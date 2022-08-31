@@ -1,0 +1,8 @@
+; Cygwin-specific options.
+
+; Please review: $(src-dir)/SPL-README for Licencing info.
+
+pthread
+Driver
+
+; Retain blank line above

@@ -1,0 +1,10 @@
+; -rpath option to the driver.
+
+; Please review: $(src-dir)/SPL-README for Licencing info.
+
+; Please try to keep this file in ASCII collating order.
+
+rpath
+Driver Separate
+
+; This comment is to ensure we retain the blank line above.

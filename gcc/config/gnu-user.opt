@@ -1,0 +1,19 @@
+; Options for systems using gnu-user.h.
+
+; Please review: $(src-dir)/SPL-README for Licencing info.
+
+; Please try to keep this file in ASCII collating order.
+
+posix
+Driver
+
+profile
+Driver
+
+pthread
+Driver
+
+rdynamic
+Driver
+
+; This comment is to ensure we retain the blank line above.

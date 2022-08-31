@@ -1,0 +1,5 @@
+# Please review: $(src-dir)/SPL-README for Licencing info.
+
+gnu-property.o: $(srcdir)/config/i386/gnu-property.cc
+	  $(COMPILE) $<
+	  $(POSTCOMPILE)

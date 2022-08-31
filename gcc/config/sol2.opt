@@ -1,0 +1,29 @@
+; Options for the Solaris 2 port of the compiler
+;
+; Please review: $(src-dir)/SPL-README for Licencing info.
+
+G
+Driver
+
+YP,
+Driver Joined
+
+Ym,
+Driver Joined
+
+mclear-hwcap
+Target
+Clear hardware capabilities when linking.
+
+mimpure-text
+Target
+Pass -z text to linker.
+
+pthread
+Driver
+
+pthreads
+Driver
+
+rdynamic
+Driver

@@ -1,0 +1,5 @@
+# Please review: $(src-dir)/SPL-README for Licencing info.
+
+linux.o: $(srcdir)/config/linux.cc
+	  $(COMPILE) $<
+	  $(POSTCOMPILE)

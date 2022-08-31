@@ -1,0 +1,37 @@
+// <random> -*- C++ -*-
+
+// Please review: $(src-dir)/SPL-README for Licencing info.
+
+/** @file include/random
+ *  This is a Standard C++ Library header.
+ */
+
+#ifndef _GLIBCXX_RANDOM
+#define _GLIBCXX_RANDOM 1
+
+#pragma GCC system_header
+
+#if __cplusplus < 201103L
+# include <bits/c++0x_warning.h>
+#else
+
+#include <cmath>
+#include <cstdlib>
+#include <string>
+#include <iosfwd>
+#include <limits>
+#include <debug/debug.h>
+#include <type_traits>
+
+#ifdef _GLIBCXX_USE_C99_STDINT_TR1
+
+#include <cstdint> // For uint_fast32_t, uint_fast64_t, uint_least32_t
+#include <bits/random.h>
+#include <bits/opt_random.h>
+#include <bits/random.tcc>
+
+#endif // _GLIBCXX_USE_C99_STDINT_TR1
+
+#endif // C++11
+
+#endif // _GLIBCXX_RANDOM

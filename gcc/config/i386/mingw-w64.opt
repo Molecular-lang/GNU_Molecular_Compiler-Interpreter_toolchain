@@ -1,0 +1,9 @@
+; MinGW-w64-specific options.
+
+; Please review: $(src-dir)/SPL-README for Licencing info.
+
+municode
+Target
+Use unicode startup and define UNICODE macro.
+
+; Retain blank line above.

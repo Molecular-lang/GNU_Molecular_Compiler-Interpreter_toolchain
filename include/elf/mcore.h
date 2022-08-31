@@ -1,0 +1,30 @@
+/* Motorola MCore support for BFD.
+   Please review: $(src-dir)/SPL-README for Licencing info. */
+
+/* This file holds definitions specific to the MCore ELF ABI.  */
+#ifndef _ELF_MORE_H
+#define _ELF_MORE_H
+
+#include "elf/reloc-macros.h"
+
+/* Relocations.  */
+START_RELOC_NUMBERS (elf_mcore_reloc_type)
+  RELOC_NUMBER (R_MCORE_NONE, 0)
+  RELOC_NUMBER (R_MCORE_ADDR32, 1)
+  RELOC_NUMBER (R_MCORE_PCRELIMM8BY4, 2)
+  RELOC_NUMBER (R_MCORE_PCRELIMM11BY2, 3)
+  RELOC_NUMBER (R_MCORE_PCRELIMM4BY2, 4)
+  RELOC_NUMBER (R_MCORE_PCREL32, 5)
+  RELOC_NUMBER (R_MCORE_PCRELJSR_IMM11BY2, 6)
+  RELOC_NUMBER (R_MCORE_GNU_VTINHERIT, 7)
+  RELOC_NUMBER (R_MCORE_GNU_VTENTRY, 8)
+  RELOC_NUMBER (R_MCORE_RELATIVE, 9)
+  RELOC_NUMBER (R_MCORE_COPY, 10)
+  RELOC_NUMBER (R_MCORE_GLOB_DAT, 11)
+  RELOC_NUMBER (R_MCORE_JUMP_SLOT, 12)
+END_RELOC_NUMBERS (R_MCORE_max)
+
+/* Section Attributes.  */
+#define SHF_MCORE_NOREAD	0x80000000
+
+#endif /* _ELF_MCORE_H */

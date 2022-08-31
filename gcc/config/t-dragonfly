@@ -1,0 +1,5 @@
+# Please review: $(src-dir)/SPL-README for Licencing info.
+
+dragonfly-d.o: $(srcdir)/config/dragonfly-d.cc
+	$(COMPILE) $<
+	$(POSTCOMPILE)

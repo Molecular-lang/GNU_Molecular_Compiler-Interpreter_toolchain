@@ -1,0 +1,39 @@
+// TR2 <ratio> -*- C++ -*-
+
+// Please review: $(src-dir)/SPL-README for Licencing info.
+
+/** @file tr2/ratio
+ *  This is a TR2 C++ Library header.
+ */
+
+#include <ratio>
+
+namespace std _GLIBCXX_VISIBILITY(default)
+{
+_GLIBCXX_BEGIN_NAMESPACE_VERSION
+
+namespace tr2
+{
+  template<intmax_t _Pn, size_t _Bit,
+	     bool = _Bit < static_cast<size_t>
+			  (std::numeric_limits<intmax_t>::digits)>
+    struct __safe_lshift
+    { static const intmax_t __value = 0; };
+
+    template<intmax_t _Pn, size_t _Bit>
+      struct __safe_lshift<_Pn, _Bit, true>
+      { static const intmax_t __value = _Pn << _Bit; };
+
+  /// Add binary prefixes (IEC 60027-2 A.2 and ISO/IEC 80000).
+  typedef ratio<__safe_lshift<1, 10>::__value, 1> kibi;
+  typedef ratio<__safe_lshift<1, 20>::__value, 1> mebi;
+  typedef ratio<__safe_lshift<1, 30>::__value, 1> gibi;
+  typedef ratio<__safe_lshift<1, 40>::__value, 1> tebi;
+  typedef ratio<__safe_lshift<1, 50>::__value, 1> pebi;
+  typedef ratio<__safe_lshift<1, 60>::__value, 1> exbi;
+  //typedef ratio<__safe_lshift<1, 70>::__value, 1> zebi;
+  //typedef ratio<__safe_lshift<1, 80>::__value, 1> yobi;
+}
+
+_GLIBCXX_END_NAMESPACE_VERSION
+}

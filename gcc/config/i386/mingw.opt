@@ -1,0 +1,15 @@
+; MinGW-specific options.
+
+; Please review: $(src-dir)/SPL-README for Licencing info.
+
+pthread
+Driver
+
+no-pthread
+Driver
+
+Wpedantic-ms-format
+C ObjC C++ ObjC++ Var(warn_pedantic_ms_format) Init(1) Warning
+Warn about none ISO msvcrt scanf/printf width extensions.
+
+; Need to retain blank line above.

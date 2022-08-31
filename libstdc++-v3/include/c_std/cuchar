@@ -1,0 +1,92 @@
+// -*- C++ -*- forwarding header.
+
+// Please review: $(src-dir)/SPL-README for Licencing info.
+
+/** @file include/cuchar
+ *  This is a Standard C++ Library file.  You should @c #include this file
+ *  in your programs, rather than any of the @a *.h implementation files.
+ *
+ *  This is the C++ version of the Standard C Library header @c uchar.h,
+ *  and its contents are (mostly) the same as that header, but are all
+ *  contained in the namespace @c std (except for names which are defined
+ *  as macros in C).
+ */
+
+//
+// ISO C++ 14882:2011 21.8
+//
+
+#ifndef _GLIBCXX_CUCHAR
+#define _GLIBCXX_CUCHAR 1
+
+#pragma GCC system_header
+
+#if __cplusplus < 201103L
+# include <bits/c++0x_warning.h>
+#else
+
+#include <bits/c++config.h>
+#include <cwchar>
+
+#if _GLIBCXX_USE_C11_UCHAR_CXX11
+
+#if (_GLIBCXX_USE_C11_UCHAR_CXX11 \
+     || (_GLIBCXX_USE_CHAR8_T \
+	 && (_GLIBCXX_USE_UCHAR_C8RTOMB_MBRTOC8_FCHAR8_T \
+	     || (__cplusplus >= 202002 \
+		 && _GLIBCXX_USE_UCHAR_C8RTOMB_MBRTOC8_CXX20))))
+ 
+#include <uchar.h>
+ 
+#endif
+
+
+// Support for mbrtoc8 and c8rtomb is conditioned on support by the C library.
+#if (_GLIBCXX_USE_CHAR8_T \
+     && (_GLIBCXX_USE_UCHAR_C8RTOMB_MBRTOC8_FCHAR8_T \
+	 || (__cplusplus >= 202002 \
+	     && _GLIBCXX_USE_UCHAR_C8RTOMB_MBRTOC8_CXX20)))
+
+// Get rid of those macros defined in <uchar.h> in lieu of real functions.
+#undef mbrtoc8
+#undef c8rtomb
+
+namespace std _GLIBCXX_VISIBILITY(default)
+{
+_GLIBCXX_BEGIN_NAMESPACE_VERSION
+
+  using ::mbrtoc8;
+  using ::c8rtomb;
+
+_GLIBCXX_END_NAMESPACE_VERSION
+} // namespace std
+
+#endif // _GLIBCXX_USE_CHAR8_T
+
+
+#if _GLIBCXX_USE_C11_UCHAR_CXX11
+
+
+// Get rid of those macros defined in <uchar.h> in lieu of real functions.
+#undef mbrtoc16
+#undef c16rtomb
+#undef mbrtoc32
+#undef c32rtomb
+
+namespace std _GLIBCXX_VISIBILITY(default)
+{
+_GLIBCXX_BEGIN_NAMESPACE_VERSION
+
+  using ::mbrtoc16;
+  using ::c16rtomb;
+  using ::mbrtoc32;
+  using ::c32rtomb;
+
+_GLIBCXX_END_NAMESPACE_VERSION
+} // namespace std
+
+#endif // _GLIBCXX_USE_C11_UCHAR_CXX11
+
+#endif // C++11
+
+#endif // _GLIBCXX_CUCHAR

@@ -1,0 +1,12 @@
+/* Definitions for stringop strategy for IA-32.
+   Please review: $(src-dir)/SPL-README for Licencing info. */
+
+DEF_ALG (no_stringop, no_stringop)
+DEF_ALG (libcall, libcall)
+DEF_ALG (rep_prefix_1_byte, rep_byte)
+DEF_ALG (rep_prefix_4_byte, rep_4byte)
+DEF_ALG (rep_prefix_8_byte, rep_8byte)
+DEF_ALG (loop_1_byte, byte_loop)
+DEF_ALG (loop, loop)
+DEF_ALG (unrolled_loop, unrolled_loop)
+DEF_ALG (vector_loop, vector_loop)
