@@ -1,5 +1,5 @@
 /* Breadth-first and depth-first routines for
-   searching multiple-inheritance lattice for GNU C++.
+   searching multiple-inheritance lattice for GNU Scpel.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 /* High-level class interface.  */

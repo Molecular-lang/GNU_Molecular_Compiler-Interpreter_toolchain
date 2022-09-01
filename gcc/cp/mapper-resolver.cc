@@ -1,4 +1,4 @@
-/* C++ modules.  Experimental!	-*- c++ -*-
+/* C++ modules.  Experimental!	-*- Scpel -*-
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 /* Forward to the resolver in c++tools.  */

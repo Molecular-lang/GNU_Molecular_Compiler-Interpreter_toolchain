@@ -1,4 +1,4 @@
-/* Language-dependent hooks for C++.
+/* Language-dependent hooks for Scpel.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 #include "config.h"

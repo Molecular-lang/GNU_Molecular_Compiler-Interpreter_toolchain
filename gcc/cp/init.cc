@@ -1,4 +1,4 @@
-/* Handle initialization things in -*- C++ -*-
+/* Handle initialization things in -*- Scpel -*-
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 /* High-level class interface.  */

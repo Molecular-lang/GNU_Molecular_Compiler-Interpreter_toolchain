@@ -1,4 +1,4 @@
-/* Help friends in C++.
+/* Help friends in Scpel.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 #include "config.h"

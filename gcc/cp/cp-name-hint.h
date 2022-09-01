@@ -1,4 +1,4 @@
-/* Declarations for working with name_hint instances in the C++ frontend.
+/* Declarations for working with name_hint instances in the Scpel frontend.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 #ifndef GCC_CP_NAME_HINT_H

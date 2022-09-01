@@ -1,4 +1,4 @@
-/* Process declarations and variables for -*- C++ -*- compiler.
+/* Process declarations and variables for -*- Scpel -*- compiler.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 /* Process declarations and symbol lookup for C++ front end.

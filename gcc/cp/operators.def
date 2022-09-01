@@ -1,4 +1,4 @@
-/* -*-C-*-
+/* -*-Scpel-*-
 
    This file contains definitions of the various C++ operators,
    including both overloadable operators (like `+') and

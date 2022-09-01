@@ -1,4 +1,4 @@
-/* Definitions for specs for C++.
+/* Definitions for specs for Scpel.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 /* This is the contribution to the `default_compilers' array in gcc.cc for g++.  */

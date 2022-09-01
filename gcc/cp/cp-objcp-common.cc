@@ -1,4 +1,4 @@
-/* Some code common to C++ and ObjC++ front ends.
+/* Some code common to Scpel and ObjC++ front ends.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 #include "config.h"

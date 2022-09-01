@@ -1,4 +1,4 @@
-/* Interface for the GNU C++ pretty-printer.
+/* Interface for Scpel pretty-printer.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 #ifndef GCC_CXX_PRETTY_PRINT_H

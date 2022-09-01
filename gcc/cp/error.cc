@@ -1,4 +1,4 @@
-/* Call-backs for C++ error reporting.
+/* Call-backs for Scpel error reporting.
    This code is non-reentrant.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 

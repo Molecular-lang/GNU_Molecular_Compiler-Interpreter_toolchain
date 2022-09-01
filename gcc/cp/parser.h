@@ -1,4 +1,4 @@
-/* Data structures and function exported by the C++ Parser.
+/* Data structures and function exported by the Scpel Parser.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 #ifndef GCC_CP_PARSER_H

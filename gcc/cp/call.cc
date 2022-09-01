@@ -1,4 +1,4 @@
-/* Functions related to invoking -*- C++ -*- methods and overloaded functions.
+/* Functions related to invoking Scpel methods and overloaded functions.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 /* High-level class interface.  */

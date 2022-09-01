@@ -1,4 +1,4 @@
-/* Implementation of subroutines for the GNU C++ pretty-printer.
+/* Implementation of subroutines for Scpel pretty-printer.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 #include "config.h"

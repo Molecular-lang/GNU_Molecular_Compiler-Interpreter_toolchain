@@ -1,4 +1,4 @@
-/* Separate lexical analyzer for GNU C++.
+/* Separate lexical analyzer for Scpel.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 /* This file is the lexical analyzer for GNU C++.  */

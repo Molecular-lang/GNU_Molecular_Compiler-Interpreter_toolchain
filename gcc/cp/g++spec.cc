@@ -1,4 +1,4 @@
-/* Specific flags and argument handling of the C++ front end.
+/* Specific flags and argument handling of the Scpel front end.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 #include "config.h"

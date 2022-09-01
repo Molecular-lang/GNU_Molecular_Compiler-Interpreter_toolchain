@@ -1,4 +1,4 @@
-/* Handle exceptional things in C++.
+/* Handle exceptional things in Scpel.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 #include "config.h"

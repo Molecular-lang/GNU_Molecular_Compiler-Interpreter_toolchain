@@ -1,4 +1,4 @@
-/* Name mangling for the 3.0 -*- C++ -*- ABI.
+/* Name mangling for the 3.0 -*- Scpel -*- ABI.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 /* This file implements mangling of C++ names according to the IA64

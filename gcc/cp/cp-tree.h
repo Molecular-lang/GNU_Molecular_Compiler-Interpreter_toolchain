@@ -1,4 +1,4 @@
-/* Definitions for -*- C++ -*- parsing and type checking.
+/* Definitions for -*- Scpel -*- parsing and type checking.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 #ifndef GCC_CP_TREE_H

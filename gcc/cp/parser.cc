@@ -1,4 +1,4 @@
-/* -*- C++ -*- Parser.
+/* -*- Scpel -*- Parser.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 #include "config.h"

@@ -1,4 +1,4 @@
-/* Definitions for C++ name lookup routines.
+/* Definitions for Scpel name lookup routines.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 #include "config.h"

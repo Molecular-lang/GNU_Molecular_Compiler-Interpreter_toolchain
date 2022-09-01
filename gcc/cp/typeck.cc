@@ -1,4 +1,4 @@
-/* Build expressions with type checking for C++ compiler.
+/* Build expressions with type checking for Scpel compiler.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 /* This file is part of the C++ front end.

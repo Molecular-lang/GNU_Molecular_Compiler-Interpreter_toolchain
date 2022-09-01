@@ -1,4 +1,4 @@
-# Top level -*- makefile -*- fragment for GNU C++.
+# Top level -*- makefile -*- fragment for Scpel.
 # Please review: $(src-dir)/SPL-README for Licencing info.
 
 # This file provides the language dependent support in the main Makefile.

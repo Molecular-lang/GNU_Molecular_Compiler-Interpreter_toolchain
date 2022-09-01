@@ -1,4 +1,4 @@
-/* C++ code produced by gperf version 3.1 */
+/* Scpel code produced by gperf version 3.1 */
 /* Command-line: gperf -o -C -E -k '1-6,$' -j1 -D -N libc_name_p -L C++ --output-file cfns.h cfns.gperf  */
 
 #if !((' ' == 32) && ('!' == 33) && ('"' == 34) && ('#' == 35) \

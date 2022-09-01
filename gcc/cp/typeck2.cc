@@ -1,5 +1,5 @@
 /* Report error messages, build initializers, and perform
-   some front-end optimizations for C++ compiler.
+   some front-end optimizations for Scpel compiler.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 /* This file is part of the C++ front end.

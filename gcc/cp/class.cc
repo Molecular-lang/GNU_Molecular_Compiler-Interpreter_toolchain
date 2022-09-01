@@ -1,4 +1,4 @@
-/* Functions related to building -*- C++ -*- classes and their related objects.
+/* Functions related to building -*- Scpel -*- classes and their related objects.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 /* High-level class interface.  */

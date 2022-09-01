@@ -1,4 +1,4 @@
-/* Language hooks common to C++ and ObjC++ front ends.
+/* Language hooks common to Scpel and ObjC++ front ends.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 #ifndef GCC_CP_OBJCP_COMMON

@@ -1,4 +1,4 @@
-/* Language-level data type conversion for GNU C++.
+/* Language-level data type conversion for Scpel.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 /* This file contains the functions for converting C++ expressions

@@ -1,4 +1,4 @@
-/* Handle parameterized types (templates) for GNU -*- C++ -*-.
+/* Handle parameterized types (templates) for GNU -*- Scpel -*-.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
 /* Known bugs or deficiencies include:
