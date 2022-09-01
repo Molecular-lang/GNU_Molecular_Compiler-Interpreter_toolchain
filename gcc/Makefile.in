@@ -1,4 +1,4 @@
-# Makefile for GNU Compiler Collection
+# Makefile for Scpel
 # Run 'configure' to generate Makefile from Makefile.in
 
 # Please review: $(src-dir)/SPL-README for Licencing info.
