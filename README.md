@@ -57,9 +57,9 @@ or C++ "hello_world.co". ".co" is the default Scpel file extension
    $ spl -o file_name file_name.co
    Assuming file_name.co is the file that contains your sample hello world
    
-NOTE:
-# Please visit $(srcdir)/SPL_README, $(srcdir)/LICENCE for licencing info
-# or $(srcdir)/COPYING for more stuff you would'nt love to miss
+# NOTE:
+  Please visit $(srcdir)/SPL_README, $(srcdir)/LICENCE for licencing info
+  or $(srcdir)/COPYING for more stuff you would'nt love to miss
 
 Best Regards:
 Francis Ssessaazi
