@@ -1,8 +1,0 @@
-# Please review: $(src-dir)/SPL-README for Licencing info.
-
-MULTILIB_OPTIONS = mthreads
-MULTILIB_DIRNAMES = thread
-
-Local Variables:
-mode: makefile
-End:

@@ -1,8 +1,0 @@
-; -mfused-madd option (some targets only).
-;
-; Please review: $(src-dir)/SPL-README for Licencing info.
-
-mfused-madd
-Target Undocumented Alias(ffp-contract=, fast, off) Warn(%<-mfused-madd%> is deprecated; use %<-ffp-contract=%> instead)
-
-; This comment is to ensure we retain the blank line above.

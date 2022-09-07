@@ -1,6 +1,0 @@
-; DJGPP-specific options.
-
-; Please review: $(src-dir)/SPL-README for Licencing info.
-
-posix
-Driver

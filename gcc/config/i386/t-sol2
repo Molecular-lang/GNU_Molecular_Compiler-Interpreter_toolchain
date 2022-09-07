@@ -1,5 +1,0 @@
-# Please review: $(src-dir)/SPL-README for Licencing info.
-
-MULTILIB_OPTIONS = m32/m64
-MULTILIB_DIRNAMES = 32 amd64
-MULTILIB_OSDIRNAMES = . amd64

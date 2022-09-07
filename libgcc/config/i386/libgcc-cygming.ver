@@ -1,6 +1,0 @@
-# Please review: $(src-dir)/SPL-README for Licencing info.
-
-GCC_4.8 {
-  _GCC_specific_handler
-  __gcc_personality_seh0
-}

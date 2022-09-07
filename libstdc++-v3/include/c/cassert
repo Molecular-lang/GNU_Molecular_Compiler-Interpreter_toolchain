@@ -1,8 +1,0 @@
-// -*- C++ -*- forwarding header.
-
-// Please review: $(src-dir)/SPL-README for Licencing info.
-
-#pragma GCC system_header
-
-#include <bits/c++config.h>
-#include_next <assert.h>
