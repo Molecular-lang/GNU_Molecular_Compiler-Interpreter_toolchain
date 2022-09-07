@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# install-debug-info-for-buildid.sh -- Helper script for libbacktrace library
+# testing.
+# Please review: $(src-dir)/SPL-README for Licencing info.
+
+# Extract build-id from src, and copy debug info of src to
+# $build_id_dir/aa/bb...zz.debug.
+
+set -e
+
+sed=@SED@
+awk=@AWK@
+grep=@GREP@
+objcopy=@OBJCOPY@
+readelf=@READELF@
+mkdir_p="@MKDIR_P@"
+
+build_id_dir="$1"
+src="$2"
+
+buildid=$(LANG=C $readelf -n $src \
+	      | $grep "Build ID" \
+	      | $awk '{print $3}')
+
+prefix=$(echo $buildid \
+	     | $sed 's/^\(.\{2\}\).*/\1/')
+
+remainder=$(echo $buildid \
+		| $sed 's/^.\{2\}//')
+
+dir=$build_id_dir/$prefix
+dst=$dir/$remainder.debug
+
+$mkdir_p $dir
+
+$objcopy --only-keep-debug $src $dst

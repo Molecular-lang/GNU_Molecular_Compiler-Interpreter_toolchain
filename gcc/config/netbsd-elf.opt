@@ -1,0 +1,13 @@
+; NetBSD ELF-only options.
+
+; Please review: $(src-dir)/SPL-README for Licencing info.
+
+; Please try to keep this file in ASCII collating order.
+
+rdynamic
+Driver
+
+rpath=
+Driver JoinedOrMissing
+
+; This comment is to ensure we retain the blank line above.

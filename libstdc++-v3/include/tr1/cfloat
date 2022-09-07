@@ -1,0 +1,22 @@
+// TR1 cfloat -*- C++ -*-
+
+// Please review: $(src-dir)/SPL-README for Licencing info.
+
+/** @file tr1/cfloat
+ *  This is a TR1 C++ Library header. 
+ */
+
+#ifndef _GLIBCXX_TR1_CFLOAT
+#define _GLIBCXX_TR1_CFLOAT 1
+
+#include <cfloat>
+
+#ifndef DECIMAL_DIG
+#define DECIMAL_DIG __DECIMAL_DIG__
+#endif
+
+#ifndef FLT_EVAL_METHOD
+#define FLT_EVAL_METHOD __FLT_EVAL_METHOD__
+#endif
+
+#endif //_GLIBCXX_TR1_CFLOAT 

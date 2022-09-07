@@ -1,0 +1,51 @@
+/* This file defines the interface between the LM32 simulator and GDB.
+   Please review: $(src-dir)/SPL-README for Licencing info. */
+
+#ifndef SIM_LM32_H
+#define SIM_LM32_H
+
+enum sim_lm32_regs
+{
+  SIM_LM32_R0_REGNUM,
+  SIM_LM32_R1_REGNUM,     
+  SIM_LM32_R2_REGNUM,     
+  SIM_LM32_R3_REGNUM,     
+  SIM_LM32_R4_REGNUM,     
+  SIM_LM32_R5_REGNUM,     
+  SIM_LM32_R6_REGNUM,     
+  SIM_LM32_R7_REGNUM,     
+  SIM_LM32_R8_REGNUM,     
+  SIM_LM32_R9_REGNUM,     
+  SIM_LM32_R10_REGNUM,    
+  SIM_LM32_R11_REGNUM,    
+  SIM_LM32_R12_REGNUM,    
+  SIM_LM32_R13_REGNUM,    
+  SIM_LM32_R14_REGNUM,    
+  SIM_LM32_R15_REGNUM,    
+  SIM_LM32_R16_REGNUM,    
+  SIM_LM32_R17_REGNUM,    
+  SIM_LM32_R18_REGNUM,    
+  SIM_LM32_R19_REGNUM,    
+  SIM_LM32_R20_REGNUM,    
+  SIM_LM32_R21_REGNUM,    
+  SIM_LM32_R22_REGNUM,    
+  SIM_LM32_R23_REGNUM,    
+  SIM_LM32_R24_REGNUM,    
+  SIM_LM32_R25_REGNUM,    
+  SIM_LM32_GP_REGNUM,     
+  SIM_LM32_FP_REGNUM,     
+  SIM_LM32_SP_REGNUM,     
+  SIM_LM32_RA_REGNUM,     
+  SIM_LM32_BA_REGNUM,     
+  SIM_LM32_EA_REGNUM,     
+  SIM_LM32_PC_REGNUM,
+  SIM_LM32_EID_REGNUM,
+  SIM_LM32_EBA_REGNUM,  
+  SIM_LM32_DEBA_REGNUM, 
+  SIM_LM32_IE_REGNUM,  
+  SIM_LM32_IM_REGNUM,  
+  SIM_LM32_IP_REGNUM,  
+  SIM_LM32_NUM_REGS      
+};
+
+#endif

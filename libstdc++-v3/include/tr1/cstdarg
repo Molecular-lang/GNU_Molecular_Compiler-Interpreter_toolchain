@@ -1,0 +1,14 @@
+// TR1 cstdarg -*- C++ -*-
+
+// Please review: $(src-dir)/SPL-README for Licencing info.
+
+/** @file tr1/cstdarg
+ *  This is a TR1 C++ Library header. 
+ */
+
+#ifndef _GLIBCXX_TR1_CSTDARG
+#define _GLIBCXX_TR1_CSTDARG 1
+
+#include <cstdarg>
+
+#endif // _GLIBCXX_TR1_CSTDARG

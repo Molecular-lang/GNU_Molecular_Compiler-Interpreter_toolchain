@@ -1,0 +1,15 @@
+; Processor-independent options for LynxOS.
+
+; Please review: $(src-dir)/SPL-README for Licencing info.
+
+mlegacy-threads
+Target RejectNegative
+Support legacy multi-threading.
+
+mshared
+Target RejectNegative
+Use shared libraries.
+
+mthreads
+Target RejectNegative
+Support multi-threading.

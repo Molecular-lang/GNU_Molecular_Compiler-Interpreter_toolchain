@@ -1,0 +1,16 @@
+# Top level configure fragment for GNU C - C language.
+# Please review: $(src-dir)/SPL-README for Licencing info.
+
+# Configure looks for the existence of this file to auto-config each language.
+# We define several parameters used by configure:
+#
+# language	- name of language as it would appear in $(LANGUAGES)
+# compilers	- value to add to $(COMPILERS)
+
+language="c"
+
+compilers="cc1\$(exeext)"
+
+target_libs=
+
+gtfiles="\$(srcdir)/c/c-lang.cc \$(srcdir)/c/c-tree.h \$(srcdir)/c/c-decl.cc \$(srcdir)/c-family/c-common.cc \$(srcdir)/c-family/c-common.h \$(srcdir)/c-family/c-objc.h \$(srcdir)/c-family/c-cppbuiltin.cc \$(srcdir)/c-family/c-pragma.h \$(srcdir)/c-family/c-pragma.cc \$(srcdir)/c-family/c-format.cc \$(srcdir)/c/c-objc-common.cc \$(srcdir)/c/c-parser.h \$(srcdir)/c/c-parser.cc \$(srcdir)/c/c-lang.h"

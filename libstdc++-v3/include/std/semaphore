@@ -1,0 +1,75 @@
+// <semaphore> -*- C++ -*-
+
+// Please review: $(src-dir)/SPL-README for Licencing info.
+
+/** @file include/semaphore
+ *  This is a Standard C++ Library header.
+ */
+
+#ifndef _GLIBCXX_SEMAPHORE
+#define _GLIBCXX_SEMAPHORE 1
+
+#pragma GCC system_header
+
+#if __cplusplus > 201703L
+#include <bits/semaphore_base.h>
+
+#if __cpp_lib_atomic_wait || _GLIBCXX_HAVE_POSIX_SEMAPHORE
+namespace std _GLIBCXX_VISIBILITY(default)
+{
+_GLIBCXX_BEGIN_NAMESPACE_VERSION
+
+#define __cpp_lib_semaphore 201907L
+
+  template<ptrdiff_t __least_max_value = __semaphore_impl::_S_max>
+    class counting_semaphore
+    {
+      static_assert(__least_max_value >= 0);
+      static_assert(__least_max_value <= __semaphore_impl::_S_max);
+
+      __semaphore_impl _M_sem;
+
+    public:
+      explicit counting_semaphore(ptrdiff_t __desired) noexcept
+	: _M_sem(__desired)
+      { }
+
+      ~counting_semaphore() = default;
+
+      counting_semaphore(const counting_semaphore&) = delete;
+      counting_semaphore& operator=(const counting_semaphore&) = delete;
+
+      static constexpr ptrdiff_t
+      max() noexcept
+      { return __least_max_value; }
+
+      void
+      release(ptrdiff_t __update = 1) noexcept(noexcept(_M_sem._M_release(1)))
+      { _M_sem._M_release(__update); }
+
+      void
+      acquire() noexcept(noexcept(_M_sem._M_acquire()))
+      { _M_sem._M_acquire(); }
+
+      bool
+      try_acquire() noexcept(noexcept(_M_sem._M_try_acquire()))
+      { return _M_sem._M_try_acquire(); }
+
+      template<typename _Rep, typename _Period>
+	bool
+	try_acquire_for(const std::chrono::duration<_Rep, _Period>& __rtime)
+	{ return _M_sem._M_try_acquire_for(__rtime); }
+
+      template<typename _Clock, typename _Dur>
+	bool
+	try_acquire_until(const std::chrono::time_point<_Clock, _Dur>& __atime)
+	{ return _M_sem._M_try_acquire_until(__atime); }
+    };
+
+  using binary_semaphore = std::counting_semaphore<1>;
+
+_GLIBCXX_END_NAMESPACE_VERSION
+} // namespace
+#endif // cpp_lib_atomic_wait || _GLIBCXX_HAVE_POSIX_SEMAPHORE
+#endif // C++20
+#endif // _GLIBCXX_SEMAPHORE

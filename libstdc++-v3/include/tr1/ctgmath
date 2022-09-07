@@ -1,0 +1,14 @@
+// TR1 ctgmath -*- C++ -*-
+
+// Please review: $(src-dir)/SPL-README for Licencing info.
+
+/** @file tr1/ctgmath
+ *  This is a TR1 C++ Library header. 
+ */
+
+#ifndef _GLIBCXX_TR1_CTGMATH
+#define _GLIBCXX_TR1_CTGMATH 1
+
+#include <tr1/cmath>
+
+#endif // _GLIBCXX_TR1_CTGMATH

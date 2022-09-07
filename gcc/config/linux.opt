@@ -1,0 +1,19 @@
+; Processor-independent options for GNU/Linux.
+;
+; Please review: $(src-dir)/SPL-README for Licencing info.
+
+mbionic
+Target RejectNegative Var(linux_libc,LIBC_BIONIC) Init(DEFAULT_LIBC) Negative(mglibc)
+Use Bionic C library.
+
+mglibc
+Target RejectNegative Var(linux_libc,LIBC_GLIBC) Negative(muclibc)
+Use GNU C library.
+
+muclibc
+Target RejectNegative Var(linux_libc,LIBC_UCLIBC) Negative(mmusl)
+Use uClibc C library.
+
+mmusl
+Target RejectNegative Var(linux_libc,LIBC_MUSL) Negative(mbionic)
+Use musl C library.

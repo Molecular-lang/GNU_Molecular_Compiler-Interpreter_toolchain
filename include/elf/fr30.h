@@ -1,0 +1,26 @@
+/* FR30 ELF support for BFD.
+   Please review: $(src-dir)/SPL-README for Licencing info. */
+
+#ifndef _ELF_FR30_H
+#define _ELF_FR30_H
+
+#include "elf/reloc-macros.h"
+
+/* Relocations.  */
+START_RELOC_NUMBERS (elf_fr30_reloc_type)
+  RELOC_NUMBER (R_FR30_NONE, 0)
+  RELOC_NUMBER (R_FR30_8, 1)
+  RELOC_NUMBER (R_FR30_20, 2)
+  RELOC_NUMBER (R_FR30_32, 3)
+  RELOC_NUMBER (R_FR30_48, 4)
+  RELOC_NUMBER (R_FR30_6_IN_4, 5)
+  RELOC_NUMBER (R_FR30_8_IN_8, 6)
+  RELOC_NUMBER (R_FR30_9_IN_8, 7)
+  RELOC_NUMBER (R_FR30_10_IN_8, 8)
+  RELOC_NUMBER (R_FR30_9_PCREL, 9)
+  RELOC_NUMBER (R_FR30_12_PCREL, 10)
+  RELOC_NUMBER (R_FR30_GNU_VTINHERIT, 11)
+  RELOC_NUMBER (R_FR30_GNU_VTENTRY, 12)
+END_RELOC_NUMBERS (R_FR30_max)
+
+#endif /* _ELF_FR30_H */

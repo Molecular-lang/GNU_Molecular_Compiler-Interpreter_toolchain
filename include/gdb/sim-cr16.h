@@ -1,0 +1,51 @@
+/* This file defines the interface between the cr16 simulator and gdb.
+
+   Please review: $(src-dir)/SPL-README for Licencing info. */
+
+#if !defined (SIM_CR16_H)
+#define SIM_CR16_H
+
+/* The simulator makes use of the following register information. */
+
+enum sim_cr16_regs
+{
+  SIM_CR16_R0_REGNUM,
+  SIM_CR16_R1_REGNUM,
+  SIM_CR16_R2_REGNUM,
+  SIM_CR16_R3_REGNUM,
+  SIM_CR16_R4_REGNUM,
+  SIM_CR16_R5_REGNUM,
+  SIM_CR16_R6_REGNUM,
+  SIM_CR16_R7_REGNUM,
+  SIM_CR16_R8_REGNUM,
+  SIM_CR16_R9_REGNUM,
+  SIM_CR16_R10_REGNUM,
+  SIM_CR16_R11_REGNUM,
+  SIM_CR16_R12_REGNUM,
+  SIM_CR16_R13_REGNUM,
+  SIM_CR16_R14_REGNUM,
+  SIM_CR16_R15_REGNUM,
+
+  SIM_CR16_PC_REGNUM,
+  SIM_CR16_ISP_REGNUM,
+  SIM_CR16_USP_REGNUM,
+  SIM_CR16_INTBASE_REGNUM,
+  SIM_CR16_PSR_REGNUM,
+  SIM_CR16_CFG_REGNUM,
+  SIM_CR16_DBS_REGNUM,
+  SIM_CR16_DCR_REGNUM,
+  SIM_CR16_DSR_REGNUM,
+  SIM_CR16_CAR0_REGNUM,
+  SIM_CR16_CAR1_REGNUM
+};
+  
+enum
+{
+  SIM_CR16_NR_R_REGS = 16,
+  SIM_CR16_NR_A_REGS = 2,
+  SIM_CR16_NR_IMAP_REGS = 2,
+  SIM_CR16_NR_DMAP_REGS = 4,
+  SIM_CR16_NR_CR_REGS = 11
+};
+
+#endif

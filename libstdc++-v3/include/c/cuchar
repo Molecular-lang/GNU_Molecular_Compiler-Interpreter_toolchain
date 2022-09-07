@@ -1,0 +1,23 @@
+// -*- C++ -*- forwarding header.
+
+// Please review: $(src-dir)/SPL-README for Licencing info.
+
+#ifndef _GLIBCXX_CUCHAR
+#define _GLIBCXX_CUCHAR 1
+
+#pragma GCC system_header
+
+#if __cplusplus < 201103L
+# include <bits/c++0x_warning.h>
+#else
+
+#include <bits/c++config.h>
+#include <cwchar>
+
+#if _GLIBCXX_USE_C11_UCHAR_CXX11
+# include_next <uchar.h>
+#endif
+
+#endif // C++11
+
+#endif // _GLIBCXX_CUCHAR

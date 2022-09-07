@@ -1,0 +1,88 @@
+/* Generic support for 32-bit ELF
+   Please review $(srcdir/SPL-README) for GNU licencing info. */
+
+#include "sysdep.h"
+#include "bfd.h"
+#include "libbfd.h"
+#include "elf-bfd.h"
+
+/* This does not include any relocation information, but should be
+   good enough for GDB or objdump to read the file.  */
+
+static reloc_howto_type dummy =
+  HOWTO (0,			/* type */
+	 0,			/* rightshift */
+	 0,			/* size (0 = byte, 1 = short, 2 = long) */
+	 0,			/* bitsize */
+	 false,			/* pc_relative */
+	 0,			/* bitpos */
+	 complain_overflow_dont, /* complain_on_overflow */
+	 NULL,			/* special_function */
+	 "UNKNOWN",		/* name */
+	 false,			/* partial_inplace */
+	 0,			/* src_mask */
+	 0,			/* dst_mask */
+	 false);		/* pcrel_offset */
+
+static bool
+elf_generic_info_to_howto (bfd *abfd ATTRIBUTE_UNUSED,
+			   arelent *bfd_reloc,
+			   Elf_Internal_Rela *elf_reloc ATTRIBUTE_UNUSED)
+{
+  bfd_reloc->howto = &dummy;
+  return true;
+}
+
+static bool
+elf_generic_info_to_howto_rel (bfd *abfd ATTRIBUTE_UNUSED,
+			       arelent *bfd_reloc,
+			       Elf_Internal_Rela *elf_reloc ATTRIBUTE_UNUSED)
+{
+  bfd_reloc->howto = &dummy;
+  return true;
+}
+
+static void
+check_for_relocs (bfd * abfd, asection * o, void * failed)
+{
+  if ((o->flags & SEC_RELOC) != 0)
+    {
+      Elf_Internal_Ehdr *ehdrp;
+
+      ehdrp = elf_elfheader (abfd);
+      /* xgettext:c-format */
+      _bfd_error_handler (_("%pB: relocations in generic ELF (EM: %d)"),
+			  abfd, ehdrp->e_machine);
+
+      bfd_set_error (bfd_error_wrong_format);
+      * (bool *) failed = true;
+    }
+}
+
+static bool
+elf32_generic_link_add_symbols (bfd *abfd, struct bfd_link_info *info)
+{
+  bool failed = false;
+
+  /* Check if there are any relocations.  */
+  bfd_map_over_sections (abfd, check_for_relocs, & failed);
+
+  if (failed)
+    return false;
+  return bfd_elf_link_add_symbols (abfd, info);
+}
+
+#define TARGET_LITTLE_SYM		elf32_le_vec
+#define TARGET_LITTLE_NAME		"elf32-little"
+#define TARGET_BIG_SYM			elf32_be_vec
+#define TARGET_BIG_NAME			"elf32-big"
+#define ELF_ARCH			bfd_arch_unknown
+#define ELF_MACHINE_CODE		EM_NONE
+#define ELF_MAXPAGESIZE			0x1
+#define bfd_elf32_bfd_reloc_type_lookup bfd_default_reloc_type_lookup
+#define bfd_elf32_bfd_reloc_name_lookup _bfd_norelocs_bfd_reloc_name_lookup
+#define bfd_elf32_bfd_link_add_symbols	elf32_generic_link_add_symbols
+#define elf_info_to_howto		elf_generic_info_to_howto
+#define elf_info_to_howto_rel		elf_generic_info_to_howto_rel
+
+#include "elf32-target.h"

@@ -1,0 +1,12 @@
+# Please review: $(src-dir)/SPL-README for Licencing info.
+
+# We need multilib support for HPUX's ILP32 & LP64 modes.
+
+MULTILIB_OPTIONS = milp32/mlp64
+MULTILIB_DIRNAMES = hpux32 hpux64
+MULTILIB_MATCHES =
+
+# We do not want to include the EH stuff that linux uses, we want to use
+# the HP-UX libunwind library.
+
+T_CFLAGS += -DUSE_LIBUNWIND_EXCEPTIONS

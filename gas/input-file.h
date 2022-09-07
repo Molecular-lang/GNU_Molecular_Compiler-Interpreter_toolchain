@@ -1,0 +1,48 @@
+/* input_file.h header for input-file.c
+   Please review: $(src-dir)/SPL-README for Licencing info. */
+
+/*"input_file.c":Operating-system dependent functions to read source files.*/
+
+/*
+ * No matter what the operating system, this module must provide the
+ * following services to its callers.
+ *
+ * input_file_begin()			Call once before anything else.
+ *
+ * input_file_end()			Call once after everything else.
+ *
+ * input_file_buffer_size()		Call anytime. Returns largest possible
+ *					delivery from
+ *					input_file_give_next_buffer().
+ *
+ * input_file_open(name)		Call once for each input file.
+ *
+ * input_file_give_next_buffer(where)	Call once to get each new buffer.
+ *					Return 0: no more chars left in file,
+ *					   the file has already been closed.
+ *					Otherwise: return a pointer to just
+ *					   after the last character we read
+ *					   into the buffer.
+ *					If we can only read 0 characters, then
+ *					end-of-file is faked.
+ *
+ * input_file_push()			Push state, which can be restored
+ *					later.  Does implicit input_file_begin.
+ *					Returns char * to saved state.
+ *
+ * input_file_pop (arg)			Pops previously saved state.
+ *
+ * input_file_close ()			Closes opened file.
+ *
+ * All errors are reported so caller doesn't have to think
+ * about I/O errors.
+ */
+
+char *input_file_give_next_buffer (char *where);
+char *input_file_push (void);
+size_t input_file_buffer_size (void);
+void input_file_begin (void);
+void input_file_close (void);
+void input_file_end (void);
+void input_file_open (const char *filename, int pre);
+void input_file_pop (char *arg);

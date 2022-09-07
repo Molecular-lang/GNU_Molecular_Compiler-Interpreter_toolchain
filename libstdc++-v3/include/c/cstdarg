@@ -1,0 +1,13 @@
+// -*- C++ -*- forwarding header.
+
+// Please review: $(src-dir)/SPL-README for Licencing info.
+
+#ifndef _GLIBCXX_CSTDARG
+#define _GLIBCXX_CSTDARG 1
+
+#pragma GCC system_header
+
+#undef __need___va_list
+#include_next <stdarg.h>
+
+#endif

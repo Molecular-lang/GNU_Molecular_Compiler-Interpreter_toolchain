@@ -1,0 +1,5 @@
+# Please review: $(src-dir)/SPL-README for Licencing info.
+
+# Use the system libunwind library.
+
+T_CFLAGS += -DUSE_LIBUNWIND_EXCEPTIONS

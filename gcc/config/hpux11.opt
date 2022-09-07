@@ -1,0 +1,13 @@
+; HP-UX 11 options.
+
+; Please review: $(src-dir)/SPL-README for Licencing info.
+
+; Please try to keep this file in ASCII collating order.
+
+mt
+Target RejectNegative
+
+pthread
+Driver
+
+; This comment is to ensure we retain the blank line above.
