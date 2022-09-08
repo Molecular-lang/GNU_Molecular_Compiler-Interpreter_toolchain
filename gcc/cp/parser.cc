@@ -212,9 +212,6 @@ static void noexcept_override_late_checks(tree, tree);
 
 static void cp_parser_initial_pragma(cp_token *);
 
-static bool cp_parser_omp_declare_reduction_exprs(tree, cp_parser *);
-static void cp_finalize_oacc_routine(cp_parser *, tree, bool);
-
 /* Manifest constants.  */
 #define CP_LEXER_BUFFER_SIZE ((256 * 1024) / sizeof (cp_token))
 #define CP_SAVED_TOKEN_STACK 5
@@ -2161,10 +2158,6 @@ static cp_expr cp_parser_braced_list(cp_parser*, bool*);
 static vec<constructor_elt, va_gc> *cp_parser_initializer_list(cp_parser *, bool *, bool *);
 
 static void cp_parser_ctor_initializer_opt_and_function_body(cp_parser *, bool);
-
-static tree cp_parser_late_parsing_omp_declare_simd(cp_parser *, tree);
-
-static tree cp_parser_late_parsing_oacc_routine(cp_parser *, tree);
 
 static tree synthesize_implicit_template_parm(cp_parser *, tree);
 static tree finish_fully_implicit_template(cp_parser *, tree);
@@ -22163,8 +22156,7 @@ cp_parser_init_declarator (cp_parser* parser,
       decl = start_decl (declarator, decl_specifiers,
 			 range_for_decl_p? SD_INITIALIZED : is_initialized,
 			 attributes, prefix_attributes, &pushed_scope);
-      cp_finalize_omp_declare_simd (parser, decl);
-      cp_finalize_oacc_routine (parser, decl, false);
+			 
       /* Adjust location of decl if declarator->id_loc is more appropriate:
 	 set, and decl wasn't merged with another decl, in which case its
 	 location would be different from input_location, and more accurate.  */
@@ -22294,8 +22286,6 @@ cp_parser_init_declarator (cp_parser* parser,
 			attr_chainon (attributes, prefix_attributes));
       if (decl && TREE_CODE (decl) == FUNCTION_DECL)
 	cp_parser_save_default_args (parser, decl);
-      cp_finalize_omp_declare_simd (parser, decl);
-      cp_finalize_oacc_routine (parser, decl, false);
     }
 
   /* Finish processing the declaration.  But, skip member
@@ -23557,14 +23547,7 @@ cp_parser_late_return_type_opt (cp_parser* parser, cp_declarator *declarator,
      requires-clause.  */
   requires_clause = cp_parser_requires_clause_opt (parser, false);
 
-  if (declare_simd_p)
-    declarator->attributes
-      = cp_parser_late_parsing_omp_declare_simd (parser,
-						 declarator->attributes);
-  if (oacc_routine_p)
-    declarator->attributes
-      = cp_parser_late_parsing_oacc_routine (parser,
-					     declarator->attributes);
+// edited: possible bug
 
   return type;
 }
@@ -26922,9 +26905,6 @@ cp_parser_member_declaration (cp_parser* parser)
 		    decl = finish_fully_implicit_template (parser, decl);
 		}
 	    }
-
-	  cp_finalize_omp_declare_simd (parser, decl);
-	  cp_finalize_oacc_routine (parser, decl, false);
 
 	  /* Reset PREFIX_ATTRIBUTES.  */
 	  if (attributes != error_mark_node)
@@ -30638,13 +30618,7 @@ cp_parser_function_definition_from_specifiers_and_declarator
      might be a friend.  */
   perform_deferred_access_checks (tf_warning_or_error);
 
-  if (success_p)
-    {
-      cp_finalize_omp_declare_simd (parser, current_function_decl);
-      parser->omp_declare_simd = NULL;
-      cp_finalize_oacc_routine (parser, current_function_decl, true);
-      parser->oacc_routine = NULL;
-    }
+// edited: possible bug
 
   if (!success_p)
     {
@@ -31413,8 +31387,7 @@ cp_parser_save_member_function_body (cp_parser* parser,
 
   /* Create the FUNCTION_DECL.  */
   fn = grokmethod (decl_specifiers, declarator, attributes);
-  cp_finalize_omp_declare_simd (parser, fn);
-  cp_finalize_oacc_routine (parser, fn, true);
+  
   /* If something went badly wrong, bail out now.  */
   if (fn == error_mark_node)
     {
@@ -31706,16 +31679,7 @@ cp_parser_late_parsing_for_member (cp_parser* parser, tree member_function)
       start_preparsed_function (member_function, NULL_TREE,
 				SF_PRE_PARSED | SF_INCLASS_INLINE);
 
-      /* #pragma omp declare reduction needs special parsing.  */
-      if (DECL_OMP_DECLARE_REDUCTION_P (member_function))
-	{
-	  parser->lexer->in_pragma = true;
-	  cp_parser_omp_declare_reduction_exprs (member_function, parser);
-	  finish_function (/*inline_p=*/true);
-	  cp_check_omp_declare_reduction (member_function);
-	}
-      else
-	/* Now, parse the body of the function.  */
+    /* Parse the body of the function.  */
 	cp_parser_function_definition_after_declarator (parser,
 							/*inline_p=*/true);
 
@@ -33745,69 +33709,57 @@ cp_parser_abort_tentative_parse (cp_parser* parser)
 /* Stop parsing tentatively.  If a parse error has occurred, restore the
    token stream.  Otherwise, commit to the tokens we have consumed.
    Returns true if no error occurred; false otherwise.  */
-
 static bool
-cp_parser_parse_definitely (cp_parser* parser)
+cp_parser_parse_definitely(cp_parser* parser)
 {
-  bool error_occurred;
-  cp_parser_context *context;
+	bool error_occurred;
+	cp_parser_context *context;
 
-  /* Remember whether or not an error occurred, since we are about to
-     destroy that information.  */
-  error_occurred = cp_parser_error_occurred (parser);
-  /* Remove the topmost context from the stack.  */
-  context = parser->context;
-  parser->context = context->next;
-  /* If no parse errors occurred, commit to the tentative parse.  */
-  if (!error_occurred)
-    {
-      /* Commit to the tokens read tentatively, unless that was
-	 already done.  */
-      if (context->status != CP_PARSER_STATUS_KIND_COMMITTED)
-	cp_lexer_commit_tokens (parser->lexer);
+	/* Remember whether or not an error occurred, since we are about to destroy that information. */
+	error_occurred = cp_parser_error_occurred(parser);
+	/* Remove the topmost context from the stack. */
+	context = parser->context;
+	parser->context = context->next;
+	/* If no parse errors occurred, commit to the tentative parse.  */
+	if (!error_occurred) {
+		/* Commit to the tokens read tentatively, unless that was already done.  */
+		if (context->status != CP_PARSER_STATUS_KIND_COMMITTED)
+			cp_lexer_commit_tokens(parser->lexer);
 
-      pop_to_parent_deferring_access_checks ();
-    }
-  /* Otherwise, if errors occurred, roll back our state so that things
-     are just as they were before we began the tentative parse.  */
-  else
-    {
-      cp_lexer_rollback_tokens (parser->lexer);
-      pop_deferring_access_checks ();
-    }
-  /* Add the context to the front of the free list.  */
-  context->next = cp_parser_context_free_list;
-  cp_parser_context_free_list = context;
+		pop_to_parent_deferring_access_checks();
+	}
+	/* Otherwise, if errors occurred, roll back our state so that things
+	   are just as they were before we began the tentative parse.  */
+	else {
+		cp_lexer_rollback_tokens(parser->lexer);
+		pop_deferring_access_checks();
+	}
+	/* Add the context to the front of the free list.  */
+	context->next = cp_parser_context_free_list;
+	cp_parser_context_free_list = context;
 
-  return !error_occurred;
+	return !error_occurred;
 }
 
-/* Returns true if we are parsing tentatively and are not committed to
-   this tentative parse.  */
-
+/* Returns true if we are parsing tentatively and are not committed to this tentative parse. */
 static bool
-cp_parser_uncommitted_to_tentative_parse_p (cp_parser* parser)
+cp_parser_uncommitted_to_tentative_parse_p(cp_parser* parser)
 {
-  return (cp_parser_parsing_tentatively (parser)
-	  && parser->context->status != CP_PARSER_STATUS_KIND_COMMITTED);
+	return (cp_parser_parsing_tentatively(parser) && parser->context->status != CP_PARSER_STATUS_KIND_COMMITTED);
 }
 
-/* Returns nonzero iff an error has occurred during the most recent
-   tentative parse.  */
-
+/* Returns nonzero iff an error has occurred during the most recent tentative parse. */
 static bool
-cp_parser_error_occurred (cp_parser* parser)
+cp_parser_error_occurred(cp_parser* parser)
 {
-  return (cp_parser_parsing_tentatively (parser)
-	  && parser->context->status == CP_PARSER_STATUS_KIND_ERROR);
+	return (cp_parser_parsing_tentatively(parser) && parser->context->status == CP_PARSER_STATUS_KIND_ERROR);
 }
 
-/* Returns nonzero if GNU extensions are allowed.  */
-
+/* Returns nonzero if GNU extensions are allowed. */
 static bool
-cp_parser_allow_gnu_extensions_p (cp_parser* parser)
+cp_parser_allow_gnu_extensions_p(cp_parser* parser)
 {
-  return parser->allow_gnu_extensions_p;
+	return parser->allow_gnu_extensions_p;
 }
 
 /* Transactional Memory parsing routines.  */
@@ -34002,44 +33954,38 @@ cp_parser_transaction_expression (cp_parser *parser, enum rid keyword)
      __transaction_relaxed ctor-initializer[opt] function-body
      __transaction_relaxed function-try-block
 */
-
 static void
-cp_parser_function_transaction (cp_parser *parser, enum rid keyword)
+cp_parser_function_transaction(cp_parser *parser, enum rid keyword)
 {
-  unsigned char old_in = parser->in_transaction;
-  unsigned char new_in = 1;
-  tree compound_stmt, stmt, attrs;
-  cp_token *token;
+	unsigned char old_in = parser->in_transaction;
+	unsigned char new_in = 1;
+	tree compound_stmt, stmt, attrs;
+	cp_token *token;
 
-  gcc_assert (keyword == RID_TRANSACTION_ATOMIC
-      || keyword == RID_TRANSACTION_RELAXED);
-  token = cp_parser_require_keyword (parser, keyword,
-      (keyword == RID_TRANSACTION_ATOMIC ? RT_TRANSACTION_ATOMIC
-	  : RT_TRANSACTION_RELAXED));
-  gcc_assert (token != NULL);
+	gcc_assert(keyword == RID_TRANSACTION_ATOMIC || keyword == RID_TRANSACTION_RELAXED);
+	token = cp_parser_require_keyword(parser, keyword, (keyword == RID_TRANSACTION_ATOMIC ? RT_TRANSACTION_ATOMIC : RT_TRANSACTION_RELAXED));
+	gcc_assert(token != NULL);
 
-  if (keyword == RID_TRANSACTION_RELAXED)
-    new_in |= TM_STMT_ATTR_RELAXED;
-  else
-    {
-      attrs = cp_parser_txn_attribute_opt (parser);
-      if (attrs)
-	new_in |= parse_tm_stmt_attr (attrs, TM_STMT_ATTR_OUTER);
-    }
+	if (keyword == RID_TRANSACTION_RELAXED)
+		new_in |= TM_STMT_ATTR_RELAXED;
+	else {
+		attrs = cp_parser_txn_attribute_opt(parser);
+		if (attrs)
+			new_in |= parse_tm_stmt_attr(attrs, TM_STMT_ATTR_OUTER);
+	}
 
-  stmt = begin_transaction_stmt (token->location, &compound_stmt, new_in);
+	stmt = begin_transaction_stmt(token->location, &compound_stmt, new_in);
 
-  parser->in_transaction = new_in;
+	parser->in_transaction = new_in;
 
-  if (cp_lexer_next_token_is_keyword (parser->lexer, RID_TRY))
-    cp_parser_function_try_block (parser);
-  else
-    cp_parser_ctor_initializer_opt_and_function_body
-      (parser, /*in_function_try_block=*/false);
+	if (cp_lexer_next_token_is_keyword(parser->lexer, RID_TRY))
+		cp_parser_function_try_block(parser);
+	else
+		cp_parser_ctor_initializer_opt_and_function_body(parser, /*in_function_try_block=*/false);
 
-  parser->in_transaction = old_in;
+	parser->in_transaction = old_in;
 
-  finish_transaction_stmt (stmt, compound_stmt, new_in, NULL_TREE);
+	finish_transaction_stmt(stmt, compound_stmt, new_in, NULL_TREE);
 }
 
 /* Parse a __transaction_cancel statement.
@@ -34049,61 +33995,44 @@ cp_parser_function_transaction (cp_parser *parser, enum rid keyword)
      __transaction_cancel txn-attribute[opt] throw-expression ;
 
    ??? Cancel and throw is not yet implemented.  */
-
 static tree
-cp_parser_transaction_cancel (cp_parser *parser)
+cp_parser_transaction_cancel(cp_parser *parser)
 {
-  cp_token *token;
-  bool is_outer = false;
-  tree stmt, attrs;
+	cp_token *token;
+	bool is_outer = false;
+	tree stmt, attrs;
 
-  token = cp_parser_require_keyword (parser, RID_TRANSACTION_CANCEL,
-				     RT_TRANSACTION_CANCEL);
-  gcc_assert (token != NULL);
+	token = cp_parser_require_keyword(parser, RID_TRANSACTION_CANCEL, RT_TRANSACTION_CANCEL);
+	gcc_assert(token != NULL);
 
-  attrs = cp_parser_txn_attribute_opt (parser);
-  if (attrs)
-    is_outer = (parse_tm_stmt_attr (attrs, TM_STMT_ATTR_OUTER) != 0);
+	attrs = cp_parser_txn_attribute_opt(parser);
+	if (attrs)
+		is_outer = (parse_tm_stmt_attr(attrs, TM_STMT_ATTR_OUTER) != 0);
 
-  /* ??? Parse cancel-and-throw here.  */
+	/* ??? Parse cancel-and-throw here. */
+	cp_parser_require(parser, CPP_SEMICOLON, RT_SEMICOLON);
 
-  cp_parser_require (parser, CPP_SEMICOLON, RT_SEMICOLON);
-
-  if (!flag_tm)
-    {
-      error_at (token->location, "%<__transaction_cancel%> without "
-		"transactional memory support enabled");
-      return error_mark_node;
-    }
-  else if (parser->in_transaction & TM_STMT_ATTR_RELAXED)
-    {
-      error_at (token->location, "%<__transaction_cancel%> within a "
-		"%<__transaction_relaxed%>");
-      return error_mark_node;
-    }
-  else if (is_outer)
-    {
-      if ((parser->in_transaction & TM_STMT_ATTR_OUTER) == 0
-	  && !is_tm_may_cancel_outer (current_function_decl))
-	{
-	  error_at (token->location, "outer %<__transaction_cancel%> not "
-		    "within outer %<__transaction_atomic%>");
-	  error_at (token->location,
-		    "  or a %<transaction_may_cancel_outer%> function");
-	  return error_mark_node;
+	if (!flag_tm) {
+		error_at(token->location, "%<__transaction_cancel%> without transactional memory support enabled");
+		return error_mark_node;
+	} else if (parser->in_transaction & TM_STMT_ATTR_RELAXED) {
+		error_at(token->location, "%<__transaction_cancel%> within a %<__transaction_relaxed%>");
+		return error_mark_node;
+	} else if (is_outer) {
+		if ((parser->in_transaction & TM_STMT_ATTR_OUTER) == 0 && !is_tm_may_cancel_outer(current_function_decl)) {
+			error_at(token->location, "outer %<__transaction_cancel%> not within outer %<__transaction_atomic%>");
+			error_at(token->location, "  or a %<transaction_may_cancel_outer%> function");
+			return error_mark_node;
+		}
+	} else if (parser->in_transaction == 0) {
+		error_at(token->location, "%<__transaction_cancel%> not within %<__transaction_atomic%>");
+		return error_mark_node;
 	}
-    }
-  else if (parser->in_transaction == 0)
-    {
-      error_at (token->location, "%<__transaction_cancel%> not within "
-		"%<__transaction_atomic%>");
-      return error_mark_node;
-    }
 
-  stmt = build_tm_abort_call (token->location, is_outer);
-  add_stmt (stmt);
+	stmt = build_tm_abort_call(token->location, is_outer);
+	add_stmt(stmt);
 
-  return stmt;
+	return stmt;
 }
 
 /* The parser.  */
@@ -34116,712 +34045,369 @@ static GTY (()) cp_parser *the_parser;
 
    Always returns one token to the caller in *FIRST_TOKEN.  This is
    either the true first token of the file, or the first token after
-   the initial pragma.  */
-
+   the initial pragma. */
 static void
-cp_parser_initial_pragma (cp_token *first_token)
+cp_parser_initial_pragma(cp_token *first_token)
 {
-  if (cp_parser_pragma_kind (first_token) != PRAGMA_GCC_PCH_PREPROCESS)
-    return;
+	if (cp_parser_pragma_kind(first_token) != PRAGMA_GCC_PCH_PREPROCESS)
+		return;
 
-  cp_lexer_get_preprocessor_token (0, first_token);
+	cp_lexer_get_preprocessor_token(0, first_token);
 
-  tree name = NULL;
-  if (first_token->type == CPP_STRING)
-    {
-      name = first_token->u.value;
+	tree name = NULL;
+	if (first_token->type == CPP_STRING) {
+		name = first_token->u.value;
 
-      cp_lexer_get_preprocessor_token (0, first_token);
-    }
+		cp_lexer_get_preprocessor_token(0, first_token);
+	}
 
-  /* Skip to the end of the pragma.  */
-  if (first_token->type != CPP_PRAGMA_EOL)
-    {
-      error_at (first_token->location,
-		"malformed %<#pragma GCC pch_preprocess%>");
-      do
-	cp_lexer_get_preprocessor_token (0, first_token);
-      while (first_token->type != CPP_PRAGMA_EOL);
-    }
+	/* Skip to the end of the pragma.  */
+	if (first_token->type != CPP_PRAGMA_EOL) {
+		error_at(first_token->location, "malformed %<#pragma GCC pch_preprocess%>");
+		do
+			cp_lexer_get_preprocessor_token(0, first_token);
+		while (first_token->type != CPP_PRAGMA_EOL);
+	}
 
-  /* Now actually load the PCH file.  */
-  if (name)
-    c_common_pch_pragma (parse_in, TREE_STRING_POINTER (name));
+	/* Now actually load the PCH file.  */
+	if (name)
+		c_common_pch_pragma(parse_in, TREE_STRING_POINTER(name));
 
-  /* Read one more token to return to our caller.  We have to do this
-     after reading the PCH file in, since its pointers have to be
-     live.  */
-  cp_lexer_get_preprocessor_token (0, first_token);
+	/* Read one more token to return to our caller.  We have to do this
+	   after reading the PCH file in, since its pointers have to be
+	   live.  */
+	cp_lexer_get_preprocessor_token(0, first_token);
 }
 
 /* Parse a pragma GCC ivdep.  */
-
 static bool
-cp_parser_pragma_ivdep (cp_parser *parser, cp_token *pragma_tok)
+cp_parser_pragma_ivdep(cp_parser *parser, cp_token *pragma_tok)
 {
-  cp_parser_skip_to_pragma_eol (parser, pragma_tok);
-  return true;
+	cp_parser_skip_to_pragma_eol(parser, pragma_tok);
+	return true;
 }
 
 /* Parse a pragma GCC unroll.  */
-
 static unsigned short
-cp_parser_pragma_unroll (cp_parser *parser, cp_token *pragma_tok)
+cp_parser_pragma_unroll(cp_parser *parser, cp_token *pragma_tok)
 {
-  location_t location = cp_lexer_peek_token (parser->lexer)->location;
-  tree expr = cp_parser_constant_expression (parser);
-  unsigned short unroll;
-  expr = maybe_constant_value (expr);
-  HOST_WIDE_INT lunroll = 0;
-  if (!INTEGRAL_TYPE_P (TREE_TYPE (expr))
-      || TREE_CODE (expr) != INTEGER_CST
-      || (lunroll = tree_to_shwi (expr)) < 0
-      || lunroll >= USHRT_MAX)
-    {
-      error_at (location, "%<#pragma GCC unroll%> requires an"
-		" assignment-expression that evaluates to a non-negative"
-		" integral constant less than %u", USHRT_MAX);
-      unroll = 0;
-    }
-  else
-    {
-      unroll = (unsigned short)lunroll;
-      if (unroll == 0)
-	unroll = 1;
-    }
-  cp_parser_skip_to_pragma_eol (parser, pragma_tok);
-  return unroll;
-}
-
-/* Normal parsing of a pragma token.  Here we can (and must) use the
-   regular lexer.  */
-
-static bool
-cp_parser_pragma (cp_parser *parser, enum pragma_context context, bool *if_p)
-{
-  cp_token *pragma_tok;
-  unsigned int id;
-  tree stmt;
-  bool ret = false;
-
-  pragma_tok = cp_lexer_consume_token (parser->lexer);
-  gcc_assert (pragma_tok->type == CPP_PRAGMA);
-  parser->lexer->in_pragma = true;
-
-  id = cp_parser_pragma_kind (pragma_tok);
-  if (id != PRAGMA_OMP_DECLARE && id != PRAGMA_OACC_ROUTINE)
-    cp_ensure_no_omp_declare_simd (parser);
-  switch (id)
-    {
-    case PRAGMA_GCC_PCH_PREPROCESS:
-      error_at (pragma_tok->location,
-		"%<#pragma GCC pch_preprocess%> must be first");
-      break;
-
-    case PRAGMA_OMP_BARRIER:
-      switch (context)
-	{
-	case pragma_compound:
-	  cp_parser_omp_barrier (parser, pragma_tok);
-	  return false;
-	case pragma_stmt:
-	  error_at (pragma_tok->location, "%<#pragma %s%> may only be "
-		    "used in compound statements", "omp barrier");
-	  ret = true;
-	  break;
-	default:
-	  goto bad_stmt;
-	}
-      break;
-
-    case PRAGMA_OMP_DEPOBJ:
-      switch (context)
-	{
-	case pragma_compound:
-	  cp_parser_omp_depobj (parser, pragma_tok);
-	  return false;
-	case pragma_stmt:
-	  error_at (pragma_tok->location, "%<#pragma %s%> may only be "
-		    "used in compound statements", "omp depobj");
-	  ret = true;
-	  break;
-	default:
-	  goto bad_stmt;
-	}
-      break;
-
-    case PRAGMA_OMP_FLUSH:
-      switch (context)
-	{
-	case pragma_compound:
-	  cp_parser_omp_flush (parser, pragma_tok);
-	  return false;
-	case pragma_stmt:
-	  error_at (pragma_tok->location, "%<#pragma %s%> may only be "
-		    "used in compound statements", "omp flush");
-	  ret = true;
-	  break;
-	default:
-	  goto bad_stmt;
-	}
-      break;
-
-    case PRAGMA_OMP_TASKWAIT:
-      switch (context)
-	{
-	case pragma_compound:
-	  cp_parser_omp_taskwait (parser, pragma_tok);
-	  return false;
-	case pragma_stmt:
-	  error_at (pragma_tok->location,
-		    "%<#pragma %s%> may only be used in compound statements",
-		    "omp taskwait");
-	  ret = true;
-	  break;
-	default:
-	  goto bad_stmt;
-	}
-      break;
-
-    case PRAGMA_OMP_TASKYIELD:
-      switch (context)
-	{
-	case pragma_compound:
-	  cp_parser_omp_taskyield (parser, pragma_tok);
-	  return false;
-	case pragma_stmt:
-	  error_at (pragma_tok->location,
-		    "%<#pragma %s%> may only be used in compound statements",
-		    "omp taskyield");
-	  ret = true;
-	  break;
-	default:
-	  goto bad_stmt;
-	}
-      break;
-
-    case PRAGMA_OMP_CANCEL:
-      switch (context)
-	{
-	case pragma_compound:
-	  cp_parser_omp_cancel (parser, pragma_tok);
-	  return false;
-	case pragma_stmt:
-	  error_at (pragma_tok->location,
-		    "%<#pragma %s%> may only be used in compound statements",
-		    "omp cancel");
-	  ret = true;
-	  break;
-	default:
-	  goto bad_stmt;
-	}
-      break;
-
-    case PRAGMA_OMP_CANCELLATION_POINT:
-      return cp_parser_omp_cancellation_point (parser, pragma_tok, context);
-
-    case PRAGMA_OMP_THREADPRIVATE:
-      cp_parser_omp_threadprivate (parser, pragma_tok);
-      return false;
-
-    case PRAGMA_OMP_DECLARE:
-      return cp_parser_omp_declare (parser, pragma_tok, context);
-
-    case PRAGMA_OACC_DECLARE:
-      cp_parser_oacc_declare (parser, pragma_tok);
-      return false;
-
-    case PRAGMA_OACC_ENTER_DATA:
-      if (context == pragma_stmt)
-	{
-	  error_at (pragma_tok->location,
-		    "%<#pragma %s%> may only be used in compound statements",
-		    "acc enter data");
-	  ret = true;
-	  break;
-	}
-      else if (context != pragma_compound)
-	goto bad_stmt;
-      cp_parser_omp_construct (parser, pragma_tok, if_p);
-      return true;
-
-    case PRAGMA_OACC_EXIT_DATA:
-      if (context == pragma_stmt)
-	{
-	  error_at (pragma_tok->location,
-		    "%<#pragma %s%> may only be used in compound statements",
-		    "acc exit data");
-	  ret = true;
-	  break;
-	}
-      else if (context != pragma_compound)
-	goto bad_stmt;
-      cp_parser_omp_construct (parser, pragma_tok, if_p);
-      return true;
-
-    case PRAGMA_OACC_ROUTINE:
-      if (context != pragma_external)
-	{
-	  error_at (pragma_tok->location,
-		    "%<#pragma acc routine%> must be at file scope");
-	  ret = true;
-	  break;
-	}
-      cp_parser_oacc_routine (parser, pragma_tok, context);
-      return false;
-
-    case PRAGMA_OACC_UPDATE:
-      if (context == pragma_stmt)
-	{
-	  error_at (pragma_tok->location,
-		    "%<#pragma %s%> may only be used in compound statements",
-		    "acc update");
-	  ret = true;
-	  break;
-	}
-      else if (context != pragma_compound)
-	goto bad_stmt;
-      cp_parser_omp_construct (parser, pragma_tok, if_p);
-      return true;
-
-    case PRAGMA_OACC_WAIT:
-      if (context == pragma_stmt)
-	{
-	  error_at (pragma_tok->location,
-		    "%<#pragma %s%> may only be used in compound statements",
-		    "acc wait");
-	  ret = true;
-	  break;
-	}
-      else if (context != pragma_compound)
-	goto bad_stmt;
-      cp_parser_omp_construct (parser, pragma_tok, if_p);
-      return true;
-    case PRAGMA_OMP_ALLOCATE:
-      cp_parser_omp_allocate (parser, pragma_tok);
-      return false;
-    case PRAGMA_OACC_ATOMIC:
-    case PRAGMA_OACC_CACHE:
-    case PRAGMA_OACC_DATA:
-    case PRAGMA_OACC_HOST_DATA:
-    case PRAGMA_OACC_KERNELS:
-    case PRAGMA_OACC_LOOP:
-    case PRAGMA_OACC_PARALLEL:
-    case PRAGMA_OACC_SERIAL:
-    case PRAGMA_OMP_ATOMIC:
-    case PRAGMA_OMP_CRITICAL:
-    case PRAGMA_OMP_DISTRIBUTE:
-    case PRAGMA_OMP_FOR:
-    case PRAGMA_OMP_LOOP:
-    case PRAGMA_OMP_MASKED:
-    case PRAGMA_OMP_MASTER:
-    case PRAGMA_OMP_PARALLEL:
-    case PRAGMA_OMP_SCOPE:
-    case PRAGMA_OMP_SECTIONS:
-    case PRAGMA_OMP_SIMD:
-    case PRAGMA_OMP_SINGLE:
-    case PRAGMA_OMP_TASK:
-    case PRAGMA_OMP_TASKGROUP:
-    case PRAGMA_OMP_TASKLOOP:
-    case PRAGMA_OMP_TEAMS:
-      if (context != pragma_stmt && context != pragma_compound)
-	goto bad_stmt;
-      stmt = push_omp_privatization_clauses (false);
-      cp_parser_omp_construct (parser, pragma_tok, if_p);
-      pop_omp_privatization_clauses (stmt);
-      return true;
-
-    case PRAGMA_OMP_REQUIRES:
-      if (context != pragma_external)
-	{
-	  error_at (pragma_tok->location,
-		    "%<#pragma omp requires%> may only be used at file or "
-		    "namespace scope");
-	  ret = true;
-	  break;
-	}
-      return cp_parser_omp_requires (parser, pragma_tok);
-
-    case PRAGMA_OMP_NOTHING:
-      cp_parser_omp_nothing (parser, pragma_tok);
-      return false;
-
-    case PRAGMA_OMP_ERROR:
-      return cp_parser_omp_error (parser, pragma_tok, context);
-
-    case PRAGMA_OMP_ORDERED:
-      if (context != pragma_stmt && context != pragma_compound)
-	goto bad_stmt;
-      stmt = push_omp_privatization_clauses (false);
-      ret = cp_parser_omp_ordered (parser, pragma_tok, context, if_p);
-      pop_omp_privatization_clauses (stmt);
-      return ret;
-
-    case PRAGMA_OMP_TARGET:
-      if (context != pragma_stmt && context != pragma_compound)
-	goto bad_stmt;
-      stmt = push_omp_privatization_clauses (false);
-      ret = cp_parser_omp_target (parser, pragma_tok, context, if_p);
-      pop_omp_privatization_clauses (stmt);
-      return ret;
-
-    case PRAGMA_OMP_END_DECLARE_TARGET:
-      cp_parser_omp_end_declare_target (parser, pragma_tok);
-      return false;
-
-    case PRAGMA_OMP_SCAN:
-      error_at (pragma_tok->location,
-		"%<#pragma omp scan%> may only be used in "
-		"a loop construct with %<inscan%> %<reduction%> clause");
-      break;
-
-    case PRAGMA_OMP_SECTION:
-      error_at (pragma_tok->location,
-		"%<#pragma omp section%> may only be used in "
-		"%<#pragma omp sections%> construct");
-      break;
-
-    case PRAGMA_IVDEP:
-      {
-	if (context == pragma_external)
-	  {
-	    error_at (pragma_tok->location,
-		      "%<#pragma GCC ivdep%> must be inside a function");
-	    break;
-	  }
-	const bool ivdep = cp_parser_pragma_ivdep (parser, pragma_tok);
+	location_t location = cp_lexer_peek_token(parser->lexer)->location;
+	tree expr = cp_parser_constant_expression(parser);
 	unsigned short unroll;
-	cp_token *tok = cp_lexer_peek_token (the_parser->lexer);
-	if (tok->type == CPP_PRAGMA
-	    && cp_parser_pragma_kind (tok) == PRAGMA_UNROLL)
-	  {
-	    tok = cp_lexer_consume_token (parser->lexer);
-	    unroll = cp_parser_pragma_unroll (parser, tok);
-	    tok = cp_lexer_peek_token (the_parser->lexer);
-	  }
-	else
-	  unroll = 0;
-	if (tok->type != CPP_KEYWORD
-	    || (tok->keyword != RID_FOR
-		&& tok->keyword != RID_WHILE
-		&& tok->keyword != RID_DO))
-	  {
-	    cp_parser_error (parser, "for, while or do statement expected");
-	    return false;
-	  }
-	cp_parser_iteration_statement (parser, if_p, ivdep, unroll);
-	return true;
-      }
-
-    case PRAGMA_UNROLL:
-      {
-	if (context == pragma_external)
-	  {
-	    error_at (pragma_tok->location,
-		      "%<#pragma GCC unroll%> must be inside a function");
-	    break;
-	  }
-	const unsigned short unroll
-	  = cp_parser_pragma_unroll (parser, pragma_tok);
-	bool ivdep;
-	cp_token *tok = cp_lexer_peek_token (the_parser->lexer);
-	if (tok->type == CPP_PRAGMA
-	    && cp_parser_pragma_kind (tok) == PRAGMA_IVDEP)
-	  {
-	    tok = cp_lexer_consume_token (parser->lexer);
-	    ivdep = cp_parser_pragma_ivdep (parser, tok);
-	    tok = cp_lexer_peek_token (the_parser->lexer);
-	  }
-	else
-	  ivdep = false;
-	if (tok->type != CPP_KEYWORD
-	    || (tok->keyword != RID_FOR
-		&& tok->keyword != RID_WHILE
-		&& tok->keyword != RID_DO))
-	  {
-	    cp_parser_error (parser, "for, while or do statement expected");
-	    return false;
-	  }
-	cp_parser_iteration_statement (parser, if_p, ivdep, unroll);
-	return true;
-      }
-
-    default:
-      gcc_assert (id >= PRAGMA_FIRST_EXTERNAL);
-      c_invoke_pragma_handler (id);
-      break;
-
-    bad_stmt:
-      cp_parser_error (parser, "expected declaration specifiers");
-      break;
-    }
-
-  cp_parser_skip_to_pragma_eol (parser, pragma_tok);
-  return ret;
+	expr = maybe_constant_value(expr);
+	HOST_WIDE_INT lunroll = 0;
+	if (!INTEGRAL_TYPE_P(TREE_TYPE(expr)) || TREE_CODE(expr) != INTEGER_CST || (lunroll = tree_to_shwi(expr)) < 0 || lunroll >= USHRT_MAX) {
+		error_at(location, "%<#pragma GCC unroll%> requires an assignment-expression that evaluates to a non-negative integral constant less than %u", USHRT_MAX);
+		unroll = 0;
+	} else {
+		unroll = (unsigned short)lunroll;
+		if (unroll == 0)
+			unroll = 1;
+	}
+	cp_parser_skip_to_pragma_eol(parser, pragma_tok);
+	return unroll;
 }
 
-/* The interface the pragma parsers have to the lexer.  */
+/* Normal parsing of a pragma token.  Here we can (and must) use the regular lexer. */
+static bool
+cp_parser_pragma(cp_parser *parser, enum pragma_context context, bool *if_p)
+{
+	cp_token *pragma_tok;
+	unsigned int id;
+	bool ret = false;
 
+	pragma_tok = cp_lexer_consume_token(parser->lexer);
+	gcc_assert(pragma_tok->type == CPP_PRAGMA);
+	parser->lexer->in_pragma = true;
+
+	id = cp_parser_pragma_kind(pragma_tok);
+	if (id != PRAGMA_OMP_DECLARE && id != PRAGMA_OACC_ROUTINE)
+		cp_ensure_no_omp_declare_simd(parser);
+	switch (id) {
+		case PRAGMA_GCC_PCH_PREPROCESS:
+			error_at(pragma_tok->location, "%<#pragma GCC pch_preprocess%> must be first");
+			break;
+		case PRAGMA_IVDEP: 
+		{
+			if (context == pragma_external) {
+				error_at(pragma_tok->location, "%<#pragma GCC ivdep%> must be inside a function");
+				break;
+			}
+			const bool ivdep = cp_parser_pragma_ivdep(parser, pragma_tok);
+			unsigned short unroll;
+			cp_token *tok = cp_lexer_peek_token(the_parser->lexer);
+			if (tok->type == CPP_PRAGMA && cp_parser_pragma_kind(tok) == PRAGMA_UNROLL) {
+				tok = cp_lexer_consume_token(parser->lexer);
+				unroll = cp_parser_pragma_unroll(parser, tok);
+				tok = cp_lexer_peek_token(the_parser->lexer);
+			} else
+				unroll = 0;
+			if (tok->type != CPP_KEYWORD || (tok->keyword != RID_FOR && tok->keyword != RID_WHILE && tok->keyword != RID_DO)) {
+				cp_parser_error(parser, "for, while or do statement expected");
+				return false;
+			}
+			cp_parser_iteration_statement(parser, if_p, ivdep, unroll);
+			return true;
+		}
+		case PRAGMA_UNROLL:
+		{
+			if (context == pragma_external) {
+				error_at(pragma_tok->location, "%<#pragma GCC unroll%> must be inside a function");
+				break;
+			}
+			const unsigned short unroll = cp_parser_pragma_unroll(parser, pragma_tok);
+			bool ivdep;
+			cp_token *tok = cp_lexer_peek_token(the_parser->lexer);
+			if (tok->type == CPP_PRAGMA && cp_parser_pragma_kind(tok) == PRAGMA_IVDEP) {
+				tok = cp_lexer_consume_token(parser->lexer);
+				ivdep = cp_parser_pragma_ivdep(parser, tok);
+				tok = cp_lexer_peek_token(the_parser->lexer);
+			} else
+				ivdep = false;
+			if (tok->type != CPP_KEYWORD || (tok->keyword != RID_FOR && tok->keyword != RID_WHILE && tok->keyword != RID_DO)) {
+				cp_parser_error(parser, "for, while or do statement expected");
+				return false;
+			}
+			cp_parser_iteration_statement(parser, if_p, ivdep, unroll);
+			return true;
+		}
+		default:
+			gcc_assert(id >= PRAGMA_FIRST_EXTERNAL);
+			c_invoke_pragma_handler(id);
+			break;
+	}
+
+	cp_parser_skip_to_pragma_eol(parser, pragma_tok);
+	return ret;
+}
+
+/* The interface the pragma parsers have to the lexer. */
 enum cpp_ttype
-pragma_lex (tree *value, location_t *loc)
+pragma_lex(tree *value, location_t *loc)
 {
-  cp_token *tok = cp_lexer_peek_token (the_parser->lexer);
-  enum cpp_ttype ret = tok->type;
+	cp_token *tok = cp_lexer_peek_token(the_parser->lexer);
+	enum cpp_ttype ret = tok->type;
 
-  *value = tok->u.value;
-  if (loc)
-    *loc = tok->location;
+	*value = tok->u.value;
+	if (loc)
+		*loc = tok->location;
 
-  if (ret == CPP_PRAGMA_EOL)
-    ret = CPP_EOF;
-  else if (ret == CPP_STRING)
-    *value = cp_parser_string_literal (the_parser, false, false);
-  else
-    {
-      if (ret == CPP_KEYWORD)
-	ret = CPP_NAME;
-      cp_lexer_consume_token (the_parser->lexer);
-    }
+	if (ret == CPP_PRAGMA_EOL)
+		ret = CPP_EOF;
+	else if (ret == CPP_STRING)
+		*value = cp_parser_string_literal(the_parser, false, false);
+	else {
+		if (ret == CPP_KEYWORD)
+			ret = CPP_NAME;
+		cp_lexer_consume_token(the_parser->lexer);
+	}
 
-  return ret;
+	return ret;
 }
 
-/* External interface.  */
-
+/* External interface. */
 /* Parse one entire translation unit.  */
-
 void
-c_parse_file (void)
+c_parse_file(void)
 {
-  static bool already_called = false;
+	static bool already_called = false;
 
-  if (already_called)
-    fatal_error (input_location,
-		 "multi-source compilation not implemented for C++");
-  already_called = true;
+	if (already_called)
+		fatal_error(input_location, "multi-source compilation not implemented for C++");
+	already_called = true;
 
-  /* cp_lexer_new_main is called before doing any GC allocation
-     because tokenization might load a PCH file.  */
-  cp_lexer *lexer = cp_lexer_new_main ();
+	/* cp_lexer_new_main is called before doing any GC allocation
+	   because tokenization might load a PCH file. */
+	cp_lexer *lexer = cp_lexer_new_main();
 
-  the_parser = cp_parser_new (lexer);
+	the_parser = cp_parser_new(lexer);
 
-  cp_parser_translation_unit (the_parser);
-  class_decl_loc_t::diag_mismatched_tags ();
+	cp_parser_translation_unit(the_parser);
+	class_decl_loc_t::diag_mismatched_tags();
 
-  the_parser = NULL;
+	the_parser = NULL;
 
-  finish_translation_unit ();
+	finish_translation_unit();
 }
 
 /* Create an identifier for a generic parameter type (a synthesized
    template parameter implied by `auto' or a concept identifier). */
-
 static GTY(()) int generic_parm_count;
 static tree
-make_generic_type_name ()
+make_generic_type_name(void)
 {
-  char buf[32];
-  sprintf (buf, "auto:%d", ++generic_parm_count);
-  return get_identifier (buf);
+	char buf[32];
+	sprintf(buf, "auto:%d", ++generic_parm_count);
+	return get_identifier(buf);
 }
 
 /* Add an implicit template type parameter to the CURRENT_TEMPLATE_PARMS
    (creating a new template parameter list if necessary).  Returns the newly
-   created template type parm.  */
-
+   created template type parm. */
 static tree
-synthesize_implicit_template_parm  (cp_parser *parser, tree constr)
+synthesize_implicit_template_parm(cp_parser *parser, tree constr)
 {
-  /* A requires-clause is not a function and cannot have placeholders.  */
-  if (current_binding_level->requires_expression)
-    {
-      error ("placeholder type not allowed in this context");
-      return error_mark_node;
-    }
-
-  gcc_assert (current_binding_level->kind == sk_function_parms);
-
-  /* We are either continuing a function template that already contains implicit
-     template parameters, creating a new fully-implicit function template, or
-     extending an existing explicit function template with implicit template
-     parameters.  */
-
-  cp_binding_level *const entry_scope = current_binding_level;
-
-  bool become_template = false;
-  cp_binding_level *parent_scope = 0;
-
-  if (parser->implicit_template_scope)
-    {
-      gcc_assert (parser->implicit_template_parms);
-
-      current_binding_level = parser->implicit_template_scope;
-    }
-  else
-    {
-      /* Roll back to the existing template parameter scope (in the case of
-	 extending an explicit function template) or introduce a new template
-	 parameter scope ahead of the function parameter scope (or class scope
-	 in the case of out-of-line member definitions).  The function scope is
-	 added back after template parameter synthesis below.  */
-
-      cp_binding_level *scope = entry_scope;
-
-      while (scope->kind == sk_function_parms)
-	{
-	  parent_scope = scope;
-	  scope = scope->level_chain;
-	}
-      if (current_class_type && !LAMBDA_TYPE_P (current_class_type))
-	{
-	  /* If not defining a class, then any class scope is a scope level in
-	     an out-of-line member definition.  In this case simply wind back
-	     beyond the first such scope to inject the template parameter list.
-	     Otherwise wind back to the class being defined.  The latter can
-	     occur in class member friend declarations such as:
-
-	       class A {
-		 void foo (auto);
-	       };
-	       class B {
-		 friend void A::foo (auto);
-	       };
-
-	    The template parameter list synthesized for the friend declaration
-	    must be injected in the scope of 'B'.  This can also occur in
-	    erroneous cases such as:
-
-	       struct A {
-	         struct B {
-		   void foo (auto);
-		 };
-		 void B::foo (auto) {}
-	       };
-
-	    Here the attempted definition of 'B::foo' within 'A' is ill-formed
-	    but, nevertheless, the template parameter list synthesized for the
-	    declarator should be injected into the scope of 'A' as if the
-	    ill-formed template was specified explicitly.  */
-
-	  while (scope->kind == sk_class && !scope->defining_class_p)
-	    {
-	      parent_scope = scope;
-	      scope = scope->level_chain;
-	    }
+	/* A requires-clause is not a function and cannot have placeholders.  */
+	if (current_binding_level->requires_expression) {
+		error("placeholder type not allowed in this context");
+		return error_mark_node;
 	}
 
-      current_binding_level = scope;
+	gcc_assert(current_binding_level->kind == sk_function_parms);
 
-      if (scope->kind != sk_template_parms
-	  || !function_being_declared_is_template_p (parser))
-	{
-	  /* Introduce a new template parameter list for implicit template
-	     parameters.  */
+	/* We are either continuing a function template that already contains implicit
+	   template parameters, creating a new fully-implicit function template, or
+ 	   extending an existing explicit function template with implicit template
+	   parameters.  */
 
-	  become_template = true;
+	cp_binding_level *const entry_scope = current_binding_level;
 
-	  parser->implicit_template_scope
-	      = begin_scope (sk_template_parms, NULL);
+	bool become_template = false;
+	cp_binding_level *parent_scope = 0;
 
-	  ++processing_template_decl;
+	if (parser->implicit_template_scope) {
+		gcc_assert(parser->implicit_template_parms);
 
-	  parser->fully_implicit_function_template_p = true;
-	  ++parser->num_template_parameter_lists;
+		current_binding_level = parser->implicit_template_scope;
+	} else {
+		/* Roll back to the existing template parameter scope (in the case of
+		   extending an explicit function template) or introduce a new template
+		   parameter scope ahead of the function parameter scope (or class scope
+		   in the case of out-of-line member definitions). The function scope is
+		   added back after template parameter synthesis below. */
+
+		cp_binding_level *scope = entry_scope;
+
+		while (scope->kind == sk_function_parms) {
+			parent_scope = scope;
+			scope = scope->level_chain;
+		}
+		if (current_class_type && !LAMBDA_TYPE_P(current_class_type)) {
+			/* If not defining a class, then any class scope is a scope level in
+			   an out-of-line member definition.  In this case simply wind back
+			   beyond the first such scope to inject the template parameter list.
+			   Otherwise wind back to the class being defined.  The latter can
+			   occur in class member friend declarations such as:
+
+			   class A {
+			   		void foo (auto);
+			   };
+			   class B {
+			   		friend void A::foo (auto);
+			   };
+
+			   The template parameter list synthesized for the friend declaration
+			   must be injected in the scope of 'B'.  This can also occur in
+			   erroneous cases such as:
+
+			   struct A {
+			   		struct B {
+			   			void foo (auto);
+			        }; 
+			        void B::foo (auto) {}
+			   };
+
+			   Here the attempted definition of 'B::foo' within 'A' is ill-formed
+			   but, nevertheless, the template parameter list synthesized for the
+			   declarator should be injected into the scope of 'A' as if the
+			   ill-formed template was specified explicitly. */
+
+			while (scope->kind == sk_class && !scope->defining_class_p) {
+				parent_scope = scope;
+				scope = scope->level_chain;
+			}
+		}
+
+		current_binding_level = scope;
+
+		if (scope->kind != sk_template_parms || !function_being_declared_is_template_p(parser)) {
+			/* Introduce a new template parameter list for implicit template parameters. */
+
+			become_template = true;
+
+			parser->implicit_template_scope = begin_scope(sk_template_parms, NULL);
+
+			++processing_template_decl;
+
+			parser->fully_implicit_function_template_p = true;
+			++parser->num_template_parameter_lists;
+		} else {
+			/* Synthesize implicit template parameters at the end of the explicit template parameter list. */
+			gcc_assert(current_template_parms);
+
+			parser->implicit_template_scope = scope;
+
+			tree v = INNERMOST_TEMPLATE_PARMS(current_template_parms);
+			parser->implicit_template_parms = TREE_VEC_ELT(v, TREE_VEC_LENGTH(v) - 1);
+		}
 	}
-      else
-	{
-	  /* Synthesize implicit template parameters at the end of the explicit
-	     template parameter list.  */
 
-	  gcc_assert (current_template_parms);
+	/* Synthesize a new template parameter and track the current template
+	   parameter chain with implicit_template_parms.  */
+	tree proto = constr ? DECL_INITIAL(constr) : NULL_TREE;
+	tree synth_id = make_generic_type_name();
+	tree synth_tmpl_parm;
+	bool non_type = false;
 
-	  parser->implicit_template_scope = scope;
+	/* Synthesize the type template parameter.  */
+	gcc_assert(!proto || TREE_CODE(proto) == TYPE_DECL);
+	synth_tmpl_parm = finish_template_type_parm(class_type_node, synth_id);
 
-	  tree v = INNERMOST_TEMPLATE_PARMS (current_template_parms);
-	  parser->implicit_template_parms
-	    = TREE_VEC_ELT (v, TREE_VEC_LENGTH (v) - 1);
+	if (become_template)
+		current_template_parms = tree_cons(size_int(current_template_depth + 1), NULL_TREE, current_template_parms);
+
+	/* Attach the constraint to the parm before processing.  */
+	tree node = build_tree_list(NULL_TREE, synth_tmpl_parm);
+	TREE_TYPE(node) = constr;
+	tree new_parm = process_template_parm(parser->implicit_template_parms, input_location, node, /*non_type=*/non_type, /*param_pack=*/false);
+
+	/* Mark the synthetic declaration "virtual". This is used when
+	   comparing template-heads to determine if whether an abbreviated
+	   function template is equivalent to an explicit template.
+
+	   Note that DECL_ARTIFICIAL is used elsewhere for template parameters. */
+	if (TREE_VALUE(new_parm) != error_mark_node)
+		DECL_VIRTUAL_P(TREE_VALUE(new_parm)) = true;
+
+	// Chain the new parameter to the list of implicit parameters.
+	if (parser->implicit_template_parms)
+		parser->implicit_template_parms = TREE_CHAIN(parser->implicit_template_parms);
+	else
+		parser->implicit_template_parms = new_parm;
+
+	tree new_decl = get_local_decls();
+	if (non_type)
+		/* Return the TEMPLATE_PARM_INDEX, not the PARM_DECL. */
+		new_decl = DECL_INITIAL(new_decl);
+
+	/* If creating a fully implicit function template, start the new implicit
+	   template parameter list with this synthesized type, otherwise grow the
+	   current template parameter list.  */
+
+	if (become_template) {
+		parent_scope->level_chain = current_binding_level;
+
+		tree new_parms = make_tree_vec(1);
+		TREE_VEC_ELT(new_parms, 0) = parser->implicit_template_parms;
+		TREE_VALUE(current_template_parms) = new_parms;
+	} else {
+		tree& new_parms = INNERMOST_TEMPLATE_PARMS(current_template_parms);
+		int new_parm_idx = TREE_VEC_LENGTH(new_parms);
+		new_parms = grow_tree_vec(new_parms, new_parm_idx + 1);
+		TREE_VEC_ELT(new_parms, new_parm_idx) = parser->implicit_template_parms;
 	}
-    }
 
-  /* Synthesize a new template parameter and track the current template
-     parameter chain with implicit_template_parms.  */
+	/* If the new parameter was constrained, we need to add that to the
+	   constraints in the template parameter list. */
+	if (tree req = TEMPLATE_PARM_CONSTRAINTS(tree_last(new_parm))) {
+		tree reqs = TEMPLATE_PARMS_CONSTRAINTS(current_template_parms);
+		reqs = combine_constraint_expressions(reqs, req);
+		TEMPLATE_PARMS_CONSTRAINTS(current_template_parms) = reqs;
+	}
 
-  tree proto = constr ? DECL_INITIAL (constr) : NULL_TREE;
-  tree synth_id = make_generic_type_name ();
-  tree synth_tmpl_parm;
-  bool non_type = false;
+	current_binding_level = entry_scope;
 
-  /* Synthesize the type template parameter.  */
-  gcc_assert(!proto || TREE_CODE (proto) == TYPE_DECL);
-  synth_tmpl_parm = finish_template_type_parm (class_type_node, synth_id);
-
-  if (become_template)
-    current_template_parms = tree_cons (size_int (current_template_depth + 1),
-					NULL_TREE, current_template_parms);
-
-  /* Attach the constraint to the parm before processing.  */
-  tree node = build_tree_list (NULL_TREE, synth_tmpl_parm);
-  TREE_TYPE (node) = constr;
-  tree new_parm
-    = process_template_parm (parser->implicit_template_parms,
-			     input_location,
-			     node,
-			     /*non_type=*/non_type,
-			     /*param_pack=*/false);
-
-  /* Mark the synthetic declaration "virtual". This is used when
-     comparing template-heads to determine if whether an abbreviated
-     function template is equivalent to an explicit template.
-
-     Note that DECL_ARTIFICIAL is used elsewhere for template parameters.  */
-  if (TREE_VALUE (new_parm) != error_mark_node)
-    DECL_VIRTUAL_P (TREE_VALUE (new_parm)) = true;
-
-  // Chain the new parameter to the list of implicit parameters.
-  if (parser->implicit_template_parms)
-    parser->implicit_template_parms
-      = TREE_CHAIN (parser->implicit_template_parms);
-  else
-    parser->implicit_template_parms = new_parm;
-
-  tree new_decl = get_local_decls ();
-  if (non_type)
-    /* Return the TEMPLATE_PARM_INDEX, not the PARM_DECL.  */
-    new_decl = DECL_INITIAL (new_decl);
-
-  /* If creating a fully implicit function template, start the new implicit
-     template parameter list with this synthesized type, otherwise grow the
-     current template parameter list.  */
-
-  if (become_template)
-    {
-      parent_scope->level_chain = current_binding_level;
-
-      tree new_parms = make_tree_vec (1);
-      TREE_VEC_ELT (new_parms, 0) = parser->implicit_template_parms;
-      TREE_VALUE (current_template_parms) = new_parms;
-    }
-  else
-    {
-      tree& new_parms = INNERMOST_TEMPLATE_PARMS (current_template_parms);
-      int new_parm_idx = TREE_VEC_LENGTH (new_parms);
-      new_parms = grow_tree_vec (new_parms, new_parm_idx + 1);
-      TREE_VEC_ELT (new_parms, new_parm_idx) = parser->implicit_template_parms;
-    }
-
-  /* If the new parameter was constrained, we need to add that to the
-     constraints in the template parameter list.  */
-  if (tree req = TEMPLATE_PARM_CONSTRAINTS (tree_last (new_parm)))
-    {
-      tree reqs = TEMPLATE_PARMS_CONSTRAINTS (current_template_parms);
-      reqs = combine_constraint_expressions (reqs, req);
-      TEMPLATE_PARMS_CONSTRAINTS (current_template_parms) = reqs;
-    }
-
-  current_binding_level = entry_scope;
-
-  return new_decl;
+	return new_decl;
 }
 
 /* Finish the declaration of a fully implicit function template.  Such a
@@ -34831,73 +34417,61 @@ synthesize_implicit_template_parm  (cp_parser *parser, tree constr)
    provided if the declaration is a class member such that its template
    declaration can be completed.  If MEMBER_DECL_OPT is provided the finished
    form is returned.  Otherwise NULL_TREE is returned. */
-
 static tree
-finish_fully_implicit_template (cp_parser *parser, tree member_decl_opt)
+finish_fully_implicit_template(cp_parser *parser, tree member_decl_opt)
 {
-  gcc_assert (parser->fully_implicit_function_template_p);
+	gcc_assert(parser->fully_implicit_function_template_p);
 
-  if (member_decl_opt && member_decl_opt != error_mark_node
-      && DECL_VIRTUAL_P (member_decl_opt))
-    {
-      error_at (DECL_SOURCE_LOCATION (member_decl_opt),
-		"implicit templates may not be %<virtual%>");
-      DECL_VIRTUAL_P (member_decl_opt) = false;
-    }
+	if (member_decl_opt && member_decl_opt != error_mark_node && DECL_VIRTUAL_P(member_decl_opt)) {
+		error_at(DECL_SOURCE_LOCATION(member_decl_opt), "implicit templates may not be %<virtual%>");
+		DECL_VIRTUAL_P(member_decl_opt) = false;
+	}
 
-  if (member_decl_opt)
-    member_decl_opt = finish_member_template_decl (member_decl_opt);
-  end_template_decl ();
+	if (member_decl_opt)
+		member_decl_opt = finish_member_template_decl(member_decl_opt);
+	end_template_decl();
 
-  parser->fully_implicit_function_template_p = false;
-  parser->implicit_template_parms = 0;
-  parser->implicit_template_scope = 0;
-  --parser->num_template_parameter_lists;
+	parser->fully_implicit_function_template_p = false;
+	parser->implicit_template_parms = 0;
+	parser->implicit_template_scope = 0;
+	--parser->num_template_parameter_lists;
 
-  return member_decl_opt;
+	return member_decl_opt;
 }
 
 /* Like finish_fully_implicit_template, but to be used in error
    recovery, rearranging scopes so that we restore the state we had
    before synthesize_implicit_template_parm inserted the implement
    template parms scope.  */
-
 static void
-abort_fully_implicit_template (cp_parser *parser)
+abort_fully_implicit_template(cp_parser *parser)
 {
-  cp_binding_level *return_to_scope = current_binding_level;
+	cp_binding_level *return_to_scope = current_binding_level;
 
-  if (parser->implicit_template_scope
-      && return_to_scope != parser->implicit_template_scope)
-    {
-      cp_binding_level *child = return_to_scope;
-      for (cp_binding_level *scope = child->level_chain;
-	   scope != parser->implicit_template_scope;
-	   scope = child->level_chain)
-	child = scope;
-      child->level_chain = parser->implicit_template_scope->level_chain;
-      parser->implicit_template_scope->level_chain = return_to_scope;
-      current_binding_level = parser->implicit_template_scope;
-    }
-  else
-    return_to_scope = return_to_scope->level_chain;
+	if (parser->implicit_template_scope && return_to_scope != parser->implicit_template_scope) {
+		cp_binding_level *child = return_to_scope;
+		for (cp_binding_level *scope = child->level_chain; scope != parser->implicit_template_scope; scope = child->level_chain)
+			child = scope;
+		child->level_chain = parser->implicit_template_scope->level_chain;
+		parser->implicit_template_scope->level_chain = return_to_scope;
+		current_binding_level = parser->implicit_template_scope;
+	} else
+		return_to_scope = return_to_scope->level_chain;
 
-  finish_fully_implicit_template (parser, NULL);
+	finish_fully_implicit_template(parser, NULL);
 
-  gcc_assert (current_binding_level == return_to_scope);
+	gcc_assert(current_binding_level == return_to_scope);
 }
 
 /* Helper function for diagnostics that have complained about things
    being used with 'extern "C"' linkage.
 
    Attempt to issue a note showing where the 'extern "C"' linkage began.  */
-
 void
-maybe_show_extern_c_location (void)
+maybe_show_extern_c_location(void)
 {
-  if (the_parser->innermost_linkage_specification_location != UNKNOWN_LOCATION)
-    inform (the_parser->innermost_linkage_specification_location,
-	    "%<extern \"C\"%> linkage started here");
+	if (the_parser->innermost_linkage_specification_location != UNKNOWN_LOCATION)
+		inform(the_parser->innermost_linkage_specification_location, "%<extern \"C\"%> linkage started here");
 }
 
 #include "gt-cp-parser.h"
