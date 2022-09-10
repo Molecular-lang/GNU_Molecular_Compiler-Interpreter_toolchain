@@ -1,11 +1,10 @@
 /* Output xcoff-format symbol table information from GNU compiler.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
-/* Output xcoff-format symbol table data.  The main functionality is contained
-   in dbxout.cc.  This file implements the sdbout-like parts of the xcoff
-   interface.  Many functions are very similar to their counterparts in
-   the former sdbout.c file.  */
-
+/* Output xcoff-format symbol table data. The main functionality is contained
+   in dbxout.cc. This file implements the sdbout-like parts of the xcoff
+   interface. Many functions are very similar to their counterparts in
+   the former sdbout.c file. */
 #include "config.h"
 #include "system.h"
 #include "coretypes.h"
@@ -53,13 +52,10 @@ char *xcoff_tls_data_section_name;
 char *xcoff_read_only_section_name;
 
 /* Last source file name mentioned in a NOTE insn.  */
-
 const char *xcoff_lastfile;
-
-/* Macro definitions used below.  */
 
-#define ABS_OR_RELATIVE_LINENO(LINENO)		\
-((xcoff_inlining) ? (LINENO) : (LINENO) - xcoff_begin_function_line)
+/* Macro definitions used below.  */
+#define ABS_OR_RELATIVE_LINENO(LINENO) ((xcoff_inlining) ? (LINENO) : (LINENO) - xcoff_begin_function_line)
 
 /* Output source line numbers via ".line".  */
 #define ASM_OUTPUT_LINE(FILE,LINENUM)					   \
@@ -105,9 +101,8 @@ const char *xcoff_lastfile;
 
 static void xcoffout_block (tree, int, tree);
 static void xcoffout_source_file (FILE *, const char *, int);
-
-/* Support routines for XCOFF debugging info.  */
 
+/* Support routines for XCOFF debugging info.  */
 struct xcoff_type_number
 {
   const char *name;
@@ -384,95 +379,84 @@ xcoffout_begin_block (unsigned int line, unsigned int n)
   xcoffout_block (DECL_INITIAL (decl), 0, DECL_ARGUMENTS (decl));
 }
 
-/* Describe the end line-number of an internal block within a function.  */
-
+/* Describe the end line-number of an internal block within a function. */
 void
-xcoffout_end_block (unsigned int line, unsigned int n)
+xcoffout_end_block(unsigned int line, unsigned int n)
 {
-  if (n != 1)
-    ASM_OUTPUT_LBE (asm_out_file, line, n);
+	if (n != 1)
+		ASM_OUTPUT_LBE(asm_out_file, line, n);
 }
 
 /* Called at beginning of function (before prologue).
-   Declare function as needed for debugging.  */
-
+   Declare function as needed for debugging. */
 void
-xcoffout_declare_function (FILE *file, tree decl, const char *name)
+xcoffout_declare_function(FILE *file, tree decl, const char *name)
 {
-  size_t len;
+	size_t len;
 
-  if (*name == '*')
-    name++;
-  len = strlen (name);
-  if (name[len - 1] == ']')
-    {
-      char *n = XALLOCAVEC (char, len - 3);
-      memcpy (n, name, len - 4);
-      n[len - 4] = '\0';
-      name = n;
-    }
+	if (*name == '*')
+		name++;
+	len = strlen(name);
+	if (name[len - 1] == ']') {
+		char *n = XALLOCAVEC(char, len - 3);
+		memcpy(n, name, len - 4);
+		n[len - 4] = '\0';
+		name = n;
+	}
 
   /* Any pending .bi or .ei must occur before the .function pseudo op.
      Otherwise debuggers will think that the function is in the previous
-     file and/or at the wrong line number.  */
-  xcoffout_source_file (file, DECL_SOURCE_FILE (decl), 0);
-  dbxout_symbol (decl, 0);
+     file and/or at the wrong line number. */
+	xcoffout_source_file(file, DECL_SOURCE_FILE(decl), 0);
+	dbxout_symbol(decl, 0);
 
   /* .function NAME, TOP, MAPPING, TYPE, SIZE
      16 and 044 are placeholders for backwards compatibility */
-  fprintf (file, "\t.function .%s,.%s,16,044,FE..%s-.%s\n",
-	   name, name, name, name);
+	fprintf(file, "\t.function .%s,.%s,16,044,FE..%s-.%s\n", name, name, name, name);
 }
 
 /* Called at beginning of function body (at start of prologue).
    Record the function's starting line number, so we can output
    relative line numbers for the other lines.
-   Record the file name that this function is contained in.  */
-
+   Record the file name that this function is contained in. */
 void
-xcoffout_begin_prologue (unsigned int line,
-			 unsigned int column ATTRIBUTE_UNUSED,
-			 const char *file ATTRIBUTE_UNUSED)
+xcoffout_begin_prologue(unsigned int line, unsigned int column ATTRIBUTE_UNUSED, const char *file ATTRIBUTE_UNUSED)
 {
-  ASM_OUTPUT_LFB (asm_out_file, line);
-  dbxout_parms (DECL_ARGUMENTS (current_function_decl));
+	ASM_OUTPUT_LFB(asm_out_file, line);
+	dbxout_parms(DECL_ARGUMENTS(current_function_decl));
 
-  /* Emit the symbols for the outermost BLOCK's variables.  sdbout.c did this
-     in sdbout_begin_block, but there is no guarantee that there will be any
-     inner block 1, so we must do it here.  This gives a result similar to
-     dbxout, so it does make some sense.  */
-  do_block = BLOCK_NUMBER (DECL_INITIAL (current_function_decl));
-  xcoffout_block (DECL_INITIAL (current_function_decl), 0,
-		  DECL_ARGUMENTS (current_function_decl));
+	/* Emit the symbols for the outermost BLOCK's variables. sdbout.c did this
+	   in sdbout_begin_block, but there is no guarantee that there will be any
+	   inner block 1, so we must do it here. This gives a result similar to
+	   dbxout, so it does make some sense. */
+	do_block = BLOCK_NUMBER(DECL_INITIAL(current_function_decl));
+	xcoffout_block(DECL_INITIAL(current_function_decl), 0, DECL_ARGUMENTS(current_function_decl));
 
-  ASM_OUTPUT_LINE (asm_out_file, line);
+	ASM_OUTPUT_LINE(asm_out_file, line);
 }
 
 /* Called at end of function (before epilogue).
-   Describe end of outermost block.  */
-
+   Describe end of outermost block. */
 void
-xcoffout_end_function (unsigned int last_linenum)
+xcoffout_end_function(unsigned int last_linenum)
 {
-  ASM_OUTPUT_LFE (asm_out_file, last_linenum);
+	ASM_OUTPUT_LFE(asm_out_file, last_linenum);
 }
 
 /* Output xcoff info for the absolute end of a function.
    Called after the epilogue is output.  */
-
 void
-xcoffout_end_epilogue (unsigned int line ATTRIBUTE_UNUSED,
-		       const char *file ATTRIBUTE_UNUSED)
+xcoffout_end_epilogue(unsigned int line ATTRIBUTE_UNUSED, const char *file ATTRIBUTE_UNUSED)
 {
   /* We need to pass the correct function size to .function, otherwise,
      the xas assembler can't figure out the correct size for the function
      aux entry.  So, we emit a label after the last instruction which can
      be used by the .function pseudo op to calculate the function size.  */
 
-  const char *fname = XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0);
-  if (*fname == '*')
-    ++fname;
-  fprintf (asm_out_file, "FE..");
-  ASM_OUTPUT_LABEL (asm_out_file, fname);
+	const char *fname = XSTR(XEXP(DECL_RTL(current_function_decl), 0), 0);
+	if (*fname == '*')
+		++fname;
+	fprintf(asm_out_file, "FE..");
+	ASM_OUTPUT_LABEL(asm_out_file, fname);
 }
 #endif /* XCOFF_DEBUGGING_INFO */
