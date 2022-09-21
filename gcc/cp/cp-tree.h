@@ -7638,48 +7638,9 @@ extern tree finish_qualified_id_expr		(tree, tree, bool, bool,
 						 bool, bool, tsubst_flags_t);
 extern void simplify_aggr_init_expr		(tree *);
 extern void finalize_nrv			(tree *, tree, tree);
-extern tree omp_reduction_id			(enum tree_code, tree, tree);
-extern tree cp_remove_omp_priv_cleanup_stmt	(tree *, int *, void *);
-extern bool cp_check_omp_declare_reduction	(tree);
-extern void finish_omp_declare_simd_methods	(tree);
-extern tree finish_omp_clauses			(tree, enum c_omp_region_type);
-extern tree push_omp_privatization_clauses	(bool);
-extern void pop_omp_privatization_clauses	(tree);
-extern void save_omp_privatization_clauses	(vec<tree> &);
-extern void restore_omp_privatization_clauses	(vec<tree> &);
-extern void finish_omp_threadprivate		(tree);
-extern tree begin_omp_structured_block		(void);
-extern tree finish_omp_structured_block		(tree);
-extern tree finish_oacc_data			(tree, tree);
-extern tree finish_oacc_host_data		(tree, tree);
-extern tree finish_omp_construct		(enum tree_code, tree, tree);
-extern tree begin_omp_parallel			(void);
-extern tree finish_omp_parallel			(tree, tree);
-extern tree begin_omp_task			(void);
-extern tree finish_omp_task			(tree, tree);
-extern tree finish_omp_for			(location_t, enum tree_code,
-						 tree, tree, tree, tree, tree,
-						 tree, tree, vec<tree> *, tree);
-extern tree finish_omp_for_block		(tree, tree);
-extern void finish_omp_atomic			(location_t, enum tree_code,
-						 enum tree_code, tree, tree,
-						 tree, tree, tree, tree, tree,
-						 enum omp_memory_order, bool);
-extern void finish_omp_barrier			(void);
-extern void finish_omp_depobj			(location_t, tree,
-						 enum omp_clause_depend_kind,
-						 tree);
-extern void finish_omp_flush			(int);
-extern void finish_omp_taskwait			(void);
-extern void finish_omp_taskyield		(void);
-extern void finish_omp_cancel			(tree);
-extern void finish_omp_cancellation_point	(tree);
-extern tree omp_privatize_field			(tree, bool);
 extern tree begin_transaction_stmt		(location_t, tree *, int);
 extern void finish_transaction_stmt		(tree, tree, int, tree);
 extern tree build_transaction_expr		(location_t, tree, int, tree);
-extern bool cxx_omp_create_clause_info		(tree, tree, bool, bool,
-						 bool, bool);
 extern tree baselink_for_fns                    (tree);
 extern void finish_static_assert                (tree, tree, location_t,
 						 bool, bool);
@@ -8181,20 +8142,8 @@ extern int cxx_types_compatible_p		(tree, tree);
 extern bool cxx_block_may_fallthru		(const_tree);
 
 /* in cp-gimplify.cc */
-extern int cp_gimplify_expr			(tree *, gimple_seq *,
-						 gimple_seq *);
+extern int cp_gimplify_expr			(tree *, gimple_seq *,gimple_seq *);
 extern void cp_genericize			(tree);
-extern bool cxx_omp_const_qual_no_mutable	(tree);
-extern enum omp_clause_default_kind cxx_omp_predetermined_sharing_1 (tree);
-extern enum omp_clause_default_kind cxx_omp_predetermined_sharing (tree);
-extern enum omp_clause_defaultmap_kind cxx_omp_predetermined_mapping (tree);
-extern tree cxx_omp_clause_default_ctor		(tree, tree, tree);
-extern tree cxx_omp_clause_copy_ctor		(tree, tree, tree);
-extern tree cxx_omp_clause_assign_op		(tree, tree, tree);
-extern tree cxx_omp_clause_dtor			(tree, tree);
-extern void cxx_omp_finish_clause		(tree, gimple_seq *, bool);
-extern bool cxx_omp_privatize_by_reference	(const_tree);
-extern bool cxx_omp_disregard_value_expr	(tree, bool);
 extern void cp_fold_function			(tree);
 extern tree cp_fold_maybe_rvalue		(tree, bool);
 extern tree cp_fold_rvalue			(tree);

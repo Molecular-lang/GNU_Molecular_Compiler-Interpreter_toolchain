@@ -7519,8 +7519,6 @@ finish_struct_1 (tree t)
   finish_struct_bits (t);
 
   set_method_tm_attributes (t);
-  if (flag_openmp || flag_openmp_simd)
-    finish_omp_declare_simd_methods (t);
 
   /* Clear DECL_IN_AGGR_P for all member functions.  Complete the rtl
      for any static member objects of the type we're working on.  */
@@ -7759,14 +7757,6 @@ finish_struct (tree t, tree attributes)
   else
     error ("trying to finish struct, but kicked out due to previous parse errors");
 
-  if (flag_openmp)
-    for (tree decl = TYPE_FIELDS (t); decl; decl = DECL_CHAIN (decl))
-      if (TREE_CODE (decl) == FUNCTION_DECL
-	  && DECL_NONSTATIC_MEMBER_FUNCTION_P (decl))
-	if (tree attr = lookup_attribute ("omp declare variant base",
-					  DECL_ATTRIBUTES (decl)))
-	  omp_declare_variant_finalize (decl, attr);
-
   if (processing_template_decl && at_function_scope_p ()
       /* Lambdas are defined by the LAMBDA_EXPR.  */
       && !LAMBDA_TYPE_P (t))
@@ -7774,7 +7764,7 @@ finish_struct (tree t, tree attributes)
 
   return t;
 }
-
+
 /* Hash table to avoid endless recursion when handling references.  */
 static hash_table<nofree_ptr_hash<tree_node> > *fixed_type_or_null_ref_ht;
 
@@ -10326,88 +10316,81 @@ add_vcall_offset (tree orig_fn, tree binfo, vtbl_init_data *vid)
 }
 
 /* Return vtbl initializers for the RTTI entries corresponding to the
-   BINFO's vtable.  The RTTI entries should indicate the object given
-   by VID->rtti_binfo.  */
-
+   BINFO's vtable. The RTTI entries should indicate the object given
+   by VID->rtti_binfo. */
 static void
-build_rtti_vtbl_entries (tree binfo, vtbl_init_data* vid)
+build_rtti_vtbl_entries(tree binfo, vtbl_init_data* vid)
 {
-  tree b;
-  tree t;
-  tree offset;
-  tree decl;
-  tree init;
+	tree b;
+	tree t;
+	tree offset;
+	tree decl;
+	tree init;
 
-  t = BINFO_TYPE (vid->rtti_binfo);
+	t = BINFO_TYPE(vid->rtti_binfo);
 
-  /* To find the complete object, we will first convert to our most
-     primary base, and then add the offset in the vtbl to that value.  */
-  b = most_primary_binfo (binfo);
-  offset = size_diffop_loc (input_location,
-			BINFO_OFFSET (vid->rtti_binfo), BINFO_OFFSET (b));
+	/* To find the complete object, we will first convert to our most
+	   primary base, and then add the offset in the vtbl to that value. */
+	b = most_primary_binfo(binfo);
+	offset = size_diffop_loc(input_location,
+	BINFO_OFFSET(vid->rtti_binfo), BINFO_OFFSET(b));
 
-  /* The second entry is the address of the typeinfo object.  */
-  if (flag_rtti)
-    decl = build_address (get_tinfo_decl (t));
-  else
-    decl = integer_zero_node;
+	/* The second entry is the address of the typeinfo object. */
+	if (flag_rtti)
+		decl = build_address(get_tinfo_decl(t));
+	else
+		decl = integer_zero_node;
 
-  /* Convert the declaration to a type that can be stored in the
-     vtable.  */
-  init = build_nop (vfunc_ptr_type_node, decl);
-  CONSTRUCTOR_APPEND_ELT (vid->inits, NULL_TREE, init);
+	/* Convert the declaration to a type that can be stored in the
+	   vtable. */
+	init = build_nop(vfunc_ptr_type_node, decl);
+	CONSTRUCTOR_APPEND_ELT(vid->inits, NULL_TREE, init);
 
-  /* Add the offset-to-top entry.  It comes earlier in the vtable than
-     the typeinfo entry.  Convert the offset to look like a
-     function pointer, so that we can put it in the vtable.  */
-  init = build_nop (vfunc_ptr_type_node, offset);
-  CONSTRUCTOR_APPEND_ELT (vid->inits, NULL_TREE, init);
+	/* Add the offset-to-top entry. It comes earlier in the vtable than
+	   the typeinfo entry. Convert the offset to look like a
+	   function pointer, so that we can put it in the vtable. */
+	init = build_nop(vfunc_ptr_type_node, offset);
+	CONSTRUCTOR_APPEND_ELT(vid->inits, NULL_TREE, init);
 }
 
-/* TRUE iff TYPE is uniquely derived from PARENT.  Ignores
-   accessibility.  */
-
+/* TRUE iff TYPE is uniquely derived from PARENT. Ignores
+   accessibility. */
 bool
-uniquely_derived_from_p (tree parent, tree type)
+uniquely_derived_from_p(tree parent, tree type)
 {
-  tree base = lookup_base (type, parent, ba_unique, NULL, tf_none);
-  return base && base != error_mark_node;
+	tree base = lookup_base(type, parent, ba_unique, NULL, tf_none);
+	return base && base != error_mark_node;
 }
 
-/* TRUE iff TYPE is publicly & uniquely derived from PARENT.  */
-
+/* TRUE iff TYPE is publicly & uniquely derived from PARENT. */
 bool
-publicly_uniquely_derived_p (tree parent, tree type)
+publicly_uniquely_derived_p(tree parent, tree type)
 {
-  tree base = lookup_base (type, parent, ba_ignore_scope | ba_check,
-			   NULL, tf_none);
-  return base && base != error_mark_node;
+	tree base = lookup_base(type, parent, ba_ignore_scope | ba_check, NULL, tf_none);
+	return base && base != error_mark_node;
 }
 
-/* CTX1 and CTX2 are declaration contexts.  Return the innermost common
-   class between them, if any.  */
-
+/* CTX1 and CTX2 are declaration contexts. Return the innermost common
+   class between them, if any. */
 tree
-common_enclosing_class (tree ctx1, tree ctx2)
+common_enclosing_class(tree ctx1, tree ctx2)
 {
-  if (!TYPE_P (ctx1) || !TYPE_P (ctx2))
-    return NULL_TREE;
-  gcc_assert (ctx1 == TYPE_MAIN_VARIANT (ctx1)
-	      && ctx2 == TYPE_MAIN_VARIANT (ctx2));
-  if (ctx1 == ctx2)
-    return ctx1;
-  for (tree t = ctx1; TYPE_P (t); t = TYPE_CONTEXT (t))
-    TYPE_MARKED_P (t) = true;
-  tree found = NULL_TREE;
-  for (tree t = ctx2; TYPE_P (t); t = TYPE_CONTEXT (t))
-    if (TYPE_MARKED_P (t))
-      {
-	found = t;
-	break;
-      }
-  for (tree t = ctx1; TYPE_P (t); t = TYPE_CONTEXT (t))
-    TYPE_MARKED_P (t) = false;
-  return found;
+	if (!TYPE_P(ctx1) || !TYPE_P(ctx2))
+		return NULL_TREE;
+	gcc_assert(ctx1 == TYPE_MAIN_VARIANT(ctx1) && ctx2 == TYPE_MAIN_VARIANT(ctx2));
+	if (ctx1 == ctx2)
+		return ctx1;
+	for (tree t = ctx1; TYPE_P(t); t = TYPE_CONTEXT(t))
+		TYPE_MARKED_P(t) = true;
+	tree found = NULL_TREE;
+	for (tree t = ctx2; TYPE_P(t); t = TYPE_CONTEXT(t))
+		if (TYPE_MARKED_P(t)) {
+			found = t;
+			break;
+		}
+	for (tree t = ctx1; TYPE_P(t); t = TYPE_CONTEXT(t))
+		TYPE_MARKED_P(t) = false;
+	return found;
 }
 
 #include "gt-cp-class.h"

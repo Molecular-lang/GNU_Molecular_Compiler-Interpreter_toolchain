@@ -2055,12 +2055,6 @@ static tree cp_parser_compound_requirement(cp_parser *);
 static tree cp_parser_type_requirement(cp_parser *);
 static tree cp_parser_nested_requirement(cp_parser *);
 
-/* Transactional Memory Extensions */
-static tree cp_parser_transaction(cp_parser *, cp_token *);
-static tree cp_parser_transaction_expression(cp_parser *, enum rid);
-static void cp_parser_function_transaction(cp_parser *, enum rid);
-static tree cp_parser_transaction_cancel(cp_parser *);
-
 /* Coroutine extensions.  */
 static tree cp_parser_yield_expression(cp_parser *);
 
@@ -7804,10 +7798,6 @@ cp_parser_unary_expression (cp_parser *parser, cp_id_kind * pidk,
 	  }
 	  break;
 
-	case RID_TRANSACTION_ATOMIC:
-	case RID_TRANSACTION_RELAXED:
-	  return cp_parser_transaction_expression (parser, keyword);
-
 	case RID_NOEXCEPT:
 	  {
 	    tree expr;
@@ -7863,8 +7853,7 @@ cp_parser_unary_expression (cp_parser *parser, cp_id_kind * pidk,
 	    location_t noexcept_loc
 	      = make_location (start_loc, start_loc, parser->lexer);
 
-	    return cp_expr (finish_noexcept_expr (expr, tf_warning_or_error),
-			    noexcept_loc);
+	    return cp_expr (finish_noexcept_expr (expr, tf_warning_or_error), noexcept_loc);
 	  }
 
 	case RID_CO_AWAIT:
@@ -10793,8 +10782,7 @@ cp_parser_lambda_body (cp_parser* parser, tree lambda_expr)
   auto odsd = make_temp_override (parser->omp_declare_simd, NULL);
   auto ord = make_temp_override (parser->oacc_routine, NULL);
   auto oafp = make_temp_override (parser->omp_attrs_forbidden_p, false);
-  vec<tree> omp_privatization_save;
-  save_omp_privatization_clauses (omp_privatization_save);
+
   /* Clear this in case we're in the middle of a default argument.  */
   parser->local_variables_forbidden_p = 0;
   parser->in_function_body = true;
@@ -10812,7 +10800,6 @@ cp_parser_lambda_body (cp_parser* parser, tree lambda_expr)
     finish_lambda_function (body);
   }
 
-  restore_omp_privatization_clauses (omp_privatization_save);
   parser->local_variables_forbidden_p = local_variables_forbidden_p;
   parser->in_function_body = in_function_body;
   if (nested)
@@ -10837,323 +10824,6 @@ add_debug_begin_stmt (location_t loc)
   tree stmt = build0 (DEBUG_BEGIN_STMT, void_type_node);
   SET_EXPR_LOCATION (stmt, loc);
   add_stmt (stmt);
-}
-
-struct cp_omp_attribute_data
-{
-  cp_token_cache *tokens;
-  const c_omp_directive *dir;
-  c_omp_directive_kind kind;
-};
-
-/* Handle omp::directive and omp::sequence attributes in ATTRS
-   (if any) at the start of a statement or in attribute-declaration.  */
-
-static tree
-cp_parser_handle_statement_omp_attributes (cp_parser *parser, tree attrs)
-{
-  if (!flag_openmp && !flag_openmp_simd)
-    return attrs;
-
-  auto_vec<cp_omp_attribute_data, 16> vec;
-  int cnt = 0;
-  int tokens = 0;
-  bool bad = false;
-  for (tree *pa = &attrs; *pa; )
-    if (get_attribute_namespace (*pa) == omp_identifier
-	&& is_attribute_p ("directive", get_attribute_name (*pa)))
-      {
-	cnt++;
-	for (tree a = TREE_VALUE (*pa); a; a = TREE_CHAIN (a))
-	  {
-	    tree d = TREE_VALUE (a);
-	    gcc_assert (TREE_CODE (d) == DEFERRED_PARSE);
-	    cp_token *first = DEFPARSE_TOKENS (d)->first;
-	    cp_token *last = DEFPARSE_TOKENS (d)->last;
-	    if (parser->omp_attrs_forbidden_p)
-	      {
-		error_at (first->location,
-			  "mixing OpenMP directives with attribute and pragma "
-			  "syntax on the same statement");
-		parser->omp_attrs_forbidden_p = false;
-		bad = true;
-	      }
-	    const char *directive[3] = {};
-	    for (int i = 0; i < 3; i++)
-	      {
-		tree id = NULL_TREE;
-		if (first + i == last)
-		  break;
-		if (first[i].type == CPP_NAME)
-		  id = first[i].u.value;
-		else if (first[i].type == CPP_KEYWORD)
-		  id = ridpointers[(int) first[i].keyword];
-		else
-		  break;
-		directive[i] = IDENTIFIER_POINTER (id);
-	      }
-	    const c_omp_directive *dir = NULL;
-	    if (directive[0])
-	      dir = c_omp_categorize_directive (directive[0], directive[1],
-						directive[2]);
-	    if (dir == NULL)
-	      {
-		error_at (first->location,
-			  "unknown OpenMP directive name in %<omp::directive%>"
-			  " attribute argument");
-		continue;
-	      }
-	    c_omp_directive_kind kind = dir->kind;
-	    if (dir->id == PRAGMA_OMP_ORDERED)
-	      {
-		/* ordered is C_OMP_DIR_CONSTRUCT only if it doesn't contain
-		   depend clause.  */
-		if (directive[1] && strcmp (directive[1], "depend") == 0)
-		  kind = C_OMP_DIR_STANDALONE;
-		else if (first + 2 < last
-			 && first[1].type == CPP_COMMA
-			 && first[2].type == CPP_NAME
-			 && strcmp (IDENTIFIER_POINTER (first[2].u.value),
-				    "depend") == 0)
-		  kind = C_OMP_DIR_STANDALONE;
-	      }
-	    else if (dir->id == PRAGMA_OMP_ERROR)
-	      {
-		/* error with at(execution) clause is C_OMP_DIR_STANDALONE.  */
-		int paren_depth = 0;
-		for (int i = 1; first + i < last; i++)
-		  if (first[i].type == CPP_OPEN_PAREN)
-		    paren_depth++;
-		  else if (first[i].type == CPP_CLOSE_PAREN)
-		    paren_depth--;
-		  else if (paren_depth == 0
-			   && first + i + 2 < last
-			   && first[i].type == CPP_NAME
-			   && first[i + 1].type == CPP_OPEN_PAREN
-			   && first[i + 2].type == CPP_NAME
-			   && !strcmp (IDENTIFIER_POINTER (first[i].u.value),
-				       "at")
-			   && !strcmp (IDENTIFIER_POINTER (first[i
-								 + 2].u.value),
-				       "execution"))
-		    {
-		      kind = C_OMP_DIR_STANDALONE;
-		      break;
-		    }
-	      }
-	    cp_omp_attribute_data v = { DEFPARSE_TOKENS (d), dir, kind };
-	    vec.safe_push (v);
-	    if (flag_openmp || dir->simd)
-	      tokens += (last - first) + 1;
-	  }
-	cp_omp_attribute_data v = {};
-	vec.safe_push (v);
-	*pa = TREE_CHAIN (*pa);
-      }
-    else
-      pa = &TREE_CHAIN (*pa);
-
-  if (bad)
-    return attrs;
-
-  unsigned int i;
-  cp_omp_attribute_data *v;
-  cp_omp_attribute_data *construct_seen = nullptr;
-  cp_omp_attribute_data *standalone_seen = nullptr;
-  cp_omp_attribute_data *prev_standalone_seen = nullptr;
-  FOR_EACH_VEC_ELT (vec, i, v)
-    if (v->tokens)
-      {
-	if (v->kind == C_OMP_DIR_CONSTRUCT && !construct_seen)
-	  construct_seen = v;
-	else if (v->kind == C_OMP_DIR_STANDALONE && !standalone_seen)
-	  standalone_seen = v;
-      }
-    else
-      {
-	if (standalone_seen && !prev_standalone_seen)
-	  {
-	    prev_standalone_seen = standalone_seen;
-	    standalone_seen = nullptr;
-	  }
-      }
-
-  if (cnt > 1 && construct_seen)
-    {
-      error_at (construct_seen->tokens->first->location,
-		"OpenMP construct among %<omp::directive%> attributes"
-		" requires all %<omp::directive%> attributes on the"
-		" same statement to be in the same %<omp::sequence%>");
-      return attrs;
-    }
-  if (cnt > 1 && standalone_seen && prev_standalone_seen)
-    {
-      error_at (standalone_seen->tokens->first->location,
-		"multiple OpenMP standalone directives among"
-		" %<omp::directive%> attributes must be all within the"
-		" same %<omp::sequence%>");
-      return attrs;
-    }
-
-  if (prev_standalone_seen)
-    standalone_seen = prev_standalone_seen;
-  if (standalone_seen
-      && !cp_lexer_next_token_is (parser->lexer, CPP_SEMICOLON))
-    {
-      error_at (standalone_seen->tokens->first->location,
-		"standalone OpenMP directives in %<omp::directive%> attribute"
-		" can only appear on an empty statement");
-      return attrs;
-    }
-  if (cnt && cp_lexer_next_token_is (parser->lexer, CPP_PRAGMA))
-    {
-      cp_token *token = cp_lexer_peek_token (parser->lexer);
-      enum pragma_kind kind = cp_parser_pragma_kind (token);
-      if (kind >= PRAGMA_OMP__START_ && kind <= PRAGMA_OMP__LAST_)
-	{
-	  error_at (token->location,
-		    "mixing OpenMP directives with attribute and pragma "
-		    "syntax on the same statement");
-	  return attrs;
-	}
-    }
-
-  if (!tokens)
-    return attrs;
-  tokens++;
-  cp_lexer *lexer = cp_lexer_alloc ();
-  lexer->debugging_p = parser->lexer->debugging_p;
-  vec_safe_reserve (lexer->buffer, tokens, true);
-  FOR_EACH_VEC_ELT (vec, i, v)
-    {
-      if (!v->tokens)
-	continue;
-      if (!flag_openmp && !v->dir->simd)
-	continue;
-      cp_token *first = v->tokens->first;
-      cp_token *last = v->tokens->last;
-      cp_token tok = {};
-      tok.type = CPP_PRAGMA;
-      tok.keyword = RID_MAX;
-      tok.u.value = build_int_cst (NULL, v->dir->id);
-      tok.location = first->location;
-      lexer->buffer->quick_push (tok);
-      while (++first < last)
-	lexer->buffer->quick_push (*first);
-      tok = {};
-      tok.type = CPP_PRAGMA_EOL;
-      tok.keyword = RID_MAX;
-      tok.location = last->location;
-      lexer->buffer->quick_push (tok);
-    }
-  cp_token tok = {};
-  tok.type = CPP_EOF;
-  tok.keyword = RID_MAX;
-  tok.location = lexer->buffer->last ().location;
-  lexer->buffer->quick_push (tok);
-  lexer->next = parser->lexer;
-  lexer->next_token = lexer->buffer->address ();
-  lexer->last_token = lexer->next_token
-		      + lexer->buffer->length ()
-		      - 1;
-  lexer->in_omp_attribute_pragma = true;
-  parser->lexer = lexer;
-  /* Move the current source position to that of the first token in the
-     new lexer.  */
-  cp_lexer_set_source_position_from_token (lexer->next_token);
-  return attrs;
-}
-
-/* Handle omp::directive and omp::sequence attributes in *PATTRS
-   (if any) at the start or after declaration-id of a declaration.  */
-
-static void
-cp_parser_handle_directive_omp_attributes (cp_parser *parser, tree *pattrs,
-					   cp_omp_declare_simd_data *data,
-					   bool start)
-{
-  if (!flag_openmp && !flag_openmp_simd)
-    return;
-
-  int cnt = 0;
-  bool bad = false;
-  bool variant_p = false;
-  location_t loc = UNKNOWN_LOCATION;
-  for (tree pa = *pattrs; pa; pa = TREE_CHAIN (pa))
-    if (get_attribute_namespace (pa) == omp_identifier
-	&& is_attribute_p ("directive", get_attribute_name (pa)))
-      {
-	for (tree a = TREE_VALUE (pa); a; a = TREE_CHAIN (a))
-	  {
-	    tree d = TREE_VALUE (a);
-	    gcc_assert (TREE_CODE (d) == DEFERRED_PARSE);
-	    cp_token *first = DEFPARSE_TOKENS (d)->first;
-	    cp_token *last = DEFPARSE_TOKENS (d)->last;
-	    const char *directive[3] = {};
-	    for (int i = 0; i < 3; i++)
-	      {
-		tree id = NULL_TREE;
-		if (first + i == last)
-		  break;
-		if (first[i].type == CPP_NAME)
-		  id = first[i].u.value;
-		else if (first[i].type == CPP_KEYWORD)
-		  id = ridpointers[(int) first[i].keyword];
-		else
-		  break;
-		directive[i] = IDENTIFIER_POINTER (id);
-	      }
-	    const c_omp_directive *dir = NULL;
-	    if (directive[0])
-	      dir = c_omp_categorize_directive (directive[0], directive[1],
-						directive[2]);
-	    if (dir == NULL)
-	      continue;
-	    if (dir->id == PRAGMA_OMP_DECLARE
-		&& (strcmp (directive[1], "simd") == 0
-		    || strcmp (directive[1], "variant") == 0))
-	      {
-		if (cnt++ == 0)
-		  {
-		    variant_p = strcmp (directive[1], "variant") == 0;
-		    loc = first->location;
-		  }
-		if (start && parser->omp_declare_simd && !bad)
-		  {
-		    error_at (first->location,
-			      "mixing OpenMP directives with attribute and "
-			      "pragma syntax on the same declaration");
-		    bad = true;
-		  }
-	      }
-	  }
-      }
-
-  if (bad)
-    {
-      for (tree *pa = pattrs; *pa; )
-	if (get_attribute_namespace (*pa) == omp_identifier
-	    && is_attribute_p ("directive", get_attribute_name (*pa)))
-	  *pa = TREE_CHAIN (*pa);
-	else
-	  pa = &TREE_CHAIN (*pa);
-      return;
-    }
-  if (cnt == 0)
-    return;
-
-  if (parser->omp_declare_simd == NULL)
-    {
-      data->error_seen = false;
-      data->fndecl_seen = false;
-      data->variant_p = variant_p;
-      data->loc = loc;
-      data->tokens = vNULL;
-      data->attribs[0] = NULL;
-      data->attribs[1] = NULL;
-      parser->omp_declare_simd = data;
-    }
-  parser->omp_declare_simd->attribs[!start] = pattrs;
 }
 
 /* Parse a statement.
@@ -11241,51 +10911,7 @@ cp_parser_statement (cp_parser* parser, tree in_statement_expr,
   token = cp_lexer_peek_token (parser->lexer);
   bool omp_attrs_forbidden_p;
   omp_attrs_forbidden_p = parser->omp_attrs_forbidden_p;
-
-  if (std_attrs && (flag_openmp || flag_openmp_simd))
-    {
-      bool handle_omp_attribs = false;
-      if (token->type == CPP_KEYWORD)
-	switch (token->keyword)
-	  {
-	  case RID_IF:
-	  case RID_SWITCH:
-	  case RID_WHILE:
-	  case RID_DO:
-	  case RID_FOR:
-	  case RID_BREAK:
-	  case RID_CONTINUE:
-	  case RID_RETURN:
-	  case RID_CO_RETURN:
-	  case RID_GOTO:
-	  case RID_AT_TRY:
-	  case RID_AT_CATCH:
-	  case RID_AT_FINALLY:
-	  case RID_AT_SYNCHRONIZED:
-	  case RID_AT_THROW:
-	  case RID_TRY:
-	  case RID_TRANSACTION_ATOMIC:
-	  case RID_TRANSACTION_RELAXED:
-	  case RID_SYNCHRONIZED:
-	  case RID_ATOMIC_NOEXCEPT:
-	  case RID_ATOMIC_CANCEL:
-	  case RID_TRANSACTION_CANCEL:
-	    handle_omp_attribs = true;
-	    break;
-	  default:
-	    break;
-	  }
-      else if (token->type == CPP_SEMICOLON
-	       || token->type == CPP_OPEN_BRACE
-	       || token->type == CPP_PRAGMA)
-	handle_omp_attribs = true;
-      if (handle_omp_attribs)
-	{
-	  std_attrs = cp_parser_handle_statement_omp_attributes (parser,
-								 std_attrs);
-	  token = cp_lexer_peek_token (parser->lexer);
-	}
-    }
+  
   parser->omp_attrs_forbidden_p = false;
 
   /* Remember the location of the first token in the statement.  */
@@ -11349,19 +10975,6 @@ cp_parser_statement (cp_parser* parser, tree in_statement_expr,
 	  cp_parser_declaration_statement (parser);
 	  return;
 
-	case RID_TRANSACTION_ATOMIC:
-	case RID_TRANSACTION_RELAXED:
-	case RID_SYNCHRONIZED:
-	case RID_ATOMIC_NOEXCEPT:
-	case RID_ATOMIC_CANCEL:
-	  std_attrs = process_stmt_hotness_attribute (std_attrs, attrs_loc);
-	  statement = cp_parser_transaction (parser, token);
-	  break;
-	case RID_TRANSACTION_CANCEL:
-	  std_attrs = process_stmt_hotness_attribute (std_attrs, attrs_loc);
-	  statement = cp_parser_transaction_cancel (parser);
-	  break;
-
 	default:
 	  /* It might be a keyword like `int' that can start a
 	     declaration-statement.  */
@@ -11409,7 +11022,6 @@ cp_parser_statement (cp_parser* parser, tree in_statement_expr,
      a statement all its own.  */
   else if (token->type == CPP_PRAGMA)
     {
-     do_pragma:;
       cp_lexer *lexer = parser->lexer;
       bool do_restart = false;
       /* Only certain OpenMP pragmas are attached to statements, and thus
@@ -11476,43 +11088,6 @@ cp_parser_statement (cp_parser* parser, tree in_statement_expr,
 	  if (has_std_attrs)
 	    {
 	      cp_lexer_set_token_position (parser->lexer, statement_token);
-	      if (flag_openmp || flag_openmp_simd)
-		{
-		  size_t i = 1;
-		  bool handle_omp_attribs = true;
-		  while (cp_lexer_peek_nth_token (parser->lexer, i)->keyword
-			 == RID_EXTENSION)
-		    i++;
-		  switch (cp_lexer_peek_nth_token (parser->lexer, i)->keyword)
-		    {
-		    case RID_ASM:
-		    case RID_NAMESPACE:
-		    case RID_USING:
-		    case RID_LABEL:
-		    case RID_STATIC_ASSERT:
-		      /* Don't handle OpenMP attribs on keywords that
-			 always start a declaration statement but don't
-			 accept attribute before it and therefore
-			 the tentative cp_parser_declaration_statement
-			 fails to parse because of that.  */
-		      handle_omp_attribs = false;
-		      break;
-		    default:
-		      break;
-		    }
-
-		  if (handle_omp_attribs)
-		    {
-		      parser->omp_attrs_forbidden_p = omp_attrs_forbidden_p;
-		      std_attrs
-			= cp_parser_handle_statement_omp_attributes
-					(parser, std_attrs);
-		      parser->omp_attrs_forbidden_p = false;
-		      token = cp_lexer_peek_token (parser->lexer);
-		      if (token->type == CPP_PRAGMA)
-			goto do_pragma;
-		    }
-		}
 	    }
 	}
       /* All preceding labels have been parsed at this point.  */
@@ -13836,24 +13411,6 @@ cp_parser_declaration (cp_parser* parser, tree prefix_attrs)
       location_t attrs_loc = token1->location;
       tree std_attrs = cp_parser_std_attribute_spec_seq (parser);
 
-      if (std_attrs && (flag_openmp || flag_openmp_simd))
-	{
-	  gcc_assert (!parser->lexer->in_omp_attribute_pragma);
-	  std_attrs = cp_parser_handle_statement_omp_attributes (parser,
-								 std_attrs);
-	  if (parser->lexer->in_omp_attribute_pragma)
-	    {
-	      cp_lexer *lexer = parser->lexer;
-	      while (parser->lexer->in_omp_attribute_pragma)
-		{
-		  gcc_assert (cp_lexer_next_token_is (parser->lexer,
-						      CPP_PRAGMA));
-		  cp_parser_pragma (parser, pragma_external, NULL);
-		}
-	      cp_lexer_destroy (lexer);
-	    }
-	}
-
       if (std_attrs != NULL_TREE && !attribute_ignored_p (std_attrs))
 	warning_at (make_location (attrs_loc, attrs_loc, parser->lexer),
 		    OPT_Wattributes, "attribute ignored");
@@ -14184,12 +13741,6 @@ cp_parser_simple_declaration (cp_parser* parser,
   /* We no longer need to defer access checks.  */
   stop_deferring_access_checks ();
 
-  cp_omp_declare_simd_data odsd;
-  if (decl_specifiers.attributes && (flag_openmp || flag_openmp_simd))
-    cp_parser_handle_directive_omp_attributes (parser,
-					       &decl_specifiers.attributes,
-					       &odsd, true);
-
   /* In a block scope, a valid declaration must always have a
      decl-specifier-seq.  By not trying to parse declarators, we can
      resolve the declaration/expression ambiguity more quickly.  */
@@ -14382,7 +13933,6 @@ cp_parser_simple_declaration (cp_parser* parser,
 	  else
 	    {
 	      pop_deferring_access_checks ();
-	      cp_finalize_omp_declare_simd (parser, &odsd);
 	      return;
 	    }
 	}
@@ -14463,7 +14013,6 @@ cp_parser_simple_declaration (cp_parser* parser,
 
  done:
   pop_deferring_access_checks ();
-  cp_finalize_omp_declare_simd (parser, &odsd);
 }
 
 /* Helper of cp_parser_simple_declaration, parse a decomposition declaration.
@@ -18126,12 +17675,6 @@ cp_parser_explicit_instantiation (cp_parser* parser)
 				&decl_specifiers,
 				&declares_class_or_enum);
 
-  cp_omp_declare_simd_data odsd;
-  if (decl_specifiers.attributes && (flag_openmp || flag_openmp_simd))
-    cp_parser_handle_directive_omp_attributes (parser,
-					       &decl_specifiers.attributes,
-					       &odsd, true);
-
   /* If there was exactly one decl-specifier, and it declared a class,
      and there's no declarator, then we have an explicit type
      instantiation.  */
@@ -18198,8 +17741,6 @@ cp_parser_explicit_instantiation (cp_parser* parser)
   end_explicit_instantiation ();
 
   cp_parser_consume_semicolon_at_end_of_statement (parser);
-
-  cp_finalize_omp_declare_simd (parser, &odsd);
 }
 
 /* Parse an explicit-specialization.
@@ -22121,17 +21662,6 @@ cp_parser_direct_declarator (cp_parser* parser,
 
 		  attrs = cp_parser_std_attribute_spec_seq (parser);
 
-		  cp_omp_declare_simd_data odsd;
-		  if ((flag_openmp || flag_openmp_simd)
-		      && declarator
-		      && declarator->std_attributes
-		      && declarator->kind == cdk_id)
-		    {
-		      tree *pa = &declarator->std_attributes;
-		      cp_parser_handle_directive_omp_attributes (parser, pa,
-								 &odsd, false);
-		    }
-
 		  /* In here, we handle cases where attribute is used after
 		     the function declaration.  For example:
 		     void func (int x) __attribute__((vector(..)));  */
@@ -22140,8 +21670,6 @@ cp_parser_direct_declarator (cp_parser* parser,
 		  late_return
 		    = cp_parser_late_return_type_opt (parser, declarator,
 						      requires_clause);
-
-		  cp_finalize_omp_declare_simd (parser, &odsd);
 
 		  /* Parse the virt-specifier-seq.  */
 		  virt_specifiers = cp_parser_virt_specifier_seq_opt (parser);
@@ -25946,11 +25474,6 @@ cp_parser_member_declaration (cp_parser* parser)
 				 | CP_PARSER_FLAGS_TYPENAME_OPTIONAL),
 				&decl_specifiers,
 				&declares_class_or_enum);
-
-  if (decl_specifiers.attributes && (flag_openmp || flag_openmp_simd))
-    cp_parser_handle_directive_omp_attributes (parser,
-					       &decl_specifiers.attributes,
-					       &odsd, true);
 
   /* Check for an invalid type-name.  */
   if (!decl_specifiers.any_type_specifiers_p
@@ -30201,16 +29724,9 @@ cp_parser_function_definition_after_declarator (cp_parser* parser,
     = parser->num_template_parameter_lists;
   parser->num_template_parameter_lists = 0;
 
-  /* If the next token is `try', `__transaction_atomic', or
-     `__transaction_relaxed`, then we are looking at either function-try-block
-     or function-transaction-block.  Note that all of these include the
+  /* function-try-block. Note that all of these include the
      function-body.  */
-  if (cp_lexer_next_token_is_keyword (parser->lexer, RID_TRANSACTION_ATOMIC))
-    cp_parser_function_transaction (parser, RID_TRANSACTION_ATOMIC);
-  else if (cp_lexer_next_token_is_keyword (parser->lexer,
-      RID_TRANSACTION_RELAXED))
-    cp_parser_function_transaction (parser, RID_TRANSACTION_RELAXED);
-  else if (cp_lexer_next_token_is_keyword (parser->lexer, RID_TRY))
+  if (cp_lexer_next_token_is_keyword (parser->lexer, RID_TRY))
     cp_parser_function_try_block (parser);
   else
     cp_parser_ctor_initializer_opt_and_function_body
@@ -30632,12 +30148,6 @@ cp_parser_single_declaration (cp_parser* parser,
 				&decl_specifiers,
 				&declares_class_or_enum);
 
-  cp_omp_declare_simd_data odsd;
-  if (decl_specifiers.attributes && (flag_openmp || flag_openmp_simd))
-    cp_parser_handle_directive_omp_attributes (parser,
-					       &decl_specifiers.attributes,
-					       &odsd, true);
-
   if (friend_p)
     *friend_p = cp_parser_friend_p (&decl_specifiers);
 
@@ -30770,8 +30280,6 @@ cp_parser_single_declaration (cp_parser* parser,
   parser->scope = NULL_TREE;
   parser->qualifying_scope = NULL_TREE;
   parser->object_scope = NULL_TREE;
-
-  cp_finalize_omp_declare_simd (parser, &odsd);
 
   return decl;
 }
@@ -33242,249 +32750,6 @@ static bool
 cp_parser_allow_gnu_extensions_p(cp_parser* parser)
 {
 	return parser->allow_gnu_extensions_p;
-}
-
-/* Transactional Memory parsing routines.  */
-
-/* Parse a transaction attribute.
-
-   txn-attribute:
-	attribute
-	[ [ identifier ] ]
-
-   We use this instead of cp_parser_attributes_opt for transactions to avoid
-   the pedwarn in C++98 mode.  */
-static tree
-cp_parser_txn_attribute_opt(cp_parser *parser)
-{
-	cp_token *token;
-	tree attr_name, attr = NULL;
-
-	if (cp_lexer_next_token_is_keyword(parser->lexer, RID_ATTRIBUTE))
-		return cp_parser_attributes_opt(parser);
-
-	if (cp_lexer_next_token_is_not(parser->lexer, CPP_OPEN_SQUARE))
-		return NULL_TREE;
-	cp_lexer_consume_token(parser->lexer);
-	if (!cp_parser_require(parser, CPP_OPEN_SQUARE, RT_OPEN_SQUARE))
-		goto error1;
-
-	token = cp_lexer_peek_token(parser->lexer);
-	if (token->type == CPP_NAME || token->type == CPP_KEYWORD) {
-		token = cp_lexer_consume_token(parser->lexer);
-
-		attr_name = (token->type == CPP_KEYWORD
-			/* For keywords, use the canonical spelling, not the parsed identifier.  */ 
-			? ridpointers[(int) token->keyword] : token->u.value);
-		attr = build_tree_list(attr_name, NULL_TREE);
-	} else
-		cp_parser_error(parser, "expected identifier");
-
-	cp_parser_require(parser, CPP_CLOSE_SQUARE, RT_CLOSE_SQUARE);
-error1:
-	cp_parser_require(parser, CPP_CLOSE_SQUARE, RT_CLOSE_SQUARE);
-	return attr;
-}
-
-/* Parse a __transaction_atomic or __transaction_relaxed statement.
-
-   transaction-statement:
-     __transaction_atomic txn-attribute[opt] txn-noexcept-spec[opt]
-       compound-statement
-     __transaction_relaxed txn-noexcept-spec[opt] compound-statement
-*/
-static tree
-cp_parser_transaction(cp_parser *parser, cp_token *token)
-{
-	unsigned char old_in = parser->in_transaction;
-	unsigned char this_in = 1, new_in;
-	enum rid keyword = token->keyword;
-	tree stmt, attrs, noex;
-
-	cp_lexer_consume_token(parser->lexer);
-
-	if (keyword == RID_TRANSACTION_RELAXED || keyword == RID_SYNCHRONIZED)
-		this_in |= TM_STMT_ATTR_RELAXED;
-	else {
-		attrs = cp_parser_txn_attribute_opt(parser);
-		if (attrs)
-			this_in |= parse_tm_stmt_attr(attrs, TM_STMT_ATTR_OUTER);
-	}
-
-	/* Parse a noexcept specification.  */
-	if (keyword == RID_ATOMIC_NOEXCEPT)
-		noex = boolean_true_node;
-	else if (keyword == RID_ATOMIC_CANCEL) {
-		/* cancel-and-throw is unimplemented.  */
-		sorry("%<atomic_cancel%>");
-		noex = NULL_TREE;
-	} else
-		noex = cp_parser_noexcept_specification_opt(parser, CP_PARSER_FLAGS_NONE, /*require_constexpr=*/true, /*consumed_expr=*/NULL, /*return_cond=*/true);
-
-	/* Keep track if we're in the lexical scope of an outer transaction.  */
-	new_in = this_in | (old_in & TM_STMT_ATTR_OUTER);
-
-	stmt = begin_transaction_stmt(token->location, NULL, this_in);
-
-	parser->in_transaction = new_in;
-	cp_parser_compound_statement(parser, NULL, BCS_TRANSACTION, false);
-	parser->in_transaction = old_in;
-
-	finish_transaction_stmt(stmt, NULL, this_in, noex);
-
-	return stmt;
-}
-
-/* Parse a __transaction_atomic or __transaction_relaxed expression.
-
-   transaction-expression:
-     __transaction_atomic txn-noexcept-spec[opt] ( expression )
-     __transaction_relaxed txn-noexcept-spec[opt] ( expression )
-*/
-static tree
-cp_parser_transaction_expression(cp_parser *parser, enum rid keyword)
-{
-	unsigned char old_in = parser->in_transaction;
-	unsigned char this_in = 1;
-	cp_token *token;
-	tree expr, noex;
-	bool noex_expr;
-	location_t loc = cp_lexer_peek_token(parser->lexer)->location;
-
-	gcc_assert(keyword == RID_TRANSACTION_ATOMIC || keyword == RID_TRANSACTION_RELAXED);
-
-	if (!flag_tm)
-		error_at(loc, keyword == RID_TRANSACTION_RELAXED
-			? G_("%<__transaction_relaxed%> without transactional memory support enabled")
-			: G_("%<__transaction_atomic%> without transactional memory support enabled"));
-
-	token = cp_parser_require_keyword(parser, keyword, (keyword == RID_TRANSACTION_ATOMIC ? RT_TRANSACTION_ATOMIC : RT_TRANSACTION_RELAXED));
-	gcc_assert(token != NULL);
-
-	if (keyword == RID_TRANSACTION_RELAXED)
-		this_in |= TM_STMT_ATTR_RELAXED;
-
-	/* Set this early.  This might mean that we allow transaction_cancel in
-	   an expression that we find out later actually has to be a constexpr.
-	   However, we expect that cxx_constant_value will be able to deal with
-	   this; also, if the noexcept has no constexpr, then what we parse next
-	   really is a transaction's body.  */
-	parser->in_transaction = this_in;
-
-	/* Parse a noexcept specification.  */
-	noex = cp_parser_noexcept_specification_opt(parser, CP_PARSER_FLAGS_NONE, /*require_constexpr=*/false, &noex_expr, /*return_cond=*/true);
-
-	if (!noex || !noex_expr || cp_lexer_peek_token(parser->lexer)->type == CPP_OPEN_PAREN) {
-		matching_parens parens;
-		parens.require_open(parser);
-
-		expr = cp_parser_expression(parser);
-		expr = finish_parenthesized_expr(expr);
-
-		parens.require_close(parser);
-	} else {
-		/* The only expression that is available got parsed for the noexcept already. noexcept is true then. */
-		expr = noex;
-		noex = boolean_true_node;
-	}
-
-	expr = build_transaction_expr(token->location, expr, this_in, noex);
-	parser->in_transaction = old_in;
-
-	if (cp_parser_non_integral_constant_expression(parser, NIC_TRANSACTION))
-		return error_mark_node;
-
-	return (flag_tm ? expr : error_mark_node);
-}
-
-/* Parse a function-transaction-block.
-
-   function-transaction-block:
-     __transaction_atomic txn-attribute[opt] ctor-initializer[opt]
-	 function-body
-     __transaction_atomic txn-attribute[opt] function-try-block
-     __transaction_relaxed ctor-initializer[opt] function-body
-     __transaction_relaxed function-try-block
-*/
-static void
-cp_parser_function_transaction(cp_parser *parser, enum rid keyword)
-{
-	unsigned char old_in = parser->in_transaction;
-	unsigned char new_in = 1;
-	tree compound_stmt, stmt, attrs;
-	cp_token *token;
-
-	gcc_assert(keyword == RID_TRANSACTION_ATOMIC || keyword == RID_TRANSACTION_RELAXED);
-	token = cp_parser_require_keyword(parser, keyword, (keyword == RID_TRANSACTION_ATOMIC ? RT_TRANSACTION_ATOMIC : RT_TRANSACTION_RELAXED));
-	gcc_assert(token != NULL);
-
-	if (keyword == RID_TRANSACTION_RELAXED)
-		new_in |= TM_STMT_ATTR_RELAXED;
-	else {
-		attrs = cp_parser_txn_attribute_opt(parser);
-		if (attrs)
-			new_in |= parse_tm_stmt_attr(attrs, TM_STMT_ATTR_OUTER);
-	}
-
-	stmt = begin_transaction_stmt(token->location, &compound_stmt, new_in);
-
-	parser->in_transaction = new_in;
-
-	if (cp_lexer_next_token_is_keyword(parser->lexer, RID_TRY))
-		cp_parser_function_try_block(parser);
-	else
-		cp_parser_ctor_initializer_opt_and_function_body(parser, /*in_function_try_block=*/false);
-
-	parser->in_transaction = old_in;
-
-	finish_transaction_stmt(stmt, compound_stmt, new_in, NULL_TREE);
-}
-
-/* Parse a __transaction_cancel statement.
-
-   cancel-statement:
-     __transaction_cancel txn-attribute[opt] ;
-     __transaction_cancel txn-attribute[opt] throw-expression ;
-
-   ??? Cancel and throw is not yet implemented.  */
-static tree
-cp_parser_transaction_cancel(cp_parser *parser)
-{
-	cp_token *token;
-	bool is_outer = false;
-	tree stmt, attrs;
-
-	token = cp_parser_require_keyword(parser, RID_TRANSACTION_CANCEL, RT_TRANSACTION_CANCEL);
-	gcc_assert(token != NULL);
-
-	attrs = cp_parser_txn_attribute_opt(parser);
-	if (attrs)
-		is_outer = (parse_tm_stmt_attr(attrs, TM_STMT_ATTR_OUTER) != 0);
-
-	/* ??? Parse cancel-and-throw here. */
-	cp_parser_require(parser, CPP_SEMICOLON, RT_SEMICOLON);
-
-	if (!flag_tm) {
-		error_at(token->location, "%<__transaction_cancel%> without transactional memory support enabled");
-		return error_mark_node;
-	} else if (parser->in_transaction & TM_STMT_ATTR_RELAXED) {
-		error_at(token->location, "%<__transaction_cancel%> within a %<__transaction_relaxed%>");
-		return error_mark_node;
-	} else if (is_outer) {
-		if ((parser->in_transaction & TM_STMT_ATTR_OUTER) == 0 && !is_tm_may_cancel_outer(current_function_decl)) {
-			error_at(token->location, "outer %<__transaction_cancel%> not within outer %<__transaction_atomic%>");
-			error_at(token->location, "  or a %<transaction_may_cancel_outer%> function");
-			return error_mark_node;
-		}
-	} else if (parser->in_transaction == 0) {
-		error_at(token->location, "%<__transaction_cancel%> not within %<__transaction_atomic%>");
-		return error_mark_node;
-	}
-
-	stmt = build_tm_abort_call(token->location, is_outer);
-	add_stmt(stmt);
-
-	return stmt;
 }
 
 /* The parser.  */

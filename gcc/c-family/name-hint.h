@@ -13,45 +13,40 @@
 #endif
 
 enum lookup_name_fuzzy_kind {
-  /* Names of types.  */
-  FUZZY_LOOKUP_TYPENAME,
+	/* Names of types. */
+	FUZZY_LOOKUP_TYPENAME,
 
-  /* Names of function decls.  */
-  FUZZY_LOOKUP_FUNCTION_NAME,
+	/* Names of function decls. */
+	FUZZY_LOOKUP_FUNCTION_NAME,
 
-  /* Any name.  */
-  FUZZY_LOOKUP_NAME
+	/* Any name. */
+	FUZZY_LOOKUP_NAME
 };
 
 /* A deferred_diagnostic is a wrapper around optional extra diagnostics
    that we may want to bundle into a name_hint.
 
    The diagnostic is emitted by the subclass destructor, which should
-   check that is_suppressed_p () is not true.  */
+   check that is_suppressed_p () is not true. */
+class deferred_diagnostic {
+	public:
+		virtual ~deferred_diagnostic() {}
 
-class deferred_diagnostic
-{
- public:
-  virtual ~deferred_diagnostic () {}
+		location_t get_location() const { return m_loc; }
 
-  location_t get_location () const { return m_loc; }
+		/* Call this if the corresponding warning was not emitted,
+		   in which case we should also not emit the deferred_diagnostic.  */
+		void suppress() { m_suppress = true; }
 
-  /* Call this if the corresponding warning was not emitted,
-     in which case we should also not emit the deferred_diagnostic.  */
-  void suppress ()
-  {
-    m_suppress = true;
-  }
+		bool is_suppressed_p() const { return m_suppress; }
 
-  bool is_suppressed_p () const { return m_suppress; }
+	protected:
+		deferred_diagnostic(location_t loc)
+			: m_loc (loc), m_suppress (false) {    }
 
- protected:
-  deferred_diagnostic (location_t loc)
-  : m_loc (loc), m_suppress (false) {}
-
- private:
-  location_t m_loc;
-  bool m_suppress;
+	private:
+		location_t m_loc;
+		bool m_suppress;
 };
 
 /* A name_hint is an optional string suggestion, along with an
@@ -70,43 +65,37 @@ class deferred_diagnostic
        note: did you check behind the couch?
 
    The deferred_diagnostic is emitted by its destructor, when the
-   name_hint goes out of scope.  */
+   name_hint goes out of scope. */
 
-class name_hint
-{
-public:
-  name_hint () : m_suggestion (NULL), m_deferred () {}
+class name_hint {
+	public:
+		name_hint() : m_suggestion (NULL), m_deferred () {    }
 
-  name_hint (const char *suggestion, deferred_diagnostic *deferred)
-  : m_suggestion (suggestion), m_deferred (deferred)
-  {
-  }
+		name_hint(const char *suggestion, deferred_diagnostic *deferred)
+			: m_suggestion (suggestion), m_deferred (deferred) {    }
 
-  const char *suggestion () const { return m_suggestion; }
+		const char *suggestion() const { return m_suggestion; }
 
-  /* Does this name_hint have a suggestion or a deferred diagnostic?  */
-  operator bool () const { return (m_suggestion != NULL
-				   || m_deferred != NULL); }
+		/* Does this name_hint have a suggestion or a deferred diagnostic? */
+		operator bool () const { return (m_suggestion != NULL || m_deferred != NULL); }
 
-  /* Take ownership of this name_hint's deferred_diagnostic, for use
-     in chaining up deferred diagnostics.  */
-  std::unique_ptr<deferred_diagnostic> take_deferred () { return move (m_deferred); }
+		/* Take ownership of this name_hint's deferred_diagnostic, for use
+		   in chaining up deferred diagnostics. */
+		std::unique_ptr<deferred_diagnostic> take_deferred() { return move (m_deferred); }
 
-  /* Call this on a name_hint if the corresponding warning was not emitted,
-     in which case we should also not emit the deferred_diagnostic.  */
+		/* Call this on a name_hint if the corresponding warning was not emitted,
+		   in which case we should also not emit the deferred_diagnostic. */
 
-  void suppress ()
-  {
-    if (m_deferred)
-      m_deferred->suppress ();
-  }
+		void suppress() {
+			if (m_deferred)
+				m_deferred->suppress();
+		}
 
-private:
-  const char *m_suggestion;
-  std::unique_ptr<deferred_diagnostic> m_deferred;
+	private:
+		const char *m_suggestion;
+		std::unique_ptr<deferred_diagnostic> m_deferred;
 };
 
-extern name_hint lookup_name_fuzzy (tree, enum lookup_name_fuzzy_kind,
-				    location_t);
+extern name_hint lookup_name_fuzzy(tree, enum lookup_name_fuzzy_kind, location_t);
 
 #endif /* ! GCC_NAME_HINT_H */

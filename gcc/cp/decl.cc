@@ -7840,196 +7840,6 @@ decl_maybe_constant_destruction (tree decl, tree type)
 
 static tree declare_simd_adjust_this (tree *, int *, void *);
 
-/* Helper function of omp_declare_variant_finalize.  Finalize one
-   "omp declare variant base" attribute.  Return true if it should be
-   removed.  */
-
-static bool
-omp_declare_variant_finalize_one (tree decl, tree attr)
-{
-  if (TREE_CODE (TREE_TYPE (decl)) == METHOD_TYPE)
-    {
-      walk_tree (&TREE_VALUE (TREE_VALUE (attr)), declare_simd_adjust_this,
-		 DECL_ARGUMENTS (decl), NULL);
-      walk_tree (&TREE_PURPOSE (TREE_VALUE (attr)), declare_simd_adjust_this,
-		 DECL_ARGUMENTS (decl), NULL);
-    }
-
-  tree ctx = TREE_VALUE (TREE_VALUE (attr));
-  tree simd = omp_get_context_selector (ctx, "construct", "simd");
-  if (simd)
-    {
-      TREE_VALUE (simd)
-	= c_omp_declare_simd_clauses_to_numbers (DECL_ARGUMENTS (decl),
-						 TREE_VALUE (simd));
-      /* FIXME, adjusting simd args unimplemented.  */
-      return true;
-    }
-
-  tree chain = TREE_CHAIN (TREE_VALUE (attr));
-  location_t varid_loc
-    = cp_expr_loc_or_input_loc (TREE_PURPOSE (TREE_CHAIN (chain)));
-  location_t match_loc = cp_expr_loc_or_input_loc (TREE_PURPOSE (chain));
-  cp_id_kind idk = (cp_id_kind) tree_to_uhwi (TREE_VALUE (chain));
-  tree variant = TREE_PURPOSE (TREE_VALUE (attr));
-
-  location_t save_loc = input_location;
-  input_location = varid_loc;
-
-  releasing_vec args;
-  tree parm = DECL_ARGUMENTS (decl);
-  if (TREE_CODE (TREE_TYPE (decl)) == METHOD_TYPE)
-    parm = DECL_CHAIN (parm);
-  for (; parm; parm = DECL_CHAIN (parm))
-    if (type_dependent_expression_p (parm))
-      vec_safe_push (args, build_constructor (TREE_TYPE (parm), NULL));
-    else if (MAYBE_CLASS_TYPE_P (TREE_TYPE (parm)))
-      vec_safe_push (args, build_local_temp (TREE_TYPE (parm)));
-    else
-      vec_safe_push (args, build_zero_cst (TREE_TYPE (parm)));
-
-  bool koenig_p = false;
-  if (idk == CP_ID_KIND_UNQUALIFIED || idk == CP_ID_KIND_TEMPLATE_ID)
-    {
-      if (identifier_p (variant)
-	  /* In C++20, we may need to perform ADL for a template
-	     name.  */
-	  || (TREE_CODE (variant) == TEMPLATE_ID_EXPR
-	      && identifier_p (TREE_OPERAND (variant, 0))))
-	{
-	  if (!args->is_empty ())
-	    {
-	      koenig_p = true;
-	      if (!any_type_dependent_arguments_p (args))
-		variant = perform_koenig_lookup (variant, args,
-						 tf_warning_or_error);
-	    }
-	  else
-	    variant = unqualified_fn_lookup_error (variant);
-	}
-      else if (!args->is_empty () && is_overloaded_fn (variant))
-	{
-	  tree fn = get_first_fn (variant);
-	  fn = STRIP_TEMPLATE (fn);
-	  if (!((TREE_CODE (fn) == USING_DECL && DECL_DEPENDENT_P (fn))
-		 || DECL_FUNCTION_MEMBER_P (fn)
-		 || DECL_LOCAL_DECL_P (fn)))
-	    {
-	      koenig_p = true;
-	      if (!any_type_dependent_arguments_p (args))
-		variant = perform_koenig_lookup (variant, args,
-						 tf_warning_or_error);
-	    }
-	}
-    }
-
-  if (idk == CP_ID_KIND_QUALIFIED)
-    variant = finish_call_expr (variant, &args, /*disallow_virtual=*/true,
-				koenig_p, tf_warning_or_error);
-  else
-    variant = finish_call_expr (variant, &args, /*disallow_virtual=*/false,
-				koenig_p, tf_warning_or_error);
-  if (variant == error_mark_node && !processing_template_decl)
-    return true;
-
-  variant = cp_get_callee_fndecl_nofold (variant);
-  input_location = save_loc;
-
-  if (variant)
-    {
-      const char *varname = IDENTIFIER_POINTER (DECL_NAME (variant));
-      if (!comptypes (TREE_TYPE (decl), TREE_TYPE (variant), 0))
-	{
-	  error_at (varid_loc, "variant %qD and base %qD have incompatible "
-			       "types", variant, decl);
-	  return true;
-	}
-      if (fndecl_built_in_p (variant)
-	  && (startswith (varname, "__builtin_")
-	      || startswith (varname, "__sync_")
-	      || startswith (varname, "__atomic_")))
-	{
-	  error_at (varid_loc, "variant %qD is a built-in", variant);
-	  return true;
-	}
-      else
-	{
-	  tree construct = omp_get_context_selector (ctx, "construct", NULL);
-	  omp_mark_declare_variant (match_loc, variant, construct);
-	  if (!omp_context_selector_matches (ctx))
-	    return true;
-	  TREE_PURPOSE (TREE_VALUE (attr)) = variant;
-	}
-    }
-  else if (!processing_template_decl)
-    {
-      error_at (varid_loc, "could not find variant declaration");
-      return true;
-    }
-
-  return false;
-}
-
-/* Helper function, finish up "omp declare variant base" attribute
-   now that there is a DECL.  ATTR is the first "omp declare variant base"
-   attribute.  */
-
-void
-omp_declare_variant_finalize (tree decl, tree attr)
-{
-  size_t attr_len = strlen ("omp declare variant base");
-  tree *list = &DECL_ATTRIBUTES (decl);
-  bool remove_all = false;
-  location_t match_loc = DECL_SOURCE_LOCATION (decl);
-  if (TREE_CHAIN (TREE_VALUE (attr))
-      && TREE_PURPOSE (TREE_CHAIN (TREE_VALUE (attr)))
-      && EXPR_HAS_LOCATION (TREE_PURPOSE (TREE_CHAIN (TREE_VALUE (attr)))))
-    match_loc = EXPR_LOCATION (TREE_PURPOSE (TREE_CHAIN (TREE_VALUE (attr))));
-  if (DECL_CONSTRUCTOR_P (decl))
-    {
-      error_at (match_loc, "%<declare variant%> on constructor %qD", decl);
-      remove_all = true;
-    }
-  else if (DECL_DESTRUCTOR_P (decl))
-    {
-      error_at (match_loc, "%<declare variant%> on destructor %qD", decl);
-      remove_all = true;
-    }
-  else if (DECL_DEFAULTED_FN (decl))
-    {
-      error_at (match_loc, "%<declare variant%> on defaulted %qD", decl);
-      remove_all = true;
-    }
-  else if (DECL_DELETED_FN (decl))
-    {
-      error_at (match_loc, "%<declare variant%> on deleted %qD", decl);
-      remove_all = true;
-    }
-  else if (DECL_VIRTUAL_P (decl))
-    {
-      error_at (match_loc, "%<declare variant%> on virtual %qD", decl);
-      remove_all = true;
-    }
-  /* This loop is like private_lookup_attribute, except that it works
-     with tree * rather than tree, as we might want to remove the
-     attributes that are diagnosed as errorneous.  */
-  while (*list)
-    {
-      tree attr = get_attribute_name (*list);
-      size_t ident_len = IDENTIFIER_LENGTH (attr);
-      if (cmp_attribs ("omp declare variant base", attr_len,
-		       IDENTIFIER_POINTER (attr), ident_len))
-	{
-	  if (remove_all || omp_declare_variant_finalize_one (decl, *list))
-	    {
-	      *list = TREE_CHAIN (*list);
-	      continue;
-	    }
-	}
-      list = &TREE_CHAIN (*list);
-    }
-}
-
 /* Finish processing of a declaration;
    install its line number and initial value.
    If the length of an array type is not known before,
@@ -8236,16 +8046,6 @@ cp_finish_decl (tree decl, tree init, bool init_const_expr_p,
 	    TREE_CONSTANT (decl) = 1;
 	}
     }
-
-  if (flag_openmp
-      && TREE_CODE (decl) == FUNCTION_DECL
-      /* #pragma omp declare variant on methods handled in finish_struct
-	 instead.  */
-      && (!DECL_NONSTATIC_MEMBER_FUNCTION_P (decl)
-	  || COMPLETE_TYPE_P (DECL_CONTEXT (decl))))
-    if (tree attr = lookup_attribute ("omp declare variant base",
-				      DECL_ATTRIBUTES (decl)))
-      omp_declare_variant_finalize (decl, attr);
 
   if (processing_template_decl)
     {
@@ -10001,22 +9801,6 @@ check_concept_fn (tree fn)
 	      "concept %q#D with non-%<bool%> return type %qT", fn, type);
 }
 
-/* Helper function.  Replace the temporary this parameter injected
-   during cp_finish_omp_declare_simd with the real this parameter.  */
-
-static tree
-declare_simd_adjust_this (tree *tp, int *walk_subtrees, void *data)
-{
-  tree this_parm = (tree) data;
-  if (TREE_CODE (*tp) == PARM_DECL
-      && DECL_NAME (*tp) == this_identifier
-      && *tp != this_parm)
-    *tp = this_parm;
-  else if (TYPE_P (*tp))
-    *walk_subtrees = 0;
-  return NULL_TREE;
-}
-
 /* CTYPE is class type, or null if non-class.
    TYPE is type this FUNCTION_DECL should have, either FUNCTION_TYPE
    or METHOD_TYPE.
@@ -10429,33 +10213,6 @@ grokfndecl (tree ctype,
 
   if (TYPE_NOTHROW_P (type) || nothrow_libfn_p (decl))
     TREE_NOTHROW (decl) = 1;
-
-  if (flag_openmp || flag_openmp_simd)
-    {
-      /* Adjust "omp declare simd" attributes.  */
-      tree ods = lookup_attribute ("omp declare simd", *attrlist);
-      if (ods)
-	{
-	  tree attr;
-	  for (attr = ods; attr;
-	       attr = lookup_attribute ("omp declare simd", TREE_CHAIN (attr)))
-	    {
-	      if (TREE_CODE (type) == METHOD_TYPE)
-		walk_tree (&TREE_VALUE (attr), declare_simd_adjust_this,
-			   DECL_ARGUMENTS (decl), NULL);
-	      if (TREE_VALUE (attr) != NULL_TREE)
-		{
-		  tree cl = TREE_VALUE (TREE_VALUE (attr));
-		  cl = c_omp_declare_simd_clauses_to_numbers
-						(DECL_ARGUMENTS (decl), cl);
-		  if (cl)
-		    TREE_VALUE (TREE_VALUE (attr)) = cl;
-		  else
-		    TREE_VALUE (attr) = NULL_TREE;
-		}
-	    }
-	}
-    }
 
   /* Caller will do the rest of this.  */
   if (check < 0)
@@ -17879,11 +17636,6 @@ finish_function (bool inline_p)
   // If this is a concept, check that the definition is reasonable.
   if (DECL_DECLARED_CONCEPT_P (fndecl))
     check_function_concept (fndecl);
-
-  if (flag_openmp)
-    if (tree attr = lookup_attribute ("omp declare variant base",
-				      DECL_ATTRIBUTES (fndecl)))
-      omp_declare_variant_finalize (fndecl, attr);
 
   /* Complain if there's just no return statement.  */
   if ((warn_return_type

@@ -10,85 +10,76 @@
 
 #include <setjmp.h>
 
-typedef struct
-{
-  /* These are all indexed by nibble number (i.e only every other entry
-     of bytes is used, and every 4th entry of words).  */
-  unsigned char nibbles[24];
-  unsigned char bytes[24];
-  unsigned short words[24];
+typedef struct {
+	/* These are all indexed by nibble number (i.e only every other entry 
+	   of bytes is used, and every 4th entry of words). */
+	unsigned char nibbles[24];
+	unsigned char bytes[24];
+	unsigned short words[24];
 
-  /* Nibble number of first word not yet fetched.  */
-  unsigned int max_fetched;
-  bfd_vma insn_start;
-  OPCODES_SIGJMP_BUF bailout;
+	/* Nibble number of first word not yet fetched. */
+	unsigned int max_fetched;
+	bfd_vma insn_start;
+	OPCODES_SIGJMP_BUF bailout;
 
-  int tabl_index;
-  char instr_asmsrc[80];
-  unsigned long arg_reg[0x0f];
-  unsigned long immediate;
-  unsigned long displacement;
-  unsigned long address;
-  unsigned long cond_code;
-  unsigned long ctrl_code;
-  unsigned long flags;
-  unsigned long interrupts;
-}
-instr_data_s;
+	int tabl_index;
+	char instr_asmsrc[80];
+	unsigned long arg_reg[0x0f];
+	unsigned long immediate;
+	unsigned long displacement;
+	unsigned long address;
+	unsigned long cond_code;
+	unsigned long ctrl_code;
+	unsigned long flags;
+	unsigned long interrupts;
+} instr_data_s;
 
 /* Make sure that bytes from INFO->PRIVATE_DATA->BUFFER (inclusive)
    to ADDR (exclusive) are valid.  Returns 1 for success, longjmps
-   on error.  */
+   on error. */
 #define FETCH_DATA(info, nibble) \
-  ((nibble) < ((instr_data_s *) (info->private_data))->max_fetched \
-   ? 1 : fetch_data ((info), (nibble)))
+  ((nibble) < ((instr_data_s *) (info->private_data))->max_fetched ? 1 : fetch_data ((info), (nibble)))
 
 static int
-fetch_data (struct disassemble_info *info, int nibble)
+fetch_data(struct disassemble_info *info, int nibble)
 {
-  unsigned char mybuf[20];
-  int status;
-  instr_data_s *priv = (instr_data_s *) info->private_data;
+	unsigned char mybuf[20];
+	int status;
+	instr_data_s *priv = (instr_data_s *) info->private_data;
 
-  if ((nibble % 4) != 0)
-    abort ();
+	if ((nibble % 4) != 0)
+		abort();
 
-  status = (*info->read_memory_func) (priv->insn_start,
-				      (bfd_byte *) mybuf,
-				      nibble / 2,
-				      info);
-  if (status != 0)
-    {
-      (*info->memory_error_func) (status, priv->insn_start, info);
-      OPCODES_SIGLONGJMP (priv->bailout, 1);
-    }
+	status = (*info->read_memory_func) (priv->insn_start, (bfd_byte *) mybuf, nibble / 2, info);
+	if (status != 0) {
+		(*info->memory_error_func) (status, priv->insn_start, info);
+		OPCODES_SIGLONGJMP(priv->bailout, 1);
+	}
 
-  {
-    int i;
-    unsigned char *p = mybuf;
+	{
+		int i;
+		unsigned char *p = mybuf;
 
-    for (i = 0; i < nibble;)
-      {
-	priv->words[i] = (p[0] << 8) | p[1];
+		for (i = 0; i < nibble;) {
+			priv->words[i] = (p[0] << 8) | p[1];
 
-	priv->bytes[i] = *p;
-	priv->nibbles[i++] = *p >> 4;
-	priv->nibbles[i++] = *p & 0xf;
+			priv->bytes[i] = *p;
+			priv->nibbles[i++] = *p >> 4;
+			priv->nibbles[i++] = *p & 0xf;
 
-	++p;
-	priv->bytes[i] = *p;
-	priv->nibbles[i++] = *p >> 4;
-	priv->nibbles[i++] = *p & 0xf;
+			++p;
+			priv->bytes[i] = *p;
+			priv->nibbles[i++] = *p >> 4;
+			priv->nibbles[i++] = *p & 0xf;
 
-	++p;
-      }
-  }
-  priv->max_fetched = nibble;
-  return 1;
+			++p;
+		}
+	}
+	priv->max_fetched = nibble;
+	return 1;
 }
 
-static char *codes[16] =
-  {
+static char *codes[16] = {
     "f",
     "lt",
     "le",
@@ -105,10 +96,9 @@ static char *codes[16] =
     "pl",
     "ne",
     "nc/uge"
-  };
+};
 
-static char *ctrl_names[8] =
-  {
+static char *ctrl_names[8] = {
     "<invld>",
     "flags",
     "fcw",
@@ -117,61 +107,58 @@ static char *ctrl_names[8] =
     "psapoff",
     "nspseg",
     "nspoff"
-  };
+};
 
 static int seg_length;
-int z8k_lookup_instr (unsigned char *, disassemble_info *);
-static void output_instr (instr_data_s *, unsigned long, disassemble_info *);
-static void unpack_instr (instr_data_s *, int, disassemble_info *);
-static void unparse_instr (instr_data_s *, int);
+int z8k_lookup_instr(unsigned char *, disassemble_info *);
+static void output_instr(instr_data_s *, unsigned long, disassemble_info *);
+static void unpack_instr(instr_data_s *, int, disassemble_info *);
+static void unparse_instr(instr_data_s *, int);
 
 static int
-print_insn_z8k (bfd_vma addr, disassemble_info *info, int is_segmented)
+print_insn_z8k(bfd_vma addr, disassemble_info *info, int is_segmented)
 {
-  instr_data_s instr_data;
+	instr_data_s instr_data;
 
-  info->private_data = (PTR) &instr_data;
-  instr_data.max_fetched = 0;
-  instr_data.insn_start = addr;
-  if (OPCODES_SIGSETJMP (instr_data.bailout) != 0)
-    /* Error return.  */
-    return -1;
+	info->private_data = (PTR) &instr_data;
+	instr_data.max_fetched = 0;
+	instr_data.insn_start = addr;
+	if (OPCODES_SIGSETJMP(instr_data.bailout) != 0)
+		/* Error return.  */
+		return -1;
 
-  info->bytes_per_chunk = 2;
-  info->bytes_per_line = 6;
-  info->display_endian = BFD_ENDIAN_BIG;
+	info->bytes_per_chunk = 2;
+	info->bytes_per_line = 6;
+	info->display_endian = BFD_ENDIAN_BIG;
 
-  instr_data.tabl_index = z8k_lookup_instr (instr_data.nibbles, info);
-  if (instr_data.tabl_index >= 0)
-    {
-      unpack_instr (&instr_data, is_segmented, info);
-      unparse_instr (&instr_data, is_segmented);
-      output_instr (&instr_data, addr, info);
-      return z8k_table[instr_data.tabl_index].length + seg_length;
-    }
-  else
-    {
-      FETCH_DATA (info, 4);
-      (*info->fprintf_func) (info->stream, ".word %02x%02x",
-			     instr_data.bytes[0], instr_data.bytes[2]);
-      return 2;
-    }
+	instr_data.tabl_index = z8k_lookup_instr(instr_data.nibbles, info);
+	if (instr_data.tabl_index >= 0) {
+		unpack_instr(&instr_data, is_segmented, info);
+		unparse_instr(&instr_data, is_segmented);
+		output_instr(&instr_data, addr, info);
+		return z8k_table[instr_data.tabl_index].length + seg_length;
+	} else {
+		FETCH_DATA (info, 4);
+		(*info->fprintf_func) (info->stream, ".word %02x%02x",
+		instr_data.bytes[0], instr_data.bytes[2]);
+		return 2;
+	}
 }
 
 int
-print_insn_z8001 (bfd_vma addr, disassemble_info *info)
+print_insn_z8001(bfd_vma addr, disassemble_info *info)
 {
-  return print_insn_z8k (addr, info, 1);
+	return print_insn_z8k(addr, info, 1);
 }
 
 int
-print_insn_z8002 (bfd_vma addr, disassemble_info *info)
+print_insn_z8002(bfd_vma addr, disassemble_info *info)
 {
-  return print_insn_z8k (addr, info, 0);
+	return print_insn_z8k(addr, info, 0);
 }
 
 int
-z8k_lookup_instr (unsigned char *nibbles, disassemble_info *info)
+z8k_lookup_instr(unsigned char *nibbles, disassemble_info *info)
 {
   unsigned int nibl_index, tabl_index;
   int nibl_matched;

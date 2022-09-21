@@ -28,31 +28,29 @@
    Invoke this function on every expression that the language
    requires to be a constant expression.
    Note the ANSI C standard says it is erroneous for a
-   constant expression to overflow.  */
-
+   constant expression to overflow. */
 void
-constant_expression_warning (tree value)
+constant_expression_warning(tree value)
 {
-  if (warn_overflow && pedantic
-      && (TREE_CODE (value) == INTEGER_CST || TREE_CODE (value) == REAL_CST
-	  || TREE_CODE (value) == FIXED_CST
-	  || TREE_CODE (value) == VECTOR_CST
-	  || TREE_CODE (value) == COMPLEX_CST)
-      && TREE_OVERFLOW (value))
-    pedwarn (input_location, OPT_Woverflow, "overflow in constant expression");
+	if (warn_overflow && pedantic
+			&& (TREE_CODE(value) == INTEGER_CST || TREE_CODE(value) == REAL_CST
+			|| TREE_CODE(value) == FIXED_CST
+			|| TREE_CODE(value) == VECTOR_CST
+			|| TREE_CODE(value) == COMPLEX_CST)
+			&& TREE_OVERFLOW(value))
+		pedwarn(input_location, OPT_Woverflow, "overflow in constant expression");
 }
 
-/* The same as above but print an unconditional error.  */
-
+/* The same as above but print an unconditional error. */
 void
-constant_expression_error (tree value)
+constant_expression_error(tree value)
 {
-  if ((TREE_CODE (value) == INTEGER_CST || TREE_CODE (value) == REAL_CST
-       || TREE_CODE (value) == FIXED_CST
-       || TREE_CODE (value) == VECTOR_CST
-       || TREE_CODE (value) == COMPLEX_CST)
-      && TREE_OVERFLOW (value))
-    error ("overflow in constant expression");
+	if ((TREE_CODE(value) == INTEGER_CST || TREE_CODE(value) == REAL_CST
+			|| TREE_CODE(value) == FIXED_CST
+			|| TREE_CODE(value) == VECTOR_CST
+			|| TREE_CODE(value) == COMPLEX_CST)
+			&& TREE_OVERFLOW(value))
+		error("overflow in constant expression");
 }
 
 /* Print a warning if an expression result VALUE had an overflow
@@ -65,86 +63,58 @@ constant_expression_error (tree value)
    (3) is not already checked by convert_and_check;
    however, do not invoke this function on operands of explicit casts
    or when the expression is the result of an operator and any operand
-   already overflowed.  */
-
+   already overflowed. */
 void
-overflow_warning (location_t loc, tree value, tree expr)
+overflow_warning(location_t loc, tree value, tree expr)
 {
-  if (c_inhibit_evaluation_warnings != 0)
-    return;
+	if (c_inhibit_evaluation_warnings != 0)
+		return;
 
-  const char *warnfmt = NULL;
+	const char *warnfmt = NULL;
 
-  switch (TREE_CODE (value))
-    {
-    case INTEGER_CST:
-      warnfmt = (expr
-		 ? G_("integer overflow in expression %qE of type %qT "
-		      "results in %qE")
-		 : G_("integer overflow in expression of type %qT "
-		      "results in %qE"));
-      break;
+	switch (TREE_CODE(value)) {
+		case INTEGER_CST:
+			warnfmt = (expr ? G_("integer overflow in expression %qE of type %qT results in %qE")
+				: G_("integer overflow in expression of type %qT results in %qE"));
+			break;
+		case REAL_CST:
+			warnfmt = (expr ? G_("floating point overflow in expression %qE of type %qT results in %qE")
+				: G_("floating point overflow in expression of type %qT results in %qE"));
+			break;
+		case FIXED_CST:
+			warnfmt = (expr ? G_("fixed-point overflow in expression %qE of type %qT results in %qE")
+				: G_("fixed-point overflow in expression of type %qT results in %qE"));
+			break;
+		case VECTOR_CST:
+			warnfmt = (expr ? G_("vector overflow in expression %qE of type %qT results in %qE")
+			: G_("vector overflow in expression of type %qT results in %qE"));
+			break;
+		case COMPLEX_CST:
+			if (TREE_CODE(TREE_REALPART(value)) == INTEGER_CST)
+				warnfmt = (expr ? G_("complex integer overflow in expression %qE of type %qT results in %qE")
+					: G_("complex integer overflow in expression of type %qT results in %qE"));
+			else if (TREE_CODE(TREE_REALPART(value)) == REAL_CST)
+				warnfmt = (expr ? G_("complex floating point overflow in expression %qE of type %qT results in %qE")
+					: G_("complex floating point overflow in expression of type %qT results in %qE"));
+			else
+				return;
+			break;
+		default:
+			return;
+	}
 
-    case REAL_CST:
-      warnfmt = (expr
-		 ? G_("floating point overflow in expression %qE "
-		      "of type %qT results in %qE")
-		 : G_("floating point overflow in expression of type %qT "
-		      "results in %qE"));
-      break;
+	bool warned;
+	if (expr)
+		warned = warning_at(loc, OPT_Woverflow, warnfmt, expr, TREE_TYPE(expr), value);
+	else
+		warned = warning_at(loc, OPT_Woverflow, warnfmt, TREE_TYPE(value), value);
 
-    case FIXED_CST:
-      warnfmt = (expr
-		 ? G_("fixed-point overflow in expression %qE of type %qT "
-		      "results in %qE")
-		 : G_("fixed-point overflow in expression of type %qT "
-		      "results in %qE"));
-      break;
-
-    case VECTOR_CST:
-      warnfmt = (expr
-		 ? G_("vector overflow in expression %qE of type %qT "
-		      "results in %qE")
-		 : G_("vector overflow in expression of type %qT "
-		      "results in %qE"));
-      break;
-
-    case COMPLEX_CST:
-      if (TREE_CODE (TREE_REALPART (value)) == INTEGER_CST)
-	warnfmt = (expr
-		   ? G_("complex integer overflow in expression %qE "
-			"of type %qT results in %qE")
-		   : G_("complex integer overflow in expression of type %qT "
-			"results in %qE"));
-      else if (TREE_CODE (TREE_REALPART (value)) == REAL_CST)
-	warnfmt = (expr
-		   ? G_("complex floating point overflow in expression %qE "
-			"of type %qT results in %qE")
-		   : G_("complex floating point overflow in expression "
-			"of type %qT results in %qE"));
-      else
-	return;
-      break;
-
-    default:
-      return;
-    }
-
-  bool warned;
-  if (expr)
-    warned = warning_at (loc, OPT_Woverflow, warnfmt, expr, TREE_TYPE (expr),
-			 value);
-  else
-    warned = warning_at (loc, OPT_Woverflow, warnfmt, TREE_TYPE (value),
-			 value);
-
-  if (warned)
-    suppress_warning (value, OPT_Woverflow);
+	if (warned)
+		suppress_warning(value, OPT_Woverflow);
 }
 
 /* Helper function for walk_tree.  Unwrap C_MAYBE_CONST_EXPRs in an expression
-   pointed to by TP.  */
-
+   pointed to by TP. */
 static tree
 unwrap_c_maybe_const (tree *tp, int *walk_subtrees, void *)
 {

@@ -3,8 +3,7 @@
 
 /* i386 opcode table.  */
 
-const insn_template i386_optab[] =
-{
+const insn_template i386_optab[] = {
   { "mov", 0xa0, None, 2,
     { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

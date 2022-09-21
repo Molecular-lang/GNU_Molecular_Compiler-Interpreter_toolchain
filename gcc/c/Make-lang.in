@@ -35,8 +35,7 @@ CFLAGS-c/gccspec.o += $(DRIVER_DEFINES)
 # Language-specific object files for C and Objective C.
 C_AND_OBJC_OBJS = attribs.o c/c-errors.o c/c-decl.o c/c-typeck.o \
   c/c-convert.o c/c-aux-info.o c/c-objc-common.o c/c-parser.o \
-  c/c-fold.o c/gimple-parser.o \
-  $(C_COMMON_OBJS) $(C_TARGET_OBJS)
+  c/c-fold.o $(C_COMMON_OBJS) $(C_TARGET_OBJS)
 
 # Language-specific object files for C.
 C_OBJS = c/c-lang.o c-family/stub-objc.o $(C_AND_OBJC_OBJS)
@@ -74,7 +73,6 @@ cc1$(exeext): $(C_OBJS) cc1-checksum.o $(BACKEND) $(LIBDEPS)
 cc1.fda: ../stage1-gcc/cc1$(exeext) ../prev-gcc/$(PERF_DATA)
 	$(CREATE_GCOV) -binary ../stage1-gcc/cc1$(exeext) -gcov cc1.fda -profile ../prev-gcc/$(PERF_DATA) -gcov_version 1
 
-#
 # Build hooks:
 
 c.info:
@@ -114,8 +112,7 @@ s-selftest-c: $(C_SELFTEST_DEPS)
 # Convenience methods for running C selftests under gdb:
 .PHONY: selftest-c-gdb
 selftest-c-gdb: $(C_SELFTEST_DEPS)
-	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS) \
-	  -wrapper gdb,--args
+	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS) -wrapper gdb,--args
 
 .PHONY: selftest-gdb
 selftest-gdb: selftest-c-gdb
@@ -123,8 +120,7 @@ selftest-gdb: selftest-c-gdb
 # Convenience methods for running C selftests under valgrind:
 .PHONY: selftest-c-valgrind
 selftest-c-valgrind: $(C_SELFTEST_DEPS)
-	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS) \
-	  -wrapper valgrind,--leak-check=full
+	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS) -wrapper valgrind,--leak-check=full
 
 .PHONY: selftest-valgrind
 selftest-valgrind: selftest-c-valgrind
@@ -138,7 +134,6 @@ check_gcc_parallelize=10000
 # 'make check' in gcc/ looks for check-c.  Redirect it to check-gcc.
 check-c : check-gcc
 
-#
 # Install hooks:
 # cc1 is installed elsewhere as part of $(COMPILERS).
 
@@ -154,7 +149,6 @@ endif
 
 c.uninstall:
 
-#
 # Clean hooks:
 # A lot of the ancillary files are deleted by the main makefile.
 # We just have to delete files specific to us.
@@ -168,7 +162,7 @@ c.clean:
 c.distclean:
 	-rm -f c/config.status c/Makefile
 c.maintainer-clean:
-#
+
 # Stage hooks:
 # The main makefile has already created stage?/cp.
 

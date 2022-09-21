@@ -4326,13 +4326,6 @@ error_args_num (location_t loc, tree fndecl, bool too_many_p)
     }
   else
     {
-      if (c_dialect_objc ()  &&  objc_message_selector ())
-	error_at (loc,
-		  too_many_p 
-		  ? G_("too many arguments to method %q#D")
-		  : G_("too few arguments to method %q#D"),
-		  objc_message_selector ());
-      else
 	error_at (loc, too_many_p ? G_("too many arguments to function")
 		                  : G_("too few arguments to function"));
     }
@@ -7218,13 +7211,6 @@ cp_build_unary_op (enum tree_code code, tree xarg, bool noconvert,
 
 	inc = cp_convert (argtype, inc, complain);
 
-	/* If 'arg' is an Objective-C PROPERTY_REF expression, then we
-	   need to ask Objective-C to build the increment or decrement
-	   expression for it.  */
-	if (objc_is_property_ref (arg))
-	  return objc_build_incr_expr_for_property_ref (input_location, code, 
-							arg, inc);	
-
 	/* Complain about anything else that is not a true lvalue.  */
 	if (!lvalue_or_else (arg, ((code == PREINCREMENT_EXPR
 				    || code == POSTINCREMENT_EXPR)
@@ -8774,13 +8760,6 @@ cp_build_c_cast (location_t loc, tree type, tree expr,
       return convert_from_reference (t);
     }
 
-  /* Casts to a (pointer to a) specific ObjC class (or 'id' or
-     'Class') should always be retained, because this information aids
-     in method lookup.  */
-  if (objc_is_object_ptr (type)
-      && objc_is_object_ptr (TREE_TYPE (expr)))
-    return build_nop (type, expr);
-
   /* build_c_cast puts on a NOP_EXPR to make the result not an lvalue.
      Strip such NOP_EXPRs if VALUE is being used in non-lvalue context.  */
   if (!TYPE_REF_P (type)
@@ -9083,13 +9062,6 @@ cp_build_modify_expr (location_t loc, tree lhs, enum tree_code modifycode,
 
       if (modifycode == NOP_EXPR)
 	{
-	  if (c_dialect_objc ())
-	    {
-	      result = objc_maybe_build_modify_expr (lhs, rhs);
-	      if (result)
-		goto ret;
-	    }
-
 	  /* `operator=' is not an inheritable operator.  */
 	  if (! MAYBE_CLASS_TYPE_P (lhstype))
 	    /* Do the default thing.  */;
@@ -9153,12 +9125,6 @@ cp_build_modify_expr (location_t loc, tree lhs, enum tree_code modifycode,
 
 	  /* Now it looks like a plain assignment.  */
 	  modifycode = NOP_EXPR;
-	  if (c_dialect_objc ())
-	    {
-	      result = objc_maybe_build_modify_expr (lhs, newrhs);
-	      if (result)
-		goto ret;
-	    }
 	}
       gcc_assert (!TYPE_REF_P (lhstype));
       gcc_assert (!TYPE_REF_P (TREE_TYPE (newrhs)));
@@ -9290,16 +9256,7 @@ cp_build_modify_expr (location_t loc, tree lhs, enum tree_code modifycode,
   if (newrhs == error_mark_node)
     return error_mark_node;
 
-  if (c_dialect_objc () && flag_objc_gc)
-    {
-      result = objc_generate_write_barrier (lhs, modifycode, newrhs);
-
-      if (result)
-	goto ret;
-    }
-
-  result = build2_loc (loc, modifycode == NOP_EXPR ? MODIFY_EXPR : INIT_EXPR,
-		       lhstype, lhs, newrhs);
+  result = build2_loc (loc, modifycode == NOP_EXPR ? MODIFY_EXPR : INIT_EXPR, lhstype, lhs, newrhs);
 
   TREE_SIDE_EFFECTS (result) = 1;
   if (!plain_assign)
@@ -9793,37 +9750,6 @@ convert_for_assignment (tree type, tree rhs,
       if (complain & tf_error)
 	error_at (rhs_loc, "void value not ignored as it ought to be");
       return error_mark_node;
-    }
-
-  if (c_dialect_objc ())
-    {
-      int parmno;
-      tree selector;
-      tree rname = fndecl;
-
-      switch (errtype)
-        {
-	  case ICR_ASSIGN:
-	    parmno = -1;
-	    break;
-	  case ICR_INIT:
-	    parmno = -2;
-	    break;
-	  default:
-	    selector = objc_message_selector ();
-	    parmno = parmnum;
-	    if (selector && parmno > 1)
-	      {
-		rname = selector;
-		parmno -= 1;
-	      }
-	}
-
-      if (objc_compare_types (type, rhstype, parmno, rname))
-	{
-	  rhs = mark_rvalue_use (rhs);
-	  return convert (type, rhs);
-	}
     }
 
   /* [expr.ass]

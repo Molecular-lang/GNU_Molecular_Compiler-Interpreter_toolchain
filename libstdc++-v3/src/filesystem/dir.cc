@@ -21,8 +21,7 @@
 #include <stack>
 #include <string.h>
 #include <errno.h>
-#define _GLIBCXX_BEGIN_NAMESPACE_FILESYSTEM \
-  namespace experimental { namespace filesystem {
+#define _GLIBCXX_BEGIN_NAMESPACE_FILESYSTEM namespace experimental { namespace filesystem {
 #define _GLIBCXX_END_NAMESPACE_FILESYSTEM } }
 #include "dir-common.h"
 

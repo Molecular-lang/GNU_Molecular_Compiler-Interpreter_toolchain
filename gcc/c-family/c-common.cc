@@ -424,9 +424,6 @@ const struct c_common_resword c_common_reswords[] = {
 	{ "__signed",		RID_SIGNED,	0 },
 	{ "__signed__",		RID_SIGNED,	0 },
 	{ "__thread",		RID_THREAD,	0 },
-	{ "__transaction_atomic",	RID_TRANSACTION_ATOMIC, 0 },
-	{ "__transaction_relaxed",	RID_TRANSACTION_RELAXED, 0 },
-	{ "__transaction_cancel",	RID_TRANSACTION_CANCEL, 0 },
 	{ "__typeof",			RID_TYPEOF,	0 },
 	{ "__typeof__",			RID_TYPEOF,	0 },
 	{ "__underlying_type",	RID_UNDERLYING_TYPE, D_CXXONLY },
@@ -517,12 +514,6 @@ const struct c_common_resword c_common_reswords[] = {
 	{ "__is_constructible", 				RID_IS_CONSTRUCTIBLE, D_CXXONLY },
 	{ "__is_nothrow_assignable", 		RID_IS_NOTHROW_ASSIGNABLE, D_CXXONLY },
 	{ "__is_nothrow_constructible", 		RID_IS_NOTHROW_CONSTRUCTIBLE, D_CXXONLY },
-
-	/* C++ transactional memory.  */
-	{ "synchronized",	RID_SYNCHRONIZED, D_CXX_OBJC | D_TRANSMEM },
-	{ "atomic_noexcept",	RID_ATOMIC_NOEXCEPT, D_CXXONLY | D_TRANSMEM },
-	{ "atomic_cancel",	RID_ATOMIC_CANCEL, D_CXXONLY | D_TRANSMEM },
-	{ "atomic_commit",	RID_TRANSACTION_ATOMIC, D_CXXONLY | D_TRANSMEM },
 
 	/* Concepts-related keywords */
 	{ "concept",		RID_CONCEPT,	D_CXX_CONCEPTS_FLAGS | D_CXXWARN },

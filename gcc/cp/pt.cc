@@ -11618,9 +11618,6 @@ can_complete_type_without_circularity (tree type)
     return 1;
 }
 
-static tree tsubst_omp_clauses (tree, enum c_omp_region_type, tree,
-				tsubst_flags_t, tree);
-
 /* Instantiate a single dependent attribute T (a TREE_LIST), and return either
    T or a new TREE_LIST, possibly a chain in the case of a pack expansion.  */
 
@@ -11633,105 +11630,6 @@ tsubst_attribute (tree t, tree *decl_p, tree args,
   tree val = TREE_VALUE (t);
   if (val == NULL_TREE)
     /* Nothing to do.  */;
-  else if ((flag_openmp || flag_openmp_simd)
-	   && is_attribute_p ("omp declare simd",
-			      get_attribute_name (t)))
-    {
-      tree clauses = TREE_VALUE (val);
-      clauses = tsubst_omp_clauses (clauses, C_ORT_OMP_DECLARE_SIMD, args,
-				    complain, in_decl);
-      c_omp_declare_simd_clauses_to_decls (*decl_p, clauses);
-      clauses = finish_omp_clauses (clauses, C_ORT_OMP_DECLARE_SIMD);
-      tree parms = DECL_ARGUMENTS (*decl_p);
-      clauses
-	= c_omp_declare_simd_clauses_to_numbers (parms, clauses);
-      if (clauses)
-	val = build_tree_list (NULL_TREE, clauses);
-      else
-	val = NULL_TREE;
-    }
-  else if (flag_openmp
-	   && is_attribute_p ("omp declare variant base",
-			      get_attribute_name (t)))
-    {
-      ++cp_unevaluated_operand;
-      tree varid
-	= tsubst_expr (TREE_PURPOSE (val), args, complain,
-		       in_decl, /*integral_constant_expression_p=*/false);
-      --cp_unevaluated_operand;
-      tree chain = TREE_CHAIN (val);
-      location_t match_loc = cp_expr_loc_or_input_loc (TREE_PURPOSE (chain));
-      tree ctx = copy_list (TREE_VALUE (val));
-      tree simd = get_identifier ("simd");
-      tree score = get_identifier (" score");
-      tree condition = get_identifier ("condition");
-      for (tree t1 = ctx; t1; t1 = TREE_CHAIN (t1))
-	{
-	  const char *set = IDENTIFIER_POINTER (TREE_PURPOSE (t1));
-	  TREE_VALUE (t1) = copy_list (TREE_VALUE (t1));
-	  for (tree t2 = TREE_VALUE (t1); t2; t2 = TREE_CHAIN (t2))
-	    {
-	      if (TREE_PURPOSE (t2) == simd && set[0] == 'c')
-		{
-		  tree clauses = TREE_VALUE (t2);
-		  clauses = tsubst_omp_clauses (clauses,
-						C_ORT_OMP_DECLARE_SIMD, args,
-						complain, in_decl);
-		  c_omp_declare_simd_clauses_to_decls (*decl_p, clauses);
-		  clauses = finish_omp_clauses (clauses, C_ORT_OMP_DECLARE_SIMD);
-		  TREE_VALUE (t2) = clauses;
-		}
-	      else
-		{
-		  TREE_VALUE (t2) = copy_list (TREE_VALUE (t2));
-		  for (tree t3 = TREE_VALUE (t2); t3; t3 = TREE_CHAIN (t3))
-		    if (TREE_VALUE (t3))
-		      {
-			bool allow_string
-			  = ((TREE_PURPOSE (t2) != condition || set[0] != 'u')
-			     && TREE_PURPOSE (t3) != score);
-			tree v = TREE_VALUE (t3);
-			if (TREE_CODE (v) == STRING_CST && allow_string)
-			  continue;
-			v = tsubst_expr (v, args, complain, in_decl, true);
-			v = fold_non_dependent_expr (v);
-			if (!INTEGRAL_TYPE_P (TREE_TYPE (v))
-			    || (TREE_PURPOSE (t3) == score
-				? TREE_CODE (v) != INTEGER_CST
-				: !tree_fits_shwi_p (v)))
-			  {
-			    location_t loc
-			      = cp_expr_loc_or_loc (TREE_VALUE (t3),
-						    match_loc);
-			    if (TREE_PURPOSE (t3) == score)
-			      error_at (loc, "score argument must be "
-					     "constant integer expression");
-			    else if (allow_string)
-			      error_at (loc, "property must be constant "
-					     "integer expression or string "
-					     "literal");
-			    else
-			      error_at (loc, "property must be constant "
-					     "integer expression");
-			    return NULL_TREE;
-			  }
-			else if (TREE_PURPOSE (t3) == score
-				 && tree_int_cst_sgn (v) < 0)
-			  {
-			    location_t loc
-			      = cp_expr_loc_or_loc (TREE_VALUE (t3),
-						    match_loc);
-			    error_at (loc, "score argument must be "
-					   "non-negative");
-			    return NULL_TREE;
-			  }
-			TREE_VALUE (t3) = v;
-		      }
-		}
-	    }
-	}
-      val = tree_cons (varid, ctx, chain);
-    }
   /* If the first attribute argument is an identifier, don't
      pass it through tsubst.  Attributes like mode, format,
      cleanup and several target specific attributes expect it
@@ -12192,9 +12090,6 @@ instantiate_class_template (tree type)
 	      /* Instantiate members marked with attribute used.  */
 	      if (r != error_mark_node && DECL_PRESERVE_P (r))
 		used.safe_push (r);
-	      if (TREE_CODE (r) == FUNCTION_DECL
-		  && DECL_OMP_DECLARE_REDUCTION_P (r))
-		cp_check_omp_declare_reduction (r);
 	    }
 	  else if ((DECL_CLASS_TEMPLATE_P (t) || DECL_IMPLICIT_TYPEDEF_P (t))
 		   && LAMBDA_TYPE_P (TREE_TYPE (t)))
@@ -14204,24 +14099,6 @@ tsubst_function_decl (tree t, tree args, tsubst_flags_t complain,
 	}
     }
 
-  /* OpenMP UDRs have the only argument a reference to the declared
-     type.  We want to diagnose if the declared type is a reference,
-     which is invalid, but as references to references are usually
-     quietly merged, diagnose it here.  */
-  if (DECL_OMP_DECLARE_REDUCTION_P (t))
-    {
-      tree argtype
-	= TREE_TYPE (TREE_VALUE (TYPE_ARG_TYPES (TREE_TYPE (t))));
-      argtype = tsubst (argtype, args, complain, in_decl);
-      if (TYPE_REF_P (argtype))
-	error_at (DECL_SOURCE_LOCATION (t),
-		  "reference type %qT in "
-		  "%<#pragma omp declare reduction%>", argtype);
-      if (strchr (IDENTIFIER_POINTER (DECL_NAME (t)), '~') == NULL)
-	DECL_NAME (r) = omp_reduction_id (ERROR_MARK, DECL_NAME (t),
-					  argtype);
-    }
-
   if (member && DECL_CONV_FN_P (r))
     /* Type-conversion operator.  Reconstruct the name, in
        case it's the name of one of the template's parameters.  */
@@ -14362,11 +14239,6 @@ tsubst_function_decl (tree t, tree args, tsubst_flags_t complain,
   if (DECL_DEFAULTED_OUTSIDE_CLASS_P (r)
       && !processing_template_decl)
     defaulted_late_check (r);
-
-  if (flag_openmp)
-    if (tree attr = lookup_attribute ("omp declare variant base",
-				      DECL_ATTRIBUTES (r)))
-      omp_declare_variant_finalize (r, attr);
 
   return r;
 }
@@ -17668,352 +17540,10 @@ tsubst_copy (tree t, tree args, tsubst_flags_t complain, tree in_decl)
     }
 }
 
-/* Helper function for tsubst_omp_clauses, used for instantiation of
-   OMP_CLAUSE_DECL of clauses.  */
-
-static tree
-tsubst_omp_clause_decl (tree decl, tree args, tsubst_flags_t complain,
-			tree in_decl, tree *iterator_cache)
-{
-  if (decl == NULL_TREE || decl == ridpointers[RID_OMP_ALL_MEMORY])
-    return decl;
-
-  /* Handle OpenMP iterators.  */
-  if (TREE_CODE (decl) == TREE_LIST
-      && TREE_PURPOSE (decl)
-      && TREE_CODE (TREE_PURPOSE (decl)) == TREE_VEC)
-    {
-      tree ret;
-      if (iterator_cache[0] == TREE_PURPOSE (decl))
-	ret = iterator_cache[1];
-      else
-	{
-	  tree *tp = &ret;
-	  begin_scope (sk_omp, NULL);
-	  for (tree it = TREE_PURPOSE (decl); it; it = TREE_CHAIN (it))
-	    {
-	      *tp = copy_node (it);
-	      TREE_VEC_ELT (*tp, 0)
-		= tsubst_decl (TREE_VEC_ELT (it, 0), args, complain);
-	      DECL_CONTEXT (TREE_VEC_ELT (*tp, 0)) = current_function_decl;
-	      pushdecl (TREE_VEC_ELT (*tp, 0));
-	      TREE_VEC_ELT (*tp, 1)
-		= tsubst_expr (TREE_VEC_ELT (it, 1), args, complain, in_decl,
-			       /*integral_constant_expression_p=*/false);
-	      TREE_VEC_ELT (*tp, 2)
-		= tsubst_expr (TREE_VEC_ELT (it, 2), args, complain, in_decl,
-			       /*integral_constant_expression_p=*/false);
-	      TREE_VEC_ELT (*tp, 3)
-		= tsubst_expr (TREE_VEC_ELT (it, 3), args, complain, in_decl,
-			       /*integral_constant_expression_p=*/false);
-	      TREE_CHAIN (*tp) = NULL_TREE;
-	      tp = &TREE_CHAIN (*tp);
-	    }
-	  TREE_VEC_ELT (ret, 5) = poplevel (1, 1, 0);
-	  iterator_cache[0] = TREE_PURPOSE (decl);
-	  iterator_cache[1] = ret;
-	}
-      return build_tree_list (ret, tsubst_omp_clause_decl (TREE_VALUE (decl),
-							   args, complain,
-							   in_decl, NULL));
-    }
-
-  /* Handle an OpenMP array section represented as a TREE_LIST (or
-     OMP_CLAUSE_DEPEND_KIND).  An OMP_CLAUSE_DEPEND (with a depend
-     kind of OMP_CLAUSE_DEPEND_SINK) can also be represented as a
-     TREE_LIST.  We can handle it exactly the same as an array section
-     (purpose, value, and a chain), even though the nomenclature
-     (low_bound, length, etc) is different.  */
-  if (TREE_CODE (decl) == TREE_LIST)
-    {
-      tree low_bound
-	= tsubst_expr (TREE_PURPOSE (decl), args, complain, in_decl,
-		       /*integral_constant_expression_p=*/false);
-      tree length = tsubst_expr (TREE_VALUE (decl), args, complain, in_decl,
-				 /*integral_constant_expression_p=*/false);
-      tree chain = tsubst_omp_clause_decl (TREE_CHAIN (decl), args, complain,
-					   in_decl, NULL);
-      if (TREE_PURPOSE (decl) == low_bound
-	  && TREE_VALUE (decl) == length
-	  && TREE_CHAIN (decl) == chain)
-	return decl;
-      tree ret = tree_cons (low_bound, length, chain);
-      OMP_CLAUSE_DEPEND_SINK_NEGATIVE (ret)
-	= OMP_CLAUSE_DEPEND_SINK_NEGATIVE (decl);
-      return ret;
-    }
-  tree ret = tsubst_expr (decl, args, complain, in_decl,
-			  /*integral_constant_expression_p=*/false);
-  /* Undo convert_from_reference tsubst_expr could have called.  */
-  if (decl
-      && REFERENCE_REF_P (ret)
-      && !REFERENCE_REF_P (decl))
-    ret = TREE_OPERAND (ret, 0);
-  return ret;
-}
-
-/* Like tsubst_copy, but specifically for OpenMP clauses.  */
-
-static tree
-tsubst_omp_clauses (tree clauses, enum c_omp_region_type ort,
-		    tree args, tsubst_flags_t complain, tree in_decl)
-{
-  tree new_clauses = NULL_TREE, nc, oc;
-  tree linear_no_step = NULL_TREE;
-  tree iterator_cache[2] = { NULL_TREE, NULL_TREE };
-
-  for (oc = clauses; oc ; oc = OMP_CLAUSE_CHAIN (oc))
-    {
-      nc = copy_node (oc);
-      OMP_CLAUSE_CHAIN (nc) = new_clauses;
-      new_clauses = nc;
-
-      switch (OMP_CLAUSE_CODE (nc))
-	{
-	case OMP_CLAUSE_LASTPRIVATE:
-	  if (OMP_CLAUSE_LASTPRIVATE_STMT (oc))
-	    {
-	      OMP_CLAUSE_LASTPRIVATE_STMT (nc) = push_stmt_list ();
-	      tsubst_expr (OMP_CLAUSE_LASTPRIVATE_STMT (oc), args, complain,
-			   in_decl, /*integral_constant_expression_p=*/false);
-	      OMP_CLAUSE_LASTPRIVATE_STMT (nc)
-		= pop_stmt_list (OMP_CLAUSE_LASTPRIVATE_STMT (nc));
-	    }
-	  /* FALLTHRU */
-	case OMP_CLAUSE_PRIVATE:
-	case OMP_CLAUSE_SHARED:
-	case OMP_CLAUSE_FIRSTPRIVATE:
-	case OMP_CLAUSE_COPYIN:
-	case OMP_CLAUSE_COPYPRIVATE:
-	case OMP_CLAUSE_UNIFORM:
-	case OMP_CLAUSE_DEPEND:
-	case OMP_CLAUSE_AFFINITY:
-	case OMP_CLAUSE_FROM:
-	case OMP_CLAUSE_TO:
-	case OMP_CLAUSE_MAP:
-	case OMP_CLAUSE__CACHE_:
-	case OMP_CLAUSE_NONTEMPORAL:
-	case OMP_CLAUSE_USE_DEVICE_PTR:
-	case OMP_CLAUSE_USE_DEVICE_ADDR:
-	case OMP_CLAUSE_IS_DEVICE_PTR:
-	case OMP_CLAUSE_HAS_DEVICE_ADDR:
-	case OMP_CLAUSE_INCLUSIVE:
-	case OMP_CLAUSE_EXCLUSIVE:
-	  OMP_CLAUSE_DECL (nc)
-	    = tsubst_omp_clause_decl (OMP_CLAUSE_DECL (oc), args, complain,
-				      in_decl, iterator_cache);
-	  break;
-	case OMP_CLAUSE_NUM_TEAMS:
-	  if (OMP_CLAUSE_NUM_TEAMS_LOWER_EXPR (oc))
-	    OMP_CLAUSE_NUM_TEAMS_LOWER_EXPR (nc)
-	      = tsubst_expr (OMP_CLAUSE_NUM_TEAMS_LOWER_EXPR (oc), args,
-			     complain, in_decl,
-			     /*integral_constant_expression_p=*/false);
-	  /* FALLTHRU */
-	case OMP_CLAUSE_TILE:
-	case OMP_CLAUSE_IF:
-	case OMP_CLAUSE_NUM_THREADS:
-	case OMP_CLAUSE_SCHEDULE:
-	case OMP_CLAUSE_COLLAPSE:
-	case OMP_CLAUSE_FINAL:
-	case OMP_CLAUSE_DEVICE:
-	case OMP_CLAUSE_DIST_SCHEDULE:
-	case OMP_CLAUSE_THREAD_LIMIT:
-	case OMP_CLAUSE_SAFELEN:
-	case OMP_CLAUSE_SIMDLEN:
-	case OMP_CLAUSE_NUM_TASKS:
-	case OMP_CLAUSE_GRAINSIZE:
-	case OMP_CLAUSE_PRIORITY:
-	case OMP_CLAUSE_ORDERED:
-	case OMP_CLAUSE_HINT:
-	case OMP_CLAUSE_FILTER:
-	case OMP_CLAUSE_NUM_GANGS:
-	case OMP_CLAUSE_NUM_WORKERS:
-	case OMP_CLAUSE_VECTOR_LENGTH:
-	case OMP_CLAUSE_WORKER:
-	case OMP_CLAUSE_VECTOR:
-	case OMP_CLAUSE_ASYNC:
-	case OMP_CLAUSE_WAIT:
-	case OMP_CLAUSE_DETACH:
-	  OMP_CLAUSE_OPERAND (nc, 0)
-	    = tsubst_expr (OMP_CLAUSE_OPERAND (oc, 0), args, complain,
-			   in_decl, /*integral_constant_expression_p=*/false);
-	  break;
-	case OMP_CLAUSE_REDUCTION:
-	case OMP_CLAUSE_IN_REDUCTION:
-	case OMP_CLAUSE_TASK_REDUCTION:
-	  if (OMP_CLAUSE_REDUCTION_PLACEHOLDER (oc))
-	    {
-	      tree placeholder = OMP_CLAUSE_REDUCTION_PLACEHOLDER (oc);
-	      if (TREE_CODE (placeholder) == SCOPE_REF)
-		{
-		  tree scope = tsubst (TREE_OPERAND (placeholder, 0), args,
-				       complain, in_decl);
-		  OMP_CLAUSE_REDUCTION_PLACEHOLDER (nc)
-		    = build_qualified_name (NULL_TREE, scope,
-					    TREE_OPERAND (placeholder, 1),
-					    false);
-		}
-	      else
-		gcc_assert (identifier_p (placeholder));
-	    }
-	  OMP_CLAUSE_DECL (nc)
-	    = tsubst_omp_clause_decl (OMP_CLAUSE_DECL (oc), args, complain,
-				      in_decl, NULL);
-	  break;
-	case OMP_CLAUSE_GANG:
-	case OMP_CLAUSE_ALIGNED:
-	  OMP_CLAUSE_DECL (nc)
-	    = tsubst_omp_clause_decl (OMP_CLAUSE_DECL (oc), args, complain,
-				      in_decl, NULL);
-	  OMP_CLAUSE_OPERAND (nc, 1)
-	    = tsubst_expr (OMP_CLAUSE_OPERAND (oc, 1), args, complain,
-			   in_decl, /*integral_constant_expression_p=*/false);
-	  break;
-	case OMP_CLAUSE_ALLOCATE:
-	  OMP_CLAUSE_DECL (nc)
-	    = tsubst_omp_clause_decl (OMP_CLAUSE_DECL (oc), args, complain,
-				      in_decl, NULL);
-	  OMP_CLAUSE_OPERAND (nc, 1)
-	    = tsubst_expr (OMP_CLAUSE_OPERAND (oc, 1), args, complain,
-			   in_decl, /*integral_constant_expression_p=*/false);
-	  OMP_CLAUSE_OPERAND (nc, 2)
-	    = tsubst_expr (OMP_CLAUSE_OPERAND (oc, 2), args, complain,
-			   in_decl, /*integral_constant_expression_p=*/false);
-	  break;
-	case OMP_CLAUSE_LINEAR:
-	  OMP_CLAUSE_DECL (nc)
-	    = tsubst_omp_clause_decl (OMP_CLAUSE_DECL (oc), args, complain,
-				      in_decl, NULL);
-	  if (OMP_CLAUSE_LINEAR_STEP (oc) == NULL_TREE)
-	    {
-	      gcc_assert (!linear_no_step);
-	      linear_no_step = nc;
-	    }
-	  else if (OMP_CLAUSE_LINEAR_VARIABLE_STRIDE (oc))
-	    OMP_CLAUSE_LINEAR_STEP (nc)
-	      = tsubst_omp_clause_decl (OMP_CLAUSE_LINEAR_STEP (oc), args,
-					complain, in_decl, NULL);
-	  else
-	    OMP_CLAUSE_LINEAR_STEP (nc)
-	      = tsubst_expr (OMP_CLAUSE_LINEAR_STEP (oc), args, complain,
-			     in_decl,
-			     /*integral_constant_expression_p=*/false);
-	  break;
-	case OMP_CLAUSE_NOWAIT:
-	case OMP_CLAUSE_DEFAULT:
-	case OMP_CLAUSE_UNTIED:
-	case OMP_CLAUSE_MERGEABLE:
-	case OMP_CLAUSE_INBRANCH:
-	case OMP_CLAUSE_NOTINBRANCH:
-	case OMP_CLAUSE_PROC_BIND:
-	case OMP_CLAUSE_FOR:
-	case OMP_CLAUSE_PARALLEL:
-	case OMP_CLAUSE_SECTIONS:
-	case OMP_CLAUSE_TASKGROUP:
-	case OMP_CLAUSE_NOGROUP:
-	case OMP_CLAUSE_THREADS:
-	case OMP_CLAUSE_SIMD:
-	case OMP_CLAUSE_DEFAULTMAP:
-	case OMP_CLAUSE_ORDER:
-	case OMP_CLAUSE_BIND:
-	case OMP_CLAUSE_INDEPENDENT:
-	case OMP_CLAUSE_AUTO:
-	case OMP_CLAUSE_SEQ:
-	case OMP_CLAUSE_IF_PRESENT:
-	case OMP_CLAUSE_FINALIZE:
-	case OMP_CLAUSE_NOHOST:
-	  break;
-	default:
-	  gcc_unreachable ();
-	}
-      if ((ort & C_ORT_OMP_DECLARE_SIMD) == C_ORT_OMP)
-	switch (OMP_CLAUSE_CODE (nc))
-	  {
-	  case OMP_CLAUSE_SHARED:
-	  case OMP_CLAUSE_PRIVATE:
-	  case OMP_CLAUSE_FIRSTPRIVATE:
-	  case OMP_CLAUSE_LASTPRIVATE:
-	  case OMP_CLAUSE_COPYPRIVATE:
-	  case OMP_CLAUSE_LINEAR:
-	  case OMP_CLAUSE_REDUCTION:
-	  case OMP_CLAUSE_IN_REDUCTION:
-	  case OMP_CLAUSE_TASK_REDUCTION:
-	  case OMP_CLAUSE_USE_DEVICE_PTR:
-	  case OMP_CLAUSE_USE_DEVICE_ADDR:
-	  case OMP_CLAUSE_IS_DEVICE_PTR:
-	  case OMP_CLAUSE_HAS_DEVICE_ADDR:
-	  case OMP_CLAUSE_INCLUSIVE:
-	  case OMP_CLAUSE_EXCLUSIVE:
-	  case OMP_CLAUSE_ALLOCATE:
-	    /* tsubst_expr on SCOPE_REF results in returning
-	       finish_non_static_data_member result.  Undo that here.  */
-	    if (TREE_CODE (OMP_CLAUSE_DECL (oc)) == SCOPE_REF
-		&& (TREE_CODE (TREE_OPERAND (OMP_CLAUSE_DECL (oc), 1))
-		    == IDENTIFIER_NODE))
-	      {
-		tree t = OMP_CLAUSE_DECL (nc);
-		tree v = t;
-		while (v)
-		  switch (TREE_CODE (v))
-		    {
-		    case COMPONENT_REF:
-		    case MEM_REF:
-		    case INDIRECT_REF:
-		    CASE_CONVERT:
-		    case POINTER_PLUS_EXPR:
-		      v = TREE_OPERAND (v, 0);
-		      continue;
-		    case PARM_DECL:
-		      if (DECL_CONTEXT (v) == current_function_decl
-			  && DECL_ARTIFICIAL (v)
-			  && DECL_NAME (v) == this_identifier)
-			OMP_CLAUSE_DECL (nc) = TREE_OPERAND (t, 1);
-		      /* FALLTHRU */
-		    default:
-		      v = NULL_TREE;
-		      break;
-		    }
-	      }
-	    else if (VAR_P (OMP_CLAUSE_DECL (oc))
-		     && DECL_HAS_VALUE_EXPR_P (OMP_CLAUSE_DECL (oc))
-		     && DECL_ARTIFICIAL (OMP_CLAUSE_DECL (oc))
-		     && DECL_LANG_SPECIFIC (OMP_CLAUSE_DECL (oc))
-		     && DECL_OMP_PRIVATIZED_MEMBER (OMP_CLAUSE_DECL (oc)))
-	      {
-		tree decl = OMP_CLAUSE_DECL (nc);
-		if (VAR_P (decl))
-		  {
-		    retrofit_lang_decl (decl);
-		    DECL_OMP_PRIVATIZED_MEMBER (decl) = 1;
-		  }
-	      }
-	    break;
-	  default:
-	    break;
-	  }
-    }
-
-  new_clauses = nreverse (new_clauses);
-  if (ort != C_ORT_OMP_DECLARE_SIMD)
-    {
-      new_clauses = finish_omp_clauses (new_clauses, ort);
-      if (linear_no_step)
-	for (nc = new_clauses; nc; nc = OMP_CLAUSE_CHAIN (nc))
-	  if (nc == linear_no_step)
-	    {
-	      OMP_CLAUSE_LINEAR_STEP (nc) = NULL_TREE;
-	      break;
-	    }
-    }
-  return new_clauses;
-}
-
 /* Like tsubst_copy_and_build, but unshare TREE_LIST nodes.  */
 
 static tree
-tsubst_copy_asm_operands (tree t, tree args, tsubst_flags_t complain,
-			  tree in_decl)
+tsubst_copy_asm_operands (tree t, tree args, tsubst_flags_t complain, tree in_decl)
 {
 #define RECUR(t) tsubst_copy_asm_operands (t, args, complain, in_decl)
 
@@ -18154,7 +17684,6 @@ tsubst_omp_for_iterator (tree t, int i, tree declv, tree &orig_declv,
 			&& DECL_NAME (v) == this_identifier)
 		      {
 			decl = TREE_OPERAND (decl, 1);
-			decl = omp_privatize_field (decl, false);
 		      }
 		    /* FALLTHRU */
 		  default:
@@ -18268,64 +17797,7 @@ tsubst_omp_for_iterator (tree t, int i, tree declv, tree &orig_declv,
       RECUR (decl_expr);
       init = NULL_TREE;
     }
-  else if (init)
-    {
-      tree *pc;
-      int j;
-      for (j = ((omp_parallel_combined_clauses == NULL
-		|| TREE_CODE (t) == OMP_LOOP) ? 1 : 0); j < 2; j++)
-	{
-	  for (pc = j ? clauses : omp_parallel_combined_clauses; *pc; )
-	    {
-	      if (OMP_CLAUSE_CODE (*pc) == OMP_CLAUSE_PRIVATE
-		  && OMP_CLAUSE_DECL (*pc) == decl)
-		break;
-	      else if (OMP_CLAUSE_CODE (*pc) == OMP_CLAUSE_LASTPRIVATE
-		       && OMP_CLAUSE_DECL (*pc) == decl)
-		{
-		  if (j)
-		    break;
-		  /* Move lastprivate (decl) clause to OMP_FOR_CLAUSES.  */
-		  tree c = *pc;
-		  *pc = OMP_CLAUSE_CHAIN (c);
-		  OMP_CLAUSE_CHAIN (c) = *clauses;
-		  *clauses = c;
-		}
-	      else if (OMP_CLAUSE_CODE (*pc) == OMP_CLAUSE_FIRSTPRIVATE
-		       && OMP_CLAUSE_DECL (*pc) == decl)
-		{
-		  error ("iteration variable %qD should not be firstprivate",
-			 decl);
-		  *pc = OMP_CLAUSE_CHAIN (*pc);
-		}
-	      else if (OMP_CLAUSE_CODE (*pc) == OMP_CLAUSE_REDUCTION
-		       && OMP_CLAUSE_DECL (*pc) == decl)
-		{
-		  error ("iteration variable %qD should not be reduction",
-			 decl);
-		  *pc = OMP_CLAUSE_CHAIN (*pc);
-		}
-	      else
-		pc = &OMP_CLAUSE_CHAIN (*pc);
-	    }
-	  if (*pc)
-	    break;
-	}
-      if (*pc == NULL_TREE)
-	{
-	  tree c = build_omp_clause (input_location,
-				     TREE_CODE (t) == OMP_LOOP
-				     ? OMP_CLAUSE_LASTPRIVATE
-				     : OMP_CLAUSE_PRIVATE);
-	  OMP_CLAUSE_DECL (c) = decl;
-	  c = finish_omp_clauses (c, C_ORT_OMP);
-	  if (c)
-	    {
-	      OMP_CLAUSE_CHAIN (c) = *clauses;
-	      *clauses = c;
-	    }
-	}
-    }
+
   cond = TREE_VEC_ELT (OMP_FOR_COND (t), i);
   if (COMPARISON_CLASS_P (cond))
     {
@@ -18732,10 +18204,6 @@ tsubst_expr (tree t, tree args, tsubst_flags_t complain, tree in_decl,
 		    if (TREE_CODE (DECL_CONTEXT (decl)) == FUNCTION_DECL)
 		      DECL_CONTEXT (decl) = NULL_TREE;
 		    decl = pushdecl (decl);
-		    if (TREE_CODE (decl) == FUNCTION_DECL
-			&& DECL_OMP_DECLARE_REDUCTION_P (decl)
-			&& cp_check_omp_declare_reduction (decl))
-		      instantiate_body (pattern_decl, args, decl, true);
 		  }
 		else
 		  {
@@ -19125,330 +18593,6 @@ tsubst_expr (tree t, tree args, tsubst_flags_t complain, tree in_decl,
       }
       break;
 
-    case OACC_KERNELS:
-    case OACC_PARALLEL:
-    case OACC_SERIAL:
-      tmp = tsubst_omp_clauses (OMP_CLAUSES (t), C_ORT_ACC, args, complain,
-				in_decl);
-      stmt = begin_omp_parallel ();
-      RECUR (OMP_BODY (t));
-      finish_omp_construct (TREE_CODE (t), stmt, tmp);
-      break;
-
-    case OMP_PARALLEL:
-      r = push_omp_privatization_clauses (OMP_PARALLEL_COMBINED (t));
-      tmp = tsubst_omp_clauses (OMP_PARALLEL_CLAUSES (t), C_ORT_OMP, args,
-				complain, in_decl);
-      if (OMP_PARALLEL_COMBINED (t))
-	omp_parallel_combined_clauses = &tmp;
-      stmt = begin_omp_parallel ();
-      RECUR (OMP_PARALLEL_BODY (t));
-      gcc_assert (omp_parallel_combined_clauses == NULL);
-      OMP_PARALLEL_COMBINED (finish_omp_parallel (tmp, stmt))
-	= OMP_PARALLEL_COMBINED (t);
-      pop_omp_privatization_clauses (r);
-      break;
-
-    case OMP_TASK:
-      if (OMP_TASK_BODY (t) == NULL_TREE)
-	{
-	  tmp = tsubst_omp_clauses (OMP_TASK_CLAUSES (t), C_ORT_OMP, args,
-				    complain, in_decl);
-	  t = copy_node (t);
-	  OMP_TASK_CLAUSES (t) = tmp;
-	  add_stmt (t);
-	  break;
-	}
-      r = push_omp_privatization_clauses (false);
-      tmp = tsubst_omp_clauses (OMP_TASK_CLAUSES (t), C_ORT_OMP, args,
-				complain, in_decl);
-      stmt = begin_omp_task ();
-      RECUR (OMP_TASK_BODY (t));
-      finish_omp_task (tmp, stmt);
-      pop_omp_privatization_clauses (r);
-      break;
-
-    case OMP_SECTIONS:
-    case OMP_MASKED:
-      omp_parallel_combined_clauses = NULL;
-      /* FALLTHRU */
-    case OMP_SINGLE:
-    case OMP_SCOPE:
-    case OMP_TEAMS:
-    case OMP_CRITICAL:
-    case OMP_TASKGROUP:
-    case OMP_SCAN:
-      r = push_omp_privatization_clauses (TREE_CODE (t) == OMP_TEAMS
-					  && OMP_TEAMS_COMBINED (t));
-      tmp = tsubst_omp_clauses (OMP_CLAUSES (t), C_ORT_OMP, args, complain,
-				in_decl);
-      if (TREE_CODE (t) == OMP_TEAMS)
-	{
-	  keep_next_level (true);
-	  stmt = begin_omp_structured_block ();
-	  RECUR (OMP_BODY (t));
-	  stmt = finish_omp_structured_block (stmt);
-	}
-      else
-	{
-	  stmt = push_stmt_list ();
-	  RECUR (OMP_BODY (t));
-	  stmt = pop_stmt_list (stmt);
-	}
-
-      if (TREE_CODE (t) == OMP_CRITICAL
-	  && tmp != NULL_TREE
-	  && integer_nonzerop (OMP_CLAUSE_HINT_EXPR (tmp)))
-	{
-	  error_at (OMP_CLAUSE_LOCATION (tmp),
-		    "%<#pragma omp critical%> with %<hint%> clause requires "
-		    "a name, except when %<omp_sync_hint_none%> is used");
-	  RETURN (error_mark_node);
-	}
-      t = copy_node (t);
-      OMP_BODY (t) = stmt;
-      OMP_CLAUSES (t) = tmp;
-      add_stmt (t);
-      pop_omp_privatization_clauses (r);
-      break;
-
-    case OMP_DEPOBJ:
-      r = RECUR (OMP_DEPOBJ_DEPOBJ (t));
-      if (OMP_DEPOBJ_CLAUSES (t) && OMP_DEPOBJ_CLAUSES (t) != error_mark_node)
-	{
-	  enum omp_clause_depend_kind kind = OMP_CLAUSE_DEPEND_SOURCE;
-	  if (TREE_CODE (OMP_DEPOBJ_CLAUSES (t)) == OMP_CLAUSE)
-	    {
-	      tmp = tsubst_omp_clauses (OMP_DEPOBJ_CLAUSES (t), C_ORT_OMP,
-					args, complain, in_decl);
-	      if (tmp == NULL_TREE)
-		tmp = error_mark_node;
-	    }
-	  else
-	    {
-	      kind = (enum omp_clause_depend_kind)
-		     tree_to_uhwi (OMP_DEPOBJ_CLAUSES (t));
-	      tmp = NULL_TREE;
-	    }
-	  finish_omp_depobj (EXPR_LOCATION (t), r, kind, tmp);
-	}
-      else
-	finish_omp_depobj (EXPR_LOCATION (t), r,
-			   OMP_CLAUSE_DEPEND_SOURCE,
-			   OMP_DEPOBJ_CLAUSES (t));
-      break;
-
-    case OACC_DATA:
-    case OMP_TARGET_DATA:
-    case OMP_TARGET:
-      tmp = tsubst_omp_clauses (OMP_CLAUSES (t),
-				TREE_CODE (t) == OACC_DATA
-				? C_ORT_ACC
-				: TREE_CODE (t) == OMP_TARGET
-				? C_ORT_OMP_TARGET : C_ORT_OMP,
-				args, complain, in_decl);
-      keep_next_level (true);
-      stmt = begin_omp_structured_block ();
-
-      RECUR (OMP_BODY (t));
-      stmt = finish_omp_structured_block (stmt);
-
-      t = copy_node (t);
-      OMP_BODY (t) = stmt;
-      OMP_CLAUSES (t) = tmp;
-
-      if (TREE_CODE (t) == OMP_TARGET)
-	finish_omp_target_clauses (EXPR_LOCATION (t), OMP_BODY (t),
-				   &OMP_CLAUSES (t));
-
-      if (TREE_CODE (t) == OMP_TARGET && OMP_TARGET_COMBINED (t))
-	{
-	  tree teams = cp_walk_tree (&stmt, tsubst_find_omp_teams, NULL, NULL);
-	  if (teams)
-	    /* For combined target teams, ensure the num_teams and
-	       thread_limit clause expressions are evaluated on the host,
-	       before entering the target construct.  */
-	    for (tree c = OMP_TEAMS_CLAUSES (teams);
-		 c; c = OMP_CLAUSE_CHAIN (c))
-	      if (OMP_CLAUSE_CODE (c) == OMP_CLAUSE_NUM_TEAMS
-		  || OMP_CLAUSE_CODE (c) == OMP_CLAUSE_THREAD_LIMIT)
-		for (int i = 0;
-		     i <= (OMP_CLAUSE_CODE (c) == OMP_CLAUSE_NUM_TEAMS); ++i)
-		  if (OMP_CLAUSE_OPERAND (c, i)
-		      && TREE_CODE (OMP_CLAUSE_OPERAND (c, i)) != INTEGER_CST)
-		    {
-		      tree expr = OMP_CLAUSE_OPERAND (c, i);
-		      expr = force_target_expr (TREE_TYPE (expr), expr,
-						tf_none);
-		      if (expr == error_mark_node)
-			continue;
-		      tmp = TARGET_EXPR_SLOT (expr);
-		      add_stmt (expr);
-		      OMP_CLAUSE_OPERAND (c, i) = expr;
-		      tree tc = build_omp_clause (OMP_CLAUSE_LOCATION (c),
-						  OMP_CLAUSE_FIRSTPRIVATE);
-		      OMP_CLAUSE_DECL (tc) = tmp;
-		      OMP_CLAUSE_CHAIN (tc) = OMP_TARGET_CLAUSES (t);
-		      OMP_TARGET_CLAUSES (t) = tc;
-		    }
-	}
-      add_stmt (t);
-      break;
-
-    case OACC_DECLARE:
-      t = copy_node (t);
-      tmp = tsubst_omp_clauses (OACC_DECLARE_CLAUSES (t), C_ORT_ACC, args,
-				complain, in_decl);
-      OACC_DECLARE_CLAUSES (t) = tmp;
-      add_stmt (t);
-      break;
-
-    case OMP_TARGET_UPDATE:
-    case OMP_TARGET_ENTER_DATA:
-    case OMP_TARGET_EXIT_DATA:
-      tmp = tsubst_omp_clauses (OMP_STANDALONE_CLAUSES (t), C_ORT_OMP, args,
-				complain, in_decl);
-      t = copy_node (t);
-      OMP_STANDALONE_CLAUSES (t) = tmp;
-      add_stmt (t);
-      break;
-
-    case OACC_CACHE:
-    case OACC_ENTER_DATA:
-    case OACC_EXIT_DATA:
-    case OACC_UPDATE:
-      tmp = tsubst_omp_clauses (OMP_STANDALONE_CLAUSES (t), C_ORT_ACC, args,
-				complain, in_decl);
-      t = copy_node (t);
-      OMP_STANDALONE_CLAUSES (t) = tmp;
-      add_stmt (t);
-      break;
-
-    case OMP_ORDERED:
-      tmp = tsubst_omp_clauses (OMP_ORDERED_CLAUSES (t), C_ORT_OMP, args,
-				complain, in_decl);
-      stmt = push_stmt_list ();
-      RECUR (OMP_BODY (t));
-      stmt = pop_stmt_list (stmt);
-
-      t = copy_node (t);
-      OMP_BODY (t) = stmt;
-      OMP_ORDERED_CLAUSES (t) = tmp;
-      add_stmt (t);
-      break;
-
-    case OMP_MASTER:
-      omp_parallel_combined_clauses = NULL;
-      /* FALLTHRU */
-    case OMP_SECTION:
-      stmt = push_stmt_list ();
-      RECUR (OMP_BODY (t));
-      stmt = pop_stmt_list (stmt);
-
-      t = copy_node (t);
-      OMP_BODY (t) = stmt;
-      add_stmt (t);
-      break;
-
-    case OMP_ATOMIC:
-      gcc_assert (OMP_ATOMIC_DEPENDENT_P (t));
-      tmp = NULL_TREE;
-      if (TREE_CODE (TREE_OPERAND (t, 0)) == OMP_CLAUSE)
-	tmp = tsubst_omp_clauses (TREE_OPERAND (t, 0), C_ORT_OMP, args,
-				  complain, in_decl);
-      if (TREE_CODE (TREE_OPERAND (t, 1)) != MODIFY_EXPR)
-	{
-	  tree op1 = TREE_OPERAND (t, 1);
-	  tree rhs1 = NULL_TREE;
-	  tree r = NULL_TREE;
-	  tree lhs, rhs;
-	  if (TREE_CODE (op1) == COMPOUND_EXPR)
-	    {
-	      rhs1 = RECUR (TREE_OPERAND (op1, 0));
-	      op1 = TREE_OPERAND (op1, 1);
-	    }
-	  if (TREE_CODE (op1) == COND_EXPR)
-	    {
-	      gcc_assert (rhs1 == NULL_TREE);
-	      tree c = TREE_OPERAND (op1, 0);
-	      if (TREE_CODE (c) == MODIFY_EXPR)
-		{
-		  r = RECUR (TREE_OPERAND (c, 0));
-		  c = TREE_OPERAND (c, 1);
-		}
-	      gcc_assert (TREE_CODE (c) == EQ_EXPR);
-	      rhs = RECUR (TREE_OPERAND (c, 1));
-	      lhs = RECUR (TREE_OPERAND (op1, 2));
-	      rhs1 = RECUR (TREE_OPERAND (op1, 1));
-	    }
-	  else
-	    {
-	      lhs = RECUR (TREE_OPERAND (op1, 0));
-	      rhs = RECUR (TREE_OPERAND (op1, 1));
-	    }
-	  finish_omp_atomic (EXPR_LOCATION (t), OMP_ATOMIC, TREE_CODE (op1),
-			     lhs, rhs, NULL_TREE, NULL_TREE, rhs1, r,
-			     tmp, OMP_ATOMIC_MEMORY_ORDER (t),
-			     OMP_ATOMIC_WEAK (t));
-	}
-      else
-	{
-	  tree op1 = TREE_OPERAND (t, 1);
-	  tree v = NULL_TREE, lhs, rhs = NULL_TREE, lhs1 = NULL_TREE;
-	  tree rhs1 = NULL_TREE, r = NULL_TREE;
-	  enum tree_code code = TREE_CODE (TREE_OPERAND (op1, 1));
-	  enum tree_code opcode = NOP_EXPR;
-	  if (code == OMP_ATOMIC_READ)
-	    {
-	      v = RECUR (TREE_OPERAND (op1, 0));
-	      lhs = RECUR (TREE_OPERAND (TREE_OPERAND (op1, 1), 0));
-	    }
-	  else if (code == OMP_ATOMIC_CAPTURE_OLD
-		   || code == OMP_ATOMIC_CAPTURE_NEW)
-	    {
-	      tree op11 = TREE_OPERAND (TREE_OPERAND (op1, 1), 1);
-	      v = RECUR (TREE_OPERAND (op1, 0));
-	      lhs1 = RECUR (TREE_OPERAND (TREE_OPERAND (op1, 1), 0));
-	      if (TREE_CODE (op11) == COMPOUND_EXPR)
-		{
-		  rhs1 = RECUR (TREE_OPERAND (op11, 0));
-		  op11 = TREE_OPERAND (op11, 1);
-		}
-	      if (TREE_CODE (op11) == COND_EXPR)
-		{
-		  gcc_assert (rhs1 == NULL_TREE);
-		  tree c = TREE_OPERAND (op11, 0);
-		  if (TREE_CODE (c) == MODIFY_EXPR)
-		    {
-		      r = RECUR (TREE_OPERAND (c, 0));
-		      c = TREE_OPERAND (c, 1);
-		    }
-		  gcc_assert (TREE_CODE (c) == EQ_EXPR);
-		  rhs = RECUR (TREE_OPERAND (c, 1));
-		  lhs = RECUR (TREE_OPERAND (op11, 2));
-		  rhs1 = RECUR (TREE_OPERAND (op11, 1));
-		}
-	      else
-		{
-		  lhs = RECUR (TREE_OPERAND (op11, 0));
-		  rhs = RECUR (TREE_OPERAND (op11, 1));
-		}
-	      opcode = TREE_CODE (op11);
-	      if (opcode == MODIFY_EXPR)
-		opcode = NOP_EXPR;
-	    }
-	  else
-	    {
-	      code = OMP_ATOMIC;
-	      lhs = RECUR (TREE_OPERAND (op1, 0));
-	      rhs = RECUR (TREE_OPERAND (op1, 1));
-	    }
-	  finish_omp_atomic (EXPR_LOCATION (t), code, opcode, lhs, rhs, v,
-			     lhs1, rhs1, r, tmp,
-			     OMP_ATOMIC_MEMORY_ORDER (t), OMP_ATOMIC_WEAK (t));
-	}
-      break;
-
     case TRANSACTION_EXPR:
       {
 	int flags = 0;
@@ -19529,74 +18673,6 @@ tsubst_expr (tree t, tree args, tsubst_flags_t complain, tree in_decl,
   return r;
 #undef RECUR
 #undef RETURN
-}
-
-/* Instantiate the special body of the artificial DECL_OMP_DECLARE_REDUCTION
-   function.  For description of the body see comment above
-   cp_parser_omp_declare_reduction_exprs.  */
-
-static void
-tsubst_omp_udr (tree t, tree args, tsubst_flags_t complain, tree in_decl)
-{
-  if (t == NULL_TREE || t == error_mark_node)
-    return;
-
-  gcc_assert (TREE_CODE (t) == STATEMENT_LIST && current_function_decl);
-
-  tree_stmt_iterator tsi;
-  int i;
-  tree stmts[7];
-  memset (stmts, 0, sizeof stmts);
-  for (i = 0, tsi = tsi_start (t);
-       i < 7 && !tsi_end_p (tsi);
-       i++, tsi_next (&tsi))
-    stmts[i] = tsi_stmt (tsi);
-  gcc_assert (tsi_end_p (tsi));
-
-  if (i >= 3)
-    {
-      gcc_assert (TREE_CODE (stmts[0]) == DECL_EXPR
-		  && TREE_CODE (stmts[1]) == DECL_EXPR);
-      tree omp_out = tsubst (DECL_EXPR_DECL (stmts[0]),
-			     args, complain, in_decl);
-      tree omp_in = tsubst (DECL_EXPR_DECL (stmts[1]),
-			    args, complain, in_decl);
-      /* tsubsting a local var_decl leaves DECL_CONTEXT null, as we
-	 expect to be pushing it.  */
-      DECL_CONTEXT (omp_out) = current_function_decl;
-      DECL_CONTEXT (omp_in) = current_function_decl;
-      keep_next_level (true);
-      tree block = begin_omp_structured_block ();
-      tsubst_expr (stmts[2], args, complain, in_decl, false);
-      block = finish_omp_structured_block (block);
-      block = maybe_cleanup_point_expr_void (block);
-      add_decl_expr (omp_out);
-      copy_warning (omp_out, DECL_EXPR_DECL (stmts[0]));
-      add_decl_expr (omp_in);
-      finish_expr_stmt (block);
-    }
-  if (i >= 6)
-    {
-      gcc_assert (TREE_CODE (stmts[3]) == DECL_EXPR
-		  && TREE_CODE (stmts[4]) == DECL_EXPR);
-      tree omp_priv = tsubst (DECL_EXPR_DECL (stmts[3]),
-			      args, complain, in_decl);
-      tree omp_orig = tsubst (DECL_EXPR_DECL (stmts[4]),
-			      args, complain, in_decl);
-      DECL_CONTEXT (omp_priv) = current_function_decl;
-      DECL_CONTEXT (omp_orig) = current_function_decl;
-      keep_next_level (true);
-      tree block = begin_omp_structured_block ();
-      tsubst_expr (stmts[5], args, complain, in_decl, false);
-      block = finish_omp_structured_block (block);
-      block = maybe_cleanup_point_expr_void (block);
-      cp_walk_tree (&block, cp_remove_omp_priv_cleanup_stmt, omp_priv, NULL);
-      add_decl_expr (omp_priv);
-      add_decl_expr (omp_orig);
-      finish_expr_stmt (block);
-      if (i == 7)
-	add_decl_expr (omp_orig);
-    }
 }
 
 /* T is a postfix-expression that is not being used in a function
@@ -26347,13 +25423,6 @@ instantiate_body (tree pattern, tree args, tree d, bool nested_p)
       td = pattern;
       code_pattern = DECL_TEMPLATE_RESULT (td);
     }
-  else
-    /* Only OMP reductions are nested.  */
-    gcc_checking_assert (DECL_OMP_DECLARE_REDUCTION_P (code_pattern));
-
-  vec<tree> omp_privatization_save;
-  if (current_function_decl)
-    save_omp_privatization_clauses (omp_privatization_save);
 
   bool push_to_top
     = !(current_function_decl
@@ -26445,12 +25514,7 @@ instantiate_body (tree pattern, tree args, tree d, bool nested_p)
       register_parameter_specializations (code_pattern, d);
 
       /* Substitute into the body of the function.  */
-      if (DECL_OMP_DECLARE_REDUCTION_P (code_pattern))
-	tsubst_omp_udr (DECL_SAVED_TREE (code_pattern), args,
-			tf_warning_or_error, d);
-      else
-	{
-	  tsubst_expr (DECL_SAVED_TREE (code_pattern), args,
+    tsubst_expr (DECL_SAVED_TREE (code_pattern), args,
 		       tf_warning_or_error, DECL_TI_TEMPLATE (d),
 		       /*integral_constant_expression_p=*/false);
 
@@ -26462,7 +25526,6 @@ instantiate_body (tree pattern, tree args, tree d, bool nested_p)
 	  /* Remember if we saw an infinite loop in the template.  */
 	  current_function_infinite_loop
 	    = DECL_STRUCT_FUNCTION (code_pattern)->language->infinite_loop;
-	}
 
       /* Finish the function.  */
       if (nested_p)
@@ -26472,9 +25535,6 @@ instantiate_body (tree pattern, tree args, tree d, bool nested_p)
 	  d = finish_function (/*inline_p=*/false);
 	  expand_or_defer_fn (d);
 	}
-
-      if (DECL_OMP_DECLARE_REDUCTION_P (code_pattern))
-	cp_check_omp_declare_reduction (d);
     }
 
   /* We're not deferring instantiation any more.  */
@@ -26485,9 +25545,6 @@ instantiate_body (tree pattern, tree args, tree d, bool nested_p)
     pop_from_top_level ();
   else
     pop_function_context ();
-
-  if (current_function_decl)
-    restore_omp_privatization_clauses (omp_privatization_save);
 }
 
 /* Produce the definition of D, a _DECL generated from a template.  If

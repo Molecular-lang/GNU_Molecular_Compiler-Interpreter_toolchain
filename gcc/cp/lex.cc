@@ -1,7 +1,7 @@
 /* Separate lexical analyzer for GNU C++.
    Please review: $(src-dir)/SPL-README for Licencing info. */
 
-/* This file is the lexical analyzer for GNU C++.  */
+/* This file is the lexical analyzer for GNU Scpel.  */
 
 #include "config.h"
 /* For use with name_hint.  */
@@ -16,19 +16,19 @@
 #include "cp-name-hint.h"
 #include "langhooks.h"
 
-static int interface_strcmp (const char *);
-static void init_cp_pragma (void);
+static int interface_strcmp(const char *);
+static void init_cp_pragma(void);
 
-static tree parse_strconst_pragma (const char *, int);
-static void handle_pragma_vtable (cpp_reader *);
-static void handle_pragma_unit (cpp_reader *);
-static void handle_pragma_interface (cpp_reader *);
-static void handle_pragma_implementation (cpp_reader *);
+static tree parse_strconst_pragma(const char *, int);
+static void handle_pragma_vtable(cpp_reader *);
+static void handle_pragma_unit(cpp_reader *);
+static void handle_pragma_interface(cpp_reader *);
+static void handle_pragma_implementation(cpp_reader *);
 
-static void init_operators (void);
-static void copy_lang_type (tree);
+static void init_operators(void);
+static void copy_lang_type(tree);
 
-/* A constraint that can be tested at compile time.  */
+/* A constraint that can be tested at compile time. */
 #define CONSTRAINT(name, expr) extern int constraint_##name [(expr) ? 1 : -1]
 
 /* Functions and data structures for #pragma interface.
@@ -48,480 +48,423 @@ static void copy_lang_type (tree);
 
    There are cases when we want to link files such as "defs.h" and
    "main.cc".  In this case, we give "defs.h" a `#pragma interface',
-   and "main.cc" has `#pragma implementation "defs.h"'.  */
+   and "main.cc" has `#pragma implementation "defs.h"'. */
 
-struct impl_files
-{
-  const char *filename;
-  struct impl_files *next;
+struct impl_files {
+	const char *filename;
+	struct impl_files *next;
 };
 
 static struct impl_files *impl_file_chain;
-
+
 void
-cxx_finish (void)
+cxx_finish(void)
 {
-  c_common_finish ();
+	c_common_finish();
 }
 
-ovl_op_info_t ovl_op_info[2][OVL_OP_MAX] = 
-  {
-    {
-      {NULL_TREE, NULL, NULL, ERROR_MARK, OVL_OP_ERROR_MARK, 0},
-      {NULL_TREE, NULL, NULL, NOP_EXPR, OVL_OP_NOP_EXPR, 0},
-#define DEF_OPERATOR(NAME, CODE, MANGLING, FLAGS) \
-      {NULL_TREE, NAME, MANGLING, CODE, OVL_OP_##CODE, FLAGS},
-#define OPERATOR_TRANSITION }, {			\
-      {NULL_TREE, NULL, NULL, ERROR_MARK, OVL_OP_ERROR_MARK, 0},
+ovl_op_info_t ovl_op_info[2][OVL_OP_MAX] = {
+	{
+		{NULL_TREE, NULL, NULL, ERROR_MARK, OVL_OP_ERROR_MARK, 0},
+		{NULL_TREE, NULL, NULL, NOP_EXPR, OVL_OP_NOP_EXPR, 0},
+#define DEF_OPERATOR(NAME, CODE, MANGLING, FLAGS) {NULL_TREE, NAME, MANGLING, CODE, OVL_OP_##CODE, FLAGS},
+#define OPERATOR_TRANSITION }, {{NULL_TREE, NULL, NULL, ERROR_MARK, OVL_OP_ERROR_MARK, 0},
 #include "operators.def"
-    }
-  };
+	}
+};
 unsigned char ovl_op_mapping[MAX_TREE_CODES];
 unsigned char ovl_op_alternate[OVL_OP_MAX];
 
-/* Get the name of the kind of identifier T.  */
-
+/* Get the name of the kind of identifier T. */
 const char *
-get_identifier_kind_name (tree id)
+get_identifier_kind_name(tree id)
 {
-  /* Keep in sync with cp_id_kind enumeration.  */
-  static const char *const names[cik_max] = {
-    "normal", "keyword", "constructor", "destructor",
-    "simple-op", "assign-op", "conv-op", "<reserved>udlit-op"
-  };
+	/* Keep in sync with cp_id_kind enumeration. */
+	static const char *const names[cik_max] = {
+		"normal", "keyword", "constructor", "destructor",
+		"simple-op", "assign-op", "conv-op", "<reserved>udlit-op"
+	};
 
-  unsigned kind = 0;
-  kind |= IDENTIFIER_KIND_BIT_2 (id) << 2;
-  kind |= IDENTIFIER_KIND_BIT_1 (id) << 1;
-  kind |= IDENTIFIER_KIND_BIT_0 (id) << 0;
+	unsigned kind = 0;
+	kind |= IDENTIFIER_KIND_BIT_2(id) << 2;
+	kind |= IDENTIFIER_KIND_BIT_1(id) << 1;
+	kind |= IDENTIFIER_KIND_BIT_0(id) << 0;
 
-  return names[kind];
+	return names[kind];
 }
 
-/* Set the identifier kind, which we expect to currently be zero.  */
-
+/* Set the identifier kind, which we expect to currently be zero. */
 void
-set_identifier_kind (tree id, cp_identifier_kind kind)
+set_identifier_kind(tree id, cp_identifier_kind kind)
 {
-  gcc_checking_assert (!IDENTIFIER_KIND_BIT_2 (id)
-		       & !IDENTIFIER_KIND_BIT_1 (id)
-		       & !IDENTIFIER_KIND_BIT_0 (id));
-  IDENTIFIER_KIND_BIT_2 (id) |= (kind >> 2) & 1;
-  IDENTIFIER_KIND_BIT_1 (id) |= (kind >> 1) & 1;
-  IDENTIFIER_KIND_BIT_0 (id) |= (kind >> 0) & 1;
+	gcc_checking_assert(!IDENTIFIER_KIND_BIT_2(id) & !IDENTIFIER_KIND_BIT_1(id) & !IDENTIFIER_KIND_BIT_0(id));
+	IDENTIFIER_KIND_BIT_2 (id) |= (kind >> 2) & 1;
+	IDENTIFIER_KIND_BIT_1 (id) |= (kind >> 1) & 1;
+	IDENTIFIER_KIND_BIT_0 (id) |= (kind >> 0) & 1;
 }
 
 /* Create and tag the internal operator name for the overloaded
-   operator PTR describes.  */
-
+   operator PTR describes. */
 static tree
-set_operator_ident (ovl_op_info_t *ptr)
+set_operator_ident(ovl_op_info_t *ptr)
 {
-  char buffer[32];
-  size_t len = snprintf (buffer, sizeof (buffer), "operator%s%s",
-			 &" "[ptr->name[0] && ptr->name[0] != '_'
-			      && !ISALPHA (ptr->name[0])],
-			 ptr->name);
-  gcc_checking_assert (len < sizeof (buffer));
+	char buffer[32];
+	size_t len = snprintf(buffer, sizeof (buffer), "operator%s%s",
+		&" "[ptr->name[0] && ptr->name[0] != '_' && !ISALPHA (ptr->name[0])], ptr->name);
+	gcc_checking_assert(len < sizeof (buffer));
 
-  tree ident = get_identifier_with_length (buffer, len);
-  ptr->identifier = ident;
+	tree ident = get_identifier_with_length(buffer, len);
+	ptr->identifier = ident;
 
-  return ident;
+	return ident;
 }
 
-/* Initialize data structures that keep track of operator names.  */
-
+/* Initialize data structures that keep track of operator names. */
 static void
-init_operators (void)
+init_operators(void)
 {
-  /* We rely on both these being zero.  */
-  gcc_checking_assert (!OVL_OP_ERROR_MARK && !ERROR_MARK);
+	/* We rely on both these being zero. */
+	gcc_checking_assert(!OVL_OP_ERROR_MARK && !ERROR_MARK);
 
-  /* This loop iterates backwards because we need to move the
-     assignment operators down to their correct slots.  I.e. morally
-     equivalent to an overlapping memmove where dest > src.  Slot
-     zero is for error_mark, so hae no operator. */
-  for (unsigned ix = OVL_OP_MAX; --ix;)
-    {
-      ovl_op_info_t *op_ptr = &ovl_op_info[false][ix];
+	/* This loop iterates backwards because we need to move the
+	   assignment operators down to their correct slots.  I.e. morally
+	   equivalent to an overlapping memmove where dest > src.  Slot
+	   zero is for error_mark, so hae no operator. */
+	for (unsigned ix = OVL_OP_MAX; --ix;) {
+		ovl_op_info_t *op_ptr = &ovl_op_info[false][ix];
 
-      if (op_ptr->name)
-	{
-	  tree ident = set_operator_ident (op_ptr);
-	  if (unsigned index = IDENTIFIER_CP_INDEX (ident))
-	    {
-	      ovl_op_info_t *bin_ptr = &ovl_op_info[false][index];
+		if (op_ptr->name) {
+			tree ident = set_operator_ident(op_ptr);
+			if (unsigned index = IDENTIFIER_CP_INDEX(ident)) {
+				ovl_op_info_t *bin_ptr = &ovl_op_info[false][index];
 
-	      /* They should only differ in unary/binary ness.  */
-	      gcc_checking_assert ((op_ptr->flags ^ bin_ptr->flags)
-				   == OVL_OP_FLAG_AMBIARY);
-	      bin_ptr->flags |= op_ptr->flags;
-	      ovl_op_alternate[index] = ix;
-	    }
-	  else
-	    {
-	      IDENTIFIER_CP_INDEX (ident) = ix;
-	      set_identifier_kind (ident, cik_simple_op);
-	    }
+				/* They should only differ in unary/binary ness. */
+				gcc_checking_assert((op_ptr->flags ^ bin_ptr->flags) == OVL_OP_FLAG_AMBIARY);
+				bin_ptr->flags |= op_ptr->flags;
+				ovl_op_alternate[index] = ix;
+			} else {
+				IDENTIFIER_CP_INDEX(ident) = ix;
+				set_identifier_kind(ident, cik_simple_op);
+			}
+		}
+		if (op_ptr->tree_code) {
+			gcc_checking_assert(op_ptr->ovl_op_code == ix && !ovl_op_mapping[op_ptr->tree_code]);
+			ovl_op_mapping[op_ptr->tree_code] = op_ptr->ovl_op_code;
+		}
+
+		ovl_op_info_t *as_ptr = &ovl_op_info[true][ix];
+		if (as_ptr->name) {
+			/* These will be placed at the start of the array, move to
+			   the correct slot and initialize. */
+			if (as_ptr->ovl_op_code != ix) {
+				ovl_op_info_t *dst_ptr = &ovl_op_info[true][as_ptr->ovl_op_code];
+				gcc_assert(as_ptr->ovl_op_code > ix && !dst_ptr->tree_code);
+				memcpy(dst_ptr, as_ptr, sizeof (*dst_ptr));
+				memset(as_ptr, 0, sizeof (*as_ptr));
+				as_ptr = dst_ptr;
+			}
+
+			tree ident = set_operator_ident(as_ptr);
+			gcc_checking_assert(!IDENTIFIER_CP_INDEX(ident));
+			IDENTIFIER_CP_INDEX(ident) = as_ptr->ovl_op_code;
+			set_identifier_kind(ident, cik_assign_op);
+
+			gcc_checking_assert(!ovl_op_mapping[as_ptr->tree_code]
+				|| (ovl_op_mapping[as_ptr->tree_code] == as_ptr->ovl_op_code));
+			ovl_op_mapping[as_ptr->tree_code] = as_ptr->ovl_op_code;
+		}
 	}
-      if (op_ptr->tree_code)
-	{
-	  gcc_checking_assert (op_ptr->ovl_op_code == ix
-			       && !ovl_op_mapping[op_ptr->tree_code]);
-	  ovl_op_mapping[op_ptr->tree_code] = op_ptr->ovl_op_code;
-	}
-
-      ovl_op_info_t *as_ptr = &ovl_op_info[true][ix];
-      if (as_ptr->name)
-	{
-	  /* These will be placed at the start of the array, move to
-	     the correct slot and initialize.  */
-	  if (as_ptr->ovl_op_code != ix)
-	    {
-	      ovl_op_info_t *dst_ptr = &ovl_op_info[true][as_ptr->ovl_op_code];
-	      gcc_assert (as_ptr->ovl_op_code > ix && !dst_ptr->tree_code);
-	      memcpy (dst_ptr, as_ptr, sizeof (*dst_ptr));
-	      memset (as_ptr, 0, sizeof (*as_ptr));
-	      as_ptr = dst_ptr;
-	    }
-
-	  tree ident = set_operator_ident (as_ptr);
-	  gcc_checking_assert (!IDENTIFIER_CP_INDEX (ident));
-	  IDENTIFIER_CP_INDEX (ident) = as_ptr->ovl_op_code;
-	  set_identifier_kind (ident, cik_assign_op);
-
-	  gcc_checking_assert (!ovl_op_mapping[as_ptr->tree_code]
-			       || (ovl_op_mapping[as_ptr->tree_code]
-				   == as_ptr->ovl_op_code));
-	  ovl_op_mapping[as_ptr->tree_code] = as_ptr->ovl_op_code;
-	}
-    }
 }
 
-/* Initialize the reserved words.  */
-
+/* Initialize the reserved words. */
 void
-init_reswords (void)
+init_reswords(void)
 {
-  unsigned int i;
-  tree id;
-  int mask = 0;
+	unsigned int i;
+	tree id;
+	int mask = 0;
 
-  if (cxx_dialect < cxx11)
-    mask |= D_CXX11;
-  if (cxx_dialect < cxx20)
-    mask |= D_CXX20;
-  if (!flag_concepts)
-    mask |= D_CXX_CONCEPTS;
-  if (!flag_coroutines)
-    mask |= D_CXX_COROUTINES;
-  if (!flag_modules)
-    mask |= D_CXX_MODULES;
-  if (!flag_tm)
-    mask |= D_TRANSMEM;
-  if (!flag_char8_t)
-    mask |= D_CXX_CHAR8_T;
-  if (flag_no_asm)
-    mask |= D_ASM | D_EXT;
-  if (flag_no_gnu_keywords)
-    mask |= D_EXT;
+	if (cxx_dialect < cxx11)
+		mask |= D_CXX11;
+	if (cxx_dialect < cxx20)
+		mask |= D_CXX20;
+	if (!flag_concepts)
+		mask |= D_CXX_CONCEPTS;
+	if (!flag_coroutines)
+		mask |= D_CXX_COROUTINES;
+	if (!flag_modules)
+		mask |= D_CXX_MODULES;
+	if (!flag_tm)
+		mask |= D_TRANSMEM;
+	if (!flag_char8_t)
+		mask |= D_CXX_CHAR8_T;
+	if (flag_no_asm)
+		mask |= D_ASM | D_EXT;
+	if (flag_no_gnu_keywords)
+		mask |= D_EXT;
 
-  /* The Objective-C keywords are all context-dependent.  */
-  mask |= D_OBJC;
+	/* The Objective-C keywords are all context-dependent. */
+	mask |= D_OBJC;
 
-  ridpointers = ggc_cleared_vec_alloc<tree> ((int) RID_MAX);
-  for (i = 0; i < num_c_common_reswords; i++)
-    {
-      if (c_common_reswords[i].disable & D_CONLY)
-	continue;
-      id = get_identifier (c_common_reswords[i].word);
-      C_SET_RID_CODE (id, c_common_reswords[i].rid);
-      ridpointers [(int) c_common_reswords[i].rid] = id;
-      if (! (c_common_reswords[i].disable & mask))
-	set_identifier_kind (id, cik_keyword);
-    }
+	ridpointers = ggc_cleared_vec_alloc<tree> ((int) RID_MAX);
+	for (i = 0; i < num_c_common_reswords; i++) {
+		if (c_common_reswords[i].disable & D_CONLY)
+			continue;
+		id = get_identifier(c_common_reswords[i].word);
+		C_SET_RID_CODE(id, c_common_reswords[i].rid);
+		ridpointers [(int) c_common_reswords[i].rid] = id;
+		if (! (c_common_reswords[i].disable & mask))
+			set_identifier_kind(id, cik_keyword);
+	}
 
-  for (i = 0; i < NUM_INT_N_ENTS; i++)
-    {
-      char name[50];
-      sprintf (name, "__int%d", int_n_data[i].bitsize);
-      id = get_identifier (name);
-      C_SET_RID_CODE (id, RID_FIRST_INT_N + i);
-      set_identifier_kind (id, cik_keyword);
+	for (i = 0; i < NUM_INT_N_ENTS; i++) {
+		char name[50];
+		sprintf(name, "__int%d", int_n_data[i].bitsize);
+		id = get_identifier(name);
+		C_SET_RID_CODE(id, RID_FIRST_INT_N + i);
+		set_identifier_kind(id, cik_keyword);
 
-      sprintf (name, "__int%d__", int_n_data[i].bitsize);
-      id = get_identifier (name);
-      C_SET_RID_CODE (id, RID_FIRST_INT_N + i);
-      set_identifier_kind (id, cik_keyword);
-    }
+		sprintf(name, "__int%d__", int_n_data[i].bitsize);
+		id = get_identifier(name);
+		C_SET_RID_CODE(id, RID_FIRST_INT_N + i);
+		set_identifier_kind(id, cik_keyword);
+	}
 
-  if (flag_openmp)
-    {
-      id = get_identifier ("omp_all_memory");
-      C_SET_RID_CODE (id, RID_OMP_ALL_MEMORY);
-      set_identifier_kind (id, cik_keyword);
-      ridpointers [RID_OMP_ALL_MEMORY] = id;
-    }
+	if (flag_openmp) {
+		id = get_identifier("omp_all_memory");
+		C_SET_RID_CODE(id, RID_OMP_ALL_MEMORY);
+		set_identifier_kind (id, cik_keyword);
+		ridpointers[RID_OMP_ALL_MEMORY] = id;
+	}
 }
 
 static void
-init_cp_pragma (void)
+init_cp_pragma(void)
 {
-  c_register_pragma (0, "vtable", handle_pragma_vtable);
-  c_register_pragma (0, "unit", handle_pragma_unit);
-  c_register_pragma (0, "interface", handle_pragma_interface);
-  c_register_pragma (0, "implementation", handle_pragma_implementation);
-  c_register_pragma ("GCC", "interface", handle_pragma_interface);
-  c_register_pragma ("GCC", "implementation", handle_pragma_implementation);
+	c_register_pragma(0, "vtable", handle_pragma_vtable);
+	c_register_pragma(0, "unit", handle_pragma_unit);
+	c_register_pragma(0, "interface", handle_pragma_interface);
+	c_register_pragma(0, "implementation", handle_pragma_implementation);
+	c_register_pragma("GCC", "interface", handle_pragma_interface);
+	c_register_pragma("GCC", "implementation", handle_pragma_implementation);
 }
 
-/* TRUE if a code represents a statement.  */
-
+/* TRUE if a code represents a statement. */
 bool statement_code_p[MAX_TREE_CODES];
 
 /* Initialize the C++ front end.  This function is very sensitive to
    the exact order that things are done here.  It would be nice if the
    initialization done by this routine were moved to its subroutines,
-   and the ordering dependencies clarified and reduced.  */
+   and the ordering dependencies clarified and reduced. */
 bool
-cxx_init (void)
+cxx_init(void)
 {
-  location_t saved_loc;
-  unsigned int i;
-  static const enum tree_code stmt_codes[] = {
-   CTOR_INITIALIZER,	TRY_BLOCK,	HANDLER,
-   EH_SPEC_BLOCK,	USING_STMT,	TAG_DEFN,
-   IF_STMT,		CLEANUP_STMT,	FOR_STMT,
-   RANGE_FOR_STMT,	WHILE_STMT,	DO_STMT,
-   BREAK_STMT,		CONTINUE_STMT,	SWITCH_STMT,
-   EXPR_STMT,		OMP_DEPOBJ
-  };
+	location_t saved_loc;
+	unsigned int i;
+	static const enum tree_code stmt_codes[] = {
+		CTOR_INITIALIZER,	TRY_BLOCK,		HANDLER,
+		EH_SPEC_BLOCK,		USING_STMT,		TAG_DEFN,
+		IF_STMT,			CLEANUP_STMT,	FOR_STMT,
+		RANGE_FOR_STMT,		WHILE_STMT,		DO_STMT,
+		BREAK_STMT,			CONTINUE_STMT,	SWITCH_STMT,
+		EXPR_STMT,			OMP_DEPOBJ
+	};
 
-  memset (&statement_code_p, 0, sizeof (statement_code_p));
-  for (i = 0; i < ARRAY_SIZE (stmt_codes); i++)
-    statement_code_p[stmt_codes[i]] = true;
+	memset(&statement_code_p, 0, sizeof (statement_code_p));
+	for (i = 0; i < ARRAY_SIZE(stmt_codes); i++)
+		statement_code_p[stmt_codes[i]] = true;
 
-  saved_loc = input_location;
-  input_location = BUILTINS_LOCATION;
+	saved_loc = input_location;
+	input_location = BUILTINS_LOCATION;
 
-  init_reswords ();
-  init_tree ();
-  init_cp_semantics ();
-  init_operators ();
-  init_method ();
+	init_reswords();
+	init_tree();
+	init_cp_semantics();
+	init_operators();
+	init_method();
 
-  current_function_decl = NULL;
+	current_function_decl = NULL;
 
-  class_type_node = ridpointers[(int) RID_CLASS];
+	class_type_node = ridpointers[(int) RID_CLASS];
 
-  cxx_init_decl_processing ();
+	cxx_init_decl_processing();
 
-  if (c_common_init () == false)
-    {
-      input_location = saved_loc;
-      return false;
-    }
+	if (c_common_init() == false) {
+		input_location = saved_loc;
+		return false;
+	}
 
-  init_cp_pragma ();
+	init_cp_pragma();
 
-  input_location = saved_loc;
-  return true;
+	input_location = saved_loc;
+	return true;
 }
-
+
 /* Return nonzero if S is not considered part of an
-   INTERFACE/IMPLEMENTATION pair.  Otherwise, return 0.  */
-
+   INTERFACE/IMPLEMENTATION pair.  Otherwise, return 0. */
 static int
-interface_strcmp (const char* s)
+interface_strcmp(const char* s)
 {
-  /* Set the interface/implementation bits for this scope.  */
-  struct impl_files *ifiles;
-  const char *s1;
+	/* Set the interface/implementation bits for this scope. */
+	struct impl_files *ifiles;
+	const char *s1;
 
-  for (ifiles = impl_file_chain; ifiles; ifiles = ifiles->next)
-    {
-      const char *t1 = ifiles->filename;
-      s1 = s;
+	for (ifiles = impl_file_chain; ifiles; ifiles = ifiles->next) {
+		const char *t1 = ifiles->filename;
+		s1 = s;
 
-      if (*s1 == 0 || filename_ncmp (s1, t1, 1) != 0)
-	continue;
+		if (*s1 == 0 || filename_ncmp(s1, t1, 1) != 0)
+			continue;
 
-      while (*s1 != 0 && filename_ncmp (s1, t1, 1) == 0)
-	s1++, t1++;
+		while (*s1 != 0 && filename_ncmp(s1, t1, 1) == 0)
+			s1++, t1++;
 
-      /* A match.  */
-      if (*s1 == *t1)
-	return 0;
+		/* A match. */
+		if (*s1 == *t1)
+			return 0;
 
-      /* Don't get faked out by xxx.yyy.cc vs xxx.zzz.cc.  */
-      if (strchr (s1, '.') || strchr (t1, '.'))
-	continue;
+		/* Don't get faked out by xxx.yyy.cc vs xxx.zzz.cc. */
+		if (strchr(s1, '.') || strchr(t1, '.'))
+			continue;
 
-      if (*s1 == '\0' || s1[-1] != '.' || t1[-1] != '.')
-	continue;
+		if (*s1 == '\0' || s1[-1] != '.' || t1[-1] != '.')
+			continue;
 
-      /* A match.  */
-      return 0;
-    }
+		/* A match. */
+		return 0;
+	}
 
-  /* No matches.  */
-  return 1;
+	/* No matches. */
+	return 1;
 }
 
 /* We've just read a cpp-token, figure out our next state.  Hey, this
-   is a hand-coded co-routine!  */
+   is a hand-coded co-routine! */
+struct module_token_filter {
+	enum state {
+		idle,
+		module_first,
+		module_cont,
+		module_end,
+	};
 
-struct module_token_filter
-{
-  enum state
-  {
-   idle,
-   module_first,
-   module_cont,
-   module_end,
-  };
+	enum state state : 8;
+	bool is_import : 1;
+	bool got_export : 1;
+	bool got_colon : 1;
+	bool want_dot : 1;
 
-  enum state state : 8;
-  bool is_import : 1;
-  bool got_export : 1;
-  bool got_colon : 1;
-  bool want_dot : 1;
+	location_t token_loc;
+	cpp_reader *reader;
+	module_state *module;
+	module_state *import;
 
-  location_t token_loc;
-  cpp_reader *reader;
-  module_state *module;
-  module_state *import;
+	module_token_filter(cpp_reader *reader)
+		: state (idle), is_import (false), got_export (false), got_colon (false), want_dot (false),
+		  token_loc (UNKNOWN_LOCATION), reader (reader), module (NULL), import (NULL) {	};
 
-  module_token_filter (cpp_reader *reader)
-    : state (idle), is_import (false),
-    got_export (false), got_colon (false), want_dot (false),
-    token_loc (UNKNOWN_LOCATION),
-    reader (reader), module (NULL), import (NULL)
-  {
-  };
+	/* Process the next token. Note we cannot see CPP_EOF inside a
+	   pragma -- a CPP_PRAGMA_EOL always happens. */
+	uintptr_t resume(int type, int keyword, tree value, location_t loc) {
+		unsigned res = 0;
 
-  /* Process the next token.  Note we cannot see CPP_EOF inside a
-     pragma -- a CPP_PRAGMA_EOL always happens.  */
-  uintptr_t resume (int type, int keyword, tree value, location_t loc)
-  {
-    unsigned res = 0;
+		switch (state) {
+			case idle:
+				if (type == CPP_KEYWORD)
+					switch (keyword) {
+						default:
+							break;
+						case RID__EXPORT:
+							got_export = true;
+							res = lang_hooks::PT_begin_pragma;
+							break;
+						case RID__IMPORT:
+							is_import = true;
+							/* FALLTHRU */
+						case RID__MODULE:
+							state = module_first;
+							want_dot = false;
+							got_colon = false;
+							token_loc = loc;
+							import = NULL;
+							if (!got_export)
+								res = lang_hooks::PT_begin_pragma;
+							break;
+					}
+				break;
 
-    switch (state)
-      {
-      case idle:
-	if (type == CPP_KEYWORD)
-	  switch (keyword)
-	    {
-	    default:
-	      break;
+			case module_first:
+				if (is_import && type == CPP_HEADER_NAME) {
+					/* A header name.  The preprocessor will have already
+					   done include searching and canonicalization. */
+					state = module_end;
+					goto header_unit;
+				}
 
-	    case RID__EXPORT:
-	      got_export = true;
-	      res = lang_hooks::PT_begin_pragma;
-	      break;
+				if (type == CPP_PADDING || type == CPP_COMMENT)
+					break;
 
-	    case RID__IMPORT:
-	      is_import = true;
-	      /* FALLTHRU */
-	    case RID__MODULE:
-	      state = module_first;
-	      want_dot = false;
-	      got_colon = false;
-	      token_loc = loc;
-	      import = NULL;
-	      if (!got_export)
-		res = lang_hooks::PT_begin_pragma;
-	      break;
-	    }
-	break;
+				state = module_cont;
+				if (type == CPP_COLON && module) {
+					got_colon = true;
+					import = module;
+					break;
+				}
+				/* FALLTHROUGH  */
+			case module_cont:
+				switch (type) {
+					case CPP_PADDING:
+					case CPP_COMMENT:
+						break;
+					default:
+						/* If we ever need to pay attention to attributes for
+						   header modules, more logic will be needed. */
+						state = module_end;
+						break;
+					case CPP_COLON:
+						if (got_colon)
+							state = module_end;
+						got_colon = true;
+						/* FALLTHROUGH  */
+					case CPP_DOT:
+						if (!want_dot)
+							state = module_end;
+						want_dot = false;
+						break;
+					case CPP_PRAGMA_EOL:
+						goto module_end;
+					case CPP_NAME:
+						if (want_dot) {
+							/* Got name instead of [.:].  */
+							state = module_end;
+							break;
+						}
+header_unit:
+						import = get_module(value, import, got_colon);
+						want_dot = true;
+						break;
+				}
+				break;
+			case module_end:
+				if (type == CPP_PRAGMA_EOL) {
+module_end:;
+					/* End of the directive, handle the name.  */
+					if (import && (is_import || !flag_header_unit))
+						if (module_state *m = preprocess_module(import, token_loc, module != NULL, is_import, got_export, reader))
+							if (!module)
+								module = m;
 
-      case module_first:
-	if (is_import && type == CPP_HEADER_NAME)
-	  {
-	    /* A header name.  The preprocessor will have already
-	       done include searching and canonicalization.  */
-	    state = module_end;
-	    goto header_unit;
-	  }
-	
-	if (type == CPP_PADDING || type == CPP_COMMENT)
-	  break;
+					is_import = got_export = false;
+					state = idle;
+				}
+				break;
+		}
 
-	state = module_cont;
-	if (type == CPP_COLON && module)
-	  {
-	    got_colon = true;
-	    import = module;
-	    break;
-	  }
-	/* FALLTHROUGH  */
-
-      case module_cont:
-	switch (type)
-	  {
-	  case CPP_PADDING:
-	  case CPP_COMMENT:
-	    break;
-
-	  default:
-	    /* If we ever need to pay attention to attributes for
-	       header modules, more logic will be needed.  */
-	    state = module_end;
-	    break;
-
-	  case CPP_COLON:
-	    if (got_colon)
-	      state = module_end;
-	    got_colon = true;
-	    /* FALLTHROUGH  */
-	  case CPP_DOT:
-	    if (!want_dot)
-	      state = module_end;
-	    want_dot = false;
-	    break;
-
-	  case CPP_PRAGMA_EOL:
-	    goto module_end;
-
-	  case CPP_NAME:
-	    if (want_dot)
-	      {
-		/* Got name instead of [.:].  */
-		state = module_end;
-		break;
-	      }
-	  header_unit:
-	    import = get_module (value, import, got_colon);
-	    want_dot = true;
-	    break;
-	  }
-	break;
-
-      case module_end:
-	if (type == CPP_PRAGMA_EOL)
-	  {
-	  module_end:;
-	    /* End of the directive, handle the name.  */
-	    if (import && (is_import || !flag_header_unit))
-	      if (module_state *m
-		  = preprocess_module (import, token_loc, module != NULL,
-				       is_import, got_export, reader))
-		if (!module)
-		  module = m;
-
-	    is_import = got_export = false;
-	    state = idle;
-	  }
-	break;
-      }
-
-    return res;
-  }
+		return res;
+	}
 };
 
-/* Initialize or teardown.  */
-
+/* Initialize or teardown. */
 uintptr_t
 module_token_cdtor (cpp_reader *pfile, uintptr_t data_)
 {
@@ -1093,34 +1036,31 @@ cxx_make_type (enum tree_code code MEM_STAT_DECL)
 }
 
 /* A wrapper without the memory stats for LANG_HOOKS_MAKE_TYPE.  */
-
 tree
 cxx_make_type_hook (enum tree_code code)
 {
-  return cxx_make_type (code);
+	return cxx_make_type (code);
 }
 
 tree
-make_class_type (enum tree_code code MEM_STAT_DECL)
+make_class_type(enum tree_code code MEM_STAT_DECL)
 {
-  tree t = cxx_make_type (code PASS_MEM_STAT);
-  SET_CLASS_TYPE_P (t, 1);
-  return t;
+	tree t = cxx_make_type(code PASS_MEM_STAT);
+	SET_CLASS_TYPE_P(t, 1);
+	return t;
 }
 
 /* Returns true if we are currently in the main source file, or in a
-   template instantiation started from the main source file.  */
-
+   template instantiation started from the main source file. */
 bool
-in_main_input_context (void)
+in_main_input_context(void)
 {
-  struct tinst_level *tl = outermost_tinst_level();
+	struct tinst_level *tl = outermost_tinst_level();
 
-  if (tl)
-    return filename_cmp (main_input_filename,
-			 LOCATION_FILE (tl->locus)) == 0;
-  else
-    return filename_cmp (main_input_filename, LOCATION_FILE (input_location)) == 0;
+	if (tl)
+		return filename_cmp(main_input_filename, LOCATION_FILE(tl->locus)) == 0;
+	else
+		return filename_cmp(main_input_filename, LOCATION_FILE (input_location)) == 0;
 }
 
 #include "gt-cp-lex.h"

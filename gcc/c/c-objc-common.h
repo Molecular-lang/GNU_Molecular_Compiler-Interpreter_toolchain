@@ -84,26 +84,14 @@
 /* The C front end's scoping structure is very different from
    that expected by the language-independent code; it is best
    to disable getdecls.
-   This means it must also provide its own write_globals.  */
+   This means it must also provide its own write_globals. */
 
 #undef LANG_HOOKS_GETDECLS
 #define LANG_HOOKS_GETDECLS hook_tree_void_null
 
-/* Hooks for tree gimplification.  */
+/* Hooks for tree gimplification. */
 #undef LANG_HOOKS_GIMPLIFY_EXPR
 #define LANG_HOOKS_GIMPLIFY_EXPR c_gimplify_expr
-
-#undef LANG_HOOKS_OMP_PREDETERMINED_SHARING
-#define LANG_HOOKS_OMP_PREDETERMINED_SHARING c_omp_predetermined_sharing
-
-#undef LANG_HOOKS_OMP_PREDETERMINED_MAPPING
-#define LANG_HOOKS_OMP_PREDETERMINED_MAPPING c_omp_predetermined_mapping
-
-#undef LANG_HOOKS_OMP_CLAUSE_COPY_CTOR
-#define LANG_HOOKS_OMP_CLAUSE_COPY_CTOR c_omp_clause_copy_ctor
-
-#undef LANG_HOOKS_OMP_CLAUSE_ASSIGN_OP
-#define LANG_HOOKS_OMP_CLAUSE_ASSIGN_OP c_omp_clause_copy_ctor
 
 #undef LANG_HOOKS_TREE_INLINING_VAR_MOD_TYPE_P
 #define LANG_HOOKS_TREE_INLINING_VAR_MOD_TYPE_P c_vla_unspec_p
