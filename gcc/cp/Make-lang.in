@@ -42,7 +42,7 @@ CFLAGS-cp/module.o += -DHOST_MACHINE=\"$(host)\" \
 ifneq ($(DEVPHASE_c),)
 # Some date's don't grok 'r', if so, simply use today's
 # date (don't bootstrap at midnight).
-MODULE_VERSION := $(shell date -r $(srcdir)/cp/module.cc '+%y%m%d-%H%M' \
+MODULE_VERSION := $(shell date -r $(srcdir)/cp/module.co '+%y%m%d-%H%M' \
   2>/dev/null || date '+%y%m%d-0000' 2>/dev/null || echo 0)
 
 CFLAGS-cp/module.o += -DMODULE_VERSION='($(subst -,,$(MODULE_VERSION))U)'
@@ -102,15 +102,15 @@ cp-warn = $(STRICT_WARN)
 # compute checksum over all object files and the options
 # re-use the checksum from the prev-final stage so it passes
 # the bootstrap comparison and allows comparing of the cc1 binary
-cc1plus-checksum.cc : build/genchecksum$(build_exeext) checksum-options \
+cc1plus-checksum.co : build/genchecksum$(build_exeext) checksum-options \
 	$(CXX_OBJS) $(BACKEND) $(CODYLIB) $(LIBDEPS) 
 	if [ -f ../stage_final ] \
 	   && cmp -s ../stage_current ../stage_final; then \
-	   cp ../prev-gcc/cc1plus-checksum.cc cc1plus-checksum.cc; \
+	   cp ../prev-gcc/cc1plus-checksum.co cc1plus-checksum.co; \
 	else \
 	  build/genchecksum$(build_exeext) $(CXX_OBJS) $(BACKEND) $(CODYLIB) $(LIBDEPS) \
-                     checksum-options > cc1plus-checksum.cc.tmp &&	   \
-	  $(srcdir)/../move-if-change cc1plus-checksum.cc.tmp cc1plus-checksum.cc; \
+                     checksum-options > cc1plus-checksum.co.tmp &&	   \
+	  $(srcdir)/../move-if-change cc1plus-checksum.co.tmp cc1plus-checksum.co; \
 	fi
 
 cc1plus$(exeext): $(CXX_OBJS) cc1plus-checksum.o $(BACKEND) $(CODYLIB) $(LIBDEPS) $(c++.prev)
@@ -155,7 +155,7 @@ c++.srcinfo:
 c++.srcextra:
 
 c++.tags: force
-	cd $(srcdir)/cp; $(ETAGS) -o TAGS.sub *.cc *.h --language=none \
+	cd $(srcdir)/cp; $(ETAGS) -o TAGS.sub *.co *.h --language=none \
 	  --regex='/DEFTREECODE [(]\([A-Z_]+\)/\1/' cp-tree.def; \
 	$(ETAGS) --include TAGS.sub --include ../TAGS.sub
 

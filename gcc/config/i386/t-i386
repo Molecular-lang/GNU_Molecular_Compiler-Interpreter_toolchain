@@ -6,43 +6,43 @@ TM_H += $(srcdir)/config/i386/x86-tune.def \
 	$(srcdir)/config/i386/i386-isa.def
 PASSES_EXTRA += $(srcdir)/config/i386/i386-passes.def
 
-i386-c.o: $(srcdir)/config/i386/i386-c.cc
+i386-c.o: $(srcdir)/config/i386/i386-c.co
 	  $(COMPILE) $<
 	  $(POSTCOMPILE)
 
-x86-tune-sched.o: $(srcdir)/config/i386/x86-tune-sched.cc
+x86-tune-sched.o: $(srcdir)/config/i386/x86-tune-sched.co
 	  $(COMPILE) $<
 	  $(POSTCOMPILE)
 
-x86-tune-sched-bd.o: $(srcdir)/config/i386/x86-tune-sched-bd.cc
+x86-tune-sched-bd.o: $(srcdir)/config/i386/x86-tune-sched-bd.co
 	  $(COMPILE) $<
 	  $(POSTCOMPILE)
 
-x86-tune-sched-atom.o: $(srcdir)/config/i386/x86-tune-sched-atom.cc
+x86-tune-sched-atom.o: $(srcdir)/config/i386/x86-tune-sched-atom.co
 	  $(COMPILE) $<
 	  $(POSTCOMPILE)
 
-x86-tune-sched-core.o: $(srcdir)/config/i386/x86-tune-sched-core.cc
+x86-tune-sched-core.o: $(srcdir)/config/i386/x86-tune-sched-core.co
 	  $(COMPILE) $<
 	  $(POSTCOMPILE)
 
-i386-d.o: $(srcdir)/config/i386/i386-d.cc
+i386-d.o: $(srcdir)/config/i386/i386-d.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-i386-options.o: $(srcdir)/config/i386/i386-options.cc
+i386-options.o: $(srcdir)/config/i386/i386-options.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-i386-builtins.o: $(srcdir)/config/i386/i386-builtins.cc
+i386-builtins.o: $(srcdir)/config/i386/i386-builtins.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-i386-expand.o: $(srcdir)/config/i386/i386-expand.cc
+i386-expand.o: $(srcdir)/config/i386/i386-expand.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-i386-features.o: $(srcdir)/config/i386/i386-features.cc
+i386-features.o: $(srcdir)/config/i386/i386-features.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 

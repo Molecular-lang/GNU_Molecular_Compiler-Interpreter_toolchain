@@ -1,9 +1,9 @@
 # Please review: $(src-dir)/SPL-README for Licencing info.
 
-glibc-c.o: config/glibc-c.cc
+glibc-c.o: config/glibc-c.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-glibc-d.o: config/glibc-d.cc
+glibc-d.o: config/glibc-d.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)

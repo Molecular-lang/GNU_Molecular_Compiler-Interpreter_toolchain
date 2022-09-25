@@ -10,8 +10,8 @@
 #define GTY(x) /* nothing */
 #endif
 
-/* This is what each hash table entry points to.  It may be embedded
-   deeply within another object.  */
+/* This is what each hash table entry points to. It may be embedded
+   deeply within another object. */
 typedef struct ht_identifier ht_identifier;
 typedef struct ht_identifier *ht_identifier_ptr;
 struct GTY(()) ht_identifier {

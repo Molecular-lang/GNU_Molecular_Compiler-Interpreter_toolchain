@@ -1,10 +1,10 @@
 # Please review: $(src-dir)/SPL-README for Licencing info.
 
-vxworks.o: $(srcdir)/config/vxworks.cc
+vxworks.o: $(srcdir)/config/vxworks.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-vxworks-c.o: $(srcdir)/config/vxworks-c.cc
+vxworks-c.o: $(srcdir)/config/vxworks-c.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 

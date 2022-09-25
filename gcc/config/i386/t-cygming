@@ -4,33 +4,33 @@
 # doing the build, it may not be installed yet.
 LIMITS_H_TEST = true
 
-winnt.o: $(srcdir)/config/i386/winnt.cc $(CONFIG_H) $(SYSTEM_H) coretypes.h \
+winnt.o: $(srcdir)/config/i386/winnt.co $(CONFIG_H) $(SYSTEM_H) coretypes.h \
   $(TM_H) $(RTL_H) $(REGS_H) hard-reg-set.h output.h $(TREE_H) flags.h \
   $(TM_P_H) $(HASH_TABLE_H) $(GGC_H) $(LTO_STREAMER_H)
 	$(COMPILER) -c $(ALL_COMPILERFLAGS) $(ALL_CPPFLAGS) $(INCLUDES) \
-	$(srcdir)/config/i386/winnt.cc
+	$(srcdir)/config/i386/winnt.co
 
-winnt-cxx.o: $(srcdir)/config/i386/winnt-cxx.cc $(CONFIG_H) $(SYSTEM_H) coretypes.h \
+winnt-cxx.o: $(srcdir)/config/i386/winnt-cxx.co $(CONFIG_H) $(SYSTEM_H) coretypes.h \
   $(TM_H) $(TREE_H) flags.h \
   $(TM_P_H) $(HASHTAB_H) $(GGC_H)
 	$(COMPILER) -c $(ALL_COMPILERFLAGS) $(ALL_CPPFLAGS) $(INCLUDES) \
-	$(srcdir)/config/i386/winnt-cxx.cc
+	$(srcdir)/config/i386/winnt-cxx.co
 
 
-winnt-stubs.o: $(srcdir)/config/i386/winnt-stubs.cc $(CONFIG_H) $(SYSTEM_H) coretypes.h \
+winnt-stubs.o: $(srcdir)/config/i386/winnt-stubs.co $(CONFIG_H) $(SYSTEM_H) coretypes.h \
   $(TM_H) $(RTL_H) $(REGS_H) hard-reg-set.h output.h $(TREE_H) flags.h \
   $(TM_P_H) $(HASHTAB_H) $(GGC_H)
 	$(COMPILER) -c $(ALL_COMPILERFLAGS) $(ALL_CPPFLAGS) $(INCLUDES) \
-	$(srcdir)/config/i386/winnt-stubs.cc
+	$(srcdir)/config/i386/winnt-stubs.co
 
-winnt-d.o: $(srcdir)/config/i386/winnt-d.cc
+winnt-d.o: $(srcdir)/config/i386/winnt-d.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-msformat-c.o: $(srcdir)/config/i386/msformat-c.cc $(CONFIG_H) $(SYSTEM_H) coretypes.h \
+msformat-c.o: $(srcdir)/config/i386/msformat-c.co $(CONFIG_H) $(SYSTEM_H) coretypes.h \
   $(TM_H) $(RTL_H) $(REGS_H) hard-reg-set.h output.h $(TREE_H) flags.h \
   $(TM_P_H) $(HASHTAB_H) $(GGC_H)
 	$(COMPILER) -c $(ALL_COMPILERFLAGS) $(ALL_CPPFLAGS) $(INCLUDES) \
-	$(srcdir)/config/i386/msformat-c.cc
+	$(srcdir)/config/i386/msformat-c.co
 
 STMP_FIXINC=stmp-fixinc

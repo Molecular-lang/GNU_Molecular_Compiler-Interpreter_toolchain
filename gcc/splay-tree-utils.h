@@ -472,4 +472,4 @@ template<typename Node>
 using default_rootless_splay_tree
   = rootless_splay_tree<default_splay_tree_accessors_with_parent<Node>>;
 
-#include "splay-tree-utils.tcc"
+#include "splay-tree-utils.tco"

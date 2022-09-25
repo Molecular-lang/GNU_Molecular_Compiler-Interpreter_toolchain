@@ -2,22 +2,22 @@
 
 TM_H += $(srcdir)/config/darwin-sections.def
 
-darwin.o: $(srcdir)/config/darwin.cc config/darwin-sections.def
+darwin.o: $(srcdir)/config/darwin.co config/darwin-sections.def
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-darwin-c.o: $(srcdir)/config/darwin-c.cc
+darwin-c.o: $(srcdir)/config/darwin-c.co
 	$(COMPILE) $(PREPROCESSOR_DEFINES) $<
 	$(POSTCOMPILE)
 
-darwin-d.o: $(srcdir)/config/darwin-d.cc
+darwin-d.o: $(srcdir)/config/darwin-d.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-darwin-f.o: $(srcdir)/config/darwin-f.cc
+darwin-f.o: $(srcdir)/config/darwin-f.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-darwin-driver.o: $(srcdir)/config/darwin-driver.cc
+darwin-driver.o: $(srcdir)/config/darwin-driver.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)

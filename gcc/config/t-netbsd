@@ -1,9 +1,9 @@
 # Please review: $(src-dir)/SPL-README for Licencing info.
 
-netbsd.o: $(srcdir)/config/netbsd.cc
+netbsd.o: $(srcdir)/config/netbsd.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-netbsd-d.o: $(srcdir)/config/netbsd-d.cc
+netbsd-d.o: $(srcdir)/config/netbsd-d.co
 	$(COMPILE) $<
 	$(POSTCOMPILE)

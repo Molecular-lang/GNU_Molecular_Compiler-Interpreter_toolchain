@@ -8,7 +8,7 @@
 #define DBX_TYPE_DECL_STABS_CODE N_DECL
 
 /* Use the XCOFF predefined type numbers. */
-#define DBX_ASSIGN_FUNDAMENTAL_TYPE_NUMBER(TYPE) xcoff_assign_fundamental_type_number (TYPE)
+#define DBX_ASSIGN_FUNDAMENTAL_TYPE_NUMBER(TYPE) xcoff_assign_fundamental_type_number(TYPE)
 
 /* Any type with a negative type index has already been output. */
 #define DBX_TYPE_DEFINED(TYPE) (TYPE_SYMTAB_ADDRESS (TYPE) < 0)
@@ -16,12 +16,12 @@
 /* Must use N_STSYM for static const variables (those in the text section) instead of N_FUN. */
 #define DBX_STATIC_CONST_VAR_CODE N_STSYM
 
-/* For static variables, output code to define the start of a static block.  */
+/* For static variables, output code to define the start of a static block. */
 #define DBX_STATIC_BLOCK_START(ASMFILE,CODE) { \
 	if ((CODE) == N_STSYM) \
 		fprintf((ASMFILE), "\t.bs\t%s[RW]\n", xcoff_private_data_section_name); \
 	else if ((CODE) == N_LCSYM) \
-		fprintf((ASMFILE), "\t.bs\t%s\n", xcoff_bss_section_name);	\
+		fprintf((ASMFILE), "\t.bs\t%s\n", xcoff_bss_section_name); \
 }
 
 /* For static variables, output code to define the end of a static block. */
@@ -135,20 +135,20 @@ extern const char *xcoff_lastfile;
    into a separate .stabs, containing only cross-refs to the others. */
 #define DBX_NO_XREFS
 
-/* We must put stabs in the text section.  If we don't the assembler
+/* We must put stabs in the text section. If we don't the assembler
    won't handle them correctly; it will sometimes put stabs where gdb
    can't find them. */
 #define DEBUG_SYMS_TEXT
 
 /* Prototype functions in xcoffout.cc. */
-extern int stab_to_sclass (int);
-extern void xcoffout_begin_prologue (unsigned int, unsigned int, const char *);
-extern void xcoffout_begin_block (unsigned, unsigned);
-extern void xcoffout_end_epilogue (unsigned int, const char *);
-extern void xcoffout_end_function (unsigned int);
-extern void xcoffout_end_block (unsigned, unsigned);
-extern int xcoff_assign_fundamental_type_number (tree);
-extern void xcoffout_declare_function (FILE *, tree, const char *);
-extern void xcoffout_source_line (unsigned int, unsigned int, const char *, int, bool);
+extern int stab_to_sclass(int);
+extern void xcoffout_begin_prologue(unsigned int, unsigned int, const char *);
+extern void xcoffout_begin_block(unsigned, unsigned);
+extern void xcoffout_end_epilogue(unsigned int, const char *);
+extern void xcoffout_end_function(unsigned int);
+extern void xcoffout_end_block(unsigned, unsigned);
+extern int xcoff_assign_fundamental_type_number(tree);
+extern void xcoffout_declare_function(FILE *, tree, const char *);
+extern void xcoffout_source_line(unsigned int, unsigned int, const char *, int, bool);
 
 #endif /* GCC_XCOFFOUT_H */
