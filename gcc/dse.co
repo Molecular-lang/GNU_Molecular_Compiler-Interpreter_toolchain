@@ -1839,7 +1839,6 @@ find_shift_sequence (poly_int64 access_size,
   return read_reg;
 }
 
-
 /* Call back for note_stores to find the hard regs set or clobbered by
    insn.  Data is a bitmap of the hardregs set so far.  */
 
@@ -2383,7 +2382,6 @@ check_mem_read_use (rtx *loc, void *data)
     }
 }
 
-
 /* Get arguments passed to CALL_INSN.  Return TRUE if successful.
    So far it only handles arguments passed in registers.  */
 
@@ -2661,7 +2659,6 @@ scan_insn (bb_info_t bb_info, rtx_insn *insn, int max_active_local_stores)
     insn_info->cannot_delete = true;
 }
 
-
 /* Remove BASE from the set of active_local_stores.  This is a
    callback from cselib that is used to get rid of the stores in
    active_local_stores.  */
@@ -2705,7 +2702,6 @@ remove_useless_values (cselib_val *base)
       insn_info = insn_info->next_local_store;
     }
 }
-
 
 /* Do all of step 1.  */
 
@@ -2858,7 +2854,6 @@ dse_step1 (void)
   rtx_group_table->empty ();
 }
 
-
 /*----------------------------------------------------------------------------
    Second step.
 
@@ -2955,14 +2950,11 @@ dse_step2 (void)
   return current_position != 1;
 }
 
-
-
 /*----------------------------------------------------------------------------
   Third step.
 
   Build the bit vectors for the transfer functions.
 ----------------------------------------------------------------------------*/
-
 
 /* Look up the bitmap index for OFFSET in GROUP_INFO.  If it is not
    there, return 0.  */
@@ -3304,20 +3296,15 @@ dse_step3 ()
     BITMAP_FREE (all_ones);
 }
 
-
-
 /*----------------------------------------------------------------------------
    Fourth step.
 
    Solve the bitvector equations.
 ----------------------------------------------------------------------------*/
 
-
 /* Confluence function for blocks with no successors.  Create an out
    set from the gen set of the exit block.  This block logically has
    the exit block as a successor.  */
-
-
 
 static void
 dse_confluence_0 (basic_block bb)
@@ -3453,15 +3440,11 @@ dse_step4 (void)
     }
 }
 
-
-
 /*----------------------------------------------------------------------------
    Fifth step.
 
    Delete the stores that can only be deleted using the global information.
 ----------------------------------------------------------------------------*/
-
-
 static void
 dse_step5 (void)
 {
@@ -3572,8 +3555,6 @@ dse_step5 (void)
     }
 }
 
-
-
 /*----------------------------------------------------------------------------
    Sixth step.
 
@@ -3623,7 +3604,7 @@ dse_step6 (void)
 	}
     }
 }
-
+
 /*----------------------------------------------------------------------------
    Seventh step.
 

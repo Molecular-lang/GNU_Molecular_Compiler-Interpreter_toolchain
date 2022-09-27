@@ -21,7 +21,7 @@
    since the user's expectation is that `cpp' always preprocesses.  */
 static const char *const known_suffixes[] =
 {
-  ".c",  ".C",   ".S",   ".m",
+  ".c", "co", ".C",   ".S",   ".m",
   ".cc", ".cxx", ".cpp", ".cp",  ".c++",
   ".sx",
   NULL

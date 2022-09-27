@@ -22,7 +22,6 @@ enum cpp_operation {
 
 extern void collect_ada_nodes (tree, const char *);
 extern void collect_source_ref (const char *);
-extern void dump_ada_specs (void (*)(const char *),
-			    int (*)(tree, cpp_operation));
+extern void dump_ada_specs (void (*)(const char *), int (*)(tree, cpp_operation));
 
 #endif /* ! C_ADA_SPEC_H */

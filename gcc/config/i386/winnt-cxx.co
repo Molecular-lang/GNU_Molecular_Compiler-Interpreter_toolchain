@@ -6,7 +6,7 @@
 #include "config.h"
 #include "system.h"
 #include "coretypes.h"
-#include "cp/cp-tree.h" /* This is why we're a separate module.  */
+#include "scpel/scpel-tree.h" /* This is why we're a separate module.  */
 #include "stringpool.h"
 #include "attribs.h"
 

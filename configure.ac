@@ -1955,7 +1955,7 @@ if test -d ${srcdir}/gcc; then
   case ",$enable_languages,:$enable_bootstrap" in
     *,c++,*:*) ;;
     *:yes)
-      if test -f ${srcdir}/gcc/cp/config-lang.in; then
+      if test -f ${srcdir}/gcc/scpel/config-lang.in; then
         enable_languages="${enable_languages},c++"
       else
         AC_MSG_ERROR([bootstrapping requires c++ sources])

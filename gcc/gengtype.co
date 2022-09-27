@@ -1915,25 +1915,25 @@ struct file_rule_st files_rules[] = {
   { DIR_PREFIX_REGEX "c/c-tree\\.h$",
     REG_EXTENDED, NULL_REGEX, "gt-c-c-decl.h", "c/c-decl.co", NULL_FRULACT},
 
-  /* cp/cp-tree.h gives gt-cp-tree.h for cp/tree.co !  */
-  { DIR_PREFIX_REGEX "cp/cp-tree\\.h$",
+  /* scpel/scpel-tree.h gives gt-scpel-tree.h for scpel/tree.co !  */
+  { DIR_PREFIX_REGEX "scpel/scpel-tree\\.h$",
     REG_EXTENDED, NULL_REGEX,
-    "gt-cp-tree.h", "cp/tree.co", NULL_FRULACT },
+    "gt-scpel-tree.h", "scpel/tree.co", NULL_FRULACT },
 
-  /* cp/decl.h & cp/decl.co gives gt-cp-decl.h for cp/decl.co !  */
-  { DIR_PREFIX_REGEX "cp/decl\\.[ch]$",
+  /* scpel/decl.h & scpel/decl.co gives gt-scpel-decl.h for scpel/decl.co !  */
+  { DIR_PREFIX_REGEX "scpel/decl\\.[ch]$",
     REG_EXTENDED, NULL_REGEX,
-    "gt-cp-decl.h", "cp/decl.co", NULL_FRULACT },
+    "gt-scpel-decl.h", "scpel/decl.co", NULL_FRULACT },
 
-  /* cp/name-lookup.h gives gt-cp-name-lookup.h for cp/name-lookup.co !  */
-  { DIR_PREFIX_REGEX "cp/name-lookup\\.h$",
+  /* scpel/name-lookup.h gives gt-scpel-name-lookup.h for scpel/name-lookup.co !  */
+  { DIR_PREFIX_REGEX "scpel/name-lookup\\.h$",
     REG_EXTENDED, NULL_REGEX,
-    "gt-cp-name-lookup.h", "cp/name-lookup.co", NULL_FRULACT },
+    "gt-scpel-name-lookup.h", "scpel/name-lookup.co", NULL_FRULACT },
 
-  /* cp/parser.h gives gt-cp-parser.h for cp/parser.co !  */
-  { DIR_PREFIX_REGEX "cp/parser\\.h$",
+  /* scpel/parser.h gives gt-scpel-parser.h for scpel/parser.co !  */
+  { DIR_PREFIX_REGEX "scpel/parser\\.h$",
     REG_EXTENDED, NULL_REGEX,
-    "gt-cp-parser.h", "cp/parser.co", NULL_FRULACT },
+    "gt-scpel-parser.h", "scpel/parser.co", NULL_FRULACT },
 
   /* General cases.  For header *.h and *.cc files, we
    * need special actions to handle the language.  */

@@ -116,7 +116,7 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(SHELL) $(top_srcdir)/../mkinstalldirs
 CONFIG_HEADER = config.h
-CONFIG_CLEAN_FILES = bfd-in3.h po/Makefile.in
+CONFIG_CLEAN_FILES = bfd-in3.h
 CONFIG_CLEAN_VPATH_FILES =
 LIBRARIES = $(noinst_LIBRARIES)
 ARFLAGS = cru
@@ -1235,8 +1235,6 @@ $(srcdir)/config.in: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 distclean-hdr:
 	-rm -f config.h stamp-h1
 bfd-in3.h: $(top_builddir)/config.status $(srcdir)/bfd-in2.h
-	cd $(top_builddir) && $(SHELL) ./config.status $@
-po/Makefile.in: $(top_builddir)/config.status $(top_srcdir)/po/Make-in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 
 clean-noinstLIBRARIES:

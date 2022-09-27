@@ -2629,10 +2629,6 @@ local-distclean:
 	-if [ "$(HOST_SUBDIR)" != "." ]; then \
 	  rm -rf $(HOST_SUBDIR); \
 	else true; fi
-	-rm -f texinfo/po/Makefile texinfo/po/Makefile.in texinfo/info/Makefile
-	-rm -f texinfo/doc/Makefile texinfo/po/POTFILES
-	-rmdir texinfo/doc texinfo/info texinfo/intl texinfo/lib 2>/dev/null
-	-rmdir texinfo/makeinfo texinfo/po texinfo/util 2>/dev/null
 	-rmdir c++tools fastjar gcc gnattools gotools 2>/dev/null
 	-rmdir libcc1 libiberty texinfo zlib 2>/dev/null
 	-find . -name config.cache -exec rm -f {} \; \; 2>/dev/null
