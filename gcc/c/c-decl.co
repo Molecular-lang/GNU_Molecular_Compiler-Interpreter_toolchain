@@ -8599,10 +8599,9 @@ start_enum (location_t loc, struct c_enum_contents *the_enum, tree name)
    install their decls in the enumeration type and finish it off.
    ENUMTYPE is the type object, VALUES a list of decl-value pairs,
    and ATTRIBUTES are the specified attributes.
-   Returns ENUMTYPE.  */
-
+   Returns ENUMTYPE. */
 tree
-finish_enum (tree enumtype, tree values, tree attributes)
+finish_enum(tree enumtype, tree values, tree attributes)
 {
   tree pair, tem;
   tree minnode = NULL_TREE, maxnode = NULL_TREE;
@@ -8768,86 +8767,76 @@ finish_enum (tree enumtype, tree values, tree attributes)
 tree
 build_enumerator(location_t decl_loc, location_t loc, struct c_enum_contents *the_enum, tree name, tree value)
 {
-  tree decl, type;
+	tree decl, type;
 
-  /* Validate and default VALUE. */
+	/* Validate and default VALUE. */
 
-  if (value != NULL_TREE) {
-      /* Don't issue more errors for error_mark_node (i.e. an
-	 undeclared identifier) - just ignore the value expression.  */
-      if (value == error_mark_node)
-	value = NULL_TREE;
-      else if (!INTEGRAL_TYPE_P (TREE_TYPE (value))) {
-	  error_at (loc, "enumerator value for %qE is not an integer constant",
-		    name);
-	  value = NULL_TREE;
-	} else {
-	  if (TREE_CODE (value) != INTEGER_CST) {
-	      value = c_fully_fold (value, false, NULL);
-	      if (TREE_CODE (value) == INTEGER_CST)
-		pedwarn (loc, OPT_Wpedantic,
-			 "enumerator value for %qE is not an integer "
-			 "constant expression", name);
-	    }
-	  if (TREE_CODE (value) != INTEGER_CST) {
-	      error ("enumerator value for %qE is not an integer constant",
-		     name);
-	      value = NULL_TREE;
-	    } else {
-	      value = default_conversion (value);
-	      constant_expression_warning (value);
-	    }
+	if (value != NULL_TREE) {
+		/* Don't issue more errors for error_mark_node (i.e. an
+		   undeclared identifier) - just ignore the value expression. */
+		if (value == error_mark_node)
+			value = NULL_TREE;
+		else if (!INTEGRAL_TYPE_P (TREE_TYPE (value))) {
+			error_at(loc, "enumerator value for %qE is not an integer constant", name);
+		value = NULL_TREE;
+		} else {
+			if (TREE_CODE (value) != INTEGER_CST) {
+				value = c_fully_fold(value, false, NULL);
+			if (TREE_CODE (value) == INTEGER_CST)
+				pedwarn(loc, OPT_Wpedantic, "enumerator value for %qE is not an integer constant expression", name);
+			}
+			if (TREE_CODE (value) != INTEGER_CST) {
+				error("enumerator value for %qE is not an integer constant", name);
+			value = NULL_TREE;
+			} else {
+				value = default_conversion(value);
+				constant_expression_warning(value);
+			}
+		}
 	}
-    }
 
-  /* Default based on previous value.  */
-  /* It should no longer be possible to have NON_LVALUE_EXPR
-     in the default.  */
-  if (value == NULL_TREE) {
-      value = the_enum->enum_next_value;
-      if (the_enum->enum_overflow)
-	error_at (loc, "overflow in enumeration values");
-    }
-  /* Even though the underlying type of an enum is unspecified, the
-     type of enumeration constants is explicitly defined as int
-     (6.4.4.3/2 in the C99 Standard).  GCC allows any integer type as
-     an extension.  */
-  else if (!int_fits_type_p (value, integer_type_node))
-    pedwarn (loc, OPT_Wpedantic,
-	     "ISO C restricts enumerator values to range of %<int%>");
+	/* Default based on previous value. */
+	/* It should no longer be possible to have NON_LVALUE_EXPR
+	   in the default. */
+	if (value == NULL_TREE) {
+		value = the_enum->enum_next_value;
+		if (the_enum->enum_overflow)
+			error_at(loc, "overflow in enumeration values");
+	}
+	/* Even though the underlying type of an enum is unspecified, the
+	   type of enumeration constants is explicitly defined as int
+	   (6.4.4.3/2 in the C99 Standard). GCC allows any integer type as
+	    an extension. */
+	else if (!int_fits_type_p (value, integer_type_node))
+		pedwarn(loc, OPT_Wpedantic, "ISO C restricts enumerator values to range of %<int%>");
 
-  /* The ISO C Standard mandates enumerators to have type int, even
-     though the underlying type of an enum type is unspecified.
-     However, GCC allows enumerators of any integer type as an
-     extensions.  Here we convert any enumerators that fit in an int
-     to type int, to avoid promotions to unsigned types when comparing
-     integers with enumerators that fit in the int range.  When
-     -pedantic is given, we would have already warned about those that
-     don't fit. We have to do this here rather than in finish_enum
-     because this value may be used to define more enumerators.  */
-  if (int_fits_type_p (value, integer_type_node))
-    value = convert (integer_type_node, value);
+	/* The ISO C Standard mandates enumerators to have type int, even
+	   though the underlying type of an enum type is unspecified.
+	   However, GCC allows enumerators of any integer type as an
+	   extensions.  Here we convert any enumerators that fit in an int
+	   to type int, to avoid promotions to unsigned types when comparing
+	   integers with enumerators that fit in the int range.  When
+	   -pedantic is given, we would have already warned about those that
+	   don't fit. We have to do this here rather than in finish_enum
+	   because this value may be used to define more enumerators.  */
+	if (int_fits_type_p(value, integer_type_node))
+		value = convert(integer_type_node, value);
 
-  /* Set basis for default for next value.  */
-  the_enum->enum_next_value
-    = build_binary_op (EXPR_LOC_OR_LOC (value, input_location),
-		       PLUS_EXPR, value, integer_one_node, false);
-  the_enum->enum_overflow = tree_int_cst_lt (the_enum->enum_next_value, value);
+	/* Set basis for default for next value.  */
+	the_enum->enum_next_value = build_binary_op(EXPR_LOC_OR_LOC (value, input_location), PLUS_EXPR, value, integer_one_node, false);
+	the_enum->enum_overflow = tree_int_cst_lt(the_enum->enum_next_value, value);
 
-  /* Now create a declaration for the enum value name.  */
+	/* Now create a declaration for the enum value name. */
+	type = TREE_TYPE (value);
+	type = c_common_type_for_size(MAX (TYPE_PRECISION (type),
+		TYPE_PRECISION (integer_type_node)), (TYPE_PRECISION (type)
+		>= TYPE_PRECISION (integer_type_node) && TYPE_UNSIGNED (type)));
 
-  type = TREE_TYPE (value);
-  type = c_common_type_for_size (MAX (TYPE_PRECISION (type),
-				      TYPE_PRECISION (integer_type_node)),
-				 (TYPE_PRECISION (type)
-				  >= TYPE_PRECISION (integer_type_node)
-				  && TYPE_UNSIGNED (type)));
+	decl = build_decl(decl_loc, CONST_DECL, name, type);
+	DECL_INITIAL (decl) = convert(type, value);
+	pushdecl(decl);
 
-  decl = build_decl (decl_loc, CONST_DECL, name, type);
-  DECL_INITIAL (decl) = convert (type, value);
-  pushdecl (decl);
-
-  return tree_cons (decl, value, NULL_TREE);
+	return tree_cons(decl, value, NULL_TREE);
 }
 
 /* Implement LANG_HOOKS_SIMULATE_ENUM_DECL. */

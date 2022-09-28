@@ -46,9 +46,9 @@ lang_specific_driver(struct cl_decoded_option **in_decoded_options ATTRIBUTE_UNU
 
 				/* If the filename ends in .m or .mi, we are compiling
 				   ObjC and want to pass -shared-libgcc.  */
-				len = strlen (file);
+				len = strlen(file);
 				if ((len > 2 && file[len - 2] == '.' && file[len - 1] == 'm')
-						||  (len > 3 && file[len - 3] == '.' && file[len - 2] == 'm'
+						|| (len > 3 && file[len - 3] == '.' && file[len - 2] == 'm'
 						&& file[len - 1] == 'i'))
 					shared_libgcc = 1;
 			}

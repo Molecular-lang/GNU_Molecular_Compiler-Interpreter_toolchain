@@ -156,9 +156,9 @@ machine_mode c_default_pointer_mode = VOIDmode;
 
 tree c_global_trees[CTI_MAX];
 
-/* Switches common to the C front ends.  */
+/* Switches common to the C front ends. */
 
-/* Nonzero means don't output line number information.  */
+/* Nonzero means don't output line number information. */
 
 char flag_no_line_commands;
 
@@ -650,137 +650,122 @@ fname_as_string(int pretty_p)
    ID is its name (unfortunately C and C++ hold the RID values of
    keywords in different places, so we can't derive RID from ID in
    this language independent code. LOC is the location of the
-   function.  */
+   function. */
 tree
-fname_decl (location_t loc, unsigned int rid, tree id)
+fname_decl(location_t loc, unsigned int rid, tree id)
 {
-  unsigned ix;
-  tree decl = NULL_TREE;
+	unsigned ix;
+	tree decl = NULL_TREE;
 
-  for (ix = 0; fname_vars[ix].decl; ix++)
-    if (fname_vars[ix].rid == rid)
-      break;
+	for (ix = 0; fname_vars[ix].decl; ix++)
+		if (fname_vars[ix].rid == rid)
+			break;
 
-  decl = *fname_vars[ix].decl;
-  if (!decl)
-    {
-      /* If a tree is built here, it would normally have the lineno of
-	 the current statement.  Later this tree will be moved to the
-	 beginning of the function and this line number will be wrong.
-	 To avoid this problem set the lineno to 0 here; that prevents
-	 it from appearing in the RTL.  */
-      tree stmts;
-      location_t saved_location = input_location;
-      input_location = UNKNOWN_LOCATION;
+	decl = *fname_vars[ix].decl;
+	if (!decl) {
+		/* If a tree is built here, it would normally have the lineno of
+		   the current statement. Later this tree will be moved to the
+		   beginning of the function and this line number will be wrong.
+		   To avoid this problem set the lineno to 0 here; that prevents
+		   it from appearing in the RTL. */
+		tree stmts;
+		location_t saved_location = input_location;
+		input_location = UNKNOWN_LOCATION;
 
-      stmts = push_stmt_list ();
-      decl = (*make_fname_decl) (loc, id, fname_vars[ix].pretty);
-      stmts = pop_stmt_list (stmts);
-      if (!IS_EMPTY_STMT (stmts))
-	saved_function_name_decls
-	  = tree_cons (decl, stmts, saved_function_name_decls);
-      *fname_vars[ix].decl = decl;
-      input_location = saved_location;
-    }
-  if (!ix && !current_function_decl)
-    pedwarn (loc, 0, "%qD is not defined outside of function scope", decl);
+		stmts = push_stmt_list ();
+		decl = (*make_fname_decl) (loc, id, fname_vars[ix].pretty);
+		stmts = pop_stmt_list(stmts);
+		if (!IS_EMPTY_STMT (stmts))
+			saved_function_name_decls = tree_cons(decl, stmts, saved_function_name_decls);
+		*fname_vars[ix].decl = decl;
+		input_location = saved_location;
+	}
+	if (!ix && !current_function_decl)
+		pedwarn(loc, 0, "%qD is not defined outside of function scope", decl);
 
-  return decl;
+	return decl;
 }
 
-/* Given a STRING_CST, give it a suitable array-of-chars data type.  */
-
+/* Given a STRING_CST, give it a suitable array-of-chars data type. */
 tree
-fix_string_type (tree value)
+fix_string_type(tree value)
 {
-  int length = TREE_STRING_LENGTH (value);
-  int nchars, charsz;
-  tree e_type, i_type, a_type;
+	int length = TREE_STRING_LENGTH (value);
+	int nchars, charsz;
+	tree e_type, i_type, a_type;
 
-  /* Compute the number of elements, for the array type.  */
-  if (TREE_TYPE (value) == char_array_type_node || !TREE_TYPE (value))
-    {
-      charsz = 1;
-      e_type = char_type_node;
-    }
-  else if (flag_char8_t && TREE_TYPE (value) == char8_array_type_node)
-    {
-      charsz = TYPE_PRECISION (char8_type_node) / BITS_PER_UNIT;
-      e_type = char8_type_node;
-    }
-  else if (TREE_TYPE (value) == char16_array_type_node)
-    {
-      charsz = TYPE_PRECISION (char16_type_node) / BITS_PER_UNIT;
-      e_type = char16_type_node;
-    }
-  else if (TREE_TYPE (value) == char32_array_type_node)
-    {
-      charsz = TYPE_PRECISION (char32_type_node) / BITS_PER_UNIT;
-      e_type = char32_type_node;
-    }
-  else
-    {
-      charsz = TYPE_PRECISION (wchar_type_node) / BITS_PER_UNIT;
-      e_type = wchar_type_node;
-    }
+	/* Compute the number of elements, for the array type.  */
+	if (TREE_TYPE (value) == char_array_type_node || !TREE_TYPE (value)) {
+		charsz = 1;
+		e_type = char_type_node;
+	} else if (flag_char8_t && TREE_TYPE (value) == char8_array_type_node) {
+		charsz = TYPE_PRECISION (char8_type_node) / BITS_PER_UNIT;
+		e_type = char8_type_node;
+	} else if (TREE_TYPE (value) == char16_array_type_node) {
+		charsz = TYPE_PRECISION (char16_type_node) / BITS_PER_UNIT;
+		e_type = char16_type_node;
+	} else if (TREE_TYPE (value) == char32_array_type_node) {
+		charsz = TYPE_PRECISION (char32_type_node) / BITS_PER_UNIT;
+		e_type = char32_type_node;
+	} else {
+		charsz = TYPE_PRECISION (wchar_type_node) / BITS_PER_UNIT;
+		e_type = wchar_type_node;
+	}
 
-  /* This matters only for targets where ssizetype has smaller precision
-     than 32 bits.  */
-  if (wi::lts_p (wi::to_wide (TYPE_MAX_VALUE (ssizetype)), length))
-    {
-      error ("size of string literal is too large");
-      length = tree_to_shwi (TYPE_MAX_VALUE (ssizetype)) / charsz * charsz;
-      char *str = CONST_CAST (char *, TREE_STRING_POINTER (value));
-      memset (str + length, '\0',
-	      MIN (TREE_STRING_LENGTH (value) - length, charsz));
-      TREE_STRING_LENGTH (value) = length;
-    }
-  nchars = length / charsz;
+	/* This matters only for targets where ssizetype has smaller precision
+	   than 32 bits. */
+	if (wi::lts_p (wi::to_wide (TYPE_MAX_VALUE (ssizetype)), length)) {
+		error("size of string literal is too large");
+		length = tree_to_shwi(TYPE_MAX_VALUE (ssizetype)) / charsz * charsz;
+		char *str = CONST_CAST (char *, TREE_STRING_POINTER (value));
+		memset (str + length, '\0', MIN (TREE_STRING_LENGTH (value) - length, charsz));
+		TREE_STRING_LENGTH (value) = length;
+	}
+	nchars = length / charsz;
 
-  /* C89 2.2.4.1, C99 5.2.4.1 (Translation limits).  The analogous
-     limit in C++98 Annex B is very large (65536) and is not normative,
-     so we do not diagnose it (warn_overlength_strings is forced off
-     in c_common_post_options).  */
-  if (warn_overlength_strings)
-    {
-      const int nchars_max = flag_isoc99 ? 4095 : 509;
-      const int relevant_std = flag_isoc99 ? 99 : 90;
-      if (nchars - 1 > nchars_max)
-	/* Translators: The %d after 'ISO C' will be 90 or 99.  Do not
-	   separate the %d from the 'C'.  'ISO' should not be
-	   translated, but it may be moved after 'C%d' in languages
-	   where modifiers follow nouns.  */
-	pedwarn (input_location, OPT_Woverlength_strings,
-		 "string length %qd is greater than the length %qd "
-		 "ISO C%d compilers are required to support",
-		 nchars - 1, nchars_max, relevant_std);
-    }
+	/* C89 2.2.4.1, C99 5.2.4.1 (Translation limits).  The analogous
+	   limit in C++98 Annex B is very large (65536) and is not normative,
+	   so we do not diagnose it (warn_overlength_strings is forced off
+	   in c_common_post_options).  */
+	if (warn_overlength_strings) {
+		const int nchars_max = flag_isoc99 ? 4095 : 509;
+		const int relevant_std = flag_isoc99 ? 99 : 90;
+		if (nchars - 1 > nchars_max)
+			/* Translators: The %d after 'ISO C' will be 90 or 99.  Do not
+			   separate the %d from the 'C'.  'ISO' should not be
+			   translated, but it may be moved after 'C%d' in languages
+			   where modifiers follow nouns.  */
+			pedwarn(input_location, OPT_Woverlength_strings,
+					"string length %qd is greater than the length %qd "
+					"ISO C%d compilers are required to support",
+					nchars - 1, nchars_max, relevant_std);
+	}
 
-  /* Create the array type for the string constant.  The ISO C++
-     standard says that a string literal has type `const char[N]' or
-     `const wchar_t[N]'.  We use the same logic when invoked as a C
-     front-end with -Wwrite-strings.
-     ??? We should change the type of an expression depending on the
-     state of a warning flag.  We should just be warning -- see how
-     this is handled in the C++ front-end for the deprecated implicit
-     conversion from string literals to `char*' or `wchar_t*'.
+	/* Create the array type for the string constant. The ISO C++
+	   standard says that a string literal has type `const char[N]' or
+	   `const wchar_t[N]'. We use the same logic when invoked as a C
+	   front-end with -Wwrite-strings.
+	   ??? We should change the type of an expression depending on the
+	   state of a warning flag. We should just be warning -- see how
+	   this is handled in the C++ front-end for the deprecated implicit
+	   conversion from string literals to `char*' or `wchar_t*'.
 
-     The C++ front end relies on TYPE_MAIN_VARIANT of a cv-qualified
-     array type being the unqualified version of that type.
-     Therefore, if we are constructing an array of const char, we must
-     construct the matching unqualified array type first.  The C front
-     end does not require this, but it does no harm, so we do it
-     unconditionally.  */
-  i_type = build_index_type (size_int (nchars - 1));
-  a_type = build_array_type (e_type, i_type);
-  if (c_dialect_cxx() || warn_write_strings)
-    a_type = c_build_qualified_type (a_type, TYPE_QUAL_CONST);
+	   The C++ front end relies on TYPE_MAIN_VARIANT of a cv-qualified
+	   array type being the unqualified version of that type.
+	   Therefore, if we are constructing an array of const char, we must
+	   construct the matching unqualified array type first.  The C front
+	   end does not require this, but it does no harm, so we do it
+	   unconditionally. */
+	i_type = build_index_type(size_int(nchars - 1));
+	a_type = build_array_type(e_type, i_type);
+	if (c_dialect_cxx() || warn_write_strings)
+		a_type = c_build_qualified_type(a_type, TYPE_QUAL_CONST);
 
-  TREE_TYPE (value) = a_type;
-  TREE_CONSTANT (value) = 1;
-  TREE_READONLY (value) = 1;
-  TREE_STATIC (value) = 1;
-  return value;
+	TREE_TYPE (value) = a_type;
+	TREE_CONSTANT (value) = 1;
+	TREE_READONLY (value) = 1;
+	TREE_STATIC (value) = 1;
+	return value;
 }
 
 /* Given a string of type STRING_TYPE, determine what kind of string
@@ -792,73 +777,60 @@ fix_string_type (tree value)
    at this point.
 
    This effectively reverses part of the logic in lex_string and
-   fix_string_type.  */
-
+   fix_string_type. */
 static enum cpp_ttype
-get_cpp_ttype_from_string_type (tree string_type)
+get_cpp_ttype_from_string_type(tree string_type)
 {
-  gcc_assert (string_type);
-  if (TREE_CODE (string_type) == POINTER_TYPE)
-    string_type = TREE_TYPE (string_type);
+	gcc_assert(string_type);
+	if (TREE_CODE (string_type) == POINTER_TYPE)
+		string_type = TREE_TYPE (string_type);
 
-  if (TREE_CODE (string_type) != ARRAY_TYPE)
-    return CPP_OTHER;
+	if (TREE_CODE (string_type) != ARRAY_TYPE)
+		return CPP_OTHER;
 
-  tree element_type = TREE_TYPE (string_type);
-  if (TREE_CODE (element_type) != INTEGER_TYPE)
-    return CPP_OTHER;
+	tree element_type = TREE_TYPE (string_type);
+	if (TREE_CODE (element_type) != INTEGER_TYPE)
+		return CPP_OTHER;
 
-  int bits_per_character = TYPE_PRECISION (element_type);
-  switch (bits_per_character)
-    {
-    case 8:
-      return CPP_STRING;  /* It could have also been CPP_UTF8STRING.  */
-    case 16:
-      return CPP_STRING16;
-    case 32:
-      return CPP_STRING32;
-    }
+	int bits_per_character = TYPE_PRECISION (element_type);
+	switch (bits_per_character) {
+		case 8:
+			return CPP_STRING;  /* It could have also been CPP_UTF8STRING.  */
+		case 16:
+			return CPP_STRING16;
+		case 32:
+			return CPP_STRING32;
+	}
 
-  return CPP_OTHER;
+	return CPP_OTHER;
 }
 
 /* The global record of string concatentations, for use in
-   extracting locations within string literals.  */
-
+   extracting locations within string literals. */
 GTY(()) string_concat_db *g_string_concat_db;
 
-/* Implementation of LANG_HOOKS_GET_SUBSTRING_LOCATION.  */
-
+/* Implementation of LANG_HOOKS_GET_SUBSTRING_LOCATION. */
 const char *
-c_get_substring_location (const substring_loc &substr_loc,
-			  location_t *out_loc)
+c_get_substring_location(const substring_loc &substr_loc, location_t *out_loc)
 {
-  enum cpp_ttype tok_type
-    = get_cpp_ttype_from_string_type (substr_loc.get_string_type ());
-  if (tok_type == CPP_OTHER)
-    return "unrecognized string type";
+	enum cpp_ttype tok_type = get_cpp_ttype_from_string_type(substr_loc.get_string_type());
+	if (tok_type == CPP_OTHER)
+		return "unrecognized string type";
 
-  return get_location_within_string (parse_in, g_string_concat_db,
-				     substr_loc.get_fmt_string_loc (),
-				     tok_type,
-				     substr_loc.get_caret_idx (),
-				     substr_loc.get_start_idx (),
-				     substr_loc.get_end_idx (),
-				     out_loc);
+	return get_location_within_string(parse_in, g_string_concat_db,
+		substr_loc.get_fmt_string_loc(), tok_type, substr_loc.get_caret_idx(),
+		substr_loc.get_start_idx(), substr_loc.get_end_idx(), out_loc);
 }
 
-
-/* Return true iff T is a boolean promoted to int.  */
-
+/* Return true iff T is a boolean promoted to int. */
 bool
-bool_promoted_to_int_p (tree t)
+bool_promoted_to_int_p(tree t)
 {
-  return (CONVERT_EXPR_P (t)
-	  && TREE_TYPE (t) == integer_type_node
-	  && TREE_CODE (TREE_TYPE (TREE_OPERAND (t, 0))) == BOOLEAN_TYPE);
+	return (CONVERT_EXPR_P (t) && TREE_TYPE (t) == integer_type_node
+		&& TREE_CODE (TREE_TYPE (TREE_OPERAND (t, 0))) == BOOLEAN_TYPE);
 }
 
-/* vector_targets_convertible_p is used for vector pointer types.  The
+/* vector_targets_convertible_p is used for vector pointer types. The
    callers perform various checks that the qualifiers are satisfactory,
    while OTOH vector_targets_convertible_p ignores the number of elements
    in the vectors.  That's fine with vector pointers as we can consider,
@@ -868,16 +840,16 @@ bool_promoted_to_int_p (tree t)
    vector_types_compatible_elements_p are used for vector value types.  */
 /* True if pointers to distinct types T1 and T2 can be converted to
    each other without an explicit cast.  Only returns true for opaque
-   vector types.  */
+   vector types. */
 bool
-vector_targets_convertible_p (const_tree t1, const_tree t2)
+vector_targets_convertible_p(const_tree t1, const_tree t2)
 {
-  if (VECTOR_TYPE_P (t1) && VECTOR_TYPE_P (t2)
-      && (TYPE_VECTOR_OPAQUE (t1) || TYPE_VECTOR_OPAQUE (t2))
-      && tree_int_cst_equal (TYPE_SIZE (t1), TYPE_SIZE (t2)))
-    return true;
+	if (VECTOR_TYPE_P (t1) && VECTOR_TYPE_P (t2)
+			&& (TYPE_VECTOR_OPAQUE (t1) || TYPE_VECTOR_OPAQUE (t2))
+			&& tree_int_cst_equal (TYPE_SIZE (t1), TYPE_SIZE (t2)))
+		return true;
 
-  return false;
+	return false;
 }
 
 /* vector_types_convertible_p is used for vector value types.
@@ -890,46 +862,45 @@ vector_targets_convertible_p (const_tree t1, const_tree t2)
    In contrast, vector_targets_convertible_p is used for vector pointer
    values, and vector_types_compatible_elements_p is used specifically
    in the context for binary operators, as a check if use is possible without
-   conversion.  */
+   conversion. */
 /* True if vector types T1 and T2 can be converted to each other
    without an explicit cast.  If EMIT_LAX_NOTE is true, and T1 and T2
    can only be converted with -flax-vector-conversions yet that is not
    in effect, emit a note telling the user about that option if such
-   a note has not previously been emitted.  */
+   a note has not previously been emitted. */
 bool
-vector_types_convertible_p (const_tree t1, const_tree t2, bool emit_lax_note)
+vector_types_convertible_p(const_tree t1, const_tree t2, bool emit_lax_note)
 {
-  static bool emitted_lax_note = false;
-  bool convertible_lax;
+	static bool emitted_lax_note = false;
+	bool convertible_lax;
 
-  if ((TYPE_VECTOR_OPAQUE (t1) || TYPE_VECTOR_OPAQUE (t2))
-      && tree_int_cst_equal (TYPE_SIZE (t1), TYPE_SIZE (t2)))
-    return true;
+	if ((TYPE_VECTOR_OPAQUE (t1) || TYPE_VECTOR_OPAQUE (t2)) && tree_int_cst_equal(TYPE_SIZE (t1), TYPE_SIZE (t2)))
+		return true;
 
-  convertible_lax =
-    (tree_int_cst_equal (TYPE_SIZE (t1), TYPE_SIZE (t2))
-     && (TREE_CODE (TREE_TYPE (t1)) != REAL_TYPE
-	 || known_eq (TYPE_VECTOR_SUBPARTS (t1),
-		      TYPE_VECTOR_SUBPARTS (t2)))
-     && (INTEGRAL_TYPE_P (TREE_TYPE (t1))
-	 == INTEGRAL_TYPE_P (TREE_TYPE (t2))));
+	convertible_lax =
+	(tree_int_cst_equal (TYPE_SIZE (t1), TYPE_SIZE (t2))
+	&& (TREE_CODE (TREE_TYPE (t1)) != REAL_TYPE
+	|| known_eq (TYPE_VECTOR_SUBPARTS (t1),
+	  TYPE_VECTOR_SUBPARTS (t2)))
+	&& (INTEGRAL_TYPE_P (TREE_TYPE (t1))
+	== INTEGRAL_TYPE_P (TREE_TYPE (t2))));
 
-  if (!convertible_lax || flag_lax_vector_conversions)
-    return convertible_lax;
+	if (!convertible_lax || flag_lax_vector_conversions)
+	return convertible_lax;
 
-  if (known_eq (TYPE_VECTOR_SUBPARTS (t1), TYPE_VECTOR_SUBPARTS (t2))
-      && lang_hooks.types_compatible_p (TREE_TYPE (t1), TREE_TYPE (t2)))
-    return true;
+	if (known_eq (TYPE_VECTOR_SUBPARTS (t1), TYPE_VECTOR_SUBPARTS (t2))
+	&& lang_hooks.types_compatible_p (TREE_TYPE (t1), TREE_TYPE (t2)))
+	return true;
 
-  if (emit_lax_note && !emitted_lax_note)
-    {
-      emitted_lax_note = true;
-      inform (input_location, "use %<-flax-vector-conversions%> to permit "
-              "conversions between vectors with differing "
-              "element types or numbers of subparts");
-    }
+	if (emit_lax_note && !emitted_lax_note)
+	{
+	emitted_lax_note = true;
+	inform (input_location, "use %<-flax-vector-conversions%> to permit "
+	  "conversions between vectors with differing "
+	  "element types or numbers of subparts");
+	}
 
-  return false;
+	return false;
 }
 
 /* Build a VEC_PERM_EXPR if V0, V1 and MASK are not error_mark_nodes

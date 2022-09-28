@@ -31,7 +31,7 @@
    debugger or by the front-end for things like
    __PRETTY_FUNCTION__.  */
 static cxx_pretty_printer actual_pretty_printer;
-static cxx_pretty_printer * const cxx_pp = &actual_pretty_printer;
+static cxx_pretty_printer *const cxx_pp = &actual_pretty_printer;
 
 /* Translate if being used for diagnostics, but not for dump files or
    __PRETTY_FUNCTION.  */
@@ -39,158 +39,142 @@ static cxx_pretty_printer * const cxx_pp = &actual_pretty_printer;
 
 # define NEXT_CODE(T) (TREE_CODE (TREE_TYPE (T)))
 
-static const char *args_to_string (tree, int);
-static const char *code_to_string (enum tree_code);
-static const char *cv_to_string (tree, int);
-static const char *decl_to_string (tree, int, bool);
-static const char *fndecl_to_string (tree, int);
-static const char *op_to_string	(bool, enum tree_code);
-static const char *parm_to_string (int);
-static const char *type_to_string (tree, int, bool, bool *, bool);
+static const char *args_to_string(tree, int);
+static const char *code_to_string(enum tree_code);
+static const char *cv_to_string(tree, int);
+static const char *decl_to_string(tree, int, bool);
+static const char *fndecl_to_string(tree, int);
+static const char *op_to_string(bool, enum tree_code);
+static const char *parm_to_string(int);
+static const char *type_to_string(tree, int, bool, bool *, bool);
 
-static void dump_alias_template_specialization (cxx_pretty_printer *, tree, int);
-static void dump_type (cxx_pretty_printer *, tree, int);
-static void dump_typename (cxx_pretty_printer *, tree, int);
-static void dump_simple_decl (cxx_pretty_printer *, tree, tree, int);
-static void dump_decl (cxx_pretty_printer *, tree, int);
-static void dump_template_decl (cxx_pretty_printer *, tree, int);
-static void dump_function_decl (cxx_pretty_printer *, tree, int);
-static void dump_expr (cxx_pretty_printer *, tree, int);
-static void dump_unary_op (cxx_pretty_printer *, const char *, tree, int);
-static void dump_binary_op (cxx_pretty_printer *, const char *, tree, int);
-static void dump_aggr_type (cxx_pretty_printer *, tree, int);
-static void dump_type_prefix (cxx_pretty_printer *, tree, int);
-static void dump_type_suffix (cxx_pretty_printer *, tree, int);
-static void dump_function_name (cxx_pretty_printer *, tree, int);
-static void dump_call_expr_args (cxx_pretty_printer *, tree, int, bool);
-static void dump_aggr_init_expr_args (cxx_pretty_printer *, tree, int, bool);
-static void dump_expr_list (cxx_pretty_printer *, tree, int);
-static void dump_global_iord (cxx_pretty_printer *, tree);
-static void dump_parameters (cxx_pretty_printer *, tree, int);
-static void dump_ref_qualifier (cxx_pretty_printer *, tree, int);
-static void dump_exception_spec (cxx_pretty_printer *, tree, int);
-static void dump_template_argument (cxx_pretty_printer *, tree, int);
-static void dump_template_argument_list (cxx_pretty_printer *, tree, int);
-static void dump_template_parameter (cxx_pretty_printer *, tree, int);
-static void dump_template_bindings (cxx_pretty_printer *, tree, tree, vec<tree, va_gc> *);
-static void dump_scope (cxx_pretty_printer *, tree, int);
-static void dump_template_parms (cxx_pretty_printer *, tree, int, int);
-static int get_non_default_template_args_count (tree, int);
-static const char *function_category (tree);
-static void maybe_print_constexpr_context (diagnostic_context *);
-static void maybe_print_instantiation_context (diagnostic_context *);
-static void print_instantiation_full_context (diagnostic_context *);
-static void print_instantiation_partial_context (diagnostic_context *, struct tinst_level *, location_t);
-static void maybe_print_constraint_context (diagnostic_context *);
-static void cp_diagnostic_starter (diagnostic_context *, diagnostic_info *);
-static void cp_print_error_function (diagnostic_context *, diagnostic_info *);
+static void dump_alias_template_specialization(cxx_pretty_printer *, tree, int);
+static void dump_type(cxx_pretty_printer *, tree, int);
+static void dump_typename(cxx_pretty_printer *, tree, int);
+static void dump_simple_decl(cxx_pretty_printer *, tree, tree, int);
+static void dump_decl(cxx_pretty_printer *, tree, int);
+static void dump_template_decl(cxx_pretty_printer *, tree, int);
+static void dump_function_decl(cxx_pretty_printer *, tree, int);
+static void dump_expr(cxx_pretty_printer *, tree, int);
+static void dump_unary_op(cxx_pretty_printer *, const char *, tree, int);
+static void dump_binary_op(cxx_pretty_printer *, const char *, tree, int);
+static void dump_aggr_type(cxx_pretty_printer *, tree, int);
+static void dump_type_prefix(cxx_pretty_printer *, tree, int);
+static void dump_type_suffix(cxx_pretty_printer *, tree, int);
+static void dump_function_name(cxx_pretty_printer *, tree, int);
+static void dump_call_expr_args(cxx_pretty_printer *, tree, int, bool);
+static void dump_aggr_init_expr_args(cxx_pretty_printer *, tree, int, bool);
+static void dump_expr_list(cxx_pretty_printer *, tree, int);
+static void dump_global_iord(cxx_pretty_printer *, tree);
+static void dump_parameters(cxx_pretty_printer *, tree, int);
+static void dump_ref_qualifier(cxx_pretty_printer *, tree, int);
+static void dump_exception_spec(cxx_pretty_printer *, tree, int);
+static void dump_template_argument(cxx_pretty_printer *, tree, int);
+static void dump_template_argument_list(cxx_pretty_printer *, tree, int);
+static void dump_template_parameter(cxx_pretty_printer *, tree, int);
+static void dump_template_bindings(cxx_pretty_printer *, tree, tree, vec<tree, va_gc> *);
+static void dump_scope(cxx_pretty_printer *, tree, int);
+static void dump_template_parms(cxx_pretty_printer *, tree, int, int);
+static int get_non_default_template_args_count(tree, int);
+static const char *function_category(tree);
+static void maybe_print_constexpr_context(diagnostic_context *);
+static void maybe_print_instantiation_context(diagnostic_context *);
+static void print_instantiation_full_context(diagnostic_context *);
+static void print_instantiation_partial_context(diagnostic_context *, struct tinst_level *, location_t);
+static void maybe_print_constraint_context(diagnostic_context *);
+static void cp_diagnostic_starter(diagnostic_context *, diagnostic_info *);
+static void cp_print_error_function(diagnostic_context *, diagnostic_info *);
 
-static bool cp_printer (pretty_printer *, text_info *, const char *, int, bool, bool, bool, bool *, const char **);
+static bool cp_printer(pretty_printer *, text_info *, const char *, int, bool, bool, bool, bool *, const char **);
 
 /* Struct for handling %H or %I, which require delaying printing the
-   type until a postprocessing stage.  */
+   type until a postprocessing stage. */
+class deferred_printed_type {
+	public:
+		deferred_printed_type()
+			: m_tree (NULL_TREE), m_buffer_ptr (NULL), m_verbose (false), m_quote (false) {}
 
-class deferred_printed_type
-{
-public:
-  deferred_printed_type ()
-  : m_tree (NULL_TREE), m_buffer_ptr (NULL), m_verbose (false), m_quote (false)
-  {}
+		deferred_printed_type(tree type, const char **buffer_ptr, bool verbose, bool quote)
+			: m_tree (type), m_buffer_ptr (buffer_ptr), m_verbose (verbose), m_quote (quote)
+		{
+			gcc_assert(type);
+			gcc_assert(buffer_ptr);
+		}
 
-  deferred_printed_type (tree type, const char **buffer_ptr, bool verbose,
-			 bool quote)
-  : m_tree (type), m_buffer_ptr (buffer_ptr), m_verbose (verbose),
-    m_quote (quote)
-  {
-    gcc_assert (type);
-    gcc_assert (buffer_ptr);
-  }
-
-  /* The tree is not GTY-marked: they are only non-NULL within a
-     call to pp_format.  */
-  tree m_tree;
-  const char **m_buffer_ptr;
-  bool m_verbose;
-  bool m_quote;
+		/* The tree is not GTY-marked: they are only non-NULL within a
+		   call to pp_format. */
+		tree m_tree;
+		const char **m_buffer_ptr;
+		bool m_verbose;
+		bool m_quote;
 };
 
 /* Subclass of format_postprocessor for the C++ frontend.
    This handles the %H and %I formatting codes, printing them
-   in a postprocessing phase (since they affect each other).  */
+   in a postprocessing phase (since they affect each other). */
+class cxx_format_postprocessor : public format_postprocessor {
+	public:
+		cxx_format_postprocessor()
+			: m_type_a (), m_type_b () {}
 
-class cxx_format_postprocessor : public format_postprocessor
-{
- public:
-  cxx_format_postprocessor ()
-  : m_type_a (), m_type_b ()
-  {}
+		format_postprocessor *clone() const final override {
+			return new cxx_format_postprocessor();
+		}
 
-  format_postprocessor *clone() const final override
-  {
-    return new cxx_format_postprocessor ();
-  }
+		void handle(pretty_printer *pp) final override;
 
-  void handle (pretty_printer *pp) final override;
-
-  deferred_printed_type m_type_a;
-  deferred_printed_type m_type_b;
+		deferred_printed_type m_type_a;
+		deferred_printed_type m_type_b;
 };
 
 /* CONTEXT->printer is a basic pretty printer that was constructed
    presumably by diagnostic_initialize(), called early in the
    compiler's initialization process (in general_init) Before the FE
-   is initialized.  This (C++) FE-specific diagnostic initializer is
+   is initialized. This (C++) FE-specific diagnostic initializer is
    thus replacing the basic pretty printer with one that has C++-aware
-   capacities.  */
-
+   capacities. */
 void
-cxx_initialize_diagnostics (diagnostic_context *context)
+cxx_initialize_diagnostics(diagnostic_context *context)
 {
-  pretty_printer *base = context->printer;
-  cxx_pretty_printer *pp = XNEW (cxx_pretty_printer);
-  context->printer = new (pp) cxx_pretty_printer ();
+	pretty_printer *base = context->printer;
+	cxx_pretty_printer *pp = XNEW (cxx_pretty_printer);
+	context->printer = new (pp) cxx_pretty_printer();
 
-  /* It is safe to free this object because it was previously XNEW()'d.  */
-  base->~pretty_printer ();
-  XDELETE (base);
+	/* It is safe to free this object because it was previously XNEW()'d. */
+	base->~pretty_printer();
+	XDELETE (base);
 
-  c_common_diagnostics_set_defaults (context);
-  diagnostic_starter (context) = cp_diagnostic_starter;
-  /* diagnostic_finalizer is already c_diagnostic_finalizer.  */
-  diagnostic_format_decoder (context) = cp_printer;
-  pp->m_format_postprocessor = new cxx_format_postprocessor ();
+	c_common_diagnostics_set_defaults(context);
+	diagnostic_starter(context) = cp_diagnostic_starter;
+	/* diagnostic_finalizer is already c_diagnostic_finalizer. */
+	diagnostic_format_decoder(context) = cp_printer;
+	pp->m_format_postprocessor = new cxx_format_postprocessor();
 }
 
-/* Dump an '@module' name suffix for DECL, if any.  */
-
+/* Dump an '@module' name suffix for DECL, if any. */
 static void
-dump_module_suffix (cxx_pretty_printer *pp, tree decl)
+dump_module_suffix(cxx_pretty_printer *pp, tree decl)
 {
-  if (!modules_p ())
-    return;
+	if (!modules_p())
+		return;
 
-  if (!DECL_CONTEXT (decl))
-    return;
+	if (!DECL_CONTEXT (decl))
+		return;
 
-  if (TREE_CODE (decl) != CONST_DECL
-      || !UNSCOPED_ENUM_P (DECL_CONTEXT (decl)))
-    {
-      if (!DECL_NAMESPACE_SCOPE_P (decl))
-	return;
+	if (TREE_CODE (decl) != CONST_DECL || !UNSCOPED_ENUM_P (DECL_CONTEXT (decl))) {
+		if (!DECL_NAMESPACE_SCOPE_P (decl))
+			return;
 
-      if (TREE_CODE (decl) == NAMESPACE_DECL
-	  && !DECL_NAMESPACE_ALIAS (decl)
-	  && (TREE_PUBLIC (decl) || !TREE_PUBLIC (CP_DECL_CONTEXT (decl))))
-	return;
-    }
+		if (TREE_CODE (decl) == NAMESPACE_DECL && !DECL_NAMESPACE_ALIAS (decl) && (TREE_PUBLIC (decl) || !TREE_PUBLIC (CP_DECL_CONTEXT (decl))))
+			return;
+	}
 
-  if (unsigned m = get_originating_module (decl))
-    if (const char *n = module_name (m, false))
-      {
-	pp_character (pp, '@');
-	pp->padding = pp_none;
-	pp_string (pp, n);
-      }
+	if (unsigned m = get_originating_module(decl))
+		if (const char *n = module_name(m, false)) {
+			pp_character(pp, '@');
+			pp->padding = pp_none;
+			pp_string(pp, n);
+		}
 }
 
 /* The scope of the declaration we're currently printing, to avoid redundantly

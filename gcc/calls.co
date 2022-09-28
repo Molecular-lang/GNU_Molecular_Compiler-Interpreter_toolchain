@@ -135,13 +135,11 @@ static int stack_arg_under_construction;
 static void precompute_register_parameters (int, struct arg_data *, int *);
 static int store_one_arg (struct arg_data *, rtx, int, int, int);
 static void store_unaligned_arguments_into_pseudos (struct arg_data *, int);
-static int finalize_must_preallocate (int, int, struct arg_data *,
-				      struct args_size *);
+static int finalize_must_preallocate (int, int, struct arg_data *, struct args_size *);
 static void precompute_arguments (int, struct arg_data *);
 static void compute_argument_addresses (struct arg_data *, rtx, int);
 static rtx rtx_for_function_call (tree, tree);
-static void load_register_parameters (struct arg_data *, int, rtx *, int,
-				      int, int *);
+static void load_register_parameters (struct arg_data *, int, rtx *, int, int, int *);
 static int special_function_p (const_tree, int);
 static int check_sibcall_argument_overlap_1 (rtx);
 static int check_sibcall_argument_overlap (rtx_insn *, struct arg_data *, int);
@@ -152,13 +150,12 @@ static tree split_complex_types (tree);
 static rtx save_fixed_argument_area (int, rtx, int *, int *);
 static void restore_fixed_argument_area (rtx, rtx, int, int);
 #endif
-
+
 /* Return true if bytes [LOWER_BOUND, UPPER_BOUND) of the outgoing
    stack region might already be in use.  */
 
 static bool
-stack_region_maybe_used_p (poly_uint64 lower_bound, poly_uint64 upper_bound,
-			   unsigned int reg_parm_stack_space)
+stack_region_maybe_used_p (poly_uint64 lower_bound, poly_uint64 upper_bound, unsigned int reg_parm_stack_space)
 {
   unsigned HOST_WIDE_INT const_lower, const_upper;
   const_lower = constant_lower_bound (lower_bound);

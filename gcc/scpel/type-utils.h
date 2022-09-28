@@ -12,8 +12,7 @@
    This is primarily intended for detecting whether T uses `auto' or a concept
    identifier.  Since either of these can only appear as a type-specifier for
    the declaration in question, only top-level qualifications are traversed;
-   find_type_usage does not look through the whole type.  */
-
+   find_type_usage does not look through the whole type. */
 inline tree
 find_type_usage(tree t, bool (*pred) (const_tree))
 {

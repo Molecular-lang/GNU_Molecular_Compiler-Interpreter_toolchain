@@ -286,8 +286,6 @@ c_lex_one_token(c_parser *parser, c_token *token, bool raw = false)
 	tree decl;
 
 	bool objc_force_identifier = parser->objc_need_raw_identifier;
-	if (c_dialect_objc ())
-	  parser->objc_need_raw_identifier = false;
 
 	if (C_IS_RESERVED_WORD (token->value))
 	  {
@@ -310,68 +308,6 @@ c_lex_one_token(c_parser *parser, c_token *token, bool raw = false)
 		token->keyword = rid_code;
 		break;
 	      }
-	    else if (c_dialect_objc () && OBJC_IS_PQ_KEYWORD (rid_code))
-	      {
-		/* We found an Objective-C "pq" keyword (in, out,
-		   inout, bycopy, byref, oneway).  They need special
-		   care because the interpretation depends on the
-		   context.  */
-		if (parser->objc_pq_context)
-		  {
-		    token->type = CPP_KEYWORD;
-		    token->keyword = rid_code;
-		    break;
-		  }
-		else if (parser->objc_could_be_foreach_context
-			 && rid_code == RID_IN)
-		  {
-		    /* We are in Objective-C, inside a (potential)
-		       foreach context (which means after having
-		       parsed 'for (', but before having parsed ';'),
-		       and we found 'in'.  We consider it the keyword
-		       which terminates the declaration at the
-		       beginning of a foreach-statement.  Note that
-		       this means you can't use 'in' for anything else
-		       in that context; in particular, in Objective-C
-		       you can't use 'in' as the name of the running
-		       variable in a C for loop.  We could potentially
-		       try to add code here to disambiguate, but it
-		       seems a reasonable limitation.  */
-		    token->type = CPP_KEYWORD;
-		    token->keyword = rid_code;
-		    break;
-		  }
-		/* Else, "pq" keywords outside of the "pq" context are
-		   not keywords, and we fall through to the code for
-		   normal tokens.  */
-	      }
-	    else if (c_dialect_objc () && OBJC_IS_PATTR_KEYWORD (rid_code))
-	      {
-		/* We found an Objective-C "property attribute"
-		   keyword (getter, setter, readonly, etc). These are
-		   only valid in the property context.  */
-		if (parser->objc_property_attr_context)
-		  {
-		    token->type = CPP_KEYWORD;
-		    token->keyword = rid_code;
-		    break;
-		  }
-		/* Else they are not special keywords.
-		*/
-	      }
-	    else if (c_dialect_objc () 
-		     && (OBJC_IS_AT_KEYWORD (rid_code)
-			 || OBJC_IS_CXX_KEYWORD (rid_code)))
-	      {
-		/* We found one of the Objective-C "@" keywords (defs,
-		   selector, synchronized, etc) or one of the
-		   Objective-C "cxx" keywords (class, private,
-		   protected, public, try, catch, throw) without a
-		   preceding '@' sign.  Do nothing and fall through to
-		   the code for normal tokens (in C++ we would still
-		   consider the CXX ones keywords, but not in C).  */
-		;
-	      }
 	    else
 	      {
 		token->type = CPP_KEYWORD;
@@ -389,55 +325,13 @@ c_lex_one_token(c_parser *parser, c_token *token, bool raw = false)
 		break;
 	      }
 	  }
-	else if (c_dialect_objc ())
-	  {
-	    tree objc_interface_decl = objc_is_class_name (token->value);
-	    /* Objective-C class names are in the same namespace as
-	       variables and typedefs, and hence are shadowed by local
-	       declarations.  */
-	    if (objc_interface_decl
-                && (!objc_force_identifier || global_bindings_p ()))
-	      {
-		token->value = objc_interface_decl;
-		token->id_kind = C_ID_CLASSNAME;
-		break;
-	      }
-	  }
         token->id_kind = C_ID_ID;
       }
-      break;
-    case CPP_AT_NAME:
-      /* This only happens in Objective-C; it must be a keyword.  */
-      token->type = CPP_KEYWORD;
-      switch (C_RID_CODE (token->value))
-	{
-	  /* Replace 'class' with '@class', 'private' with '@private',
-	     etc.  This prevents confusion with the C++ keyword
-	     'class', and makes the tokens consistent with other
-	     Objective-C 'AT' keywords.  For example '@class' is
-	     reported as RID_AT_CLASS which is consistent with
-	     '@synchronized', which is reported as
-	     RID_AT_SYNCHRONIZED.
-	  */
-	case RID_CLASS:     token->keyword = RID_AT_CLASS; break;
-	case RID_PRIVATE:   token->keyword = RID_AT_PRIVATE; break;
-	case RID_PROTECTED: token->keyword = RID_AT_PROTECTED; break;
-	case RID_PUBLIC:    token->keyword = RID_AT_PUBLIC; break;
-	case RID_THROW:     token->keyword = RID_AT_THROW; break;
-	case RID_TRY:       token->keyword = RID_AT_TRY; break;
-	case RID_CATCH:     token->keyword = RID_AT_CATCH; break;
-	case RID_SYNCHRONIZED: token->keyword = RID_AT_SYNCHRONIZED; break;
-	default:            token->keyword = C_RID_CODE (token->value);
-	}
       break;
     case CPP_COLON:
     case CPP_COMMA:
     case CPP_CLOSE_PAREN:
     case CPP_SEMICOLON:
-      /* These tokens may affect the interpretation of any identifiers
-	 following, if doing Objective-C.  */
-      if (c_dialect_objc ())
-	parser->objc_need_raw_identifier = false;
       break;
     case CPP_PRAGMA:
       /* We smuggled the cpp_token->u.pragma value in an INTEGER_CST.  */
@@ -508,12 +402,10 @@ c_parser_peek_nth_token_raw(c_parser *parser, unsigned int n)
   if (parser->tokens_avail >= n)
     return &parser->tokens[n - 1];
   unsigned int raw_len = vec_safe_length (parser->raw_tokens);
-  unsigned int raw_avail
-    = parser->tokens_avail + raw_len - parser->raw_tokens_used;
+  unsigned int raw_avail = parser->tokens_avail + raw_len - parser->raw_tokens_used;
   gcc_assert (raw_avail >= n - 1);
   if (raw_avail >= n)
-    return &(*parser->raw_tokens)[parser->raw_tokens_used
-				  + n - 1 - parser->tokens_avail];
+    return &(*parser->raw_tokens)[parser->raw_tokens_used + n - 1 - parser->tokens_avail];
   vec_safe_reserve (parser->raw_tokens, 1);
   parser->raw_tokens->quick_grow (raw_len + 1);
   c_lex_one_token (parser, &(*parser->raw_tokens)[raw_len], true);
@@ -523,8 +415,7 @@ c_parser_peek_nth_token_raw(c_parser *parser, unsigned int n)
 bool
 c_keyword_starts_typename(enum rid keyword)
 {
-  switch (keyword)
-    {
+  switch (keyword) {
     case RID_UNSIGNED:
     case RID_LONG:
     case RID_SHORT:
@@ -569,11 +460,9 @@ c_keyword_starts_typename(enum rid keyword)
 bool
 c_token_starts_typename(c_token *token)
 {
-  switch (token->type)
-    {
+  switch (token->type) {
     case CPP_NAME:
-      switch (token->id_kind)
-	{
+      switch (token->id_kind) {
 	case C_ID_ID:
 	  return false;
 	case C_ID_ADDRSPACE:
@@ -589,8 +478,6 @@ c_token_starts_typename(c_token *token)
     case CPP_KEYWORD:
       return c_keyword_starts_typename (token->keyword);
     case CPP_LESS:
-      if (c_dialect_objc ())
-	return true;
       return false;
     default:
       return false;
@@ -608,8 +495,7 @@ c_parser_next_tokens_start_typename(c_parser *parser, enum c_lookahead_kind la)
     return true;
 
   /* Try a bit harder to detect an unknown typename.  */
-  if (la != cla_prefer_id
-      && token->type == CPP_NAME
+  if (la != cla_prefer_id && token->type == CPP_NAME
       && token->id_kind == C_ID_ID
 
       /* Do not try too hard when we could have "object in array".  */
@@ -630,19 +516,16 @@ c_parser_next_tokens_start_typename(c_parser *parser, enum c_lookahead_kind la)
 static bool
 c_token_is_qualifier(c_token *token)
 {
-  switch (token->type)
-    {
+  switch (token->type) {
     case CPP_NAME:
-      switch (token->id_kind)
-	{
+      switch (token->id_kind) {
 	case C_ID_ADDRSPACE:
 	  return true;
 	default:
 	  return false;
 	}
     case CPP_KEYWORD:
-      switch (token->keyword)
-	{
+      switch (token->keyword) {
 	case RID_CONST:
 	case RID_VOLATILE:
 	case RID_RESTRICT:
@@ -739,8 +622,6 @@ c_token_starts_declspecs(c_token *token)
 	  return false;
 	}
     case CPP_LESS:
-      if (c_dialect_objc ())
-	return true;
       return false;
     default:
       return false;
@@ -769,18 +650,6 @@ c_parser_next_token_starts_declspecs(c_parser *parser)
 {
   c_token *token = c_parser_peek_token (parser);
 
-  /* In Objective-C, a classname normally starts a declspecs unless it
-     is immediately followed by a dot.  In that case, it is the
-     Objective-C 2.0 "dot-syntax" for class objects, ie, calls the
-     setter/getter on the class.  c_token_starts_declspecs() can't
-     differentiate between the two cases because it only checks the
-     current token, so we have a special check here.  */
-  if (c_dialect_objc () 
-      && token->type == CPP_NAME
-      && token->id_kind == C_ID_CLASSNAME 
-      && c_parser_peek_2nd_token (parser)->type == CPP_DOT)
-    return false;
-
   return c_token_starts_declspecs (token);
 }
 
@@ -791,13 +660,6 @@ bool
 c_parser_next_tokens_start_declaration(c_parser *parser)
 {
   c_token *token = c_parser_peek_token (parser);
-
-  /* Same as above.  */
-  if (c_dialect_objc () 
-      && token->type == CPP_NAME
-      && token->id_kind == C_ID_CLASSNAME 
-      && c_parser_peek_2nd_token (parser)->type == CPP_DOT)
-    return false;
 
   /* Labels do not start declarations.  */
   if (token->type == CPP_NAME
@@ -848,8 +710,7 @@ c_parser_consume_pragma(c_parser *parser)
   gcc_assert (parser->tokens[0].type == CPP_PRAGMA);
   if (parser->tokens != &parser->tokens_buf[0])
     parser->tokens++;
-  else if (parser->tokens_avail >= 2)
-    {
+  else if (parser->tokens_avail >= 2) {
       parser->tokens[0] = parser->tokens[1];
       if (parser->tokens_avail >= 3)
 	parser->tokens[1] = parser->tokens[2];
@@ -862,8 +723,7 @@ c_parser_consume_pragma(c_parser *parser)
 static inline void
 c_parser_set_source_position_from_token(c_token *token)
 {
-  if (token->type != CPP_EOF)
-    {
+  if (token->type != CPP_EOF) {
       input_location = token->location;
     }
 }
@@ -932,13 +792,9 @@ c_parser_error_richloc(c_parser *parser, const char *gmsgid, rich_location *rich
     return false;
 
   /* If this is actually a conflict marker, report it as such.  */
-  if (token->type == CPP_LSHIFT
-      || token->type == CPP_RSHIFT
-      || token->type == CPP_EQ_EQ)
-    {
+  if (token->type == CPP_LSHIFT || token->type == CPP_RSHIFT || token->type == CPP_EQ_EQ) {
       location_t loc;
-      if (c_parser_peek_conflict_marker (parser, token->type, &loc))
-	{
+      if (c_parser_peek_conflict_marker (parser, token->type, &loc)) {
 	  error_at (loc, "version control conflict marker in file");
 	  return true;
 	}
@@ -951,16 +807,12 @@ c_parser_error_richloc(c_parser *parser, const char *gmsgid, rich_location *rich
      there is one, then add that as an hint to the error message. */
   auto_diagnostic_group d;
   name_hint h;
-  if (parser->seen_string_literal && token->type == CPP_NAME)
-    {
+  if (parser->seen_string_literal && token->type == CPP_NAME) {
       tree name = token->value;
       const char *token_name = IDENTIFIER_POINTER (name);
-      const char *header_hint
-	= get_c_stdlib_header_for_string_macro_name (token_name);
+      const char *header_hint = get_c_stdlib_header_for_string_macro_name (token_name);
       if (header_hint != NULL)
-	h = name_hint (NULL, new suggest_missing_header (token->location,
-							 token_name,
-							 header_hint));
+	h = name_hint (NULL, new suggest_missing_header (token->location, token_name, header_hint));
     }
 
   c_parse_error (gmsgid,
@@ -1109,19 +961,14 @@ get_matching_symbol(enum cpp_ttype type)
    "expected %<;%>, %<,%> or %<)%>"), and thus we shouldn't attempt to
    generate a fix-it hint. */
 bool
-c_parser_require(c_parser *parser,
-		  enum cpp_ttype type,
-		  const char *msgid,
-		  location_t matching_location,
+c_parser_require(c_parser *parser, enum cpp_ttype type,
+		  const char *msgid, location_t matching_location,
 		  bool type_is_unique)
 {
-  if (c_parser_next_token_is (parser, type))
-    {
+  if (c_parser_next_token_is (parser, type)) {
       c_parser_consume_token (parser);
       return true;
-    }
-  else
-    {
+    } else {
       location_t next_token_loc = c_parser_peek_token (parser)->location;
       gcc_rich_location richloc (next_token_loc);
 
@@ -1129,23 +976,20 @@ c_parser_require(c_parser *parser,
 	 missing token immediately after the *previous* token.
 	 This may move the primary location within richloc.  */
       if (!parser->error && type_is_unique)
-	maybe_suggest_missing_token_insertion (&richloc, type,
-					       parser->last_token_location);
+	maybe_suggest_missing_token_insertion (&richloc, type, parser->last_token_location);
 
       /* If matching_location != UNKNOWN_LOCATION, highlight it.
 	 Attempt to consolidate diagnostics by printing it as a
 	 secondary range within the main diagnostic.  */
       bool added_matching_location = false;
       if (matching_location != UNKNOWN_LOCATION)
-	added_matching_location
-	  = richloc.add_location_if_nearby (matching_location);
+	added_matching_location = richloc.add_location_if_nearby (matching_location);
 
       if (c_parser_error_richloc (parser, msgid, &richloc))
 	/* If we weren't able to consolidate matching_location, then
 	   print it as a secondary diagnostic.  */
 	if (matching_location != UNKNOWN_LOCATION && !added_matching_location)
-	  inform (matching_location, "to match this %qs",
-		  get_matching_symbol (type));
+	  inform (matching_location, "to match this %qs", get_matching_symbol (type));
 
       return false;
     }
@@ -1156,13 +1000,10 @@ c_parser_require(c_parser *parser,
 static bool
 c_parser_require_keyword(c_parser *parser, enum rid keyword, const char *msgid)
 {
-  if (c_parser_next_token_is_keyword (parser, keyword))
-    {
+  if (c_parser_next_token_is_keyword (parser, keyword)) {
       c_parser_consume_token (parser);
       return true;
-    }
-  else
-    {
+    } else {
       c_parser_error (parser, msgid);
       return false;
     }
@@ -1187,13 +1028,11 @@ c_parser_skip_until_found(c_parser *parser, enum cpp_ttype type, const char *msg
     return;
 
   /* Skip tokens until the desired token is found.  */
-  while (true)
-    {
+  while (true) {
       /* Peek at the next token.  */
       c_token *token = c_parser_peek_token (parser);
       /* If we've reached the token we want, consume it and stop.  */
-      if (token->type == type && !nesting_depth)
-	{
+      if (token->type == type && !nesting_depth) {
 	  c_parser_consume_token (parser);
 	  break;
 	}
@@ -2653,15 +2492,6 @@ c_parser_declspecs(c_parser *parser, struct c_declspecs *specs,
 	  declspecs_add_type (loc, specs, t);
 	  break;
 	case RID_ATOMIC:
-	  /* C parser handling of Objective-C constructs needs
-	     checking for correct lvalue-to-rvalue conversions, and
-	     the code in build_modify_expr handling various
-	     Objective-C cases, and that in build_unary_op handling
-	     Objective-C cases for increment / decrement, also needs
-	     updating; uses of TYPE_MAIN_VARIANT in objc_compare_types
-	     and objc_types_are_equivalent may also need updates.  */
-	  if (c_dialect_objc ())
-	    sorry ("%<_Atomic%> in Objective-C");
 	  if (flag_isoc99)
 	    pedwarn_c99 (loc, OPT_Wpedantic,
 			 "ISO C99 does not support the %<_Atomic%> qualifier");
@@ -2783,15 +2613,13 @@ c_parser_enum_specifier(c_parser *parser)
   enum_loc = c_parser_peek_token (parser)->location;
   /* Set the location in case we create a decl now.  */
   c_parser_set_source_position_from_token (c_parser_peek_token (parser));
-  if (c_parser_next_token_is (parser, CPP_NAME))
-    {
+  if (c_parser_next_token_is (parser, CPP_NAME)) {
       ident = c_parser_peek_token (parser)->value;
       ident_loc = c_parser_peek_token (parser)->location;
       enum_loc = ident_loc;
       c_parser_consume_token (parser);
     }
-  if (c_parser_next_token_is (parser, CPP_OPEN_BRACE))
-    {
+  if (c_parser_next_token_is (parser, CPP_OPEN_BRACE)) {
       /* Parse an enum definition.  */
       struct c_enum_contents the_enum;
       tree type;
@@ -2803,8 +2631,7 @@ c_parser_enum_specifier(c_parser *parser)
       type = start_enum (enum_loc, &the_enum, ident);
       values = NULL_TREE;
       c_parser_consume_token (parser);
-      while (true)
-	{
+      while (true) {
 	  tree enum_id;
 	  tree enum_value;
 	  tree enum_decl;
@@ -2886,9 +2713,7 @@ c_parser_enum_specifier(c_parser *parser)
       ret.expr_const_operands = true;
       timevar_pop (TV_PARSE_ENUM);
       return ret;
-    }
-  else if (!ident)
-    {
+    } else if (!ident) {
       c_parser_error (parser, "expected %<{%>");
       ret.spec = error_mark_node;
       ret.kind = ctsk_tagref;
@@ -3856,96 +3681,72 @@ c_parser_parms_list_declarator(c_parser *parser, tree attrs, tree expr, bool hav
      note as above that gnu-attributes are ignored as the only contents of
      the parentheses, or as the only contents after forward
      declarations.  */
-  if (c_parser_next_token_is (parser, CPP_CLOSE_PAREN))
-    {
+  if (c_parser_next_token_is (parser, CPP_CLOSE_PAREN)) {
       struct c_arg_info *ret = build_arg_info ();
       c_parser_consume_token (parser);
       return ret;
     }
-  if (c_parser_next_token_is (parser, CPP_ELLIPSIS))
-    {
+  if (c_parser_next_token_is (parser, CPP_ELLIPSIS)) {
       struct c_arg_info *ret = build_arg_info ();
 
-      if (flag_allow_parameterless_variadic_functions)
-        {
+      if (flag_allow_parameterless_variadic_functions) {
           /* F (...) is allowed.  */
           ret->types = NULL_TREE;
-        }
-      else
-        {
+        } else {
           /* Suppress -Wold-style-definition for this case.  */
           ret->types = error_mark_node;
-          error_at (c_parser_peek_token (parser)->location,
-                    "ISO C requires a named argument before %<...%>");
+          error_at (c_parser_peek_token (parser)->location, "ISO C requires a named argument before %<...%>");
         }
       c_parser_consume_token (parser);
-      if (c_parser_next_token_is (parser, CPP_CLOSE_PAREN))
-	{
+      if (c_parser_next_token_is (parser, CPP_CLOSE_PAREN)) {
 	  c_parser_consume_token (parser);
 	  return ret;
-	}
-      else
-	{
-	  c_parser_skip_until_found (parser, CPP_CLOSE_PAREN,
-				     "expected %<)%>");
+	} else {
+	  c_parser_skip_until_found (parser, CPP_CLOSE_PAREN, "expected %<)%>");
 	  return NULL;
 	}
     }
   /* Nonempty list of parameters, either terminated with semicolon
      (forward declarations; recurse) or with close parenthesis (normal
      function) or with ", ... )" (variadic function).  */
-  while (true)
-    {
+  while (true) {
       /* Parse a parameter.  */
-      struct c_parm *parm = c_parser_parameter_declaration (parser, attrs,
-							    have_gnu_attrs);
+      struct c_parm *parm = c_parser_parameter_declaration (parser, attrs, have_gnu_attrs);
       attrs = NULL_TREE;
       have_gnu_attrs = false;
       if (parm == NULL)
 	bad_parm = true;
       else
 	push_parm_decl (parm, &expr);
-      if (c_parser_next_token_is (parser, CPP_SEMICOLON))
-	{
+      if (c_parser_next_token_is (parser, CPP_SEMICOLON)) {
 	  tree new_attrs;
 	  c_parser_consume_token (parser);
 	  mark_forward_parm_decls ();
-	  bool new_have_gnu_attrs
-	    = c_parser_next_token_is_keyword (parser, RID_ATTRIBUTE);
+	  bool new_have_gnu_attrs = c_parser_next_token_is_keyword (parser, RID_ATTRIBUTE);
 	  new_attrs = c_parser_gnu_attributes (parser);
-	  return c_parser_parms_list_declarator (parser, new_attrs, expr,
-						 new_have_gnu_attrs);
+	  return c_parser_parms_list_declarator (parser, new_attrs, expr, new_have_gnu_attrs);
 	}
-      if (c_parser_next_token_is (parser, CPP_CLOSE_PAREN))
-	{
+      if (c_parser_next_token_is (parser, CPP_CLOSE_PAREN)) {
 	  c_parser_consume_token (parser);
 	  if (bad_parm)
 	    return NULL;
 	  else
 	    return get_parm_info (false, expr);
 	}
-      if (!c_parser_require (parser, CPP_COMMA,
-			     "expected %<;%>, %<,%> or %<)%>",
-			     UNKNOWN_LOCATION, false))
-	{
+      if (!c_parser_require (parser, CPP_COMMA, "expected %<;%>, %<,%> or %<)%>", UNKNOWN_LOCATION, false)) {
 	  c_parser_skip_until_found (parser, CPP_CLOSE_PAREN, NULL);
 	  return NULL;
 	}
-      if (c_parser_next_token_is (parser, CPP_ELLIPSIS))
-	{
+      if (c_parser_next_token_is (parser, CPP_ELLIPSIS)) {
 	  c_parser_consume_token (parser);
-	  if (c_parser_next_token_is (parser, CPP_CLOSE_PAREN))
-	    {
+	  if (c_parser_next_token_is (parser, CPP_CLOSE_PAREN)) {
 	      c_parser_consume_token (parser);
 	      if (bad_parm)
 		return NULL;
 	      else
 		return get_parm_info (true, expr);
-	    }
-	  else
-	    {
-	      c_parser_skip_until_found (parser, CPP_CLOSE_PAREN,
-					 "expected %<)%>");
+	    } else {
+	      c_parser_skip_until_found (parser, CPP_CLOSE_PAREN, "expected %<)%>");
 	      return NULL;
 	    }
 	}
@@ -3997,8 +3798,7 @@ c_parser_parameter_declaration(c_parser *parser, tree attrs, bool have_gnu_attrs
       /* ??? In some Objective-C cases '...' isn't applicable so there
 	 should be a different message.  */
       else
-	c_parser_error (parser,
-			"expected declaration specifiers or %<...%>");
+	c_parser_error (parser, "expected declaration specifiers or %<...%>");
       c_parser_skip_to_end_of_parameter (parser);
       return NULL;
     }
@@ -4006,22 +3806,17 @@ c_parser_parameter_declaration(c_parser *parser, tree attrs, bool have_gnu_attrs
   location_t start_loc = c_parser_peek_token (parser)->location;
 
   specs = build_null_declspecs ();
-  if (attrs)
-    {
+  if (attrs) {
       declspecs_add_attrs (input_location, specs, attrs);
       attrs = NULL_TREE;
     }
-  c_parser_declspecs (parser, specs, true, true, true, true, false,
-		      !have_gnu_attrs, true, cla_nonabstract_decl);
+  c_parser_declspecs (parser, specs, true, true, true, true, false, !have_gnu_attrs, true, cla_nonabstract_decl);
   finish_declspecs (specs);
   pending_xref_error ();
   prefix_attrs = specs->attrs;
   specs->attrs = NULL_TREE;
-  declarator = c_parser_declarator (parser,
-				    specs->typespec_kind != ctsk_none,
-				    C_DTR_PARM, &dummy);
-  if (declarator == NULL)
-    {
+  declarator = c_parser_declarator (parser, specs->typespec_kind != ctsk_none, C_DTR_PARM, &dummy);
+  if (declarator == NULL) {
       c_parser_skip_until_found (parser, CPP_COMMA, NULL);
       return NULL;
     }
@@ -4047,13 +3842,10 @@ c_parser_parameter_declaration(c_parser *parser, tree attrs, bool have_gnu_attrs
   c_declarator *id_declarator = declarator;
   while (id_declarator && id_declarator->kind != cdk_id)
     id_declarator = id_declarator->declarator;
-  location_t caret_loc = (id_declarator->u.id.id
-			  ? id_declarator->id_loc
-			  : start_loc);
+  location_t caret_loc = (id_declarator->u.id.id ? id_declarator->id_loc : start_loc);
   location_t param_loc = make_location (caret_loc, start_loc, end_loc);
 
-  return build_c_parm (specs, chainon (postfix_attrs, prefix_attrs),
-		       declarator, param_loc);
+  return build_c_parm (specs, chainon (postfix_attrs, prefix_attrs), declarator, param_loc);
 }
 
 /* Parse a string literal in an asm expression.  It should not be
@@ -4104,12 +3896,10 @@ c_parser_gnu_attribute_any_word(c_parser *parser)
 {
   tree attr_name = NULL_TREE;
 
-  if (c_parser_next_token_is (parser, CPP_KEYWORD))
-    {
+  if (c_parser_next_token_is (parser, CPP_KEYWORD)) {
       /* ??? See comment above about what keywords are accepted here.  */
       bool ok;
-      switch (c_parser_peek_token (parser)->keyword)
-	{
+      switch (c_parser_peek_token (parser)->keyword) {
 	case RID_STATIC:
 	case RID_UNSIGNED:
 	case RID_LONG:
@@ -4156,8 +3946,7 @@ c_parser_gnu_attribute_any_word(c_parser *parser)
 
       /* Accept __attribute__((__const)) as __attribute__((const)) etc.  */
       attr_name = ridpointers[(int) c_parser_peek_token (parser)->keyword];
-    }
-  else if (c_parser_next_token_is (parser, CPP_NAME))
+    } else if (c_parser_next_token_is (parser, CPP_NAME))
     attr_name = c_parser_peek_token (parser)->value;
 
   return attr_name;
@@ -4181,20 +3970,13 @@ c_parser_attribute_arguments(c_parser *parser, bool takes_identifier, bool requi
   /* Parse the attribute contents.  If they start with an
      identifier which is followed by a comma or close
      parenthesis, then the arguments start with that
-     identifier; otherwise they are an expression list.
-     In objective-c the identifier may be a classname.  */
+     identifier; otherwise they are an expression list. */
   if (c_parser_next_token_is (parser, CPP_NAME)
-      && (c_parser_peek_token (parser)->id_kind == C_ID_ID
-	  || (c_dialect_objc ()
-	      && c_parser_peek_token (parser)->id_kind
-	      == C_ID_CLASSNAME))
+      && (c_parser_peek_token (parser)->id_kind == C_ID_ID)
       && ((c_parser_peek_2nd_token (parser)->type == CPP_COMMA)
 	  || (c_parser_peek_2nd_token (parser)->type
 	      == CPP_CLOSE_PAREN))
-      && (takes_identifier
-	  || (c_dialect_objc ()
-	      && c_parser_peek_token (parser)->id_kind
-	      == C_ID_CLASSNAME)))
+      && (takes_identifier))
     {
       tree arg1 = c_parser_peek_token (parser)->value;
       c_parser_consume_token (parser);
