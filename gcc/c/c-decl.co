@@ -4813,37 +4813,27 @@ lookup_last_decl (tree decl)
 }
 
 /* Wrapper for decl_attributes that adds some implicit attributes
-   to VAR_DECLs or FUNCTION_DECLs.  */
-
+   to VAR_DECLs or FUNCTION_DECLs. */
 static tree
-c_decl_attributes (tree *node, tree attributes, int flags)
+c_decl_attributes(tree *node, tree attributes, int flags)
 {
-  /* Add implicit "omp declare target" attribute if requested.  */
-  if (current_omp_declare_target_attribute
-      && ((VAR_P (*node) && is_global_var (*node))
-	  || TREE_CODE (*node) == FUNCTION_DECL))
-    {
-      if (VAR_P (*node)
-	  && !lang_hooks.types.omp_mappable_type (TREE_TYPE (*node)))
-	attributes = tree_cons (get_identifier ("omp declare target implicit"),
-				NULL_TREE, attributes);
-      else
-	{
-	  attributes = tree_cons (get_identifier ("omp declare target"),
-				  NULL_TREE, attributes);
-	  attributes = tree_cons (get_identifier ("omp declare target block"),
-				  NULL_TREE, attributes);
+	/* Add implicit "omp declare target" attribute if requested. */
+	if (current_omp_declare_target_attribute && ((VAR_P (*node) && is_global_var (*node)) || TREE_CODE (*node) == FUNCTION_DECL)) {
+		if (VAR_P (*node) && !lang_hooks.types.omp_mappable_type(TREE_TYPE (*node)))
+			attributes = tree_cons(get_identifier("omp declare target implicit"), NULL_TREE, attributes);
+		else {
+			attributes = tree_cons(get_identifier("omp declare target"), NULL_TREE, attributes);
+			attributes = tree_cons(get_identifier("omp declare target block"), NULL_TREE, attributes);
+		}
 	}
-    }
 
-  /* Look up the current declaration with all the attributes merged
-     so far so that attributes on the current declaration that's
-     about to be pushed that conflict with the former can be detected,
-     diagnosed, and rejected as appropriate.  */
-  tree last_decl = lookup_last_decl (*node);
-  return decl_attributes (node, attributes, flags, last_decl);
+	/* Look up the current declaration with all the attributes merged
+	   so far so that attributes on the current declaration that's
+	   about to be pushed that conflict with the former can be detected,
+	   diagnosed, and rejected as appropriate. */
+	tree last_decl = lookup_last_decl(*node);
+	return decl_attributes(node, attributes, flags, last_decl);
 }
-
 
 /* Decode a declarator in an ordinary declaration or data definition.
    This is called as soon as the type information and variable name
@@ -4858,208 +4848,165 @@ c_decl_attributes (tree *node, tree attributes, int flags)
    the type is left null, to be filled in by `finish_decl'.
 
    Function definitions do not come here; they go to start_function
-   instead.  However, external and forward declarations of functions
-   do go through here.  Structure field declarations are done by
-   grokfield and not through here.  */
-
+   instead. However, external and forward declarations of functions
+   do go through here. Structure field declarations are done by
+   grokfield and not through here. */
 tree
-start_decl (struct c_declarator *declarator, struct c_declspecs *declspecs,
-	    bool initialized, tree attributes, location_t *lastloc /* = NULL */)
+start_decl(struct c_declarator *declarator, struct c_declspecs *declspecs,
+		bool initialized, tree attributes, location_t *lastloc /* = NULL */)
 {
-  tree decl;
-  tree tem;
-  tree expr = NULL_TREE;
-  enum deprecated_states deprecated_state = DEPRECATED_NORMAL;
+	tree decl;
+	tree tem;
+	tree expr = NULL_TREE;
+	enum deprecated_states deprecated_state = DEPRECATED_NORMAL;
 
-  /* An object declared as __attribute__((unavailable)) suppresses
-     warnings and errors from __attribute__((deprecated/unavailable))
-     components.
-     An object declared as __attribute__((deprecated)) suppresses
-     warnings of uses of other deprecated items.  */
-  if (lookup_attribute ("unavailable", attributes))
-    deprecated_state = UNAVAILABLE_DEPRECATED_SUPPRESS;
-  else if (lookup_attribute ("deprecated", attributes))
-    deprecated_state = DEPRECATED_SUPPRESS;
+	/* An object declared as __attribute__((unavailable)) suppresses
+	   warnings and errors from __attribute__((deprecated/unavailable))
+	   components.
+	   An object declared as __attribute__((deprecated)) suppresses
+	   warnings of uses of other deprecated items. */
+	if (lookup_attribute("unavailable", attributes))
+		deprecated_state = UNAVAILABLE_DEPRECATED_SUPPRESS;
+	else if (lookup_attribute("deprecated", attributes))
+		deprecated_state = DEPRECATED_SUPPRESS;
 
-  decl = grokdeclarator (declarator, declspecs,
-			 NORMAL, initialized, NULL, &attributes, &expr, NULL,
-			 deprecated_state);
-  if (!decl || decl == error_mark_node)
-    return NULL_TREE;
+	decl = grokdeclarator(declarator, declspecs, NORMAL, initialized, NULL, &attributes, &expr, NULL, deprecated_state);
+	if (!decl || decl == error_mark_node)
+		return NULL_TREE;
 
-  if (tree lastdecl = lastloc ? lookup_last_decl (decl) : NULL_TREE)
-    if (lastdecl != error_mark_node)
-      *lastloc = DECL_SOURCE_LOCATION (lastdecl);
+	if (tree lastdecl = lastloc ? lookup_last_decl(decl) : NULL_TREE)
+		if (lastdecl != error_mark_node)
+			*lastloc = DECL_SOURCE_LOCATION (lastdecl);
 
-  if (expr)
-    add_stmt (fold_convert (void_type_node, expr));
+	if (expr)
+		add_stmt(fold_convert(void_type_node, expr));
 
-  if (TREE_CODE (decl) != FUNCTION_DECL && MAIN_NAME_P (DECL_NAME (decl))
-      && TREE_PUBLIC (decl))
-    warning (OPT_Wmain, "%q+D is usually a function", decl);
+	if (TREE_CODE (decl) != FUNCTION_DECL && MAIN_NAME_P (DECL_NAME (decl)) && TREE_PUBLIC (decl))
+		warning(OPT_Wmain, "%q+D is usually a function", decl);
 
-  if (initialized)
-    /* Is it valid for this decl to have an initializer at all?
-       If not, set INITIALIZED to zero, which will indirectly
-       tell 'finish_decl' to ignore the initializer once it is parsed.  */
-    switch (TREE_CODE (decl))
-      {
-      case TYPE_DECL:
-	error ("typedef %qD is initialized (use %<__typeof__%> instead)", decl);
-	initialized = false;
-	break;
+	if (initialized)
+		/* Is it valid for this decl to have an initializer at all?
+		   If not, set INITIALIZED to zero, which will indirectly
+		   tell 'finish_decl' to ignore the initializer once it is parsed.  */
+		switch (TREE_CODE (decl)) {
+			case TYPE_DECL:
+				error("typedef %qD is initialized (use %<__typeof__%> instead)", decl);
+				initialized = false;
+				break;
+			case FUNCTION_DECL:
+				error("function %qD is initialized like a variable", decl);
+				initialized = false;
+				break;
+			case PARM_DECL:
+				/* DECL_INITIAL in a PARM_DECL is really DECL_ARG_TYPE. */
+				error("parameter %qD is initialized", decl);
+				initialized = false;
+				break;
+			default:
+				/* Don't allow initializations for incomplete types except for
+				   arrays which might be completed by the initialization. */
 
-      case FUNCTION_DECL:
-	error ("function %qD is initialized like a variable", decl);
-	initialized = false;
-	break;
+				/* This can happen if the array size is an undefined macro.
+				   We already gave a warning, so we don't need another one. */
+				if (TREE_TYPE (decl) == error_mark_node)
+					initialized = false;
+				else if (COMPLETE_TYPE_P (TREE_TYPE (decl))) {
+					/* A complete type is ok if size is fixed. */
+					if (!poly_int_tree_p (TYPE_SIZE (TREE_TYPE (decl))) || C_DECL_VARIABLE_SIZE (decl)) {
+						error("variable-sized object may not be initialized");
+						initialized = false;
+					}
+				} else if (TREE_CODE (TREE_TYPE (decl)) != ARRAY_TYPE) {
+					error("variable %qD has initializer but incomplete type", decl);
+					initialized = false;
+				} else if (C_DECL_VARIABLE_SIZE (decl)) {
+					/* Although C99 is unclear about whether incomplete arrays
+					   of VLAs themselves count as VLAs, it does not make
+					   sense to permit them to be initialized given that
+					   ordinary VLAs may not be initialized. */
+					error("variable-sized object may not be initialized");
+					initialized = false;
+				}
+		}
 
-      case PARM_DECL:
-	/* DECL_INITIAL in a PARM_DECL is really DECL_ARG_TYPE.  */
-	error ("parameter %qD is initialized", decl);
-	initialized = false;
-	break;
+	if (initialized) {
+		if (current_scope == file_scope)
+			TREE_STATIC (decl) = 1;
 
-      default:
-	/* Don't allow initializations for incomplete types except for
-	   arrays which might be completed by the initialization.  */
-
-	/* This can happen if the array size is an undefined macro.
-	   We already gave a warning, so we don't need another one.  */
-	if (TREE_TYPE (decl) == error_mark_node)
-	  initialized = false;
-	else if (COMPLETE_TYPE_P (TREE_TYPE (decl)))
-	  {
-	    /* A complete type is ok if size is fixed.  */
-
-	    if (!poly_int_tree_p (TYPE_SIZE (TREE_TYPE (decl)))
-		|| C_DECL_VARIABLE_SIZE (decl))
-	      {
-		error ("variable-sized object may not be initialized");
-		initialized = false;
-	      }
-	  }
-	else if (TREE_CODE (TREE_TYPE (decl)) != ARRAY_TYPE)
-	  {
-	    error ("variable %qD has initializer but incomplete type", decl);
-	    initialized = false;
-	  }
-	else if (C_DECL_VARIABLE_SIZE (decl))
-	  {
-	    /* Although C99 is unclear about whether incomplete arrays
-	       of VLAs themselves count as VLAs, it does not make
-	       sense to permit them to be initialized given that
-	       ordinary VLAs may not be initialized.  */
-	    error ("variable-sized object may not be initialized");
-	    initialized = false;
-	  }
-      }
-
-  if (initialized)
-    {
-      if (current_scope == file_scope)
-	TREE_STATIC (decl) = 1;
-
-      /* Tell 'pushdecl' this is an initialized decl
-	 even though we don't yet have the initializer expression.
-	 Also tell 'finish_decl' it may store the real initializer.  */
-      DECL_INITIAL (decl) = error_mark_node;
-    }
-
-  /* If this is a function declaration, write a record describing it to the
-     prototypes file (if requested).  */
-
-  if (TREE_CODE (decl) == FUNCTION_DECL)
-    gen_aux_info_record (decl, 0, 0, prototype_p (TREE_TYPE (decl)));
-
-  /* ANSI specifies that a tentative definition which is not merged with
-     a non-tentative definition behaves exactly like a definition with an
-     initializer equal to zero.  (Section 3.7.2)
-
-     -fno-common gives strict ANSI behavior, though this tends to break
-     a large body of code that grew up without this rule.
-
-     Thread-local variables are never common, since there's no entrenched
-     body of code to break, and it allows more efficient variable references
-     in the presence of dynamic linking.  */
-
-  if (VAR_P (decl)
-      && !initialized
-      && TREE_PUBLIC (decl)
-      && !DECL_THREAD_LOCAL_P (decl)
-      && !flag_no_common)
-    DECL_COMMON (decl) = 1;
-
-  /* Set attributes here so if duplicate decl, will have proper attributes.  */
-  c_decl_attributes (&decl, attributes, 0);
-
-  /* Handle gnu_inline attribute.  */
-  if (declspecs->inline_p
-      && !flag_gnu89_inline
-      && TREE_CODE (decl) == FUNCTION_DECL
-      && (lookup_attribute ("gnu_inline", DECL_ATTRIBUTES (decl))
-	  || current_function_decl))
-    {
-      if (declspecs->storage_class == csc_auto && current_scope != file_scope)
-	;
-      else if (declspecs->storage_class != csc_static)
-	DECL_EXTERNAL (decl) = !DECL_EXTERNAL (decl);
-    }
-
-  if (TREE_CODE (decl) == FUNCTION_DECL
-      && targetm.calls.promote_prototypes (TREE_TYPE (decl)))
-    {
-      struct c_declarator *ce = declarator;
-
-      if (ce->kind == cdk_pointer)
-	ce = declarator->declarator;
-      if (ce->kind == cdk_function)
-	{
-	  tree args = ce->u.arg_info->parms;
-	  for (; args; args = DECL_CHAIN (args))
-	    {
-	      tree type = TREE_TYPE (args);
-	      if (type && INTEGRAL_TYPE_P (type)
-		  && TYPE_PRECISION (type) < TYPE_PRECISION (integer_type_node))
-		DECL_ARG_TYPE (args) = c_type_promotes_to (type);
-	    }
+		/* Tell 'pushdecl' this is an initialized decl
+		   even though we don't yet have the initializer expression.
+		   Also tell 'finish_decl' it may store the real initializer. */
+		DECL_INITIAL (decl) = error_mark_node;
 	}
-    }
 
-  if (TREE_CODE (decl) == FUNCTION_DECL
-      && DECL_DECLARED_INLINE_P (decl)
-      && DECL_UNINLINABLE (decl)
-      && lookup_attribute ("noinline", DECL_ATTRIBUTES (decl)))
-    warning (OPT_Wattributes, "inline function %q+D given attribute %qs",
-	     decl, "noinline");
+	/* If this is a function declaration, write a record describing it to the
+	   prototypes file (if requested). */
+	if (TREE_CODE (decl) == FUNCTION_DECL)
+		gen_aux_info_record(decl, 0, 0, prototype_p(TREE_TYPE (decl)));
 
-  /* C99 6.7.4p3: An inline definition of a function with external
-     linkage shall not contain a definition of a modifiable object
-     with static storage duration...  */
-  if (VAR_P (decl)
-      && current_scope != file_scope
-      && TREE_STATIC (decl)
-      && !TREE_READONLY (decl)
-      && DECL_DECLARED_INLINE_P (current_function_decl)
-      && DECL_EXTERNAL (current_function_decl))
-    record_inline_static (input_location, current_function_decl,
-			  decl, csi_modifiable);
+	/* ANSI specifies that a tentative definition which is not merged with
+	   a non-tentative definition behaves exactly like a definition with an
+	   initializer equal to zero. (Section 3.7.2)
 
-  if (c_dialect_objc ()
-      && VAR_OR_FUNCTION_DECL_P (decl))
-      objc_check_global_decl (decl);
+	   -fno-common gives strict ANSI behavior, though this tends to break
+	   a large body of code that grew up without this rule.
 
-  /* Add this decl to the current scope.
-     TEM may equal DECL or it may be a previous decl of the same name.  */
-  tem = pushdecl (decl);
+	   Thread-local variables are never common, since there's no entrenched
+	   body of code to break, and it allows more efficient variable references
+	   in the presence of dynamic linking. */
 
-  if (initialized && DECL_EXTERNAL (tem))
-    {
-      DECL_EXTERNAL (tem) = 0;
-      TREE_STATIC (tem) = 1;
-    }
+	if (VAR_P (decl) && !initialized && TREE_PUBLIC (decl) && !DECL_THREAD_LOCAL_P (decl) && !flag_no_common)
+		DECL_COMMON (decl) = 1;
 
-  return tem;
+	/* Set attributes here so if duplicate decl, will have proper attributes. */
+	c_decl_attributes(&decl, attributes, 0);
+
+	/* Handle gnu_inline attribute. */
+	if (declspecs->inline_p && !flag_gnu89_inline && TREE_CODE (decl) == FUNCTION_DECL
+		&& (lookup_attribute("gnu_inline", DECL_ATTRIBUTES (decl)) || current_function_decl))
+	{
+		if (declspecs->storage_class == csc_auto && current_scope != file_scope)
+			;
+		else if (declspecs->storage_class != csc_static)
+			DECL_EXTERNAL (decl) = !DECL_EXTERNAL (decl);
+	}
+
+	if (TREE_CODE (decl) == FUNCTION_DECL && targetm.calls.promote_prototypes(TREE_TYPE (decl))) {
+		struct c_declarator *ce = declarator;
+
+		if (ce->kind == cdk_pointer)
+			ce = declarator->declarator;
+		if (ce->kind == cdk_function) {
+			tree args = ce->u.arg_info->parms;
+			for (; args; args = DECL_CHAIN (args)) {
+				tree type = TREE_TYPE (args);
+				if (type && INTEGRAL_TYPE_P (type) && TYPE_PRECISION (type) < TYPE_PRECISION (integer_type_node))
+					DECL_ARG_TYPE (args) = c_type_promotes_to(type);
+			}
+		}
+	}
+
+	if (TREE_CODE (decl) == FUNCTION_DECL && DECL_DECLARED_INLINE_P (decl) && DECL_UNINLINABLE (decl)
+			&& lookup_attribute("noinline", DECL_ATTRIBUTES (decl)))
+		warning(OPT_Wattributes, "inline function %q+D given attribute %qs", decl, "noinline");
+
+	/* C99 6.7.4p3: An inline definition of a function with external
+	   linkage shall not contain a definition of a modifiable object
+	   with static storage duration... */
+	if (VAR_P (decl) && current_scope != file_scope && TREE_STATIC (decl)
+			&& !TREE_READONLY (decl) && DECL_DECLARED_INLINE_P (current_function_decl) && DECL_EXTERNAL (current_function_decl))
+		record_inline_static(input_location, current_function_decl, decl, csi_modifiable);
+
+	/* Add this decl to the current scope.
+	   TEM may equal DECL or it may be a previous decl of the same name. */
+	tem = pushdecl(decl);
+
+	if (initialized && DECL_EXTERNAL (tem)) {
+		DECL_EXTERNAL (tem) = 0;
+		TREE_STATIC (tem) = 1;
+	}
+
+	return tem;
 }
 
 /* Subroutine of finish_decl. TYPE is the type of an uninitialized object
@@ -5995,12 +5942,12 @@ smallest_type_quals_location (const location_t *locations,
    DECLSPECS is a c_declspecs structure for the declaration specifiers.
 
    DECL_CONTEXT says which syntactic context this declaration is in:
-     NORMAL for most contexts.  Make a VAR_DECL or FUNCTION_DECL or TYPE_DECL.
-     FUNCDEF for a function definition.  Like NORMAL but a few different
-      error messages in each case.  Return value may be zero meaning
+     NORMAL for most contexts. Make a VAR_DECL or FUNCTION_DECL or TYPE_DECL.
+     FUNCDEF for a function definition. Like NORMAL but a few different
+      error messages in each case. Return value may be zero meaning
       this definition is too screwy to try to parse.
      PARM for a parameter declaration (either within a function prototype
-      or before a function body).  Make a PARM_DECL, or return void_type_node.
+      or before a function body). Make a PARM_DECL, or return void_type_node.
      TYPENAME if for a typename (in a cast or sizeof).
       Don't make a DECL node; just return the ..._TYPE node.
      FIELD for a struct or union field; make a FIELD_DECL.
@@ -6008,7 +5955,7 @@ smallest_type_quals_location (const location_t *locations,
    WIDTH is non-NULL for bit-fields, and is a pointer to an INTEGER_CST node
    representing the width of the bit-field.
    DECL_ATTRS points to the list of attributes that should be added to this
-     decl.  Any nested attributes that belong on the decl itself will be
+     decl. Any nested attributes that belong on the decl itself will be
      added to this list.
    If EXPR is not NULL, any expressions that need to be evaluated as
      part of evaluating variably modified types will be stored in *EXPR.
@@ -6023,8 +5970,7 @@ smallest_type_quals_location (const location_t *locations,
    argument type is specified but not the name.
 
    This function is where the complicated C meanings of `static'
-   and `extern' are interpreted.  */
-
+   and `extern' are interpreted. */
 static tree
 grokdeclarator(const struct c_declarator *declarator,
 		struct c_declspecs *declspecs,
@@ -6663,14 +6609,14 @@ grokdeclarator(const struct c_declarator *declarator,
 					really_funcdef = (t->kind == cdk_id);
 				}
 
-				/* Declaring a function type.  Make sure we have a valid
-				   type for the function to return.  */
+				/* Declaring a function type. Make sure we have a valid
+				   type for the function to return. */
 				if (type == error_mark_node)
 					continue;
 
 				size_varies = false;
 
-				/* Warn about some types functions can't return.  */
+				/* Warn about some types functions can't return. */
 				if (TREE_CODE(type) == FUNCTION_TYPE) {
 					if (name)
 						error_at(loc, "%qE declared as function returning a function", name);
@@ -6709,10 +6655,10 @@ grokdeclarator(const struct c_declarator *declarator,
 					   effect, so give a warning at -Wreturn-type.
 					   Qualifiers on a void return type are banned on
 					   function definitions in ISO C; GCC used to used
-					   them for noreturn functions.  The resolution of C11
+					   them for noreturn functions. The resolution of C11
 					   DR#423 means qualifiers (other than _Atomic) are
 					   actually removed from the return type when
-					   determining the function type.  */
+					   determining the function type. */
 					int quals_used = type_quals;
 					if (flag_isoc11)
 						quals_used &= TYPE_QUAL_ATOMIC;
@@ -6723,7 +6669,7 @@ grokdeclarator(const struct c_declarator *declarator,
 
 					/* Ensure an error for restrict on invalid types; the
 					   DR#423 resolution is not entirely clear about
-					   this.  */
+					   this. */
 					if (flag_isoc11 && (type_quals & TYPE_QUAL_RESTRICT) && (!POINTER_TYPE_P(type)
 							|| !C_TYPE_OBJECT_OR_INCOMPLETE_P(TREE_TYPE(type))))
 						error_at(loc, "invalid use of %<restrict%>");
@@ -8468,131 +8414,115 @@ finish_struct (location_t loc, tree t, tree fieldlist, tree attributes,
 }
 
 static struct {
-  gt_pointer_operator new_value;
-  void *cookie;
+	gt_pointer_operator new_value;
+	void *cookie;
 } resort_data;
 
 /* This routine compares two fields like field_decl_cmp but using the
-pointer operator in resort_data.  */
-
+pointer operator in resort_data. */
 static int
-resort_field_decl_cmp (const void *x_p, const void *y_p)
+resort_field_decl_cmp(const void *x_p, const void *y_p)
 {
-  const tree *const x = (const tree *) x_p;
-  const tree *const y = (const tree *) y_p;
+	const tree *const x = (const tree *) x_p;
+	const tree *const y = (const tree *) y_p;
 
-  if (DECL_NAME (*x) == DECL_NAME (*y))
-    /* A nontype is "greater" than a type.  */
-    return (TREE_CODE (*y) == TYPE_DECL) - (TREE_CODE (*x) == TYPE_DECL);
-  if (DECL_NAME (*x) == NULL_TREE)
-    return -1;
-  if (DECL_NAME (*y) == NULL_TREE)
-    return 1;
-  {
-    tree d1 = DECL_NAME (*x);
-    tree d2 = DECL_NAME (*y);
-    resort_data.new_value (&d1, &d1, resort_data.cookie);
-    resort_data.new_value (&d2, &d2, resort_data.cookie);
-    if (d1 < d2)
-      return -1;
-  }
-  return 1;
+	if (DECL_NAME (*x) == DECL_NAME (*y))
+		/* A nontype is "greater" than a type. */
+		return (TREE_CODE (*y) == TYPE_DECL) - (TREE_CODE (*x) == TYPE_DECL);
+	if (DECL_NAME (*x) == NULL_TREE)
+		return -1;
+	if (DECL_NAME (*y) == NULL_TREE)
+		return 1;
+	{
+		tree d1 = DECL_NAME (*x);
+		tree d2 = DECL_NAME (*y);
+		resort_data.new_value (&d1, &d1, resort_data.cookie);
+		resort_data.new_value (&d2, &d2, resort_data.cookie);
+		if (d1 < d2)
+			return -1;
+	}
+	return 1;
 }
 
-/* Resort DECL_SORTED_FIELDS because pointers have been reordered.  */
-
+/* Resort DECL_SORTED_FIELDS because pointers have been reordered. */
 void
-resort_sorted_fields (void *obj,
-		      void * ARG_UNUSED (orig_obj),
-		      gt_pointer_operator new_value,
-		      void *cookie)
+resort_sorted_fields(void *obj, void * ARG_UNUSED (orig_obj), gt_pointer_operator new_value, void *cookie)
 {
-  struct sorted_fields_type *sf = (struct sorted_fields_type *) obj;
-  resort_data.new_value = new_value;
-  resort_data.cookie = cookie;
-  qsort (&sf->elts[0], sf->len, sizeof (tree),
-	 resort_field_decl_cmp);
+	struct sorted_fields_type *sf = (struct sorted_fields_type *) obj;
+	resort_data.new_value = new_value;
+	resort_data.cookie = cookie;
+	qsort(&sf->elts[0], sf->len, sizeof (tree), resort_field_decl_cmp);
 }
 
-/* Lay out the type T, and its element type, and so on.  */
-
+/* Lay out the type T, and its element type, and so on. */
 static void
-layout_array_type (tree t)
+layout_array_type(tree t)
 {
-  if (TREE_CODE (TREE_TYPE (t)) == ARRAY_TYPE)
-    layout_array_type (TREE_TYPE (t));
-  layout_type (t);
+	if (TREE_CODE (TREE_TYPE (t)) == ARRAY_TYPE)
+		layout_array_type(TREE_TYPE (t));
+	layout_type(t);
 }
-
+
 /* Begin compiling the definition of an enumeration type.
    NAME is its name (or null if anonymous).
    LOC is the enum's location.
    Returns the type object, as yet incomplete.
    Also records info about it so that build_enumerator
-   may be used to declare the individual values as they are read.  */
-
+   may be used to declare the individual values as they are read. */
 tree
-start_enum (location_t loc, struct c_enum_contents *the_enum, tree name)
+start_enum(location_t loc, struct c_enum_contents *the_enum, tree name)
 {
-  tree enumtype = NULL_TREE;
-  location_t enumloc = UNKNOWN_LOCATION;
+	tree enumtype = NULL_TREE;
+	location_t enumloc = UNKNOWN_LOCATION;
 
-  /* If this is the real definition for a previous forward reference,
-     fill in the contents in the same object that used to be the
-     forward reference.  */
+	/* If this is the real definition for a previous forward reference,
+	   fill in the contents in the same object that used to be the
+	   forward reference. */
 
-  if (name != NULL_TREE)
-    enumtype = lookup_tag (ENUMERAL_TYPE, name, true, &enumloc);
+	if (name != NULL_TREE)
+		enumtype = lookup_tag (ENUMERAL_TYPE, name, true, &enumloc);
 
-  if (enumtype == NULL_TREE || TREE_CODE (enumtype) != ENUMERAL_TYPE)
-    {
-      enumtype = make_node (ENUMERAL_TYPE);
-      pushtag (loc, name, enumtype);
-    }
-  /* Update type location to the one of the definition, instead of e.g.
-     a forward declaration.  */
-  else if (TYPE_STUB_DECL (enumtype))
-    {
-      enumloc = DECL_SOURCE_LOCATION (TYPE_STUB_DECL (enumtype));
-      DECL_SOURCE_LOCATION (TYPE_STUB_DECL (enumtype)) = loc;
-    }
+	if (enumtype == NULL_TREE || TREE_CODE (enumtype) != ENUMERAL_TYPE) {
+		enumtype = make_node (ENUMERAL_TYPE);
+		pushtag (loc, name, enumtype);
+	} /* Update type location to the one of the definition, instead of e.g.
+	     a forward declaration. */
+	else if (TYPE_STUB_DECL (enumtype)) {
+		enumloc = DECL_SOURCE_LOCATION (TYPE_STUB_DECL (enumtype));
+		DECL_SOURCE_LOCATION (TYPE_STUB_DECL (enumtype)) = loc;
+	}
 
-  if (C_TYPE_BEING_DEFINED (enumtype))
-    error_at (loc, "nested redefinition of %<enum %E%>", name);
+	if (C_TYPE_BEING_DEFINED (enumtype))
+		error_at(loc, "nested redefinition of %<enum %E%>", name);
 
-  C_TYPE_BEING_DEFINED (enumtype) = 1;
+	C_TYPE_BEING_DEFINED (enumtype) = 1;
 
-  if (TYPE_VALUES (enumtype) != NULL_TREE)
-    {
-      /* This enum is a named one that has been declared already.  */
-      auto_diagnostic_group d;
-      error_at (loc, "redeclaration of %<enum %E%>", name);
-      if (enumloc != UNKNOWN_LOCATION)
-	inform (enumloc, "originally defined here");
+	if (TYPE_VALUES (enumtype) != NULL_TREE) {
+		/* This enum is a named one that has been declared already. */
+		auto_diagnostic_group d;
+		error_at(loc, "redeclaration of %<enum %E%>", name);
+		if (enumloc != UNKNOWN_LOCATION)
+			inform(enumloc, "originally defined here");
 
-      /* Completely replace its old definition.
-	 The old enumerators remain defined, however.  */
-      TYPE_VALUES (enumtype) = NULL_TREE;
-    }
+		/* Completely replace its old definition. The old enumerators remain defined, however. */
+		TYPE_VALUES (enumtype) = NULL_TREE;
+	}
 
-  the_enum->enum_next_value = integer_zero_node;
-  the_enum->enum_overflow = 0;
+	the_enum->enum_next_value = integer_zero_node;
+	the_enum->enum_overflow = 0;
 
-  if (flag_short_enums)
-    for (tree v = TYPE_MAIN_VARIANT (enumtype); v; v = TYPE_NEXT_VARIANT (v))
-      TYPE_PACKED (v) = 1;
+	if (flag_short_enums)
+		for (tree v = TYPE_MAIN_VARIANT (enumtype); v; v = TYPE_NEXT_VARIANT (v))
+			TYPE_PACKED (v) = 1;
 
-  /* FIXME: This will issue a warning for a use of a type defined
-     within sizeof in a statement expr.  This is not terribly serious
-     as C++ doesn't permit statement exprs within sizeof anyhow.  */
-  if (warn_cxx_compat && (in_sizeof || in_typeof || in_alignof))
-    warning_at (loc, OPT_Wc___compat,
-		"defining type in %qs expression is invalid in C++",
-		(in_sizeof
-		 ? "sizeof"
-		 : (in_typeof ? "typeof" : "alignof")));
+	/* FIXME: This will issue a warning for a use of a type defined
+	   within sizeof in a statement expr.  This is not terribly serious
+	   as C++ doesn't permit statement exprs within sizeof anyhow.  */
+	if (warn_cxx_compat && (in_sizeof || in_typeof || in_alignof))
+		warning_at(loc, OPT_Wc___compat, "defining type in %qs expression is invalid in C++",
+			(in_sizeof ? "sizeof" : (in_typeof ? "typeof" : "alignof")));
 
-  return enumtype;
+	return enumtype;
 }
 
 /* After processing and defining all the values of an enumeration type,
@@ -8603,159 +8533,140 @@ start_enum (location_t loc, struct c_enum_contents *the_enum, tree name)
 tree
 finish_enum(tree enumtype, tree values, tree attributes)
 {
-  tree pair, tem;
-  tree minnode = NULL_TREE, maxnode = NULL_TREE;
-  int precision;
-  signop sign;
-  bool toplevel = (file_scope == current_scope);
-  struct lang_type *lt;
+	tree pair, tem;
+	tree minnode = NULL_TREE, maxnode = NULL_TREE;
+	int precision;
+	signop sign;
+	bool toplevel = (file_scope == current_scope);
+	struct lang_type *lt;
 
-  decl_attributes (&enumtype, attributes, (int) ATTR_FLAG_TYPE_IN_PLACE);
+	decl_attributes(&enumtype, attributes, (int) ATTR_FLAG_TYPE_IN_PLACE);
 
-  /* Calculate the maximum value of any enumerator in this type.  */
+	/* Calculate the maximum value of any enumerator in this type. */
 
-  if (values == error_mark_node)
-    minnode = maxnode = integer_zero_node;
-  else
-    {
-      minnode = maxnode = TREE_VALUE (values);
-      for (pair = TREE_CHAIN (values); pair; pair = TREE_CHAIN (pair))
-	{
-	  tree value = TREE_VALUE (pair);
-	  if (tree_int_cst_lt (maxnode, value))
-	    maxnode = value;
-	  if (tree_int_cst_lt (value, minnode))
-	    minnode = value;
-	}
-    }
-
-  /* Construct the final type of this enumeration.  It is the same
-     as one of the integral types - the narrowest one that fits, except
-     that normally we only go as narrow as int - and signed iff any of
-     the values are negative.  */
-  sign = (tree_int_cst_sgn (minnode) >= 0) ? UNSIGNED : SIGNED;
-  precision = MAX (tree_int_cst_min_precision (minnode, sign),
-		   tree_int_cst_min_precision (maxnode, sign));
-
-  /* If the precision of the type was specified with an attribute and it
-     was too small, give an error.  Otherwise, use it.  */
-  if (TYPE_PRECISION (enumtype) && lookup_attribute ("mode", attributes))
-    {
-      if (precision > TYPE_PRECISION (enumtype))
-	{
-	  TYPE_PRECISION (enumtype) = 0;
-	  error ("specified mode too small for enumerated values");
-	}
-      else
-	precision = TYPE_PRECISION (enumtype);
-    }
-  else
-    TYPE_PRECISION (enumtype) = 0;
-
-  if (TYPE_PACKED (enumtype)
-      || precision > TYPE_PRECISION (integer_type_node)
-      || TYPE_PRECISION (enumtype))
-    {
-      tem = c_common_type_for_size (precision, sign == UNSIGNED ? 1 : 0);
-      if (tem == NULL)
-	{
-	  warning (0, "enumeration values exceed range of largest integer");
-	  tem = long_long_integer_type_node;
-	}
-    }
-  else
-    tem = sign == UNSIGNED ? unsigned_type_node : integer_type_node;
-
-  TYPE_MIN_VALUE (enumtype) = TYPE_MIN_VALUE (tem);
-  TYPE_MAX_VALUE (enumtype) = TYPE_MAX_VALUE (tem);
-  TYPE_UNSIGNED (enumtype) = TYPE_UNSIGNED (tem);
-  SET_TYPE_ALIGN (enumtype, TYPE_ALIGN (tem));
-  TYPE_SIZE (enumtype) = NULL_TREE;
-  TYPE_PRECISION (enumtype) = TYPE_PRECISION (tem);
-
-  layout_type (enumtype);
-
-  if (values != error_mark_node)
-    {
-      /* Change the type of the enumerators to be the enum type.  We
-	 need to do this irrespective of the size of the enum, for
-	 proper type checking.  Replace the DECL_INITIALs of the
-	 enumerators, and the value slots of the list, with copies
-	 that have the enum type; they cannot be modified in place
-	 because they may be shared (e.g.  integer_zero_node) Finally,
-	 change the purpose slots to point to the names of the decls.  */
-      for (pair = values; pair; pair = TREE_CHAIN (pair))
-	{
-	  tree enu = TREE_PURPOSE (pair);
-	  tree ini = DECL_INITIAL (enu);
-
-	  TREE_TYPE (enu) = enumtype;
-
-	  /* The ISO C Standard mandates enumerators to have type int,
-	     even though the underlying type of an enum type is
-	     unspecified.  However, GCC allows enumerators of any
-	     integer type as an extensions.  build_enumerator()
-	     converts any enumerators that fit in an int to type int,
-	     to avoid promotions to unsigned types when comparing
-	     integers with enumerators that fit in the int range.
-	     When -pedantic is given, build_enumerator() would have
-	     already warned about those that don't fit. Here we
-	     convert the rest to the enumerator type. */
-	  if (TREE_TYPE (ini) != integer_type_node)
-	    ini = convert (enumtype, ini);
-
-	  DECL_INITIAL (enu) = ini;
-	  TREE_PURPOSE (pair) = DECL_NAME (enu);
-	  /* To match the C++ FE, store the CONST_DECL rather than just its
-	     value.  */
-	  TREE_VALUE (pair) = enu;
+	if (values == error_mark_node)
+		minnode = maxnode = integer_zero_node;
+	else {
+		minnode = maxnode = TREE_VALUE (values);
+		for (pair = TREE_CHAIN (values); pair; pair = TREE_CHAIN (pair)) {
+			tree value = TREE_VALUE (pair);
+			if (tree_int_cst_lt(maxnode, value))
+				maxnode = value;
+			if (tree_int_cst_lt(value, minnode))
+				minnode = value;
+		}
 	}
 
-      TYPE_VALUES (enumtype) = values;
-    }
+	/* Construct the final type of this enumeration. It is the same
+	   as one of the integral types - the narrowest one that fits, except
+	   that normally we only go as narrow as int - and signed iff any of
+	   the values are negative. */
+	sign = (tree_int_cst_sgn(minnode) >= 0) ? UNSIGNED : SIGNED;
+	precision = MAX (tree_int_cst_min_precision(minnode, sign), tree_int_cst_min_precision(maxnode, sign));
 
-  /* Record the min/max values so that we can warn about bit-field
-     enumerations that are too small for the values.  */
-  lt = ggc_cleared_alloc<struct lang_type> ();
-  lt->enum_min = minnode;
-  lt->enum_max = maxnode;
-  TYPE_LANG_SPECIFIC (enumtype) = lt;
+	/* If the precision of the type was specified with an attribute and it
+	   was too small, give an error. Otherwise, use it. */
+	if (TYPE_PRECISION (enumtype) && lookup_attribute("mode", attributes)) {
+		if (precision > TYPE_PRECISION (enumtype)) {
+			TYPE_PRECISION (enumtype) = 0;
+			error ("specified mode too small for enumerated values");
+		} else
+			precision = TYPE_PRECISION (enumtype);
+	} else
+		TYPE_PRECISION (enumtype) = 0;
 
-  /* Fix up all variant types of this enum type.  */
-  tree incomplete_vars = C_TYPE_INCOMPLETE_VARS (TYPE_MAIN_VARIANT (enumtype));
-  for (tem = TYPE_MAIN_VARIANT (enumtype); tem; tem = TYPE_NEXT_VARIANT (tem))
-    {
-      C_TYPE_INCOMPLETE_VARS (tem) = NULL_TREE;
-      if (tem == enumtype)
-	continue;
-      TYPE_VALUES (tem) = TYPE_VALUES (enumtype);
-      TYPE_MIN_VALUE (tem) = TYPE_MIN_VALUE (enumtype);
-      TYPE_MAX_VALUE (tem) = TYPE_MAX_VALUE (enumtype);
-      TYPE_SIZE (tem) = TYPE_SIZE (enumtype);
-      TYPE_SIZE_UNIT (tem) = TYPE_SIZE_UNIT (enumtype);
-      SET_TYPE_MODE (tem, TYPE_MODE (enumtype));
-      TYPE_PRECISION (tem) = TYPE_PRECISION (enumtype);
-      SET_TYPE_ALIGN (tem, TYPE_ALIGN (enumtype));
-      TYPE_USER_ALIGN (tem) = TYPE_USER_ALIGN (enumtype);
-      TYPE_UNSIGNED (tem) = TYPE_UNSIGNED (enumtype);
-      TYPE_LANG_SPECIFIC (tem) = TYPE_LANG_SPECIFIC (enumtype);
-    }
+	if (TYPE_PACKED (enumtype) || precision > TYPE_PRECISION (integer_type_node) || TYPE_PRECISION (enumtype)) {
+		tem = c_common_type_for_size(precision, sign == UNSIGNED ? 1 : 0);
+		if (tem == NULL) {
+			warning(0, "enumeration values exceed range of largest integer");
+			tem = long_long_integer_type_node;
+		}
+	} else
+		tem = sign == UNSIGNED ? unsigned_type_node : integer_type_node;
 
-  /* Finish debugging output for this type.  */
-  rest_of_type_compilation (enumtype, toplevel);
+	TYPE_MIN_VALUE (enumtype) = TYPE_MIN_VALUE (tem);
+	TYPE_MAX_VALUE (enumtype) = TYPE_MAX_VALUE (tem);
+	TYPE_UNSIGNED (enumtype) = TYPE_UNSIGNED (tem);
+	SET_TYPE_ALIGN (enumtype, TYPE_ALIGN (tem));
+	TYPE_SIZE (enumtype) = NULL_TREE;
+	TYPE_PRECISION (enumtype) = TYPE_PRECISION (tem);
 
-  finish_incomplete_vars (incomplete_vars, toplevel);
+	layout_type(enumtype);
 
-  /* If this enum is defined inside a struct, add it to
-     struct_types.  */
-  if (warn_cxx_compat
-      && struct_parse_info != NULL
-      && !in_sizeof && !in_typeof && !in_alignof)
-    struct_parse_info->struct_types.safe_push (enumtype);
+	if (values != error_mark_node) {
+		/* Change the type of the enumerators to be the enum type. We
+		   need to do this irrespective of the size of the enum, for
+		   proper type checking. Replace the DECL_INITIALs of the
+		   enumerators, and the value slots of the list, with copies
+		   that have the enum type; they cannot be modified in place
+		   because they may be shared (e.g. integer_zero_node) Finally,
+		   change the purpose slots to point to the names of the decls. */
+		for (pair = values; pair; pair = TREE_CHAIN (pair)) {
+			tree enu = TREE_PURPOSE (pair);
+			tree ini = DECL_INITIAL (enu);
 
-  C_TYPE_BEING_DEFINED (enumtype) = 0;
+			TREE_TYPE (enu) = enumtype;
 
-  return enumtype;
+			/* The ISO C Standard mandates enumerators to have type int,
+			   even though the underlying type of an enum type is
+			   unspecified.  However, GCC allows enumerators of any
+			   integer type as an extensions.  build_enumerator()
+			   converts any enumerators that fit in an int to type int,
+			   to avoid promotions to unsigned types when comparing
+			   integers with enumerators that fit in the int range.
+			   When -pedantic is given, build_enumerator() would have
+			   already warned about those that don't fit. Here we
+			   convert the rest to the enumerator type. */
+			if (TREE_TYPE (ini) != integer_type_node)
+				ini = convert(enumtype, ini);
+
+			DECL_INITIAL (enu) = ini;
+			TREE_PURPOSE (pair) = DECL_NAME (enu);
+			/* To match the C++ FE, store the CONST_DECL rather than just its value. */
+			TREE_VALUE (pair) = enu;
+		}
+
+		TYPE_VALUES (enumtype) = values;
+	}
+
+	/* Record the min/max values so that we can warn about bit-field
+	   enumerations that are too small for the values. */
+	lt = ggc_cleared_alloc<struct lang_type> ();
+	lt->enum_min = minnode;
+	lt->enum_max = maxnode;
+	TYPE_LANG_SPECIFIC (enumtype) = lt;
+
+	/* Fix up all variant types of this enum type. */
+	tree incomplete_vars = C_TYPE_INCOMPLETE_VARS (TYPE_MAIN_VARIANT (enumtype));
+	for (tem = TYPE_MAIN_VARIANT (enumtype); tem; tem = TYPE_NEXT_VARIANT (tem)) {
+		C_TYPE_INCOMPLETE_VARS (tem) = NULL_TREE;
+		if (tem == enumtype)
+			continue;
+		TYPE_VALUES (tem) = TYPE_VALUES (enumtype);
+		TYPE_MIN_VALUE (tem) = TYPE_MIN_VALUE (enumtype);
+		TYPE_MAX_VALUE (tem) = TYPE_MAX_VALUE (enumtype);
+		TYPE_SIZE (tem) = TYPE_SIZE (enumtype);
+		TYPE_SIZE_UNIT (tem) = TYPE_SIZE_UNIT (enumtype);
+		SET_TYPE_MODE (tem, TYPE_MODE (enumtype));
+		TYPE_PRECISION (tem) = TYPE_PRECISION (enumtype);
+		SET_TYPE_ALIGN (tem, TYPE_ALIGN (enumtype));
+		TYPE_USER_ALIGN (tem) = TYPE_USER_ALIGN (enumtype);
+		TYPE_UNSIGNED (tem) = TYPE_UNSIGNED (enumtype);
+		TYPE_LANG_SPECIFIC (tem) = TYPE_LANG_SPECIFIC (enumtype);
+	}
+
+	/* Finish debugging output for this type. */
+	rest_of_type_compilation(enumtype, toplevel);
+
+	finish_incomplete_vars(incomplete_vars, toplevel);
+
+	/* If this enum is defined inside a struct, add it to struct_types. */
+	if (warn_cxx_compat && struct_parse_info != NULL && !in_sizeof && !in_typeof && !in_alignof)
+		struct_parse_info->struct_types.safe_push(enumtype);
+
+	C_TYPE_BEING_DEFINED (enumtype) = 0;
+
+	return enumtype;
 }
 
 /* Build and install a CONST_DECL for one value of the

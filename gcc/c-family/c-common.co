@@ -532,7 +532,7 @@ const struct c_common_resword c_common_reswords[] = {
 	{ "spl_composite",	RID_SPL_COMPOSITE,	0 },		/* composite */
 	{ "spl_neurode",		RID_SPL_NEURODE,	0 },			/* neurode */ 
 	{ "spl_container",	RID_SPL_CONTAINER,	0 },		/* container */
-	{ "spl_hotplug",		RID_SPL_HOTPLUG,	0 },			/* hotplug */
+	{ "hotplug",		RID_SPL_HOTPLUG,	0 },			/* hotplug */
 	{ "spl_function",	RID_SPL_FUNCTION,	0 },		/* function */
 	{ "spl_varname",		RID_SPL_VARNAME,	0 },			/* varname */ 
 };

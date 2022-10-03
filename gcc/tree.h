@@ -4435,16 +4435,16 @@ tree_strip_any_location_wrapper (tree exp)
 #define chrec_dont_know			global_trees[TI_CHREC_DONT_KNOW]
 #define chrec_known			global_trees[TI_CHREC_KNOWN]
 
-#define char_type_node			integer_types[itk_char]
-#define signed_char_type_node		integer_types[itk_signed_char]
-#define unsigned_char_type_node		integer_types[itk_unsigned_char]
-#define short_integer_type_node		integer_types[itk_short]
-#define short_unsigned_type_node	integer_types[itk_unsigned_short]
-#define integer_type_node		integer_types[itk_int]
-#define unsigned_type_node		integer_types[itk_unsigned_int]
-#define long_integer_type_node		integer_types[itk_long]
-#define long_unsigned_type_node		integer_types[itk_unsigned_long]
-#define long_long_integer_type_node	integer_types[itk_long_long]
+#define char_type_node					integer_types[itk_char]
+#define signed_char_type_node			integer_types[itk_signed_char]
+#define unsigned_char_type_node			integer_types[itk_unsigned_char]
+#define short_integer_type_node			integer_types[itk_short]
+#define short_unsigned_type_node		integer_types[itk_unsigned_short]
+#define integer_type_node				integer_types[itk_int]
+#define unsigned_type_node				integer_types[itk_unsigned_int]
+#define long_integer_type_node			integer_types[itk_long]
+#define long_unsigned_type_node			integer_types[itk_unsigned_long]
+#define long_long_integer_type_node		integer_types[itk_long_long]
 #define long_long_unsigned_type_node	integer_types[itk_unsigned_long_long]
 
 /* True if T is an erroneous expression.  */
@@ -5479,10 +5479,8 @@ extern void using_eh_for_cleanups (void);
 extern bool using_eh_for_cleanups_p (void);
 extern const char *get_tree_code_name (enum tree_code);
 extern void set_call_expr_flags (tree, int);
-extern tree walk_tree_1 (tree*, walk_tree_fn, void*, hash_set<tree>*,
-			 walk_tree_lh);
-extern tree walk_tree_without_duplicates_1 (tree*, walk_tree_fn, void*,
-					    walk_tree_lh);
+extern tree walk_tree_1 (tree*, walk_tree_fn, void*, hash_set<tree>*, walk_tree_lh);
+extern tree walk_tree_without_duplicates_1 (tree*, walk_tree_fn, void*, walk_tree_lh);
 #define walk_tree(a,b,c,d) \
 	walk_tree_1 (a, b, c, d, NULL)
 #define walk_tree_without_duplicates(a,b,c) \
@@ -5540,8 +5538,7 @@ extern int tree_map_base_eq (const void *, const void *);
 extern unsigned int tree_map_base_hash (const void *);
 extern int tree_map_base_marked_p (const void *);
 extern void DEBUG_FUNCTION verify_type (const_tree t);
-extern bool gimple_canonical_types_compatible_p (const_tree, const_tree,
-						 bool trust_type_canonical = true);
+extern bool gimple_canonical_types_compatible_p (const_tree, const_tree, bool trust_type_canonical = true);
 extern bool type_with_interoperable_signedness (const_tree);
 extern bitmap get_nonnull_args (const_tree);
 extern int get_range_pos_neg (tree);
@@ -6506,63 +6503,54 @@ desired_pro_or_demotion_p (const_tree to_type, const_tree from_type)
   return to_type_precision <= TYPE_PRECISION (from_type);
 }
 
-/* Pointer type used to declare builtins before we have seen its real
-   declaration.  */
-class builtin_structptr_type
-{
-public:
-  tree& node;
-  tree& base;
-  const char *str;
+/* Pointer type used to declare builtins before we have seen its real declaration. */
+class builtin_structptr_type {
+	public:
+		tree& node;
+		tree& base;
+		const char *str;
 };
 extern const builtin_structptr_type builtin_structptr_types[6];
 
-/* Return true if type T has the same precision as its underlying mode.  */
-
+/* Return true if type T has the same precision as its underlying mode. */
 inline bool
-type_has_mode_precision_p (const_tree t)
+type_has_mode_precision_p(const_tree t)
 {
-  return known_eq (TYPE_PRECISION (t), GET_MODE_PRECISION (TYPE_MODE (t)));
+	return known_eq(TYPE_PRECISION (t), GET_MODE_PRECISION (TYPE_MODE (t)));
 }
 
 /* Return true if a FUNCTION_DECL NODE is a GCC built-in function.
 
    Note that it is different from the DECL_IS_UNDECLARED_BUILTIN
-   accessor, as this is impervious to user declaration.  */
-
+   accessor, as this is impervious to user declaration. */
 inline bool
-fndecl_built_in_p (const_tree node)
+fndecl_built_in_p(const_tree node)
 {
-  return DECL_BUILT_IN_CLASS (node) != NOT_BUILT_IN;
+	return DECL_BUILT_IN_CLASS (node) != NOT_BUILT_IN;
 }
 
 /* Return true if a FUNCTION_DECL NODE is a GCC built-in function
-   of class KLASS.  */
-
+   of class KLASS. */
 inline bool
-fndecl_built_in_p (const_tree node, built_in_class klass)
+fndecl_built_in_p(const_tree node, built_in_class klass)
 {
-  return fndecl_built_in_p (node) && DECL_BUILT_IN_CLASS (node) == klass;
+	return fndecl_built_in_p(node) && DECL_BUILT_IN_CLASS (node) == klass;
 }
 
 /* Return true if a FUNCTION_DECL NODE is a GCC built-in function
-   of class KLASS with name equal to NAME.  */
-
+   of class KLASS with name equal to NAME. */
 inline bool
-fndecl_built_in_p (const_tree node, unsigned int name, built_in_class klass)
+fndecl_built_in_p(const_tree node, unsigned int name, built_in_class klass)
 {
-  return (fndecl_built_in_p (node, klass)
-	  && DECL_UNCHECKED_FUNCTION_CODE (node) == name);
+	return (fndecl_built_in_p(node, klass) && DECL_UNCHECKED_FUNCTION_CODE (node) == name);
 }
 
 /* Return true if a FUNCTION_DECL NODE is a GCC built-in function
-   of BUILT_IN_NORMAL class with name equal to NAME.  */
-
+   of BUILT_IN_NORMAL class with name equal to NAME. */
 inline bool
-fndecl_built_in_p (const_tree node, built_in_function name)
+fndecl_built_in_p(const_tree node, built_in_function name)
 {
-  return (fndecl_built_in_p (node, BUILT_IN_NORMAL)
-	  && DECL_FUNCTION_CODE (node) == name);
+	return (fndecl_built_in_p(node, BUILT_IN_NORMAL) && DECL_FUNCTION_CODE (node) == name);
 }
 
 /* A struct for encapsulating location information about an operator
@@ -6592,66 +6580,60 @@ fndecl_built_in_p (const_tree node, built_in_function name)
      arg_0 op arg_1
      ~~~~~~^~~~~~~~
 
-   where it is not.  */
+   where it is not. */
+class op_location_t {
+	public:
+		location_t m_operator_loc;
+		location_t m_combined_loc;
 
-class op_location_t
-{
-public:
-  location_t m_operator_loc;
-  location_t m_combined_loc;
+		/* 1-argument ctor, for constructing from a combined location. */
+		op_location_t(location_t combined_loc)
+			: m_operator_loc (UNKNOWN_LOCATION), m_combined_loc (combined_loc) {}
 
-  /* 1-argument ctor, for constructing from a combined location.  */
-  op_location_t (location_t combined_loc)
-  : m_operator_loc (UNKNOWN_LOCATION), m_combined_loc (combined_loc)
-  {}
+		/* 2-argument ctor, for distinguishing between the operator's location
+		   and the combined location. */
+		op_location_t(location_t operator_loc, location_t combined_loc)
+			: m_operator_loc (operator_loc), m_combined_loc (combined_loc) {}
 
-  /* 2-argument ctor, for distinguishing between the operator's location
-     and the combined location.  */
-  op_location_t (location_t operator_loc, location_t combined_loc)
-  : m_operator_loc (operator_loc), m_combined_loc (combined_loc)
-  {}
-
-  /* Implicitly convert back to a location_t, using the combined location.  */
-  operator location_t () const { return m_combined_loc; }
+		/* Implicitly convert back to a location_t, using the combined location. */
+		operator location_t() const { return m_combined_loc; }
 };
 
-/* Code that doesn't refer to any warning.  Has no effect on suppression
-   functions.  */
-constexpr opt_code no_warning = opt_code ();
-/* Wildcard code that refers to all warnings.  */
+/* Code that doesn't refer to any warning. Has no effect on suppression
+   functions. */
+constexpr opt_code no_warning = opt_code();
+/* Wildcard code that refers to all warnings. */
 constexpr opt_code all_warnings = N_OPTS;
 
 /* Return the disposition for a warning (or all warnings by default)
-   at a location.  */
+   at a location. */
 extern bool warning_suppressed_at (location_t, opt_code = all_warnings);
 /* Set the disposition for a warning (or all warnings by default)
-   at a location to disabled by default.  */
-extern bool suppress_warning_at (location_t, opt_code = all_warnings,
-				 bool = true);
-/* Copy warning disposition from one location to another.  */
-extern void copy_warning (location_t, location_t);
+   at a location to disabled by default. */
+extern bool suppress_warning_at(location_t, opt_code = all_warnings, bool = true);
+/* Copy warning disposition from one location to another. */
+extern void copy_warning(location_t, location_t);
 
 /* Return the disposition for a warning (or all warnings by default)
-   for an expression.  */
-extern bool warning_suppressed_p (const_tree, opt_code = all_warnings);
+   for an expression. */
+extern bool warning_suppressed_p(const_tree, opt_code = all_warnings);
 /* Set the disposition for a warning (or all warnings by default)
-   at a location to disabled by default.  */
-extern void suppress_warning (tree, opt_code = all_warnings, bool = true)
-  ATTRIBUTE_NONNULL (1);
-/* Copy warning disposition from one expression to another.  */
-extern void copy_warning (tree, const_tree);
+   at a location to disabled by default. */
+extern void suppress_warning(tree, opt_code = all_warnings, bool = true) ATTRIBUTE_NONNULL (1);
+/* Copy warning disposition from one expression to another. */
+extern void copy_warning(tree, const_tree);
 
 /* Return the zero-based number corresponding to the argument being
    deallocated if FNDECL is a deallocation function or an out-of-bounds
-   value if it isn't.  */
-extern unsigned fndecl_dealloc_argno (tree);
+   value if it isn't. */
+extern unsigned fndecl_dealloc_argno(tree);
 
 /* If an expression refers to a character array or pointer declared
    attribute nonstring, return a decl for that array or pointer and
    if nonnull, set the second argument to the referenced enclosing
-   object or pointer.  Otherwise return null.  */
-extern tree get_attr_nonstring_decl (tree, tree * = NULL);
+   object or pointer. Otherwise return null. */
+extern tree get_attr_nonstring_decl(tree, tree * = NULL);
 
-extern int get_target_clone_attr_len (tree);
+extern int get_target_clone_attr_len(tree);
 
 #endif  /* GCC_TREE_H  */

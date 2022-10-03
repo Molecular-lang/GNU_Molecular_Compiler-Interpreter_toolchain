@@ -834,6 +834,14 @@ enum integer_type_kind {
   itk_none
 };
 
+/* An enumeration of Scpel fixed range datatypes */
+enum fixed_range_type_kind {
+	frtk_byte,
+	frtk_word,
+	frtk_dword,
+	frtk_qword
+};
+
 /* A pointer-to-function member type looks like:
 
      struct {
@@ -2240,71 +2248,69 @@ struct floatn_type_info {
 };
 
 
-/*---------------------------------------------------------------------------
-                                Global variables
----------------------------------------------------------------------------*/
-/* Matrix describing the structures contained in a given tree code.  */
+/* Global variables */
+/* Matrix describing the structures contained in a given tree code. */
 extern bool tree_contains_struct[MAX_TREE_CODES][64];
 
-/* Class of tree given its code.  */
+/* Class of tree given its code. */
 extern const enum tree_code_class tree_code_type[];
 
 /* Each tree code class has an associated string representation.
-   These must correspond to the tree_code_class entries.  */
+   These must correspond to the tree_code_class entries. */
 extern const char *const tree_code_class_strings[];
 
-/* Number of argument-words in each kind of tree-node.  */
+/* Number of argument-words in each kind of tree-node. */
 extern const unsigned char tree_code_length[];
 
-/* Vector of all alias pairs for global symbols.  */
+/* Vector of all alias pairs for global symbols. */
 extern GTY(()) vec<alias_pair, va_gc> *alias_pairs;
 
-/* Names of all the built_in classes.  */
+/* Names of all the built_in classes. */
 extern const char *const built_in_class_names[BUILT_IN_LAST];
 
-/* Names of all the built_in functions.  */
+/* Names of all the built_in functions. */
 extern const char * built_in_names[(int) END_BUILTINS];
 
-/* Number of operands and names for each OMP_CLAUSE node.  */
+/* Number of operands and names for each OMP_CLAUSE node. */
 extern unsigned const char omp_clause_num_ops[];
 extern const char * const omp_clause_code_name[];
-extern const char *user_omp_clause_code_name (tree, bool);
+extern const char *user_omp_clause_code_name(tree, bool);
 
-/* A vector of all translation-units.  */
+/* A vector of all translation-units. */
 extern GTY (()) vec<tree, va_gc> *all_translation_units;
 
-/* Vector of standard trees used by the C compiler.  */
+/* Vector of standard trees used by the C compiler. */
 extern GTY(()) tree global_trees[TI_MAX];
 
-/* The standard C integer types.  Use integer_type_kind to index into
-   this array.  */
+/* The standard C integer types. Use integer_type_kind to index into
+   this array. */
 extern GTY(()) tree integer_types[itk_none];
 
-/* Types used to represent sizes.  */
+/* Types used to represent sizes. */
 extern GTY(()) tree sizetype_tab[(int) stk_type_kind_last];
 
-/* Arrays for keeping track of tree node statistics.  */
+/* Arrays for keeping track of tree node statistics. */
 extern uint64_t tree_node_counts[];
 extern uint64_t tree_node_sizes[];
 
 /* True if we are in gimple form and the actions of the folders need to
-   be restricted.  False if we are not in gimple form and folding is not
-   restricted to creating gimple expressions.  */
+   be restricted. False if we are not in gimple form and folding is not
+   restricted to creating gimple expressions. */
 extern bool in_gimple_form;
 
-/* Functional interface to the builtin functions.  */
+/* Functional interface to the builtin functions. */
 extern GTY(()) builtin_info_type builtin_info[(int)END_BUILTINS];
 
-/* If nonzero, an upper limit on alignment of structure fields, in bits,  */
+/* If nonzero, an upper limit on alignment of structure fields, in bits, */
 extern unsigned int maximum_field_alignment;
 
-/* Points to the FUNCTION_DECL of the function whose body we are reading.  */
+/* Points to the FUNCTION_DECL of the function whose body we are reading. */
 extern GTY(()) tree current_function_decl;
 
-/* Nonzero means a FUNC_BEGIN label was emitted.  */
+/* Nonzero means a FUNC_BEGIN label was emitted. */
 extern GTY(()) const char * current_function_func_begin_label;
 
-/* Information about the _FloatN and _FloatNx types.  */
+/* Information about the _FloatN and _FloatNx types. */
 extern const floatn_type_info floatn_nx_types[NUM_FLOATN_NX_TYPES];
 
 #endif  // GCC_TREE_CORE_H
