@@ -2173,7 +2173,7 @@ cpp_check_utf8_bom (const char *data, size_t data_length)
    diagnostics, and causes a return of NULL if there was any error instead.  */
 
 uchar * 
-_cpp_convert_input (cpp_reader *pfile, const char *input_charset,
+_cpp_convert_input(cpp_reader *pfile, const char *input_charset,
 		    uchar *input, size_t size, size_t len,
 		    const unsigned char **buffer_start, off_t *st_size)
 {
@@ -2252,8 +2252,7 @@ _cpp_convert_input (cpp_reader *pfile, const char *input_charset,
 }
 
 /* Decide on the default encoding to assume for input files.  */
-const char *
-_cpp_default_encoding (void)
+const char *_cpp_default_encoding(void)
 {
   const char *current_encoding = NULL;
 
@@ -2276,70 +2275,61 @@ _cpp_default_encoding (void)
        would be friendly to support.
      (Zack Weinberg and Paolo Bonzini, May 20th 2004)  */
 #if defined (HAVE_LOCALE_H) && defined (HAVE_LANGINFO_CODESET) && 0
-  setlocale (LC_CTYPE, "");
-  current_encoding = nl_langinfo (CODESET);
+	setlocale(LC_CTYPE, "");
+	current_encoding = nl_langinfo(CODESET);
 #endif
-  if (current_encoding == NULL || *current_encoding == '\0')
-    current_encoding = SOURCE_CHARSET;
+	if (current_encoding == NULL || *current_encoding == '\0')
+		current_encoding = SOURCE_CHARSET;
 
-  return current_encoding;
+	return current_encoding;
 }
 
 /* Check if the configured input charset requires no conversion, other than
-   possibly stripping a UTF-8 BOM.  */
-bool cpp_input_conversion_is_trivial (const char *input_charset)
+   possibly stripping a UTF-8 BOM. */
+bool cpp_input_conversion_is_trivial(const char *input_charset)
 {
-  return !strcasecmp (input_charset, SOURCE_CHARSET);
+	return !strcasecmp(input_charset, SOURCE_CHARSET);
 }
 
-/* Implementation of class cpp_string_location_reader.  */
+/* Implementation of class cpp_string_location_reader. */
 
-/* Constructor for cpp_string_location_reader.  */
+/* Constructor for cpp_string_location_reader. */
 
 cpp_string_location_reader::
-cpp_string_location_reader (location_t src_loc,
-			    line_maps *line_table)
+cpp_string_location_reader(location_t src_loc, line_maps *line_table)
 {
-  src_loc = get_range_from_loc (line_table, src_loc).m_start;
+	src_loc = get_range_from_loc (line_table, src_loc).m_start;
 
-  /* SRC_LOC might be a macro location.  It only makes sense to do
-     column-by-column calculations on ordinary maps, so get the
-     corresponding location in an ordinary map.  */
-  m_loc
-    = linemap_resolve_location (line_table, src_loc,
-				LRK_SPELLING_LOCATION, NULL);
+	/* SRC_LOC might be a macro location.  It only makes sense to do
+	   column-by-column calculations on ordinary maps, so get the
+	   corresponding location in an ordinary map. */
+	m_loc = linemap_resolve_location(line_table, src_loc, LRK_SPELLING_LOCATION, NULL);
 
-  const line_map_ordinary *map
-    = linemap_check_ordinary (linemap_lookup (line_table, m_loc));
-  m_offset_per_column = (1 << map->m_range_bits);
+	const line_map_ordinary *map = linemap_check_ordinary(linemap_lookup(line_table, m_loc));
+	m_offset_per_column = (1 << map->m_range_bits);
 }
 
-/* Get the range of the next source byte.  */
+/* Get the range of the next source byte. */
 
 source_range
-cpp_string_location_reader::get_next ()
+cpp_string_location_reader::get_next()
 {
-  source_range result;
-  result.m_start = m_loc;
-  result.m_finish = m_loc;
-  if (m_loc <= LINE_MAP_MAX_LOCATION_WITH_COLS)
-    m_loc += m_offset_per_column;
-  return result;
+	source_range result;
+	result.m_start = m_loc;
+	result.m_finish = m_loc;
+	if (m_loc <= LINE_MAP_MAX_LOCATION_WITH_COLS)
+		m_loc += m_offset_per_column;
+	return result;
 }
 
 cpp_display_width_computation::
-cpp_display_width_computation (const char *data, int data_length,
-			       const cpp_char_column_policy &policy) :
-  m_begin (data),
-  m_next (m_begin),
-  m_bytes_left (data_length),
-  m_policy (policy),
-  m_display_cols (0)
+cpp_display_width_computation(const char *data, int data_length,
+	const cpp_char_column_policy &policy) : m_begin (data), m_next (m_begin),
+	m_bytes_left (data_length), m_policy (policy), m_display_cols (0)
 {
-  gcc_assert (policy.m_tabstop > 0);
-  gcc_assert (policy.m_width_cb);
+	gcc_assert(policy.m_tabstop > 0);
+	gcc_assert(policy.m_width_cb);
 }
-
 
 /* The main implementation function for class cpp_display_width_computation.
    m_next points on entry to the start of the UTF-8 encoding of the next
@@ -2353,53 +2343,45 @@ cpp_display_width_computation (const char *data, int data_length,
    If OUT is non-NULL, it is populated.  */
 
 int
-cpp_display_width_computation::process_next_codepoint (cpp_decoded_char *out)
+cpp_display_width_computation::process_next_codepoint(cpp_decoded_char *out)
 {
-  cppchar_t c;
-  int next_width;
+	cppchar_t c;
+	int next_width;
 
-  if (out)
-    out->m_start_byte = m_next;
+	if (out)
+		out->m_start_byte = m_next;
 
-  if (*m_next == '\t')
-    {
-      ++m_next;
-      --m_bytes_left;
-      next_width = m_policy.m_tabstop - (m_display_cols % m_policy.m_tabstop);
-      if (out)
-	{
-	  out->m_ch = '\t';
-	  out->m_valid_ch = true;
+	if (*m_next == '\t') {
+		++m_next;
+		--m_bytes_left;
+		next_width = m_policy.m_tabstop - (m_display_cols % m_policy.m_tabstop);
+		if (out) {
+			out->m_ch = '\t';
+			out->m_valid_ch = true;
+		}
+	} else if (one_utf8_to_cppchar((const uchar **) &m_next, &m_bytes_left, &c) != 0) {
+		/* Input is not convertible to UTF-8.  This could be fine, e.g. in a
+		   string literal, so don't complain.  Just treat it as if it has a width
+		   of one. */
+		++m_next;
+		--m_bytes_left;
+		next_width = m_policy.m_undecoded_byte_width;
+		if (out)
+			out->m_valid_ch = false;
+	} else {
+		/* one_utf8_to_cppchar() has updated m_next and m_bytes_left for us. */
+		next_width = m_policy.m_width_cb(c);
+		if (out) {
+			out->m_ch = c;
+			out->m_valid_ch = true;
+		}
 	}
-    }
-  else if (one_utf8_to_cppchar ((const uchar **) &m_next, &m_bytes_left, &c)
-	   != 0)
-    {
-      /* Input is not convertible to UTF-8.  This could be fine, e.g. in a
-	 string literal, so don't complain.  Just treat it as if it has a width
-	 of one.  */
-      ++m_next;
-      --m_bytes_left;
-      next_width = m_policy.m_undecoded_byte_width;
-      if (out)
-	out->m_valid_ch = false;
-    }
-  else
-    {
-      /*  one_utf8_to_cppchar() has updated m_next and m_bytes_left for us.  */
-      next_width = m_policy.m_width_cb (c);
-      if (out)
-	{
-	  out->m_ch = c;
-	  out->m_valid_ch = true;
-	}
-    }
 
-  if (out)
-    out->m_next_byte = m_next;
+	if (out)
+		out->m_next_byte = m_next;
 
-  m_display_cols += next_width;
-  return next_width;
+	m_display_cols += next_width;
+	return next_width;
 }
 
 /*  Utility to advance the byte stream by the minimum amount needed to consume
@@ -2408,13 +2390,13 @@ cpp_display_width_computation::process_next_codepoint (cpp_decoded_char *out)
     or more than N, if the last character to be skipped had a sufficiently large
     display width.  */
 int
-cpp_display_width_computation::advance_display_cols (int n)
+cpp_display_width_computation::advance_display_cols(int n)
 {
-  const int start = m_display_cols;
-  const int target = start + n;
-  while (m_display_cols < target && !done ())
-    process_next_codepoint (NULL);
-  return m_display_cols - start;
+	const int start = m_display_cols;
+	const int target = start + n;
+	while (m_display_cols < target && !done())
+		process_next_codepoint(NULL);
+	return m_display_cols - start;
 }
 
 /*  For the string of length DATA_LENGTH bytes that begins at DATA, compute
@@ -2422,37 +2404,35 @@ cpp_display_width_computation::advance_display_cols (int n)
     may exceed DATA_LENGTH, in which case the phantom bytes at the end are
     treated as if they have display width 1.  Tabs are expanded to the next tab
     stop, relative to the start of DATA, and non-printable-ASCII characters
-    will be escaped as per POLICY.  */
+    will be escaped as per POLICY. */
 
 int
-cpp_byte_column_to_display_column (const char *data, int data_length,
-				   int column,
-				   const cpp_char_column_policy &policy)
+cpp_byte_column_to_display_column(const char *data, int data_length,
+				   int column, const cpp_char_column_policy &policy)
 {
-  const int offset = MAX (0, column - data_length);
-  cpp_display_width_computation dw (data, column - offset, policy);
-  while (!dw.done ())
-    dw.process_next_codepoint (NULL);
-  return dw.display_cols_processed () + offset;
+	const int offset = MAX (0, column - data_length);
+	cpp_display_width_computation dw(data, column - offset, policy);
+	while (!dw.done())
+		dw.process_next_codepoint(NULL);
+	return dw.display_cols_processed() + offset;
 }
 
 /*  For the string of length DATA_LENGTH bytes that begins at DATA, compute
     the least number of bytes that will result in at least DISPLAY_COL display
     columns.  The return value may exceed DATA_LENGTH if the entire string does
-    not occupy enough display columns.  Non-printable-ASCII characters
-    will be escaped as per POLICY.  */
+    not occupy enough display columns. Non-printable-ASCII characters
+    will be escaped as per POLICY. */
 
 int
-cpp_display_column_to_byte_column (const char *data, int data_length,
-				   int display_col,
-				   const cpp_char_column_policy &policy)
+cpp_display_column_to_byte_column(const char *data, int data_length,
+				   int display_col, const cpp_char_column_policy &policy)
 {
-  cpp_display_width_computation dw (data, data_length, policy);
-  const int avail_display = dw.advance_display_cols (display_col);
-  return dw.bytes_processed () + MAX (0, display_col - avail_display);
+	cpp_display_width_computation dw(data, data_length, policy);
+	const int avail_display = dw.advance_display_cols(display_col);
+	return dw.bytes_processed() + MAX (0, display_col - avail_display);
 }
 
-/* Our own version of wcwidth().  We don't use the actual wcwidth() in glibc,
+/* Our own version of wcwidth(). We don't use the actual wcwidth() in glibc,
    because that will inspect the user's locale, and in particular in an ASCII
    locale, it will not return anything useful for extended characters.  But GCC
    in other respects (see e.g. _cpp_default_encoding()) behaves as if
@@ -2465,30 +2445,26 @@ cpp_display_column_to_byte_column (const char *data, int data_length,
    diagnostics, they are sufficient.  */
 
 #include "generated_cpp_wcwidth.h"
-int cpp_wcwidth (cppchar_t c)
+int cpp_wcwidth(cppchar_t c)
 {
-  if (__builtin_expect (c <= wcwidth_range_ends[0], true))
-    return wcwidth_widths[0];
+	if (__builtin_expect(c <= wcwidth_range_ends[0], true))
+		return wcwidth_widths[0];
 
-  /* Binary search the tables.  */
-  int begin = 1;
-  static const int end
-      = sizeof wcwidth_range_ends / sizeof (*wcwidth_range_ends);
-  int len = end - begin;
-  do
-    {
-      int half = len/2;
-      int middle = begin + half;
-      if (c > wcwidth_range_ends[middle])
-	{
-	  begin = middle + 1;
-	  len -= half + 1;
-	}
-      else
-	len = half;
-    } while (len);
+	/* Binary search the tables. */
+	int begin = 1;
+	static const int end = sizeof wcwidth_range_ends / sizeof (*wcwidth_range_ends);
+	int len = end - begin;
+	do {
+		int half = len/2;
+		int middle = begin + half;
+		if (c > wcwidth_range_ends[middle]) {
+			begin = middle + 1;
+			len -= half + 1;
+		} else
+			len = half;
+	} while (len);
 
-  if (__builtin_expect (begin != end, true))
-    return wcwidth_widths[begin];
-  return 1;
+	if (__builtin_expect(begin != end, true))
+		return wcwidth_widths[begin];
+	return 1;
 }
