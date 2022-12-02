@@ -465,152 +465,144 @@ print_intr(char *tmp_str, unsigned long interrupts)
 static void
 print_flags(char *tmp_str, unsigned long flags)
 {
-  int comma = 0;
+	int comma = 0;
 
-  *tmp_str = 0;
-  if (flags & 8)
-    {
-      strcat (tmp_str, "c");
-      comma = 1;
-    }
-  if (flags & 4)
-    {
-      if (comma) strcat (tmp_str, ",");
-      strcat (tmp_str, "z");
-      comma = 1;
-    }
-  if (flags & 2)
-    {
-      if (comma) strcat (tmp_str, ",");
-      strcat (tmp_str, "s");
-      comma = 1;
-    }
-  if (flags & 1)
-    {
-      if (comma) strcat (tmp_str, ",");
-      strcat (tmp_str, "p");
-    }
+	*tmp_str = 0;
+	if (flags & 8) {
+		strcat(tmp_str, "c");
+		comma = 1;
+	}
+	if (flags & 4) {
+		if (comma) strcat(tmp_str, ",");
+			strcat(tmp_str, "z");
+		comma = 1;
+	}
+	if (flags & 2) {
+		if (comma) strcat(tmp_str, ",");
+			strcat(tmp_str, "s");
+		comma = 1;
+	}
+	if (flags & 1) {
+		if (comma) strcat(tmp_str, ",");
+			strcat(tmp_str, "p");
+	}
 }
 
 static void
-unparse_instr (instr_data_s *instr_data, int is_segmented)
+unparse_instr(instr_data_s *instr_data, int is_segmented)
 {
-  unsigned short datum_value;
-  unsigned int tabl_datum, datum_class;
-  int loop, loop_limit;
-  char out_str[80], tmp_str[25];
+	unsigned short datum_value;
+	unsigned int tabl_datum, datum_class;
+	int loop, loop_limit;
+	char out_str[80], tmp_str[25];
 
-  sprintf (out_str, "%s\t", z8k_table[instr_data->tabl_index].name);
+	sprintf(out_str, "%s\t", z8k_table[instr_data->tabl_index].name);
 
-  loop_limit = z8k_table[instr_data->tabl_index].noperands;
-  for (loop = 0; loop < loop_limit; loop++)
-    {
-      if (loop)
-	strcat (out_str, ",");
+	loop_limit = z8k_table[instr_data->tabl_index].noperands;
+	for (loop = 0; loop < loop_limit; loop++) {
+		if (loop)
+			strcat(out_str, ",");
 
-      tabl_datum = z8k_table[instr_data->tabl_index].arg_info[loop];
-      datum_class = tabl_datum & CLASS_MASK;
-      datum_value = tabl_datum & ~CLASS_MASK;
+		tabl_datum = z8k_table[instr_data->tabl_index].arg_info[loop];
+		datum_class = tabl_datum & CLASS_MASK;
+		datum_value = tabl_datum & ~CLASS_MASK;
 
-      switch (datum_class)
-	{
-	case CLASS_X:
-          sprintf (tmp_str, "0x%0lx(r%ld)", instr_data->address,
-                   instr_data->arg_reg[datum_value]);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_BA:
-          if (is_segmented)
-            sprintf (tmp_str, "rr%ld(#0x%lx)", instr_data->arg_reg[datum_value],
-                     instr_data->immediate);
-          else
-            sprintf (tmp_str, "r%ld(#0x%lx)", instr_data->arg_reg[datum_value],
-                     instr_data->immediate);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_BX:
-          if (is_segmented)
-            sprintf (tmp_str, "rr%ld(r%ld)", instr_data->arg_reg[datum_value],
-                     instr_data->arg_reg[ARG_RX]);
-          else
-            sprintf (tmp_str, "r%ld(r%ld)", instr_data->arg_reg[datum_value],
-                     instr_data->arg_reg[ARG_RX]);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_DISP:
-	  sprintf (tmp_str, "0x%0lx", instr_data->displacement);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_IMM:
-	  if (datum_value == ARG_IMM2)	/* True with EI/DI instructions only.  */
-	    {
-	      print_intr (tmp_str, instr_data->interrupts);
-	      strcat (out_str, tmp_str);
-	      break;
-	    }
-	  sprintf (tmp_str, "#0x%0lx", instr_data->immediate);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_CC:
-	  sprintf (tmp_str, "%s", codes[instr_data->cond_code]);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_CTRL:
-	  sprintf (tmp_str, "%s", ctrl_names[instr_data->ctrl_code]);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_DA:
-	case CLASS_ADDRESS:
-	  sprintf (tmp_str, "0x%0lx", instr_data->address);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_IR:
-	  if (is_segmented)
-	    sprintf (tmp_str, "@rr%ld", instr_data->arg_reg[datum_value]);
-	  else
-	    sprintf (tmp_str, "@r%ld", instr_data->arg_reg[datum_value]);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_IRO:
-          sprintf (tmp_str, "@r%ld", instr_data->arg_reg[datum_value]);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_FLAGS:
-	  print_flags(tmp_str, instr_data->flags);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_REG_BYTE:
-	  if (instr_data->arg_reg[datum_value] >= 0x8)
-	    sprintf (tmp_str, "rl%ld",
-		     instr_data->arg_reg[datum_value] - 0x8);
-	  else
-	    sprintf (tmp_str, "rh%ld", instr_data->arg_reg[datum_value]);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_REG_WORD:
-	  sprintf (tmp_str, "r%ld", instr_data->arg_reg[datum_value]);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_REG_QUAD:
-	  sprintf (tmp_str, "rq%ld", instr_data->arg_reg[datum_value]);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_REG_LONG:
-	  sprintf (tmp_str, "rr%ld", instr_data->arg_reg[datum_value]);
-	  strcat (out_str, tmp_str);
-	  break;
-	case CLASS_PR:
-	  if (is_segmented)
-	    sprintf (tmp_str, "rr%ld", instr_data->arg_reg[datum_value]);
-	  else
-	    sprintf (tmp_str, "r%ld", instr_data->arg_reg[datum_value]);
-	  strcat (out_str, tmp_str);
-	  break;
-	default:
-	  abort ();
-	  break;
+		switch (datum_class) {
+			case CLASS_X:
+				sprintf(tmp_str, "0x%0lx(r%ld)", instr_data->address,
+						instr_data->arg_reg[datum_value]);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_BA:
+				if (is_segmented)
+					sprintf(tmp_str, "rr%ld(#0x%lx)", instr_data->arg_reg[datum_value],
+							instr_data->immediate);
+				else
+					sprintf(tmp_str, "r%ld(#0x%lx)", instr_data->arg_reg[datum_value],
+							instr_data->immediate);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_BX:
+				if (is_segmented)
+					sprintf(tmp_str, "rr%ld(r%ld)", instr_data->arg_reg[datum_value],
+							instr_data->arg_reg[ARG_RX]);
+				else
+					sprintf(tmp_str, "r%ld(r%ld)", instr_data->arg_reg[datum_value],
+							instr_data->arg_reg[ARG_RX]);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_DISP:
+				sprintf(tmp_str, "0x%0lx", instr_data->displacement);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_IMM:
+				if (datum_value == ARG_IMM2) /* True with EI/DI instructions only.  */ {
+					print_intr(tmp_str, instr_data->interrupts);
+					strcat(out_str, tmp_str);
+					break;
+				}
+				sprintf(tmp_str, "#0x%0lx", instr_data->immediate);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_CC:
+				sprintf(tmp_str, "%s", codes[instr_data->cond_code]);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_CTRL:
+				sprintf(tmp_str, "%s", ctrl_names[instr_data->ctrl_code]);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_DA:
+			case CLASS_ADDRESS:
+				sprintf(tmp_str, "0x%0lx", instr_data->address);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_IR:
+				if (is_segmented)
+					sprintf(tmp_str, "@rr%ld", instr_data->arg_reg[datum_value]);
+				else
+					sprintf(tmp_str, "@r%ld", instr_data->arg_reg[datum_value]);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_IRO:
+				sprintf(tmp_str, "@r%ld", instr_data->arg_reg[datum_value]);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_FLAGS:
+				print_flags(tmp_str, instr_data->flags);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_REG_BYTE:
+				if (instr_data->arg_reg[datum_value] >= 0x8)
+					sprintf(tmp_str, "rl%ld", instr_data->arg_reg[datum_value] - 0x8);
+				else
+					sprintf(tmp_str, "rh%ld", instr_data->arg_reg[datum_value]);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_REG_WORD:
+				sprintf(tmp_str, "r%ld", instr_data->arg_reg[datum_value]);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_REG_QUAD:
+				sprintf(tmp_str, "rq%ld", instr_data->arg_reg[datum_value]);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_REG_LONG:
+				sprintf(tmp_str, "rr%ld", instr_data->arg_reg[datum_value]);
+				strcat(out_str, tmp_str);
+				break;
+			case CLASS_PR:
+				if (is_segmented)
+					sprintf(tmp_str, "rr%ld", instr_data->arg_reg[datum_value]);
+				else
+					sprintf(tmp_str, "r%ld", instr_data->arg_reg[datum_value]);
+				strcat(out_str, tmp_str);
+				break;
+			default:
+				abort();
+			break;
+		}
 	}
-    }
 
-  strcpy (instr_data->instr_asmsrc, out_str);
+	strcpy(instr_data->instr_asmsrc, out_str);
 }

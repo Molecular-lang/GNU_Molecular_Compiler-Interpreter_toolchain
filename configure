@@ -5106,7 +5106,7 @@ if test -z "$CXX"; then
     CXX=$CCC
   else
     if test -n "$ac_tool_prefix"; then
-  for ac_prog in spl+ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
+  for ac_prog in scpel c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
   do
     # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
 set dummy $ac_tool_prefix$ac_prog; ac_word=$2
@@ -5150,7 +5150,7 @@ fi
 fi
 if test -z "$CXX"; then
   ac_ct_CXX=$CXX
-  for ac_prog in spl+ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
+  for ac_prog in scpel c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -5193,7 +5193,7 @@ fi
 done
 
   if test "x$ac_ct_CXX" = x; then
-    CXX="spl+"
+    CXX="scpel"
   else
     case $cross_compiling:$ac_tool_warned in
 yes:)
@@ -5379,8 +5379,8 @@ if test "$GCC" = yes; then
   saved_LDFLAGS="$LDFLAGS"
 
   LDFLAGS="$LDFLAGS -static-libstdc++ -static-libgcc"
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether spl+ accepts -static-libstdc++ -static-libgcc" >&5
-$as_echo_n "checking whether spl+ accepts -static-libstdc++ -static-libgcc... " >&6; }
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether scpel accepts -static-libstdc++ -static-libgcc" >&5
+$as_echo_n "checking whether scpel accepts -static-libstdc++ -static-libgcc... " >&6; }
   ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -12974,7 +12974,7 @@ elif test -n "$ac_cv_prog_CXX_FOR_TARGET"; then
 fi
 
 if test -n "$ac_cv_prog_CXX_FOR_TARGET"; then
-  for ncn_progname in c++ spl+ cxx gxx; do
+  for ncn_progname in c++ scpel cxx gxx; do
     # Extract the first word of "${ncn_progname}", so it can be a program name with args.
 set dummy ${ncn_progname}; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -13016,7 +13016,7 @@ fi
 fi
 
 if test -z "$ac_cv_prog_CXX_FOR_TARGET" && test -n "$with_build_time_tools"; then
-  for ncn_progname in c++ spl+ cxx gxx; do
+  for ncn_progname in c++ scpel cxx gxx; do
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${ncn_progname} in $with_build_time_tools" >&5
 $as_echo_n "checking for ${ncn_progname} in $with_build_time_tools... " >&6; }
     if test -x $with_build_time_tools/${ncn_progname}; then
@@ -13032,7 +13032,7 @@ $as_echo "no" >&6; }
 fi
 
 if test -z "$ac_cv_prog_CXX_FOR_TARGET"; then
-  for ncn_progname in c++ spl+ cxx gxx; do
+  for ncn_progname in c++ scpel cxx gxx; do
     if test -n "$ncn_target_tool_prefix"; then
       # Extract the first word of "${ncn_target_tool_prefix}${ncn_progname}", so it can be a program name with args.
 set dummy ${ncn_target_tool_prefix}${ncn_progname}; ac_word=$2
@@ -13116,7 +13116,7 @@ fi
 fi
 
 if test -z "$ac_cv_prog_CXX_FOR_TARGET" ; then
-  set dummy c++ spl+ cxx gxx
+  set dummy c++ scpel cxx gxx
   if test $build = $target ; then
     CXX_FOR_TARGET="$2"
   else

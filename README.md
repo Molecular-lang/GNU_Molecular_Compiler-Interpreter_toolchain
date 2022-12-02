@@ -54,7 +54,7 @@ or C++ "hello_world.co". ".co" is the default Scpel file extension
    $ sudo make install
    Which wiil have your newly compiled binaries installed in /usr/local
 5. From your terminal, call the driver by:
-   $ spl -o file_name file_name.co
+   $ scpel -o file_name file_name.co
    Assuming file_name.co is the file that contains your sample hello world
    
 # NOTE:
