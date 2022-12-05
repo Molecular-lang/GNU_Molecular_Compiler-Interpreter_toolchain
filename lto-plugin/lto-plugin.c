@@ -879,47 +879,46 @@ all_symbols_read_handler (void)
   return LDPS_OK;
 }
 
-/* Helper, as used in collect2.  */
+/* Helper, as used in collect2. */
 static int
-file_exists (const char *name)
+file_exists(const char *name)
 {
-  return access (name, R_OK) == 0;
+	return access(name, R_OK) == 0;
 }
 
 /* Unlink FILE unless we have save-temps set.
    Note that we're saving files if verbose output is set. */
 
 static void
-maybe_unlink (const char *file)
+maybe_unlink(const char *file)
 {
-  if (save_temps && file_exists (file))
-    {
-      if (verbose)
-	fprintf (stderr, "[Leaving %s]\n", file);
-      return;
-    }
+	if (save_temps && file_exists(file)) {
+		if (verbose)
+			fprintf(stderr, "[Leaving %s]\n", file);
+		return;
+	}
 
-  unlink_if_ordinary (file);
+	unlink_if_ordinary(file);
 }
 
 /* Remove temporary files at the end of the link. */
 
 static enum ld_plugin_status
-cleanup_handler (void)
+cleanup_handler(void)
 {
-  unsigned int i;
+	unsigned int i;
 
-  if (debug)
-    return LDPS_OK;
+	if (debug)
+		return LDPS_OK;
 
-  if (arguments_file_name)
-    maybe_unlink (arguments_file_name);
+	if (arguments_file_name)
+		maybe_unlink(arguments_file_name);
 
-  for (i = 0; i < num_output_files; i++)
-    maybe_unlink (output_files[i]);
+	for (i = 0; i < num_output_files; i++)
+		maybe_unlink(output_files[i]);
 
-  free_2 ();
-  return LDPS_OK;
+	free_2();
+	return LDPS_OK;
 }
 
 #define SWAP(type, a, b) \
@@ -927,37 +926,36 @@ cleanup_handler (void)
 
 /* Compare two hash table entries */
 
-static int eq_sym (const void *a, const void *b)
+static int eq_sym(const void *a, const void *b)
 {
-  const struct ld_plugin_symbol *as = (const struct ld_plugin_symbol *)a;
-  const struct ld_plugin_symbol *bs = (const struct ld_plugin_symbol *)b;
+	const struct ld_plugin_symbol *as = (const struct ld_plugin_symbol *)a;
+	const struct ld_plugin_symbol *bs = (const struct ld_plugin_symbol *)b;
 
-  return !strcmp (as->name, bs->name);
+	return !strcmp(as->name, bs->name);
 }
 
 /* Hash a symbol */
 
-static hashval_t hash_sym (const void *a)
+static hashval_t hash_sym(const void *a)
 {
-  const struct ld_plugin_symbol *as = (const struct ld_plugin_symbol *)a;
+	const struct ld_plugin_symbol *as = (const struct ld_plugin_symbol *)a;
 
-  return htab_hash_string (as->name);
+	return htab_hash_string(as->name);
 }
 
 /* Determine how strong a symbol is */
 
-static int symbol_strength (struct ld_plugin_symbol *s)
+static int symbol_strength(struct ld_plugin_symbol *s)
 {
-  switch (s->def) 
-    { 
-    case LDPK_UNDEF:
-    case LDPK_WEAKUNDEF:
-      return 0;
-    case LDPK_WEAKDEF:
-      return 1;
-    default:
-      return 2;
-    }
+	switch (s->def) { 
+		case LDPK_UNDEF:
+		case LDPK_WEAKUNDEF:
+			return 0;
+		case LDPK_WEAKDEF:
+			return 1;
+		default:
+			return 2;
+	}
 }
 
 /* In the ld -r case we can get dups in the LTO symbol tables, where
@@ -979,190 +977,176 @@ static int symbol_strength (struct ld_plugin_symbol *s)
    XXX how to handle common? */
 
 static void
-resolve_conflicts (struct plugin_symtab *t, struct plugin_symtab *conflicts)
+resolve_conflicts(struct plugin_symtab *t, struct plugin_symtab *conflicts)
 {
-  htab_t symtab = htab_create (t->nsyms, hash_sym, eq_sym, NULL);
-  int i;
-  int out;
-  int outlen;
+	htab_t symtab = htab_create(t->nsyms, hash_sym, eq_sym, NULL);
+	int i;
+	int out;
+	int outlen;
 
-  outlen = t->nsyms;
-  conflicts->syms = xmalloc (sizeof (struct ld_plugin_symbol) * outlen);
-  conflicts->aux = xmalloc (sizeof (struct sym_aux) * outlen);
+	outlen = t->nsyms;
+	conflicts->syms = xmalloc(sizeof (struct ld_plugin_symbol) * outlen);
+	conflicts->aux = xmalloc(sizeof (struct sym_aux) * outlen);
 
-  /* Move all duplicate symbols into the auxiliary conflicts table. */
-  out = 0;
-  for (i = 0; i < t->nsyms; i++) 
-    {
-      struct ld_plugin_symbol *s = &t->syms[i];
-      struct sym_aux *aux = &t->aux[i];
-      void **slot;
+	/* Move all duplicate symbols into the auxiliary conflicts table. */
+	out = 0;
+	for (i = 0; i < t->nsyms; i++) {
+		struct ld_plugin_symbol *s = &t->syms[i];
+		struct sym_aux *aux = &t->aux[i];
+		void **slot;
 
-      slot = htab_find_slot (symtab, s, INSERT);
-      if (*slot != NULL)
-	{
-	  int cnf;
-	  struct ld_plugin_symbol *orig = (struct ld_plugin_symbol *)*slot;
-	  struct sym_aux *orig_aux = &t->aux[orig - t->syms];
+		slot = htab_find_slot(symtab, s, INSERT);
+		if (*slot != NULL) {
+			int cnf;
+			struct ld_plugin_symbol *orig = (struct ld_plugin_symbol *)*slot;
+			struct sym_aux *orig_aux = &t->aux[orig - t->syms];
 
-	  /* Always let the linker resolve the strongest symbol */
-	  if (symbol_strength (orig) < symbol_strength (s)) 
-	    {
-	      SWAP (struct ld_plugin_symbol, *orig, *s);
-	      SWAP (uint32_t, orig_aux->slot, aux->slot);
-	      SWAP (unsigned long long, orig_aux->id, aux->id);
-	      /* Don't swap conflict chain pointer */
-	    } 
+			/* Always let the linker resolve the strongest symbol */
+			if (symbol_strength(orig) < symbol_strength(s)) {
+				SWAP (struct ld_plugin_symbol, *orig, *s);
+				SWAP (uint32_t, orig_aux->slot, aux->slot);
+				SWAP (unsigned long long, orig_aux->id, aux->id);
+				/* Don't swap conflict chain pointer */
+			} 
 
-	  /* Move current symbol into the conflicts table */
-	  cnf = conflicts->nsyms++;
-	  conflicts->syms[cnf] = *s;
-	  conflicts->aux[cnf] = *aux;
-	  aux = &conflicts->aux[cnf];
+			/* Move current symbol into the conflicts table */
+			cnf = conflicts->nsyms++;
+			conflicts->syms[cnf] = *s;
+			conflicts->aux[cnf] = *aux;
+			aux = &conflicts->aux[cnf];
 
-	  /* Update conflicts chain of the original symbol */
-	  aux->next_conflict = orig_aux->next_conflict;
-	  orig_aux->next_conflict = cnf;
+			/* Update conflicts chain of the original symbol */
+			aux->next_conflict = orig_aux->next_conflict;
+			orig_aux->next_conflict = cnf;
 
-	  continue;
+			continue;
+		}
+
+		/* Remove previous duplicates in the main table */
+		if (out < i) {
+			t->syms[out] = *s;
+			t->aux[out] = *aux;
+		}
+
+		/* Put original into the hash table */
+		*slot = &t->syms[out];
+		out++;
 	}
 
-      /* Remove previous duplicates in the main table */
-      if (out < i)
-	{
-	  t->syms[out] = *s;
-	  t->aux[out] = *aux;
-	}
+	assert(conflicts->nsyms <= outlen);
+	assert(conflicts->nsyms + out == t->nsyms);
 
-      /* Put original into the hash table */
-      *slot = &t->syms[out];
-      out++;
-    }
-
-  assert (conflicts->nsyms <= outlen);
-  assert (conflicts->nsyms + out == t->nsyms);
-  
-  t->nsyms = out;
-  htab_delete (symtab);
+	t->nsyms = out;
+	htab_delete(symtab);
 }
 
-/* Process one section of an object file.  */
+/* Process one section of an object file. */
 
 static int 
-process_symtab (void *data, const char *name, off_t offset, off_t length)
+process_symtab(void *data, const char *name, off_t offset, off_t length)
 {
-  struct plugin_objfile *obj = (struct plugin_objfile *)data;
-  char *s;
-  char *secdatastart, *secdata;
+	struct plugin_objfile *obj = (struct plugin_objfile *)data;
+	char *s;
+	char *secdatastart, *secdata;
 
-  if (!startswith (name, ".gnu.lto_.symtab"))
-    return 1;
+	if (!startswith(name, ".gnu.lto_.symtab"))
+		return 1;
 
-  s = strrchr (name, '.');
-  if (s)
-    sscanf (s, ".%" PRI_LL "x", &obj->out->id);
-  secdata = secdatastart = xmalloc (length);
-  offset += obj->file->offset;
-  if (offset != lseek (obj->file->fd, offset, SEEK_SET))
-    goto err;
+	s = strrchr(name, '.');
+	if (s)
+		sscanf(s, ".%" PRI_LL "x", &obj->out->id);
+	secdata = secdatastart = xmalloc(length);
+	offset += obj->file->offset;
+	if (offset != lseek(obj->file->fd, offset, SEEK_SET))
+		goto err;
 
-  do
-    {
-      ssize_t got = read (obj->file->fd, secdata, length);
-      if (got == 0)
-	break;
-      else if (got > 0)
-	{
-	  secdata += got;
-	  length -= got;
-	}
-      else if (errno != EINTR)
-	goto err;
-    }
-  while (length > 0);
-  if (length > 0)
-    goto err;
+	do {
+		ssize_t got = read(obj->file->fd, secdata, length);
+		if (got == 0)
+			break;
+		else if (got > 0) {
+			secdata += got;
+			length -= got;
+		} else if (errno != EINTR)
+			goto err;
+	} while (length > 0);
+	if (length > 0)
+		goto err;
 
-  translate (secdatastart, secdata, obj->out);
-  obj->found++;
-  free (secdatastart);
-  return 1;
+	translate(secdatastart, secdata, obj->out);
+	obj->found++;
+	free(secdatastart);
+	return 1;
 
 err:
-  if (message)
-    message (LDPL_FATAL, "%s: corrupt object file", obj->file->name);
-  /* Force claim_file_handler to abandon this file.  */
-  obj->found = 0;
-  free (secdatastart);
-  return 0;
+	if (message)
+		message(LDPL_FATAL, "%s: corrupt object file", obj->file->name);
+	/* Force claim_file_handler to abandon this file. */
+	obj->found = 0;
+	free(secdatastart);
+	return 0;
 }
 
-/* Process one section of an object file.  */
+/* Process one section of an object file. */
 
 static int
-process_symtab_extension (void *data, const char *name, off_t offset,
-			  off_t length)
+process_symtab_extension(void *data, const char *name, off_t offset, off_t length)
 {
-  struct plugin_objfile *obj = (struct plugin_objfile *)data;
-  char *s;
-  char *secdatastart, *secdata;
+	struct plugin_objfile *obj = (struct plugin_objfile *)data;
+	char *s;
+	char *secdatastart, *secdata;
 
-  if (!startswith (name, ".gnu.lto_.ext_symtab"))
-    return 1;
+	if (!startswith(name, ".gnu.lto_.ext_symtab"))
+		return 1;
 
-  s = strrchr (name, '.');
-  if (s)
-    sscanf (s, ".%" PRI_LL "x", &obj->out->id);
-  secdata = secdatastart = xmalloc (length);
-  offset += obj->file->offset;
-  if (offset != lseek (obj->file->fd, offset, SEEK_SET))
-    goto err;
+	s = strrchr(name, '.');
+	if (s)
+		sscanf(s, ".%" PRI_LL "x", &obj->out->id);
+	secdata = secdatastart = xmalloc(length);
+	offset += obj->file->offset;
+	if (offset != lseek(obj->file->fd, offset, SEEK_SET))
+		goto err;
 
-  do
-    {
-      ssize_t got = read (obj->file->fd, secdata, length);
-      if (got == 0)
-	break;
-      else if (got > 0)
-	{
-	  secdata += got;
-	  length -= got;
+	do {
+		ssize_t got = read(obj->file->fd, secdata, length);
+		if (got == 0)
+			break;
+		else if (got > 0) {
+			secdata += got;
+			length -= got;
+		} else if (errno != EINTR)
+			goto err;
 	}
-      else if (errno != EINTR)
+	while (length > 0);
+	if (length > 0)
 	goto err;
-    }
-  while (length > 0);
-  if (length > 0)
-    goto err;
 
-  parse_symtab_extension (secdatastart, secdata, obj->out);
-  obj->found++;
-  free (secdatastart);
-  return 1;
+	parse_symtab_extension(secdatastart, secdata, obj->out);
+	obj->found++;
+	free(secdatastart);
+	return 1;
 
 err:
-  if (message)
-    message (LDPL_FATAL, "%s: corrupt object file", obj->file->name);
-  /* Force claim_file_handler to abandon this file.  */
-  obj->found = 0;
-  free (secdatastart);
-  return 0;
+	if (message)
+		message(LDPL_FATAL, "%s: corrupt object file", obj->file->name);
+	/* Force claim_file_handler to abandon this file. */
+	obj->found = 0;
+	free(secdatastart);
+	return 0;
 }
 
-
-/* Find an offload section of an object file.  */
+/* Find an offload section of an object file. */
 
 static int
-process_offload_section (void *data, const char *name, off_t offset, off_t len)
+process_offload_section(void *data, const char *name, off_t offset, off_t len)
 {
-  if (startswith (name, ".gnu.offload_lto_.opts"))
-    {
-      struct plugin_objfile *obj = (struct plugin_objfile *) data;
-      obj->offload = true;
-      return 0;
-    }
+	if (startswith(name, ".gnu.offload_lto_.opts")) {
+		struct plugin_objfile *obj = (struct plugin_objfile *) data;
+		obj->offload = true;
+		return 0;
+	}
 
-  return 1;
+	return 1;
 }
 
 /* Callback used by a linker to check if the plugin will claim FILE. Writes

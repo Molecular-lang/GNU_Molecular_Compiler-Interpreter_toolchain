@@ -3194,140 +3194,140 @@ cp_parser_make_indirect_declarator(enum tree_code code, tree class_type, cp_cv_q
 static cp_parser *
 cp_parser_new(cp_lexer *lexer)
 {
-  /* Initialize the binops_by_token so that we can get the tree
-     directly from the token.  */
-  for (unsigned i = 0; i < ARRAY_SIZE (binops); i++)
-    binops_by_token[binops[i].token_type] = binops[i];
+	/* Initialize the binops_by_token so that we can get the tree
+	   directly from the token. */
+	for (unsigned i = 0; i < ARRAY_SIZE (binops); i++)
+		binops_by_token[binops[i].token_type] = binops[i];
 
-  cp_parser *parser = ggc_cleared_alloc<cp_parser> ();
-  parser->lexer = lexer;
-  parser->context = cp_parser_context_new (NULL);
+	cp_parser *parser = ggc_cleared_alloc<cp_parser> ();
+	parser->lexer = lexer;
+	parser->context = cp_parser_context_new (NULL);
 
-  /* For now, we always accept GNU extensions.  */
-  parser->allow_gnu_extensions_p = 1;
+	/* For now, we always accept GNU extensions. */
+	parser->allow_gnu_extensions_p = 1;
 
-  /* The `>' token is a greater-than operator, not the end of a
-     template-id.  */
-  parser->greater_than_is_operator_p = true;
+	/* The `>' token is a greater-than operator, not the end of a
+	   template-id. */
+	parser->greater_than_is_operator_p = true;
 
-  parser->default_arg_ok_p = true;
+	parser->default_arg_ok_p = true;
 
-  /* We are not parsing a constant-expression.  */
-  parser->integral_constant_expression_p = false;
-  parser->allow_non_integral_constant_expression_p = false;
-  parser->non_integral_constant_expression_p = false;
+	/* We are not parsing a constant-expression. */
+	parser->integral_constant_expression_p = false;
+	parser->allow_non_integral_constant_expression_p = false;
+	parser->non_integral_constant_expression_p = false;
 
-  /* Local variable names are not forbidden.  */
-  parser->local_variables_forbidden_p = 0;
+	/* Local variable names are not forbidden. */
+	parser->local_variables_forbidden_p = 0;
 
-  /* We are not processing an `extern "C"' declaration.  */
-  parser->in_unbraced_linkage_specification_p = false;
+	/* We are not processing an `extern "C"' declaration. */
+	parser->in_unbraced_linkage_specification_p = false;
 
-  /* We are not processing a declarator.  */
-  parser->in_declarator_p = false;
+	/* We are not processing a declarator. */
+	parser->in_declarator_p = false;
 
-  /* We are not processing a template-argument-list.  */
-  parser->in_template_argument_list_p = false;
+	/* We are not processing a template-argument-list. */
+	parser->in_template_argument_list_p = false;
 
-  /* We are not in an iteration statement.  */
-  parser->in_statement = 0;
+	/* We are not in an iteration statement. */
+	parser->in_statement = 0;
 
-  /* We are not in a switch statement.  */
-  parser->in_switch_statement_p = false;
+	/* We are not in a switch statement. */
+	parser->in_switch_statement_p = false;
 
-  /* We are not parsing a type-id inside an expression.  */
-  parser->in_type_id_in_expr_p = false;
+	/* We are not parsing a type-id inside an expression. */
+	parser->in_type_id_in_expr_p = false;
 
-  /* String literals should be translated to the execution character set.  */
-  parser->translate_strings_p = true;
+	/* String literals should be translated to the execution character set. */
+	parser->translate_strings_p = true;
 
-  /* We are not parsing a function body.  */
-  parser->in_function_body = false;
+	/* We are not parsing a function body. */
+	parser->in_function_body = false;
 
-  /* We can correct until told otherwise.  */
-  parser->colon_corrects_to_scope_p = true;
+	/* We can correct until told otherwise. */
+	parser->colon_corrects_to_scope_p = true;
 
-  /* The unparsed function queue is empty.  */
-  push_unparsed_function_queues (parser);
+	/* The unparsed function queue is empty. */
+	push_unparsed_function_queues (parser);
 
-  /* There are no classes being defined.  */
-  parser->num_classes_being_defined = 0;
+	/* There are no classes being defined. */
+	parser->num_classes_being_defined = 0;
 
-  /* No template parameters apply.  */
-  parser->num_template_parameter_lists = 0;
+	/* No template parameters apply. */
+	parser->num_template_parameter_lists = 0;
 
-  /* Special parsing data structures.  */
-  parser->omp_declare_simd = NULL;
-  parser->oacc_routine = NULL;
+	/* Special parsing data structures. */
+	parser->omp_declare_simd = NULL;
+	parser->oacc_routine = NULL;
 
-  /* Not declaring an implicit function template.  */
-  parser->auto_is_implicit_function_template_parm_p = false;
-  parser->fully_implicit_function_template_p = false;
-  parser->implicit_template_parms = 0;
-  parser->implicit_template_scope = 0;
+	/* Not declaring an implicit function template. */
+	parser->auto_is_implicit_function_template_parm_p = false;
+	parser->fully_implicit_function_template_p = false;
+	parser->implicit_template_parms = 0;
+	parser->implicit_template_scope = 0;
 
-  /* Allow constrained-type-specifiers. */
-  parser->prevent_constrained_type_specifiers = 0;
+	/* Allow constrained-type-specifiers. */
+	parser->prevent_constrained_type_specifiers = 0;
 
-  /* We haven't yet seen an 'extern "C"'.  */
-  parser->innermost_linkage_specification_location = UNKNOWN_LOCATION;
+	/* We haven't yet seen an 'extern "C"'. */
+	parser->innermost_linkage_specification_location = UNKNOWN_LOCATION;
 
-  return parser;
+	return parser;
 }
 
 /* Create a cp_lexer structure which will emit the tokens in CACHE
-   and push it onto the parser's lexer stack.  This is used for delayed
+   and push it onto the parser's lexer stack. This is used for delayed
    parsing of in-class method bodies and default arguments, and should
-   not be confused with tentative parsing.  */
+   not be confused with tentative parsing. */
 static void
-cp_parser_push_lexer_for_tokens (cp_parser *parser, cp_token_cache *cache)
+cp_parser_push_lexer_for_tokens(cp_parser *parser, cp_token_cache *cache)
 {
-  cp_lexer *lexer = cp_lexer_new_from_tokens (cache);
-  lexer->next = parser->lexer;
-  parser->lexer = lexer;
+	cp_lexer *lexer = cp_lexer_new_from_tokens(cache);
+	lexer->next = parser->lexer;
+	parser->lexer = lexer;
 
-  /* Move the current source position to that of the first token in the
-     new lexer.  */
-  cp_lexer_set_source_position_from_token (lexer->next_token);
+	/* Move the current source position to that of the first token in the
+	   new lexer. */
+	cp_lexer_set_source_position_from_token(lexer->next_token);
 }
 
 /* Pop the top lexer off the parser stack.  This is never used for the
-   "main" lexer, only for those pushed by cp_parser_push_lexer_for_tokens.  */
+   "main" lexer, only for those pushed by cp_parser_push_lexer_for_tokens. */
 static void
-cp_parser_pop_lexer (cp_parser *parser)
+cp_parser_pop_lexer(cp_parser *parser)
 {
-  cp_lexer *lexer = parser->lexer;
-  parser->lexer = lexer->next;
-  cp_lexer_destroy (lexer);
+	cp_lexer *lexer = parser->lexer;
+	parser->lexer = lexer->next;
+	cp_lexer_destroy(lexer);
 
-  /* Put the current source position back where it was before this
-     lexer was pushed.  */
-  cp_lexer_set_source_position_from_token (parser->lexer->next_token);
+	/* Put the current source position back where it was before this
+	   lexer was pushed. */
+	cp_lexer_set_source_position_from_token(parser->lexer->next_token);
 }
 
-/* Lexical conventions [gram.lex]  */
+/* Lexical conventions [gram.lex] */
 
-/* Parse an identifier.  Returns an IDENTIFIER_NODE representing the
-   identifier.  */
+/* Parse an identifier. Returns an IDENTIFIER_NODE representing the
+   identifier. */
 
 static cp_expr
-cp_parser_identifier (cp_parser* parser)
+cp_parser_identifier(cp_parser* parser)
 {
-  cp_token *token;
+	cp_token *token;
 
-  /* Look for the identifier.  */
-  token = cp_parser_require (parser, CPP_NAME, RT_NAME);
-  /* Return the value.  */
-  if (token)
-    return cp_expr (token->u.value, token->location);
-  else
-    return error_mark_node;
+	/* Look for the identifier. */
+	token = cp_parser_require(parser, CPP_NAME, RT_NAME);
+	/* Return the value. */
+	if (token)
+		return cp_expr(token->u.value, token->location);
+	else
+		return error_mark_node;
 }
 
-/* Parse a sequence of adjacent string constants.  Returns a
+/* Parse a sequence of adjacent string constants. Returns a
    TREE_STRING representing the combined, nul-terminated string
-   constant.  If TRANSLATE is true, translate the string to the
-   execution character set.  If WIDE_OK is true, a wide string is
+   constant. If TRANSLATE is true, translate the string to the
+   execution character set. If WIDE_OK is true, a wide string is
    invalid here.
 
    C++98 [lex.string] says that if a narrow string literal token is
@@ -3337,209 +3337,177 @@ cp_parser_identifier (cp_parser* parser)
 
    This code is largely lifted from lex_string() in c-lex.cc.
 
-   FUTURE: ObjC++ will need to handle @-strings here.  */
+   FUTURE: ObjC++ will need to handle @-strings here. */
 static cp_expr
-cp_parser_string_literal (cp_parser *parser, bool translate, bool wide_ok,
-			  bool lookup_udlit = true)
+cp_parser_string_literal(cp_parser *parser, bool translate, bool wide_ok,
+	bool lookup_udlit = true)
 {
-  tree value;
-  size_t count;
-  struct obstack str_ob;
-  struct obstack loc_ob;
-  cpp_string str, istr, *strs;
-  cp_token *tok;
-  enum cpp_ttype type, curr_type;
-  int have_suffix_p = 0;
-  tree string_tree;
-  tree suffix_id = NULL_TREE;
-  bool curr_tok_is_userdef_p = false;
+	tree value;
+	size_t count;
+	struct obstack str_ob;
+	struct obstack loc_ob;
+	cpp_string str, istr, *strs;
+	cp_token *tok;
+	enum cpp_ttype type, curr_type;
+	int have_suffix_p = 0;
+	tree string_tree;
+	tree suffix_id = NULL_TREE;
+	bool curr_tok_is_userdef_p = false;
 
-  tok = cp_lexer_peek_token (parser->lexer);
-  if (!cp_parser_is_string_literal (tok))
-    {
-      cp_parser_error (parser, "expected string-literal");
-      return error_mark_node;
-    }
-
-  location_t loc = tok->location;
-
-  if (cpp_userdef_string_p (tok->type))
-    {
-      string_tree = USERDEF_LITERAL_VALUE (tok->u.value);
-      curr_type = cpp_userdef_string_remove_type (tok->type);
-      curr_tok_is_userdef_p = true;
-    }
-  else
-    {
-      string_tree = tok->u.value;
-      curr_type = tok->type;
-    }
-  type = curr_type;
-
-  /* Try to avoid the overhead of creating and destroying an obstack
-     for the common case of just one string.  */
-  if (!cp_parser_is_string_literal
-      (cp_lexer_peek_nth_token (parser->lexer, 2)))
-    {
-      cp_lexer_consume_token (parser->lexer);
-
-      str.text = (const unsigned char *)TREE_STRING_POINTER (string_tree);
-      str.len = TREE_STRING_LENGTH (string_tree);
-      count = 1;
-
-      if (curr_tok_is_userdef_p)
-	{
-	  suffix_id = USERDEF_LITERAL_SUFFIX_ID (tok->u.value);
-	  have_suffix_p = 1;
-	  curr_type = cpp_userdef_string_remove_type (tok->type);
+	tok = cp_lexer_peek_token(parser->lexer);
+	if (!cp_parser_is_string_literal(tok)) {
+		cp_parser_error(parser, "expected string-literal");
+		return error_mark_node;
 	}
-      else
-	curr_type = tok->type;
 
-      strs = &str;
-    }
-  else
-    {
-      location_t last_tok_loc = tok->location;
-      gcc_obstack_init (&str_ob);
-      gcc_obstack_init (&loc_ob);
-      count = 0;
+	location_t loc = tok->location;
 
-      do
+	if (cpp_userdef_string_p(tok->type)) {
+		string_tree = USERDEF_LITERAL_VALUE (tok->u.value);
+		curr_type = cpp_userdef_string_remove_type(tok->type);
+		curr_tok_is_userdef_p = true;
+	} else {
+		string_tree = tok->u.value;
+		curr_type = tok->type;
+	}
+	type = curr_type;
+
+	/* Try to avoid the overhead of creating and destroying an obstack
+	   for the common case of just one string. */
+	if (!cp_parser_is_string_literal(cp_lexer_peek_nth_token(parser->lexer, 2))) {
+		cp_lexer_consume_token(parser->lexer);
+
+		str.text = (const unsigned char *)TREE_STRING_POINTER (string_tree);
+		str.len = TREE_STRING_LENGTH (string_tree);
+		count = 1;
+
+		if (curr_tok_is_userdef_p) {
+			suffix_id = USERDEF_LITERAL_SUFFIX_ID (tok->u.value);
+			have_suffix_p = 1;
+			curr_type = cpp_userdef_string_remove_type(tok->type);
+		} else
+			curr_type = tok->type;
+
+		strs = &str;
+	} else {
+		location_t last_tok_loc = tok->location;
+		gcc_obstack_init(&str_ob);
+		gcc_obstack_init(&loc_ob);
+		count = 0;
+
+		do {
+			cp_lexer_consume_token(parser->lexer);
+			count++;
+			str.text = (const unsigned char *)TREE_STRING_POINTER (string_tree);
+			str.len = TREE_STRING_LENGTH (string_tree);
+
+			if (curr_tok_is_userdef_p) {
+				tree curr_suffix_id = USERDEF_LITERAL_SUFFIX_ID (tok->u.value);
+				if (have_suffix_p == 0) {
+					suffix_id = curr_suffix_id;
+					have_suffix_p = 1;
+				} else if (have_suffix_p == 1 && curr_suffix_id != suffix_id) {
+					error("inconsistent user-defined literal suffixes"
+						  " %qD and %qD in string literal", suffix_id, curr_suffix_id);
+					have_suffix_p = -1;
+				}
+				curr_type = cpp_userdef_string_remove_type(tok->type);
+			} else
+				curr_type = tok->type;
+
+			if (type != curr_type) {
+				if (type == CPP_STRING)
+					type = curr_type;
+				else if (curr_type != CPP_STRING) {
+					rich_location rich_loc(line_table, tok->location);
+					rich_loc.add_range(last_tok_loc);
+					error_at(&rich_loc, "concatenation of string literals with "
+										"conflicting encoding prefixes");
+				}
+			}
+
+			obstack_grow(&str_ob, &str, sizeof (cpp_string));
+			obstack_grow(&loc_ob, &tok->location, sizeof (location_t));
+
+			last_tok_loc = tok->location;
+
+			tok = cp_lexer_peek_token(parser->lexer);
+			if (cpp_userdef_string_p(tok->type)) {
+				string_tree = USERDEF_LITERAL_VALUE (tok->u.value);
+				curr_type = cpp_userdef_string_remove_type(tok->type);
+				curr_tok_is_userdef_p = true;
+			} else {
+				string_tree = tok->u.value;
+				curr_type = tok->type;
+				curr_tok_is_userdef_p = false;
+			}
+		} while (cp_parser_is_string_literal(tok));
+
+		/* A string literal built by concatenation has its caret=start at
+		   the start of the initial string, and its finish at the finish of
+		   the final string literal. */
+		loc = make_location(loc, loc, get_finish(last_tok_loc));
+
+		strs = (cpp_string *) obstack_finish(&str_ob);
+	}
+
+	if (type != CPP_STRING && !wide_ok) {
+		cp_parser_error(parser, "a wide string is invalid in this context");
+		type = CPP_STRING;
+	}
+
+	if ((translate ? cpp_interpret_string : cpp_interpret_string_notranslate)
+		(parse_in, strs, count, &istr, type))
 	{
-	  cp_lexer_consume_token (parser->lexer);
-	  count++;
-	  str.text = (const unsigned char *)TREE_STRING_POINTER (string_tree);
-	  str.len = TREE_STRING_LENGTH (string_tree);
-
-	  if (curr_tok_is_userdef_p)
-	    {
-	      tree curr_suffix_id = USERDEF_LITERAL_SUFFIX_ID (tok->u.value);
-	      if (have_suffix_p == 0)
-		{
-		  suffix_id = curr_suffix_id;
-		  have_suffix_p = 1;
+		value = build_string(istr.len, (const char *)istr.text);
+		free(CONST_CAST (unsigned char *, istr.text));
+		if (count > 1) {
+			location_t *locs = (location_t *)obstack_finish(&loc_ob);
+			gcc_assert(g_string_concat_db);
+			g_string_concat_db->record_string_concatenation(count, locs);
 		}
-	      else if (have_suffix_p == 1
-		       && curr_suffix_id != suffix_id)
-		{
-		  error ("inconsistent user-defined literal suffixes"
-			 " %qD and %qD in string literal",
-			 suffix_id, curr_suffix_id);
-		  have_suffix_p = -1;
+
+		switch (type) {
+			default:
+				case CPP_STRING:
+				TREE_TYPE (value) = char_array_type_node;
+				break;
+			case CPP_UTF8STRING:
+				if (flag_char8_t)
+				TREE_TYPE (value) = char8_array_type_node;
+				else
+				TREE_TYPE (value) = char_array_type_node;
+				break;
+			case CPP_STRING16:
+				TREE_TYPE (value) = char16_array_type_node;
+				break;
+			case CPP_STRING32:
+				TREE_TYPE (value) = char32_array_type_node;
+				break;
+			case CPP_WSTRING:
+				TREE_TYPE (value) = wchar_array_type_node;
+				break;
 		}
-	      curr_type = cpp_userdef_string_remove_type (tok->type);
-	    }
-	  else
-	    curr_type = tok->type;
 
-	  if (type != curr_type)
-	    {
-	      if (type == CPP_STRING)
-		type = curr_type;
-	      else if (curr_type != CPP_STRING)
-		{
-		  rich_location rich_loc (line_table, tok->location);
-		  rich_loc.add_range (last_tok_loc);
-		  error_at (&rich_loc,
-			    "concatenation of string literals with "
-			    "conflicting encoding prefixes");
+		value = fix_string_type(value);
+
+		if (have_suffix_p) {
+			tree literal = build_userdef_literal(suffix_id, value, OT_NONE, NULL_TREE);
+			if (lookup_udlit)
+				value = cp_parser_userdef_string_literal(literal);
+			else
+				value = literal;
 		}
-	    }
+	} else
+		/* cpp_interpret_string has issued an error. */
+		value = error_mark_node;
 
-	  obstack_grow (&str_ob, &str, sizeof (cpp_string));
-	  obstack_grow (&loc_ob, &tok->location, sizeof (location_t));
-
-	  last_tok_loc = tok->location;
-
-	  tok = cp_lexer_peek_token (parser->lexer);
-	  if (cpp_userdef_string_p (tok->type))
-	    {
-	      string_tree = USERDEF_LITERAL_VALUE (tok->u.value);
-	      curr_type = cpp_userdef_string_remove_type (tok->type);
-	      curr_tok_is_userdef_p = true;
-	    }
-	  else
-	    {
-	      string_tree = tok->u.value;
-	      curr_type = tok->type;
-	      curr_tok_is_userdef_p = false;
-	    }
-	}
-      while (cp_parser_is_string_literal (tok));
-
-      /* A string literal built by concatenation has its caret=start at
-	 the start of the initial string, and its finish at the finish of
-	 the final string literal.  */
-      loc = make_location (loc, loc, get_finish (last_tok_loc));
-
-      strs = (cpp_string *) obstack_finish (&str_ob);
-    }
-
-  if (type != CPP_STRING && !wide_ok)
-    {
-      cp_parser_error (parser, "a wide string is invalid in this context");
-      type = CPP_STRING;
-    }
-
-  if ((translate ? cpp_interpret_string : cpp_interpret_string_notranslate)
-      (parse_in, strs, count, &istr, type))
-    {
-      value = build_string (istr.len, (const char *)istr.text);
-      free (CONST_CAST (unsigned char *, istr.text));
-      if (count > 1)
-	{
-	  location_t *locs = (location_t *)obstack_finish (&loc_ob);
-	  gcc_assert (g_string_concat_db);
-	  g_string_concat_db->record_string_concatenation (count, locs);
+	if (count > 1) {
+		obstack_free(&str_ob, 0);
+		obstack_free(&loc_ob, 0);
 	}
 
-      switch (type)
-	{
-	default:
-	case CPP_STRING:
-	  TREE_TYPE (value) = char_array_type_node;
-	  break;
-	case CPP_UTF8STRING:
-	  if (flag_char8_t)
-	    TREE_TYPE (value) = char8_array_type_node;
-	  else
-	    TREE_TYPE (value) = char_array_type_node;
-	  break;
-	case CPP_STRING16:
-	  TREE_TYPE (value) = char16_array_type_node;
-	  break;
-	case CPP_STRING32:
-	  TREE_TYPE (value) = char32_array_type_node;
-	  break;
-	case CPP_WSTRING:
-	  TREE_TYPE (value) = wchar_array_type_node;
-	  break;
-	}
-
-      value = fix_string_type (value);
-
-      if (have_suffix_p)
-	{
-	  tree literal = build_userdef_literal (suffix_id, value,
-						OT_NONE, NULL_TREE);
-	  if (lookup_udlit)
-	    value = cp_parser_userdef_string_literal (literal);
-	  else
-	    value = literal;
-	}
-    }
-  else
-    /* cpp_interpret_string has issued an error.  */
-    value = error_mark_node;
-
-  if (count > 1)
-    {
-      obstack_free (&str_ob, 0);
-      obstack_free (&loc_ob, 0);
-    }
-
-  return cp_expr (value, loc);
+	return cp_expr(value, loc);
 }
 
 /* Look up a literal operator with the name and the exact arguments.  */
