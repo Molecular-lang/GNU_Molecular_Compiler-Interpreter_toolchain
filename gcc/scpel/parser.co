@@ -3510,296 +3510,282 @@ cp_parser_string_literal(cp_parser *parser, bool translate, bool wide_ok,
 	return cp_expr(value, loc);
 }
 
-/* Look up a literal operator with the name and the exact arguments.  */
+/* Look up a literal operator with the name and the exact arguments. */
 
 static tree
-lookup_literal_operator (tree name, vec<tree, va_gc> *args)
+lookup_literal_operator(tree name, vec<tree, va_gc> *args)
 {
-  tree decl = lookup_name (name);
-  if (!decl || !is_overloaded_fn (decl))
-    return error_mark_node;
+	tree decl = lookup_name(name);
+	if (!decl || !is_overloaded_fn(decl))
+		return error_mark_node;
 
-  for (lkp_iterator iter (decl); iter; ++iter)
-    {
-      tree fn = *iter;
+	for (lkp_iterator iter(decl); iter; ++iter) {
+	tree fn = *iter;
 
-      if (tree parmtypes = TYPE_ARG_TYPES (TREE_TYPE (fn)))
-	{
-	  unsigned int ix;
-	  bool found = true;
+	if (tree parmtypes = TYPE_ARG_TYPES (TREE_TYPE (fn))) {
+		unsigned int ix;
+		bool found = true;
 
-	  for (ix = 0;
-	       found && ix < vec_safe_length (args) && parmtypes != NULL_TREE;
-	       ++ix, parmtypes = TREE_CHAIN (parmtypes))
-	    {
-	      tree tparm = TREE_VALUE (parmtypes);
-	      tree targ = TREE_TYPE ((*args)[ix]);
-	      bool ptr = TYPE_PTR_P (tparm);
-	      bool arr = TREE_CODE (targ) == ARRAY_TYPE;
-	      if ((ptr || arr || !same_type_p (tparm, targ))
-		  && (!ptr || !arr
-		      || !same_type_p (TREE_TYPE (tparm),
-				       TREE_TYPE (targ))))
-		found = false;
-	    }
+		for (ix = 0;
+			found && ix < vec_safe_length(args) && parmtypes != NULL_TREE;
+			++ix, parmtypes = TREE_CHAIN (parmtypes))
+		{
+			tree tparm = TREE_VALUE (parmtypes);
+			tree targ = TREE_TYPE ((*args)[ix]);
+			bool ptr = TYPE_PTR_P (tparm);
+			bool arr = TREE_CODE (targ) == ARRAY_TYPE;
+			if ((ptr || arr || !same_type_p(tparm, targ)) && (!ptr || !arr
+					|| !same_type_p(TREE_TYPE (tparm), TREE_TYPE (targ))))
+				found = false;
+		}
 
-	  if (found
-	      && ix == vec_safe_length (args)
-	      /* May be this should be sufficient_parms_p instead,
-		 depending on how exactly should user-defined literals
-		 work in presence of default arguments on the literal
-		 operator parameters.  */
-	      && parmtypes == void_list_node)
-	    return decl;
+		if (found && ix == vec_safe_length(args)
+				/* May be this should be sufficient_parms_p instead,
+				   depending on how exactly should user-defined literals
+				   work in presence of default arguments on the literal
+				   operator parameters. */
+				&& parmtypes == void_list_node)
+			return decl;
+		}
 	}
-    }
 
-  return error_mark_node;
+	return error_mark_node;
 }
 
 /* Parse a user-defined char constant.  Returns a call to a user-defined
-   literal operator taking the character as an argument.  */
+   literal operator taking the character as an argument. */
 
 static cp_expr
-cp_parser_userdef_char_literal (cp_parser *parser)
+cp_parser_userdef_char_literal(cp_parser *parser)
 {
-  cp_token *token = cp_lexer_consume_token (parser->lexer);
-  tree literal = token->u.value;
-  tree suffix_id = USERDEF_LITERAL_SUFFIX_ID (literal);
-  tree value = USERDEF_LITERAL_VALUE (literal);
-  tree name = cp_literal_operator_id (IDENTIFIER_POINTER (suffix_id));
-  tree decl, result;
+	cp_token *token = cp_lexer_consume_token(parser->lexer);
+	tree literal = token->u.value;
+	tree suffix_id = USERDEF_LITERAL_SUFFIX_ID(literal);
+	tree value = USERDEF_LITERAL_VALUE (literal);
+	tree name = cp_literal_operator_id (IDENTIFIER_POINTER (suffix_id));
+	tree decl, result;
 
-  /* Build up a call to the user-defined operator  */
-  /* Lookup the name we got back from the id-expression.  */
-  releasing_vec args;
-  vec_safe_push (args, value);
-  decl = lookup_literal_operator (name, args);
-  if (!decl || decl == error_mark_node)
-    {
-      error ("unable to find character literal operator %qD with %qT argument",
-	     name, TREE_TYPE (value));
-      return error_mark_node;
-    }
-  result = finish_call_expr (decl, &args, false, true, tf_warning_or_error);
-  return result;
+	/* Build up a call to the user-defined operator */
+	/* Lookup the name we got back from the id-expression. */
+	releasing_vec args;
+	vec_safe_push(args, value);
+	decl = lookup_literal_operator(name, args);
+	if (!decl || decl == error_mark_node) {
+		error("unable to find character literal operator %qD with %qT argument", name, TREE_TYPE (value));
+		return error_mark_node;
+	}
+	result = finish_call_expr(decl, &args, false, true, tf_warning_or_error);
+	return result;
 }
 
 /* A subroutine of cp_parser_userdef_numeric_literal to
-   create a char... template parameter pack from a string node.  */
+   create a char... template parameter pack from a string node. */
 
 static tree
-make_char_string_pack (tree value)
+make_char_string_pack(tree value)
 {
-  tree charvec;
-  tree argpack = make_node (NONTYPE_ARGUMENT_PACK);
-  const unsigned char *str
-    = (const unsigned char *) TREE_STRING_POINTER (value);
-  int i, len = TREE_STRING_LENGTH (value) - 1;
-  tree argvec = make_tree_vec (1);
+	tree charvec;
+	tree argpack = make_node(NONTYPE_ARGUMENT_PACK);
+	const unsigned char *str = (const unsigned char *) TREE_STRING_POINTER (value);
+	int i, len = TREE_STRING_LENGTH (value) - 1;
+	tree argvec = make_tree_vec(1);
 
-  /* Fill in CHARVEC with all of the parameters.  */
-  charvec = make_tree_vec (len);
-  for (i = 0; i < len; ++i)
-    {
-      unsigned char s[3] = { '\'', str[i], '\'' };
-      cpp_string in = { 3, s };
-      cpp_string out = { 0, 0 };
-      if (!cpp_interpret_string (parse_in, &in, 1, &out, CPP_STRING))
-	return NULL_TREE;
-      gcc_assert (out.len == 2);
-      TREE_VEC_ELT (charvec, i) = build_int_cst (char_type_node,
-						 out.text[0]);
-    }
+	/* Fill in CHARVEC with all of the parameters. */
+	charvec = make_tree_vec(len);
+	for (i = 0; i < len; ++i) {
+		unsigned char s[3] = { '\'', str[i], '\'' };
+		cpp_string in = { 3, s };
+		cpp_string out = { 0, 0 };
+		if (!cpp_interpret_string(parse_in, &in, 1, &out, CPP_STRING))
+			return NULL_TREE;
+		gcc_assert(out.len == 2);
+		TREE_VEC_ELT (charvec, i) = build_int_cst(char_type_node, out.text[0]);
+	}
 
-  /* Build the argument packs.  */
-  ARGUMENT_PACK_ARGS (argpack) = charvec;
+	/* Build the argument packs. */
+	ARGUMENT_PACK_ARGS (argpack) = charvec;
 
-  TREE_VEC_ELT (argvec, 0) = argpack;
+	TREE_VEC_ELT (argvec, 0) = argpack;
 
-  return argvec;
+	return argvec;
 }
 
 /* A subroutine of cp_parser_userdef_numeric_literal to
-   create a char... template parameter pack from a string node.  */
+   create a char... template parameter pack from a string node. */
 
 static tree
-make_string_pack (tree value)
+make_string_pack(tree value)
 {
-  tree charvec;
-  tree argpack = make_node (NONTYPE_ARGUMENT_PACK);
-  const unsigned char *str
-    = (const unsigned char *) TREE_STRING_POINTER (value);
-  int sz = TREE_INT_CST_LOW (TYPE_SIZE_UNIT (TREE_TYPE (TREE_TYPE (value))));
-  int len = TREE_STRING_LENGTH (value) / sz - 1;
-  tree argvec = make_tree_vec (2);
+	tree charvec;
+	tree argpack = make_node(NONTYPE_ARGUMENT_PACK);
+	const unsigned char *str = (const unsigned char *) TREE_STRING_POINTER (value);
+	int sz = TREE_INT_CST_LOW (TYPE_SIZE_UNIT (TREE_TYPE (TREE_TYPE (value))));
+	int len = TREE_STRING_LENGTH (value) / sz - 1;
+	tree argvec = make_tree_vec(2);
 
-  tree str_char_type_node = TREE_TYPE (TREE_TYPE (value));
-  str_char_type_node = TYPE_MAIN_VARIANT (str_char_type_node);
+	tree str_char_type_node = TREE_TYPE (TREE_TYPE (value));
+	str_char_type_node = TYPE_MAIN_VARIANT (str_char_type_node);
 
-  /* First template parm is character type.  */
-  TREE_VEC_ELT (argvec, 0) = str_char_type_node;
+	/* First template parm is character type. */
+	TREE_VEC_ELT (argvec, 0) = str_char_type_node;
 
-  /* Fill in CHARVEC with all of the parameters.  */
-  charvec = make_tree_vec (len);
-  for (int i = 0; i < len; ++i)
-    TREE_VEC_ELT (charvec, i)
-      = double_int_to_tree (str_char_type_node,
-			    double_int::from_buffer (str + i * sz, sz));
+	/* Fill in CHARVEC with all of the parameters. */
+	charvec = make_tree_vec(len);
+	for (int i = 0; i < len; ++i)
+		TREE_VEC_ELT (charvec, i) = double_int_to_tree(str_char_type_node,
+										double_int::from_buffer(str + i * sz, sz));
 
-  /* Build the argument packs.  */
-  ARGUMENT_PACK_ARGS (argpack) = charvec;
+	/* Build the argument packs. */
+	ARGUMENT_PACK_ARGS (argpack) = charvec;
 
-  TREE_VEC_ELT (argvec, 1) = argpack;
+	TREE_VEC_ELT (argvec, 1) = argpack;
 
-  return argvec;
+	return argvec;
 }
 
-/* Parse a user-defined numeric constant.  returns a call to a user-defined
-   literal operator.  */
+/* Parse a user-defined numeric constant. returns a call to a user-defined
+   literal operator. */
 
 static cp_expr
-cp_parser_userdef_numeric_literal (cp_parser *parser)
+cp_parser_userdef_numeric_literal(cp_parser *parser)
 {
-  cp_token *token = cp_lexer_consume_token (parser->lexer);
-  tree literal = token->u.value;
-  tree suffix_id = USERDEF_LITERAL_SUFFIX_ID (literal);
-  tree value = USERDEF_LITERAL_VALUE (literal);
-  int overflow = USERDEF_LITERAL_OVERFLOW (literal);
-  tree num_string = USERDEF_LITERAL_NUM_STRING (literal);
-  tree name = cp_literal_operator_id (IDENTIFIER_POINTER (suffix_id));
-  tree decl, result;
+	cp_token *token = cp_lexer_consume_token(parser->lexer);
+	tree literal = token->u.value;
+	tree suffix_id = USERDEF_LITERAL_SUFFIX_ID (literal);
+	tree value = USERDEF_LITERAL_VALUE (literal);
+	int overflow = USERDEF_LITERAL_OVERFLOW (literal);
+	tree num_string = USERDEF_LITERAL_NUM_STRING (literal);
+	tree name = cp_literal_operator_id(IDENTIFIER_POINTER (suffix_id));
+	tree decl, result;
 
-  /* Look for a literal operator taking the exact type of numeric argument
-     as the literal value.  */
-  releasing_vec args;
-  vec_safe_push (args, value);
-  decl = lookup_literal_operator (name, args);
-  if (decl && decl != error_mark_node)
-    {
-      result = finish_call_expr (decl, &args, false, true,
-				 tf_warning_or_error);
+	/* Look for a literal operator taking the exact type of numeric argument
+	   as the literal value. */
+	releasing_vec args;
+	vec_safe_push(args, value);
+	decl = lookup_literal_operator(name, args);
+	if (decl && decl != error_mark_node) {
+		result = finish_call_expr(decl, &args, false, true, tf_warning_or_error);
 
-      if (TREE_CODE (TREE_TYPE (value)) == INTEGER_TYPE && overflow > 0)
-	{
-	  warning_at (token->location, OPT_Woverflow,
-		      "integer literal exceeds range of %qT type",
-		      long_long_unsigned_type_node);
+		if (TREE_CODE (TREE_TYPE (value)) == INTEGER_TYPE && overflow > 0)
+		{
+		warning_at (token->location, OPT_Woverflow,
+		"integer literal exceeds range of %qT type",
+		long_long_unsigned_type_node);
+		}
+		else
+		{
+		if (overflow > 0)
+		warning_at (token->location, OPT_Woverflow,
+		"floating literal exceeds range of %qT type",
+		long_double_type_node);
+		else if (overflow < 0)
+		warning_at (token->location, OPT_Woverflow,
+		"floating literal truncated to zero");
+		}
+
+		return result;
 	}
-      else
+
+	/* If the numeric argument didn't work, look for a raw literal
+	operator taking a const char* argument consisting of the number
+	in string format.  */
+	args->truncate (0);
+	vec_safe_push (args, num_string);
+	decl = lookup_literal_operator (name, args);
+	if (decl && decl != error_mark_node)
 	{
-	  if (overflow > 0)
-	    warning_at (token->location, OPT_Woverflow,
-			"floating literal exceeds range of %qT type",
-			long_double_type_node);
-	  else if (overflow < 0)
-	    warning_at (token->location, OPT_Woverflow,
-			"floating literal truncated to zero");
+	result = finish_call_expr (decl, &args, false, true,
+	tf_warning_or_error);
+	return result;
 	}
 
-      return result;
-    }
-
-  /* If the numeric argument didn't work, look for a raw literal
-     operator taking a const char* argument consisting of the number
-     in string format.  */
-  args->truncate (0);
-  vec_safe_push (args, num_string);
-  decl = lookup_literal_operator (name, args);
-  if (decl && decl != error_mark_node)
-    {
-      result = finish_call_expr (decl, &args, false, true,
-				 tf_warning_or_error);
-      return result;
-    }
-
-  /* If the raw literal didn't work, look for a non-type template
-     function with parameter pack char....  Call the function with
-     template parameter characters representing the number.  */
-  args->truncate (0);
-  decl = lookup_literal_operator (name, args);
-  if (decl && decl != error_mark_node)
-    {
-      tree tmpl_args = make_char_string_pack (num_string);
-      if (tmpl_args == NULL_TREE)
+	/* If the raw literal didn't work, look for a non-type template
+	function with parameter pack char....  Call the function with
+	template parameter characters representing the number.  */
+	args->truncate (0);
+	decl = lookup_literal_operator (name, args);
+	if (decl && decl != error_mark_node)
 	{
-	  error ("failed to translate literal to execution character set %qT",
-		 num_string);
-	  return error_mark_node;
-	}
-      decl = lookup_template_function (decl, tmpl_args);
-      result = finish_call_expr (decl, &args, false, true,
-				 tf_warning_or_error);
-      return result;
-    }
-
-  /* In C++14 the standard library defines complex number suffixes that
-     conflict with GNU extensions.  Prefer them if <complex> is #included.  */
-  bool ext = cpp_get_options (parse_in)->ext_numeric_literals;
-  bool i14 = (cxx_dialect > cxx11
-	      && (id_equal (suffix_id, "i")
-		  || id_equal (suffix_id, "if")
-		  || id_equal (suffix_id, "il")));
-  diagnostic_t kind = DK_ERROR;
-  int opt = 0;
-
-  if (i14 && ext)
-    {
-      tree cxlit = lookup_qualified_name (std_node, "complex_literals",
-					  LOOK_want::NORMAL, false);
-      if (cxlit == error_mark_node)
+	tree tmpl_args = make_char_string_pack (num_string);
+	if (tmpl_args == NULL_TREE)
 	{
-	  /* No <complex>, so pedwarn and use GNU semantics.  */
-	  kind = DK_PEDWARN;
-	  opt = OPT_Wpedantic;
+	error ("failed to translate literal to execution character set %qT",
+	num_string);
+	return error_mark_node;
 	}
-    }
+	decl = lookup_template_function (decl, tmpl_args);
+	result = finish_call_expr (decl, &args, false, true,
+	tf_warning_or_error);
+	return result;
+	}
 
-  bool complained
-    = emit_diagnostic (kind, input_location, opt,
-		       "unable to find numeric literal operator %qD", name);
+	/* In C++14 the standard library defines complex number suffixes that
+	conflict with GNU extensions.  Prefer them if <complex> is #included.  */
+	bool ext = cpp_get_options (parse_in)->ext_numeric_literals;
+	bool i14 = (cxx_dialect > cxx11
+	&& (id_equal (suffix_id, "i")
+	|| id_equal (suffix_id, "if")
+	|| id_equal (suffix_id, "il")));
+	diagnostic_t kind = DK_ERROR;
+	int opt = 0;
 
-  if (!complained)
-    /* Don't inform either.  */;
-  else if (i14)
-    {
-      inform (token->location, "add %<using namespace std::complex_literals%> "
-	      "(from %<<complex>%>) to enable the C++14 user-defined literal "
-	      "suffixes");
-      if (ext)
+	if (i14 && ext)
+	{
+	tree cxlit = lookup_qualified_name (std_node, "complex_literals",
+	LOOK_want::NORMAL, false);
+	if (cxlit == error_mark_node)
+	{
+	/* No <complex>, so pedwarn and use GNU semantics.  */
+	kind = DK_PEDWARN;
+	opt = OPT_Wpedantic;
+	}
+	}
+
+	bool complained
+	= emit_diagnostic (kind, input_location, opt,
+	"unable to find numeric literal operator %qD", name);
+
+	if (!complained)
+	/* Don't inform either.  */;
+	else if (i14)
+	{
+	inform (token->location, "add %<using namespace std::complex_literals%> "
+	"(from %<<complex>%>) to enable the C++14 user-defined literal "
+	"suffixes");
+	if (ext)
 	inform (token->location, "or use %<j%> instead of %<i%> for the "
-		"GNU built-in suffix");
-    }
-  else if (!ext)
-    inform (token->location, "use %<-fext-numeric-literals%> "
-	    "to enable more built-in suffixes");
-
-  if (kind == DK_ERROR)
-    value = error_mark_node;
-  else
-    {
-      /* Use the built-in semantics.  */
-      tree type;
-      if (id_equal (suffix_id, "i"))
-	{
-	  if (TREE_CODE (value) == INTEGER_CST)
-	    type = integer_type_node;
-	  else
-	    type = double_type_node;
+	"GNU built-in suffix");
 	}
-      else if (id_equal (suffix_id, "if"))
+	else if (!ext)
+	inform (token->location, "use %<-fext-numeric-literals%> "
+	"to enable more built-in suffixes");
+
+	if (kind == DK_ERROR)
+	value = error_mark_node;
+	else
+	{
+	/* Use the built-in semantics.  */
+	tree type;
+	if (id_equal (suffix_id, "i"))
+	{
+	if (TREE_CODE (value) == INTEGER_CST)
+	type = integer_type_node;
+	else
+	type = double_type_node;
+	}
+	else if (id_equal (suffix_id, "if"))
 	type = float_type_node;
-      else /* if (id_equal (suffix_id, "il")) */
+	else /* if (id_equal (suffix_id, "il")) */
 	type = long_double_type_node;
 
-      value = fold_build2 (COMPLEX_EXPR, build_complex_type (type),
-			   build_zero_cst (type), fold_convert (type, value));
-    }
+	value = fold_build2 (COMPLEX_EXPR, build_complex_type (type),
+	build_zero_cst (type), fold_convert (type, value));
+	}
 
-  if (cp_parser_uncommitted_to_tentative_parse_p (parser))
-    /* Avoid repeated diagnostics.  */
-    token->u.value = value;
-  return value;
+	if (cp_parser_uncommitted_to_tentative_parse_p (parser))
+	/* Avoid repeated diagnostics.  */
+	token->u.value = value;
+	return value;
 }
 
 /* Parse a user-defined string constant.  Returns a call to a user-defined
@@ -31715,180 +31701,151 @@ class_decl_loc_t::add_or_diag_mismatched_tag (tree type_decl,
     locvec.pop ();
 }
 
-/* Issues -Wmismatched-tags for a single class.  */
+/* Issues -Wmismatched-tags for a single class. */
 
 void
-class_decl_loc_t::diag_mismatched_tags (tree type_decl)
+class_decl_loc_t::diag_mismatched_tags(tree type_decl)
 {
-  if (!warn_mismatched_tags)
-    return;
+	if (!warn_mismatched_tags)
+		return;
 
-  /* Number of uses of the class.  */
-  const unsigned ndecls = locvec.length ();
+	/* Number of uses of the class. */
+	const unsigned ndecls = locvec.length();
 
-  /* The class (or template) declaration guiding the decisions about
-     the diagnostic.  For ordinary classes it's the same as THIS.  For
-     uses of instantiations of templates other than their declarations
-     it points to the record for the declaration of the corresponding
-     primary template or partial specialization.  */
-  class_decl_loc_t *cdlguide = this;
+	/* The class (or template) declaration guiding the decisions about
+	   the diagnostic. For ordinary classes it's the same as THIS. For
+	   uses of instantiations of templates other than their declarations
+	   it points to the record for the declaration of the corresponding
+	   primary template or partial specialization. */
+	class_decl_loc_t *cdlguide = this;
 
-  tree type = TREE_TYPE (type_decl);
-  if (CLASS_TYPE_P (type) && CLASSTYPE_IMPLICIT_INSTANTIATION (type))
-    {
-      /* For implicit instantiations of a primary template look up
-	 the primary or partial specialization and use it as
-	 the expected class-key rather than using the class-key of
-	 the first reference to the instantiation.  The primary must
-	 be (and inevitably is) at index zero.  */
-      tree spec = specialization_of (type);
-      cdlguide = class2loc.get (spec);
-      gcc_assert (cdlguide != NULL);
-    }
-  else
-    {
-      /* Skip declarations that consistently use the same class-key.  */
-      if (def_class_key != none_type)
-	return;
-    }
+	tree type = TREE_TYPE (type_decl);
+	if (CLASS_TYPE_P (type) && CLASSTYPE_IMPLICIT_INSTANTIATION (type)) {
+		/* For implicit instantiations of a primary template look up
+		   the primary or partial specialization and use it as
+		   the expected class-key rather than using the class-key of
+		   the first reference to the instantiation. The primary must
+		   be (and inevitably is) at index zero. */
+		tree spec = specialization_of(type);
+		cdlguide = class2loc.get(spec);
+		gcc_assert(cdlguide != NULL);
+	} else {
+		/* Skip declarations that consistently use the same class-key. */
+		if (def_class_key != none_type)
+			return;
+	}
 
-  /* Set if a definition for the class has been seen.  */
-  const bool def_p = cdlguide->def_p ();
+	/* Set if a definition for the class has been seen. */
+	const bool def_p = cdlguide->def_p();
 
-  /* The index of the declaration whose class-key this declaration
-     is expected to match.  It's either the class-key of the class
-     definition if one exists or the first declaration otherwise.  */
-  const unsigned idxguide = def_p ? cdlguide->idxdef : 0;
+	/* The index of the declaration whose class-key this declaration
+	   is expected to match.  It's either the class-key of the class
+	   definition if one exists or the first declaration otherwise. */
+	const unsigned idxguide = def_p ? cdlguide->idxdef : 0;
 
-  /* The class-key the class is expected to be declared with: it's
-     either the key used in its definition or the first declaration
-     if no definition has been provided.
-     For implicit instantiations of a primary template it's
-     the class-key used to declare the primary with.  The primary
-     must be at index zero.  */
-  const tag_types xpect_key = cdlguide->class_key (idxguide);
+	/* The class-key the class is expected to be declared with: it's
+	   either the key used in its definition or the first declaration
+	   if no definition has been provided.
+	   For implicit instantiations of a primary template it's
+	   the class-key used to declare the primary with.  The primary
+	   must be at index zero. */
+	const tag_types xpect_key = cdlguide->class_key(idxguide);
 
-  unsigned idx = 0;
-  /* Advance IDX to the first declaration that either is not
-     a definition or that doesn't match the first declaration
-     if no definition is provided.  */
-  while (class_key (idx) == xpect_key)
-    if (++idx == ndecls)
-      return;
+	unsigned idx = 0;
+	/* Advance IDX to the first declaration that either is not
+	   a definition or that doesn't match the first declaration
+	   if no definition is provided. */
+	while (class_key(idx) == xpect_key)
+		if (++idx == ndecls)
+			return;
 
-  /* Save the current function before changing it below.  */
-  tree save_func = current_function_decl;
-  /* Set the function declaration to print in diagnostic context.  */
-  current_function_decl = function (idx);
+	/* Save the current function before changing it below. */
+	tree save_func = current_function_decl;
+	/* Set the function declaration to print in diagnostic context. */
+	current_function_decl = function(idx);
 
-  const char *xmatchkstr = xpect_key == record_type ? "class" : "struct";
-  const char *xpectkstr = xpect_key == record_type ? "struct" : "class";
+	const char *xmatchkstr = xpect_key == record_type ? "class" : "struct";
+	const char *xpectkstr = xpect_key == record_type ? "struct" : "class";
 
-  location_t loc = location (idx);
-  bool key_redundant_p = key_redundant (idx);
-  auto_diagnostic_group d;
-  /* Issue a warning for the first mismatched declaration.
-     Avoid using "%#qT" since the class-key for the same type will
-     be the same regardless of which one was used in the declaraion.  */
-  if (warning_at (loc, OPT_Wmismatched_tags,
-		  "%qT declared with a mismatched class-key %qs",
-		  type_decl, xmatchkstr))
-    {
-      /* Suggest how to avoid the warning for each instance since
-	 the guidance may be different depending on context.  */
-      inform (loc,
-	      (key_redundant_p
-	       ? G_("remove the class-key or replace it with %qs")
-	       : G_("replace the class-key with %qs")),
-	      xpectkstr);
+	location_t loc = location(idx);
+	bool key_redundant_p = key_redundant(idx);
+	auto_diagnostic_group d;
+	/* Issue a warning for the first mismatched declaration.
+	   Avoid using "%#qT" since the class-key for the same type will
+	   be the same regardless of which one was used in the declaraion. */
+	if (warning_at(loc, OPT_Wmismatched_tags, "%qT declared with a mismatched class-key %qs", type_decl, xmatchkstr)) {
+		/* Suggest how to avoid the warning for each instance since
+		   the guidance may be different depending on context. */
+		inform(loc, (key_redundant_p ? G_("remove the class-key or replace it with %qs") : G_("replace the class-key with %qs")), xpectkstr);
 
-      /* Also point to the first declaration or definition that guided
-	 the decision to issue the warning above.  */
-      inform (cdlguide->location (idxguide),
-	      (def_p
-	       ? G_("%qT defined as %qs here")
-	       : G_("%qT first declared as %qs here")),
-	      type_decl, xpectkstr);
-    }
+		/* Also point to the first declaration or definition that guided
+		   the decision to issue the warning above. */
+		inform(cdlguide->location(idxguide), (def_p ? G_("%qT defined as %qs here") : G_("%qT first declared as %qs here")), type_decl, xpectkstr);
+	}
 
-  /* Issue warnings for the remaining inconsistent declarations.  */
-  for (unsigned i = idx + 1; i != ndecls; ++i)
-    {
-      tag_types clskey = class_key (i);
-      /* Skip over the declarations that match either the definition
-	 if one was provided or the first declaration.  */
-      if (clskey == xpect_key)
-	continue;
+	/* Issue warnings for the remaining inconsistent declarations. */
+	for (unsigned i = idx + 1; i != ndecls; ++i) {
+		tag_types clskey = class_key(i);
+		/* Skip over the declarations that match either the definition
+		   if one was provided or the first declaration. */
+		if (clskey == xpect_key)
+			continue;
 
-      loc = location (i);
-      key_redundant_p = key_redundant (i);
-      /* Set the function declaration to print in diagnostic context.  */
-      current_function_decl = function (i);
-      if (warning_at (loc, OPT_Wmismatched_tags,
-		      "%qT declared with a mismatched class-key %qs",
-		      type_decl, xmatchkstr))
-	/* Suggest how to avoid the warning for each instance since
-	   the guidance may be different depending on context.  */
-	inform (loc,
-		(key_redundant_p
-		 ? G_("remove the class-key or replace it with %qs")
-		 : G_("replace the class-key with %qs")),
-		xpectkstr);
-    }
+		loc = location(i);
+		key_redundant_p = key_redundant(i);
+		/* Set the function declaration to print in diagnostic context. */
+		current_function_decl = function(i);
+		if (warning_at(loc, OPT_Wmismatched_tags, "%qT declared with a mismatched class-key %qs", type_decl, xmatchkstr))
+			/* Suggest how to avoid the warning for each instance since
+			   the guidance may be different depending on context. */
+			inform(loc, (key_redundant_p ? G_("remove the class-key or replace it with %qs") : G_("replace the class-key with %qs")), xpectkstr);
+	}
 
-  /* Restore the current function in case it was replaced above.  */
-  current_function_decl = save_func;
+	/* Restore the current function in case it was replaced above. */
+	current_function_decl = save_func;
 }
 
-/* Issues -Wmismatched-tags for all classes.  Called at the end
+/* Issues -Wmismatched-tags for all classes. Called at the end
    of processing a translation unit, after declarations of all class
-   types and their uses have been recorded.  */
+   types and their uses have been recorded. */
 
 void
-class_decl_loc_t::diag_mismatched_tags ()
+class_decl_loc_t::diag_mismatched_tags()
 {
-  /* CLASS2LOC should be empty if both -Wmismatched-tags and
-     -Wredundant-tags are disabled.  */
-  gcc_assert (warn_mismatched_tags
-	      || warn_redundant_tags
-	      || class2loc.is_empty ());
+	/* CLASS2LOC should be empty if both -Wmismatched-tags and
+	   -Wredundant-tags are disabled. */
+	gcc_assert(warn_mismatched_tags || warn_redundant_tags || class2loc.is_empty());
 
-  /* Save the current function before changing on return.  It should
-     be null at this point.  */
-  temp_override<tree> cleanup (current_function_decl);
+	/* Save the current function before changing on return. It should
+	   be null at this point. */
+	temp_override<tree> cleanup(current_function_decl);
 
-  if (warn_mismatched_tags)
-    {
-      /* Iterate over the collected class/struct/template declarations.  */
-      typedef class_to_loc_map_t::iterator iter_t;
-      for (iter_t it = class2loc.begin (); it != class2loc.end (); ++it)
-	{
-	  tree type_decl = (*it).first;
-	  class_decl_loc_t &recloc = (*it).second;
-	  recloc.diag_mismatched_tags (type_decl);
+	if (warn_mismatched_tags) {
+		/* Iterate over the collected class/struct/template declarations. */
+		typedef class_to_loc_map_t::iterator iter_t;
+		for (iter_t it = class2loc.begin(); it != class2loc.end(); ++it) {
+			tree type_decl = (*it).first;
+			class_decl_loc_t &recloc = (*it).second;
+			recloc.diag_mismatched_tags(type_decl);
+		}
 	}
-    }
 
-  class2loc.empty ();
+	class2loc.empty();
 }
 
 /* Issue an error message if DECL is redeclared with different
    access than its original declaration [class.access.spec/3].
    This applies to nested classes, nested class templates and
-   enumerations [class.mem/1].  */
+   enumerations [class.mem/1]. */
 static void
 cp_parser_check_access_in_redeclaration (tree decl, location_t location)
 {
-  if (!decl
-      || (!CLASS_TYPE_P (TREE_TYPE (decl))
-	  && TREE_CODE (TREE_TYPE (decl)) != ENUMERAL_TYPE))
-    return;
+	if (!decl || (!CLASS_TYPE_P (TREE_TYPE (decl)) && TREE_CODE (TREE_TYPE (decl)) != ENUMERAL_TYPE))
+		return;
 
-  if ((TREE_PRIVATE (decl)
-       != (current_access_specifier == access_private_node))
-      || (TREE_PROTECTED (decl)
-	  != (current_access_specifier == access_protected_node)))
-    error_at (location, "%qD redeclared with different access", decl);
+	if ((TREE_PRIVATE (decl) != (current_access_specifier == access_private_node))
+			|| (TREE_PROTECTED (decl) != (current_access_specifier == access_protected_node)))
+		error_at(location, "%qD redeclared with different access", decl);
 }
 
 /* Look for the `template' keyword, as a syntactic disambiguator.

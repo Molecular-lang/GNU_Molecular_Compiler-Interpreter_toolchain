@@ -8,7 +8,7 @@
 #endif
 
   {".cc",  "@c++", 0, 0, 0},
-  {".co",  "@c++", 0, 0, 0},
+  {".co",  "@c++", 0, 0, 0},	// scpel source file extensio
   {".cp",  "@c++", 0, 0, 0},
   {".cxx", "@c++", 0, 0, 0},
   {".cpp", "@c++", 0, 0, 0},
@@ -16,7 +16,7 @@
   {".C",   "@c++", 0, 0, 0},
   {".CO",  "@c++", 0, 0, 0},
   {".CPP", "@c++", 0, 0, 0},
-  {".ho",  "@c++-header", 0, 0, 0},
+  {".ho",  "@c++-header", 0, 0, 0},	// scpel header file extension
   {".H",   "@c++-header", 0, 0, 0},
   {".hpp", "@c++-header", 0, 0, 0},
   {".hp",  "@c++-header", 0, 0, 0},

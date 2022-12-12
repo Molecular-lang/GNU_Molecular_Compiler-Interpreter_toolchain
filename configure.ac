@@ -1379,7 +1379,7 @@ if test "$GCC" = yes; then
   saved_LDFLAGS="$LDFLAGS"
 
   LDFLAGS="$LDFLAGS -static-libstdc++ -static-libgcc"
-  AC_MSG_CHECKING([whether scpel accepts -static-libstdc++ -static-libgcc])
+  AC_MSG_CHECKING([whether c++ accepts -static-libstdc++ -static-libgcc])
   AC_LANG_PUSH(C++)
   AC_LINK_IFELSE([AC_LANG_SOURCE([
 #if (__GNUC__ < 4) || (__GNUC__ == 4 && __GNUC_MINOR__ < 5)
@@ -3592,7 +3592,7 @@ AC_ARG_WITH([build-time-tools],
   [with_build_time_tools=])
 
 NCN_STRICT_CHECK_TARGET_TOOLS(CC_FOR_TARGET, cc spl)
-NCN_STRICT_CHECK_TARGET_TOOLS(CXX_FOR_TARGET, c++ scpel cxx gxx)
+NCN_STRICT_CHECK_TARGET_TOOLS(CXX_FOR_TARGET, c++ spl+ cxx gxx)
 NCN_STRICT_CHECK_TARGET_TOOLS(GCC_FOR_TARGET, gcc, ${CC_FOR_TARGET})
 NCN_STRICT_CHECK_TARGET_TOOLS(GFORTRAN_FOR_TARGET, gfortran)
 NCN_STRICT_CHECK_TARGET_TOOLS(GOC_FOR_TARGET, gccgo)

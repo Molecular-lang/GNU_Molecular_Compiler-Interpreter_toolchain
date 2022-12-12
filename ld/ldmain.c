@@ -79,42 +79,20 @@ ld_config_type config;
 
 sort_type sort_section;
 
-static const char *get_sysroot
-  (int, char **);
-static char *get_emulation
-  (int, char **);
-static bool add_archive_element
-  (struct bfd_link_info *, bfd *, const char *, bfd **);
-static void multiple_definition
-  (struct bfd_link_info *, struct bfd_link_hash_entry *,
-   bfd *, asection *, bfd_vma);
-static void multiple_common
-  (struct bfd_link_info *, struct bfd_link_hash_entry *,
-   bfd *, enum bfd_link_hash_type, bfd_vma);
-static void add_to_set
-  (struct bfd_link_info *, struct bfd_link_hash_entry *,
-   bfd_reloc_code_real_type, bfd *, asection *, bfd_vma);
-static void constructor_callback
-  (struct bfd_link_info *, bool, const char *, bfd *,
-   asection *, bfd_vma);
-static void warning_callback
-  (struct bfd_link_info *, const char *, const char *, bfd *,
-   asection *, bfd_vma);
-static void warning_find_reloc
-  (bfd *, asection *, void *);
-static void undefined_symbol
-  (struct bfd_link_info *, const char *, bfd *, asection *, bfd_vma,
-   bool);
-static void reloc_overflow
-  (struct bfd_link_info *, struct bfd_link_hash_entry *, const char *,
-   const char *, bfd_vma, bfd *, asection *, bfd_vma);
-static void reloc_dangerous
-  (struct bfd_link_info *, const char *, bfd *, asection *, bfd_vma);
-static void unattached_reloc
-  (struct bfd_link_info *, const char *, bfd *, asection *, bfd_vma);
-static bool notice
-  (struct bfd_link_info *, struct bfd_link_hash_entry *,
-   struct bfd_link_hash_entry *, bfd *, asection *, bfd_vma, flagword);
+static const char *get_sysroot(int, char **);
+static char *get_emulation(int, char **);
+static bool add_archive_element(struct bfd_link_info *, bfd *, const char *, bfd **);
+static void multiple_definition(struct bfd_link_info *, struct bfd_link_hash_entry *, bfd *, asection *, bfd_vma);
+static void multiple_common(struct bfd_link_info *, struct bfd_link_hash_entry *, bfd *, enum bfd_link_hash_type, bfd_vma);
+static void add_to_set(struct bfd_link_info *, struct bfd_link_hash_entry *, bfd_reloc_code_real_type, bfd *, asection *, bfd_vma);
+static void constructor_callback(struct bfd_link_info *, bool, const char *, bfd *, asection *, bfd_vma);
+static void warning_callback(struct bfd_link_info *, const char *, const char *, bfd *, asection *, bfd_vma);
+static void warning_find_reloc(bfd *, asection *, void *);
+static void undefined_symbol(struct bfd_link_info *, const char *, bfd *, asection *, bfd_vma, bool);
+static void reloc_overflow(struct bfd_link_info *, struct bfd_link_hash_entry *, const char *, const char *, bfd_vma, bfd *, asection *, bfd_vma);
+static void reloc_dangerous(struct bfd_link_info *, const char *, bfd *, asection *, bfd_vma);
+static void unattached_reloc(struct bfd_link_info *, const char *, bfd *, asection *, bfd_vma);
+static bool notice(struct bfd_link_info *, struct bfd_link_hash_entry *, struct bfd_link_hash_entry *, bfd *, asection *, bfd_vma, flagword);
 
 static struct bfd_link_callbacks link_callbacks =
 {
@@ -143,9 +121,8 @@ static bfd_assert_handler_type default_bfd_assert_handler;
 static bfd_error_handler_type default_bfd_error_handler;
 
 struct bfd_link_info link_info;
-
-struct dependency_file
-{
+
+struct dependency_file {
   struct dependency_file *next;
   char *name;
 };

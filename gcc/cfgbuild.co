@@ -101,7 +101,6 @@ control_flow_insn_p (const rtx_insn *insn)
   return can_throw_internal (insn);
 }
 
-
 /* Create an edge between two basic blocks.  FLAGS are auxiliary information
    about the edge that is accumulated between calls.  */
 
@@ -362,7 +361,7 @@ make_edges (basic_block min, basic_block max, int update_p)
   if (edge_cache)
     sbitmap_free (edge_cache);
 }
-
+
 static void
 mark_tablejump_edge (rtx label)
 {
