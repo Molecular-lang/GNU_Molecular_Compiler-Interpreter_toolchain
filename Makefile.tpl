@@ -5,7 +5,23 @@ in
 # Makefile.in is generated from Makefile.tpl by 'autogen Makefile.def'.
 #
 # Makefile for directory with subdirs to build.
-# Please review $(srcdir/SPL-README) for Licencing info.
+#   Copyright (C) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
+#   1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
+#   Free Software Foundation
+#
+# This file is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; see the file COPYING3.  If not see
+# <http://www.gnu.org/licenses/>.
 #
 
 # First, test for a proper version of make, but only where one is required.
@@ -150,6 +166,8 @@ BUILD_EXPORTS = \
 	GOCFLAGS="$(GOCFLAGS_FOR_BUILD)"; export GOCFLAGS; \
 	GDC="$(GDC_FOR_BUILD)"; export GDC; \
 	GDCFLAGS="$(GDCFLAGS_FOR_BUILD)"; export GDCFLAGS; \
+	GM2="$(GM2_FOR_BUILD)"; export GM2; \
+	GM2FLAGS="$(GM2FLAGS_FOR_BUILD)"; export GM2FLAGS; \
 	DLLTOOL="$(DLLTOOL_FOR_BUILD)"; export DLLTOOL; \
 	DSYMUTIL="$(DSYMUTIL_FOR_BUILD)"; export DSYMUTIL; \
 	LD="$(LD_FOR_BUILD)"; export LD; \
@@ -188,6 +206,7 @@ HOST_EXPORTS = \
 	GFORTRAN="$(GFORTRAN)"; export GFORTRAN; \
 	GOC="$(GOC)"; export GOC; \
 	GDC="$(GDC)"; export GDC; \
+	GM2="$(GM2)"; export GM2; \
 	AR="$(AR)"; export AR; \
 	AS="$(AS)"; export AS; \
 	CC_FOR_BUILD="$(CC_FOR_BUILD)"; export CC_FOR_BUILD; \
@@ -209,7 +228,7 @@ HOST_EXPORTS = \
 	AR_FOR_TARGET="$(AR_FOR_TARGET)"; export AR_FOR_TARGET; \
 	AS_FOR_TARGET="$(AS_FOR_TARGET)"; export AS_FOR_TARGET; \
 	DSYMUTIL_FOR_TARGET="$(DSYMUTIL_FOR_TARGET)"; export DSYMUTIL_FOR_TARGET; \
-	GCC_FOR_TARGET="$(GCC_FOR_TARGET)"; export GCC_FOR_TARGET; \
+	GCC_FOR_TARGET="$(GCC_FOR_TARGET) $$TFLAGS"; export GCC_FOR_TARGET; \
 	LD_FOR_TARGET="$(LD_FOR_TARGET)"; export LD_FOR_TARGET; \
 	NM_FOR_TARGET="$(NM_FOR_TARGET)"; export NM_FOR_TARGET; \
 	OBJDUMP_FOR_TARGET="$(OBJDUMP_FOR_TARGET)"; export OBJDUMP_FOR_TARGET; \
@@ -223,8 +242,6 @@ HOST_EXPORTS = \
 	GMPINC="$(HOST_GMPINC)"; export GMPINC; \
 	ISLLIBS="$(HOST_ISLLIBS)"; export ISLLIBS; \
 	ISLINC="$(HOST_ISLINC)"; export ISLINC; \
-	LIBELFLIBS="$(HOST_LIBELFLIBS)"; export LIBELFLIBS; \
-	LIBELFINC="$(HOST_LIBELFINC)"; export LIBELFINC; \
 	XGCC_FLAGS_FOR_TARGET="$(XGCC_FLAGS_FOR_TARGET)"; export XGCC_FLAGS_FOR_TARGET; \
 @if gcc-bootstrap
 	$(RPATH_ENVVAR)=`echo "$(TARGET_LIB_PATH)$$$(RPATH_ENVVAR)" | sed 's,::*,:,g;s,^:*,,;s,:*$$,,'`; export $(RPATH_ENVVAR); \
@@ -293,6 +310,7 @@ BASE_TARGET_EXPORTS = \
 	GFORTRAN="$(GFORTRAN_FOR_TARGET) $(XGCC_FLAGS_FOR_TARGET) $$TFLAGS"; export GFORTRAN; \
 	GOC="$(GOC_FOR_TARGET) $(XGCC_FLAGS_FOR_TARGET) $$TFLAGS"; export GOC; \
 	GDC="$(GDC_FOR_TARGET) $(XGCC_FLAGS_FOR_TARGET) $$TFLAGS"; export GDC; \
+	GM2="$(GM2_FOR_TARGET) $(XGCC_FLAGS_FOR_TARGET) $$TFLAGS"; export GM2; \
 	DLLTOOL="$(DLLTOOL_FOR_TARGET)"; export DLLTOOL; \
 	DSYMUTIL="$(DSYMUTIL_FOR_TARGET)"; export DSYMUTIL; \
 	LD="$(COMPILER_LD_FOR_TARGET)"; export LD; \
@@ -330,10 +348,6 @@ HOST_GMPINC = @gmpinc@
 HOST_ISLLIBS = @isllibs@
 HOST_ISLINC = @islinc@
 
-# Where to find libelf
-HOST_LIBELFLIBS = @libelflibs@
-HOST_LIBELFINC = @libelfinc@
-
 # ----------------------------------------------
 # Programs producing files for the BUILD machine
 # ----------------------------------------------
@@ -363,6 +377,7 @@ DSYMUTIL_FOR_BUILD = @DSYMUTIL_FOR_BUILD@
 GFORTRAN_FOR_BUILD = @GFORTRAN_FOR_BUILD@
 GOC_FOR_BUILD = @GOC_FOR_BUILD@
 GDC_FOR_BUILD = @GDC_FOR_BUILD@
+GM2_FOR_BUILD = @GM2_FOR_BUILD@
 LDFLAGS_FOR_BUILD = @LDFLAGS_FOR_BUILD@
 LD_FOR_BUILD = @LD_FOR_BUILD@
 NM_FOR_BUILD = @NM_FOR_BUILD@
@@ -433,6 +448,7 @@ CXXFLAGS = @CXXFLAGS@
 LIBCXXFLAGS = $(CXXFLAGS) -fno-implicit-templates
 GOCFLAGS = $(CFLAGS)
 GDCFLAGS = $(CFLAGS)
+GM2FLAGS = $(CFLAGS)
 
 # Pass additional PGO and LTO compiler options to the PGO build.
 BUILD_CFLAGS = $(PGO_BUILD_CFLAGS) $(PGO_BUILD_LTO_CFLAGS)
@@ -568,6 +584,7 @@ RAW_CXX_FOR_TARGET=$(STAGE_CC_WRAPPER) @RAW_CXX_FOR_TARGET@
 GFORTRAN_FOR_TARGET=$(STAGE_CC_WRAPPER) @GFORTRAN_FOR_TARGET@
 GOC_FOR_TARGET=$(STAGE_CC_WRAPPER) @GOC_FOR_TARGET@
 GDC_FOR_TARGET=$(STAGE_CC_WRAPPER) @GDC_FOR_TARGET@
+GM2_FOR_TARGET=$(STAGE_CC_WRAPPER) @GM2_FOR_TARGET@
 DLLTOOL_FOR_TARGET=@DLLTOOL_FOR_TARGET@
 DSYMUTIL_FOR_TARGET=@DSYMUTIL_FOR_TARGET@
 LD_FOR_TARGET=@LD_FOR_TARGET@
@@ -593,6 +610,7 @@ CXXFLAGS_FOR_TARGET = @CXXFLAGS_FOR_TARGET@
 LIBCFLAGS_FOR_TARGET = $(CFLAGS_FOR_TARGET)
 LIBCXXFLAGS_FOR_TARGET = $(CXXFLAGS_FOR_TARGET) -fno-implicit-templates
 LDFLAGS_FOR_TARGET = @LDFLAGS_FOR_TARGET@
+GM2FLAGS_FOR_TARGET = -O2 -g
 GOCFLAGS_FOR_TARGET = -O2 -g
 GDCFLAGS_FOR_TARGET = -O2 -g
 
@@ -699,6 +717,7 @@ EXTRA_HOST_FLAGS = \
 	'GFORTRAN=$(GFORTRAN)' \
 	'GOC=$(GOC)' \
 	'GDC=$(GDC)' \
+	'GM2=$(GM2)' \
 	'LD=$(LD)' \
 	'LIPO=$(LIPO)' \
 	'NM=$(NM)' \
@@ -725,6 +744,7 @@ POSTSTAGE1_FLAGS_TO_PASS = \
 	CC="$${CC}" CC_FOR_BUILD="$${CC_FOR_BUILD}" \
 	CXX="$${CXX}" CXX_FOR_BUILD="$${CXX_FOR_BUILD}" \
 	GDC="$${GDC}" GDC_FOR_BUILD="$${GDC_FOR_BUILD}" \
+	GM2="$${GM2}" GM2_FOR_BUILD="$${GM2_FOR_BUILD}" \
 	GNATBIND="$${GNATBIND}" \
 	LDFLAGS="$${LDFLAGS}" \
 	HOST_LIBS="$${HOST_LIBS}" \
@@ -760,6 +780,8 @@ EXTRA_TARGET_FLAGS = \
 	'GOCFLAGS=$$(GOCFLAGS_FOR_TARGET)' \
 	'GDC=$$(GDC_FOR_TARGET) $$(XGCC_FLAGS_FOR_TARGET) $$(TFLAGS)' \
 	'GDCFLAGS=$$(GDCFLAGS_FOR_TARGET)' \
+	'GM2=$$(GM2_FOR_TARGET) $$(XGCC_FLAGS_FOR_TARGET) $$(TFLAGS)' \
+	'GM2FLAGS=$$(GM2FLAGS_FOR_TARGET)' \
 	'LD=$(COMPILER_LD_FOR_TARGET)' \
 	'LDFLAGS=$$(LDFLAGS_FOR_TARGET)' \
 	'LIBCFLAGS=$$(LIBCFLAGS_FOR_TARGET)' \
@@ -785,7 +807,8 @@ TARGET_FLAGS_TO_PASS = $(BASE_FLAGS_TO_PASS) $(EXTRA_TARGET_FLAGS)
 # The BUILD_* variables are a special case, which are used for the gcc
 # cross-building scheme.
 EXTRA_GCC_FLAGS = \
-	"GCC_FOR_TARGET=$(GCC_FOR_TARGET)" \
+	"GCC_FOR_TARGET=$(GCC_FOR_TARGET) $$TFLAGS" \
+	"GM2_FOR_TARGET=$(GM2_FOR_TARGET) $$TFLAGS" \
 	"`echo 'STMP_FIXPROTO=$(STMP_FIXPROTO)' | sed -e s'/[^=][^=]*=$$/XFOO=/'`" \
 	"`echo 'LIMITS_H_TEST=$(LIMITS_H_TEST)' | sed -e s'/[^=][^=]*=$$/XFOO=/'`"
 
@@ -931,6 +954,10 @@ local-distclean:
 	-if [ "$(HOST_SUBDIR)" != "." ]; then \
 	  rm -rf $(HOST_SUBDIR); \
 	else true; fi
+	-rm -f texinfo/po/Makefile texinfo/po/Makefile.in texinfo/info/Makefile
+	-rm -f texinfo/doc/Makefile texinfo/po/POTFILES
+	-rmdir texinfo/doc texinfo/info texinfo/intl texinfo/lib 2>/dev/null
+	-rmdir texinfo/makeinfo texinfo/po texinfo/util 2>/dev/null
 	-rmdir c++tools fastjar gcc gnattools gotools 2>/dev/null
 	-rmdir libcc1 libiberty texinfo zlib 2>/dev/null
 	-find . -name config.cache -exec rm -f {} \; \; 2>/dev/null

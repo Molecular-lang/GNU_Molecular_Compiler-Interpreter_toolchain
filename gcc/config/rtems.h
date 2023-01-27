@@ -1,5 +1,26 @@
 /* Configuration common to all targets running RTEMS. 
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2000-2023 Free Software Foundation, Inc.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published
+   by the Free Software Foundation; either version 3, or (at your
+   option) any later version.
+
+   GCC is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+   License for more details.
+
+   Under Section 7 of GPL version 3, you are granted additional
+   permissions described in the GCC Runtime Library Exception, version
+   3.1, as published by the Free Software Foundation.
+
+   You should have received a copy of the GNU General Public License and
+   a copy of the GCC Runtime Library Exception along with this program;
+   see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #ifndef RTEMS_STARTFILE_SPEC
 #define RTEMS_STARTFILE_SPEC "crti%O%s crtbegin%O%s"
@@ -35,3 +56,7 @@
 /* Prefer int for int32_t (see stdint-newlib.h).  */
 #undef STDINT_LONG32
 #define STDINT_LONG32 (INT_TYPE_SIZE != 32 && LONG_TYPE_SIZE == 32)
+
+/* Default to local-exec TLS model.  */
+#undef OS_CC1_SPEC
+#define OS_CC1_SPEC " %{!ftls-model=*:-ftls-model=local-exec}"

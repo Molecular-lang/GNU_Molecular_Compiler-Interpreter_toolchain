@@ -1,5 +1,21 @@
 /* Definitions for code generation pass of GNU compiler.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_EXPR_H
 #define GCC_EXPR_H
@@ -53,7 +69,16 @@ extern void convert_move (rtx, rtx, int);
 extern rtx convert_to_mode (machine_mode, rtx, int);
 
 /* Convert an rtx to MODE from OLDMODE and return the result.  */
-extern rtx convert_modes (machine_mode, machine_mode, rtx, int);
+extern rtx convert_modes (machine_mode mode, machine_mode oldmode,
+			  rtx x, int unsignedp);
+
+/* Variant of convert_modes for ABI parameter passing/return.  */
+extern rtx convert_float_to_wider_int (machine_mode mode, machine_mode fmode,
+				       rtx x);
+
+/* Variant of convert_modes for ABI parameter passing/return.  */
+extern rtx convert_wider_int_to_float (machine_mode mode, machine_mode imode,
+				       rtx x);
 
 /* Expand a call to memcpy or memmove or memcmp, and return the result.  */
 extern rtx emit_block_op_via_libcall (enum built_in_function, rtx, rtx, rtx,
@@ -237,7 +262,7 @@ extern rtx_insn *emit_move_insn_1 (rtx, rtx);
 extern rtx_insn *emit_move_complex_push (machine_mode, rtx, rtx);
 extern rtx_insn *emit_move_complex_parts (rtx, rtx);
 extern rtx read_complex_part (rtx, bool);
-extern void write_complex_part (rtx, rtx, bool);
+extern void write_complex_part (rtx, rtx, bool, bool);
 extern rtx read_complex_part (rtx, bool);
 extern rtx emit_move_resolve_push (machine_mode, rtx);
 

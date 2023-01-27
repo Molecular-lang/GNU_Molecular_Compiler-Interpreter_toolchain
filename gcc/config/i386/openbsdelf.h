@@ -1,6 +1,22 @@
 /* Configuration for an OpenBSD i386 target.
    
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2005-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #define TARGET_OS_CPP_BUILTINS()		\
   do						\
@@ -9,9 +25,9 @@
     }						\
   while (0)
 
-#undef DBX_REGISTER_NUMBER
-#define DBX_REGISTER_NUMBER(n) \
-  (TARGET_64BIT ? dbx64_register_map[n] : svr4_dbx_register_map[n])
+#undef DEBUGGER_REGNO
+#define DEBUGGER_REGNO(n) \
+  (TARGET_64BIT ? debugger64_register_map[n] : svr4_debugger_register_map[n])
 
 /* This must agree with <machine/_types.h>.  */
 #undef SIZE_TYPE

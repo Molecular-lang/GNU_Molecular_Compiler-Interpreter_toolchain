@@ -1,4 +1,25 @@
-/* Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Copyright (C) 2002-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 /*
  * ISO C Standard:  5.2.4.2.2  Characteristics of floating types <float.h>
@@ -227,8 +248,7 @@
 #define DBL_NORM_MAX	__DBL_NORM_MAX__
 #define LDBL_NORM_MAX	__LDBL_NORM_MAX__
 
-/* Whether each type matches an IEC 60559 format (1 for format, 2 for
-   format and operations).  */
+/* Whether each type matches an IEC 60559 format.  */
 #undef FLT_IS_IEC_60559
 #undef DBL_IS_IEC_60559
 #undef LDBL_IS_IEC_60559
@@ -236,9 +256,11 @@
 #define DBL_IS_IEC_60559	__DBL_IS_IEC_60559__
 #define LDBL_IS_IEC_60559	__LDBL_IS_IEC_60559__
 
-/* Infinity in type float, or overflow if infinity not supported.  */
+/* Infinity in type float; not defined if infinity not supported.  */
+#if __FLT_HAS_INFINITY__
 #undef INFINITY
 #define INFINITY	(__builtin_inff ())
+#endif
 
 /* Quiet NaN, if supported for float.  */
 #if __FLT_HAS_QUIET_NAN__
@@ -601,5 +623,9 @@
 #endif /* C2X */
 
 #endif /* __DEC32_MANT_DIG__ */
+
+#if defined __STDC_VERSION__ && __STDC_VERSION__ > 201710L
+#define __STDC_VERSION_FLOAT_H__	202311L
+#endif
 
 #endif /* _FLOAT_H___ */

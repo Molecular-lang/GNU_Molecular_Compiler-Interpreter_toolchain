@@ -1,5 +1,27 @@
 /* Definitions for Intel 386 running DragonFly with ELF format
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2014-2023 Free Software Foundation, Inc.
+   Contributed by John Marino <gnugcc@marino.st>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 
 /* Override the default comment-starter of "/".  */
@@ -12,9 +34,9 @@
 #undef  ASM_APP_OFF
 #define ASM_APP_OFF "#NO_APP\n"
 
-#undef  DBX_REGISTER_NUMBER
-#define DBX_REGISTER_NUMBER(n) \
-  (TARGET_64BIT ? dbx64_register_map[n] : svr4_dbx_register_map[n])
+#undef  DEBUGGER_REGNO
+#define DEBUGGER_REGNO(n) \
+  (TARGET_64BIT ? debugger64_register_map[n] : svr4_debugger_register_map[n])
 
 #undef  NO_PROFILE_COUNTERS
 #define NO_PROFILE_COUNTERS	1

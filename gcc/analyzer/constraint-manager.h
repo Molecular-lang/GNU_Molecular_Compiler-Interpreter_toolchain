@@ -1,5 +1,22 @@
 /* Tracking equivalence classes and constraints at a point on an execution path.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_ANALYZER_CONSTRAINT_MANAGER_H
 #define GCC_ANALYZER_CONSTRAINT_MANAGER_H
@@ -120,6 +137,9 @@ public:
   bool empty_p () const { return m_ranges.length () == 0; }
 
   static int cmp (const bounded_ranges *a, const bounded_ranges *b);
+
+  unsigned get_count () const { return m_ranges.length (); }
+  const bounded_range &get_range (unsigned idx) const { return m_ranges[idx]; }
 
 private:
   void canonicalize ();
@@ -466,6 +486,9 @@ public:
   void validate () const;
 
   bounded_ranges_manager *get_range_manager () const;
+
+  bool replay_call_summary (call_summary_replay &r,
+			    const constraint_manager &summary);
 
   auto_delete_vec<equiv_class> m_equiv_classes;
   auto_vec<constraint> m_constraints;

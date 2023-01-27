@@ -1,6 +1,22 @@
 /* Common definitions for Intel 386 and AMD x86-64 systems using
-   GNU userspace.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   GNU userspace.  Copyright (C) 2012-2023 Free Software Foundation, Inc.
+   Contributed by Ilya Enkovich.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* The svr4 ABI for the i386 says that records and unions are returned
    in memory.  In the 64bit compilation we will turn this flag off in
@@ -31,7 +47,7 @@
 
 /* Similar to standard GNU userspace, but adding -ffast-math support.  */
 #define GNU_USER_TARGET_MATHFILE_SPEC \
-  "%{Ofast|ffast-math|funsafe-math-optimizations:crtfastmath.o%s} \
+  "%{mdaz-ftz:crtfastmath.o%s;Ofast|ffast-math|funsafe-math-optimizations:%{!shared:%{!mno-daz-ftz:crtfastmath.o%s}}} \
    %{mpc32:crtprec32.o%s} \
    %{mpc64:crtprec64.o%s} \
    %{mpc80:crtprec80.o%s}"

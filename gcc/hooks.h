@@ -1,5 +1,23 @@
 /* General-purpose hooks.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2002-2023 Free Software Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 3, or (at your option) any
+   later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.
+
+   In other words, you are welcome to use, share and improve this program.
+   You are forbidden to forbid anyone else to use, share and improve
+   what you give them.   Help stamp out software-hoarding!  */
 
 #ifndef GCC_HOOKS_H
 #define GCC_HOOKS_H
@@ -17,10 +35,13 @@ extern bool hook_bool_mode_const_rtx_false (machine_mode, const_rtx);
 extern bool hook_bool_mode_const_rtx_true (machine_mode, const_rtx);
 extern bool hook_bool_mode_rtx_false (machine_mode, rtx);
 extern bool hook_bool_mode_rtx_true (machine_mode, rtx);
-extern bool hook_bool_const_rtx_insn_const_rtx_insn_true (const rtx_insn *, const rtx_insn *);
-extern bool hook_bool_mode_uhwi_false (machine_mode, unsigned HOST_WIDE_INT);
+extern bool hook_bool_const_rtx_insn_const_rtx_insn_true (const rtx_insn *,
+							  const rtx_insn *);
+extern bool hook_bool_mode_uhwi_false (machine_mode,
+				       unsigned HOST_WIDE_INT);
 extern bool hook_bool_puint64_puint64_true (poly_uint64, poly_uint64);
-extern bool hook_bool_uint_uint_mode_false (unsigned int, unsigned int, machine_mode);
+extern bool hook_bool_uint_uint_mode_false (unsigned int, unsigned int,
+					    machine_mode);
 extern bool hook_bool_uint_mode_true (unsigned int, machine_mode);
 extern bool hook_bool_tree_false (tree);
 extern bool hook_bool_const_tree_false (const_tree);

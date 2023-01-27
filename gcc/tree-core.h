@@ -1,5 +1,21 @@
 /* Core data structures for the 'tree' type.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1989-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_TREE_CORE_H
 #define GCC_TREE_CORE_H
@@ -17,7 +33,7 @@ struct function;
 struct real_value;
 struct fixed_value;
 struct ptr_info_def;
-struct range_info_def;
+struct irange_storage_slot;
 struct die_struct;
 
 
@@ -328,6 +344,9 @@ enum omp_clause_code {
 
   /* OpenMP clause: has_device_addr (variable-list).  */
   OMP_CLAUSE_HAS_DEVICE_ADDR,
+
+  /* OpenMP clause: doacross ({source,sink}:vec).  */
+  OMP_CLAUSE_DOACROSS,
 
   /* Internal structure to hold OpenACC cache directive's variable-list.
      #pragma acc cache (variable-list).  */
@@ -646,6 +665,9 @@ enum tree_index {
   TI_DOUBLE_TYPE,
   TI_LONG_DOUBLE_TYPE,
 
+  /* __bf16 type if supported (used in C++ as std::bfloat16_t).  */
+  TI_BFLOAT16_TYPE,
+
   /* The _FloatN and _FloatNx types must be consecutive, and in the
      same sequence as the corresponding complex types, which must also
      be consecutive; _FloatN must come before _FloatNx; the order must
@@ -670,6 +692,10 @@ enum tree_index {
 #define NUM_FLOATN_NX_TYPES (TI_FLOATN_NX_TYPE_LAST		\
 			     - TI_FLOATN_NX_TYPE_FIRST		\
 			     + 1)
+
+  /* Type used by certain backends for __float128, which in C++ should be
+     distinct type from _Float128 for backwards compatibility reasons.  */
+  TI_FLOAT128T_TYPE,
 
   /* Put the complex types after their component types, so that in (sequential)
      tree streaming we can assert that their component types have already been
@@ -832,14 +858,6 @@ enum integer_type_kind {
   itk_unsigned_intN_3,
 
   itk_none
-};
-
-/* An enumeration of Scpel fixed range datatypes */
-enum fixed_range_type_kind {
-	frtk_byte,
-	frtk_word,
-	frtk_dword,
-	frtk_qword
 };
 
 /* A pointer-to-function member type looks like:
@@ -1186,9 +1204,6 @@ struct GTY(()) tree_base {
        TRANSACTION_EXPR_OUTER in
 	   TRANSACTION_EXPR
 
-       SSA_NAME_ANTI_RANGE_P in
-	   SSA_NAME
-
        MUST_TAIL_CALL in
 	   CALL_EXPR
 
@@ -1520,10 +1535,16 @@ enum omp_clause_depend_kind
   OMP_CLAUSE_DEPEND_INOUT,
   OMP_CLAUSE_DEPEND_MUTEXINOUTSET,
   OMP_CLAUSE_DEPEND_INOUTSET,
-  OMP_CLAUSE_DEPEND_SOURCE,
-  OMP_CLAUSE_DEPEND_SINK,
   OMP_CLAUSE_DEPEND_DEPOBJ,
+  OMP_CLAUSE_DEPEND_INVALID,
   OMP_CLAUSE_DEPEND_LAST
+};
+
+enum omp_clause_doacross_kind
+{
+  OMP_CLAUSE_DOACROSS_SOURCE,
+  OMP_CLAUSE_DOACROSS_SINK,
+  OMP_CLAUSE_DOACROSS_LAST
 };
 
 enum omp_clause_proc_bind_kind
@@ -1584,13 +1605,17 @@ struct GTY(()) tree_ssa_name {
 
   /* Value range information.  */
   union ssa_name_info_type {
+    /* Ranges for integers.  */
+    struct GTY ((tag ("0"))) irange_storage_slot *irange_info;
+    /* Ranges for floating point numbers.  */
+    struct GTY ((tag ("1"))) frange_storage_slot *frange_info;
     /* Pointer attributes used for alias analysis.  */
-    struct GTY ((tag ("0"))) ptr_info_def *ptr_info;
-    /* Value range attributes used for zero/sign extension elimination.  */
-    struct GTY ((tag ("1"))) range_info_def *range_info;
+    struct GTY ((tag ("2"))) ptr_info_def *ptr_info;
+    /* This holds any range info supported by ranger (except ptr_info
+       above) and is managed by vrange_storage.  */
+    void * GTY ((skip)) range_info;
   } GTY ((desc ("%1.typed.type ?" \
-		"!POINTER_TYPE_P (TREE_TYPE ((tree)&%1)) : 2"))) info;
-
+		"(POINTER_TYPE_P (TREE_TYPE ((tree)&%1)) ? 2 : SCALAR_FLOAT_TYPE_P (TREE_TYPE ((tree)&%1))) : 3"))) info;
   /* Immediate uses list for this SSA_NAME.  */
   struct ssa_use_operand_t imm_uses;
 };
@@ -1611,6 +1636,7 @@ struct GTY(()) tree_omp_clause {
     enum omp_clause_default_kind   default_kind;
     enum omp_clause_schedule_kind  schedule_kind;
     enum omp_clause_depend_kind    depend_kind;
+    enum omp_clause_doacross_kind  doacross_kind;
     /* See include/gomp-constants.h for enum gomp_map_kind's values.  */
     unsigned int		   map_kind;
     enum omp_clause_proc_bind_kind proc_bind_kind;
@@ -1691,7 +1717,8 @@ struct GTY(()) tree_type_common {
   unsigned typeless_storage : 1;
   unsigned empty_flag : 1;
   unsigned indivisible_p : 1;
-  unsigned spare : 16;
+  unsigned no_named_args_stdarg_p : 1;
+  unsigned spare : 15;
 
   alias_set_type alias_set;
   tree pointer_to;
@@ -1804,7 +1831,10 @@ struct GTY(()) tree_decl_common {
      TYPE_WARN_IF_NOT_ALIGN.  */
   unsigned int warn_if_not_align : 6;
 
-  /* 14 bits unused.  */
+  /* In FIELD_DECL, this is DECL_NOT_FLEXARRAY.  */
+  unsigned int decl_not_flexarray : 1;
+
+  /* 13 bits unused.  */
 
   /* UID for points-to sets, stable over copying from inlining.  */
   unsigned int pt_uid;
@@ -2248,69 +2278,88 @@ struct floatn_type_info {
 };
 
 
-/* Global variables */
-/* Matrix describing the structures contained in a given tree code. */
+/*---------------------------------------------------------------------------
+                                Global variables
+---------------------------------------------------------------------------*/
+/* Matrix describing the structures contained in a given tree code.  */
 extern bool tree_contains_struct[MAX_TREE_CODES][64];
 
-/* Class of tree given its code. */
-extern const enum tree_code_class tree_code_type[];
+#define DEFTREECODE(SYM, NAME, TYPE, LENGTH) TYPE,
+#define END_OF_BASE_TREE_CODES tcc_exceptional,
+
+
+/* Class of tree given its code.  */
+constexpr enum tree_code_class tree_code_type[] = {
+#include "all-tree.def"
+};
+
+#undef DEFTREECODE
+#undef END_OF_BASE_TREE_CODES
 
 /* Each tree code class has an associated string representation.
-   These must correspond to the tree_code_class entries. */
+   These must correspond to the tree_code_class entries.  */
 extern const char *const tree_code_class_strings[];
 
-/* Number of argument-words in each kind of tree-node. */
-extern const unsigned char tree_code_length[];
+/* Number of argument-words in each kind of tree-node.  */
 
-/* Vector of all alias pairs for global symbols. */
+#define DEFTREECODE(SYM, NAME, TYPE, LENGTH) LENGTH,
+#define END_OF_BASE_TREE_CODES 0,
+constexpr unsigned char tree_code_length[] = {
+#include "all-tree.def"
+};
+
+#undef DEFTREECODE
+#undef END_OF_BASE_TREE_CODES
+
+/* Vector of all alias pairs for global symbols.  */
 extern GTY(()) vec<alias_pair, va_gc> *alias_pairs;
 
-/* Names of all the built_in classes. */
+/* Names of all the built_in classes.  */
 extern const char *const built_in_class_names[BUILT_IN_LAST];
 
-/* Names of all the built_in functions. */
+/* Names of all the built_in functions.  */
 extern const char * built_in_names[(int) END_BUILTINS];
 
-/* Number of operands and names for each OMP_CLAUSE node. */
+/* Number of operands and names for each OMP_CLAUSE node.  */
 extern unsigned const char omp_clause_num_ops[];
 extern const char * const omp_clause_code_name[];
-extern const char *user_omp_clause_code_name(tree, bool);
+extern const char *user_omp_clause_code_name (tree, bool);
 
-/* A vector of all translation-units. */
+/* A vector of all translation-units.  */
 extern GTY (()) vec<tree, va_gc> *all_translation_units;
 
-/* Vector of standard trees used by the C compiler. */
+/* Vector of standard trees used by the C compiler.  */
 extern GTY(()) tree global_trees[TI_MAX];
 
-/* The standard C integer types. Use integer_type_kind to index into
-   this array. */
+/* The standard C integer types.  Use integer_type_kind to index into
+   this array.  */
 extern GTY(()) tree integer_types[itk_none];
 
-/* Types used to represent sizes. */
+/* Types used to represent sizes.  */
 extern GTY(()) tree sizetype_tab[(int) stk_type_kind_last];
 
-/* Arrays for keeping track of tree node statistics. */
+/* Arrays for keeping track of tree node statistics.  */
 extern uint64_t tree_node_counts[];
 extern uint64_t tree_node_sizes[];
 
 /* True if we are in gimple form and the actions of the folders need to
-   be restricted. False if we are not in gimple form and folding is not
-   restricted to creating gimple expressions. */
+   be restricted.  False if we are not in gimple form and folding is not
+   restricted to creating gimple expressions.  */
 extern bool in_gimple_form;
 
-/* Functional interface to the builtin functions. */
+/* Functional interface to the builtin functions.  */
 extern GTY(()) builtin_info_type builtin_info[(int)END_BUILTINS];
 
-/* If nonzero, an upper limit on alignment of structure fields, in bits, */
+/* If nonzero, an upper limit on alignment of structure fields, in bits,  */
 extern unsigned int maximum_field_alignment;
 
-/* Points to the FUNCTION_DECL of the function whose body we are reading. */
+/* Points to the FUNCTION_DECL of the function whose body we are reading.  */
 extern GTY(()) tree current_function_decl;
 
-/* Nonzero means a FUNC_BEGIN label was emitted. */
+/* Nonzero means a FUNC_BEGIN label was emitted.  */
 extern GTY(()) const char * current_function_func_begin_label;
 
-/* Information about the _FloatN and _FloatNx types. */
+/* Information about the _FloatN and _FloatNx types.  */
 extern const floatn_type_info floatn_nx_types[NUM_FLOATN_NX_TYPES];
 
 #endif  // GCC_TREE_CORE_H

@@ -1,7 +1,23 @@
 /* Utilities to execute a program in a subprocess (possibly linked by pipes
    with other subprocesses), and wait for it.  Generic Unix version
    (also used for UWIN and VMS).
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1996-2023 Free Software Foundation, Inc.
+
+This file is part of the libiberty library.
+Libiberty is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
+
+Libiberty is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with libiberty; see the file COPYING.LIB.  If not,
+write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+Boston, MA 02110-1301, USA.  */
 
 #include "config.h"
 #include "libiberty.h"

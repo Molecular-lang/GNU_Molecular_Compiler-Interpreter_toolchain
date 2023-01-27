@@ -1,5 +1,6 @@
 /* Extended support for using signal values.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Written by Fred Fish.  fnf@cygnus.com
+   This file is in the public domain.  */
 
 #include "config.h"
 #include "ansidecl.h"

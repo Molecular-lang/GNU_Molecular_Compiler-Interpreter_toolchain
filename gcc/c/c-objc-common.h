@@ -1,5 +1,22 @@
 /* Language hooks common to C and ObjC front ends.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2004-2023 Free Software Foundation, Inc.
+   Contributed by Ziemowit Laski  <zlaski@apple.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_C_OBJC_COMMON
 #define GCC_C_OBJC_COMMON
@@ -84,14 +101,26 @@
 /* The C front end's scoping structure is very different from
    that expected by the language-independent code; it is best
    to disable getdecls.
-   This means it must also provide its own write_globals. */
+   This means it must also provide its own write_globals.  */
 
 #undef LANG_HOOKS_GETDECLS
 #define LANG_HOOKS_GETDECLS hook_tree_void_null
 
-/* Hooks for tree gimplification. */
+/* Hooks for tree gimplification.  */
 #undef LANG_HOOKS_GIMPLIFY_EXPR
 #define LANG_HOOKS_GIMPLIFY_EXPR c_gimplify_expr
+
+#undef LANG_HOOKS_OMP_PREDETERMINED_SHARING
+#define LANG_HOOKS_OMP_PREDETERMINED_SHARING c_omp_predetermined_sharing
+
+#undef LANG_HOOKS_OMP_PREDETERMINED_MAPPING
+#define LANG_HOOKS_OMP_PREDETERMINED_MAPPING c_omp_predetermined_mapping
+
+#undef LANG_HOOKS_OMP_CLAUSE_COPY_CTOR
+#define LANG_HOOKS_OMP_CLAUSE_COPY_CTOR c_omp_clause_copy_ctor
+
+#undef LANG_HOOKS_OMP_CLAUSE_ASSIGN_OP
+#define LANG_HOOKS_OMP_CLAUSE_ASSIGN_OP c_omp_clause_copy_ctor
 
 #undef LANG_HOOKS_TREE_INLINING_VAR_MOD_TYPE_P
 #define LANG_HOOKS_TREE_INLINING_VAR_MOD_TYPE_P c_vla_unspec_p

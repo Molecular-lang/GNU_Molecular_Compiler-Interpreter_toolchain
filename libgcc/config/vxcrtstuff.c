@@ -1,4 +1,23 @@
-/* Please review: $(src-dir)/SPL-README for Licencing info. */
+/* This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 /* The essential point of the crtbegin/crtend files on VxWorks is to handle
    the eh frames registration thanks to dedicated constructors and
@@ -7,15 +26,21 @@
 
 #define IN_LIBGCC2
 
-/* FIXME: Including auto-host is incorrect, but until we have
-   identified the set of defines that need to go into auto-target.h,
-   this will have to do.  */
+/* FIXME: Including auto-host is incorrect here (target library implementation
+   file), but we still need it for DEFAULT_USE_CXA_ATEXIT and most importantly
+   USE_INITFINI_ARRAY, guarded by HAVE_INITFINI_ARRAY_SUPPORT, not yet handled
+   by auto-target.h.  Proceed as crtstuff.c, with the inclusion followed by a
+   few #undefs preventing build failures in configurations setup for Windows
+   hosts, including canadian builds.  #define USED_FOR_TARGET would circumvent
+   this but would unfortunately also inhibit some of the definitions we
+   need.  */
 #include "auto-host.h"
 #undef caddr_t
 #undef pid_t
 #undef rlim_t
 #undef ssize_t
 #undef vfork
+
 #include "tconfig.h"
 #include "tsystem.h"
 #include "coretypes.h"
@@ -39,17 +64,19 @@
 
 #ifdef CRT_BEGIN
 
+/* Provide __dso_handle in RTP objects, which might be included in contexts
+   involving shared objects.  This mimics the crtstuff.c behavior:  dso_handle
+   should be NULL for the main program (in vx_crtbegin.o) and a unique value
+   for the shared libraries (in vx_crtbeginS.o).  */
+
 #if DEFAULT_USE_CXA_ATEXIT && defined(__RTP__)
-/* This mimics the crtstuff.c behavior.  dso_handle should be NULL for the
-   main program (in vx_crtbegin.o) and a unique value for the shared libraries
-   (in vx_crtbeginS.o).   */
 extern void *__dso_handle __attribute__ ((__visibility__ ("hidden")));
 #ifdef CRTSTUFFS_O
 void *__dso_handle = &__dso_handle;
 #else
 void *__dso_handle = 0;
 #endif
-#endif /* DEFAULT_USE_CXA_ATEXIT */
+#endif
 
 /* Determine what names to use for the constructor/destructor functions.  */
 
@@ -84,7 +111,7 @@ void *__dso_handle = 0;
    where we don't want to drag libc_internal contents blindly and which
    provides functions with a slightly different name anyway.  */
 
-#if HAVE_INITFINI_ARRAY_SUPPORT && defined(CRTSTUFFS_O)
+#if defined(CRTSTUFFS_O)
 
 /* Run through the .init_array, .fini_array sections.  The linker script
    *must* provide __init_array_start, __init_array_end, __fini_array_start,

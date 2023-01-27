@@ -1,5 +1,25 @@
 /* Header file for the ARM EABI and C6X unwinders
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2003-2023 Free Software Foundation, Inc.
+   Contributed by Paul Brook
+
+   This file is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 3, or (at your option) any
+   later version.
+
+   This file is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   Under Section 7 of GPL version 3, you are granted additional
+   permissions described in the GCC Runtime Library Exception, version
+   3.1, as published by the Free Software Foundation.
+
+   You should have received a copy of the GNU General Public License and
+   a copy of the GCC Runtime Library Exception along with this program;
+   see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 /* Language-independent unwinder header public defines.  This contains both
    ABI defined objects, and GNU support routines.  */
@@ -107,7 +127,8 @@ extern "C" {
       _UVRSC_VFP = 1,       /* vfp */
       _UVRSC_FPA = 2,       /* fpa */
       _UVRSC_WMMXD = 3,     /* Intel WMMX data register */
-      _UVRSC_WMMXC = 4      /* Intel WMMX control register */
+      _UVRSC_WMMXC = 4,     /* Intel WMMX control register */
+      _UVRSC_PAC = 5        /* Armv8.1-M Mainline PAC/AUTH pseudo-register */
     }
   _Unwind_VRS_RegClass;
 

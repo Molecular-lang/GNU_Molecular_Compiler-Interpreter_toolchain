@@ -1,5 +1,26 @@
 /* Exception handling and frame unwind runtime interface routines.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3, or (at your option)
+   any later version.
+
+   GCC is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+   License for more details.
+
+   Under Section 7 of GPL version 3, you are granted additional
+   permissions described in the GCC Runtime Library Exception, version
+   3.1, as published by the Free Software Foundation.
+
+   You should have received a copy of the GNU General Public License and
+   a copy of the GCC Runtime Library Exception along with this program;
+   see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 /* This is derived from the C++ ABI for IA-64.  Where we diverge
    for cross-architecture compatibility are noted with "@@@".  */
@@ -9,6 +30,7 @@
 
 #if defined (__SEH__) && !defined (__USING_SJLJ_EXCEPTIONS__)
 /* Only for _GCC_specific_handler.  */
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
 
@@ -271,6 +293,6 @@ EXCEPTION_DISPOSITION _GCC_specific_handler (PEXCEPTION_RECORD, void *,
 #define _Unwind_Frames_Extra(frames)
 
 /* Increment frame count.  */
-#define _Unwind_Frames_Increment(context, frames) frames++
+#define _Unwind_Frames_Increment(exc, context, frames) frames++
 
 #endif /* unwind.h */

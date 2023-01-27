@@ -1,5 +1,21 @@
 /* Default common target hook functions.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2003-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_COMMON_TARGHOOKS_H
 #define GCC_COMMON_TARGHOOKS_H
@@ -15,5 +31,16 @@ extern bool default_target_handle_option (struct gcc_options *,
 extern vec<const char *> default_get_valid_option_values (int, const char *);
 
 extern const struct default_options empty_optimization_table[];
+
+const char *
+default_compute_multilib(
+  const struct switchstr *,
+  int,
+  const char *multilib,
+  const char *,
+  const char *,
+  const char *,
+  const char *,
+  const char *);
 
 #endif

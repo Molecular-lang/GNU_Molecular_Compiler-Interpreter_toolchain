@@ -1,5 +1,29 @@
 /* File format for coverage information
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1996-2023 Free Software Foundation, Inc.
+   Contributed by Bob Manson <manson@cygnus.com>.
+   Completely remangled by Nathan Sidwell <nathan@codesourcery.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
+
 
 /* CAVEAT: Coverage information files should not be parsed directly,
    instead use `gcov --json-format`, which provides
@@ -242,8 +266,8 @@ typedef uint64_t gcov_type_unsigned;
 #define GCOV_TAG_COUNTER_LENGTH(NUM) ((NUM) * 2 * GCOV_WORD_SIZE)
 #define GCOV_TAG_COUNTER_NUM(LENGTH) ((LENGTH / GCOV_WORD_SIZE) / 2)
 #define GCOV_TAG_OBJECT_SUMMARY  ((gcov_unsigned_t)0xa1000000)
+#define GCOV_TAG_OBJECT_SUMMARY_LENGTH (2 * GCOV_WORD_SIZE)
 #define GCOV_TAG_PROGRAM_SUMMARY ((gcov_unsigned_t)0xa3000000) /* Obsolete */
-#define GCOV_TAG_SUMMARY_LENGTH (2 * GCOV_WORD_SIZE)
 #define GCOV_TAG_AFDO_FILE_NAMES ((gcov_unsigned_t)0xaa000000)
 #define GCOV_TAG_AFDO_FUNCTION ((gcov_unsigned_t)0xac000000)
 #define GCOV_TAG_AFDO_WORKING_SET ((gcov_unsigned_t)0xaf000000)

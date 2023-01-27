@@ -1,8 +1,32 @@
 /* "Supergraph" classes that combine CFGs and callgraph into one digraph.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_ANALYZER_SUPERGRAPH_H
 #define GCC_ANALYZER_SUPERGRAPH_H
+
+#include "ordered-hash-map.h"
+#include "cfg.h"
+#include "basic-block.h"
+#include "gimple.h"
+#include "gimple-iterator.h"
+#include "digraph.h"
 
 using namespace ana;
 
@@ -314,7 +338,7 @@ class superedge : public dedge<supergraph_traits>
   ::edge get_any_cfg_edge () const;
   cgraph_edge *get_any_callgraph_edge () const;
 
-  char *get_description (bool user_facing) const;
+  label_text get_description (bool user_facing) const;
 
  protected:
   superedge (supernode *src, supernode *dest, enum edge_kind kind)
@@ -546,6 +570,8 @@ class switch_cfg_superedge : public cfg_superedge {
 
   const vec<tree> &get_case_labels () const { return m_case_labels; }
 
+  bool implicitly_created_default_p () const;
+
 private:
   auto_vec<tree> m_case_labels;
 };
@@ -588,7 +614,8 @@ class dot_annotator
   }
 };
 
-extern cgraph_edge *supergraph_call_edge (function *fun, gimple *stmt);
+extern cgraph_edge *supergraph_call_edge (function *fun, const gimple *stmt);
+extern function *get_ultimate_function_for_cgraph_edge (cgraph_edge *edge);
 
 } // namespace ana
 

@@ -1,5 +1,21 @@
 /* Definitions for the ubiquitous 'tree' type for GNU compilers.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1989-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_TREE_H
 #define GCC_TREE_H
@@ -756,6 +772,12 @@ extern void omp_clause_range_check_failed (const_tree, const char *, int,
    normal GNU extensions for target-specific vector types.  */
 #define TYPE_INDIVISIBLE_P(NODE) (TYPE_CHECK (NODE)->type_common.indivisible_p)
 
+/* True if this is a stdarg function with no named arguments (C2x
+   (...) prototype, where arguments can be accessed with va_start and
+   va_arg), as opposed to an unprototyped function.  */
+#define TYPE_NO_NAMED_ARGS_STDARG_P(NODE) \
+  (TYPE_CHECK (NODE)->type_common.no_named_args_stdarg_p)
+
 /* In an IDENTIFIER_NODE, this means that assemble_name was called with
    this string as an argument.  */
 #define TREE_SYMBOL_REFERENCED(NODE) \
@@ -1119,7 +1141,7 @@ extern void omp_clause_range_check_failed (const_tree, const char *, int,
 
 /* Define fields and accessors for some special-purpose tree nodes.  */
 
-/* As with STRING_CST, in C terms this is sizeof, not strlen.  */
+/* Unlike STRING_CST, in C terms this is strlen, not sizeof.  */
 #define IDENTIFIER_LENGTH(NODE) \
   (IDENTIFIER_NODE_CHECK (NODE)->identifier.id.len)
 #define IDENTIFIER_POINTER(NODE) \
@@ -1267,6 +1289,8 @@ get_expr_source_range (tree expr)
 
 extern void protected_set_expr_location (tree, location_t);
 extern void protected_set_expr_location_if_unset (tree, location_t);
+ATTRIBUTE_WARN_UNUSED_RESULT
+extern tree protected_set_expr_location_unshare (tree, location_t);
 
 WARN_UNUSED_RESULT extern tree maybe_wrap_with_location (tree, location_t);
 
@@ -1383,10 +1407,6 @@ class auto_suppress_location_wrappers
 #define OBJ_TYPE_REF_EXPR(NODE)	  TREE_OPERAND (OBJ_TYPE_REF_CHECK (NODE), 0)
 #define OBJ_TYPE_REF_OBJECT(NODE) TREE_OPERAND (OBJ_TYPE_REF_CHECK (NODE), 1)
 #define OBJ_TYPE_REF_TOKEN(NODE)  TREE_OPERAND (OBJ_TYPE_REF_CHECK (NODE), 2)
-
-/* ASSERT_EXPR accessors.  */
-#define ASSERT_EXPR_VAR(NODE)	TREE_OPERAND (ASSERT_EXPR_CHECK (NODE), 0)
-#define ASSERT_EXPR_COND(NODE)	TREE_OPERAND (ASSERT_EXPR_CHECK (NODE), 1)
 
 /* CALL_EXPR accessors.  */
 #define CALL_EXPR_FN(NODE) TREE_OPERAND (CALL_EXPR_CHECK (NODE), 1)
@@ -1706,8 +1726,15 @@ class auto_suppress_location_wrappers
 #define OMP_CLAUSE_DEPEND_KIND(NODE) \
   (OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_DEPEND)->omp_clause.subcode.depend_kind)
 
-#define OMP_CLAUSE_DEPEND_SINK_NEGATIVE(NODE) \
+#define OMP_CLAUSE_DOACROSS_KIND(NODE) \
+  (OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_DOACROSS)->omp_clause.subcode.doacross_kind)
+
+#define OMP_CLAUSE_DOACROSS_SINK_NEGATIVE(NODE) \
   TREE_PUBLIC (TREE_LIST_CHECK (NODE))
+
+/* True if DOACROSS clause is spelled as DEPEND.  */
+#define OMP_CLAUSE_DOACROSS_DEPEND(NODE) \
+  TREE_PROTECTED (OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_DOACROSS))
 
 #define OMP_CLAUSE_MAP_KIND(NODE) \
   ((enum gomp_map_kind) OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_MAP)->omp_clause.subcode.map_kind)
@@ -1769,6 +1796,11 @@ class auto_suppress_location_wrappers
 
 #define OMP_CLAUSE_ORDERED_EXPR(NODE) \
   OMP_CLAUSE_OPERAND (OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_ORDERED), 0)
+
+/* True on an OMP_CLAUSE_ORDERED if stand-alone ordered construct is nested
+   inside of work-sharing loop the clause is on.  */
+#define OMP_CLAUSE_ORDERED_DOACROSS(NODE) \
+  (OMP_CLAUSE_SUBCODE_CHECK (NODE, OMP_CLAUSE_ORDERED)->base.public_flag)
 
 /* True for unconstrained modifier on order(concurrent) clause.  */
 #define OMP_CLAUSE_ORDER_UNCONSTRAINED(NODE) \
@@ -2013,14 +2045,6 @@ class auto_suppress_location_wrappers
 /* Attributes for SSA_NAMEs for pointer-type variables.  */
 #define SSA_NAME_PTR_INFO(N) \
    SSA_NAME_CHECK (N)->ssa_name.info.ptr_info
-
-/* True if SSA_NAME_RANGE_INFO describes an anti-range.  */
-#define SSA_NAME_ANTI_RANGE_P(N) \
-    SSA_NAME_CHECK (N)->base.static_flag
-
-/* The type of range described by SSA_NAME_RANGE_INFO.  */
-#define SSA_NAME_RANGE_TYPE(N) \
-    (SSA_NAME_ANTI_RANGE_P (N) ? VR_ANTI_RANGE : VR_RANGE)
 
 /* Value range info attributes for SSA_NAMEs of non pointer-type variables.  */
 #define SSA_NAME_RANGE_INFO(N) \
@@ -2984,6 +3008,12 @@ extern void decl_value_expr_insert (tree, tree);
 /* Used in a FIELD_DECL to indicate that this field is padding.  */
 #define DECL_PADDING_P(NODE) \
   (FIELD_DECL_CHECK (NODE)->decl_common.decl_flag_3)
+
+/* Used in a FIELD_DECL to indicate whether this field is not a flexible
+   array member. This is only valid for the last array type field of a
+   structure.  */
+#define DECL_NOT_FLEXARRAY(NODE) \
+  (FIELD_DECL_CHECK (NODE)->decl_common.decl_not_flexarray)
 
 /* A numeric unique identifier for a LABEL_DECL.  The UID allocation is
    dense, unique within any one function, and may be used to index arrays.
@@ -4265,6 +4295,7 @@ tree_strip_any_location_wrapper (tree exp)
 #define float_type_node			global_trees[TI_FLOAT_TYPE]
 #define double_type_node		global_trees[TI_DOUBLE_TYPE]
 #define long_double_type_node		global_trees[TI_LONG_DOUBLE_TYPE]
+#define bfloat16_type_node		global_trees[TI_BFLOAT16_TYPE]
 
 /* Nodes for particular _FloatN and _FloatNx types in sequence.  */
 #define FLOATN_TYPE_NODE(IDX)		global_trees[TI_FLOATN_TYPE_FIRST + (IDX)]
@@ -4281,6 +4312,10 @@ tree_strip_any_location_wrapper (tree exp)
 #define float32x_type_node		global_trees[TI_FLOAT32X_TYPE]
 #define float64x_type_node		global_trees[TI_FLOAT64X_TYPE]
 #define float128x_type_node		global_trees[TI_FLOAT128X_TYPE]
+
+/* Type used by certain backends for __float128, which in C++ should be
+   distinct type from _Float128 for backwards compatibility reasons.  */
+#define float128t_type_node		global_trees[TI_FLOAT128T_TYPE]
 
 #define float_ptr_type_node		global_trees[TI_FLOAT_PTR_TYPE]
 #define double_ptr_type_node		global_trees[TI_DOUBLE_PTR_TYPE]
@@ -4435,16 +4470,16 @@ tree_strip_any_location_wrapper (tree exp)
 #define chrec_dont_know			global_trees[TI_CHREC_DONT_KNOW]
 #define chrec_known			global_trees[TI_CHREC_KNOWN]
 
-#define char_type_node					integer_types[itk_char]
-#define signed_char_type_node			integer_types[itk_signed_char]
-#define unsigned_char_type_node			integer_types[itk_unsigned_char]
-#define short_integer_type_node			integer_types[itk_short]
-#define short_unsigned_type_node		integer_types[itk_unsigned_short]
-#define integer_type_node				integer_types[itk_int]
-#define unsigned_type_node				integer_types[itk_unsigned_int]
-#define long_integer_type_node			integer_types[itk_long]
-#define long_unsigned_type_node			integer_types[itk_unsigned_long]
-#define long_long_integer_type_node		integer_types[itk_long_long]
+#define char_type_node			integer_types[itk_char]
+#define signed_char_type_node		integer_types[itk_signed_char]
+#define unsigned_char_type_node		integer_types[itk_unsigned_char]
+#define short_integer_type_node		integer_types[itk_short]
+#define short_unsigned_type_node	integer_types[itk_unsigned_short]
+#define integer_type_node		integer_types[itk_int]
+#define unsigned_type_node		integer_types[itk_unsigned_int]
+#define long_integer_type_node		integer_types[itk_long]
+#define long_unsigned_type_node		integer_types[itk_unsigned_long]
+#define long_long_integer_type_node	integer_types[itk_long_long]
 #define long_long_unsigned_type_node	integer_types[itk_unsigned_long_long]
 
 /* True if T is an erroneous expression.  */
@@ -4675,6 +4710,13 @@ extern tree build_alloca_call_expr (tree, unsigned int, HOST_WIDE_INT);
 extern tree build_string_literal (unsigned, const char * = NULL,
 				  tree = char_type_node,
 				  unsigned HOST_WIDE_INT = HOST_WIDE_INT_M1U);
+inline tree build_string_literal (const char *p)
+{ return build_string_literal (strlen (p) + 1, p); }
+inline tree build_string_literal (tree t)
+{
+  return build_string_literal (IDENTIFIER_LENGTH (t) + 1,
+			       IDENTIFIER_POINTER (t));
+}
 
 /* Construct various nodes representing data types.  */
 
@@ -4682,6 +4724,7 @@ extern tree signed_or_unsigned_type_for (int, tree);
 extern tree signed_type_for (tree);
 extern tree unsigned_type_for (tree);
 extern bool is_truth_type_for (tree, tree);
+extern bool tree_zero_one_valued_p (tree);
 extern tree truth_type_for (tree);
 extern tree build_pointer_type_for_mode (tree, machine_mode, bool);
 extern tree build_pointer_type (tree);
@@ -4696,7 +4739,7 @@ extern tree build_array_type_1 (tree, tree, bool, bool, bool);
 extern tree build_array_type (tree, tree, bool = false);
 extern tree build_nonshared_array_type (tree, tree);
 extern tree build_array_type_nelts (tree, poly_uint64);
-extern tree build_function_type (tree, tree);
+extern tree build_function_type (tree, tree, bool = false);
 extern tree build_function_type_list (tree, ...);
 extern tree build_varargs_function_type_list (tree, ...);
 extern tree build_function_type_array (tree, int, tree *);
@@ -5329,6 +5372,7 @@ extern bool tree_nop_conversion_p (const_tree, const_tree);
 extern tree tree_strip_nop_conversions (tree);
 extern tree tree_strip_sign_nop_conversions (tree);
 extern const_tree strip_invariant_refs (const_tree);
+extern tree strip_zero_offset_components (tree);
 extern tree lhd_gcc_personality (void);
 extern void assign_assembler_name_if_needed (tree);
 extern bool warn_deprecated_use (tree, tree);
@@ -5453,6 +5497,7 @@ extern bool needs_to_live_in_memory (const_tree);
 extern tree reconstruct_complex_type (tree, tree);
 extern bool real_onep (const_tree);
 extern bool real_minus_onep (const_tree);
+extern bool real_maybe_zerop (const_tree);
 extern void init_ttree (void);
 extern void build_common_tree_nodes (bool);
 extern void build_common_builtin_nodes (void);
@@ -5479,8 +5524,10 @@ extern void using_eh_for_cleanups (void);
 extern bool using_eh_for_cleanups_p (void);
 extern const char *get_tree_code_name (enum tree_code);
 extern void set_call_expr_flags (tree, int);
-extern tree walk_tree_1 (tree*, walk_tree_fn, void*, hash_set<tree>*, walk_tree_lh);
-extern tree walk_tree_without_duplicates_1 (tree*, walk_tree_fn, void*, walk_tree_lh);
+extern tree walk_tree_1 (tree*, walk_tree_fn, void*, hash_set<tree>*,
+			 walk_tree_lh);
+extern tree walk_tree_without_duplicates_1 (tree*, walk_tree_fn, void*,
+					    walk_tree_lh);
 #define walk_tree(a,b,c,d) \
 	walk_tree_1 (a, b, c, d, NULL)
 #define walk_tree_without_duplicates(a,b,c) \
@@ -5508,24 +5555,28 @@ extern tree array_ref_up_bound (tree);
    EXP, an ARRAY_REF or an ARRAY_RANGE_REF.  */
 extern tree array_ref_low_bound (tree);
 
-/* Returns true if REF is an array reference or a component reference
-   to an array at the end of a structure.  If this is the case, the array
-   may be allocated larger than its upper bound implies.  */
-extern bool array_at_struct_end_p (tree);
+/* Returns true if REF is an array reference, a component reference,
+   or a memory reference to an array whose actual size might be larger
+   than its upper bound implies.  */
+extern bool array_ref_flexible_size_p (tree, bool * = NULL);
 
 /* Return a tree representing the offset, in bytes, of the field referenced
    by EXP.  This does not include any offset in DECL_FIELD_BIT_OFFSET.  */
 extern tree component_ref_field_offset (tree);
 
-/* Describes a "special" array member due to which component_ref_size
-   returns null.  */
+/* Describes a "special" array member for a COMPONENT_REF.  */
 enum struct special_array_member
   {
-   none,      /* Not a special array member.  */
-   int_0,     /* Interior array member with size zero.  */
-   trail_0,   /* Trailing array member with size zero.  */
-   trail_1    /* Trailing array member with one element.  */
+    none,	/* Not a special array member.  */
+    int_0,	/* Interior array member with size zero.  */
+    trail_0,	/* Trailing array member with size zero.  */
+    trail_1,	/* Trailing array member with one element.  */
+    trail_n,	/* Trailing array member with two or more elements.  */
+    int_n	/* Interior array member with one or more elements.  */
   };
+
+/* Determines the special array member type for a COMPONENT_REF.  */
+extern special_array_member component_ref_sam_type (tree);
 
 /* Return the size of the member referenced by the COMPONENT_REF, using
    its initializer expression if necessary in order to determine the size
@@ -5538,7 +5589,8 @@ extern int tree_map_base_eq (const void *, const void *);
 extern unsigned int tree_map_base_hash (const void *);
 extern int tree_map_base_marked_p (const void *);
 extern void DEBUG_FUNCTION verify_type (const_tree t);
-extern bool gimple_canonical_types_compatible_p (const_tree, const_tree, bool trust_type_canonical = true);
+extern bool gimple_canonical_types_compatible_p (const_tree, const_tree,
+						 bool trust_type_canonical = true);
 extern bool type_with_interoperable_signedness (const_tree);
 extern bitmap get_nonnull_args (const_tree);
 extern int get_range_pos_neg (tree);
@@ -6503,54 +6555,63 @@ desired_pro_or_demotion_p (const_tree to_type, const_tree from_type)
   return to_type_precision <= TYPE_PRECISION (from_type);
 }
 
-/* Pointer type used to declare builtins before we have seen its real declaration. */
-class builtin_structptr_type {
-	public:
-		tree& node;
-		tree& base;
-		const char *str;
+/* Pointer type used to declare builtins before we have seen its real
+   declaration.  */
+class builtin_structptr_type
+{
+public:
+  tree& node;
+  tree& base;
+  const char *str;
 };
 extern const builtin_structptr_type builtin_structptr_types[6];
 
-/* Return true if type T has the same precision as its underlying mode. */
+/* Return true if type T has the same precision as its underlying mode.  */
+
 inline bool
-type_has_mode_precision_p(const_tree t)
+type_has_mode_precision_p (const_tree t)
 {
-	return known_eq(TYPE_PRECISION (t), GET_MODE_PRECISION (TYPE_MODE (t)));
+  return known_eq (TYPE_PRECISION (t), GET_MODE_PRECISION (TYPE_MODE (t)));
 }
 
 /* Return true if a FUNCTION_DECL NODE is a GCC built-in function.
 
    Note that it is different from the DECL_IS_UNDECLARED_BUILTIN
-   accessor, as this is impervious to user declaration. */
+   accessor, as this is impervious to user declaration.  */
+
 inline bool
-fndecl_built_in_p(const_tree node)
+fndecl_built_in_p (const_tree node)
 {
-	return DECL_BUILT_IN_CLASS (node) != NOT_BUILT_IN;
+  return DECL_BUILT_IN_CLASS (node) != NOT_BUILT_IN;
 }
 
 /* Return true if a FUNCTION_DECL NODE is a GCC built-in function
-   of class KLASS. */
+   of class KLASS.  */
+
 inline bool
-fndecl_built_in_p(const_tree node, built_in_class klass)
+fndecl_built_in_p (const_tree node, built_in_class klass)
 {
-	return fndecl_built_in_p(node) && DECL_BUILT_IN_CLASS (node) == klass;
+  return fndecl_built_in_p (node) && DECL_BUILT_IN_CLASS (node) == klass;
 }
 
 /* Return true if a FUNCTION_DECL NODE is a GCC built-in function
-   of class KLASS with name equal to NAME. */
+   of class KLASS with name equal to NAME.  */
+
 inline bool
-fndecl_built_in_p(const_tree node, unsigned int name, built_in_class klass)
+fndecl_built_in_p (const_tree node, unsigned int name, built_in_class klass)
 {
-	return (fndecl_built_in_p(node, klass) && DECL_UNCHECKED_FUNCTION_CODE (node) == name);
+  return (fndecl_built_in_p (node, klass)
+	  && DECL_UNCHECKED_FUNCTION_CODE (node) == name);
 }
 
 /* Return true if a FUNCTION_DECL NODE is a GCC built-in function
-   of BUILT_IN_NORMAL class with name equal to NAME. */
+   of BUILT_IN_NORMAL class with name equal to NAME.  */
+
 inline bool
-fndecl_built_in_p(const_tree node, built_in_function name)
+fndecl_built_in_p (const_tree node, built_in_function name)
 {
-	return (fndecl_built_in_p(node, BUILT_IN_NORMAL) && DECL_FUNCTION_CODE (node) == name);
+  return (fndecl_built_in_p (node, BUILT_IN_NORMAL)
+	  && DECL_FUNCTION_CODE (node) == name);
 }
 
 /* A struct for encapsulating location information about an operator
@@ -6580,60 +6641,66 @@ fndecl_built_in_p(const_tree node, built_in_function name)
      arg_0 op arg_1
      ~~~~~~^~~~~~~~
 
-   where it is not. */
-class op_location_t {
-	public:
-		location_t m_operator_loc;
-		location_t m_combined_loc;
+   where it is not.  */
 
-		/* 1-argument ctor, for constructing from a combined location. */
-		op_location_t(location_t combined_loc)
-			: m_operator_loc (UNKNOWN_LOCATION), m_combined_loc (combined_loc) {}
+class op_location_t
+{
+public:
+  location_t m_operator_loc;
+  location_t m_combined_loc;
 
-		/* 2-argument ctor, for distinguishing between the operator's location
-		   and the combined location. */
-		op_location_t(location_t operator_loc, location_t combined_loc)
-			: m_operator_loc (operator_loc), m_combined_loc (combined_loc) {}
+  /* 1-argument ctor, for constructing from a combined location.  */
+  op_location_t (location_t combined_loc)
+  : m_operator_loc (UNKNOWN_LOCATION), m_combined_loc (combined_loc)
+  {}
 
-		/* Implicitly convert back to a location_t, using the combined location. */
-		operator location_t() const { return m_combined_loc; }
+  /* 2-argument ctor, for distinguishing between the operator's location
+     and the combined location.  */
+  op_location_t (location_t operator_loc, location_t combined_loc)
+  : m_operator_loc (operator_loc), m_combined_loc (combined_loc)
+  {}
+
+  /* Implicitly convert back to a location_t, using the combined location.  */
+  operator location_t () const { return m_combined_loc; }
 };
 
-/* Code that doesn't refer to any warning. Has no effect on suppression
-   functions. */
-constexpr opt_code no_warning = opt_code();
-/* Wildcard code that refers to all warnings. */
+/* Code that doesn't refer to any warning.  Has no effect on suppression
+   functions.  */
+constexpr opt_code no_warning = opt_code ();
+/* Wildcard code that refers to all warnings.  */
 constexpr opt_code all_warnings = N_OPTS;
 
 /* Return the disposition for a warning (or all warnings by default)
-   at a location. */
+   at a location.  */
 extern bool warning_suppressed_at (location_t, opt_code = all_warnings);
 /* Set the disposition for a warning (or all warnings by default)
-   at a location to disabled by default. */
-extern bool suppress_warning_at(location_t, opt_code = all_warnings, bool = true);
-/* Copy warning disposition from one location to another. */
-extern void copy_warning(location_t, location_t);
+   at a location to disabled by default.  */
+extern bool suppress_warning_at (location_t, opt_code = all_warnings,
+				 bool = true);
+/* Copy warning disposition from one location to another.  */
+extern void copy_warning (location_t, location_t);
 
 /* Return the disposition for a warning (or all warnings by default)
-   for an expression. */
-extern bool warning_suppressed_p(const_tree, opt_code = all_warnings);
+   for an expression.  */
+extern bool warning_suppressed_p (const_tree, opt_code = all_warnings);
 /* Set the disposition for a warning (or all warnings by default)
-   at a location to disabled by default. */
-extern void suppress_warning(tree, opt_code = all_warnings, bool = true) ATTRIBUTE_NONNULL (1);
-/* Copy warning disposition from one expression to another. */
-extern void copy_warning(tree, const_tree);
+   at a location to disabled by default.  */
+extern void suppress_warning (tree, opt_code = all_warnings, bool = true)
+  ATTRIBUTE_NONNULL (1);
+/* Copy warning disposition from one expression to another.  */
+extern void copy_warning (tree, const_tree);
 
 /* Return the zero-based number corresponding to the argument being
    deallocated if FNDECL is a deallocation function or an out-of-bounds
-   value if it isn't. */
-extern unsigned fndecl_dealloc_argno(tree);
+   value if it isn't.  */
+extern unsigned fndecl_dealloc_argno (tree);
 
 /* If an expression refers to a character array or pointer declared
    attribute nonstring, return a decl for that array or pointer and
    if nonnull, set the second argument to the referenced enclosing
-   object or pointer. Otherwise return null. */
-extern tree get_attr_nonstring_decl(tree, tree * = NULL);
+   object or pointer.  Otherwise return null.  */
+extern tree get_attr_nonstring_decl (tree, tree * = NULL);
 
-extern int get_target_clone_attr_len(tree);
+extern int get_target_clone_attr_len (tree);
 
 #endif  /* GCC_TREE_H  */

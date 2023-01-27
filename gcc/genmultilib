@@ -1,6 +1,22 @@
 #!/bin/sh 
 # Generates multilib.h.
-# Please review: $(src-dir)/SPL-README for Licencing info. 
+#   Copyright (C) 1994-2023 Free Software Foundation, Inc.
+
+#This file is part of GCC.
+
+#GCC is free software; you can redistribute it and/or modify it under
+#the terms of the GNU General Public License as published by the Free
+#Software Foundation; either version 3, or (at your option) any later
+#version.
+
+#GCC is distributed in the hope that it will be useful, but WITHOUT
+#ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with GCC; see the file COPYING3.  If not see
+#<http://www.gnu.org/licenses/>.  
 
 # This shell script produces a header file which the gcc driver
 # program uses to pick which library to use based on the machine
@@ -234,6 +250,10 @@ if [ -n "${dirnames}" ]; then
     for opts in `echo ${set} | sed -e 's|/| |'g`; do
       patt="/"
       for opt in `echo ${opts} | sed -e 's_|_ _'g`; do
+	if [ -z "$1" ]; then
+	  echo 1>&2 "Error calling $0: No dirname for option: $opt"
+	  exit 1
+	fi
         if [ "$1" != "${opt}" ]; then
           todirnames="${todirnames} -e s|/${opt}/|/${1}/|g"
 	  patt="${patt}${1}/"
@@ -290,6 +310,10 @@ if [ -n "${osdirnames}" ]; then
       for opts in `echo ${set} | sed -e 's|/| |'g`; do
         patt="/"
         for opt in `echo ${opts} | sed -e 's_|_ _'g`; do
+	if [ -z "$1" ]; then
+	  echo 1>&2 "Error calling $0: No osdirname for option: $opt"
+	  exit 1
+	fi
           if [ "$1" != "${opt}" ]; then
             toosdirnames="${toosdirnames} -e s|/${opt}/|/${1}/|g"
 	    patt="${patt}${1}/"

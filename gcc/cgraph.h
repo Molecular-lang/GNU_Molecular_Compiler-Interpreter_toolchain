@@ -1,5 +1,22 @@
 /* Callgraph handling code.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2003-2023 Free Software Foundation, Inc.
+   Contributed by Jan Hubicka
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_CGRAPH_H
 #define GCC_CGRAPH_H
@@ -874,7 +891,8 @@ struct GTY((tag ("SYMTAB_FUNCTION"))) cgraph_node : public symtab_node
       versionable (false), can_change_signature (false),
       redefined_extern_inline (false), tm_may_enter_irr (false),
       ipcp_clone (false), declare_variant_alt (false),
-      calls_declare_variant_alt (false), m_uid (uid), m_summary_id (-1)
+      calls_declare_variant_alt (false), gc_candidate (false),
+      m_uid (uid), m_summary_id (-1)
   {}
 
   /* Remove the node from cgraph and all inline clones inlined into it.
@@ -1473,6 +1491,10 @@ struct GTY((tag ("SYMTAB_FUNCTION"))) cgraph_node : public symtab_node
   unsigned declare_variant_alt : 1;
   /* True if the function calls declare_variant_alt functions.  */
   unsigned calls_declare_variant_alt : 1;
+  /* True if the function should only be emitted if it is used.  This flag
+     is set for local SIMD clones when they are created and cleared if the
+     vectorizer uses them.  */
+  unsigned gc_candidate : 1;
 
 private:
   /* Unique id of the node.  */

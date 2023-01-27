@@ -1,5 +1,21 @@
 /* Internal functions.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2011-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_INTERNAL_FN_H
 #define GCC_INTERNAL_FN_H
@@ -226,6 +242,8 @@ extern void expand_internal_call (internal_fn, gcall *);
 extern void expand_PHI (internal_fn, gcall *);
 extern void expand_SHUFFLEVECTOR (internal_fn, gcall *);
 extern void expand_SPACESHIP (internal_fn, gcall *);
+extern void expand_TRAP (internal_fn, gcall *);
+extern void expand_ASSUME (internal_fn, gcall *);
 
 extern bool vectorized_internal_fn_supported_p (internal_fn, tree);
 

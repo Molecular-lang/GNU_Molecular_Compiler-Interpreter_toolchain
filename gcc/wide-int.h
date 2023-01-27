@@ -1,5 +1,21 @@
 /* Operations with very long integers.  -*- C++ -*-
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2012-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 3, or (at your option) any
+later version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef WIDE_INT_H
 #define WIDE_INT_H
@@ -1357,10 +1373,13 @@ namespace wi
     : public int_traits <wide_int_storage> {};
 }
 
-/* An array of N wide_int-like objects that can be put at the end of
-   a variable-sized structure.  Use extra_size to calculate how many
-   bytes beyond the sizeof need to be allocated.  Use set_precision
-   to initialize the structure.  */
+/* A variable-length array of wide_int-like objects that can be put
+   at the end of a variable-sized structure.  The number of objects is
+   at most N and can be set at runtime by using set_precision().
+
+   Use extra_size to calculate how many bytes beyond the
+   sizeof need to be allocated.  Use set_precision to initialize the
+   structure.  */
 template <int N>
 struct GTY((user)) trailing_wide_ints
 {
@@ -1370,6 +1389,9 @@ private:
 
   /* The shared maximum length of each number.  */
   unsigned char m_max_len;
+
+  /* The number of elements.  */
+  unsigned char m_num_elements;
 
   /* The current length of each number.
      Avoid char array so the whole structure is not a typeless storage
@@ -1383,12 +1405,15 @@ private:
 public:
   typedef WIDE_INT_REF_FOR (trailing_wide_int_storage) const_reference;
 
-  void set_precision (unsigned int);
+  void set_precision (unsigned int precision, unsigned int num_elements = N);
   unsigned int get_precision () const { return m_precision; }
+  unsigned int num_elements () const { return m_num_elements; }
   trailing_wide_int operator [] (unsigned int);
   const_reference operator [] (unsigned int) const;
-  static size_t extra_size (unsigned int);
-  size_t extra_size () const { return extra_size (m_precision); }
+  static size_t extra_size (unsigned int precision,
+			    unsigned int num_elements = N);
+  size_t extra_size () const { return extra_size (m_precision,
+						  m_num_elements); }
 };
 
 inline trailing_wide_int_storage::
@@ -1441,11 +1466,14 @@ trailing_wide_int_storage::operator = (const T &x)
 }
 
 /* Initialize the structure and record that all elements have precision
-   PRECISION.  */
+   PRECISION.  NUM_ELEMENTS can be no more than N.  */
 template <int N>
 inline void
-trailing_wide_ints <N>::set_precision (unsigned int precision)
+trailing_wide_ints <N>::set_precision (unsigned int precision,
+				       unsigned int num_elements)
 {
+  gcc_checking_assert (num_elements <= N);
+  m_num_elements = num_elements;
   m_precision = precision;
   m_max_len = ((precision + HOST_BITS_PER_WIDE_INT - 1)
 	       / HOST_BITS_PER_WIDE_INT);
@@ -1468,15 +1496,19 @@ trailing_wide_ints <N>::operator [] (unsigned int index) const
 			  m_len[index].len, m_precision);
 }
 
-/* Return how many extra bytes need to be added to the end of the structure
-   in order to handle N wide_ints of precision PRECISION.  */
+/* Return how many extra bytes need to be added to the end of the
+   structure in order to handle NUM_ELEMENTS wide_ints of precision
+   PRECISION.  NUM_ELEMENTS is the number of elements, and defaults
+   to N.  */
 template <int N>
 inline size_t
-trailing_wide_ints <N>::extra_size (unsigned int precision)
+trailing_wide_ints <N>::extra_size (unsigned int precision,
+				    unsigned int num_elements)
 {
   unsigned int max_len = ((precision + HOST_BITS_PER_WIDE_INT - 1)
 			  / HOST_BITS_PER_WIDE_INT);
-  return (N * max_len - 1) * sizeof (HOST_WIDE_INT);
+  gcc_checking_assert (num_elements <= N);
+  return (num_elements * max_len - 1) * sizeof (HOST_WIDE_INT);
 }
 
 /* This macro is used in structures that end with a trailing_wide_ints field

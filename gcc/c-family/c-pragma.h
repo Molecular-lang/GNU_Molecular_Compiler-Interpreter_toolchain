@@ -1,5 +1,21 @@
 /* Pragma related interfaces.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1995-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_C_PRAGMA_H
 #define GCC_C_PRAGMA_H
@@ -29,8 +45,11 @@ enum pragma_kind {
   /* PRAGMA_OMP__START_ should be equal to the first PRAGMA_OMP_* code.  */
   PRAGMA_OMP_ALLOCATE,
   PRAGMA_OMP__START_ = PRAGMA_OMP_ALLOCATE,
+  PRAGMA_OMP_ASSUME,
+  PRAGMA_OMP_ASSUMES,
   PRAGMA_OMP_ATOMIC,
   PRAGMA_OMP_BARRIER,
+  PRAGMA_OMP_BEGIN,
   PRAGMA_OMP_CANCEL,
   PRAGMA_OMP_CANCELLATION_POINT,
   PRAGMA_OMP_CRITICAL,
@@ -38,7 +57,7 @@ enum pragma_kind {
   PRAGMA_OMP_DEPOBJ,
   PRAGMA_OMP_DISTRIBUTE,
   PRAGMA_OMP_ERROR,
-  PRAGMA_OMP_END_DECLARE_TARGET,
+  PRAGMA_OMP_END,
   PRAGMA_OMP_FLUSH,
   PRAGMA_OMP_FOR,
   PRAGMA_OMP_LOOP,
@@ -92,6 +111,7 @@ enum pragma_omp_clause {
   PRAGMA_OMP_CLAUSE_DEVICE,
   PRAGMA_OMP_CLAUSE_DEVICE_TYPE,
   PRAGMA_OMP_CLAUSE_DIST_SCHEDULE,
+  PRAGMA_OMP_CLAUSE_DOACROSS,
   PRAGMA_OMP_CLAUSE_ENTER,
   PRAGMA_OMP_CLAUSE_FILTER,
   PRAGMA_OMP_CLAUSE_FINAL,
@@ -203,7 +223,7 @@ union gen_pragma_handler {
 };
 /* Internally used to keep the data of the handler.  */
 struct internal_pragma_handler {
-  union gen_pragma_handler handler;
+  union gen_pragma_handler handler, early_handler;
   /* Permits to know if handler is a pragma_handler_1arg (extra_data is false)
      or a pragma_handler_2arg (extra_data is true).  */
   bool extra_data;
@@ -225,6 +245,17 @@ extern void c_register_pragma_with_expansion_and_data (const char *space,
                                                    pragma_handler_2arg handler,
                                                        void *data);
 extern void c_invoke_pragma_handler (unsigned int);
+
+/* Early pragma handlers run in addition to the normal ones.  They can be used
+   by frontends such as C++ that may want to process some pragmas during lexing
+   before they start processing them.  */
+extern void
+c_register_pragma_with_early_handler (const char *space, const char *name,
+				      pragma_handler_1arg handler,
+				      pragma_handler_1arg early_handler);
+extern void c_invoke_early_pragma_handler (unsigned int);
+extern void c_pp_invoke_early_pragma_handler (unsigned int);
+
 
 extern void maybe_apply_pragma_weak (tree);
 extern void maybe_apply_pending_pragma_weaks (void);

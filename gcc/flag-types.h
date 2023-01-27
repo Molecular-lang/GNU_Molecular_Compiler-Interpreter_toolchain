@@ -1,5 +1,21 @@
 /* Compilation switch flag type definitions for GCC.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_FLAG_TYPES_H
 #define GCC_FLAG_TYPES_H
@@ -8,24 +24,18 @@
 
 enum debug_info_type
 {
-  DINFO_TYPE_NONE = 0,		  /* No debug info.  */
-  DINFO_TYPE_DBX = 1,		  /* BSD .stabs for DBX.  */
-  DINFO_TYPE_DWARF2 = 2,	  /* Dwarf v2 debug info.  */
-  DINFO_TYPE_XCOFF = 3,		  /* IBM/Xcoff debug info.  */
-  DINFO_TYPE_VMS = 4,		  /* VMS debug info.  */
-  DINFO_TYPE_CTF = 5,		  /* CTF debug info.  */
-  DINFO_TYPE_BTF = 6,		  /* BTF debug info.  */
-  DINFO_TYPE_BTF_WITH_CORE = 7,	  /* BTF debug info with CO-RE relocations.  */
+  DINFO_TYPE_NONE,		  /* No debug info.  */
+  DINFO_TYPE_DWARF2,		  /* Dwarf v2 debug info.  */
+  DINFO_TYPE_VMS,		  /* VMS debug info.  */
+  DINFO_TYPE_CTF,		  /* CTF debug info.  */
+  DINFO_TYPE_BTF,		  /* BTF debug info.  */
+  DINFO_TYPE_BTF_WITH_CORE,	  /* BTF debug info with CO-RE relocations.  */
   DINFO_TYPE_MAX = DINFO_TYPE_BTF_WITH_CORE /* Marker only.  */
 };
 
 #define NO_DEBUG      (0U)
-/* Write DBX debug info (using dbxout.cc).  */
-#define DBX_DEBUG     (1U << DINFO_TYPE_DBX)
 /* Write DWARF2 debug info (using dwarf2out.cc).  */
 #define DWARF2_DEBUG  (1U << DINFO_TYPE_DWARF2)
-/* Write IBM/XCOFF debug info (using dbxout.cc).  */
-#define XCOFF_DEBUG   (1U << DINFO_TYPE_XCOFF)
 /* Write VMS debug info (using vmsdbgout.cc).  */
 #define VMS_DEBUG     (1U << DINFO_TYPE_VMS)
 /* Write CTF debug info (using ctfout.cc).  */
@@ -463,15 +473,6 @@ enum threader_debug
   THREADER_DEBUG_ALL = 1
 };
 
-/* EVRP mode.  */
-enum evrp_mode
-{
-  EVRP_MODE_RVRP_ONLY,
-  EVRP_MODE_EVRP_ONLY,
-  EVRP_MODE_EVRP_FIRST,
-  EVRP_MODE_RVRP_FIRST
-};
-
 /* VRP modes.  */
 enum vrp_mode
 {
@@ -491,6 +492,15 @@ enum openacc_privatization
 {
   OPENACC_PRIVATIZATION_QUIET,
   OPENACC_PRIVATIZATION_NOISY
+};
+
+/* Targets for -fopenmp-target-simd-clone.  */
+enum omp_target_simd_clone_device_kind
+{
+  OMP_TARGET_SIMD_CLONE_NONE = 0,
+  OMP_TARGET_SIMD_CLONE_HOST = 1,
+  OMP_TARGET_SIMD_CLONE_NOHOST = 2,
+  OMP_TARGET_SIMD_CLONE_ANY = 3
 };
 
 #endif

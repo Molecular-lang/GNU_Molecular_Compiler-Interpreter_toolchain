@@ -1,6 +1,22 @@
 /* Declarations for variables relating to reading the source file.
    Used by parsers, lexical analyzers, and error message routines.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1993-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_INPUT_H
 #define GCC_INPUT_H
@@ -15,6 +31,9 @@ extern GTY(()) class line_maps *saved_line_table;
 
 /* The location for declarations in "<built-in>" */
 #define BUILTINS_LOCATION ((location_t) 1)
+
+/* Returns the translated string referring to the special location.  */
+const char *special_fname_builtin ();
 
 /* line-map.cc reserves RESERVED_LOCATION_COUNT to the user.  Ensure
    both UNKNOWN_LOCATION and BUILTINS_LOCATION fit into that.  */
@@ -95,6 +114,7 @@ class char_span
 };
 
 extern char_span location_get_source_line (const char *file_path, int line);
+extern char *get_source_text_between (location_t, location_t);
 
 extern bool location_missing_trailing_newline (const char *file_path);
 
@@ -148,6 +168,10 @@ extern location_t expansion_point_location_if_in_system_header (location_t);
 extern location_t expansion_point_location (location_t);
 
 extern location_t input_location;
+
+extern location_t location_with_discriminator (location_t, int);
+extern bool has_discriminator (location_t);
+extern int get_discriminator_from_loc (location_t);
 
 #define LOCATION_FILE(LOC) ((expand_location (LOC)).file)
 #define LOCATION_LINE(LOC) ((expand_location (LOC)).line)

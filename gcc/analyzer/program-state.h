@@ -1,5 +1,22 @@
 /* Classes for representing the state of interest at a given path of analysis.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_ANALYZER_PROGRAM_STATE_H
 #define GCC_ANALYZER_PROGRAM_STATE_H
@@ -128,6 +145,7 @@ public:
 		       state_machine::state_t state,
 		       const svalue *origin,
 		       const extrinsic_state &ext_state);
+  void clear_any_state (const svalue *sval);
 
   void set_global_state (state_machine::state_t state);
   state_machine::state_t get_global_state () const;
@@ -153,6 +171,14 @@ public:
 
   static const svalue *
   canonicalize_svalue (const svalue *sval, const extrinsic_state &ext_state);
+
+  bool replay_call_summary (call_summary_replay &r,
+			    const sm_state_map &summary);
+
+  bool can_merge_with_p (const sm_state_map &other,
+			 const state_machine &sm,
+			 const extrinsic_state &ext_state,
+			 sm_state_map **out) const;
 
 private:
   const state_machine &m_sm;
@@ -255,6 +281,9 @@ public:
 			    const svalue *extra_sval,
 			    const extrinsic_state &ext_state,
 			    region_model_context *ctxt);
+
+  bool replay_call_summary (call_summary_replay &r,
+			    const program_state &summary);
 
   void impl_call_analyzer_dump_state (const gcall *call,
 				      const extrinsic_state &ext_state,

@@ -1,5 +1,23 @@
 /* Vector API for GNU compiler.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2004-2023 Free Software Foundation, Inc.
+   Contributed by Nathan Sidwell <nathan@codesourcery.com>
+   Re-implemented in C++ by Diego Novillo <dnovillo@google.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_VEC_H
 #define GCC_VEC_H
@@ -1451,6 +1469,9 @@ public:
   bool is_empty (void) const
   { return m_vec ? m_vec->is_empty () : true; }
 
+  unsigned allocated (void) const
+  { return m_vec ? m_vec->allocated () : 0; }
+
   unsigned length (void) const
   { return m_vec ? m_vec->length () : 0; }
 
@@ -2245,6 +2266,18 @@ public:
   template<typename OtherT>
   array_slice (const vec<OtherT> &v)
     : m_base (v.address ()), m_size (v.length ()) {}
+
+  template<typename OtherT>
+  array_slice (vec<OtherT> &v)
+    : m_base (v.address ()), m_size (v.length ()) {}
+
+  template<typename OtherT>
+  array_slice (const vec<OtherT, va_gc> *v)
+    : m_base (v ? v->address () : nullptr), m_size (v ? v->length () : 0) {}
+
+  template<typename OtherT>
+  array_slice (vec<OtherT, va_gc> *v)
+    : m_base (v ? v->address () : nullptr), m_size (v ? v->length () : 0) {}
 
   iterator begin () { return m_base; }
   iterator end () { return m_base + m_size; }

@@ -1,4 +1,26 @@
-/* Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Copyright (C) 2001-2023 Free Software Foundation, Inc.
+   Contributed by Jakub Jelinek <jakub@redhat.com>.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3, or (at your option)
+   any later version.
+
+   GCC is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   Under Section 7 of GPL version 3, you are granted additional
+   permissions described in the GCC Runtime Library Exception, version
+   3.1, as published by the Free Software Foundation.
+
+   You should have received a copy of the GNU General Public License and
+   a copy of the GCC Runtime Library Exception along with this program;
+   see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 /* Locate the FDE entry for a given address, using PT_GNU_EH_FRAME ELF
    segment and dl_iterate_phdr to avoid register/deregister calls at
@@ -374,10 +396,21 @@ find_fde_tail (_Unwind_Ptr pc,
   if (hdr->version != 1)
     return NULL;
 
-  p = read_encoded_value_with_base (hdr->eh_frame_ptr_enc,
-				    base_from_cb_data (hdr->eh_frame_ptr_enc,
-						       dbase),
-				    p, &eh_frame);
+  if (__builtin_expect (hdr->eh_frame_ptr_enc == (DW_EH_PE_sdata4
+						  | DW_EH_PE_pcrel), 1))
+    {
+      /* Specialized version of read_encoded_value_with_base, based on what
+	 BFD ld generates.  */
+      signed value __attribute__ ((mode (SI)));
+      memcpy (&value, p, sizeof (value));
+      p += sizeof (value);
+      dbase = value;		/* No adjustment because pcrel has base 0.  */
+    }
+  else
+    p = read_encoded_value_with_base (hdr->eh_frame_ptr_enc,
+				      base_from_cb_data (hdr->eh_frame_ptr_enc,
+							 dbase),
+				      p, &eh_frame);
 
   /* We require here specific table encoding to speed things up.
      Also, DW_EH_PE_datarel here means using PT_GNU_EH_FRAME start
@@ -387,10 +420,20 @@ find_fde_tail (_Unwind_Ptr pc,
     {
       _Unwind_Ptr fde_count;
 
-      p = read_encoded_value_with_base (hdr->fde_count_enc,
-					base_from_cb_data (hdr->fde_count_enc,
-							   dbase),
-					p, &fde_count);
+      if (__builtin_expect (hdr->fde_count_enc == DW_EH_PE_udata4, 1))
+	{
+	  /* Specialized version of read_encoded_value_with_base, based on
+	     what BFD ld generates.  */
+	  unsigned value __attribute__ ((mode (SI)));
+	  memcpy (&value, p, sizeof (value));
+	  p += sizeof (value);
+	  fde_count = value;
+	}
+      else
+	p = read_encoded_value_with_base (hdr->fde_count_enc,
+					  base_from_cb_data (hdr->fde_count_enc,
+							     dbase),
+					  p, &fde_count);
       /* Shouldn't happen.  */
       if (fde_count == 0)
 	return NULL;
@@ -432,8 +475,25 @@ find_fde_tail (_Unwind_Ptr pc,
 	  f = (fde *) (table[mid].fde + data_base);
 	  f_enc = get_fde_encoding (f);
 	  f_enc_size = size_of_encoded_value (f_enc);
-	  read_encoded_value_with_base (f_enc & 0x0f, 0,
-					&f->pc_begin[f_enc_size], &range);
+
+	  /* BFD ld uses DW_EH_PE_sdata4 | DW_EH_PE_pcrel on non-FDPIC targets,
+	     so optimize for that.
+
+	     This optimization is not valid for FDPIC targets.  f_enc & 0x0f as
+	     passed to read_encoded_value_with_base masks away the base flags,
+	     but they are implicit for FDPIC.  */
+#ifndef __FDPIC__
+	  if (__builtin_expect (f_enc == (DW_EH_PE_sdata4 | DW_EH_PE_pcrel),
+				1))
+	    {
+	      signed value __attribute__ ((mode (SI)));
+	      memcpy (&value, &f->pc_begin[f_enc_size], sizeof (value));
+	      range = value;
+	    }
+	  else
+#endif
+	    read_encoded_value_with_base (f_enc & 0x0f, 0,
+					  &f->pc_begin[f_enc_size], &range);
 	  _Unwind_Ptr func = table[mid].initial_loc + data_base;
 	  if (pc < table[mid].initial_loc + data_base + range)
 	    {

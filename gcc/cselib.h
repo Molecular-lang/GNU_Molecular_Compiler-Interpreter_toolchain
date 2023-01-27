@@ -1,5 +1,21 @@
 /* Common subexpression elimination for GNU compiler.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_CSELIB_H
 #define GCC_CSELIB_H
@@ -67,6 +83,7 @@ extern void cselib_process_insn (rtx_insn *);
 extern bool fp_setter_insn (rtx_insn *);
 extern machine_mode cselib_reg_set_mode (const_rtx);
 extern int rtx_equal_for_cselib_1 (rtx, rtx, machine_mode, int);
+extern bool cselib_redundant_set_p (rtx);
 extern int references_value_p (const_rtx, int);
 extern rtx cselib_expand_value_rtx (rtx, bitmap, int);
 typedef rtx (*cselib_expand_callback)(rtx, bitmap, int, void *);

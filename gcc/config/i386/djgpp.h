@@ -1,5 +1,21 @@
 /* Configuration for an i386 running MS-DOS with DJGPP.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1997-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Support generation of DWARF2 debugging info.  */
 #define DWARF2_DEBUGGING_INFO 1
@@ -112,8 +128,8 @@
 #undef PTRDIFF_TYPE
 #define PTRDIFF_TYPE "int"
 
-#undef DBX_REGISTER_NUMBER
-#define DBX_REGISTER_NUMBER(n) svr4_dbx_register_map[n]
+#undef DEBUGGER_REGNO
+#define DEBUGGER_REGNO(n) svr4_debugger_register_map[n]
 
 /* Default to pcc-struct-return.  */
 #define DEFAULT_PCC_STRUCT_RETURN 1

@@ -1,5 +1,22 @@
 /* Default macros to initialize the lang_hooks data structure.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+   Contributed by Alexandre Oliva  <aoliva@redhat.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_LANG_HOOKS_DEF_H
 #define GCC_LANG_HOOKS_DEF_H
@@ -71,7 +88,6 @@ extern tree lhd_omp_array_size (tree, gimple_seq *);
 struct gimplify_omp_ctx;
 extern void lhd_omp_firstprivatize_type_sizes (struct gimplify_omp_ctx *,
 					       tree);
-extern bool lhd_omp_mappable_type (tree);
 extern bool lhd_omp_scalar_p (tree, bool);
 extern tree *lhd_omp_get_decl_init (tree);
 extern void lhd_omp_finish_decl_inits ();
@@ -189,7 +205,6 @@ extern tree lhd_unit_size_without_reusable_padding (tree);
 #define LANG_HOOKS_TYPE_MAX_SIZE	lhd_return_null_const_tree
 #define LANG_HOOKS_OMP_FIRSTPRIVATIZE_TYPE_SIZES \
   lhd_omp_firstprivatize_type_sizes
-#define LANG_HOOKS_OMP_MAPPABLE_TYPE	lhd_omp_mappable_type
 #define LANG_HOOKS_TYPE_HASH_EQ		NULL
 #define LANG_HOOKS_COPY_LANG_QUALIFIERS NULL
 #define LANG_HOOKS_GET_ARRAY_DESCR_INFO	NULL
@@ -218,7 +233,6 @@ extern tree lhd_unit_size_without_reusable_padding (tree);
   LANG_HOOKS_INCOMPLETE_TYPE_ERROR, \
   LANG_HOOKS_TYPE_MAX_SIZE, \
   LANG_HOOKS_OMP_FIRSTPRIVATIZE_TYPE_SIZES, \
-  LANG_HOOKS_OMP_MAPPABLE_TYPE, \
   LANG_HOOKS_TYPE_HASH_EQ, \
   LANG_HOOKS_COPY_LANG_QUALIFIERS, \
   LANG_HOOKS_GET_ARRAY_DESCR_INFO, \

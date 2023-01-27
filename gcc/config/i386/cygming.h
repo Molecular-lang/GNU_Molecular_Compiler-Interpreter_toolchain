@@ -1,6 +1,22 @@
 /* Operating system specific defines to be used when targeting GCC for
    hosting on Windows32, using a Unix style C library and tools.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1995-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #define DWARF2_DEBUGGING_INFO 1
 
@@ -56,19 +72,19 @@
 
 #endif
 
-#undef DBX_REGISTER_NUMBER
-#define DBX_REGISTER_NUMBER(n)				\
-  (TARGET_64BIT ? dbx64_register_map[n]			\
+#undef DEBUGGER_REGNO
+#define DEBUGGER_REGNO(n)				\
+  (TARGET_64BIT ? debugger64_register_map[n]			\
    : (dwarf_debuginfo_p ()				\
-      ? svr4_dbx_register_map[n] : dbx_register_map[n]))
+      ? svr4_debugger_register_map[n] : debugger_register_map[n]))
 
 /* Map gcc register number to DWARF 2 CFA column number. For 32 bit
-   target, always use the svr4_dbx_register_map for DWARF .eh_frame
+   target, always use the svr4_debugger_register_map for DWARF .eh_frame
    even if we don't use DWARF .debug_frame. */
 #undef DWARF_FRAME_REGNUM
 #define DWARF_FRAME_REGNUM(n)				\
-  (TARGET_64BIT ? dbx64_register_map[(n)]		\
-		: svr4_dbx_register_map[(n)])
+  (TARGET_64BIT ? debugger64_register_map[(n)]		\
+		: svr4_debugger_register_map[(n)])
 
 /* The 64-bit MS_ABI changes the set of call-used registers.  */
 #undef DWARF_FRAME_REGISTERS

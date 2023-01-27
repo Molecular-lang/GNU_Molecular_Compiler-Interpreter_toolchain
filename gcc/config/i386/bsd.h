@@ -1,10 +1,26 @@
 /* Definitions for BSD assembler syntax for Intel 386
    (actually AT&T syntax for insns and operands,
    adapted to BSD conventions for symbol names and debugging.)
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1988-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Use the Sequent Symmetry assembler syntax.  */
-
+
 /* Define the syntax of pseudo-ops, labels and comments.  */
 
 /* Prefix for internally generated assembler labels.  If we aren't using
@@ -20,9 +36,10 @@
 #define ASM_LONG "\t.long\t"
 #define ASM_QUAD "\t.quad\t"  /* Should not be used for 32bit compilation.  */
 
-/* This was suggested, but it shouldn't be right for DBX output. -- RMS
+/* This was suggested, but it shouldn't be right for debugger output. -- RMS
    #define ASM_OUTPUT_SOURCE_FILENAME(FILE, NAME) */
 
+
 /* Define the syntax of labels and symbol definitions/declarations.  */
 
 /* This is how to output an assembler line
@@ -74,9 +91,3 @@
 /* The prefix to add to user-visible assembler symbols.  */
 
 #define USER_LABEL_PREFIX "_"
-
-/* Sequent has some changes in the format of DBX symbols.  */
-#define DBX_NO_XREFS 1
-
-/* Don't split DBX symbols into continuations.  */
-#define DBX_CONTIN_LENGTH 0

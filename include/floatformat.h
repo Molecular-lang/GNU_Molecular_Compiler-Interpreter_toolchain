@@ -1,5 +1,21 @@
 /* IEEE floating point support declarations, for GDB, the GNU Debugger.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1991-2023 Free Software Foundation, Inc.
+
+This file is part of GDB.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 
 #if !defined (FLOATFORMAT_H)
 #define FLOATFORMAT_H 1
@@ -75,13 +91,13 @@ struct floatformat
 
   /* Is the format actually the sum of two smaller floating point
      formats (IBM long double, as described in
-     gcc/config/rs6000/darwin-ldouble-format)?  If so, this is the
+     libgcc/config/rs6000/ibm-ldouble-format)?  If so, this is the
      smaller format in question, and the fields sign_start through
      intbit describe the first half.  If not, this is NULL.  */
   const struct floatformat *split_half;
 };
 
-/* floatformats for IEEE single and double, big and little endian.  */
+/* floatformats for IEEE half, single, double and quad, big and little endian.  */
 
 extern const struct floatformat floatformat_ieee_half_big;
 extern const struct floatformat floatformat_ieee_half_little;
@@ -89,6 +105,8 @@ extern const struct floatformat floatformat_ieee_single_big;
 extern const struct floatformat floatformat_ieee_single_little;
 extern const struct floatformat floatformat_ieee_double_big;
 extern const struct floatformat floatformat_ieee_double_little;
+extern const struct floatformat floatformat_ieee_quad_big;
+extern const struct floatformat floatformat_ieee_quad_little;
 
 /* floatformat for ARM IEEE double, little endian bytes and big endian words */
 
@@ -112,8 +130,6 @@ extern const struct floatformat floatformat_arm_ext_littlebyte_bigword;
 /* IA-64 Floating Point register spilt into memory.  */
 extern const struct floatformat floatformat_ia64_spill_big;
 extern const struct floatformat floatformat_ia64_spill_little;
-extern const struct floatformat floatformat_ia64_quad_big;
-extern const struct floatformat floatformat_ia64_quad_little;
 /* IBM long double (double+double).  */
 extern const struct floatformat floatformat_ibm_long_double_big;
 extern const struct floatformat floatformat_ibm_long_double_little;

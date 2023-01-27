@@ -1,9 +1,38 @@
 # Makefile.am -- Backtrace Makefile.
-# Please review: $(src-dir)/SPL-README for Licencing info.
+# Copyright (C) 2012-2023 Free Software Foundation, Inc.
+
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+
+#     (1) Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+
+#     (2) Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in
+#     the documentation and/or other materials provided with the
+#     distribution.
+
+#     (3) The name of the author may not be used to
+#     endorse or promote products derived from this software without
+#     specific prior written permission.
+
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
+# INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+# IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
 
 ACLOCAL_AMFLAGS = -I .. -I ../config
 
-AM_CPPFLAGS = -I $(top_srcdir)/../include -I $(top_srcdir)/../libgcc -I ../libgcc
+AM_CPPFLAGS = -I $(top_srcdir)/../include -I $(top_srcdir)/../libgcc \
+	-I ../libgcc
 
 AM_CFLAGS = $(EXTRA_FLAGS) $(WARN_FLAGS) $(PIC_FLAG) $(CET_HOST_FLAGS)
 
@@ -56,13 +85,19 @@ libbacktrace_la_DEPENDENCIES = $(libbacktrace_la_LIBADD)
 
 # Testsuite.
 
-# Add a test to this variable if you want it to be built.
+# Add a test to this variable if you want it to be built as a program,
+# with SOURCES, etc.
 check_PROGRAMS =
 
 # Add a test to this variable if you want it to be run.
 TESTS =
 
-# Add a test to this variable if you want it to be built and run.
+# Add a test to this variable if you want it to be built as a Makefile
+# target and run.
+MAKETESTS =
+
+# Add a test to this variable if you want it to be built as a program,
+# with SOURCES, etc., and run.
 BUILDTESTS =
 
 # Add a file to this variable if you want it to be built for testing.
@@ -213,6 +248,7 @@ check_DATA += allocfail.dSYM
 endif USE_DSYMUTIL
 
 if HAVE_ELF
+if HAVE_BUILDID
 if HAVE_OBJCOPY_DEBUGLINK
 
 b2test_SOURCES = $(btest_SOURCES)
@@ -221,7 +257,7 @@ b2test_LDFLAGS = -Wl,--build-id
 b2test_LDADD = libbacktrace_elf_for_test.la
 
 check_PROGRAMS += b2test
-TESTS += b2test_buildid
+MAKETESTS += b2test_buildid
 
 if HAVE_DWZ
 
@@ -231,11 +267,12 @@ b3test_LDFLAGS = -Wl,--build-id
 b3test_LDADD = libbacktrace_elf_for_test.la
 
 check_PROGRAMS += b3test
-TESTS += b3test_dwz_buildid
+MAKETESTS += b3test_dwz_buildid
 
 endif HAVE_DWZ
 
 endif HAVE_OBJCOPY_DEBUGLINK
+endif HAVE_BUILDID
 endif HAVE_ELF
 
 btest_SOURCES = btest.c testlib.c
@@ -282,11 +319,11 @@ if HAVE_DWZ
 	  cp $< $@; \
 	fi
 
-TESTS += btest_dwz
+MAKETESTS += btest_dwz
 
 if HAVE_OBJCOPY_DEBUGLINK
 
-TESTS += btest_dwz_gnudebuglink
+MAKETESTS += btest_dwz_gnudebuglink
 
 endif HAVE_OBJCOPY_DEBUGLINK
 
@@ -332,6 +369,25 @@ ztest_alloc_SOURCES = $(ztest_SOURCES)
 ztest_alloc_CFLAGS = $(ztest_CFLAGS)
 
 BUILDTESTS += ztest_alloc
+
+zstdtest_SOURCES = zstdtest.c testlib.c
+zstdtest_CFLAGS = $(libbacktrace_TEST_CFLAGS) -DSRCDIR=\"$(srcdir)\"
+zstdtest_LDADD = libbacktrace.la
+zstdtest_alloc_LDADD = libbacktrace_alloc.la
+
+if HAVE_ZSTD
+zstdtest_LDADD += -lzstd
+zstdtest_alloc_LDADD += -lzstd
+endif
+zstdtest_LDADD += $(CLOCK_GETTIME_LINK)
+zstdtest_alloc_LDADD += $(CLOCK_GETTIME_LINK)
+
+BUILDTESTS += zstdtest
+
+zstdtest_alloc_SOURCES = $(zstdtest_SOURCES)
+zstdtest_alloc_CFLAGS = $(zstdtest_CFLAGS)
+
+BUILDTESTS += zstdtest_alloc
 
 endif HAVE_ELF
 
@@ -387,7 +443,7 @@ endif HAVE_PTHREAD
 
 if HAVE_OBJCOPY_DEBUGLINK
 
-TESTS += btest_gnudebuglink
+MAKETESTS += btest_gnudebuglink
 
 %_gnudebuglink: %
 	$(OBJCOPY) --only-keep-debug $< $@.debug
@@ -414,6 +470,17 @@ ctesta_LDFLAGS = -Wl,--compress-debug-sections=zlib-gabi
 ctesta_LDADD = libbacktrace.la
 
 BUILDTESTS += ctestg ctesta
+
+if HAVE_COMPRESSED_DEBUG_ZSTD
+
+ctestzstd_SOURCES = btest.c testlib.c
+ctestzstd_CFLAGS = $(libbacktrace_TEST_CFLAGS)
+ctestzstd_LDFLAGS = -Wl,--compress-debug-sections=zstd
+ctestzstd_LDADD = libbacktrace.la
+
+BUILDTESTS += ctestzstd
+
+endif
 
 ctestg_alloc_SOURCES = $(ctestg_SOURCES)
 ctestg_alloc_CFLAGS = $(ctestg_CFLAGS)
@@ -465,7 +532,7 @@ endif USE_DSYMUTIL
 
 if HAVE_MINIDEBUG
 
-TESTS += mtest_minidebug
+MAKETESTS += mtest_minidebug
 
 %_minidebug: %
 	$(NM) -D $< -P --defined-only | $(AWK) '{ print $$1 }' | sort > $<.dsyms
@@ -507,10 +574,11 @@ endif HAVE_ELF
 
 check_PROGRAMS += $(BUILDTESTS)
 
-TESTS += $(BUILDTESTS)
+TESTS += $(MAKETESTS) $(BUILDTESTS)
 
 CLEANFILES = \
-	$(TESTS) *.debug elf_for_test.c edtest2_build.c gen_edtest2_build \
+	$(MAKETESTS) $(BUILDTESTS) *.debug elf_for_test.c edtest2_build.c \
+	gen_edtest2_build \
 	*.dsyms *.fsyms *.keepsyms *.dbg *.mdbg *.mdbg.xz *.strip
 
 clean-local:

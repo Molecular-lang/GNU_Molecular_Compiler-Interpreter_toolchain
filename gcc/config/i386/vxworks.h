@@ -1,5 +1,22 @@
 /* IA32 VxWorks target definitions for GNU compiler.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2003-2023 Free Software Foundation, Inc.
+   Updated by CodeSourcery, LLC.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* VxWorks after 7 SR0600 use the ELF ABI and the system environment is llvm
    based.  Earlier versions have GNU based environment components and use the
@@ -37,12 +54,12 @@
 
 #endif
 
-/* Provide our target specific DBX_REGISTER_NUMBER.  VxWorks relies on
+/* Provide our target specific DEBUGGER_REGNO.  VxWorks relies on
    the SVR4 numbering.  */
 
-#undef DBX_REGISTER_NUMBER
-#define DBX_REGISTER_NUMBER(n) \
-  (TARGET_64BIT ? dbx64_register_map[n] : svr4_dbx_register_map[n])
+#undef DEBUGGER_REGNO
+#define DEBUGGER_REGNO(n) \
+  (TARGET_64BIT ? debugger64_register_map[n] : svr4_debugger_register_map[n])
 
 /* CPU macro definitions, ordered to account for VxWorks 7 not
    supporting CPUs older than PENTIUM4 since SR0650.  */

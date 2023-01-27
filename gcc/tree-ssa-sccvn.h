@@ -1,5 +1,22 @@
 /* Tree SCC value numbering
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+   Contributed by Daniel Berlin <dberlin@dberlin.org>
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+
+   GCC is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with GCC; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.  */
 
 #ifndef TREE_SSA_SCCVN_H
 #define TREE_SSA_SCCVN_H
@@ -278,8 +295,12 @@ value_id_constant_p (unsigned int v)
 tree fully_constant_vn_reference_p (vn_reference_t);
 tree vn_nary_simplify (vn_nary_op_t);
 
-unsigned do_rpo_vn (function *, edge, bitmap, bool, bool, vn_lookup_kind);
-unsigned do_rpo_vn (function *, edge, bitmap);
+unsigned do_rpo_vn (function *, edge, bitmap,
+		    /* iterate */ bool = false,
+		    /* eliminate */ bool = true,
+		    vn_lookup_kind = VN_WALKREWRITE);
+
+/* Private interface for PRE.  */
 void run_rpo_vn (vn_lookup_kind);
 unsigned eliminate_with_rpo_vn (bitmap);
 void free_rpo_vn (void);

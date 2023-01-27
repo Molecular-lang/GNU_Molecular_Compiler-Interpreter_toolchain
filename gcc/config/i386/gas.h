@@ -1,5 +1,21 @@
 /* Definitions for Intel 386 using GAS.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1988-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Note that i386/seq-gas.h is a GAS configuration that does not use this
    file.  */
@@ -15,14 +31,10 @@
  * Next is the question of whether to uses underscores.  RMS didn't
  * like this idea at first, but since it is now obvious that we
  * need this separate tm file for use with gas, at least to get
- * dbx debugging info, I think we should also switch to underscores.
+ * debugging info, I think we should also switch to underscores.
  * We can keep i386v for real att style output, and the few
  * people who want both form will have to compile twice.
  */
-
-/* these come from i386/bsd.h, but are specific to sequent */
-#undef DBX_NO_XREFS
-#undef DBX_CONTIN_LENGTH
 
 /* Output #ident as a .ident.  */
 

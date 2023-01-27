@@ -1,5 +1,21 @@
 /* Traits for hashable types.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2014-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef hash_traits_h
 #define hash_traits_h
@@ -69,6 +85,32 @@ typed_noop_remove <Type>::remove (Type &)
 {
 }
 
+/* Base traits for integer type Type, providing just the hash and
+   comparison functionality.  */
+
+template <typename Type>
+struct int_hash_base : typed_noop_remove <Type>
+{
+  typedef Type value_type;
+  typedef Type compare_type;
+
+  static inline hashval_t hash (value_type);
+  static inline bool equal (value_type existing, value_type candidate);
+};
+
+template <typename Type>
+inline hashval_t
+int_hash_base <Type>::hash (value_type x)
+{
+  return x;
+}
+
+template <typename Type>
+inline bool
+int_hash_base <Type>::equal (value_type x, value_type y)
+{
+  return x == y;
+}
 
 /* Hasher for integer type Type in which Empty is a spare value that can be
    used to mark empty slots.  If Deleted != Empty then Deleted is another
@@ -76,33 +118,17 @@ typed_noop_remove <Type>::remove (Type &)
    hash table entries cannot be deleted.  */
 
 template <typename Type, Type Empty, Type Deleted = Empty>
-struct int_hash : typed_noop_remove <Type>
+struct int_hash : int_hash_base <Type>
 {
   typedef Type value_type;
   typedef Type compare_type;
 
-  static inline hashval_t hash (value_type);
-  static inline bool equal (value_type existing, value_type candidate);
   static inline void mark_deleted (Type &);
   static const bool empty_zero_p = Empty == 0;
   static inline void mark_empty (Type &);
   static inline bool is_deleted (Type);
   static inline bool is_empty (Type);
 };
-
-template <typename Type, Type Empty, Type Deleted>
-inline hashval_t
-int_hash <Type, Empty, Deleted>::hash (value_type x)
-{
-  return x;
-}
-
-template <typename Type, Type Empty, Type Deleted>
-inline bool
-int_hash <Type, Empty, Deleted>::equal (value_type x, value_type y)
-{
-  return x == y;
-}
 
 template <typename Type, Type Empty, Type Deleted>
 inline void
@@ -380,6 +406,61 @@ inline bool
 pair_hash <T1, T2>::is_empty (const value_type &x)
 {
   return T1::is_empty (x.first);
+}
+
+/* Base traits for vectors, providing just the hash and comparison
+   functionality.  Type gives the corresponding traits for the element
+   type.  */
+
+template <typename Type>
+struct vec_hash_base
+{
+  typedef vec<typename Type::value_type> value_type;
+  typedef vec<typename Type::compare_type> compare_type;
+
+  static inline hashval_t hash (value_type);
+  static inline bool equal (value_type, compare_type);
+};
+
+template <typename Type>
+inline hashval_t
+vec_hash_base <Type>::hash (value_type x)
+{
+  inchash::hash hstate;
+  hstate.add_int (x.length ());
+  for (auto &value : x)
+    hstate.merge_hash (Type::hash (value));
+  return hstate.end ();
+}
+
+template <typename Type>
+inline bool
+vec_hash_base <Type>::equal (value_type x, compare_type y)
+{
+  if (x.length () != y.length ())
+    return false;
+  for (unsigned int i = 0; i < x.length (); ++i)
+    if (!Type::equal (x[i], y[i]))
+      return false;
+  return true;
+}
+
+/* Traits for vectors whose contents should be freed normally.  */
+
+template <typename Type>
+struct vec_free_hash_base : vec_hash_base <Type>
+{
+  static void remove (typename vec_hash_base <Type>::value_type &);
+};
+
+template <typename Type>
+void
+vec_free_hash_base <Type>
+::remove (typename vec_hash_base <Type>::value_type &x)
+{
+  for (auto &value : x)
+    Type::remove (x);
+  x.release ();
 }
 
 template <typename T> struct default_hash_traits : T {};

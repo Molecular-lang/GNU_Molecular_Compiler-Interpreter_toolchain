@@ -1,6 +1,28 @@
 /* Threads compatibility routines for libgcc2 and libobjc for VxWorks.  */
 /* Compile this one with gcc.  */
-/* Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Copyright (C) 1997-2023 Free Software Foundation, Inc.
+   Contributed by Mike Stump <mrs@wrs.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_GTHR_VXWORKS_H
 #define GCC_GTHR_VXWORKS_H
@@ -16,8 +38,11 @@
 #include <_vxworks-versions.h>
 
 /* Some VxWorks headers profusely use typedefs of a pointer to a function with
-   undefined number of arguments.  */
+   undefined number of arguments.  Arrange to ignore declaration errors in C++,
+   which is achievable by ignoring Wstrict-prototypes diagnostics even when the
+   option is registered as only valid for c/objc.  */
 #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wpragmas"
   #pragma GCC diagnostic ignored "-Wstrict-prototypes"
   #include <semLib.h>
 #pragma GCC diagnostic pop

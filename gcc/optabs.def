@@ -1,5 +1,21 @@
 /* Definitions for operation tables, or "optabs".
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* The entries in optabs.def are categorized:
      C: A "conversion" optab, which uses two modes; has libcall data.
@@ -204,6 +220,8 @@ OPTAB_D (reload_in_optab, "reload_in$a")
 OPTAB_D (reload_out_optab, "reload_out$a")
 
 OPTAB_DC(cbranch_optab, "cbranch$a4", COMPARE)
+OPTAB_D (tbranch_eq_optab, "tbranch_eq$a3")
+OPTAB_D (tbranch_ne_optab, "tbranch_ne$a3")
 OPTAB_D (addcc_optab, "add$acc")
 OPTAB_D (negcc_optab, "neg$acc")
 OPTAB_D (notcc_optab, "not$acc")
@@ -297,6 +315,7 @@ OPTAB_D (fmod_optab, "fmod$a3")
 OPTAB_D (hypot_optab, "hypot$a3")
 OPTAB_D (ilogb_optab, "ilogb$a2")
 OPTAB_D (isinf_optab, "isinf$a2")
+OPTAB_D (issignaling_optab, "issignaling$a2")
 OPTAB_D (ldexp_optab, "ldexp$a3")
 OPTAB_D (log10_optab, "log10$a2")
 OPTAB_D (log1p_optab, "log1p$a2")

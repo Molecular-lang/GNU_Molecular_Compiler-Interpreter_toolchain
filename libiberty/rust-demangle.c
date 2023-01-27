@@ -1,5 +1,31 @@
 /* Demangler for the Rust programming language
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2016-2023 Free Software Foundation, Inc.
+   Written by David Tolnay (dtolnay@gmail.com).
+   Rewritten by Eduard-Mihai Burtescu (eddyb@lyken.rs) for v0 support.
+
+This file is part of the libiberty library.
+Libiberty is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
+
+In addition to the permissions in the GNU Library General Public
+License, the Free Software Foundation gives you unlimited permission
+to link the compiled version of this file into combinations with other
+programs, and to distribute those combinations without any restriction
+coming from the use of this file.  (The Library Public License
+restrictions do apply in other respects; for example, they cover
+modification of the file, and distribution when not linked into a
+combined executable.)
+
+Libiberty is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with libiberty; see the file COPYING.LIB.
+If not, see <http://www.gnu.org/licenses/>.  */
 
 
 #ifdef HAVE_CONFIG_H
@@ -100,7 +126,7 @@ parse_integer_62 (struct rust_demangler *rdm)
     return 0;
 
   x = 0;
-  while (!eat (rdm, '_'))
+  while (!eat (rdm, '_') && !rdm->errored)
     {
       c = next (rdm);
       x *= 62;
@@ -1056,6 +1082,18 @@ demangle_path_maybe_open_generics (struct rust_demangler *rdm)
   if (rdm->errored)
     return open;
 
+  if (rdm->recursion != RUST_NO_RECURSION_LIMIT)
+    {
+      ++ rdm->recursion;
+      if (rdm->recursion > RUST_MAX_RECURSION_COUNT)
+	{
+	  /* FIXME: There ought to be a way to report
+	     that the recursion limit has been reached.  */
+	  rdm->errored = 1;
+	  goto end_of_func;
+	}
+    }
+
   if (eat (rdm, 'B'))
     {
       backref = parse_integer_62 (rdm);
@@ -1081,6 +1119,11 @@ demangle_path_maybe_open_generics (struct rust_demangler *rdm)
     }
   else
     demangle_path (rdm, 0);
+
+ end_of_func:
+  if (rdm->recursion != RUST_NO_RECURSION_LIMIT)
+    -- rdm->recursion;
+
   return open;
 }
 
@@ -1122,6 +1165,15 @@ demangle_const (struct rust_demangler *rdm)
   if (rdm->errored)
     return;
 
+  if (rdm->recursion != RUST_NO_RECURSION_LIMIT)
+    {
+      ++ rdm->recursion;
+      if (rdm->recursion > RUST_MAX_RECURSION_COUNT)
+	/* FIXME: There ought to be a way to report
+	   that the recursion limit has been reached.  */
+	goto fail_return;
+    }
+
   if (eat (rdm, 'B'))
     {
       backref = parse_integer_62 (rdm);
@@ -1132,7 +1184,7 @@ demangle_const (struct rust_demangler *rdm)
           demangle_const (rdm);
           rdm->next = old_next;
         }
-      return;
+      goto pass_return;
     }
 
   ty_tag = next (rdm);
@@ -1141,7 +1193,7 @@ demangle_const (struct rust_demangler *rdm)
     /* Placeholder. */
     case 'p':
       PRINT ("_");
-      return;
+      goto pass_return;
 
     /* Unsigned integer types. */
     case 'h':
@@ -1174,18 +1226,21 @@ demangle_const (struct rust_demangler *rdm)
       break;
 
     default:
-      rdm->errored = 1;
-      return;
+      goto fail_return;
     }
 
-  if (rdm->errored)
-    return;
-
-  if (rdm->verbose)
+  if (!rdm->errored && rdm->verbose)
     {
       PRINT (": ");
       PRINT (basic_type (ty_tag));
     }
+  goto pass_return;
+
+ fail_return:
+  rdm->errored = 1;
+ pass_return:
+  if (rdm->recursion != RUST_NO_RECURSION_LIMIT)
+    -- rdm->recursion;
 }
 
 static void

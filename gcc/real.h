@@ -1,5 +1,21 @@
 /* Definitions of floating-point access for GNU compiler.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1989-2023 Free Software Foundation, Inc.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify it under
+   the terms of the GNU General Public License as published by the Free
+   Software Foundation; either version 3, or (at your option) any later
+   version.
+
+   GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+   WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+   for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with GCC; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_REAL_H
 #define GCC_REAL_H
@@ -261,11 +277,22 @@ extern bool real_compare (int, const REAL_VALUE_TYPE *, const REAL_VALUE_TYPE *)
 /* Determine whether a floating-point value X is infinite.  */
 extern bool real_isinf (const REAL_VALUE_TYPE *);
 
+/* Determine whether a floating-point value X is infinite with SIGN.  */
+extern bool real_isinf (const REAL_VALUE_TYPE *, bool sign);
+
 /* Determine whether a floating-point value X is a NaN.  */
 extern bool real_isnan (const REAL_VALUE_TYPE *);
 
 /* Determine whether a floating-point value X is a signaling NaN.  */
 extern bool real_issignaling_nan (const REAL_VALUE_TYPE *);
+
+/* Determine whether floating-point value R is a denormal.  This
+   function is only valid for normalized values.  */
+inline bool
+real_isdenormal (const REAL_VALUE_TYPE *r, machine_mode mode)
+{
+  return r->cl == rvc_normal && REAL_EXP (r) < REAL_MODE_FORMAT (mode)->emin;
+}
 
 /* Determine whether a floating-point value X is finite.  */
 extern bool real_isfinite (const REAL_VALUE_TYPE *);
@@ -275,6 +302,12 @@ extern bool real_isneg (const REAL_VALUE_TYPE *);
 
 /* Determine whether a floating-point value X is minus zero.  */
 extern bool real_isnegzero (const REAL_VALUE_TYPE *);
+
+/* Determine whether a floating-point value X is plus or minus zero.  */
+extern bool real_iszero (const REAL_VALUE_TYPE *);
+
+/* Determine whether a floating-point value X is zero with SIGN.  */
+extern bool real_iszero (const REAL_VALUE_TYPE *, bool sign);
 
 /* Test relationships between reals.  */
 extern bool real_identical (const REAL_VALUE_TYPE *, const REAL_VALUE_TYPE *);
@@ -315,7 +348,7 @@ extern long real_to_target (long *, const REAL_VALUE_TYPE *, format_helper);
 extern void real_from_target (REAL_VALUE_TYPE *, const long *,
 			      format_helper);
 
-extern void real_inf (REAL_VALUE_TYPE *);
+extern void real_inf (REAL_VALUE_TYPE *, bool sign = false);
 
 extern bool real_nan (REAL_VALUE_TYPE *, const char *, int, format_helper);
 
@@ -437,6 +470,8 @@ extern REAL_VALUE_TYPE dconst1;
 extern REAL_VALUE_TYPE dconst2;
 extern REAL_VALUE_TYPE dconstm1;
 extern REAL_VALUE_TYPE dconsthalf;
+extern REAL_VALUE_TYPE dconstinf;
+extern REAL_VALUE_TYPE dconstninf;
 
 #define dconst_e() (*dconst_e_ptr ())
 #define dconst_third() (*dconst_third_ptr ())

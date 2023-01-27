@@ -1,6 +1,22 @@
 /* Definitions of the pointer_query and related classes.
 
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify it under
+   the terms of the GNU General Public License as published by the Free
+   Software Foundation; either version 3, or (at your option) any later
+   version.
+
+   GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+   WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+   for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with GCC; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_POINTER_QUERY_H
 #define GCC_POINTER_QUERY_H
@@ -72,7 +88,7 @@ struct access_ref
      argument to the minimum.  */
   offset_int size_remaining (offset_int * = nullptr) const;
 
-/* Return true if the offset and object size are in range for SIZE.  */
+  /* Return true if the offset and object size are in range for SIZE.  */
   bool offset_in_range (const offset_int &) const;
 
   /* Return true if *THIS is an access to a declared object.  */
@@ -125,6 +141,9 @@ struct access_ref
   /* Positive when REF is dereferenced, negative when its address is
      taken.  */
   int deref;
+  /* The following indicates if heuristics interpreted 'ref' is interpreted
+     as (offsetted) nullptr.  */
+  bool ref_nullptr_p;
   /* Set if trailing one-element arrays should be treated as flexible
      array members.  */
   bool trail1special;

@@ -1,6 +1,22 @@
 /* Declarations for insn-output.cc and other code to write to asm_out_file.
    These functions are defined in final.cc, and varasm.cc.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_OUTPUT_H
 #define GCC_OUTPUT_H
@@ -182,10 +198,6 @@ extern void assemble_end_function (tree, const char *);
    DONT_OUTPUT_DATA if nonzero means don't actually output the
    initial value (that will be done by the caller).  */
 extern void assemble_variable (tree, int, int, int);
-
-/* Put the vtable verification constructor initialization function
-   into the preinit array.  */
-extern void assemble_vtv_preinit_initializer (tree);
 
 /* Assemble everything that is needed for a variable declaration that has
    no definition in the current translation unit.  */

@@ -1,5 +1,21 @@
 # GCC host-specific configuration file.
-# Please review: $(src-dir)/SPL-README for Licencing info.
+# Copyright (C) 1997-2023 Free Software Foundation, Inc.
+
+#This file is part of GCC.
+
+#GCC is free software; you can redistribute it and/or modify it under
+#the terms of the GNU General Public License as published by the Free
+#Software Foundation; either version 3, or (at your option) any later
+#version.
+
+#GCC is distributed in the hope that it will be useful, but WITHOUT
+#ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with GCC; see the file COPYING3.  If not see
+#<http://www.gnu.org/licenses/>.
 
 # This is the GCC host-specific configuration file
 # where a configuration type is mapped to different system-specific
@@ -185,11 +201,6 @@ esac
 
 # Machine-specific settings.
 case ${host} in
-  hppa1.0-*-hpux10* | hppa1.1-*-hpux10* | hppa2*-*-hpux10*)
-    out_host_hook_obj=host-hpux.o
-    host_xmake_file="${host_xmake_file} x-hpux"
-    ;;
-  hppa1.0-*-hpux11* | hppa1.1-*-hpux11* | hppa2*-*-hpux11* | \
   hppa*64*-*-hpux11*)
     out_host_hook_obj=host-hpux.o
     host_xmake_file="${host_xmake_file} x-hpux"

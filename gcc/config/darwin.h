@@ -1,5 +1,27 @@
 /* Target definitions for Darwin (Mac OS X) systems.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1989-2023 Free Software Foundation, Inc.
+   Contributed by Apple Computer Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef CONFIG_DARWIN_H
 #define CONFIG_DARWIN_H
@@ -374,10 +396,10 @@ extern GTY(()) int darwin_ms_struct;
 
 #define DSYMUTIL_SPEC \
   "%{!c:%{!E:%{!S:%{!r:%{!M:%{!MM:%{!fsyntax-only:%{!fdump=*:\
-     %{g*:%{!gctf:%{!gbtf:%{!gstabs*:%{%:debug-level-gt(0): -idsym \
+     %{g*:%{!gctf:%{!gbtf:%{%:debug-level-gt(0): -idsym \
        %{.c|.cc|.C|.cpp|.cp|.c++|.cxx|.CPP|.m|.mm|.s|.f|.f90|\
 	 .f95|.f03|.f77|.for|.F|.F90|.F95|.F03|.d: -dsym }\
-      }}}}}\
+      }}}}\
    }}}}}}}}"
 
 #define LINK_COMMAND_SPEC LINK_COMMAND_SPEC_A DSYMUTIL_SPEC
@@ -421,10 +443,16 @@ extern GTY(()) int darwin_ms_struct;
                      %:replace-outfile(-lobjc libobjc-gnu.a%s); \
                     :%:replace-outfile(-lobjc -lobjc-gnu )}}\
    %{static|static-libgcc|static-libgfortran:%:replace-outfile(-lgfortran libgfortran.a%s)}\
+   %{static|static-libgcc|static-libquadmath:%:replace-outfile(-lquadmath libquadmath.a%s)}\
    %{static|static-libgcc|static-libphobos:%:replace-outfile(-lgphobos libgphobos.a%s)}\
    %{static|static-libgcc|static-libstdc++|static-libgfortran:%:replace-outfile(-lgomp libgomp.a%s)}\
    %{static|static-libgcc|static-libstdc++:%:replace-outfile(-lstdc++ libstdc++.a%s)}\
-   %{force_cpusubtype_ALL:-arch %(darwin_arch)} \
+   %{static|static-libgm2:%:replace-outfile(-lm2pim libm2pim.a%s)}\
+   %{static|static-libgm2:%:replace-outfile(-lm2iso libm2iso.a%s)}\
+   %{static|static-libgm2:%:replace-outfile(-lm2min libm2min.a%s)}\
+   %{static|static-libgm2:%:replace-outfile(-lm2log libm2log.a%s)}\
+   %{static|static-libgm2:%:replace-outfile(-lm2cor libm2cor.a%s)}\
+  %{force_cpusubtype_ALL:-arch %(darwin_arch)} \
    %{!force_cpusubtype_ALL:-arch %(darwin_subarch)} "\
    LINK_SYSROOT_SPEC \
   "%{mmacosx-version-min=*:-macosx_version_min %*} \
@@ -560,14 +588,7 @@ extern GTY(()) int darwin_ms_struct;
 "%{static} -arch %(darwin_arch) " \
 ASM_OPTIONS ASM_MMACOSX_VERSION_MIN_SPEC
 
-#ifdef HAVE_AS_STABS_DIRECTIVE
-/* We only pass a debug option to the assembler if that supports stabs, since
-   dwarf is not uniformly supported in the assemblers.  */
-#define ASM_DEBUG_SPEC  "%{g*:%{%:debug-level-gt(0):%{!gdwarf*:--gstabs}}}"
-#else
 #define ASM_DEBUG_SPEC  ""
-#endif
-
 #undef  ASM_DEBUG_OPTION_SPEC
 #define ASM_DEBUG_OPTION_SPEC	""
 
@@ -580,10 +601,6 @@ ASM_OPTIONS ASM_MMACOSX_VERSION_MIN_SPEC
 
 #define DWARF2_DEBUGGING_INFO 1
 #define PREFERRED_DEBUGGING_TYPE DWARF2_DEBUG
-
-#ifdef HAVE_AS_STABS_DIRECTIVE
-#define DBX_DEBUGGING_INFO 1
-#endif
 
 #define DEBUG_FRAME_SECTION	  "__DWARF,__debug_frame,regular,debug"
 #define DEBUG_INFO_SECTION	  "__DWARF,__debug_info,regular,debug"
@@ -615,18 +632,6 @@ ASM_OPTIONS ASM_MMACOSX_VERSION_MIN_SPEC
 #define DEBUG_PUBTYPES_SECTION   ((debug_generate_pub_sections == 2) \
                                ? "__DWARF,__debug_gnu_pubt,regular,debug" \
                                : "__DWARF,__debug_pubtypes,regular,debug")
-
-/* When generating stabs debugging, use N_BINCL entries.  */
-
-#define DBX_USE_BINCL
-
-/* There is no limit to the length of stabs strings.  */
-
-#define DBX_CONTIN_LENGTH 0
-
-/* gdb needs a null N_SO at the end of each file for scattered loading.  */
-
-#define DBX_OUTPUT_NULL_N_SO_AT_MAIN_SOURCE_FILE_END
 
 /* GCC's definition of 'one_only' is the same as its definition of 'weak'.  */
 #define MAKE_DECL_ONE_ONLY(DECL) (DECL_WEAK (DECL) = 1)

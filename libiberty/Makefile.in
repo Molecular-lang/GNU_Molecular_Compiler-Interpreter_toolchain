@@ -1,7 +1,23 @@
 # Makefile for the libiberty library.
 # Originally written by K. Richard Pixley <rich@cygnus.com>.
 #
-# Please review: $(src-dir)/SPL-README for Licencing info.
+# Copyright (C) 1990-2023 Free Software Foundation, Inc.
+#
+# This file is part of the libiberty library.
+# Libiberty is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# Libiberty is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with libiberty; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+# Boston, MA 02110-1301, USA.
 
 libiberty_topdir = @libiberty_topdir@
 srcdir = @srcdir@
@@ -82,7 +98,7 @@ FLAGS_TO_PASS = \
 	"tooldir=$(tooldir)"
 
 # Subdirectories to recurse into. We need to override this during cleaning
-SUBDIRS =
+SUBDIRS = testsuite
 
 # FIXME: add @BUILD_INFO@ once we're sure it works for everyone.
 all: stamp-picdir stamp-noasandir $(TARGETLIB) required-list all-subdir
@@ -270,9 +286,17 @@ dvi: $(LIBIBERTY_DVIFILES) dvi-subdir
 
 dvi__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 
-install-dvi:
+install-dvi: $(LIBIBERTY_DVIFILES)
+	@$(NORMAL_INSTALL)
+	test -z "$(dvidir)" || $(mkinstalldirs) "$(DESTDIR)$(dvidir)"
+	@list='$(LIBIBERTY_DVIFILES)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(dvi__strip_dir) \
+	  echo " $(INSTALL_DATA) '$$d$$p' '$(DESTDIR)$(dvidir)/$$f'"; \
+	  $(INSTALL_DATA) "$$d$$p" "$(DESTDIR)$(dvidir)/$$f"; \
+	done
 
-LIBIBERTY_PDFFILES =
+LIBIBERTY_PDFFILES = libiberty.pdf
 
 pdf: $(LIBIBERTY_PDFFILES) pdf-subdir
 
@@ -280,7 +304,15 @@ pdf: $(LIBIBERTY_PDFFILES) pdf-subdir
 
 pdf__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 
-install-pdf:
+install-pdf: $(LIBIBERTY_PDFFILES)
+	@$(NORMAL_INSTALL)
+	test -z "$(pdfdir)" || $(mkinstalldirs) "$(DESTDIR)$(pdfdir)"
+	@list='$(LIBIBERTY_PDFFILES)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(pdf__strip_dir) \
+	  echo " $(INSTALL_DATA) '$$d$$p' '$(DESTDIR)$(pdfdir)/$$f'"; \
+	  $(INSTALL_DATA) "$$d$$p" "$(DESTDIR)$(pdfdir)/$$f"; \
+	done
 
 # html, install-html targets
 HTMLS = libiberty.html
@@ -296,17 +328,51 @@ html__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 
 install-html: install-html-am
 
-install-html-am:
+install-html-am: $(HTMLS)
+	@$(NORMAL_INSTALL)
+	test -z "$(htmldir)" || $(mkdir_p) "$(DESTDIR)$(htmldir)"
+	@list='$(HTMLS)'; for p in $$list; do \
+	  if test -f "$$p" || test -d "$$p"; then d=""; else d="$(srcdir)/"; fi; \
+	  f=$(html__strip_dir) \
+	  if test -d "$$d$$p"; then \
+	    echo " $(mkdir_p) '$(DESTDIR)$(htmldir)/$$f'"; \
+	    $(mkdir_p) "$(DESTDIR)$(htmldir)/$$f" || exit 1; \
+	    echo " $(INSTALL_DATA) '$$d$$p'/* '$(DESTDIR)$(htmldir)/$$f'"; \
+	    $(INSTALL_DATA) "$$d$$p"/* "$(DESTDIR)$(htmldir)/$$f"; \
+	  else \
+	    echo " $(INSTALL_DATA) '$$d$$p' '$(DESTDIR)$(htmldir)/$$f'"; \
+	    $(INSTALL_DATA) "$$d$$p" "$(DESTDIR)$(htmldir)/$$f"; \
+	  fi; \
+	done
 
-TEXISRC =
+TEXISRC = \
+	$(srcdir)/libiberty.texi \
+	$(srcdir)/copying-lib.texi \
+	$(srcdir)/obstacks.texi \
+	$(srcdir)/functions.texi
 
 # Additional files that have texi snippets that need to be collected
 # and sorted.  Some are here because the sources are imported from
 # elsewhere.  Others represent headers in ../include.
-TEXIFILES =
+TEXIFILES = fnmatch.txh pexecute.txh simple-object.txh
+
+libiberty.info : $(srcdir)/libiberty.texi $(TEXISRC)
+	$(MAKEINFO) -I$(srcdir) $(srcdir)/libiberty.texi
+
+libiberty.dvi : $(srcdir)/libiberty.texi $(TEXISRC)
+	texi2dvi $(srcdir)/libiberty.texi
+
+libiberty.pdf : $(srcdir)/libiberty.texi $(TEXISRC)
+	texi2pdf $(srcdir)/libiberty.texi
+
+libiberty.html : $(srcdir)/libiberty.texi $(TEXISRC)
+	$(MAKEINFO) --no-split --html -I$(srcdir) -o $@ $<
+
+@MAINT@$(srcdir)/functions.texi : stamp-functions
+@MAINT@	@true
 
 @MAINT@stamp-functions : $(CFILES:%=$(srcdir)/%) $(TEXIFILES:%=$(srcdir)/%) $(srcdir)/gather-docs Makefile
-@MAINT@@HAVE_PERL@	$(PERL) $(srcdir)/gather-docs $(srcdir) $(CFILES) $(TEXIFILES)
+@MAINT@@HAVE_PERL@	$(PERL) $(srcdir)/gather-docs $(srcdir) $(srcdir)/functions.texi $(CFILES) $(TEXIFILES)
 @MAINT@	echo stamp > stamp-functions
 
 INSTALL_DEST = @INSTALL_DEST@
@@ -387,7 +453,8 @@ maint-missing :
 maint-buildall : $(REQUIRED_OFILES) $(CONFIGURED_OFILES)
 	@true
 
-maint-undoc :
+maint-undoc : $(srcdir)/functions.texi
+	@$(PERL) $(srcdir)/maint-tool -s $(srcdir) undoc
 
 maint-deps :
 	@$(PERL) $(srcdir)/maint-tool -s $(srcdir) deps $(INCDIR)
@@ -415,6 +482,7 @@ distclean: distclean-subdir
 	@$(MULTICLEAN) multi-clean DO=distclean
 	-rm -f *~ Makefile config.cache config.status xhost-mkfrag TAGS multilib.out
 	-rm -f config.log
+	-rmdir testsuite 2>/dev/null
 maintainer-clean realclean: maintainer-clean-subdir
 	$(MAKE) SUBDIRS="" distclean
 

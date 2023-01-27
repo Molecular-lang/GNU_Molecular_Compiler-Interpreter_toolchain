@@ -1,6 +1,23 @@
 /* This file contains the definitions of the GIMPLE IR tuples used in GCC.
 
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+   Contributed by Aldy Hernandez <aldyh@redhat.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* The format of this file is
    DEFGSCODE(GIMPLE_symbol, printable name, GSS_symbol).  */
@@ -389,3 +406,8 @@ DEFGSCODE(GIMPLE_PREDICT, "gimple_predict", GSS_BASE)
 
     This tuple should not exist outside of the gimplifier proper.  */
 DEFGSCODE(GIMPLE_WITH_CLEANUP_EXPR, "gimple_with_cleanup_expr", GSS_WCE)
+
+/* GIMPLE_ASSUME <GUARD, BODY> represents [[assume(cond)]].
+   BODY is the GIMPLE_BIND with the condition which sets GUARD to true
+   (otherwise UB).  */
+DEFGSCODE(GIMPLE_ASSUME, "gimple_assume", GSS_ASSUME)

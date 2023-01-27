@@ -1,5 +1,37 @@
 /* DWARF2 frame unwind data structure.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1997-2023 Free Software Foundation, Inc.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3, or (at your option)
+   any later version.
+
+   GCC is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+   License for more details.
+
+   Under Section 7 of GPL version 3, you are granted additional
+   permissions described in the GCC Runtime Library Exception, version
+   3.1, as published by the Free Software Foundation.
+
+   You should have received a copy of the GNU General Public License and
+   a copy of the GCC Runtime Library Exception along with this program;
+   see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+   <http://www.gnu.org/licenses/>.  */
+
+enum {
+  REG_UNSAVED,
+  REG_SAVED_OFFSET,
+  REG_SAVED_REG,
+  REG_SAVED_EXP,
+  REG_SAVED_VAL_OFFSET,
+  REG_SAVED_VAL_EXP,
+  REG_UNSAVED_ARCHEXT,		/* Target specific extension.  */
+  REG_UNDEFINED
+};
 
 /* The result of interpreting the frame unwind info for a frame.
    This is all symbolic at this point, as none of the values can
@@ -16,16 +48,14 @@ typedef struct
 	_Unwind_Sword offset;
 	const unsigned char *exp;
       } loc;
-      enum {
-	REG_UNSAVED,
-	REG_SAVED_OFFSET,
-	REG_SAVED_REG,
-	REG_SAVED_EXP,
-	REG_SAVED_VAL_OFFSET,
-	REG_SAVED_VAL_EXP,
-	REG_UNDEFINED
-      } how;
     } reg[__LIBGCC_DWARF_FRAME_REGISTERS__+1];
+    unsigned char how[__LIBGCC_DWARF_FRAME_REGISTERS__+1];
+
+    enum {
+      CFA_UNSET,
+      CFA_REG_OFFSET,
+      CFA_EXP
+    } cfa_how : 8;
 
     /* Used to implement DW_CFA_remember_state.  */
     struct frame_state_reg_info *prev;
@@ -35,11 +65,6 @@ typedef struct
     _Unwind_Sword cfa_offset;
     _Unwind_Word cfa_reg;
     const unsigned char *cfa_exp;
-    enum {
-      CFA_UNSET,
-      CFA_REG_OFFSET,
-      CFA_EXP
-    } cfa_how;
   } regs;
 
   /* The PC described by the current frame state.  */

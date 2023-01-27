@@ -1,4 +1,20 @@
-/* Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Copyright (C) 1988-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_I386_EXPAND_H
 #define GCC_I386_EXPAND_H
@@ -22,7 +38,8 @@ alias_set_type ix86_GOT_alias_set (void);
 rtx legitimize_pic_address (rtx orig, rtx reg);
 rtx legitimize_pe_coff_symbol (rtx addr, bool inreg);
 
-bool insn_defines_reg (unsigned int regno1, unsigned int regno2, rtx_insn *insn);
+bool insn_defines_reg (unsigned int regno1, unsigned int regno2,
+		       rtx_insn *insn);
 void ix86_emit_binop (enum rtx_code code, machine_mode mode, rtx dst, rtx src);
 enum calling_abi ix86_function_abi (const_tree fndecl);
 bool ix86_function_ms_hook_prologue (const_tree fn);

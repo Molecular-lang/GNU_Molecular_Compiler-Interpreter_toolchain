@@ -1,5 +1,21 @@
 /* Header file for SSA loop optimizations.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2013-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_TREE_SSA_LOOP_H
 #define GCC_TREE_SSA_LOOP_H
@@ -36,13 +52,14 @@ public:
 			   may_be_zero == false), more precisely the number
 			   of executions of the latch of the loop.  */
   widest_int max;	/* The upper bound on the number of iterations of
-			   the loop.  */
+			   the loop.  If niter is constant, then these values
+			   must agree.  */
 
-  /* The simplified shape of the exit condition.  The loop exits if
-     CONTROL CMP BOUND is false, where CMP is one of NE_EXPR,
-     LT_EXPR, or GT_EXPR, and step of CONTROL is positive if CMP is
-     LE_EXPR and negative if CMP is GE_EXPR.  This information is used
-     by loop unrolling.  */
+  /* The simplified shape of the exit condition.  This information is used by
+     loop unrolling.  If CMP is ERROR_MARK, then the loop cannot be unrolled.
+     Otherwise, the loop exits if CONTROL CMP BOUND is false, where CMP is one
+     of NE_EXPR, LT_EXPR, or GT_EXPR, and CONTROL.STEP is positive if CMP is
+     LT_EXPR and negative if CMP is GT_EXPR.  */
   affine_iv control;
   tree bound;
   enum tree_code cmp;

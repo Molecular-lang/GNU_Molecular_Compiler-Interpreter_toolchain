@@ -1,9 +1,40 @@
 # libtool.m4 - Configure libtool for the host system. -*-Autoconf-*-
 #
-# Please review $(srcdir/SPL-README) for Licencing info.
+#   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,
+#                 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+#   Written by Gordon Matzigkeit, 1996
+#
+# This file is free software; the Free Software Foundation gives
+# unlimited permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
 
 m4_define([_LT_COPYING], [dnl
-# Please review $(srcdir/SPL-README) for Licencing info.
+#   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,
+#                 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+#   Written by Gordon Matzigkeit, 1996
+#
+#   This file is part of GNU Libtool.
+#
+# GNU Libtool is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+#
+# As a special exception to the GNU General Public License,
+# if you distribute this file as part of a program or library that
+# is built using GNU Libtool, you may include this file under the
+# same distribution terms that you use for the rest of that program.
+#
+# GNU Libtool is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Libtool; see the file COPYING.  If not, a copy
+# can be downloaded from http://www.gnu.org/licenses/gpl.html, or
+# obtained by writing to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 ])
 
 # serial 56 LT_INIT
@@ -2644,6 +2675,25 @@ uts4*)
   shlibpath_var=LD_LIBRARY_PATH
   ;;
 
+# Shared libraries for VwWorks, >= 7 only at this stage
+# and (fpic) still incompatible with "large" code models
+# in a few configurations. Only for RTP mode in any case,
+# and upon explicit request at configure time.
+vxworks7*)
+  dynamic_linker=no
+  case ${with_multisubdir}-${enable_shared} in
+    *large*)
+      ;;
+    *mrtp*-yes)
+      version_type=linux
+      need_lib_prefix=no
+      need_version=no
+      library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+      soname_spec='${libname}${release}${shared_ext}$major'
+      dynamic_linker="$host_os module_loader"
+      ;;
+  esac
+  ;;
 *)
   dynamic_linker=no
   ;;
@@ -3129,6 +3179,11 @@ sysv4 | sysv4.3*)
   ;;
 
 tpf*)
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+vxworks*)
+  # Assume VxWorks cross toolchains are built on Linux, possibly
+  # as canadian for Windows hosts.
   lt_cv_deplibs_check_method=pass_all
   ;;
 esac
@@ -6365,8 +6420,9 @@ if test "$_lt_caught_CXX_error" != yes; then
         ;;
 
       vxworks*)
-        # FIXME: insert proper C++ library support
-        _LT_TAGVAR(ld_shlibs, $1)=no
+        # For VxWorks ports, we assume the use of a GNU linker with
+        # standard elf conventions.
+        _LT_TAGVAR(ld_shlibs, $1)=yes
         ;;
 
       *)

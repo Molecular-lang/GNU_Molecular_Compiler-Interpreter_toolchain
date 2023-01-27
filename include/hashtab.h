@@ -1,5 +1,20 @@
 /* An expandable hash tables datatype.  
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1999-2023 Free Software Foundation, Inc.
+   Contributed by Vladimir Makarov (vmakarov@cygnus.com).
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 
 /* This package implements basic hash table functionality.  It is possible
    to search for an entry, create an entry and destroy an entry.
@@ -64,12 +79,12 @@ typedef void (*htab_free_with_arg) (void *, void *);
 
 /* This macro defines reserved value for empty table entry.  */
 
-#define HTAB_EMPTY_ENTRY    ((PTR) 0)
+#define HTAB_EMPTY_ENTRY    ((void *) 0)
 
 /* This macro defines reserved value for table entry which contained
    a deleted element. */
 
-#define HTAB_DELETED_ENTRY  ((PTR) 1)
+#define HTAB_DELETED_ENTRY  ((void *) 1)
 
 /* Hash tables are of the following type.  The structure
    (implementation) of this type is not needed for using the hash

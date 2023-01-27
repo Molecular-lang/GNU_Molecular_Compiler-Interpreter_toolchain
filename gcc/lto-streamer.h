@@ -1,7 +1,24 @@
 /* Data structures and declarations used for reading and writing
    GIMPLE to a file stream.
 
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Contributed by Doug Kwan <dougkwan@google.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_LTO_STREAMER_H
 #define GCC_LTO_STREAMER_H
@@ -294,6 +311,7 @@ private:
     int line, col;
     bool sysp;
     tree block;
+    unsigned discr;
   };
 
   /* The location cache.  */
@@ -316,6 +334,7 @@ private:
   bool current_sysp;
   location_t current_loc;
   tree current_block;
+  unsigned current_discr;
 };
 
 /* Structure used as buffer for reading an LTO file.  */
@@ -706,6 +725,7 @@ struct output_block
   bool reset_locus;
   bool emit_pwd;
   tree current_block;
+  unsigned current_discr;
 
   /* Cache of nodes written in this section.  */
   struct streamer_tree_cache_d *writer_cache;

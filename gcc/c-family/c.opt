@@ -1,5 +1,21 @@
 ; Options for the C, ObjC, C++ and ObjC++ front ends.
-; Please review: $(src-dir)/SPL-README for Licencing info.
+; Copyright (C) 2003-2023 Free Software Foundation, Inc.
+;
+; This file is part of GCC.
+;
+; GCC is free software; you can redistribute it and/or modify it under
+; the terms of the GNU General Public License as published by the Free
+; Software Foundation; either version 3, or (at your option) any later
+; version.
+;
+; GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+; WARRANTY; without even the implied warranty of MERCHANTABILITY or
+; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+; for more details.
+;
+; You should have received a copy of the GNU General Public License
+; along with GCC; see the file COPYING3.  If not see
+; <http://www.gnu.org/licenses/>.
 
 ; See the GCC internals manual for a description of this file's format.
 
@@ -439,7 +455,7 @@ Wc++2a-compat
 C++ ObjC++ Warning Alias(Wc++20-compat) Undocumented
 
 Wc++20-compat
-C++ ObjC++ Var(warn_cxx20_compat) Warning LangEnabledBy(C++ ObjC++,Wall)
+C++ ObjC++ Var(warn_cxx20_compat) Warning LangEnabledBy(C++ ObjC++,Wall) Init(0) CPP(cpp_warn_cxx20_compat) CppReason(CPP_W_CXX20_COMPAT)
 Warn about C++ constructs whose meaning differs between ISO C++ 2017 and ISO C++ 2020.
 
 Wc++11-extensions
@@ -538,6 +554,10 @@ Warn for uses of pointers to auto variables whose lifetime has ended.
 Wdangling-pointer=
 C ObjC C++ ObjC++ Joined RejectNegative UInteger Var(warn_dangling_pointer) Warning LangEnabledBy(C ObjC C++ ObjC++,Wall, 2, 0) IntegerRange(0, 2)
 Warn for uses of pointers to auto variables whose lifetime has ended.
+
+Wdangling-reference
+C++ ObjC++ Var(warn_dangling_reference) Warning LangEnabledBy(C++ ObjC++, Wall)
+Warn when a reference is bound to a temporary whose lifetime has ended.
 
 Wdate-time
 C ObjC C++ ObjC++ CPP(warn_date_time) CppReason(CPP_W_DATE_TIME) Var(cpp_warn_date_time) Init(0) Warning
@@ -797,6 +817,10 @@ Wint-to-pointer-cast
 C ObjC C++ ObjC++ Var(warn_int_to_pointer_cast) Init(1) Warning
 Warn when there is a cast to a pointer from an integer of a different size.
 
+Winvalid-constexpr
+C++ ObjC++ Var(warn_invalid_constexpr) Init(-1) Warning
+Warn when a function never produces a constant expression.
+
 Winvalid-offsetof
 C++ ObjC++ Var(warn_invalid_offsetof) Init(1) Warning
 Warn about invalid uses of the \"offsetof\" macro.
@@ -804,6 +828,10 @@ Warn about invalid uses of the \"offsetof\" macro.
 Winvalid-pch
 C ObjC C++ ObjC++ CPP(warn_invalid_pch) CppReason(CPP_W_INVALID_PCH) Var(cpp_warn_invalid_pch) Init(0) Warning
 Warn about PCH files that are found but not used.
+
+Winvalid-utf8
+C ObjC C++ ObjC++ CPP(cpp_warn_invalid_utf8) CppReason(CPP_W_INVALID_UTF8) Var(warn_invalid_utf8) Init(0) Warning
+Warn about invalid UTF-8 characters.
 
 Wjump-misses-init
 C ObjC Var(warn_jump_misses_init) Warning LangEnabledby(C ObjC,Wc++-compat)
@@ -827,7 +855,7 @@ Do not warn about using \"long long\" when -pedantic.
 
 Wmain
 C ObjC C++ ObjC++ Var(warn_main) Init(-1) Warning LangEnabledBy(C ObjC,Wall, 2, 0)
-Warn about suspicious declarations of \"scpel\".
+Warn about suspicious declarations of \"main\".
 
 Wmain
 LangEnabledBy(C ObjC C++ ObjC++,Wpedantic, 2, 0)
@@ -947,6 +975,11 @@ Warn about reading past the end of a source array in string manipulation functio
 Wstringop-truncation
 C ObjC C++ LTO ObjC++ Var(warn_stringop_truncation) Warning Init (1) LangEnabledBy(C ObjC C++ LTO ObjC++, Wall)
 Warn about truncation in string manipulation functions like strncat and strncpy.
+
+Wstrict-flex-arrays
+C C++ Var(warn_strict_flex_arrays) Warning
+Warn about inproper usages of flexible array members
+according to the level of -fstrict-flex-arrays.
 
 Wsuggest-attribute=format
 C ObjC C++ ObjC++ Var(warn_suggest_attribute_format) Warning
@@ -1213,6 +1246,10 @@ Wselector
 ObjC ObjC++ Var(warn_selector) Warning
 Warn if a selector has multiple methods.
 
+Wself-move
+C++ ObjC++ Var(warn_self_move) Warning LangEnabledBy(C++ ObjC++, Wall)
+Warn when a value is moved to itself with std::move.
+
 Wsequence-point
 C ObjC C++ ObjC++ Var(warn_sequence_point) Warning LangEnabledBy(C ObjC C++ ObjC++,Wall)
 Warn about possible violations of sequence point rules.
@@ -1321,6 +1358,10 @@ Wundef
 C ObjC C++ ObjC++ CPP(warn_undef) CppReason(CPP_W_UNDEF) Var(cpp_warn_undef) Init(0) Warning
 Warn if an undefined macro is used in an #if directive.
 
+Wunicode
+C ObjC C++ ObjC++ CPP(cpp_warn_unicode) CppReason(CPP_W_UNICODE) Var(warn_unicode) Init(1) Warning
+Warn about invalid forms of delimited or named escape sequences.
+
 Wuninitialized
 C ObjC C++ ObjC++ LTO LangEnabledBy(C ObjC C++ ObjC++ LTO,Wall)
 ;
@@ -1423,6 +1464,10 @@ Wwrite-strings
 C ObjC C++ ObjC++ Var(warn_write_strings) Warning
 In C++, nonzero means warn about deprecated conversion from string literals to 'char *'.  In C, similar warning, except that the conversion is of course not deprecated by the ISO C standard.
 
+Wxor-used-as-pow
+C ObjC C++ ObjC++ Var(warn_xor_used_as_pow) Warning Init(1)
+Warn about xor operators where it appears the user meant exponentiation.
+
 Wzero-as-null-pointer-constant
 C++ ObjC++ Var(warn_zero_as_null_pointer_constant) Warning
 Warn when a literal '0' is used as null pointer.
@@ -1476,8 +1521,8 @@ fall-virtual
 C++ ObjC++ WarnRemoved
 
 fallow-parameterless-variadic-functions
-C ObjC Var(flag_allow_parameterless_variadic_functions)
-Allow variadic functions without named parameter.
+C ObjC Ignore
+Does nothing. Preserved for backward compatibility.
 
 falt-external-templates
 C++ ObjC++ WarnRemoved
@@ -1637,6 +1682,47 @@ C++ ObjC++ Joined RejectNegative UInteger Var(constexpr_loop_limit) Init(262144)
 fconstexpr-ops-limit=
 C++ ObjC++ Joined RejectNegative Host_Wide_Int Var(constexpr_ops_limit) Init(33554432)
 -fconstexpr-ops-limit=<number>	Specify maximum number of constexpr operations during a single constexpr evaluation.
+
+fcontracts
+C++ ObjC++ Var(flag_contracts) Init(0)
+Enable certain features present drafts of C++ Contracts.
+
+Enum
+Name(on_off) Type(int) UnknownError(argument %qs must be either %<on%> or %<off%>)
+
+EnumValue
+Enum(on_off) String(off) Value(0)
+
+EnumValue
+Enum(on_off) String(on) Value(1)
+
+fcontract-assumption-mode=
+C++ Joined RejectNegative
+-fcontract-assumption-mode=[on|off]	Enable or disable treating axiom level contracts as assumptions (default on).
+
+fcontract-build-level=
+C++ Joined RejectNegative
+-fcontract-build-level=[off|default|audit]	Specify max contract level to generate runtime checks for.
+
+fcontract-strict-declarations=
+C++ Var(flag_contract_strict_declarations) Enum(on_off) Joined Init(0) RejectNegative
+-fcontract-strict-declarations=[on|off]	Enable or disable warnings on generalized redeclaration of functions with contracts (default off).
+
+fcontract-mode=
+C++ Var(flag_contract_mode) Enum(on_off) Joined Init(1) RejectNegative
+-fcontract-mode=[on|off]	Enable or disable all contract facilities (default on).
+
+fcontract-continuation-mode=
+C++ Joined RejectNegative
+-fcontract-continuation-mode=[on|off]	Enable or disable contract continuation mode (default off).
+
+fcontract-role=
+C++ Joined RejectNegative
+-fcontract-role=<name>:<semantics>	Specify the semantics for all levels in a role (default, review), or a custom contract role with given semantics (ex: opt:assume,assume,assume).
+
+fcontract-semantic=
+C++ Joined RejectNegative
+-fcontract-semantic=<level>:<semantic>	Specify the concrete semantics for level.
 
 fcoroutines
 C++ LTO Var(flag_coroutines)
@@ -2043,6 +2129,13 @@ Make \"char\" signed by default.
 fsized-deallocation
 C++ ObjC++ Var(flag_sized_deallocation) Init(-1)
 Enable C++14 sized deallocation support.
+
+fstrict-flex-arrays
+C C++ Common Alias(fstrict-flex-arrays=,3,0)
+
+fstrict-flex-arrays=
+C C++ Common Joined RejectNegative UInteger Var(flag_strict_flex_arrays) Init(0) IntegerRange(0,3)
+-fstrict-flex-arrays=<level>    Control when to treat the trailing array of a structure as a flexible array member for the purposes of accessing the elements of such an array. The default is treating all trailing arrays of structures as flexible array members.
 
 fsquangle
 C++ ObjC++ WarnRemoved

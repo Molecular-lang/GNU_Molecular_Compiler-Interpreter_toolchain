@@ -1,5 +1,22 @@
 /* Target definitions for x86 running Darwin.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+   Contributed by Apple Computer Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Enable Mach-O bits in generic x86 code.  */
 #undef TARGET_MACHO
@@ -93,7 +110,7 @@
 
 #undef ENDFILE_SPEC
 #define ENDFILE_SPEC \
-  "%{Ofast|ffast-math|funsafe-math-optimizations:crtfastmath.o%s} \
+  "%{mdaz-ftz:crtfastmath.o%s;Ofast|ffast-math|funsafe-math-optimizations:%{!shared:%{!mno-daz-ftz:crtfastmath.o%s}}} \
    %{mpc32:crtprec32.o%s} \
    %{mpc64:crtprec64.o%s} \
    %{mpc80:crtprec80.o%s}" TM_DESTRUCTOR
@@ -220,11 +237,11 @@
 /* Darwin uses the standard DWARF register numbers but the default
    register numbers for STABS.  Fortunately for 64-bit code the
    default and the standard are the same.  */
-#undef DBX_REGISTER_NUMBER
-#define DBX_REGISTER_NUMBER(n) 					\
-  (TARGET_64BIT ? dbx64_register_map[n]				\
-   : dwarf_debuginfo_p () ? svr4_dbx_register_map[n]		\
-   : dbx_register_map[n])
+#undef DEBUGGER_REGNO
+#define DEBUGGER_REGNO(n) 					\
+  (TARGET_64BIT ? debugger64_register_map[n]				\
+   : dwarf_debuginfo_p () ? svr4_debugger_register_map[n]		\
+   : debugger_register_map[n])
 
 /* Unfortunately, the 32-bit EH information also doesn't use the standard
    DWARF register numbers.  */

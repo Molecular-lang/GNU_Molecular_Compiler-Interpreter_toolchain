@@ -1,5 +1,21 @@
 /* Base configuration file for all OpenBSD targets.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1999-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Common OpenBSD configuration. 
    All OpenBSD architectures include this file, which is intended as
@@ -133,17 +149,6 @@ while (0)
    so the version from elfos.h header won't be used.  */
 #undef TARGET_LIBC_HAS_FUNCTION
 #define TARGET_LIBC_HAS_FUNCTION default_libc_has_function
-
-
-/* Runtime target specification.  */
-
-/* Miscellaneous parameters.  */
-
-/* Controlling debugging info: dbx options.  */
-
-/* Don't use the `xsTAG;' construct in DBX output; OpenBSD systems that
-   use DBX don't support it.  */
-#define DBX_NO_XREFS
 
 
 /* - we use . - _func instead of a local label,

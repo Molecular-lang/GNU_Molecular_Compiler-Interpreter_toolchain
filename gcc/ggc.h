@@ -1,6 +1,22 @@
 /* Garbage collection for the GNU compiler.
 
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1998-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_GGC_H
 #define GCC_GGC_H
@@ -28,7 +44,8 @@ typedef void (*gt_handle_reorder) (void *, void *, gt_pointer_operator,
 				   void *);
 
 /* Used by the gt_pch_n_* routines.  Register an object in the hash table.  */
-extern int gt_pch_note_object (void *, void *, gt_note_pointers);
+extern int gt_pch_note_object (void *, void *, gt_note_pointers,
+			       size_t length_override = (size_t)-1);
 
 /* Used by the gt_pch_p_* routines.  Register address of a callback
    pointer.  */
@@ -85,6 +102,7 @@ extern int ggc_marked_p	(const void *);
 
 /* PCH and GGC handling for strings, mostly trivial.  */
 extern void gt_pch_n_S (const void *);
+extern void gt_pch_n_S2 (const void *, size_t);
 extern void gt_ggc_m_S (const void *);
 
 /* End of GTY machinery API.  */

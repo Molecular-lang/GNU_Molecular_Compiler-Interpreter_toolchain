@@ -1,5 +1,23 @@
 /* Target definitions for GCC for Intel 80386 using ELF
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1988-2023 Free Software Foundation, Inc.
+
+   Derived from sysv4.h written by Ron Guilmette (rfg@netcom.com).
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Define DEFAULT_PCC_STRUCT_RETURN to 1 because the i386 SVR4 ABI returns
    records and unions in memory. ix86_option_override_internal will overide
@@ -18,9 +36,9 @@
 			  %{pg:gcrt0.o%s}%{!pg:%{p:mcrt0.o%s}%{!p:crt0.o%s}}}}\
 			crtbegin.o%s"
 
-#undef DBX_REGISTER_NUMBER
-#define DBX_REGISTER_NUMBER(n) \
-  (TARGET_64BIT ? dbx64_register_map[n] : svr4_dbx_register_map[n])
+#undef DEBUGGER_REGNO
+#define DEBUGGER_REGNO(n) \
+  (TARGET_64BIT ? debugger64_register_map[n] : svr4_debugger_register_map[n])
 
 #define LOCAL_LABEL_PREFIX	"."
 

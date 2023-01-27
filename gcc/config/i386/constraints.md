@@ -1,5 +1,21 @@
 ;; Constraint definitions for IA-32 and x86-64.
-;; Please review: $(src-dir)/SPL-README for Licencing info.
+;; Copyright (C) 2006-2023 Free Software Foundation, Inc.
+;;
+;; This file is part of GCC.
+;;
+;; GCC is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; GCC is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with GCC; see the file COPYING3.  If not see
+;; <http://www.gnu.org/licenses/>.
 
 ;;; Unused letters:
 ;;;           H
@@ -152,6 +168,9 @@
 ;;  z  Constant call address operand.
 ;;  C  Integer SSE constant with all bits set operand.
 ;;  F  Floating-point SSE constant with all bits set operand.
+;;  H  Integer SSE constant that is 128/256bit all ones
+;;     and zero-extand to 256/512bit, or 128bit all ones
+;;     and zero-extend to 512bit.
 ;;  M  x86-64 memory operand.
 
 (define_constraint "Bf"
@@ -216,6 +235,11 @@
   "@internal floating-point SSE constant with all bits set operand."
   (and (match_test "TARGET_SSE")
        (match_operand 0 "float_vector_all_ones_operand")))
+
+(define_constraint "BH"
+  "@internal integer constant with last half/quarter bits set operand."
+  (ior (match_operand 0 "vector_all_ones_zero_extend_half_operand")
+       (match_operand 0 "vector_all_ones_zero_extend_quarter_operand")))
 
 ;; NB: Similar to 'm', but don't use define_memory_constraint on x86-64
 ;; to prevent LRA from converting the operand to the form '(mem (reg X))'

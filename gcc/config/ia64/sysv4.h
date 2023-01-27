@@ -1,6 +1,27 @@
 /* Override definitions in elfos.h to be correct for IA64.
 
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+Copyright (C) 2000-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 #undef TARGET_INIT_LIBFUNCS
 #define TARGET_INIT_LIBFUNCS ia64_sysv4_init_libfuncs
@@ -8,9 +29,6 @@
 /* We want DWARF2 as specified by the IA64 ABI.  */
 #undef PREFERRED_DEBUGGING_TYPE
 #define PREFERRED_DEBUGGING_TYPE DWARF2_DEBUG
-
-/* Stabs does not work properly for 64-bit targets.  */
-#undef DBX_DEBUGGING_INFO
 
 /* Various pseudo-ops for which the Intel assembler uses non-standard
    definitions.  */
@@ -82,8 +100,8 @@ do {						\
 #undef FINI_SECTION_ASM_OP
 #define FINI_SECTION_ASM_OP	"\t.section\t.fini,\"ax\",\"progbits\""
 
-#define DBX_REGISTER_NUMBER(REGNO) \
-  ia64_dbx_register_number(REGNO)
+#define DEBUGGER_REGNO(REGNO) \
+  ia64_debugger_regno(REGNO)
 
 #undef SIZE_TYPE
 #define SIZE_TYPE "long unsigned int"

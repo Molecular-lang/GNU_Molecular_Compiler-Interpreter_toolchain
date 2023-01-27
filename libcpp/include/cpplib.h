@@ -1,5 +1,24 @@
 /* Definitions for CPP library.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1995-2023 Free Software Foundation, Inc.
+   Written by Per Bothner, 1994-95.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 3, or (at your option) any
+later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.
+
+ In other words, you are welcome to use, share and improve this program.
+ You are forbidden to forbid anyone else to use, share and improve
+ what you give them.   Help stamp out software-hoarding!  */
 #ifndef LIBCPP_CPPLIB_H
 #define LIBCPP_CPPLIB_H
 
@@ -30,137 +49,141 @@ struct _cpp_file;
    See the cpp_operator table optab in expr.cc if you change the order or
    add or remove anything in the first group.  */
 
-#define TTYPE_TABLE \
-  OP(EQ,		"=") \
-  OP(NOT,		"!") \
-  OP(GREATER,	">") /* compare */ \
-  OP(LESS,		"<") \
-  OP(PLUS,		"+") /* math */ \
-  OP(MINUS,		"-") \
-  OP(MULT,		"*") \
-  OP(DIV,		"/") \
-  OP(MOD,		"%") \
-  OP(AND,		"&") /* bit ops */ \
-  OP(OR,		"|") \
-  OP(XOR,		"^") \
-  OP(RSHIFT,	">>") \
-  OP(LSHIFT,	"<<") \
-\
-  OP(COMPL,		"~") \
-  OP(AND_AND,	"&&") /* logical */ \
-  OP(OR_OR,		"||") \
-  OP(QUERY,		"?") \
-  OP(COLON,		":") \
-  OP(COMMA,		",") /* grouping */ \
-  OP(OPEN_PAREN,	"(") \
-  OP(CLOSE_PAREN,	")") \
-  TK(EOF,			NONE) \
-  OP(EQ_EQ,			"==") /* compare */ \
-  OP(NOT_EQ,		"!=") \
-  OP(GREATER_EQ,	">=") \
-  OP(LESS_EQ,		"<=") \
-  OP(SPACESHIP,		"<=>") \
-\
-  /* These two are unary + / - in preprocessor expressions. */ \
-  OP(PLUS_EQ,		"+=") /* math */ \
-  OP(MINUS_EQ,		"-=") \
-\
-  OP(MULT_EQ,		"*=") \
-  OP(DIV_EQ,		"/=") \
-  OP(MOD_EQ,		"%=") \
-  OP(AND_EQ,		"&=") /* bit ops */ \
-  OP(OR_EQ,			"|=") \
-  OP(XOR_EQ,		"^=") \
-  OP(RSHIFT_EQ,		">>=") \
-  OP(LSHIFT_EQ,		"<<=") \
-  /* Digraphs together, beginning with CPP_FIRST_DIGRAPH. */ \
-  OP(HASH,			"#") /* digraphs */ \
-  OP(PASTE,			"##") \
-  OP(OPEN_SQUARE,	"[") \
-  OP(CLOSE_SQUARE,	"]") \
-  OP(OPEN_BRACE,	"{") \
-  OP(CLOSE_BRACE,	"}") \
-  /* The remainder of the punctuation. Order is not significant. */ \
-  OP(SEMICOLON,		";") /* structure */ \
-  OP(ELLIPSIS,		"...") \
-  OP(PLUS_PLUS,		"++") /* increment */ \
-  OP(MINUS_MINUS,	"--") \
-  OP(DEREF,			"->") /* accessors */ \
-  OP(DOT,			".") \
-  OP(SCOPE,			"::") \
-  OP(DEREF_STAR,	"->*") \
-  OP(DOT_STAR,		".*") \
-  OP(ATSIGN,		"@") /* used in Objective-C */ \
-\
-  TK(NAME,			IDENT) /* word */ \
-  TK(AT_NAME,		IDENT) /* @word - Objective-C */ \
-  TK(NUMBER,		LITERAL) /* 34_be+ta  */ \
-\
-  TK(CHAR,			LITERAL) /* 'char' */ \
-  TK(WCHAR,			LITERAL) /* L'char' */ \
-  TK(CHAR16,		LITERAL) /* u'char' */ \
-  TK(CHAR32,		LITERAL) /* U'char' */ \
-  TK(UTF8CHAR,		LITERAL) /* u8'char' */ \
-  TK(OTHER,			LITERAL) /* stray punctuation */ \
-\
-  TK(STRING,		LITERAL) /* "string" */ \
-  TK(WSTRING,		LITERAL) /* L"string" */ \
-  TK(STRING16,		LITERAL) /* u"string" */ \
-  TK(STRING32,		LITERAL) /* U"string" */ \
-  TK(UTF8STRING,	LITERAL) /* u8"string" */ \
-  TK(OBJC_STRING,	LITERAL) /* @"string" - Objective-C */ \
-  TK(HEADER_NAME,	LITERAL) /* <stdio.h> in #include */ \
-\
-  TK(CHAR_USERDEF,		LITERAL) /* 'char'_suffix - C++-0x */ \
-  TK(WCHAR_USERDEF,		LITERAL) /* L'char'_suffix - C++-0x */ \
-  TK(CHAR16_USERDEF,	LITERAL) /* u'char'_suffix - C++-0x */ \
-  TK(CHAR32_USERDEF,	LITERAL) /* U'char'_suffix - C++-0x */ \
-  TK(UTF8CHAR_USERDEF,	LITERAL) /* u8'char'_suffix - C++-0x */ \
-  TK(STRING_USERDEF,	LITERAL) /* "string"_suffix - C++-0x */ \
-  TK(WSTRING_USERDEF,	LITERAL) /* L"string"_suffix - C++-0x */ \
-  TK(STRING16_USERDEF,	LITERAL) /* u"string"_suffix - C++-0x */ \
-  TK(STRING32_USERDEF,	LITERAL) /* U"string"_suffix - C++-0x */ \
-  TK(UTF8STRING_USERDEF,LITERAL) /* u8"string"_suffix - C++-0x */ \
-\
-  TK(COMMENT,		LITERAL) /* Only if output comments. */ \
-/* SPELL_LITERAL happens to DTRT. */ \
-  TK(MACRO_ARG,		NONE) /* Macro argument. */ \
-  TK(PRAGMA,		NONE) /* Only for deferred pragmas. */ \
-  TK(PRAGMA_EOL,	NONE) /* End-of-line for deferred pragmas. */ \
-  TK(PADDING,		NONE) /* Whitespace for -E. */
+#define TTYPE_TABLE							\
+  OP(EQ,		"=")						\
+  OP(NOT,		"!")						\
+  OP(GREATER,		">")	/* compare */				\
+  OP(LESS,		"<")						\
+  OP(PLUS,		"+")	/* math */				\
+  OP(MINUS,		"-")						\
+  OP(MULT,		"*")						\
+  OP(DIV,		"/")						\
+  OP(MOD,		"%")						\
+  OP(AND,		"&")	/* bit ops */				\
+  OP(OR,		"|")						\
+  OP(XOR,		"^")						\
+  OP(RSHIFT,		">>")						\
+  OP(LSHIFT,		"<<")						\
+									\
+  OP(COMPL,		"~")						\
+  OP(AND_AND,		"&&")	/* logical */				\
+  OP(OR_OR,		"||")						\
+  OP(QUERY,		"?")						\
+  OP(COLON,		":")						\
+  OP(COMMA,		",")	/* grouping */				\
+  OP(OPEN_PAREN,	"(")						\
+  OP(CLOSE_PAREN,	")")						\
+  TK(EOF,		NONE)						\
+  OP(EQ_EQ,		"==")	/* compare */				\
+  OP(NOT_EQ,		"!=")						\
+  OP(GREATER_EQ,	">=")						\
+  OP(LESS_EQ,		"<=")						\
+  OP(SPACESHIP,		"<=>")						\
+									\
+  /* These two are unary + / - in preprocessor expressions.  */		\
+  OP(PLUS_EQ,		"+=")	/* math */				\
+  OP(MINUS_EQ,		"-=")						\
+									\
+  OP(MULT_EQ,		"*=")						\
+  OP(DIV_EQ,		"/=")						\
+  OP(MOD_EQ,		"%=")						\
+  OP(AND_EQ,		"&=")	/* bit ops */				\
+  OP(OR_EQ,		"|=")						\
+  OP(XOR_EQ,		"^=")						\
+  OP(RSHIFT_EQ,		">>=")						\
+  OP(LSHIFT_EQ,		"<<=")						\
+  /* Digraphs together, beginning with CPP_FIRST_DIGRAPH.  */		\
+  OP(HASH,		"#")	/* digraphs */				\
+  OP(PASTE,		"##")						\
+  OP(OPEN_SQUARE,	"[")						\
+  OP(CLOSE_SQUARE,	"]")						\
+  OP(OPEN_BRACE,	"{")						\
+  OP(CLOSE_BRACE,	"}")						\
+  /* The remainder of the punctuation.	Order is not significant.  */	\
+  OP(SEMICOLON,		";")	/* structure */				\
+  OP(ELLIPSIS,		"...")						\
+  OP(PLUS_PLUS,		"++")	/* increment */				\
+  OP(MINUS_MINUS,	"--")						\
+  OP(DEREF,		"->")	/* accessors */				\
+  OP(DOT,		".")						\
+  OP(SCOPE,		"::")						\
+  OP(DEREF_STAR,	"->*")						\
+  OP(DOT_STAR,		".*")						\
+  OP(ATSIGN,		"@")  /* used in Objective-C */			\
+									\
+  TK(NAME,		IDENT)	 /* word */				\
+  TK(AT_NAME,		IDENT)	 /* @word - Objective-C */		\
+  TK(NUMBER,		LITERAL) /* 34_be+ta  */			\
+									\
+  TK(CHAR,		LITERAL) /* 'char' */				\
+  TK(WCHAR,		LITERAL) /* L'char' */				\
+  TK(CHAR16,		LITERAL) /* u'char' */				\
+  TK(CHAR32,		LITERAL) /* U'char' */				\
+  TK(UTF8CHAR,		LITERAL) /* u8'char' */				\
+  TK(OTHER,		LITERAL) /* stray punctuation */		\
+									\
+  TK(STRING,		LITERAL) /* "string" */				\
+  TK(WSTRING,		LITERAL) /* L"string" */			\
+  TK(STRING16,		LITERAL) /* u"string" */			\
+  TK(STRING32,		LITERAL) /* U"string" */			\
+  TK(UTF8STRING,	LITERAL) /* u8"string" */			\
+  TK(OBJC_STRING,	LITERAL) /* @"string" - Objective-C */		\
+  TK(HEADER_NAME,	LITERAL) /* <stdio.h> in #include */		\
+									\
+  TK(CHAR_USERDEF,	LITERAL) /* 'char'_suffix - C++-0x */		\
+  TK(WCHAR_USERDEF,	LITERAL) /* L'char'_suffix - C++-0x */		\
+  TK(CHAR16_USERDEF,	LITERAL) /* u'char'_suffix - C++-0x */		\
+  TK(CHAR32_USERDEF,	LITERAL) /* U'char'_suffix - C++-0x */		\
+  TK(UTF8CHAR_USERDEF,	LITERAL) /* u8'char'_suffix - C++-0x */		\
+  TK(STRING_USERDEF,	LITERAL) /* "string"_suffix - C++-0x */		\
+  TK(WSTRING_USERDEF,	LITERAL) /* L"string"_suffix - C++-0x */	\
+  TK(STRING16_USERDEF,	LITERAL) /* u"string"_suffix - C++-0x */	\
+  TK(STRING32_USERDEF,	LITERAL) /* U"string"_suffix - C++-0x */	\
+  TK(UTF8STRING_USERDEF,LITERAL) /* u8"string"_suffix - C++-0x */	\
+									\
+  TK(COMMENT,		LITERAL) /* Only if output comments.  */	\
+				 /* SPELL_LITERAL happens to DTRT.  */	\
+  TK(MACRO_ARG,		NONE)	 /* Macro argument.  */			\
+  TK(PRAGMA,		NONE)	 /* Only for deferred pragmas.  */	\
+  TK(PRAGMA_EOL,	NONE)	 /* End-of-line for deferred pragmas.  */ \
+  TK(PADDING,		NONE)	 /* Whitespace for -E.	*/
 
 #define OP(e, s) CPP_ ## e,
 #define TK(e, s) CPP_ ## e,
-enum cpp_ttype {
-	TTYPE_TABLE
-	N_TTYPES,
+enum cpp_ttype
+{
+  TTYPE_TABLE
+  N_TTYPES,
 
-	/* A token type for keywords, as opposed to ordinary identifiers. */
-	CPP_KEYWORD,
+  /* A token type for keywords, as opposed to ordinary identifiers.  */
+  CPP_KEYWORD,
 
-	/* Positions in the table. */
-	CPP_LAST_EQ = CPP_LSHIFT,
-	CPP_FIRST_DIGRAPH = CPP_HASH,
-	CPP_LAST_PUNCTUATOR = CPP_ATSIGN,
-	CPP_LAST_CPP_OP = CPP_LESS_EQ
+  /* Positions in the table.  */
+  CPP_LAST_EQ        = CPP_LSHIFT,
+  CPP_FIRST_DIGRAPH  = CPP_HASH,
+  CPP_LAST_PUNCTUATOR= CPP_ATSIGN,
+  CPP_LAST_CPP_OP    = CPP_LESS_EQ
 };
 #undef OP
 #undef TK
 
-/* C language kind, used when calling cpp_create_reader. */
-enum c_lang {
-	CLK_GNUC89 = 0, CLK_GNUC99, CLK_GNUC11, CLK_GNUC17, CLK_GNUC2X,
-	CLK_STDC89, CLK_STDC94, CLK_STDC99, CLK_STDC11, CLK_STDC17,
-	CLK_STDC2X, CLK_GNUCXX, CLK_CXX98, CLK_GNUCXX11, CLK_CXX11,
-	CLK_GNUCXX14, CLK_CXX14, CLK_GNUCXX17, CLK_CXX17,
-	CLK_GNUCXX20, CLK_CXX20, CLK_GNUCXX23, CLK_CXX23,
-	CLK_ASM
-};
+/* C language kind, used when calling cpp_create_reader.  */
+enum c_lang {CLK_GNUC89 = 0, CLK_GNUC99, CLK_GNUC11, CLK_GNUC17, CLK_GNUC2X,
+	     CLK_STDC89, CLK_STDC94, CLK_STDC99, CLK_STDC11, CLK_STDC17,
+	     CLK_STDC2X,
+	     CLK_GNUCXX, CLK_CXX98, CLK_GNUCXX11, CLK_CXX11,
+	     CLK_GNUCXX14, CLK_CXX14, CLK_GNUCXX17, CLK_CXX17,
+	     CLK_GNUCXX20, CLK_CXX20, CLK_GNUCXX23, CLK_CXX23,
+	     CLK_ASM};
 
 /* Payload of a NUMBER, STRING, CHAR or COMMENT token.  */
 struct GTY(()) cpp_string {
   unsigned int len;
-  const unsigned char *text;
+
+  /* TEXT is always null terminated (terminator not included in len); but this
+     GTY markup arranges that PCH streaming works properly even if there is a
+     null byte in the middle of the string.  */
+  const unsigned char * GTY((string_length ("1 + %h.len"))) text;
 };
 
 /* Flags for the cpp_token structure.  */
@@ -171,7 +194,7 @@ struct GTY(()) cpp_string {
 #define NAMED_OP	(1 << 4) /* C++ named operators.  */
 #define PREV_FALLTHROUGH (1 << 5) /* On a token preceeded by FALLTHROUGH
 				     comment.  */
-#define BOL		(1 << 6) /* Token at beginning of line.  */
+#define DECIMAL_INT     (1 << 6) /* Decimal integer, set in c-lex.cc.  */
 #define PURE_ZERO	(1 << 7) /* Single 0 digit, used by the C++ frontend,
 				    set in c-lex.cc.  */
 #define SP_DIGRAPH	(1 << 8) /* # or ## token was a digraph.  */
@@ -180,6 +203,7 @@ struct GTY(()) cpp_string {
 				    after a # operator.  */
 #define NO_EXPAND	(1 << 10) /* Do not macro-expand this token.  */
 #define PRAGMA_OP	(1 << 11) /* _Pragma token.  */
+#define BOL		(1 << 12) /* Token at beginning of line.  */
 
 /* Specify which field, if any, of the cpp_token union is used.  */
 
@@ -476,6 +500,10 @@ struct cpp_options
      in C11.  */
   unsigned char c11_identifiers;
 
+  /* Nonzero means extended identifiers allow the characters specified
+     by Unicode XID_Start and XID_Continue properties.  */
+  unsigned char xid_identifiers;
+
   /* Nonzero for C++ 2014 Standard binary constants.  */
   unsigned char binary_constants;
 
@@ -494,11 +522,20 @@ struct cpp_options
   /* Nonzero for the '#elifdef' and '#elifndef' directives.  */
   unsigned char elifdef;
 
+  /* Nonzero for the '#warning' directive.  */
+  unsigned char warning_directive;
+
   /* Nonzero means tokenize C++20 module directives.  */
   unsigned char module_directives;
 
   /* Nonzero for C++23 size_t literals.  */
   unsigned char size_t_literals;
+
+  /* Nonzero for C++23 delimited escape sequences.  */
+  unsigned char delimited_escape_seqs;
+
+  /* Nonzero for 'true' and 'false' in #if expressions.  */
+  unsigned char true_false;
 
   /* Holds the name of the target (execution) character set.  */
   const char *narrow_charset;
@@ -528,9 +565,23 @@ struct cpp_options
   /* True if warn about differences between C++98 and C++11.  */
   bool cpp_warn_cxx11_compat;
 
+  /* True if warn about differences between C++17 and C++20.  */
+  bool cpp_warn_cxx20_compat;
+
   /* Nonzero if bidirectional control characters checking is on.  See enum
      cpp_bidirectional_level.  */
   unsigned char cpp_warn_bidirectional;
+
+  /* True if libcpp should warn about invalid UTF-8 characters in comments.
+     2 if it should be a pedwarn.  */
+  unsigned char cpp_warn_invalid_utf8;
+
+  /* True if libcpp should warn about invalid forms of delimited or named
+     escape sequences.  */
+  bool cpp_warn_unicode;
+
+  /* True if -finput-charset= option has been used explicitly.  */
+  bool cpp_input_charset_explicit;
 
   /* Dependency generation.  */
   struct
@@ -562,8 +613,8 @@ struct cpp_options
      ints and target wide characters, respectively.  */
   size_t precision, char_precision, int_precision, wchar_precision;
 
-  /* True means chars (wide chars) are unsigned.  */
-  bool unsigned_char, unsigned_wchar;
+  /* True means chars (wide chars, UTF-8 chars) are unsigned.  */
+  bool unsigned_char, unsigned_wchar, unsigned_utf8char;
 
   /* True if the most significant byte in a word has the lowest
      address in memory.  */
@@ -636,8 +687,11 @@ enum cpp_warning_reason {
   CPP_W_C90_C99_COMPAT,
   CPP_W_C11_C2X_COMPAT,
   CPP_W_CXX11_COMPAT,
+  CPP_W_CXX20_COMPAT,
   CPP_W_EXPANSION_TO_DEFINED,
-  CPP_W_BIDIRECTIONAL
+  CPP_W_BIDIRECTIONAL,
+  CPP_W_INVALID_UTF8,
+  CPP_W_UNICODE
 };
 
 /* Callback for header lookup for HEADER, which is the name of a
@@ -1229,6 +1283,7 @@ struct cpp_num
 #define CPP_N_USERDEF	0x1000000 /* C++11 user-defined literal.  */
 
 #define CPP_N_SIZE_T	0x2000000 /* C++23 size_t literal.  */
+#define CPP_N_BFLOAT16	0x4000000 /* std::bfloat16_t type.  */
 
 #define CPP_N_WIDTH_FLOATN_NX	0xF0000000 /* _FloatN / _FloatNx value
 					      of N, divided by 16.  */

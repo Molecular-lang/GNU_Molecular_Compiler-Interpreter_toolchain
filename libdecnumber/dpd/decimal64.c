@@ -1,5 +1,27 @@
 /* Decimal 64-bit format module for the decNumber C Library.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2005-2023 Free Software Foundation, Inc.
+   Contributed by IBM Corporation.  Author Mike Cowlishaw.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify it under
+   the terms of the GNU General Public License as published by the Free
+   Software Foundation; either version 3, or (at your option) any later
+   version.
+
+   GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+   WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+   for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 /* ------------------------------------------------------------------ */
 /* Decimal 64-bit format module 				      */
@@ -592,7 +614,6 @@ static const uInt multies[]={131073, 26215, 5243, 1049, 210};
 #endif
 void decDigitsToDPD(const decNumber *dn, uInt *targ, Int shift) {
   Int  cut;		      /* work */
-  Int  n;		      /* output bunch counter */
   Int  digits=dn->digits;     /* digit countdown */
   uInt dpd;		      /* densely packed decimal value */
   uInt bin;		      /* binary value 0-999 */
@@ -651,7 +672,7 @@ void decDigitsToDPD(const decNumber *dn, uInt *targ, Int shift) {
     bin=0;			   /* [keep compiler quiet] */
   #endif
 
-  for(n=0; digits>0; n++) {	   /* each output bunch */
+  for(; digits>0;) {		   /* each output bunch */
     #if DECDPUN==3		   /* fast path, 3-at-a-time */
       bin=*inu; 		   /* 3 digits ready for convert */
       digits-=3;		   /* [may go negative] */

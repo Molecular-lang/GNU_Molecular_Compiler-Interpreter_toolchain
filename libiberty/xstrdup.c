@@ -1,5 +1,6 @@
 /* xstrdup.c -- Duplicate a string in memory, using xmalloc.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   This trivial function is in the public domain.
+   Ian Lance Taylor, Cygnus Support, December 1995.  */
 
 /*
 

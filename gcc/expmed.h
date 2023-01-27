@@ -1,5 +1,21 @@
 /* Target-dependent costs for expmed.cc.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef EXPMED_H
 #define EXPMED_H 1
@@ -691,15 +707,18 @@ extern rtx expand_variable_shift (enum tree_code, machine_mode,
 				  rtx, tree, rtx, int);
 extern rtx expand_shift (enum tree_code, machine_mode, rtx, poly_int64, rtx,
 			 int);
+extern rtx maybe_expand_shift (enum tree_code, machine_mode, rtx, int, rtx,
+			       int);
 #ifdef GCC_OPTABS_H
-extern rtx expand_divmod (int, enum tree_code, machine_mode, rtx, rtx,
-			  rtx, int, enum optab_methods = OPTAB_LIB_WIDEN);
+extern rtx expand_divmod (int, enum tree_code, machine_mode, tree, tree,
+			  rtx, rtx, rtx, int,
+			  enum optab_methods = OPTAB_LIB_WIDEN);
 #endif
 #endif
 
 extern void store_bit_field (rtx, poly_uint64, poly_uint64,
 			     poly_uint64, poly_uint64,
-			     machine_mode, rtx, bool);
+			     machine_mode, rtx, bool, bool);
 extern rtx extract_bit_field (rtx, poly_uint64, poly_uint64, int, rtx,
 			      machine_mode, machine_mode, bool, rtx *);
 extern rtx extract_low_bits (machine_mode, machine_mode, rtx);

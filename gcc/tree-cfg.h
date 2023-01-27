@@ -1,5 +1,22 @@
 /* Data and Control Flow Analysis for Trees.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+   Contributed by Diego Novillo <dnovillo@redhat.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef _TREE_CFG_H
 #define _TREE_CFG_H
@@ -16,6 +33,7 @@ extern void init_empty_tree_cfg_for_function (struct function *);
 extern void init_empty_tree_cfg (void);
 extern void start_recording_case_labels (void);
 extern void end_recording_case_labels (void);
+extern tree get_cases_for_edge (edge, gswitch *);
 extern basic_block label_to_block (struct function *, tree);
 extern void cleanup_dead_labels (void);
 extern bool group_case_labels_stmt (gswitch *);
@@ -45,8 +63,8 @@ extern gphi *get_virtual_phi (basic_block);
 extern gimple *first_stmt (basic_block);
 extern gimple *last_stmt (basic_block);
 extern gimple *last_and_only_stmt (basic_block);
-extern void verify_gimple_in_seq (gimple_seq);
-extern void verify_gimple_in_cfg (struct function *, bool);
+extern bool verify_gimple_in_seq (gimple_seq, bool = true);
+extern bool verify_gimple_in_cfg (struct function *, bool, bool = true);
 extern tree gimple_block_label (basic_block);
 extern void add_phi_args_after_copy_bb (basic_block);
 extern void add_phi_args_after_copy (basic_block *, unsigned, edge);

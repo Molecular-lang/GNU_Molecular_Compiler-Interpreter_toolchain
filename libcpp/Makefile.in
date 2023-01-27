@@ -1,7 +1,23 @@
 # @configure_input@
 # Makefile for libcpp.  Run 'configure' to generate Makefile from Makefile.in
 
-# Please review: $(src-dir)/SPL-README for Licencing info.
+# Copyright (C) 2004-2023 Free Software Foundation, Inc.
+
+#This file is part of libcpp.
+
+#libcpp is free software; you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation; either version 3, or (at your option)
+#any later version.
+
+#libcpp is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with libcpp; see the file COPYING3.  If not see
+#<http://www.gnu.org/licenses/>.
 
 @SET_MAKE@
 
@@ -80,7 +96,7 @@ libcpp_a_SOURCES = charset.cc directives.cc errors.cc \
 all: libcpp.a $(USED_CATALOGS)
 
 .SUFFIXES:
-.SUFFIXES: .co .gmo .o .obj .po .pox
+.SUFFIXES: .cc .gmo .o .obj .po .pox
 
 libcpp.a: $(libcpp_a_OBJS)
 	-rm -f libcpp.a
@@ -207,7 +223,7 @@ endif
 
 # Implicit rules and I18N
 
-.co.o:
+.cc.o:
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 

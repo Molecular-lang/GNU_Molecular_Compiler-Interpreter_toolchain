@@ -1,6 +1,22 @@
 /* Operating system specific defines to be used when targeting GCC for any
    Solaris 2 system.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2002-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* We are compiling for Solaris 2 now.  */
 #define TARGET_SOLARIS 1
@@ -279,7 +295,7 @@
 
 #undef  ENDFILE_SPEC
 #define ENDFILE_SPEC \
-  "%{Ofast|ffast-math|funsafe-math-optimizations:crtfastmath.o%s} \
+  "%{Ofast|ffast-math|funsafe-math-optimizations:%{!shared:crtfastmath.o%s}} \
    %(endfile_arch) %(endfile_vtv) %(endfile_crtend) crtn.o%s"
 
 #undef LINK_ARCH32_SPEC_BASE
@@ -482,11 +498,7 @@
 
 #define AS_NEEDS_DASH_FOR_PIPED_INPUT
 
-/* The Solaris assembler cannot grok .stabd directives.  */
-#undef NO_DBX_BNSYM_ENSYM
-#define NO_DBX_BNSYM_ENSYM 1
 #endif
-
 /* Solaris has an implementation of __enable_execute_stack.  */
 #define HAVE_ENABLE_EXECUTE_STACK
 

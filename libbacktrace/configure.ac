@@ -1,5 +1,33 @@
 # configure.ac -- Backtrace configure script.
-# Please review: $(src-dir)/SPL-README for Licencing info.
+# Copyright (C) 2012-2023 Free Software Foundation, Inc.
+
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+
+#     (1) Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+
+#     (2) Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in
+#     the documentation and/or other materials provided with the
+#     distribution.
+
+#     (3) The name of the author may not be used to
+#     endorse or promote products derived from this software without
+#     specific prior written permission.
+
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
+# INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+# IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
 
 AC_INIT(package-unused, version-unused,, libbacktrace)
 AC_CONFIG_SRCDIR(backtrace.h)
@@ -307,13 +335,17 @@ fi
 AC_SUBST(BACKTRACE_USES_MALLOC)
 
 # Check for dl_iterate_phdr.
-AC_CHECK_HEADERS(link.h)
-if test "$ac_cv_header_link_h" = "no"; then
+AC_CHECK_HEADERS(link.h sys/link.h)
+if test "$ac_cv_header_link_h" = "no" -a "$ac_cv_header_sys_link_h" = "no"; then
   have_dl_iterate_phdr=no
 else
   if test -n "${with_target_subdir}"; then
+    link_h=link.h
+    if test "$ac_cv_header_link_h" = "no"; then
+       link_h=sys/link.h
+    fi
     # When built as a GCC target library, we can't do a link test.
-    AC_EGREP_HEADER([dl_iterate_phdr], [link.h], [have_dl_iterate_phdr=yes],
+    AC_EGREP_HEADER([dl_iterate_phdr], [$link_h], [have_dl_iterate_phdr=yes],
 		    [have_dl_iterate_phdr=no])
   else
     AC_CHECK_FUNC([dl_iterate_phdr], [have_dl_iterate_phdr=yes],
@@ -452,7 +484,18 @@ AC_CHECK_LIB([z], [compress],
     [AC_DEFINE(HAVE_ZLIB, 1, [Define if -lz is available.])])
 AM_CONDITIONAL(HAVE_ZLIB, test "$ac_cv_lib_z_compress" = yes)
 
-dnl Test whether the linker supports the --compress_debug_sections option.
+dnl Test whether the linker supports the --build-id option.
+AC_CACHE_CHECK([whether --build-id is supported],
+[libbacktrace_cv_ld_buildid],
+[LDFLAGS_hold=$LDFLAGS
+LDFLAGS="$LDFLAGS -Wl,--build-id"
+AC_LINK_IFELSE([AC_LANG_PROGRAM(,)],
+[libbacktrace_cv_ld_buildid=yes],
+[libbacktrace_cv_ld_buildid=no])
+LDFLAGS=$LDFLAGS_hold])
+AM_CONDITIONAL(HAVE_BUILDID, test "$libbacktrace_cv_ld_buildid" = yes)
+
+dnl Test whether the linker supports the --compress-debug-sections option.
 AC_CACHE_CHECK([whether --compress-debug-sections is supported],
 [libgo_cv_ld_compress],
 [LDFLAGS_hold=$LDFLAGS
@@ -462,6 +505,21 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM(,)],
 [libgo_cv_ld_compress=no])
 LDFLAGS=$LDFLAGS_hold])
 AM_CONDITIONAL(HAVE_COMPRESSED_DEBUG, test "$libgo_cv_ld_compress" = yes)
+
+AC_CHECK_LIB([zstd], [ZSTD_compress],
+    [AC_DEFINE(HAVE_ZSTD, 1, [Define if -lzstd is available.])])
+AM_CONDITIONAL(HAVE_ZSTD, test "$ac_cv_lib_zstd_ZSTD_compress" = yes)
+
+dnl Test whether the linker supports --compress-debug-sections=zstd option.
+AC_CACHE_CHECK([whether --compress-debug-sections=zstd is supported],
+[libgo_cv_ld_compress_zstd],
+[LDFLAGS_hold=$LDFLAGS
+LDFLAGS="$LDFLAGS -Wl,--compress-debug-sections=zstd"
+AC_LINK_IFELSE([AC_LANG_PROGRAM(,)],
+[libgo_cv_ld_compress_zstd=yes],
+[libgo_cv_ld_compress_zstd=no])
+LDFLAGS=$LDFLAGS_hold])
+AM_CONDITIONAL(HAVE_COMPRESSED_DEBUG_ZSTD, test "$libgo_cv_ld_compress_zstd" = yes)
 
 AC_ARG_VAR(OBJCOPY, [location of objcopy])
 AC_CHECK_PROG(OBJCOPY, objcopy, objcopy,)

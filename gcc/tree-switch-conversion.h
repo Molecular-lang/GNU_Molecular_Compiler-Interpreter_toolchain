@@ -1,5 +1,21 @@
 /* Tree switch conversion for GNU compiler.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2017-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef TREE_SWITCH_CONVERSION_H
 #define TREE_SWITCH_CONVERSION_H
@@ -86,6 +102,10 @@ public:
   /* Probability of reaching subtree rooted at this node.  */
   profile_probability m_subtree_prob;
 
+  /* Probability of default case when reaching the node.
+     It is used by bit-test right now.  */
+  profile_probability m_default_prob;
+
 protected:
   /* Default constructor.  */
   cluster () {}
@@ -94,7 +114,8 @@ protected:
 cluster::cluster (tree case_label_expr, basic_block case_bb,
 		  profile_probability prob, profile_probability subtree_prob):
   m_case_label_expr (case_label_expr), m_case_bb (case_bb), m_prob (prob),
-  m_subtree_prob (subtree_prob)
+  m_subtree_prob (subtree_prob),
+  m_default_prob (profile_probability::uninitialized ())
 {
 }
 
@@ -529,6 +550,7 @@ public:
   basic_block target_bb;
   tree label;
   int bits;
+  profile_probability prob;
 
   /* Comparison function for qsort to order bit tests by decreasing
      probability of execution.  */

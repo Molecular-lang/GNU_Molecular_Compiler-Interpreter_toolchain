@@ -1,6 +1,11 @@
 # ltsugar.m4 -- libtool m4 base layer.                         -*-Autoconf-*-
 #
-# Please review $(srcdir/SPL-README) for Licencing info.
+# Copyright (C) 2004, 2005, 2007, 2008 Free Software Foundation, Inc.
+# Written by Gary V. Vaughan, 2004
+#
+# This file is free software; the Free Software Foundation gives
+# unlimited permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
 
 # serial 6 ltsugar.m4
 

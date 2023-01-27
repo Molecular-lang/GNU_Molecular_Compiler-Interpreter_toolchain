@@ -1,5 +1,21 @@
 /* Fold a constant sub-tree into a single node for C-compiler
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_FOLD_CONST_H
 #define GCC_FOLD_CONST_H
@@ -17,14 +33,17 @@ extern bool folding_cxx_constexpr;
 
 /* Convert between trees and native memory representation.  */
 extern int native_encode_expr (const_tree, unsigned char *, int, int off = -1);
-extern int native_encode_initializer (tree, unsigned char *, int, int off = -1, unsigned char * = nullptr);
+extern int native_encode_initializer (tree, unsigned char *, int,
+				      int off = -1, unsigned char * = nullptr);
 extern tree native_interpret_expr (tree, const unsigned char *, int);
 extern tree native_interpret_real (tree, const unsigned char *, int);
 extern bool can_native_interpret_type_p (tree);
 extern tree native_interpret_aggregate (tree, const unsigned char *, int, int);
 extern tree find_bitfield_repr_type (int, int);
-extern void shift_bytes_in_array_left (unsigned char *, unsigned int, unsigned int);
-extern void shift_bytes_in_array_right (unsigned char *, unsigned int, unsigned int);
+extern void shift_bytes_in_array_left (unsigned char *, unsigned int,
+				       unsigned int);
+extern void shift_bytes_in_array_right (unsigned char *, unsigned int,
+					unsigned int);
 
 /* Fold constants as much as possible in an expression.
    Returns the simplified expression.
@@ -196,6 +215,7 @@ extern tree build_range_check (location_t, tree, tree, int, tree, tree);
 extern bool merge_ranges (int *, tree *, tree *, int, tree, tree, int,
 			  tree, tree);
 extern tree sign_bit_p (tree, const_tree);
+extern bool simple_condition_p (tree);
 extern tree exact_inverse (tree, tree);
 extern bool expr_not_equal_to (tree t, const wide_int &);
 extern tree const_unop (enum tree_code, tree, tree);

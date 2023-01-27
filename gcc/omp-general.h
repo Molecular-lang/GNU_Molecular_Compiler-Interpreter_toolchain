@@ -1,7 +1,23 @@
 /* General types and functions that are uselful for processing of OpenMP,
    OpenACC and similar directivers at various stages of compilation.
 
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2005-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_OMP_GENERAL_H
 #define GCC_OMP_GENERAL_H
@@ -78,6 +94,7 @@ struct omp_for_data
 extern tree omp_find_clause (tree clauses, enum omp_clause_code kind);
 extern bool omp_is_allocatable_or_ptr (tree decl);
 extern tree omp_check_optional_argument (tree decl, bool for_present_check);
+extern bool omp_mappable_type (tree type);
 extern bool omp_privatize_by_reference (tree decl);
 extern void omp_adjust_for_condition (location_t loc, enum tree_code *cond_code,
 				      tree *n2, tree v, tree step);
@@ -110,12 +127,12 @@ extern int oacc_get_ifn_dim_arg (const gimple *stmt);
 
 enum omp_requires {
   OMP_REQUIRES_ATOMIC_DEFAULT_MEM_ORDER = 0xf,
-  OMP_REQUIRES_UNIFIED_ADDRESS = 0x10,
-  OMP_REQUIRES_UNIFIED_SHARED_MEMORY = 0x20,
+  OMP_REQUIRES_UNIFIED_ADDRESS = GOMP_REQUIRES_UNIFIED_ADDRESS,
+  OMP_REQUIRES_UNIFIED_SHARED_MEMORY = GOMP_REQUIRES_UNIFIED_SHARED_MEMORY,
   OMP_REQUIRES_DYNAMIC_ALLOCATORS = 0x40,
-  OMP_REQUIRES_REVERSE_OFFLOAD = 0x80,
+  OMP_REQUIRES_REVERSE_OFFLOAD = GOMP_REQUIRES_REVERSE_OFFLOAD,
   OMP_REQUIRES_ATOMIC_DEFAULT_MEM_ORDER_USED = 0x100,
-  OMP_REQUIRES_TARGET_USED = 0x200
+  OMP_REQUIRES_TARGET_USED = GOMP_REQUIRES_TARGET_USED,
 };
 
 extern GTY(()) enum omp_requires omp_requires_mask;

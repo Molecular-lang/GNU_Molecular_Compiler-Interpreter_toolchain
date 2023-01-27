@@ -1,4 +1,18 @@
-dnl Please review: $(src-dir)/SPL-README for Licencing info.
+dnl Copyright (C) 2000-2023 Free Software Foundation, Inc.
+dnl
+dnl GCC is free software; you can redistribute it and/or modify
+dnl it under the terms of the GNU General Public License as published by
+dnl the Free Software Foundation; either version 3, or (at your option)
+dnl any later version.
+dnl
+dnl GCC is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl GNU General Public License for more details.
+dnl
+dnl You should have received a copy of the GNU General Public License
+dnl along with GCC; see the file COPYING3.  If not see
+dnl <http://www.gnu.org/licenses/>.
 
 dnl See whether strncmp reads past the end of its string parameters.
 dnl On some versions of SunOS4 at least, strncmp reads a word at a time
@@ -10,6 +24,8 @@ AC_CACHE_CHECK([for working strncmp], ac_cv_func_strncmp_works,
 [AC_TRY_RUN([
 /* Test by Jim Wilson and Kaveh Ghazi.
    Check whether strncmp reads past the end of its string parameters. */
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 
 #ifdef HAVE_FCNTL_H
@@ -37,7 +53,8 @@ AC_CACHE_CHECK([for working strncmp], ac_cv_func_strncmp_works,
 
 #define MAP_LEN 0x10000
 
-main ()
+int
+main (void)
 {
 #if defined(HAVE_MMAP) || defined(HAVE_MMAP_ANYWHERE)
   char *p;
@@ -143,7 +160,10 @@ if test $ac_cv_os_cray = yes; then
 fi
 
 AC_CACHE_CHECK(stack direction for C alloca, ac_cv_c_stack_direction,
-[AC_TRY_RUN([find_stack_direction ()
+[AC_TRY_RUN([#include <stdlib.h>
+
+int
+find_stack_direction (void)
 {
   static char *addr = 0;
   auto char dummy;
@@ -155,7 +175,9 @@ AC_CACHE_CHECK(stack direction for C alloca, ac_cv_c_stack_direction,
   else
     return (&dummy > addr) ? 1 : -1;
 }
-main ()
+
+int
+main (void)
 {
   exit (find_stack_direction() < 0);
 }],

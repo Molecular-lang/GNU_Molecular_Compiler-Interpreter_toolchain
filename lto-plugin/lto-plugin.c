@@ -1,5 +1,20 @@
 /* LTO plugin for linkers like gold, GNU ld or mold.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Contributed by Rafael Avila de Espindola (espindola@google.com).
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* The plugin has only one external function: onload. A linker passes it an array of
    function that the plugin uses to communicate back to the linker.
@@ -25,11 +40,7 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
-#if !HAVE_PTHREAD_H
-#error POSIX threads are mandatory dependency
 #endif
-#endif
-
 #if HAVE_STDINT_H
 #include <stdint.h>
 #endif
@@ -44,7 +55,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
+#if HAVE_PTHREAD_LOCKING
 #include <pthread.h>
+#endif
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
 #endif
@@ -147,8 +160,16 @@ enum symbol_style
   ss_uscore,	/* Underscore prefix all symbols.  */
 };
 
+#if HAVE_PTHREAD_LOCKING
 /* Plug-in mutex.  */
 static pthread_mutex_t plugin_lock;
+
+#define LOCK_SECTION pthread_mutex_lock (&plugin_lock)
+#define UNLOCK_SECTION pthread_mutex_unlock (&plugin_lock)
+#else
+#define LOCK_SECTION
+#define UNLOCK_SECTION
+#endif
 
 static char *arguments_file_name;
 static ld_plugin_register_claim_file register_claim_file;
@@ -159,6 +180,10 @@ static ld_plugin_add_input_file add_input_file;
 static ld_plugin_add_input_library add_input_library;
 static ld_plugin_message message;
 static ld_plugin_add_symbols add_symbols, add_symbols_v2;
+static ld_plugin_get_api_version get_api_version;
+
+/* By default, use version LAPI_V0 if there is not negotiation.  */
+static enum linker_api_version api_version = LAPI_V0;
 
 static struct plugin_file_info *claimed_files = NULL;
 static unsigned int num_claimed_files = 0;
@@ -879,46 +904,47 @@ all_symbols_read_handler (void)
   return LDPS_OK;
 }
 
-/* Helper, as used in collect2. */
+/* Helper, as used in collect2.  */
 static int
-file_exists(const char *name)
+file_exists (const char *name)
 {
-	return access(name, R_OK) == 0;
+  return access (name, R_OK) == 0;
 }
 
 /* Unlink FILE unless we have save-temps set.
    Note that we're saving files if verbose output is set. */
 
 static void
-maybe_unlink(const char *file)
+maybe_unlink (const char *file)
 {
-	if (save_temps && file_exists(file)) {
-		if (verbose)
-			fprintf(stderr, "[Leaving %s]\n", file);
-		return;
-	}
+  if (save_temps && file_exists (file))
+    {
+      if (verbose)
+	fprintf (stderr, "[Leaving %s]\n", file);
+      return;
+    }
 
-	unlink_if_ordinary(file);
+  unlink_if_ordinary (file);
 }
 
 /* Remove temporary files at the end of the link. */
 
 static enum ld_plugin_status
-cleanup_handler(void)
+cleanup_handler (void)
 {
-	unsigned int i;
+  unsigned int i;
 
-	if (debug)
-		return LDPS_OK;
+  if (debug)
+    return LDPS_OK;
 
-	if (arguments_file_name)
-		maybe_unlink(arguments_file_name);
+  if (arguments_file_name)
+    maybe_unlink (arguments_file_name);
 
-	for (i = 0; i < num_output_files; i++)
-		maybe_unlink(output_files[i]);
+  for (i = 0; i < num_output_files; i++)
+    maybe_unlink (output_files[i]);
 
-	free_2();
-	return LDPS_OK;
+  free_2 ();
+  return LDPS_OK;
 }
 
 #define SWAP(type, a, b) \
@@ -926,36 +952,37 @@ cleanup_handler(void)
 
 /* Compare two hash table entries */
 
-static int eq_sym(const void *a, const void *b)
+static int eq_sym (const void *a, const void *b)
 {
-	const struct ld_plugin_symbol *as = (const struct ld_plugin_symbol *)a;
-	const struct ld_plugin_symbol *bs = (const struct ld_plugin_symbol *)b;
+  const struct ld_plugin_symbol *as = (const struct ld_plugin_symbol *)a;
+  const struct ld_plugin_symbol *bs = (const struct ld_plugin_symbol *)b;
 
-	return !strcmp(as->name, bs->name);
+  return !strcmp (as->name, bs->name);
 }
 
 /* Hash a symbol */
 
-static hashval_t hash_sym(const void *a)
+static hashval_t hash_sym (const void *a)
 {
-	const struct ld_plugin_symbol *as = (const struct ld_plugin_symbol *)a;
+  const struct ld_plugin_symbol *as = (const struct ld_plugin_symbol *)a;
 
-	return htab_hash_string(as->name);
+  return htab_hash_string (as->name);
 }
 
 /* Determine how strong a symbol is */
 
-static int symbol_strength(struct ld_plugin_symbol *s)
+static int symbol_strength (struct ld_plugin_symbol *s)
 {
-	switch (s->def) { 
-		case LDPK_UNDEF:
-		case LDPK_WEAKUNDEF:
-			return 0;
-		case LDPK_WEAKDEF:
-			return 1;
-		default:
-			return 2;
-	}
+  switch (s->def) 
+    { 
+    case LDPK_UNDEF:
+    case LDPK_WEAKUNDEF:
+      return 0;
+    case LDPK_WEAKDEF:
+      return 1;
+    default:
+      return 2;
+    }
 }
 
 /* In the ld -r case we can get dups in the LTO symbol tables, where
@@ -977,539 +1004,657 @@ static int symbol_strength(struct ld_plugin_symbol *s)
    XXX how to handle common? */
 
 static void
-resolve_conflicts(struct plugin_symtab *t, struct plugin_symtab *conflicts)
+resolve_conflicts (struct plugin_symtab *t, struct plugin_symtab *conflicts)
 {
-	htab_t symtab = htab_create(t->nsyms, hash_sym, eq_sym, NULL);
-	int i;
-	int out;
-	int outlen;
+  htab_t symtab = htab_create (t->nsyms, hash_sym, eq_sym, NULL);
+  int i;
+  int out;
+  int outlen;
 
-	outlen = t->nsyms;
-	conflicts->syms = xmalloc(sizeof (struct ld_plugin_symbol) * outlen);
-	conflicts->aux = xmalloc(sizeof (struct sym_aux) * outlen);
+  outlen = t->nsyms;
+  conflicts->syms = xmalloc (sizeof (struct ld_plugin_symbol) * outlen);
+  conflicts->aux = xmalloc (sizeof (struct sym_aux) * outlen);
 
-	/* Move all duplicate symbols into the auxiliary conflicts table. */
-	out = 0;
-	for (i = 0; i < t->nsyms; i++) {
-		struct ld_plugin_symbol *s = &t->syms[i];
-		struct sym_aux *aux = &t->aux[i];
-		void **slot;
+  /* Move all duplicate symbols into the auxiliary conflicts table. */
+  out = 0;
+  for (i = 0; i < t->nsyms; i++) 
+    {
+      struct ld_plugin_symbol *s = &t->syms[i];
+      struct sym_aux *aux = &t->aux[i];
+      void **slot;
 
-		slot = htab_find_slot(symtab, s, INSERT);
-		if (*slot != NULL) {
-			int cnf;
-			struct ld_plugin_symbol *orig = (struct ld_plugin_symbol *)*slot;
-			struct sym_aux *orig_aux = &t->aux[orig - t->syms];
+      slot = htab_find_slot (symtab, s, INSERT);
+      if (*slot != NULL)
+	{
+	  int cnf;
+	  struct ld_plugin_symbol *orig = (struct ld_plugin_symbol *)*slot;
+	  struct sym_aux *orig_aux = &t->aux[orig - t->syms];
 
-			/* Always let the linker resolve the strongest symbol */
-			if (symbol_strength(orig) < symbol_strength(s)) {
-				SWAP (struct ld_plugin_symbol, *orig, *s);
-				SWAP (uint32_t, orig_aux->slot, aux->slot);
-				SWAP (unsigned long long, orig_aux->id, aux->id);
-				/* Don't swap conflict chain pointer */
-			} 
+	  /* Always let the linker resolve the strongest symbol */
+	  if (symbol_strength (orig) < symbol_strength (s)) 
+	    {
+	      SWAP (struct ld_plugin_symbol, *orig, *s);
+	      SWAP (uint32_t, orig_aux->slot, aux->slot);
+	      SWAP (unsigned long long, orig_aux->id, aux->id);
+	      /* Don't swap conflict chain pointer */
+	    } 
 
-			/* Move current symbol into the conflicts table */
-			cnf = conflicts->nsyms++;
-			conflicts->syms[cnf] = *s;
-			conflicts->aux[cnf] = *aux;
-			aux = &conflicts->aux[cnf];
+	  /* Move current symbol into the conflicts table */
+	  cnf = conflicts->nsyms++;
+	  conflicts->syms[cnf] = *s;
+	  conflicts->aux[cnf] = *aux;
+	  aux = &conflicts->aux[cnf];
 
-			/* Update conflicts chain of the original symbol */
-			aux->next_conflict = orig_aux->next_conflict;
-			orig_aux->next_conflict = cnf;
+	  /* Update conflicts chain of the original symbol */
+	  aux->next_conflict = orig_aux->next_conflict;
+	  orig_aux->next_conflict = cnf;
 
-			continue;
-		}
-
-		/* Remove previous duplicates in the main table */
-		if (out < i) {
-			t->syms[out] = *s;
-			t->aux[out] = *aux;
-		}
-
-		/* Put original into the hash table */
-		*slot = &t->syms[out];
-		out++;
+	  continue;
 	}
 
-	assert(conflicts->nsyms <= outlen);
-	assert(conflicts->nsyms + out == t->nsyms);
+      /* Remove previous duplicates in the main table */
+      if (out < i)
+	{
+	  t->syms[out] = *s;
+	  t->aux[out] = *aux;
+	}
 
-	t->nsyms = out;
-	htab_delete(symtab);
+      /* Put original into the hash table */
+      *slot = &t->syms[out];
+      out++;
+    }
+
+  assert (conflicts->nsyms <= outlen);
+  assert (conflicts->nsyms + out == t->nsyms);
+  
+  t->nsyms = out;
+  htab_delete (symtab);
 }
 
-/* Process one section of an object file. */
+/* Process one section of an object file.  */
 
 static int 
-process_symtab(void *data, const char *name, off_t offset, off_t length)
+process_symtab (void *data, const char *name, off_t offset, off_t length)
 {
-	struct plugin_objfile *obj = (struct plugin_objfile *)data;
-	char *s;
-	char *secdatastart, *secdata;
+  struct plugin_objfile *obj = (struct plugin_objfile *)data;
+  char *s;
+  char *secdatastart, *secdata;
 
-	if (!startswith(name, ".gnu.lto_.symtab"))
-		return 1;
+  if (!startswith (name, ".gnu.lto_.symtab"))
+    return 1;
 
-	s = strrchr(name, '.');
-	if (s)
-		sscanf(s, ".%" PRI_LL "x", &obj->out->id);
-	secdata = secdatastart = xmalloc(length);
-	offset += obj->file->offset;
-	if (offset != lseek(obj->file->fd, offset, SEEK_SET))
-		goto err;
+  s = strrchr (name, '.');
+  if (s)
+    sscanf (s, ".%" PRI_LL "x", &obj->out->id);
+  secdata = secdatastart = xmalloc (length);
+  offset += obj->file->offset;
+  if (offset != lseek (obj->file->fd, offset, SEEK_SET))
+    goto err;
 
-	do {
-		ssize_t got = read(obj->file->fd, secdata, length);
-		if (got == 0)
-			break;
-		else if (got > 0) {
-			secdata += got;
-			length -= got;
-		} else if (errno != EINTR)
-			goto err;
-	} while (length > 0);
-	if (length > 0)
-		goto err;
-
-	translate(secdatastart, secdata, obj->out);
-	obj->found++;
-	free(secdatastart);
-	return 1;
-
-err:
-	if (message)
-		message(LDPL_FATAL, "%s: corrupt object file", obj->file->name);
-	/* Force claim_file_handler to abandon this file. */
-	obj->found = 0;
-	free(secdatastart);
-	return 0;
-}
-
-/* Process one section of an object file. */
-
-static int
-process_symtab_extension(void *data, const char *name, off_t offset, off_t length)
-{
-	struct plugin_objfile *obj = (struct plugin_objfile *)data;
-	char *s;
-	char *secdatastart, *secdata;
-
-	if (!startswith(name, ".gnu.lto_.ext_symtab"))
-		return 1;
-
-	s = strrchr(name, '.');
-	if (s)
-		sscanf(s, ".%" PRI_LL "x", &obj->out->id);
-	secdata = secdatastart = xmalloc(length);
-	offset += obj->file->offset;
-	if (offset != lseek(obj->file->fd, offset, SEEK_SET))
-		goto err;
-
-	do {
-		ssize_t got = read(obj->file->fd, secdata, length);
-		if (got == 0)
-			break;
-		else if (got > 0) {
-			secdata += got;
-			length -= got;
-		} else if (errno != EINTR)
-			goto err;
+  do
+    {
+      ssize_t got = read (obj->file->fd, secdata, length);
+      if (got == 0)
+	break;
+      else if (got > 0)
+	{
+	  secdata += got;
+	  length -= got;
 	}
-	while (length > 0);
-	if (length > 0)
+      else if (errno != EINTR)
 	goto err;
+    }
+  while (length > 0);
+  if (length > 0)
+    goto err;
 
-	parse_symtab_extension(secdatastart, secdata, obj->out);
-	obj->found++;
-	free(secdatastart);
-	return 1;
+  translate (secdatastart, secdata, obj->out);
+  obj->found++;
+  free (secdatastart);
+  return 1;
 
 err:
-	if (message)
-		message(LDPL_FATAL, "%s: corrupt object file", obj->file->name);
-	/* Force claim_file_handler to abandon this file. */
-	obj->found = 0;
-	free(secdatastart);
-	return 0;
+  if (message)
+    message (LDPL_FATAL, "%s: corrupt object file", obj->file->name);
+  /* Force claim_file_handler to abandon this file.  */
+  obj->found = 0;
+  free (secdatastart);
+  return 0;
 }
 
-/* Find an offload section of an object file. */
+/* Process one section of an object file.  */
 
 static int
-process_offload_section(void *data, const char *name, off_t offset, off_t len)
+process_symtab_extension (void *data, const char *name, off_t offset,
+			  off_t length)
 {
-	if (startswith(name, ".gnu.offload_lto_.opts")) {
-		struct plugin_objfile *obj = (struct plugin_objfile *) data;
-		obj->offload = true;
-		return 0;
-	}
+  struct plugin_objfile *obj = (struct plugin_objfile *)data;
+  char *s;
+  char *secdatastart, *secdata;
 
-	return 1;
+  if (!startswith (name, ".gnu.lto_.ext_symtab"))
+    return 1;
+
+  s = strrchr (name, '.');
+  if (s)
+    sscanf (s, ".%" PRI_LL "x", &obj->out->id);
+  secdata = secdatastart = xmalloc (length);
+  offset += obj->file->offset;
+  if (offset != lseek (obj->file->fd, offset, SEEK_SET))
+    goto err;
+
+  do
+    {
+      ssize_t got = read (obj->file->fd, secdata, length);
+      if (got == 0)
+	break;
+      else if (got > 0)
+	{
+	  secdata += got;
+	  length -= got;
+	}
+      else if (errno != EINTR)
+	goto err;
+    }
+  while (length > 0);
+  if (length > 0)
+    goto err;
+
+  parse_symtab_extension (secdatastart, secdata, obj->out);
+  obj->found++;
+  free (secdatastart);
+  return 1;
+
+err:
+  if (message)
+    message (LDPL_FATAL, "%s: corrupt object file", obj->file->name);
+  /* Force claim_file_handler to abandon this file.  */
+  obj->found = 0;
+  free (secdatastart);
+  return 0;
+}
+
+
+/* Find an offload section of an object file.  */
+
+static int
+process_offload_section (void *data, const char *name, off_t offset, off_t len)
+{
+  if (startswith (name, ".gnu.offload_lto_.opts"))
+    {
+      struct plugin_objfile *obj = (struct plugin_objfile *) data;
+      obj->offload = true;
+      return 0;
+    }
+
+  return 1;
 }
 
 /* Callback used by a linker to check if the plugin will claim FILE. Writes
    the result in CLAIMED. */
 
 static enum ld_plugin_status
-claim_file_handler(const struct ld_plugin_input_file *file, int *claimed)
+claim_file_handler (const struct ld_plugin_input_file *file, int *claimed)
 {
-	enum ld_plugin_status status;
-	struct plugin_objfile obj;
-	struct plugin_file_info lto_file;
-	int err;
-	const char *errmsg;
+  enum ld_plugin_status status;
+  struct plugin_objfile obj;
+  struct plugin_file_info lto_file;
+  int err;
+  const char *errmsg;
 
-	memset(&lto_file, 0, sizeof (struct plugin_file_info));
+  memset (&lto_file, 0, sizeof (struct plugin_file_info));
 
-	if (file->offset != 0) {
-		/* We pass the offset of the actual file, not the archive header.
-		   Can't use PRIx64, because that's C99, so we have to print the
-		   64-bit hex int as two 32-bit ones.  Use xasprintf instead of
-		   asprintf because asprintf doesn't work as expected on some older
-		   mingw32 hosts. */
-		int lo, hi;
-		lo = file->offset & 0xffffffff;
-		hi = ((int64_t)file->offset >> 32) & 0xffffffff;
-		lto_file.name = hi ? xasprintf("%s@0x%x%08x", file->name, hi, lo)
-			: xasprintf("%s@0x%x", file->name, lo);
-	} else {
-		lto_file.name = xstrdup(file->name);
+  if (file->offset != 0)
+    {
+      /* We pass the offset of the actual file, not the archive header.
+         Can't use PRIx64, because that's C99, so we have to print the
+	 64-bit hex int as two 32-bit ones.  Use xasprintf instead of
+	 asprintf because asprintf doesn't work as expected on some older
+	 mingw32 hosts.  */
+      int lo, hi;
+      lo = file->offset & 0xffffffff;
+      hi = ((int64_t)file->offset >> 32) & 0xffffffff;
+      lto_file.name = hi ? xasprintf ("%s@0x%x%08x", file->name, hi, lo)
+      			 : xasprintf ("%s@0x%x", file->name, lo);
+    }
+  else
+    {
+      lto_file.name = xstrdup (file->name);
+    }
+  lto_file.handle = file->handle;
+
+  *claimed = 0;
+  obj.file = file;
+  obj.found = 0;
+  obj.offload = false;
+  obj.out = &lto_file.symtab;
+  errmsg = NULL;
+  obj.objfile = simple_object_start_read (file->fd, file->offset, LTO_SEGMENT_NAME,
+			&errmsg, &err);
+  /* No file, but also no error code means unrecognized format; just skip it.  */
+  if (!obj.objfile && !err)
+    goto err;
+
+   if (obj.objfile)
+    {
+      errmsg = simple_object_find_sections (obj.objfile, process_symtab, &obj,
+					    &err);
+      /*  Parsing symtab extension should be done only for add_symbols_v2 and
+	  later versions.  */
+      if (!errmsg && add_symbols_v2 != NULL)
+	{
+	  obj.out->last_sym = 0;
+	  errmsg = simple_object_find_sections (obj.objfile,
+						process_symtab_extension,
+						&obj, &err);
 	}
-	lto_file.handle = file->handle;
+    }
 
-	*claimed = 0;
-	obj.file = file;
-	obj.found = 0;
-	obj.offload = false;
-	obj.out = &lto_file.symtab;
-	errmsg = NULL;
-	obj.objfile = simple_object_start_read(file->fd, file->offset, LTO_SEGMENT_NAME, &errmsg, &err);
-	/* No file, but also no error code means unrecognized format; just skip it.  */
-	if (!obj.objfile && !err)
-		goto err;
+  if (!obj.objfile || errmsg)
+    {
+      if (err && message)
+	message (LDPL_FATAL, "%s: %s: %s", file->name, errmsg,
+		xstrerror (err));
+      else if (message)
+	message (LDPL_FATAL, "%s: %s", file->name, errmsg);
+      goto err;
+    }
 
-	if (obj.objfile) {
-		errmsg = simple_object_find_sections (obj.objfile, process_symtab, &obj, &err);
-		/*  Parsing symtab extension should be done only for add_symbols_v2 and later versions.  */
-		if (!errmsg && add_symbols_v2 != NULL) {
-			obj.out->last_sym = 0;
-			errmsg = simple_object_find_sections(obj.objfile, process_symtab_extension, &obj, &err);
-		}
+  if (obj.objfile)
+    simple_object_find_sections (obj.objfile, process_offload_section,
+				 &obj, &err);
+
+  if (obj.found == 0 && !obj.offload)
+    goto err;
+
+  if (obj.found > 1)
+    resolve_conflicts (&lto_file.symtab, &lto_file.conflicts);
+
+  if (obj.found > 0)
+    {
+      if (add_symbols_v2)
+	status = add_symbols_v2 (file->handle, lto_file.symtab.nsyms,
+				 lto_file.symtab.syms);
+      else
+	status = add_symbols (file->handle, lto_file.symtab.nsyms,
+			      lto_file.symtab.syms);
+      check (status == LDPS_OK, LDPL_FATAL, "could not add symbols");
+
+      LOCK_SECTION;
+      num_claimed_files++;
+      claimed_files =
+	xrealloc (claimed_files,
+		  num_claimed_files * sizeof (struct plugin_file_info));
+      claimed_files[num_claimed_files - 1] = lto_file;
+      UNLOCK_SECTION;
+
+      *claimed = 1;
+    }
+
+  LOCK_SECTION;
+  if (offload_files == NULL)
+    {
+      /* Add dummy item to the start of the list.  */
+      offload_files = xmalloc (sizeof (struct plugin_offload_file));
+      offload_files->name = NULL;
+      offload_files->next = NULL;
+      offload_files_last = offload_files;
+    }
+
+  /* If this is an LTO file without offload, and it is the first LTO file, save
+     the pointer to the last offload file in the list.  Further offload LTO
+     files will be inserted after it, if any.  */
+  if (*claimed && !obj.offload && offload_files_last_lto == NULL)
+    offload_files_last_lto = offload_files_last;
+
+  if (obj.offload)
+    {
+      /* Add file to the list.  The order must be exactly the same as the final
+	 order after recompilation and linking, otherwise host and target tables
+	 with addresses wouldn't match.  If a static library contains both LTO
+	 and non-LTO objects, ld and gold link them in a different order.  */
+      struct plugin_offload_file *ofld
+	= xmalloc (sizeof (struct plugin_offload_file));
+      ofld->name = lto_file.name;
+      ofld->next = NULL;
+
+      if (*claimed && offload_files_last_lto == NULL && file->offset != 0
+	  && gold_version == -1)
+	{
+	  /* ld only: insert first LTO file from the archive after the last real
+	     object file immediately preceding the archive, or at the begin of
+	     the list if there was no real objects before archives.  */
+	  if (offload_files_last_obj != NULL)
+	    {
+	      ofld->next = offload_files_last_obj->next;
+	      offload_files_last_obj->next = ofld;
+	    }
+	  else
+	    {
+	      ofld->next = offload_files->next;
+	      offload_files->next = ofld;
+	    }
 	}
-
-	if (!obj.objfile || errmsg) {
-		if (err && message)
-			message(LDPL_FATAL, "%s: %s: %s", file->name, errmsg, xstrerror(err));
-		else if (message)
-			message(LDPL_FATAL, "%s: %s", file->name, errmsg);
-		goto err;
+      else if (*claimed && offload_files_last_lto != NULL)
+	{
+	  /* Insert LTO file after the last LTO file in the list.  */
+	  ofld->next = offload_files_last_lto->next;
+	  offload_files_last_lto->next = ofld;
 	}
+      else
+	/* Add non-LTO file or first non-archive LTO file to the end of the
+	   list.  */
+	offload_files_last->next = ofld;
 
-	if (obj.objfile)
-		simple_object_find_sections(obj.objfile, process_offload_section, &obj, &err);
+      if (ofld->next == NULL)
+	offload_files_last = ofld;
+      if (file->offset == 0)
+	offload_files_last_obj = ofld;
+      if (*claimed)
+	offload_files_last_lto = ofld;
+      num_offload_files++;
+    }
 
-	if (obj.found == 0 && !obj.offload)
-		goto err;
+  UNLOCK_SECTION;
 
-	if (obj.found > 1)
-		resolve_conflicts(&lto_file.symtab, &lto_file.conflicts);
+  goto cleanup;
 
-	if (obj.found > 0) {
-		if (add_symbols_v2)
-			status = add_symbols_v2(file->handle, lto_file.symtab.nsyms, lto_file.symtab.syms);
-		else
-			status = add_symbols(file->handle, lto_file.symtab.nsyms, lto_file.symtab.syms);
-		check(status == LDPS_OK, LDPL_FATAL, "could not add symbols");
+ err:
+  LOCK_SECTION;
+  non_claimed_files++;
+  UNLOCK_SECTION;
+  free (lto_file.name);
 
-		pthread_mutex_lock(&plugin_lock);
-		num_claimed_files++;
-		claimed_files = xrealloc(claimed_files, num_claimed_files * sizeof (struct plugin_file_info));
-		claimed_files[num_claimed_files - 1] = lto_file;
-		pthread_mutex_unlock(&plugin_lock);
+ cleanup:
+  if (obj.objfile)
+    simple_object_release_read (obj.objfile);
 
-		*claimed = 1;
-	}
-
-	pthread_mutex_lock(&plugin_lock);
-	if (offload_files == NULL) {
-		/* Add dummy item to the start of the list. */
-		offload_files = xmalloc(sizeof (struct plugin_offload_file));
-		offload_files->name = NULL;
-		offload_files->next = NULL;
-		offload_files_last = offload_files;
-	}
-
-	/* If this is an LTO file without offload, and it is the first LTO file, save
-	   the pointer to the last offload file in the list.  Further offload LTO
-	   files will be inserted after it, if any.  */
-	if (*claimed && !obj.offload && offload_files_last_lto == NULL)
-		offload_files_last_lto = offload_files_last;
-
-	if (obj.offload) {
-		/* Add file to the list.  The order must be exactly the same as the final
-		   order after recompilation and linking, otherwise host and target tables
-		   with addresses wouldn't match.  If a static library contains both LTO
-		   and non-LTO objects, ld and gold link them in a different order.  */
-		struct plugin_offload_file *ofld = xmalloc(sizeof (struct plugin_offload_file));
-		ofld->name = lto_file.name;
-		ofld->next = NULL;
-
-		if (*claimed && offload_files_last_lto == NULL && file->offset != 0 && gold_version == -1) {
-			/* ld only: insert first LTO file from the archive after the last real
-			   object file immediately preceding the archive, or at the begin of
-			   the list if there was no real objects before archives. */
-			if (offload_files_last_obj != NULL) {
-				ofld->next = offload_files_last_obj->next;
-				offload_files_last_obj->next = ofld;
-			} else {
-				ofld->next = offload_files->next;
-				offload_files->next = ofld;
-			}
-		} else if (*claimed && offload_files_last_lto != NULL) {
-			/* Insert LTO file after the last LTO file in the list. */
-			ofld->next = offload_files_last_lto->next;
-			offload_files_last_lto->next = ofld;
-		} else
-			/* Add non-LTO file or first non-archive LTO file to the end of the list. */
-			offload_files_last->next = ofld;
-
-		if (ofld->next == NULL)
-			offload_files_last = ofld;
-		if (file->offset == 0)
-			offload_files_last_obj = ofld;
-		if (*claimed)
-			offload_files_last_lto = ofld;
-		num_offload_files++;
-	}
-	pthread_mutex_unlock(&plugin_lock);
-
-	goto cleanup;
-
-err:
-	pthread_mutex_lock(&plugin_lock);
-	non_claimed_files++;
-	pthread_mutex_unlock(&plugin_lock);
-	free(lto_file.name);
-
-cleanup:
-	if (obj.objfile)
-		simple_object_release_read(obj.objfile);
-
-	return LDPS_OK;
+  return LDPS_OK;
 }
 
 /* Parse the plugin options. */
+
 static void
-process_option(const char *option)
+process_option (const char *option)
 {
-	if (strcmp(option, "-linker-output-known") == 0)
-		linker_output_known = true;
-		/* Also accept "notlo" for backwards compatibility. */
-	else if ((strcmp(option, "-linker-output-auto-nolto-rel") == 0)
-			|| (strcmp(option, "-linker-output-auto-notlo-rel") == 0))
-		linker_output_auto_nolto_rel = true;
-	else if (strcmp(option, "-debug") == 0)
-		debug = true;
-	else if ((strcmp(option, "-v") == 0) || (strcmp(option, "--verbose") == 0))
-		verbose = true;
-	else if (strcmp(option, "-save-temps") == 0)
-		save_temps = true;
-	else if (strcmp(option, "-nop") == 0)
-		nop = 1;
-	else if (startswith(option, "-pass-through=")) {
-		num_pass_through_items++;
-		pass_through_items = xrealloc(pass_through_items,
-				num_pass_through_items * sizeof (char *));
-		pass_through_items[num_pass_through_items - 1] =
-		xstrdup(option + strlen("-pass-through="));
-	} else if (startswith(option, "-sym-style=")) {
-		switch (option[sizeof ("-sym-style=") - 1]) {
-			case 'w':
-				sym_style = ss_win32;
-				break;
-			case 'u':
-				sym_style = ss_uscore;
-				break;
-			default:
-				sym_style = ss_none;
-				break;
-		}
-	} else if (startswith(option, "-ltrans-objects="))
-		ltrans_objects = xstrdup(option + strlen("-ltrans-objects="));
-	else {
-		int size;
-		char *opt = xstrdup(option);
-		lto_wrapper_num_args += 1;
-		size = lto_wrapper_num_args * sizeof (char *);
-		lto_wrapper_argv = (char **) xrealloc(lto_wrapper_argv, size);
-		lto_wrapper_argv[lto_wrapper_num_args - 1] = opt;
-		if (startswith(option, "-fresolution="))
-			resolution_file = opt + sizeof ("-fresolution=") - 1;
+  if (strcmp (option, "-linker-output-known") == 0)
+    linker_output_known = true;
+  /* Also accept "notlo" for backwards compatibility.  */
+  else if ((strcmp (option, "-linker-output-auto-nolto-rel") == 0)
+           || (strcmp (option, "-linker-output-auto-notlo-rel") == 0))
+    linker_output_auto_nolto_rel = true;
+  else if (strcmp (option, "-debug") == 0)
+    debug = true;
+  else if ((strcmp (option, "-v") == 0)
+           || (strcmp (option, "--verbose") == 0))
+    verbose = true;
+  else if (strcmp (option, "-save-temps") == 0)
+    save_temps = true;
+  else if (strcmp (option, "-nop") == 0)
+    nop = 1;
+  else if (startswith (option, "-pass-through="))
+    {
+      num_pass_through_items++;
+      pass_through_items = xrealloc (pass_through_items,
+				     num_pass_through_items * sizeof (char *));
+      pass_through_items[num_pass_through_items - 1] =
+          xstrdup (option + strlen ("-pass-through="));
+    }
+  else if (startswith (option, "-sym-style="))
+    {
+      switch (option[sizeof ("-sym-style=") - 1])
+	{
+	case 'w':
+	  sym_style = ss_win32;
+	  break;
+	case 'u':
+	  sym_style = ss_uscore;
+	  break;
+	default:
+	  sym_style = ss_none;
+	  break;
 	}
-	save_temps = save_temps || debug;
-	verbose = verbose || debug;
+    }
+  else if (startswith (option, "-ltrans-objects="))
+    ltrans_objects = xstrdup (option + strlen ("-ltrans-objects="));
+  else
+    {
+      int size;
+      char *opt = xstrdup (option);
+      lto_wrapper_num_args += 1;
+      size = lto_wrapper_num_args * sizeof (char *);
+      lto_wrapper_argv = (char **) xrealloc (lto_wrapper_argv, size);
+      lto_wrapper_argv[lto_wrapper_num_args - 1] = opt;
+      if (startswith (option, "-fresolution="))
+	resolution_file = opt + sizeof ("-fresolution=") - 1;
+    }
+  save_temps = save_temps || debug;
+  verbose = verbose || debug;
+}
+
+/* Negotiate linker API version.  */
+
+static void
+negotiate_api_version (void)
+{
+  const char *linker_identifier;
+  const char *linker_version;
+
+  enum linker_api_version supported_api = LAPI_V0;
+#if HAVE_PTHREAD_LOCKING
+  supported_api = LAPI_V1;
+#endif
+
+  api_version = get_api_version ("GCC", BASE_VERSION, LAPI_V0,
+				 supported_api, &linker_identifier, &linker_version);
+  if (api_version > supported_api)
+    {
+      fprintf (stderr, "requested an unsupported API version (%d)\n", api_version);
+      abort ();
+    }
+
+  switch (api_version)
+    {
+    case LAPI_V0:
+      break;
+    case LAPI_V1:
+      check (get_symbols_v3, LDPL_FATAL,
+	     "get_symbols_v3 required for API version 1");
+      check (add_symbols_v2, LDPL_FATAL,
+	     "add_symbols_v2 required for API version 1");
+      break;
+    default:
+      fprintf (stderr, "unsupported API version (%d)\n", api_version);
+      abort ();
+    }
 }
 
 /* Called by a linker after loading the plugin. TV is the transfer vector. */
+
 enum ld_plugin_status
-onload(struct ld_plugin_tv *tv)
+onload (struct ld_plugin_tv *tv)
 {
-	struct ld_plugin_tv *p;
-	enum ld_plugin_status status;
+  struct ld_plugin_tv *p;
+  enum ld_plugin_status status;
 
-	if (pthread_mutex_init(&plugin_lock, NULL) != 0) {
-		fprintf(stderr, "mutex init failed\n");
-		abort();
+#if HAVE_PTHREAD_LOCKING
+  if (pthread_mutex_init (&plugin_lock, NULL) != 0)
+    {
+      fprintf (stderr, "mutex init failed\n");
+      abort ();
+    }
+#endif
+
+  p = tv;
+  while (p->tv_tag)
+    {
+      switch (p->tv_tag)
+	{
+        case LDPT_MESSAGE:
+          message = p->tv_u.tv_message;
+          break;
+	case LDPT_REGISTER_CLAIM_FILE_HOOK:
+	  register_claim_file = p->tv_u.tv_register_claim_file;
+	  break;
+	case LDPT_ADD_SYMBOLS_V2:
+	  add_symbols_v2 = p->tv_u.tv_add_symbols;
+	  break;
+	case LDPT_ADD_SYMBOLS:
+	  add_symbols = p->tv_u.tv_add_symbols;
+	  break;
+	case LDPT_REGISTER_ALL_SYMBOLS_READ_HOOK:
+	  register_all_symbols_read = p->tv_u.tv_register_all_symbols_read;
+	  break;
+	case LDPT_GET_SYMBOLS_V3:
+	  get_symbols_v3 = p->tv_u.tv_get_symbols;
+	  break;
+	case LDPT_GET_SYMBOLS_V2:
+	  get_symbols_v2 = p->tv_u.tv_get_symbols;
+	  break;
+	case LDPT_GET_SYMBOLS:
+	  get_symbols = p->tv_u.tv_get_symbols;
+	  break;
+	case LDPT_REGISTER_CLEANUP_HOOK:
+	  register_cleanup = p->tv_u.tv_register_cleanup;
+	  break;
+	case LDPT_ADD_INPUT_FILE:
+	  add_input_file = p->tv_u.tv_add_input_file;
+	  break;
+	case LDPT_ADD_INPUT_LIBRARY:
+	  add_input_library = p->tv_u.tv_add_input_library;
+	  break;
+	case LDPT_OPTION:
+	  process_option (p->tv_u.tv_string);
+	  break;
+	case LDPT_GOLD_VERSION:
+	  gold_version = p->tv_u.tv_val;
+	  break;
+	case LDPT_LINKER_OUTPUT:
+	  linker_output = (enum ld_plugin_output_file_type) p->tv_u.tv_val;
+	  linker_output_set = true;
+	  break;
+	case LDPT_OUTPUT_NAME:
+	  /* We only use this to make user-friendly temp file names.  */
+	  link_output_name = p->tv_u.tv_string;
+	  break;
+	case LDPT_GET_API_VERSION:
+	  get_api_version = p->tv_u.tv_get_api_version;
+	  break;
+	default:
+	  break;
 	}
+      p++;
+    }
 
-	p = tv;
-	while (p->tv_tag) {
-		switch (p->tv_tag) {
-			case LDPT_MESSAGE:
-				message = p->tv_u.tv_message;
-				break;
-			case LDPT_REGISTER_CLAIM_FILE_HOOK:
-				register_claim_file = p->tv_u.tv_register_claim_file;
-				break;
-			case LDPT_ADD_SYMBOLS_V2:
-				add_symbols_v2 = p->tv_u.tv_add_symbols;
-				break;
-			case LDPT_ADD_SYMBOLS:
-				add_symbols = p->tv_u.tv_add_symbols;
-				break;
-			case LDPT_REGISTER_ALL_SYMBOLS_READ_HOOK:
-				register_all_symbols_read = p->tv_u.tv_register_all_symbols_read;
-				break;
-			case LDPT_GET_SYMBOLS_V3:
-				get_symbols_v3 = p->tv_u.tv_get_symbols;
-				break;
-			case LDPT_GET_SYMBOLS_V2:
-				get_symbols_v2 = p->tv_u.tv_get_symbols;
-				break;
-			case LDPT_GET_SYMBOLS:
-				get_symbols = p->tv_u.tv_get_symbols;
-				break;
-			case LDPT_REGISTER_CLEANUP_HOOK:
-				register_cleanup = p->tv_u.tv_register_cleanup;
-				break;
-			case LDPT_ADD_INPUT_FILE:
-				add_input_file = p->tv_u.tv_add_input_file;
-				break;
-			case LDPT_ADD_INPUT_LIBRARY:
-				add_input_library = p->tv_u.tv_add_input_library;
-				break;
-			case LDPT_OPTION:
-				process_option(p->tv_u.tv_string);
-				break;
-			case LDPT_GOLD_VERSION:
-				gold_version = p->tv_u.tv_val;
-				break;
-			case LDPT_LINKER_OUTPUT:
-				linker_output = (enum ld_plugin_output_file_type) p->tv_u.tv_val;
-				linker_output_set = true;
-				break;
-			case LDPT_OUTPUT_NAME:
-				/* We only use this to make user-friendly temp file names. */
-				link_output_name = p->tv_u.tv_string;
-				break;
-			default:
-				break;
+  if (get_api_version)
+    negotiate_api_version ();
+
+  check (register_claim_file, LDPL_FATAL, "register_claim_file not found");
+  check (add_symbols, LDPL_FATAL, "add_symbols not found");
+  status = register_claim_file (claim_file_handler);
+  check (status == LDPS_OK, LDPL_FATAL,
+	 "could not register the claim_file callback");
+
+  if (register_cleanup)
+    {
+      status = register_cleanup (cleanup_handler);
+      check (status == LDPS_OK, LDPL_FATAL,
+	     "could not register the cleanup callback");
+    }
+
+  if (register_all_symbols_read)
+    {
+      check (get_symbols, LDPL_FATAL, "get_symbols not found");
+      status = register_all_symbols_read (all_symbols_read_handler);
+      check (status == LDPS_OK, LDPL_FATAL,
+	     "could not register the all_symbols_read callback");
+    }
+
+  char *collect_gcc_options = getenv ("COLLECT_GCC_OPTIONS");
+  if (collect_gcc_options)
+    {
+      /* Support -fno-use-linker-plugin by failing to load the plugin
+	 for the case where it is auto-loaded by BFD.  */
+      if (strstr (collect_gcc_options, "'-fno-use-linker-plugin'"))
+	return LDPS_ERR;
+
+      if (strstr (collect_gcc_options, "'-save-temps'"))
+	save_temps = true;
+
+      if (strstr (collect_gcc_options, "'-v'")
+          || strstr (collect_gcc_options, "'--verbose'"))
+	verbose = true;
+
+      const char *p;
+      if ((p = strstr (collect_gcc_options, "'-dumpdir'")))
+	{
+	  p += sizeof ("'-dumpdir'");
+	  while (*p == ' ')
+	    p++;
+	  const char *start = p;
+	  int ticks = 0, escapes = 0;
+	  /* Count ticks (') and escaped (\.) characters.  Stop at the
+	     end of the options or at a blank after an even number of
+	     ticks (not counting escaped ones.  */
+	  for (p = start; *p; p++)
+	    {
+	      if (*p == '\'')
+		{
+		  ticks++;
+		  continue;
 		}
-		p++;
-	}
-
-	check(register_claim_file, LDPL_FATAL, "register_claim_file not found");
-	check(add_symbols, LDPL_FATAL, "add_symbols not found");
-	status = register_claim_file(claim_file_handler);
-	check(status == LDPS_OK, LDPL_FATAL, "could not register the claim_file callback");
-
-	if (register_cleanup) {
-		status = register_cleanup(cleanup_handler);
-		check(status == LDPS_OK, LDPL_FATAL, "could not register the cleanup callback");
-	}
-
-	if (register_all_symbols_read) {
-		check(get_symbols, LDPL_FATAL, "get_symbols not found");
-		status = register_all_symbols_read(all_symbols_read_handler);
-		check(status == LDPS_OK, LDPL_FATAL,
-			"could not register the all_symbols_read callback");
-	}
-
-	char *collect_gcc_options = getenv("COLLECT_GCC_OPTIONS");
-	if (collect_gcc_options) {
-		/* Support -fno-use-linker-plugin by failing to load the plugin
-		   for the case where it is auto-loaded by BFD. */
-		if (strstr(collect_gcc_options, "'-fno-use-linker-plugin'"))
-			return LDPS_ERR;
-
-		if (strstr(collect_gcc_options, "'-save-temps'"))
-			save_temps = true;
-
-		if (strstr(collect_gcc_options, "'-v'")
-				|| strstr(collect_gcc_options, "'--verbose'"))
-			verbose = true;
-
-		const char *p;
-		if ((p = strstr(collect_gcc_options, "'-dumpdir'"))) {
-			p += sizeof ("'-dumpdir'");
-			while (*p == ' ')
-				p++;
-			const char *start = p;
-			int ticks = 0, escapes = 0;
-			/* Count ticks (') and escaped (\.) characters.  Stop at the
-			   end of the options or at a blank after an even number of
-			   ticks (not counting escaped ones.  */
-			for (p = start; *p; p++) {
-				if (*p == '\'') {
-					ticks++;
-					continue;
-				} else if ((ticks % 2) != 0) {
-					if (*p == ' ')
-						break;
-					if (*p == '\\') {
-						if (*++p)
-							escapes++;
-						else
-							p--;
-					}
-				}
-			}
-
-			/* Now allocate a new link_output_name and decode dumpdir
-			   into it.  The loop uses the same logic, except it counts
-			   ticks and escapes backwards (so ticks is adjusted if we
-			   find an odd number of them), and it copies characters
-			   that are escaped or not otherwise skipped. */
-			int len = p - start - ticks - escapes + 1;
-			char *q = xmalloc (len);
-			link_output_name = q;
-			int oddticks = (ticks % 2);
-			ticks += oddticks;
-			for (p = start; *p; p++) {
-				if (*p == '\'') {
-					ticks--;
-					continue;
-				} else if ((ticks % 2) != 0) {
-					if (*p == ' ')
-						break;
-					if (*p == '\\') {
-						if (*++p)
-							escapes--;
-						else
-							p--;
-					}
-				}
-				*q++ = *p;
-			}
-			*q = '\0';
-			assert(escapes == 0);
-			assert(ticks == oddticks);
-			assert(q - link_output_name == len - 1);
-			skip_in_suffix = true;
+	      else if ((ticks % 2) != 0)
+		{
+		  if (*p == ' ')
+		    break;
+		  if (*p == '\\')
+		    {
+		      if (*++p)
+			escapes++;
+		      else
+			p--;
+		    }
 		}
-	}
+	    }
 
-	return LDPS_OK;
+	  /* Now allocate a new link_output_name and decode dumpdir
+	     into it.  The loop uses the same logic, except it counts
+	     ticks and escapes backwards (so ticks is adjusted if we
+	     find an odd number of them), and it copies characters
+	     that are escaped or not otherwise skipped.  */
+	  int len = p - start - ticks - escapes + 1;
+	  char *q = xmalloc (len);
+	  link_output_name = q;
+	  int oddticks = (ticks % 2);
+	  ticks += oddticks;
+	  for (p = start; *p; p++)
+	    {
+	      if (*p == '\'')
+		{
+		  ticks--;
+		  continue;
+		}
+	      else if ((ticks % 2) != 0)
+		{
+		  if (*p == ' ')
+		    break;
+		  if (*p == '\\')
+		    {
+		      if (*++p)
+			escapes--;
+		      else
+			p--;
+		    }
+		}
+	      *q++ = *p;
+	    }
+	  *q = '\0';
+	  assert (escapes == 0);
+	  assert (ticks == oddticks);
+	  assert (q - link_output_name == len - 1);
+	  skip_in_suffix = true;
+	}
+    }
+
+  return LDPS_OK;
 }

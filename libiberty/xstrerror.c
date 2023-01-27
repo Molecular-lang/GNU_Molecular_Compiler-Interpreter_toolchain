@@ -1,5 +1,6 @@
 /* xstrerror.c -- jacket routine for more robust strerror() usage.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Fri Jun 16 18:30:00 1995  Pat Rankin  <rankin@eql.caltech.edu>
+   This code is in the public domain.  */
 
 /*
 

@@ -13,9 +13,6 @@ AC_PROG_CC
 AC_SYS_LARGEFILE
 ACX_PROG_CC_WARNING_OPTS([-Wall], [ac_lto_plugin_warn_cflags])
 
-# The plug-in depends on pthreads
-LDFLAGS="-pthread"
-
 # Check whether -static-libgcc is supported.
 saved_LDFLAGS="$LDFLAGS"
 LDFLAGS="$LDFLAGS -static-libgcc"
@@ -91,8 +88,26 @@ AM_CONDITIONAL(LTO_PLUGIN_USE_SYMVER_GNU, [test "x$lto_plugin_use_symver" = xgnu
 AM_CONDITIONAL(LTO_PLUGIN_USE_SYMVER_SUN, [test "x$lto_plugin_use_symver" = xsun])
 
 # Check for thread headers.
-AC_CHECK_HEADER(pthread.h,
-  [AC_DEFINE(HAVE_PTHREAD_H, 1, [Define to 1 if pthread.h is present.])])
+use_locking=no
+ac_lto_plugin_extra_ldflags=
+
+case $host in
+  riscv*)
+    # do not use locking as pthread depends on libatomic
+    ;;
+  *-linux*)
+    use_locking=yes
+    ;;
+esac
+
+if test x$use_locking = xyes; then
+  AC_CHECK_HEADER(pthread.h,
+    [AC_DEFINE(HAVE_PTHREAD_LOCKING, 1, [Define if the system provides pthread locking mechanism.])])
+
+  ac_lto_plugin_extra_ldflags="-pthread"
+fi
+
+AC_SUBST(ac_lto_plugin_extra_ldflags)
 
 AM_PROG_LIBTOOL
 ACX_LT_HOST_FLAGS

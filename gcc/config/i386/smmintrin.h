@@ -1,4 +1,25 @@
-/* Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Copyright (C) 2007-2023 Free Software Foundation, Inc.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3, or (at your option)
+   any later version.
+
+   GCC is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   Under Section 7 of GPL version 3, you are granted additional
+   permissions described in the GCC Runtime Library Exception, version
+   3.1, as published by the Free Software Foundation.
+
+   You should have received a copy of the GNU General Public License and
+   a copy of the GCC Runtime Library Exception along with this program;
+   see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 /* Implemented from the specification included in the Intel C++ Compiler
    User Guide and Reference, version 10.0.  */
@@ -344,17 +365,18 @@ _mm_insert_ps (__m128 __D, __m128 __S, const int __N)
 extern __inline int __attribute__((__gnu_inline__, __always_inline__, __artificial__))
 _mm_extract_ps (__m128 __X, const int __N)
 {
-  union { int i; float f; } __tmp;
-  __tmp.f = __builtin_ia32_vec_ext_v4sf ((__v4sf)__X, __N);
-  return __tmp.i;
+  union { int __i; float __f; } __tmp;
+  __tmp.__f = __builtin_ia32_vec_ext_v4sf ((__v4sf)__X, __N);
+  return __tmp.__i;
 }
 #else
 #define _mm_extract_ps(X, N)						\
   (__extension__							\
    ({									\
-     union { int i; float f; } __tmp;					\
-     __tmp.f = __builtin_ia32_vec_ext_v4sf ((__v4sf)(__m128)(X), (int)(N)); \
-     __tmp.i;								\
+     union { int __i; float __f; } __tmp;				\
+     __tmp.__f = __builtin_ia32_vec_ext_v4sf ((__v4sf)(__m128)(X),	\
+					      (int)(N));		\
+     __tmp.__i;								\
    }))
 #endif
 

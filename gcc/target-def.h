@@ -1,5 +1,23 @@
 /* Default initializers for a generic GCC target.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 3, or (at your option) any
+   later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.
+
+   In other words, you are welcome to use, share and improve this program.
+   You are forbidden to forbid anyone else to use, share and improve
+   what you give them.   Help stamp out software-hoarding!  */
 
 /* See target.def for a description of what this file contains and how to
    use it.
@@ -45,7 +63,7 @@
 #  ifdef TARGET_ASM_NAMED_SECTION
 #   define TARGET_ASM_CONSTRUCTOR default_named_section_asm_out_constructor
 #  else
-#   define TARGET_ASM_CONSTRUCTOR default_stabs_asm_out_constructor
+#   define TARGET_ASM_CONSTRUCTOR default_asm_out_constructor
 #  endif
 # endif
 #endif
@@ -57,7 +75,7 @@
 #  ifdef TARGET_ASM_NAMED_SECTION
 #   define TARGET_ASM_DESTRUCTOR default_named_section_asm_out_destructor
 #  else
-#   define TARGET_ASM_DESTRUCTOR default_stabs_asm_out_destructor
+#   define TARGET_ASM_DESTRUCTOR default_asm_out_destructor
 #  endif
 # endif
 #endif

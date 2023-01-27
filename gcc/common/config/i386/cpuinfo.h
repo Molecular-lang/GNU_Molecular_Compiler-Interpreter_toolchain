@@ -1,7 +1,30 @@
 /* Get CPU type and Features for x86 processors.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2012-2023 Free Software Foundation, Inc.
+   Contributed by Sriraman Tallam (tmsriram@google.com)
 
-struct __processor_model {
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
+
+struct __processor_model
+{
   unsigned int __cpu_vendor;
   unsigned int __cpu_type;
   unsigned int __cpu_subtype;
@@ -53,6 +76,8 @@ has_cpu_feature (struct __processor_model *cpu_model,
     }
 }
 
+/* Save FEATURE to either CPU_MODEL or CPU_FEATURES2.  */
+
 static inline void
 set_cpu_feature (struct __processor_model *cpu_model,
 		 unsigned int *cpu_features2,
@@ -74,6 +99,32 @@ set_cpu_feature (struct __processor_model *cpu_model,
       index = f / 32;
       offset = f % 32;
       cpu_features2[index] |= (1U << offset);
+    }
+}
+
+/* Drop FEATURE from either CPU_MODEL or CPU_FEATURES2.  */
+
+static inline void
+reset_cpu_feature (struct __processor_model *cpu_model,
+		   unsigned int *cpu_features2,
+		   enum processor_features feature)
+{
+  unsigned index, offset;
+  unsigned f = feature;
+
+  if (f < 32)
+    {
+      /* The first 32 features.  */
+      cpu_model->__cpu_features[0] &= ~(1U << f);
+    }
+  else
+    {
+      /* The rest of features.  cpu_features2[i] contains features from
+	 (32 + i * 32) to (31 + 32 + i * 32), inclusively.  */
+      f -= 32;
+      index = f / 32;
+      offset = f % 32;
+      cpu_features2[index] &= ~(1U << offset);
     }
 }
 
@@ -230,12 +281,26 @@ get_amd_cpu (struct __processor_model *cpu_model,
       break;
     case 0x19:
       cpu_model->__cpu_type = AMDFAM19H;
-      /* AMD family 19h version 1.  */
+      /* AMD family 19h.  */
       if (model <= 0x0f)
 	{
 	  cpu = "znver3";
 	  CHECK___builtin_cpu_is ("znver3");
 	  cpu_model->__cpu_subtype = AMDFAM19H_ZNVER3;
+	}
+      else if ((model >= 0x10 && model <= 0x1f)
+		|| (model >= 0x60 && model <= 0xaf))
+	{
+	  cpu = "znver4";
+	  CHECK___builtin_cpu_is ("znver4");
+	  cpu_model->__cpu_subtype = AMDFAM19H_ZNVER4;
+	}
+      else if (has_cpu_feature (cpu_model, cpu_features2,
+				FEATURE_AVX512F))
+	{
+	  cpu = "znver4";
+	  CHECK___builtin_cpu_is ("znver4");
+	  cpu_model->__cpu_subtype = AMDFAM19H_ZNVER4;
 	}
       else if (has_cpu_feature (cpu_model, cpu_features2,
 				FEATURE_VAES))
@@ -473,6 +538,11 @@ get_intel_cpu (struct __processor_model *cpu_model,
     case 0x9a:
     case 0xbf:
       /* Alder Lake.  */
+    case 0xb7:
+      /* Raptor Lake.  */
+    case 0xaa:
+    case 0xac:
+      /* Meteor Lake.  */
       cpu = "alderlake";
       CHECK___builtin_cpu_is ("corei7");
       CHECK___builtin_cpu_is ("alderlake");
@@ -481,11 +551,34 @@ get_intel_cpu (struct __processor_model *cpu_model,
       break;
     case 0x8f:
       /* Sapphire Rapids.  */
+    case 0xcf:
+      /* Emerald Rapids.  */
       cpu = "sapphirerapids";
       CHECK___builtin_cpu_is ("corei7");
       CHECK___builtin_cpu_is ("sapphirerapids");
       cpu_model->__cpu_type = INTEL_COREI7;
       cpu_model->__cpu_subtype = INTEL_COREI7_SAPPHIRERAPIDS;
+      break;
+    case 0xaf:
+      /* Sierra Forest.  */
+      cpu = "sierraforest";
+      CHECK___builtin_cpu_is ("sierraforest");
+      cpu_model->__cpu_type = INTEL_SIERRAFOREST;
+      break;
+    case 0xad:
+    case 0xae:
+      /* Granite Rapids.  */
+      cpu = "graniterapids";
+      CHECK___builtin_cpu_is ("corei7");
+      CHECK___builtin_cpu_is ("graniterapids");
+      cpu_model->__cpu_type = INTEL_COREI7;
+      cpu_model->__cpu_subtype = INTEL_COREI7_GRANITERAPIDS;
+      break;
+    case 0xb6:
+      /* Grand Ridge.  */
+      cpu = "grandridge";
+      CHECK___builtin_cpu_is ("grandridge");
+      cpu_model->__cpu_type = INTEL_GRANDRIDGE;
       break;
     case 0x17:
     case 0x1d:
@@ -522,11 +615,11 @@ get_zhaoxin_cpu (struct __processor_model *cpu_model,
       cpu_model->__cpu_type = ZHAOXIN_FAM7H;
       if (model == 0x3b)
 	{
-	cpu = "lujiazui";
-	CHECK___builtin_cpu_is ("lujiazui");
-	cpu_model->__cpu_features[0] &= ~(1U <<(FEATURE_AVX & 31));
-	cpu_features2[0] &= ~(1U <<((FEATURE_F16C - 32) & 31));
-	cpu_model->__cpu_subtype = ZHAOXIN_FAM7H_LUJIAZUI;
+	  cpu = "lujiazui";
+	  CHECK___builtin_cpu_is ("lujiazui");
+	  reset_cpu_feature (cpu_model, cpu_features2, FEATURE_AVX);
+	  reset_cpu_feature (cpu_model, cpu_features2, FEATURE_F16C);
+	  cpu_model->__cpu_subtype = ZHAOXIN_FAM7H_LUJIAZUI;
 	}
       break;
     default:
@@ -760,15 +853,32 @@ get_available_features (struct __processor_model *cpu_model,
       __cpuid_count (7, 1, eax, ebx, ecx, edx);
       if (eax & bit_HRESET)
 	set_feature (FEATURE_HRESET);
+      if (eax & bit_CMPCCXADD)
+	set_feature(FEATURE_CMPCCXADD);
+      if (edx & bit_PREFETCHI)
+	set_feature (FEATURE_PREFETCHI);
+      if (eax & bit_RAOINT)
+	set_feature (FEATURE_RAOINT);
       if (avx_usable)
 	{
 	  if (eax & bit_AVXVNNI)
 	    set_feature (FEATURE_AVXVNNI);
+	  if (eax & bit_AVXIFMA)
+	    set_feature (FEATURE_AVXIFMA);
+	  if (edx & bit_AVXVNNIINT8)
+	    set_feature (FEATURE_AVXVNNIINT8);
+	  if (edx & bit_AVXNECONVERT)
+	    set_feature (FEATURE_AVXNECONVERT);
 	}
       if (avx512_usable)
 	{
 	  if (eax & bit_AVX512BF16)
 	    set_feature (FEATURE_AVX512BF16);
+	}
+      if (amx_usable)
+	{
+	  if (eax & bit_AMX_FP16)
+	    set_feature (FEATURE_AMX_FP16);
 	}
     }
 

@@ -1,4 +1,25 @@
-/* Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Copyright (C) 1989-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 /*
  * ISO C Standard:  7.15  Variable arguments  <stdarg.h>
@@ -23,7 +44,11 @@ typedef __builtin_va_list __gnuc_va_list;
    if this invocation was from the user program.  */
 #ifdef _STDARG_H
 
+#if defined __STDC_VERSION__ && __STDC_VERSION__ > 201710L
+#define va_start(v, ...)	__builtin_va_start(v, 0)
+#else
 #define va_start(v,l)	__builtin_va_start(v,l)
+#endif
 #define va_end(v)	__builtin_va_end(v)
 #define va_arg(v,l)	__builtin_va_arg(v,l)
 #if !defined(__STRICT_ANSI__) || __STDC_VERSION__ + 0 >= 199900L \
@@ -99,6 +124,10 @@ typedef __gnuc_va_list va_list;
 #endif /* not _VA_LIST_, except on certain systems */
 
 #endif /* not __svr4__ */
+
+#if defined __STDC_VERSION__ && __STDC_VERSION__ > 201710L
+#define __STDC_VERSION_STDARG_H__	202311L
+#endif
 
 #endif /* _STDARG_H */
 

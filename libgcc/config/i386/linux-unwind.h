@@ -1,5 +1,26 @@
 /* DWARF2 EH unwinding support for AMD x86-64 and x86.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2004-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 /* Unwind shadow stack for -fcf-protection -mshstk.  */
 #if defined __SHSTK__ && defined __CET__ && (__CET__ & 2) != 0
@@ -58,37 +79,37 @@ x86_64_fallback_frame_state (struct _Unwind_Context *context,
   fs->regs.cfa_offset = new_cfa - (long) context->cfa;
 
   /* The SVR4 register numbering macros aren't usable in libgcc.  */
-  fs->regs.reg[0].how = REG_SAVED_OFFSET;
+  fs->regs.how[0] = REG_SAVED_OFFSET;
   fs->regs.reg[0].loc.offset = (long)&sc->rax - new_cfa;
-  fs->regs.reg[1].how = REG_SAVED_OFFSET;
+  fs->regs.how[1] = REG_SAVED_OFFSET;
   fs->regs.reg[1].loc.offset = (long)&sc->rdx - new_cfa;
-  fs->regs.reg[2].how = REG_SAVED_OFFSET;
+  fs->regs.how[2] = REG_SAVED_OFFSET;
   fs->regs.reg[2].loc.offset = (long)&sc->rcx - new_cfa;
-  fs->regs.reg[3].how = REG_SAVED_OFFSET;
+  fs->regs.how[3] = REG_SAVED_OFFSET;
   fs->regs.reg[3].loc.offset = (long)&sc->rbx - new_cfa;
-  fs->regs.reg[4].how = REG_SAVED_OFFSET;
+  fs->regs.how[4] = REG_SAVED_OFFSET;
   fs->regs.reg[4].loc.offset = (long)&sc->rsi - new_cfa;
-  fs->regs.reg[5].how = REG_SAVED_OFFSET;
+  fs->regs.how[5] = REG_SAVED_OFFSET;
   fs->regs.reg[5].loc.offset = (long)&sc->rdi - new_cfa;
-  fs->regs.reg[6].how = REG_SAVED_OFFSET;
+  fs->regs.how[6] = REG_SAVED_OFFSET;
   fs->regs.reg[6].loc.offset = (long)&sc->rbp - new_cfa;
-  fs->regs.reg[8].how = REG_SAVED_OFFSET;
+  fs->regs.how[8] = REG_SAVED_OFFSET;
   fs->regs.reg[8].loc.offset = (long)&sc->r8 - new_cfa;
-  fs->regs.reg[9].how = REG_SAVED_OFFSET;
+  fs->regs.how[9] = REG_SAVED_OFFSET;
   fs->regs.reg[9].loc.offset = (long)&sc->r9 - new_cfa;
-  fs->regs.reg[10].how = REG_SAVED_OFFSET;
+  fs->regs.how[10] = REG_SAVED_OFFSET;
   fs->regs.reg[10].loc.offset = (long)&sc->r10 - new_cfa;
-  fs->regs.reg[11].how = REG_SAVED_OFFSET;
+  fs->regs.how[11] = REG_SAVED_OFFSET;
   fs->regs.reg[11].loc.offset = (long)&sc->r11 - new_cfa;
-  fs->regs.reg[12].how = REG_SAVED_OFFSET;
+  fs->regs.how[12] = REG_SAVED_OFFSET;
   fs->regs.reg[12].loc.offset = (long)&sc->r12 - new_cfa;
-  fs->regs.reg[13].how = REG_SAVED_OFFSET;
+  fs->regs.how[13] = REG_SAVED_OFFSET;
   fs->regs.reg[13].loc.offset = (long)&sc->r13 - new_cfa;
-  fs->regs.reg[14].how = REG_SAVED_OFFSET;
+  fs->regs.how[14] = REG_SAVED_OFFSET;
   fs->regs.reg[14].loc.offset = (long)&sc->r14 - new_cfa;
-  fs->regs.reg[15].how = REG_SAVED_OFFSET;
+  fs->regs.how[15] = REG_SAVED_OFFSET;
   fs->regs.reg[15].loc.offset = (long)&sc->r15 - new_cfa;
-  fs->regs.reg[16].how = REG_SAVED_OFFSET;
+  fs->regs.how[16] = REG_SAVED_OFFSET;
   fs->regs.reg[16].loc.offset = (long)&sc->rip - new_cfa;
   fs->retaddr_column = 16;
   fs->signal_frame = 1;
@@ -138,21 +159,21 @@ x86_fallback_frame_state (struct _Unwind_Context *context,
   fs->regs.cfa_offset = new_cfa - (long) context->cfa;
 
   /* The SVR4 register numbering macros aren't usable in libgcc.  */
-  fs->regs.reg[0].how = REG_SAVED_OFFSET;
+  fs->regs.how[0] = REG_SAVED_OFFSET;
   fs->regs.reg[0].loc.offset = (long)&sc->eax - new_cfa;
-  fs->regs.reg[3].how = REG_SAVED_OFFSET;
+  fs->regs.how[3] = REG_SAVED_OFFSET;
   fs->regs.reg[3].loc.offset = (long)&sc->ebx - new_cfa;
-  fs->regs.reg[1].how = REG_SAVED_OFFSET;
+  fs->regs.how[1] = REG_SAVED_OFFSET;
   fs->regs.reg[1].loc.offset = (long)&sc->ecx - new_cfa;
-  fs->regs.reg[2].how = REG_SAVED_OFFSET;
+  fs->regs.how[2] = REG_SAVED_OFFSET;
   fs->regs.reg[2].loc.offset = (long)&sc->edx - new_cfa;
-  fs->regs.reg[6].how = REG_SAVED_OFFSET;
+  fs->regs.how[6] = REG_SAVED_OFFSET;
   fs->regs.reg[6].loc.offset = (long)&sc->esi - new_cfa;
-  fs->regs.reg[7].how = REG_SAVED_OFFSET;
+  fs->regs.how[7] = REG_SAVED_OFFSET;
   fs->regs.reg[7].loc.offset = (long)&sc->edi - new_cfa;
-  fs->regs.reg[5].how = REG_SAVED_OFFSET;
+  fs->regs.how[5] = REG_SAVED_OFFSET;
   fs->regs.reg[5].loc.offset = (long)&sc->ebp - new_cfa;
-  fs->regs.reg[8].how = REG_SAVED_OFFSET;
+  fs->regs.how[8] = REG_SAVED_OFFSET;
   fs->regs.reg[8].loc.offset = (long)&sc->eip - new_cfa;
   fs->retaddr_column = 8;
   fs->signal_frame = 1;

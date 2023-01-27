@@ -1,5 +1,22 @@
 /* Vectorizer
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2003-2023 Free Software Foundation, Inc.
+   Contributed by Dorit Naishlos <dorit@il.ibm.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_TREE_VECTORIZER_H
 #define GCC_TREE_VECTORIZER_H
@@ -48,7 +65,17 @@ enum vect_def_type {
   vect_reduction_def,
   vect_double_reduction_def,
   vect_nested_cycle,
+  vect_first_order_recurrence,
   vect_unknown_def_type
+};
+
+/* Define operation type of linear/non-linear induction variable.  */
+enum vect_induction_op_type {
+   vect_step_op_add = 0,
+   vect_step_op_neg,
+   vect_step_op_mul,
+   vect_step_op_shl,
+   vect_step_op_shr
 };
 
 /* Define type of reduction.  */
@@ -137,7 +164,9 @@ struct vect_scalar_ops_slice_hash : typed_noop_remove<vect_scalar_ops_slice>
   SLP
  ************************************************************************/
 typedef vec<std::pair<unsigned, unsigned> > lane_permutation_t;
+typedef auto_vec<std::pair<unsigned, unsigned>, 16> auto_lane_permutation_t;
 typedef vec<unsigned> load_permutation_t;
+typedef auto_vec<unsigned, 16> auto_load_permutation_t;
 
 /* A computation tree of an SLP instance.  Each node corresponds to a group of
    stmts to be packed in a SIMD stmt.  */
@@ -426,6 +455,10 @@ public:
   vec<stmt_vec_info> stmt_vec_infos;
   /* Whether the above mapping is complete.  */
   bool stmt_vec_info_ro;
+
+  /* Whether we've done a transform we think OK to not update virtual
+     SSA form.  */
+  bool any_known_not_updated_vssa;
 
   /* The SLP graph.  */
   auto_vec<slp_instance> slp_instances;
@@ -995,6 +1028,7 @@ enum stmt_vec_info_type {
   cycle_phi_info_type,
   lc_phi_info_type,
   phi_info_type,
+  recurr_info_type,
   loop_exit_ctrl_vec_info_type
 };
 
@@ -1167,6 +1201,7 @@ public:
      the version here.  */
   tree loop_phi_evolution_base_unchanged;
   tree loop_phi_evolution_part;
+  enum vect_induction_op_type loop_phi_evolution_type;
 
   /* Used for various bookkeeping purposes, generally holding a pointer to
      some other stmt S that is in some way "related" to this stmt.
@@ -1400,6 +1435,7 @@ struct gather_scatter_info {
   ((S)->dr_aux.dr && DR_GROUP_FIRST_ELEMENT(S))
 #define STMT_VINFO_LOOP_PHI_EVOLUTION_BASE_UNCHANGED(S) (S)->loop_phi_evolution_base_unchanged
 #define STMT_VINFO_LOOP_PHI_EVOLUTION_PART(S) (S)->loop_phi_evolution_part
+#define STMT_VINFO_LOOP_PHI_EVOLUTION_TYPE(S) (S)->loop_phi_evolution_type
 #define STMT_VINFO_MIN_NEG_DIST(S)	(S)->min_neg_dist
 #define STMT_VINFO_REDUC_TYPE(S)	(S)->reduc_type
 #define STMT_VINFO_REDUC_CODE(S)	(S)->reduc_code
@@ -2297,6 +2333,8 @@ extern bool vectorizable_lc_phi (loop_vec_info, stmt_vec_info,
 				 gimple **, slp_tree);
 extern bool vectorizable_phi (vec_info *, stmt_vec_info, gimple **, slp_tree,
 			      stmt_vector_for_cost *);
+extern bool vectorizable_recurr (loop_vec_info, stmt_vec_info,
+				  gimple **, slp_tree, stmt_vector_for_cost *);
 extern bool vect_emulated_vector_p (tree);
 extern bool vect_can_vectorize_without_simd_p (tree_code);
 extern bool vect_can_vectorize_without_simd_p (code_helper);
@@ -2305,6 +2343,13 @@ extern int vect_get_known_peeling_cost (loop_vec_info, int, int *,
 					stmt_vector_for_cost *,
 					stmt_vector_for_cost *);
 extern tree cse_and_gimplify_to_preheader (loop_vec_info, tree);
+
+/* Nonlinear induction.  */
+extern tree vect_peel_nonlinear_iv_init (gimple_seq*, tree, tree,
+					 tree, enum vect_induction_op_type);
+extern bool
+vect_can_peel_nonlinear_iv_p (loop_vec_info loop_vinfo,
+			      enum vect_induction_op_type induction_type);
 
 /* In tree-vect-slp.cc.  */
 extern void vect_slp_init (void);

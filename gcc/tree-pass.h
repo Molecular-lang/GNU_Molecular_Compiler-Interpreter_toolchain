@@ -1,5 +1,22 @@
 /* Definitions for describing one tree-ssa optimization pass.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2004-2023 Free Software Foundation, Inc.
+   Contributed by Richard Henderson <rth@redhat.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 
 #ifndef GCC_TREE_PASS_H
@@ -210,6 +227,8 @@ protected:
 #define PROP_rtl_split_insns	(1 << 17)	/* RTL has insns split.  */
 #define PROP_loop_opts_done	(1 << 18)	/* SSA loop optimizations
 						   have completed.  */
+#define PROP_assumptions_done	(1 << 19)	/* Assume function kept
+						   around.  */
 
 #define PROP_gimple \
   (PROP_gimple_any | PROP_gimple_lcf | PROP_gimple_leh | PROP_gimple_lomp)
@@ -284,7 +303,8 @@ protected:
 /* Rebuild the callgraph edges.  */
 #define TODO_rebuild_cgraph_edges       (1 << 22)
 
-/* Release function body and stop pass manager.  */
+/* Release function body (unless assumption function)
+   and stop pass manager.  */
 #define TODO_discard_function		(1 << 23)
 
 /* Internally used in execute_function_todo().  */
@@ -427,6 +447,7 @@ extern gimple_opt_pass *make_pass_early_warn_uninitialized (gcc::context *ctxt);
 extern gimple_opt_pass *make_pass_late_warn_uninitialized (gcc::context *ctxt);
 extern gimple_opt_pass *make_pass_cse_reciprocals (gcc::context *ctxt);
 extern gimple_opt_pass *make_pass_cse_sincos (gcc::context *ctxt);
+extern gimple_opt_pass *make_pass_expand_powcabs (gcc::context *ctxt);
 extern gimple_opt_pass *make_pass_optimize_bswap (gcc::context *ctxt);
 extern gimple_opt_pass *make_pass_store_merging (gcc::context *ctxt);
 extern gimple_opt_pass *make_pass_optimize_widening_mul (gcc::context *ctxt);
@@ -447,6 +468,7 @@ extern gimple_opt_pass *make_pass_copy_prop (gcc::context *ctxt);
 extern gimple_opt_pass *make_pass_isolate_erroneous_paths (gcc::context *ctxt);
 extern gimple_opt_pass *make_pass_early_vrp (gcc::context *ctxt);
 extern gimple_opt_pass *make_pass_vrp (gcc::context *ctxt);
+extern gimple_opt_pass *make_pass_assumptions (gcc::context *ctxt);
 extern gimple_opt_pass *make_pass_uncprop (gcc::context *ctxt);
 extern gimple_opt_pass *make_pass_return_slot (gcc::context *ctxt);
 extern gimple_opt_pass *make_pass_reassoc (gcc::context *ctxt);

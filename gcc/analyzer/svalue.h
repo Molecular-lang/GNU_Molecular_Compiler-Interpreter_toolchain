@@ -1,10 +1,29 @@
 /* Symbolic values.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_ANALYZER_SVALUE_H
 #define GCC_ANALYZER_SVALUE_H
 
 #include "analyzer/complexity.h"
+#include "analyzer/store.h"
+#include "analyzer/program-point.h"
 
 using namespace ana;
 
@@ -1096,9 +1115,9 @@ public:
   /* A support class for uniquifying instances of widening_svalue.  */
   struct key_t
   {
-    key_t (tree type, const program_point &point,
+    key_t (tree type, const function_point &point,
 	   const svalue *base_sval, const svalue *iter_sval)
-    : m_type (type), m_point (point.get_function_point ()),
+    : m_type (type), m_point (point),
       m_base_sval (base_sval), m_iter_sval (iter_sval)
     {}
 
@@ -1136,12 +1155,12 @@ public:
      DIR_UNKNOWN
     };
 
-  widening_svalue (tree type, const program_point &point,
+  widening_svalue (tree type, const function_point &point,
 		   const svalue *base_sval, const svalue *iter_sval)
   : svalue (complexity::from_pair (base_sval->get_complexity (),
 				   iter_sval->get_complexity ()),
 	    type),
-    m_point (point.get_function_point ()),
+    m_point (point),
     m_base_sval (base_sval), m_iter_sval (iter_sval)
   {
     gcc_assert (base_sval->can_have_associated_state_p ());
@@ -1510,6 +1529,7 @@ public:
 
   const char *get_asm_string () const { return m_asm_string; }
   unsigned get_output_idx () const { return m_output_idx; }
+  unsigned get_num_outputs () const { return m_num_outputs; }
   unsigned get_num_inputs () const { return m_num_inputs; }
   const svalue *get_input (unsigned idx) const { return m_input_arr[idx]; }
 

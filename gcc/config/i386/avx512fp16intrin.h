@@ -1,4 +1,25 @@
-/* Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Copyright (C) 2019-2023 Free Software Foundation, Inc.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3, or (at your option)
+   any later version.
+
+   GCC is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   Under Section 7 of GPL version 3, you are granted additional
+   permissions described in the GCC Runtime Library Exception, version
+   3.1, as published by the Free Software Foundation.
+
+   You should have received a copy of the GNU General Public License and
+   a copy of the GCC Runtime Library Exception along with this program;
+   see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #ifndef _IMMINTRIN_H_INCLUDED
 #error "Never use <avx512fp16intrin.h> directly; include <immintrin.h> instead."
@@ -162,28 +183,31 @@ extern __inline __m128h
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
 _mm_setzero_ph (void)
 {
-  return _mm_set1_ph (0.0f);
+  return _mm_set1_ph (0.0f16);
 }
 
 extern __inline __m256h
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
 _mm256_setzero_ph (void)
 {
-  return _mm256_set1_ph (0.0f);
+  return _mm256_set1_ph (0.0f16);
 }
 
 extern __inline __m512h
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
 _mm512_setzero_ph (void)
 {
-  return _mm512_set1_ph (0.0f);
+  return _mm512_set1_ph (0.0f16);
 }
 
 extern __inline __m128h
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
 _mm_undefined_ph (void)
 {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winit-self"
   __m128h __Y = __Y;
+#pragma GCC diagnostic pop
   return __Y;
 }
 
@@ -191,7 +215,10 @@ extern __inline __m256h
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
 _mm256_undefined_ph (void)
 {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winit-self"
   __m256h __Y = __Y;
+#pragma GCC diagnostic pop
   return __Y;
 }
 
@@ -199,7 +226,10 @@ extern __inline __m512h
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
 _mm512_undefined_ph (void)
 {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winit-self"
   __m512h __Y = __Y;
+#pragma GCC diagnostic pop
   return __Y;
 }
 
@@ -251,10 +281,10 @@ _mm512_castph512_ph128 (__m512h __A)
 {
   union
   {
-    __m128h a[4];
-    __m512h v;
-  } u = { .v = __A };
-  return u.a[0];
+    __m128h __a[4];
+    __m512h __v;
+  } __u = { .__v = __A };
+  return __u.__a[0];
 }
 
 extern __inline __m256h
@@ -263,10 +293,10 @@ _mm512_castph512_ph256 (__m512h __A)
 {
   union
   {
-    __m256h a[2];
-    __m512h v;
-  } u = { .v = __A };
-  return u.a[0];
+    __m256h __a[2];
+    __m512h __v;
+  } __u = { .__v = __A };
+  return __u.__a[0];
 }
 
 extern __inline __m512h
@@ -275,11 +305,11 @@ _mm512_castph128_ph512 (__m128h __A)
 {
   union
   {
-    __m128h a[4];
-    __m512h v;
-  } u;
-  u.a[0] = __A;
-  return u.v;
+    __m128h __a[4];
+    __m512h __v;
+  } __u;
+  __u.__a[0] = __A;
+  return __u.__v;
 }
 
 extern __inline __m512h
@@ -288,11 +318,11 @@ _mm512_castph256_ph512 (__m256h __A)
 {
   union
   {
-    __m256h a[2];
-    __m512h v;
-  } u;
-  u.a[0] = __A;
-  return u.v;
+    __m256h __a[2];
+    __m512h __v;
+  } __u;
+  __u.__a[0] = __A;
+  return __u.__v;
 }
 
 extern __inline __m512h
@@ -337,7 +367,8 @@ extern __inline __m128h
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
 _mm_set_sh (_Float16 __F)
 {
-  return _mm_set_ph (0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, __F);
+  return _mm_set_ph (0.0f16, 0.0f16, 0.0f16, 0.0f16, 0.0f16, 0.0f16, 0.0f16,
+		     __F);
 }
 
 /* Create a vector with element 0 as *P and the rest zero.  */
@@ -345,7 +376,7 @@ extern __inline __m128h
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
 _mm_load_sh (void const *__P)
 {
-  return _mm_set_ph (0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+  return _mm_set_ph (0.0f16, 0.0f16, 0.0f16, 0.0f16, 0.0f16, 0.0f16, 0.0f16,
 		     *(_Float16 const *) __P);
 }
 
@@ -7134,11 +7165,11 @@ _mm512_set1_pch (_Float16 _Complex __A)
 {
   union
   {
-    _Float16 _Complex a;
-    float b;
-  } u = { .a = __A};
+    _Float16 _Complex __a;
+    float __b;
+  } __u = { .__a = __A};
 
-  return (__m512h) _mm512_set1_ps (u.b);
+  return (__m512h) _mm512_set1_ps (__u.__b);
 }
 
 // intrinsics below are alias for f*mul_*ch

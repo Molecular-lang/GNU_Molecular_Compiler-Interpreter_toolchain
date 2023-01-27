@@ -1,5 +1,6 @@
 /* xmemdup.c -- Duplicate a memory buffer, using xmalloc.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   This trivial function is in the public domain.
+   Jeff Garzik, September 1999.  */
 
 /*
 

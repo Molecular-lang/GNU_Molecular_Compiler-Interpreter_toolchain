@@ -1,5 +1,22 @@
 /* Regions of memory.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_ANALYZER_REGION_H
 #define GCC_ANALYZER_REGION_H
@@ -17,7 +34,8 @@ enum memory_space
   MEMSPACE_GLOBALS,
   MEMSPACE_STACK,
   MEMSPACE_HEAP,
-  MEMSPACE_READONLY_DATA
+  MEMSPACE_READONLY_DATA,
+  MEMSPACE_THREAD_LOCAL
 };
 
 /* An enum for discriminating between the different concrete subclasses
@@ -32,6 +50,7 @@ enum region_kind
   RK_LABEL,
   RK_STACK,
   RK_HEAP,
+  RK_THREAD_LOCAL,
   RK_ROOT,
   RK_SYMBOLIC,
   RK_DECL,
@@ -45,6 +64,7 @@ enum region_kind
   RK_STRING,
   RK_BIT_RANGE,
   RK_VAR_ARG,
+  RK_ERRNO,
   RK_UNKNOWN,
 };
 
@@ -55,27 +75,40 @@ enum region_kind
 
    region
      space_region
-       frame_region (RK_FRAME)
-       globals_region (RK_GLOBALS)
-       code_region (RK_CODE)
-       stack_region (RK_STACK)
-       heap_region (RK_HEAP)
-     root_region (RK_ROOT)
-     function_region (RK_FUNCTION)
-     label_region (RK_LABEL)
-     symbolic_region (RK_SYMBOLIC)
-     decl_region (RK_DECL),
-     field_region (RK_FIELD)
-     element_region (RK_ELEMENT)
-     offset_region (RK_OFFSET)
-     sized_region (RK_SIZED)
-     cast_region (RK_CAST)
-     heap_allocated_region (RK_HEAP_ALLOCATED)
-     alloca_region (RK_ALLOCA)
-     string_region (RK_STRING)
-     bit_range_region (RK_BIT_RANGE)
-     var_arg_region (RK_VAR_ARG)
-     unknown_region (RK_UNKNOWN).  */
+       frame_region (RK_FRAME): a function frame on the stack
+       globals_region (RK_GLOBALS): holds globals variables (data and bss)
+       code_region (RK_CODE): represents the code segment, containing functions
+       stack_region (RK_STACK): a stack, containing all stack frames
+       heap_region (RK_HEAP): the heap, containing heap_allocated_regions
+       thread_local_region (RK_THREAD_LOCAL): thread-local data for the thread
+                                              being analyzed
+     root_region (RK_ROOT): the top-level region
+     function_region (RK_FUNCTION): the code for a particular function
+     label_region (RK_LABEL): a particular label within a function
+     symbolic_region (RK_SYMBOLIC): dereferencing a symbolic pointer
+     decl_region (RK_DECL): the memory occupied by a particular global, local,
+			    or SSA name
+     field_region (RK_FIELD): the memory occupied by a field within a struct
+			      or union
+     element_region (RK_ELEMENT): an element within an array
+     offset_region (RK_OFFSET): a byte-offset within another region, for
+				handling pointer arithmetic as a region
+     sized_region (RK_SIZED): a subregion of symbolic size (in bytes)
+			      within its parent
+     cast_region (RK_CAST): a region that views another region using a
+			    different type
+     heap_allocated_region (RK_HEAP_ALLOCATED): an untyped region dynamically
+						allocated on the heap via
+						"malloc" or similar
+     alloca_region (RK_ALLOCA): an untyped region dynamically allocated on the
+				stack via "alloca"
+     string_region (RK_STRING): a region for a STRING_CST
+     bit_range_region (RK_BIT_RANGE): a region for a specific range of bits
+				      within another region
+     var_arg_region (RK_VAR_ARG): a region for the N-th vararg within a
+				  frame_region for a variadic call
+     errno_region (RK_ERRNO): a region for holding "errno"
+     unknown_region (RK_UNKNOWN): for handling unimplemented tree codes.  */
 
 /* Abstract base class for representing ways of accessing chunks of memory.
 
@@ -148,7 +181,7 @@ public:
 
   bool involves_p (const svalue *sval) const;
 
-  region_offset get_offset () const;
+  region_offset get_offset (region_model_manager *mgr) const;
 
   /* Attempt to get the size of this region as a concrete number of bytes.
      If successful, return true and write the size to *OUT.
@@ -169,6 +202,11 @@ public:
      Otherwise return false.  */
   virtual bool get_relative_concrete_offset (bit_offset_t *out) const;
 
+  /* Get the offset in bytes of this region relative to its parent as a svalue.
+     Might return an unknown_svalue.  */
+  virtual const svalue *
+  get_relative_symbolic_offset (region_model_manager *mgr) const;
+
   /* Attempt to get the position and size of this region expressed as a
      concrete range of bytes relative to its parent.
      If successful, return true and write to *OUT.
@@ -184,6 +222,8 @@ public:
 
   bool symbolic_for_unknown_ptr_p () const;
 
+  bool symbolic_p () const;
+
   /* For most base regions it makes sense to track the bindings of the region
      within the store.  As an optimization, some are not tracked (to avoid
      bloating the store object with redundant binding clusters).  */
@@ -193,11 +233,13 @@ public:
 
   bool is_named_decl_p (const char *decl_name) const;
 
+  bool empty_p () const;
+
  protected:
   region (complexity c, unsigned id, const region *parent, tree type);
 
  private:
-  region_offset calc_offset () const;
+  region_offset calc_offset (region_model_manager *mgr) const;
 
   complexity m_complexity;
   unsigned m_id; // purely for deterministic sorting at this stage, for dumps
@@ -383,10 +425,6 @@ public:
   /* region vfuncs.  */
   void dump_to_pp (pretty_printer *pp, bool simple) const final override;
   enum region_kind get_kind () const final override { return RK_CODE; }
-
-  const region *get_element (region_model *model,
-			const svalue *index,
-			region_model_context *ctxt);
 };
 
 } // namespace ana
@@ -421,10 +459,6 @@ public:
   dyn_cast_function_region () const final override{ return this; }
 
   tree get_fndecl () const { return m_fndecl; }
-
-  region *get_element (region_model *model,
-			const svalue *index_sid,
-			region_model_context *ctxt);
 
 private:
   tree m_fndecl;
@@ -525,6 +559,32 @@ inline bool
 is_a_helper <const heap_region *>::test (const region *reg)
 {
   return reg->get_kind () == RK_HEAP;
+}
+
+namespace ana {
+
+/* Concrete space_region subclass: thread-local data for the thread
+   being analyzed.  */
+
+class thread_local_region : public space_region
+{
+public:
+  thread_local_region (unsigned id, region *parent)
+  : space_region (id, parent)
+  {}
+
+  enum region_kind get_kind () const final override { return RK_THREAD_LOCAL; }
+  void dump_to_pp (pretty_printer *pp, bool simple) const final override;
+};
+
+} // namespace ana
+
+template <>
+template <>
+inline bool
+is_a_helper <const thread_local_region *>::test (const region *reg)
+{
+  return reg->get_kind () == RK_THREAD_LOCAL;
 }
 
 namespace ana {
@@ -730,6 +790,8 @@ public:
   tree get_field () const { return m_field; }
 
   bool get_relative_concrete_offset (bit_offset_t *out) const final override;
+  const svalue *get_relative_symbolic_offset (region_model_manager *mgr)
+    const final override;
 
 private:
   tree m_field;
@@ -814,6 +876,8 @@ public:
 
   virtual bool
   get_relative_concrete_offset (bit_offset_t *out) const final override;
+  const svalue *get_relative_symbolic_offset (region_model_manager *mgr)
+    const final override;
 
 private:
   const svalue *m_index;
@@ -898,6 +962,11 @@ public:
   const svalue *get_byte_offset () const { return m_byte_offset; }
 
   bool get_relative_concrete_offset (bit_offset_t *out) const final override;
+  const svalue *get_relative_symbolic_offset (region_model_manager *mgr)
+    const final override;
+  const svalue * get_byte_size_sval (region_model_manager *mgr)
+    const final override;
+
 
 private:
   const svalue *m_byte_offset;
@@ -1063,6 +1132,8 @@ public:
   void accept (visitor *v) const final override;
   void dump_to_pp (pretty_printer *pp, bool simple) const final override;
 
+  bool get_relative_concrete_offset (bit_offset_t *out) const final override;
+
   const region *get_original_region () const { return m_original_region; }
 
 private:
@@ -1133,6 +1204,10 @@ public:
   enum region_kind get_kind () const final override { return RK_STRING; }
 
   void dump_to_pp (pretty_printer *pp, bool simple) const final override;
+
+  /* We assume string literals are immutable, so we don't track them in
+     the store.  */
+  bool tracked_p () const final override { return false; }
 
   tree get_string_cst () const { return m_string_cst; }
 
@@ -1215,6 +1290,8 @@ public:
   bool get_bit_size (bit_size_t *out) const final override;
   const svalue *get_byte_size_sval (region_model_manager *mgr) const final override;
   bool get_relative_concrete_offset (bit_offset_t *out) const final override;
+  const svalue *get_relative_symbolic_offset (region_model_manager *mgr)
+    const final override;
 
 private:
   bit_range m_bits;
@@ -1316,6 +1393,32 @@ template <> struct default_hash_traits<var_arg_region::key_t>
 {
   static const bool empty_zero_p = true;
 };
+
+namespace ana {
+
+/* A region for errno for the current thread.  */
+
+class errno_region : public region
+{
+public:
+  errno_region (unsigned id, const thread_local_region *parent)
+  : region (complexity (parent), id, parent, integer_type_node)
+  {}
+
+  enum region_kind get_kind () const final override { return RK_ERRNO; }
+
+  void dump_to_pp (pretty_printer *pp, bool simple) const final override;
+};
+
+} // namespace ana
+
+template <>
+template <>
+inline bool
+is_a_helper <const errno_region *>::test (const region *reg)
+{
+  return reg->get_kind () == RK_ERRNO;
+}
 
 namespace ana {
 

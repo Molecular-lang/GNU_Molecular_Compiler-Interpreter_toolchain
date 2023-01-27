@@ -1,4 +1,25 @@
-/* Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Copyright (C) 2002-2023 Free Software Foundation, Inc.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3, or (at your option)
+   any later version.
+
+   GCC is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   Under Section 7 of GPL version 3, you are granted additional
+   permissions described in the GCC Runtime Library Exception, version
+   3.1, as published by the Free Software Foundation.
+
+   You should have received a copy of the GNU General Public License and
+   a copy of the GCC Runtime Library Exception along with this program;
+   see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 /* Implemented from the specification included in the Intel C++ Compiler
    User Guide and Reference, version 9.0.  */
@@ -15,6 +36,8 @@
 /* Constants for use with _mm_prefetch.  */
 enum _mm_hint
 {
+  _MM_HINT_IT0 = 19,
+  _MM_HINT_IT1 = 18,
   /* _MM_HINT_ET is _MM_HINT_T with set 3rd bit.  */
   _MM_HINT_ET0 = 7,
   _MM_HINT_ET1 = 6,
@@ -30,11 +53,12 @@ enum _mm_hint
 extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))
 _mm_prefetch (const void *__P, enum _mm_hint __I)
 {
-  __builtin_prefetch (__P, (__I & 0x4) >> 2, __I & 0x3);
+  __builtin_ia32_prefetch (__P, (__I & 0x4) >> 2,
+			   __I & 0x3, (__I & 0x10) >> 4);
 }
 #else
 #define _mm_prefetch(P, I) \
-  __builtin_prefetch ((P), ((I & 0x4) >> 2), (I & 0x3))
+  __builtin_ia32_prefetch ((P), ((I) & 0x4) >> 2, ((I) & 0x3), ((I) & 0x10) >> 4)
 #endif
 
 #ifndef __SSE__
@@ -88,7 +112,10 @@ typedef float __v4sf __attribute__ ((__vector_size__ (16)));
 extern __inline __m128 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
 _mm_undefined_ps (void)
 {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winit-self"
   __m128 __Y = __Y;
+#pragma GCC diagnostic pop
   return __Y;
 }
 

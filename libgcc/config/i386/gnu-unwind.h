@@ -1,5 +1,27 @@
 /* DWARF2 EH unwinding support for GNU Hurd: x86.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Contributed by Samuel Thibault <samuel.thibault@gnu.org>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 /* Do code reading to identify a signal frame, and set the frame
    state data appropriately.  See unwind-dw2.c for the structs. */
@@ -101,14 +123,14 @@ x86_gnu_fallback_frame_state
   fs->regs.cfa_reg = 4;
   fs->regs.cfa_offset = usp - (unsigned long) context->cfa;
 
-  fs->regs.reg[0].how = REG_SAVED_OFFSET;
-  fs->regs.reg[1].how = REG_SAVED_OFFSET;
-  fs->regs.reg[2].how = REG_SAVED_OFFSET;
-  fs->regs.reg[3].how = REG_SAVED_OFFSET;
-  fs->regs.reg[5].how = REG_SAVED_OFFSET;
-  fs->regs.reg[6].how = REG_SAVED_OFFSET;
-  fs->regs.reg[7].how = REG_SAVED_OFFSET;
-  fs->regs.reg[8].how = REG_SAVED_OFFSET;
+  fs->regs.how[0] = REG_SAVED_OFFSET;
+  fs->regs.how[1] = REG_SAVED_OFFSET;
+  fs->regs.how[2] = REG_SAVED_OFFSET;
+  fs->regs.how[3] = REG_SAVED_OFFSET;
+  fs->regs.how[5] = REG_SAVED_OFFSET;
+  fs->regs.how[6] = REG_SAVED_OFFSET;
+  fs->regs.how[7] = REG_SAVED_OFFSET;
+  fs->regs.how[8] = REG_SAVED_OFFSET;
 
   fs->retaddr_column = 8;
   fs->signal_frame = 1;

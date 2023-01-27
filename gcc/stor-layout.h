@@ -1,12 +1,29 @@
 /* Definitions and declarations for stor-layout.cc.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2013-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_STOR_LAYOUT_H
 #define GCC_STOR_LAYOUT_H
 
 extern void set_min_and_max_values_for_integral_type (tree, int, signop);
 extern void fixup_signed_type (tree);
-extern unsigned int update_alignment_for_field (record_layout_info, tree, unsigned int);
+extern unsigned int update_alignment_for_field (record_layout_info, tree,
+                                                unsigned int);
 extern record_layout_info start_record_layout (tree);
 extern tree bit_from_pos (tree, tree);
 extern tree byte_from_pos (tree, tree);

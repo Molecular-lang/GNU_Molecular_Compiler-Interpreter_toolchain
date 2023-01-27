@@ -1,8 +1,28 @@
 /* Map (unsigned int) keys to (source file, line, column) triples.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 3, or (at your option) any
+later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.
+
+ In other words, you are welcome to use, share and improve this program.
+ You are forbidden to forbid anyone else to use, share and improve
+ what you give them.   Help stamp out software-hoarding!  */
 
 #ifndef LIBCPP_LINE_MAP_H
 #define LIBCPP_LINE_MAP_H
+
+#include <utility>
 
 #ifndef GTY
 #define GTY(x) /* nothing */
@@ -36,26 +56,27 @@ typedef long long linenum_arith_t;
 
 /* A function for for use by qsort for comparing line numbers.  */
 
-inline int compare(linenum_type lhs, linenum_type rhs)
+inline int compare (linenum_type lhs, linenum_type rhs)
 {
-	/* Avoid truncation issues by using linenum_arith_t for the comparison,
-	   and only consider the sign of the result.  */
-	linenum_arith_t diff = (linenum_arith_t)lhs - (linenum_arith_t)rhs;
-	if (diff)
-		return diff > 0 ? 1 : -1;
-	return 0;
+  /* Avoid truncation issues by using linenum_arith_t for the comparison,
+     and only consider the sign of the result.  */
+  linenum_arith_t diff = (linenum_arith_t)lhs - (linenum_arith_t)rhs;
+  if (diff)
+    return diff > 0 ? 1 : -1;
+  return 0;
 }
 
 /* Reason for creating a new line map with linemap_add.  */
-enum lc_reason {
-	LC_ENTER = 0,		/* Begin #include.  */
-	LC_LEAVE,			/* Return to including file.  */
-	LC_RENAME,			/* Other reason for name change.  */
-	LC_RENAME_VERBATIM,	/* Likewise, but "" != stdin.  */
-	LC_ENTER_MACRO,		/* Begin macro expansion.  */
-	LC_MODULE,			/* A (C++) Module.  */
-	/* FIXME: add support for stringize and paste.  */
-	LC_HWM 				/* High Water Mark.  */
+enum lc_reason
+{
+  LC_ENTER = 0,		/* Begin #include.  */
+  LC_LEAVE,		/* Return to including file.  */
+  LC_RENAME,		/* Other reason for name change.  */
+  LC_RENAME_VERBATIM,	/* Likewise, but "" != stdin.  */
+  LC_ENTER_MACRO,	/* Begin macro expansion.  */
+  LC_MODULE,		/* A (C++) Module.  */
+  /* FIXME: add support for stringize and paste.  */
+  LC_HWM /* High Water Mark.  */
 };
 
 /* The typedef "location_t" is a key within the location database,
@@ -298,29 +319,33 @@ const location_t LINE_MAP_MAX_LOCATION = 0x70000000;
 
    We may need a more compact way to store these, but for now,
    let's do it the simple way, as a pair.  */
-struct GTY(()) source_range {
-	location_t m_start;
-	location_t m_finish;
+struct GTY(()) source_range
+{
+  location_t m_start;
+  location_t m_finish;
 
-	/* We avoid using constructors, since various structs that
-	   don't yet have constructors will embed instances of
-	   source_range. */
+  /* We avoid using constructors, since various structs that
+     don't yet have constructors will embed instances of
+     source_range.  */
 
-	/* Make a source_range from a location_t. */
-	static source_range from_location(location_t loc) {
-		source_range result;
-		result.m_start = loc;
-		result.m_finish = loc;
-		return result;
-	}
+  /* Make a source_range from a location_t.  */
+  static source_range from_location (location_t loc)
+  {
+    source_range result;
+    result.m_start = loc;
+    result.m_finish = loc;
+    return result;
+  }
 
-	/* Make a source_range from a pair of location_t. */
-	static source_range from_locations(location_t start, location_t finish) {
-		source_range result;
-		result.m_start = start;
-		result.m_finish = finish;
-		return result;
-	}
+  /* Make a source_range from a pair of location_t.  */
+  static source_range from_locations (location_t start,
+				      location_t finish)
+  {
+    source_range result;
+    result.m_start = start;
+    result.m_finish = finish;
+    return result;
+  }
 };
 
 /* Memory allocation function typedef.  Works like xrealloc.  */
@@ -360,9 +385,9 @@ typedef size_t (*line_map_round_alloc_size_func) (size_t);
 /* This contains GTY mark-up to support precompiled headers.
    line_map is an abstract class, only derived objects exist.  */
 struct GTY((tag ("0"), desc ("MAP_ORDINARY_P (&%h) ? 1 : 2"))) line_map {
-	location_t start_location;
+  location_t start_location;
 
-	/* Size and alignment is (usually) 4 bytes.  */
+  /* Size and alignment is (usually) 4 bytes.  */
 };
 
 /* An ordinary line map encodes physical source locations. Those
@@ -732,6 +757,7 @@ struct GTY(()) location_adhoc_data {
   location_t locus;
   source_range src_range;
   void * GTY((skip)) data;
+  unsigned discriminator;
 };
 
 struct htab;
@@ -1009,12 +1035,14 @@ LINEMAPS_LAST_ALLOCATED_MACRO_MAP (const line_maps *set)
 }
 
 extern location_t get_combined_adhoc_loc (line_maps *, location_t,
-					  source_range, void *);
+					  source_range, void *, unsigned);
 extern void *get_data_from_adhoc_loc (const line_maps *, location_t);
+extern unsigned get_discriminator_from_adhoc_loc (const line_maps *, location_t);
 extern location_t get_location_from_adhoc_loc (const line_maps *,
 					       location_t);
 
 extern source_range get_range_from_loc (line_maps *set, location_t loc);
+extern unsigned get_discriminator_from_loc (line_maps *set, location_t loc);
 
 /* Get whether location LOC is a "pure" location, or
    whether it is an ad-hoc location, or embeds range information.  */
@@ -1033,9 +1061,10 @@ inline location_t
 COMBINE_LOCATION_DATA (class line_maps *set,
 		       location_t loc,
 		       source_range src_range,
-		       void *block)
+		       void *block,
+		       unsigned discriminator)
 {
-  return get_combined_adhoc_loc (set, loc, src_range, block);
+  return get_combined_adhoc_loc (set, loc, src_range, block, discriminator);
 }
 
 extern void rebuild_location_adhoc_htab (class line_maps *);
@@ -1809,40 +1838,77 @@ protected:
    of localized text, and a flag to determine if the caller should "free" the
    buffer.  */
 
-class label_text {
-	public:
-		label_text()
-			:	m_buffer (NULL), m_caller_owned (false) {}
+class label_text
+{
+public:
+  label_text ()
+  : m_buffer (NULL), m_owned (false)
+  {}
 
-		void maybe_free() {
-			if (m_caller_owned)
-				free(m_buffer);
-		}
+  ~label_text ()
+  {
+    if (m_owned)
+      free (m_buffer);
+  }
 
-		/* Create a label_text instance that borrows BUFFER from a longer-lived owner.  */
-		static label_text borrow(const char *buffer) {
-			return label_text(const_cast <char *> (buffer), false);
-		}
+  /* Move ctor.  */
+  label_text (label_text &&other)
+  : m_buffer (other.m_buffer), m_owned (other.m_owned)
+  {
+    other.release ();
+  }
 
-		/* Create a label_text instance that takes ownership of BUFFER.  */
-		static label_text take(char *buffer) {
-			return label_text(buffer, true);
-		}
+  /* Move assignment.  */
+  label_text & operator= (label_text &&other)
+  {
+    if (m_owned)
+      free (m_buffer);
+    m_buffer = other.m_buffer;
+    m_owned = other.m_owned;
+    other.release ();
+    return *this;
+  }
 
-		/* Take ownership of the buffer, copying if necessary.  */
-		char *take_or_copy() {
-			if (m_caller_owned)
-				return m_buffer;
-			else
-				return xstrdup(m_buffer);
-		}
+  /* Delete the copy ctor and copy-assignment operator.  */
+  label_text (const label_text &) = delete;
+  label_text & operator= (const label_text &) = delete;
 
-		char *m_buffer;
-		bool m_caller_owned;
+  /* Create a label_text instance that borrows BUFFER from a
+     longer-lived owner.  */
+  static label_text borrow (const char *buffer)
+  {
+    return label_text (const_cast <char *> (buffer), false);
+  }
 
-	private:
-		label_text(char *buffer, bool owned)
-			:	m_buffer (buffer), m_caller_owned (owned) {}
+  /* Create a label_text instance that takes ownership of BUFFER.  */
+  static label_text take (char *buffer)
+  {
+    return label_text (buffer, true);
+  }
+
+  void release ()
+  {
+    m_buffer = NULL;
+    m_owned = false;
+  }
+
+  const char *get () const
+  {
+    return m_buffer;
+  }
+
+  bool is_owner () const
+  {
+    return m_owned;
+  }
+
+private:
+  char *m_buffer;
+  bool m_owned;
+
+  label_text (char *buffer, bool owned)
+  : m_buffer (buffer), m_owned (owned)
+  {}
 };
 
 /* Abstract base class for labelling a range within a rich_location
@@ -1860,14 +1926,15 @@ class label_text {
    are intended to be allocated on the stack when generating diagnostics,
    and to be short-lived.  */
 
-class range_label {
-	public:
-		virtual ~range_label() {}
+class range_label
+{
+ public:
+  virtual ~range_label () {}
 
-		/* Get localized text for the label.
-		   The RANGE_IDX is provided, allowing for range_label instances to be
-		   shared by multiple ranges if need be (the "flyweight" design pattern).  */
-		virtual label_text get_text(unsigned range_idx) const = 0;
+  /* Get localized text for the label.
+     The RANGE_IDX is provided, allowing for range_label instances to be
+     shared by multiple ranges if need be (the "flyweight" design pattern).  */
+  virtual label_text get_text (unsigned range_idx) const = 0;
 };
 
 /* A fix-it hint: a suggested insertion, replacement, or deletion of text.
@@ -1884,42 +1951,48 @@ class range_label {
    present, the newline character must be the final character of
    the content (preventing e.g. fix-its that split a pre-existing line).  */
 
-class fixit_hint {
-	public:
-		fixit_hint(location_t start, location_t next_loc, const char *new_content);
-		~fixit_hint() { free(m_bytes); }
+class fixit_hint
+{
+ public:
+  fixit_hint (location_t start,
+	      location_t next_loc,
+	      const char *new_content);
+  ~fixit_hint () { free (m_bytes); }
 
-		bool affects_line_p(const char *file, int line) const;
-		location_t get_start_loc() const { return m_start; }
-		location_t get_next_loc() const { return m_next_loc; }
-		bool maybe_append(location_t start, location_t next_loc, const char *new_content);
+  bool affects_line_p (const char *file, int line) const;
+  location_t get_start_loc () const { return m_start; }
+  location_t get_next_loc () const { return m_next_loc; }
+  bool maybe_append (location_t start,
+		     location_t next_loc,
+		     const char *new_content);
 
-		const char *get_string() const { return m_bytes; }
-		size_t get_length() const { return m_len; }
+  const char *get_string () const { return m_bytes; }
+  size_t get_length () const { return m_len; }
 
-		bool insertion_p() const { return m_start == m_next_loc; }
+  bool insertion_p () const { return m_start == m_next_loc; }
 
-		bool ends_with_newline_p() const;
+  bool ends_with_newline_p () const;
 
-	private:
-		/* We don't use source_range here since, unlike most places,
-		   this is a half-open/half-closed range:
-		   [start, next_loc)
-		   so that we can support insertion via start == next_loc.  */
-		location_t m_start;
-		location_t m_next_loc;
-		char *m_bytes;
-		size_t m_len;
+ private:
+  /* We don't use source_range here since, unlike most places,
+     this is a half-open/half-closed range:
+       [start, next_loc)
+     so that we can support insertion via start == next_loc.  */
+  location_t m_start;
+  location_t m_next_loc;
+  char *m_bytes;
+  size_t m_len;
 };
 
 
 /* This is enum is used by the function linemap_resolve_location
    below.  The meaning of the values is explained in the comment of
    that function.  */
-enum location_resolution_kind {
-	LRK_MACRO_EXPANSION_POINT,
-	LRK_SPELLING_LOCATION,
-	LRK_MACRO_DEFINITION_LOCATION
+enum location_resolution_kind
+{
+  LRK_MACRO_EXPANSION_POINT,
+  LRK_SPELLING_LOCATION,
+  LRK_MACRO_DEFINITION_LOCATION
 };
 
 /* Resolve a virtual location into either a spelling location, an
@@ -1970,7 +2043,8 @@ enum location_resolution_kind {
    resolves to a location reserved for the client code, like
    UNKNOWN_LOCATION or BUILTINS_LOCATION in GCC.  */
 
-location_t linemap_resolve_location(class line_maps *, location_t loc,
+location_t linemap_resolve_location (class line_maps *,
+				     location_t loc,
 				     enum location_resolution_kind lrk,
 				     const line_map_ordinary **loc_map);
 
@@ -1981,7 +2055,9 @@ location_t linemap_resolve_location(class line_maps *, location_t loc,
    the point where M' was expanded.  LOC_MAP is an output parameter.
    When non-NULL, *LOC_MAP is set to the map of the returned
    location.  */
-location_t linemap_unwind_toward_expansion(class line_maps *, location_t loc, const line_map **loc_map);
+location_t linemap_unwind_toward_expansion (class line_maps *,
+					    location_t loc,
+					    const line_map **loc_map);
 
 /* If LOC is the virtual location of a token coming from the expansion
    of a macro M and if its spelling location is reserved (e.g, a
@@ -1997,62 +2073,70 @@ location_t linemap_unwind_toward_expansion(class line_maps *, location_t loc, co
 
    *MAP is set to the map of the returned location if the later is
    different from LOC.  */
-location_t linemap_unwind_to_first_non_reserved_loc(class line_maps *, location_t loc, const line_map **map);
+location_t linemap_unwind_to_first_non_reserved_loc (class line_maps *,
+						     location_t loc,
+						     const line_map **map);
 
 /* Expand source code location LOC and return a user readable source
    code location.  LOC must be a spelling (non-virtual) location.  If
    it's a location < RESERVED_LOCATION_COUNT a zeroed expanded source
    location is returned.  */
-expanded_location linemap_expand_location(class line_maps *, const line_map *, location_t loc);
+expanded_location linemap_expand_location (class line_maps *,
+					   const line_map *,
+					   location_t loc);
 
 /* Statistics about maps allocation and usage as returned by
    linemap_get_statistics.  */
-struct linemap_stats {
-	long num_ordinary_maps_allocated;
-	long num_ordinary_maps_used;
-	long ordinary_maps_allocated_size;
-	long ordinary_maps_used_size;
-	long num_expanded_macros;
-	long num_macro_tokens;
-	long num_macro_maps_used;
-	long macro_maps_allocated_size;
-	long macro_maps_used_size;
-	long macro_maps_locations_size;
-	long duplicated_macro_maps_locations_size;
-	long adhoc_table_size;
-	long adhoc_table_entries_used;
+struct linemap_stats
+{
+  long num_ordinary_maps_allocated;
+  long num_ordinary_maps_used;
+  long ordinary_maps_allocated_size;
+  long ordinary_maps_used_size;
+  long num_expanded_macros;
+  long num_macro_tokens;
+  long num_macro_maps_used;
+  long macro_maps_allocated_size;
+  long macro_maps_used_size;
+  long macro_maps_locations_size;
+  long duplicated_macro_maps_locations_size;
+  long adhoc_table_size;
+  long adhoc_table_entries_used;
 };
 
 /* Return the highest location emitted for a given file for which
    there is a line map in SET.  FILE_NAME is the file name to
    consider.  If the function returns TRUE, *LOC is set to the highest
    location emitted for that file.  */
-bool linemap_get_file_highest_location(class line_maps * set, const char *file_name, location_t *loc);
+bool linemap_get_file_highest_location (class line_maps * set,
+					const char *file_name,
+					location_t *loc);
 
 /* Compute and return statistics about the memory consumption of some
    parts of the line table SET.  */
-void linemap_get_statistics(line_maps *, struct linemap_stats *);
+void linemap_get_statistics (line_maps *, struct linemap_stats *);
 
 /* Dump debugging information about source location LOC into the file
    stream STREAM. SET is the line map set LOC comes from.  */
-void linemap_dump_location(line_maps *, location_t, FILE *);
+void linemap_dump_location (line_maps *, location_t, FILE *);
 
 /* Dump line map at index IX in line table SET to STREAM.  If STREAM
    is NULL, use stderr.  IS_MACRO is true if the caller wants to
    dump a macro map, false otherwise.  */
-void linemap_dump(FILE *, line_maps *, unsigned, bool);
+void linemap_dump (FILE *, line_maps *, unsigned, bool);
 
 /* Dump line table SET to STREAM.  If STREAM is NULL, stderr is used.
    NUM_ORDINARY specifies how many ordinary maps to dump.  NUM_MACRO
    specifies how many macro maps to dump.  */
-void line_table_dump(FILE *, line_maps *, unsigned int, unsigned int);
+void line_table_dump (FILE *, line_maps *, unsigned int, unsigned int);
 
 /* An enum for distinguishing the various parts within a location_t.  */
 
-enum location_aspect {
-	LOCATION_ASPECT_CARET,
-	LOCATION_ASPECT_START,
-	LOCATION_ASPECT_FINISH
+enum location_aspect
+{
+  LOCATION_ASPECT_CARET,
+  LOCATION_ASPECT_START,
+  LOCATION_ASPECT_FINISH
 };
 
 /* The rich_location class requires a way to expand location_t instances.
@@ -2062,6 +2146,7 @@ enum location_aspect {
    Hence we require client code of libcpp to implement the following
    symbol.  */
 extern expanded_location
-linemap_client_expand_location_to_spelling_point(location_t, enum location_aspect);
+linemap_client_expand_location_to_spelling_point (location_t,
+						  enum location_aspect);
 
 #endif /* !LIBCPP_LINE_MAP_H  */

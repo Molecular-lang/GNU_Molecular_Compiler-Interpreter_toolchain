@@ -1,5 +1,23 @@
 /* Header file for the GIMPLE fold_using_range interface.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by Andrew MacLeod <amacleod@redhat.com>
+   and Aldy Hernandez <aldyh@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_GIMPLE_RANGE_FOLD_H
 #define GCC_GIMPLE_RANGE_FOLD_H
@@ -78,7 +96,6 @@ range_compatible_p (tree type1, tree type2)
 	  && TYPE_SIGN (type1) == TYPE_SIGN (type2));
 }
 
-
 // Source of all operands for fold_using_range and gori_compute.
 // It abstracts out the source of an operand so it can come from a stmt or
 // and edge or anywhere a derived class of fur_source wants.
@@ -132,9 +149,6 @@ protected:
   relation_oracle *m_oracle;
 };
 
-extern tree gimple_range_operand1 (const gimple *s);
-extern tree gimple_range_operand2 (const gimple *s);
-
 // This class uses ranges to fold a gimple statement producinf a range for
 // the LHS.  The source of all operands is supplied via the fur_source class
 // which provides a range_query as well as a source location and any other
@@ -146,16 +160,13 @@ public:
   bool fold_stmt (vrange &r, gimple *s, class fur_source &src,
 		  tree name = NULL_TREE);
 protected:
-  bool range_of_range_op (vrange &r, gimple *s, fur_source &src);
+  bool range_of_range_op (vrange &r, gimple_range_op_handler &handler,
+			  fur_source &src);
   bool range_of_call (vrange &r, gcall *call, fur_source &src);
   bool range_of_cond_expr (vrange &r, gassign* cond, fur_source &src);
   bool range_of_address (irange &r, gimple *s, fur_source &src);
-  bool range_of_builtin_call (vrange &r, gcall *call, fur_source &src);
-  bool range_of_builtin_int_call (irange &r, gcall *call, fur_source &src);
-  void range_of_builtin_ubsan_call (irange &r, gcall *call, tree_code code,
-				    fur_source &src);
   bool range_of_phi (vrange &r, gphi *phi, fur_source &src);
-  void range_of_ssa_name_with_loop_info (irange &, tree, class loop *, gphi *,
+  void range_of_ssa_name_with_loop_info (vrange &, tree, class loop *, gphi *,
 					 fur_source &src);
   void relation_fold_and_or (irange& lhs_range, gimple *s, fur_source &src);
 };

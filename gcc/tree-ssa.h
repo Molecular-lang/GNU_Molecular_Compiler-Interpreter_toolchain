@@ -1,5 +1,21 @@
 /* Header file for any pass which requires SSA routines.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2013-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_TREE_SSA_H
 #define GCC_TREE_SSA_H
@@ -39,6 +55,31 @@ extern tree find_released_ssa_name (tree *, int *, void *);
 extern bool ssa_defined_default_def_p (tree t);
 extern bool ssa_undefined_value_p (tree, bool = true);
 extern bool gimple_uses_undefined_value_p (gimple *);
+
+
+bool ssa_name_any_use_dominates_bb_p (tree var, basic_block bb);
+extern void mark_ssa_maybe_undefs (void);
+
+/* Return TRUE iff VAR is marked as maybe-undefined.  See
+   mark_ssa_maybe_undefs.  */
+
+static inline bool
+ssa_name_maybe_undef_p (tree var)
+{
+  gcc_checking_assert (TREE_CODE (var) == SSA_NAME);
+  return TREE_VISITED (var);
+}
+
+/* Set (or clear, depending on VALUE) VAR's maybe-undefined mark.  */
+
+static inline void
+ssa_name_set_maybe_undef (tree var, bool value = true)
+{
+  gcc_checking_assert (TREE_CODE (var) == SSA_NAME);
+  TREE_VISITED (var) = value;
+}
+
+
 extern void execute_update_addresses_taken (void);
 
 /* Given an edge_var_map V, return the PHI arg definition.  */

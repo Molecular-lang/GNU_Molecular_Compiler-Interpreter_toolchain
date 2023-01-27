@@ -1,5 +1,22 @@
 /* JSON trees
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2017-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_JSON_H
 #define GCC_JSON_H
@@ -139,16 +156,19 @@ class integer_number : public value
 class string : public value
 {
  public:
-  string (const char *utf8);
+  explicit string (const char *utf8);
+  string (const char *utf8, size_t len);
   ~string () { free (m_utf8); }
 
   enum kind get_kind () const final override { return JSON_STRING; }
   void print (pretty_printer *pp) const final override;
 
   const char *get_string () const { return m_utf8; }
+  size_t get_length () const { return m_len; }
 
  private:
   char *m_utf8;
+  size_t m_len;
 };
 
 /* Subclass of value for the three JSON literals "true", "false",

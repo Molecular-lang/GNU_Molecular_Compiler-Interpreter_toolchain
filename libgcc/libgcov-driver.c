@@ -1,6 +1,27 @@
 /* Routines required for instrumenting a program.  */
 /* Compile this one with gcc.  */
-/* Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Copyright (C) 1989-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 #include "libgcov.h"
 #include "gcov-io.h"
@@ -58,7 +79,7 @@ static int gcov_error (const char *, ...);
 static void gcov_error_exit (void);
 #endif
 
-#include "gcov-io.co"
+#include "gcov-io.cc"
 
 #define GCOV_PROF_PREFIX "libgcov profiling error:%s:"
 
@@ -499,7 +520,7 @@ write_one_data (const struct gcov_info *gi_ptr,
 
 #ifdef NEED_L_GCOV
   /* Generate whole program statistics.  */
-  gcov_write_summary (GCOV_TAG_OBJECT_SUMMARY, prg_p);
+  gcov_write_object_summary (prg_p);
 #endif
 
   /* Write execution counts for each function.  */

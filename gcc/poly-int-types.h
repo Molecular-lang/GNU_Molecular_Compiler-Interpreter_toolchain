@@ -1,12 +1,29 @@
 /* Typedefs for polynomial integers used in GCC.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2016-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef HAVE_POLY_INT_TYPES_H
 #define HAVE_POLY_INT_TYPES_H
 
 typedef poly_int_pod<NUM_POLY_INT_COEFFS, unsigned short> poly_uint16_pod;
 typedef poly_int_pod<NUM_POLY_INT_COEFFS, HOST_WIDE_INT> poly_int64_pod;
-typedef poly_int_pod<NUM_POLY_INT_COEFFS, unsigned HOST_WIDE_INT> poly_uint64_pod;
+typedef poly_int_pod<NUM_POLY_INT_COEFFS,
+		     unsigned HOST_WIDE_INT> poly_uint64_pod;
 typedef poly_int_pod<NUM_POLY_INT_COEFFS, offset_int> poly_offset_int_pod;
 typedef poly_int_pod<NUM_POLY_INT_COEFFS, wide_int> poly_wide_int_pod;
 typedef poly_int_pod<NUM_POLY_INT_COEFFS, widest_int> poly_widest_int_pod;

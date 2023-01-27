@@ -1,5 +1,22 @@
 /* Classes for modeling the state of memory.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_ANALYZER_STORE_H
 #define GCC_ANALYZER_STORE_H
@@ -220,6 +237,11 @@ struct bit_range
   void dump_to_pp (pretty_printer *pp) const;
   void dump () const;
 
+  bool empty_p () const
+  {
+    return m_size_in_bits == 0;
+  }
+
   bit_offset_t get_start_bit_offset () const
   {
     return m_start_bit_offset;
@@ -230,6 +252,7 @@ struct bit_range
   }
   bit_offset_t get_last_bit_offset () const
   {
+    gcc_assert (!empty_p ());
     return get_next_bit_offset () - 1;
   }
 
@@ -280,6 +303,11 @@ struct byte_range
   void dump_to_pp (pretty_printer *pp) const;
   void dump () const;
 
+  bool empty_p () const
+  {
+    return m_size_in_bytes == 0;
+  }
+
   bool contains_p (byte_offset_t offset) const
   {
     return (offset >= get_start_byte_offset ()
@@ -293,6 +321,15 @@ struct byte_range
 	    && m_size_in_bytes == other.m_size_in_bytes);
   }
 
+  bool intersects_p (const byte_range &other,
+		     byte_size_t *out_num_overlap_bytes) const;
+
+  bool exceeds_p (const byte_range &other,
+		  byte_range *out_overhanging_byte_range) const;
+
+  bool falls_short_of_p (byte_offset_t offset,
+			 byte_range *out_fall_short_bytes) const;
+
   byte_offset_t get_start_byte_offset () const
   {
     return m_start_byte_offset;
@@ -303,6 +340,7 @@ struct byte_range
   }
   byte_offset_t get_last_byte_offset () const
   {
+    gcc_assert (!empty_p ());
     return m_start_byte_offset + m_size_in_bytes - 1;
   }
 
@@ -318,8 +356,8 @@ struct byte_range
   byte_size_t m_size_in_bytes;
 };
 
-/* Concrete subclass of binding_key, for describing a concrete range of
-   bits within the binding_map (e.g. "bits 8-15").  */
+/* Concrete subclass of binding_key, for describing a non-empty
+   concrete range of bits within the binding_map (e.g. "bits 8-15").  */
 
 class concrete_binding : public binding_key
 {
@@ -329,7 +367,9 @@ public:
 
   concrete_binding (bit_offset_t start_bit_offset, bit_size_t size_in_bits)
   : m_bit_range (start_bit_offset, size_in_bits)
-  {}
+  {
+    gcc_assert (!m_bit_range.empty_p ());
+  }
   bool concrete_p () const final override { return true; }
 
   hashval_t hash () const
@@ -379,6 +419,14 @@ private:
 };
 
 } // namespace ana
+
+template <>
+template <>
+inline bool
+is_a_helper <const ana::concrete_binding *>::test (const ana::binding_key *key)
+{
+  return key->concrete_p ();
+}
 
 template <> struct default_hash_traits<ana::concrete_binding>
 : public member_function_hash_traits<ana::concrete_binding>
@@ -527,9 +575,7 @@ public:
   typedef hash_map <const binding_key *, const svalue *> map_t;
   typedef map_t::iterator iterator_t;
 
-  binding_cluster (const region *base_region)
-  : m_base_region (base_region), m_map (),
-    m_escaped (false), m_touched (false) {}
+  binding_cluster (const region *base_region);
   binding_cluster (const binding_cluster &other);
   binding_cluster& operator=(const binding_cluster &other);
 
@@ -600,7 +646,7 @@ public:
   void on_asm (const gasm *stmt, store_manager *mgr,
 	       const conjured_purge &p);
 
-  bool escaped_p () const { return m_escaped; }
+  bool escaped_p () const;
   bool touched_p () const { return m_touched; }
 
   bool redundant_p () const;
@@ -749,6 +795,12 @@ public:
   void canonicalize (store_manager *mgr);
   void loop_replay_fixup (const store *other_store,
 			  region_model_manager *mgr);
+
+  void replay_call_summary (call_summary_replay &r,
+			    const store &summary);
+  void replay_call_summary_cluster (call_summary_replay &r,
+				    const store &summary,
+				    const region *base_reg);
 
 private:
   void remove_overlapping_bindings (store_manager *mgr, const region *reg,

@@ -1,6 +1,22 @@
 /* Operating system specific defines to be used when targeting GCC for
    hosting on Windows32, using GNU tools and the Windows32 API Library.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1997-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #undef DEFAULT_ABI
 #define DEFAULT_ABI MS_ABI
@@ -15,6 +31,10 @@
 	(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS \
 	 | MASK_STACK_PROBE | MASK_ALIGN_DOUBLE \
 	 | MASK_MS_BITFIELD_LAYOUT)
+
+#ifndef TARGET_USING_MCFGTHREAD
+#define TARGET_USING_MCFGTHREAD  0
+#endif
 
 /* See i386/crtdll.h for an alternative definition. _INTEGRAL_MAX_BITS
    is for compatibility with native compiler.  */
@@ -34,18 +54,8 @@
 	  builtin_define_std ("WIN64");				\
 	  builtin_define ("_WIN64");				\
 	}							\
-    }								\
-  while (0)
-
-#define EXTRA_TARGET_D_OS_VERSIONS()				\
-  do								\
-    {								\
-      builtin_version ("MinGW");				\
-      if (TARGET_64BIT && ix86_abi == MS_ABI)			\
-	builtin_version ("Win64");				\
-      else if (!TARGET_64BIT)					\
-	builtin_version ("Win32");				\
-      builtin_version ("CRuntime_Microsoft");			\
+      if (TARGET_USING_MCFGTHREAD)				\
+	builtin_define ("__USING_MCFGTHREAD__");		\
     }								\
   while (0)
 
@@ -165,11 +175,16 @@
 #else
 #define SHARED_LIBGCC_SPEC " -lgcc "
 #endif
+#if TARGET_USING_MCFGTHREAD
+#define MCFGTHREAD_SPEC  " -lmcfgthread -lkernel32 -lntdll "
+#else
+#define MCFGTHREAD_SPEC  ""
+#endif
 #undef REAL_LIBGCC_SPEC
 #define REAL_LIBGCC_SPEC \
   "%{mthreads:-lmingwthrd} -lmingw32 \
    " SHARED_LIBGCC_SPEC " \
-   -lmoldname -lmingwex -lmsvcrt -lkernel32"
+   -lmoldname -lmingwex -lmsvcrt -lkernel32 " MCFGTHREAD_SPEC
 
 #undef STARTFILE_SPEC
 #define STARTFILE_SPEC "%{shared|mdll:dllcrt2%O%s} \
@@ -181,7 +196,7 @@
 
 #undef ENDFILE_SPEC
 #define ENDFILE_SPEC \
-  "%{Ofast|ffast-math|funsafe-math-optimizations:crtfastmath.o%s} \
+  "%{mdaz-ftz:crtfastmath.o%s;Ofast|ffast-math|funsafe-math-optimizations:%{!shared:%{!mno-daz-ftz:crtfastmath.o%s}}} \
    %{!shared:%:if-exists(default-manifest.o%s)}\
    %{fvtable-verify=none:%s; \
     fvtable-verify=preinit:vtv_end.o%s; \

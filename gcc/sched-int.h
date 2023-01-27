@@ -1,6 +1,22 @@
 /* Instruction scheduling pass.  This file contains definitions used
    internally in the scheduler.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1992-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_SCHED_INT_H
 #define GCC_SCHED_INT_H
@@ -8,7 +24,8 @@
 #ifdef INSN_SCHEDULING
 
 /* Identificator of a scheduler pass.  */
-enum sched_pass_id_t { SCHED_PASS_UNKNOWN, SCHED_RGN_PASS, SCHED_EBB_PASS, SCHED_SMS_PASS, SCHED_SEL_PASS };
+enum sched_pass_id_t { SCHED_PASS_UNKNOWN, SCHED_RGN_PASS, SCHED_EBB_PASS,
+		       SCHED_SMS_PASS, SCHED_SEL_PASS };
 
 /* The algorithm used to implement -fsched-pressure.  */
 enum sched_pressure_algorithm

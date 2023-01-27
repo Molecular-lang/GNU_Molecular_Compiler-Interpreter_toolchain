@@ -1,5 +1,22 @@
 /* Header file for gimple ranger SSA cache.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2017-2023 Free Software Foundation, Inc.
+   Contributed by Andrew MacLeod <amacleod@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_SSA_RANGE_CACHE_H
 #define GCC_SSA_RANGE_CACHE_H
@@ -27,7 +44,7 @@ private:
   vec<class ssa_block_ranges *> m_ssa_ranges;
   ssa_block_ranges &get_block_ranges (tree name);
   ssa_block_ranges *query_block_ranges (tree name);
-  vrange_allocator *m_range_allocator;
+  class vrange_allocator *m_range_allocator;
   bitmap_obstack m_bitmaps;
 };
 
@@ -70,6 +87,7 @@ public:
 
   void propagate_updated_value (tree name, basic_block bb);
 
+  void register_inferred_value (const vrange &r, tree name, basic_block bb);
   void apply_inferred_ranges (gimple *s);
   gori_compute m_gori;
   infer_range_manager m_exit;
@@ -90,6 +108,7 @@ private:
       RFD_FILL		// Scan DOM tree, updating important nodes.
     };
   bool range_from_dom (vrange &r, tree name, basic_block bb, enum rfd_mode);
+  void resolve_dom (vrange &r, tree name, basic_block bb);
   void range_of_def (vrange &r, tree name, basic_block bb = NULL);
   void entry_range (vrange &r, tree expr, basic_block bb, enum rfd_mode);
   void exit_range (vrange &r, tree expr, basic_block bb, enum rfd_mode);

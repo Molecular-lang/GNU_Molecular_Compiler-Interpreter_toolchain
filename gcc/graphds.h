@@ -1,5 +1,21 @@
 /* Graph representation.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_GRAPHDS_H
 #define GCC_GRAPHDS_H
@@ -42,7 +58,8 @@ void identify_vertices (struct graph *, int, int);
 typedef bool (*skip_edge_callback) (struct graph_edge *);
 int graphds_dfs (struct graph *, int *, int,
 		 vec<int> *, bool, bitmap, skip_edge_callback = NULL);
-int graphds_scc (struct graph *, bitmap, skip_edge_callback = NULL);
+int graphds_scc (struct graph *, bitmap, skip_edge_callback = NULL,
+		 vec<int> * = NULL);
 void graphds_domtree (struct graph *, int, int *, int *, int *);
 typedef void (*graphds_edge_callback) (struct graph *,
 				       struct graph_edge *, void *);

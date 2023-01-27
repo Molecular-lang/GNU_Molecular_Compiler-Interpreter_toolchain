@@ -1,5 +1,26 @@
 /* Header file for libgcov-*.c.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1996-2023 Free Software Foundation, Inc.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify it under
+   the terms of the GNU General Public License as published by the Free
+   Software Foundation; either version 3, or (at your option) any later
+   version.
+
+   GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+   WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+   for more details.
+
+   Under Section 7 of GPL version 3, you are granted additional
+   permissions described in the GCC Runtime Library Exception, version
+   3.1, as published by the Free Software Foundation.
+
+   You should have received a copy of the GNU General Public License and
+   a copy of the GCC Runtime Library Exception along with this program;
+   see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_LIBGCOV_H
 #define GCC_LIBGCOV_H
@@ -97,7 +118,7 @@ typedef unsigned gcov_type_unsigned __attribute__ ((mode (QI)));
 #define gcov_rewrite __gcov_rewrite
 #define gcov_is_error __gcov_is_error
 #define gcov_write_unsigned __gcov_write_unsigned
-#define gcov_write_summary __gcov_write_summary
+#define gcov_write_object_summary __gcov_write_object_summary
 #define gcov_read_unsigned __gcov_read_unsigned
 #define gcov_read_counter __gcov_read_counter
 #define gcov_read_summary __gcov_read_summary
@@ -321,8 +342,7 @@ extern int __gcov_execve (const char *, char  *const [], char *const [])
   ATTRIBUTE_HIDDEN;
 
 /* Functions that only available in libgcov.  */
-GCOV_LINKAGE void gcov_write_summary (gcov_unsigned_t /*tag*/,
-                                      const struct gcov_summary *)
+GCOV_LINKAGE void gcov_write_object_summary (const struct gcov_summary *)
     ATTRIBUTE_HIDDEN;
 GCOV_LINKAGE void gcov_rewrite (void) ATTRIBUTE_HIDDEN;
 

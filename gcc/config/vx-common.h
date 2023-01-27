@@ -1,5 +1,22 @@
 /* Target-independent configuration for VxWorks and VxWorks AE.   
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2005-2023 Free Software Foundation, Inc.
+   Contributed by CodeSourcery, LLC.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* ------------------------- Common SPEC strings -------------------------  */
 
@@ -57,7 +74,8 @@
 /* ---------------------- Debug and unwind info formats ------------------  */
 
 /* Dwarf2 unwind info is supported, unless overriden by a request for a target
-   specific format.
+   specific format.  Always #define DWARF2_UNWIND_INFO to prevent defaults.h
+   from picking a possibly different value.
 
    Taking care of this here allows using DWARF2_UNWIND_INFO in #if conditions
    from the common config/vxworks.h files, included before the cpu
@@ -67,8 +85,10 @@
    #if point.  Since <cpu>/vxworks.h. is typically included after
    config/vxworks.h, #if expressions in the latter can't rely on possible
    redefinitions in the former.  */
-#if !ARM_UNWIND_INFO
 #undef DWARF2_UNWIND_INFO
+#if ARM_UNWIND_INFO
+#define DWARF2_UNWIND_INFO 0
+#else
 #define DWARF2_UNWIND_INFO 1
 #endif
 
@@ -77,8 +97,6 @@
 #define PREFERRED_DEBUGGING_TYPE DWARF2_DEBUG
 
 /* None of these other formats is supported.  */
-#undef DBX_DEBUGGING_INFO
-#undef XCOFF_DEBUGGING_INFO
 #undef VMS_DEBUGGING_INFO
 
 /* ------------------------ Misc configuration bits ----------------------  */

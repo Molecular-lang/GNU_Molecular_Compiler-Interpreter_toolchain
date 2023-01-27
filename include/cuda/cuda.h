@@ -1,5 +1,26 @@
 /* CUDA Driver API description.
-   Please review: $(src-dir)/SPL-README for Licencing info.
+   Copyright (C) 2017-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.
 
 This header provides parts of the CUDA Driver API, without having to rely on
 the proprietary CUDA toolkit.  */
@@ -56,6 +77,7 @@ typedef enum {
   CU_DEVICE_ATTRIBUTE_CONCURRENT_KERNELS = 31,
   CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_MULTIPROCESSOR = 39,
   CU_DEVICE_ATTRIBUTE_ASYNC_ENGINE_COUNT = 40,
+  CU_DEVICE_ATTRIBUTE_UNIFIED_ADDRESSING = 41,
   CU_DEVICE_ATTRIBUTE_MAX_REGISTERS_PER_MULTIPROCESSOR = 82
 } CUdevice_attribute;
 
@@ -92,6 +114,7 @@ enum {
 #define CU_LAUNCH_PARAM_END ((void *) 0)
 #define CU_LAUNCH_PARAM_BUFFER_POINTER ((void *) 1)
 #define CU_LAUNCH_PARAM_BUFFER_SIZE ((void *) 2)
+#define CU_MEMHOSTALLOC_DEVICEMAP 0x02U
 
 enum {
   CU_STREAM_DEFAULT = 0,
@@ -136,7 +159,8 @@ CUresult cuDriverGetVersion (int *);
 CUresult cuLaunchKernel (CUfunction, unsigned, unsigned, unsigned, unsigned,
 			 unsigned, unsigned, unsigned, CUstream, void **, void **);
 #define cuLinkAddData cuLinkAddData_v2
-CUresult cuLinkAddData (CUlinkState, CUjitInputType, void *, size_t, const char *, unsigned, CUjit_option *, void **);
+CUresult cuLinkAddData (CUlinkState, CUjitInputType, void *, size_t, const char *,
+			unsigned, CUjit_option *, void **);
 CUresult cuLinkComplete (CUlinkState, void **, size_t *);
 #define cuLinkCreate cuLinkCreate_v2
 CUresult cuLinkCreate (unsigned, CUjit_option *, void **, CUlinkState *);
@@ -147,6 +171,7 @@ CUresult cuMemGetInfo (size_t *, size_t *);
 CUresult cuMemAlloc (CUdeviceptr *, size_t);
 #define cuMemAllocHost cuMemAllocHost_v2
 CUresult cuMemAllocHost (void **, size_t);
+CUresult cuMemHostAlloc (void **, size_t, unsigned int);
 CUresult cuMemcpy (CUdeviceptr, CUdeviceptr, size_t);
 #define cuMemcpyDtoDAsync cuMemcpyDtoDAsync_v2
 CUresult cuMemcpyDtoDAsync (CUdeviceptr, CUdeviceptr, size_t, CUstream);

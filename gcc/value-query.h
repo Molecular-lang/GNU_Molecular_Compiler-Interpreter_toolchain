@@ -1,5 +1,23 @@
 /* Support routines for value queries.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Contributed by Aldy Hernandez <aldyh@redhat.com> and
+   Andrew Macleod <amacleod@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_QUERY_H
 #define GCC_QUERY_H
@@ -75,6 +93,9 @@ public:
   virtual bool range_on_edge (vrange &r, edge, tree expr);
   virtual bool range_of_stmt (vrange &r, gimple *, tree name = NULL);
 
+  // When the IL in a stmt is changed, call this for better results.
+  virtual void update_stmt (gimple *) { }
+
   // Query if there is any relation between SSA1 and SSA2.
   relation_kind query_relation (gimple *s, tree ssa1, tree ssa2,
 				bool get_range = true);
@@ -85,13 +106,10 @@ public:
 
   // DEPRECATED: This method is used from vr-values.  The plan is to
   // rewrite all uses of it to the above API.
-  virtual const class value_range_equiv *get_value_range (const_tree,
-							  gimple * = NULL);
+  virtual const value_range *get_value_range (const_tree, gimple * = NULL);
   virtual void dump (FILE *);
 
 protected:
-  class value_range_equiv *allocate_value_range_equiv ();
-  void free_value_range_equiv (class value_range_equiv *);
   bool get_tree_range (vrange &v, tree expr, gimple *stmt);
   bool get_arith_expr_range (vrange &r, tree expr, gimple *stmt);
   relation_oracle *m_oracle;
@@ -126,6 +144,5 @@ get_range_query (const struct function *fun)
 }
 
 extern void gimple_range_global (vrange &v, tree name);
-extern bool update_global_range (vrange &v, tree name);
 
 #endif // GCC_QUERY_H

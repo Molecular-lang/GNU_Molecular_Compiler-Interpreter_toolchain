@@ -1,5 +1,21 @@
 # Top level -*- makefile -*- fragment for GNU C - C language.
-# Please review: $(src-dir)/SPL-README for Licencing info.
+# Copyright (C) 1994-2023 Free Software Foundation, Inc.
+
+#This file is part of GCC.
+
+#GCC is free software; you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation; either version 3, or (at your option)
+#any later version.
+
+#GCC is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with GCC; see the file COPYING3.  If not see
+# <http://www.gnu.org/licenses/>.
 
 # This file provides the language dependent support in the main Makefile.
 # Each language makefile fragment must provide the following targets:
@@ -18,6 +34,7 @@
 # - the compiler proper (eg: cc1)
 # - define the names for selecting the language in LANGUAGES.
 
+#
 # Define the names for selecting c in LANGUAGES.
 c: cc1$(exeext)
 c.serial = cc1$(exeext)
@@ -35,7 +52,8 @@ CFLAGS-c/gccspec.o += $(DRIVER_DEFINES)
 # Language-specific object files for C and Objective C.
 C_AND_OBJC_OBJS = attribs.o c/c-errors.o c/c-decl.o c/c-typeck.o \
   c/c-convert.o c/c-aux-info.o c/c-objc-common.o c/c-parser.o \
-  c/c-fold.o $(C_COMMON_OBJS) $(C_TARGET_OBJS)
+  c/c-fold.o c/gimple-parser.o \
+  $(C_COMMON_OBJS) $(C_TARGET_OBJS)
 
 # Language-specific object files for C.
 C_OBJS = c/c-lang.o c-family/stub-objc.o $(C_AND_OBJC_OBJS)
@@ -44,7 +62,8 @@ c_OBJS = $(C_OBJS) cc1-checksum.o c/gccspec.o
 # Use strict warnings for this front end.
 c-warn = $(STRICT_WARN)
 
-ifeq ($(if $(wildcard ../stage_current),$(shell cat ../stage_current)),stageautofeedback)
+ifeq ($(if $(wildcard ../stage_current),$(shell cat \
+  ../stage_current)),stageautofeedback)
 $(C_OBJS): ALL_COMPILERFLAGS += -fauto-profile=cc1.fda
 $(C_OBJS): cc1.fda
 endif
@@ -52,15 +71,15 @@ endif
 # compute checksum over all object files and the options
 # re-use the checksum from the prev-final stage so it passes
 # the bootstrap comparison and allows comparing of the cc1 binary
-cc1-checksum.co : build/genchecksum$(build_exeext) checksum-options \
+cc1-checksum.cc : build/genchecksum$(build_exeext) checksum-options \
 	$(C_OBJS) $(BACKEND) $(LIBDEPS) 
 	if [ -f ../stage_final ] \
 	   && cmp -s ../stage_current ../stage_final; then \
-	  cp ../prev-gcc/cc1-checksum.co cc1-checksum.co; \
+	  cp ../prev-gcc/cc1-checksum.cc cc1-checksum.cc; \
 	else \
 	  build/genchecksum$(build_exeext) $(C_OBJS) $(BACKEND) $(LIBDEPS) \
-                     checksum-options > cc1-checksum.co.tmp && 		 \
-	  $(srcdir)/../move-if-change cc1-checksum.co.tmp cc1-checksum.co; \
+                     checksum-options > cc1-checksum.cc.tmp && 		 \
+	  $(srcdir)/../move-if-change cc1-checksum.cc.tmp cc1-checksum.cc; \
 	fi
 
 cc1$(exeext): $(C_OBJS) cc1-checksum.o $(BACKEND) $(LIBDEPS)
@@ -72,6 +91,7 @@ cc1$(exeext): $(C_OBJS) cc1-checksum.o $(BACKEND) $(LIBDEPS)
 cc1.fda: ../stage1-gcc/cc1$(exeext) ../prev-gcc/$(PERF_DATA)
 	$(CREATE_GCOV) -binary ../stage1-gcc/cc1$(exeext) -gcov cc1.fda -profile ../prev-gcc/$(PERF_DATA) -gcov_version 1
 
+#
 # Build hooks:
 
 c.info:
@@ -89,7 +109,7 @@ c.srcinfo:
 c.srcextra: gengtype-lex.cc
 	-cp -p $^ $(srcdir)
 c.tags: force
-	cd $(srcdir)/c; $(ETAGS) -o TAGS.sub *.co *.h; \
+	cd $(srcdir)/c; $(ETAGS) -o TAGS.sub *.cc *.h; \
 	$(ETAGS) --include TAGS.sub --include ../TAGS.sub
 c.man:
 c.srcman:
@@ -111,7 +131,8 @@ s-selftest-c: $(C_SELFTEST_DEPS)
 # Convenience methods for running C selftests under gdb:
 .PHONY: selftest-c-gdb
 selftest-c-gdb: $(C_SELFTEST_DEPS)
-	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS) -wrapper gdb,--args
+	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS) \
+	  -wrapper gdb,--args
 
 .PHONY: selftest-gdb
 selftest-gdb: selftest-c-gdb
@@ -119,7 +140,8 @@ selftest-gdb: selftest-c-gdb
 # Convenience methods for running C selftests under valgrind:
 .PHONY: selftest-c-valgrind
 selftest-c-valgrind: $(C_SELFTEST_DEPS)
-	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS) -wrapper valgrind,--leak-check=full
+	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS) \
+	  -wrapper valgrind,--leak-check=full
 
 .PHONY: selftest-valgrind
 selftest-valgrind: selftest-c-valgrind
@@ -133,6 +155,7 @@ check_gcc_parallelize=10000
 # 'make check' in gcc/ looks for check-c.  Redirect it to check-gcc.
 check-c : check-gcc
 
+#
 # Install hooks:
 # cc1 is installed elsewhere as part of $(COMPILERS).
 
@@ -148,6 +171,7 @@ endif
 
 c.uninstall:
 
+#
 # Clean hooks:
 # A lot of the ancillary files are deleted by the main makefile.
 # We just have to delete files specific to us.
@@ -161,7 +185,7 @@ c.clean:
 c.distclean:
 	-rm -f c/config.status c/Makefile
 c.maintainer-clean:
-
+#
 # Stage hooks:
 # The main makefile has already created stage?/cp.
 

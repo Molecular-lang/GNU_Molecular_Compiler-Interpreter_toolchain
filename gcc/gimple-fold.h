@@ -1,6 +1,23 @@
 /* Gimple folding definitions.
 
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2011-2023 Free Software Foundation, Inc.
+   Contributed by Richard Guenther <rguenther@suse.de>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_GIMPLE_FOLD_H
 #define GCC_GIMPLE_FOLD_H
@@ -46,6 +63,7 @@ extern bool arith_code_with_undefined_signed_overflow (tree_code);
 extern gimple_seq rewrite_to_defined_overflow (gimple *, bool = false);
 extern void replace_call_with_value (gimple_stmt_iterator *, tree);
 extern tree tree_vec_extract (gimple_stmt_iterator *, tree, tree, tree, tree);
+extern void gsi_replace_with_seq_vops (gimple_stmt_iterator *, gimple_seq);
 
 /* gimple_build, functionally matching fold_buildN, outputs stmts
    int the provided sequence, matching and simplifying them on-the-fly.

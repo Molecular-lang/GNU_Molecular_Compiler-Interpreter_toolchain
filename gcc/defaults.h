@@ -1,5 +1,27 @@
 /* Definitions of various defaults for tm.h macros.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1992-2023 Free Software Foundation, Inc.
+   Contributed by Ron Guilmette (rfg@monkeys.com)
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_DEFAULTS_H
 #define GCC_DEFAULTS_H
@@ -407,17 +429,17 @@
 #endif
 #endif
 
-/* How to renumber registers for dbx and gdb.  If not defined, assume
+/* How to renumber registers for gdb.  If not defined, assume
    no renumbering is necessary.  */
 
-#ifndef DBX_REGISTER_NUMBER
-#define DBX_REGISTER_NUMBER(REGNO) (REGNO)
+#ifndef DEBUGGER_REGNO
+#define DEBUGGER_REGNO(REGNO) (REGNO)
 #endif
 
 /* The mapping from gcc register number to DWARF 2 CFA column number.
    By default, we just provide columns for all registers.  */
 #ifndef DWARF_FRAME_REGNUM
-#define DWARF_FRAME_REGNUM(REG) DBX_REGISTER_NUMBER (REG)
+#define DWARF_FRAME_REGNUM(REG) DEBUGGER_REGNO (REG)
 #endif
 
 /* The mapping from dwarf CFA reg number to internal dwarf reg numbers.  */
@@ -1417,6 +1439,12 @@
 
 #ifndef DWARF_GNAT_ENCODINGS_DEFAULT
 #define DWARF_GNAT_ENCODINGS_DEFAULT DWARF_GNAT_ENCODINGS_GDB
+#endif
+
+/* When generating dwarf info, the default standard version we'll honor
+   and advertise in absence of -gdwarf-<N> on the command line.  */
+#ifndef DWARF_VERSION_DEFAULT
+#define DWARF_VERSION_DEFAULT 5
 #endif
 
 #ifndef USED_FOR_TARGET

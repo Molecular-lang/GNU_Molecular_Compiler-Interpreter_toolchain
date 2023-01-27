@@ -1,5 +1,21 @@
 /* Natural loop functions
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_CFGLOOP_H
 #define GCC_CFGLOOP_H
@@ -7,31 +23,33 @@
 #include "cfgloopmanip.h"
 
 /* Structure to hold decision about unrolling/peeling.  */
-enum lpt_dec {
-	LPT_NONE,
-	LPT_UNROLL_CONSTANT,
-	LPT_UNROLL_RUNTIME,
-	LPT_UNROLL_STUPID
+enum lpt_dec
+{
+  LPT_NONE,
+  LPT_UNROLL_CONSTANT,
+  LPT_UNROLL_RUNTIME,
+  LPT_UNROLL_STUPID
 };
 
 struct GTY (()) lpt_decision {
-	enum lpt_dec decision;
-	unsigned times;
+  enum lpt_dec decision;
+  unsigned times;
 };
 
 /* The type of extend applied to an IV.  */
-enum iv_extend_code {
-	IV_SIGN_EXTEND,
-	IV_ZERO_EXTEND,
-	IV_UNKNOWN_EXTEND
+enum iv_extend_code
+{
+  IV_SIGN_EXTEND,
+  IV_ZERO_EXTEND,
+  IV_UNKNOWN_EXTEND
 };
 
 /* The structure describing a bound on number of iterations of a loop.  */
 
 class GTY ((chain_next ("%h.next"))) nb_iter_bound {
-	public:
+public:
   /* The statement STMT is executed at most ...  */
-		gimple *stmt;
+  gimple *stmt;
 
   /* ... BOUND + 1 times (BOUND must be an unsigned constant).
      The + 1 is added for the following reasons:
@@ -40,15 +58,15 @@ class GTY ((chain_next ("%h.next"))) nb_iter_bound {
         overflows (as MAX + 1 is sometimes produced as the estimate on number
 	of executions of STMT).
      b) it is consistent with the result of number_of_iterations_exit.  */
-		widest_int bound;
+  widest_int bound;
 
   /* True if, after executing the statement BOUND + 1 times, we will
      leave the loop; that is, all the statements after it are executed at most
      BOUND times.  */
-		bool is_exit;
+  bool is_exit;
 
   /* The next bound in the list.  */
-		class nb_iter_bound *next;
+  class nb_iter_bound *next;
 };
 
 /* Description of the loop exit.  */
@@ -65,32 +83,34 @@ struct GTY ((for_user)) loop_exit {
   struct loop_exit *next_e;
 };
 
-struct loop_exit_hasher : ggc_ptr_hash<loop_exit> {
-	typedef edge compare_type;
+struct loop_exit_hasher : ggc_ptr_hash<loop_exit>
+{
+  typedef edge compare_type;
 
-	static hashval_t hash(loop_exit *);
-	static bool equal(loop_exit *, edge);
-	static void remove(loop_exit *);
+  static hashval_t hash (loop_exit *);
+  static bool equal (loop_exit *, edge);
+  static void remove (loop_exit *);
 };
 
 typedef class loop *loop_p;
 
 /* An integer estimation of the number of iterations.  Estimate_state
    describes what is the state of the estimation.  */
-enum loop_estimation {
-	/* Estimate was not computed yet.  */
-	EST_NOT_COMPUTED,
-	/* Estimate is ready.  */
-	EST_AVAILABLE,
-	EST_LAST
+enum loop_estimation
+{
+  /* Estimate was not computed yet.  */
+  EST_NOT_COMPUTED,
+  /* Estimate is ready.  */
+  EST_AVAILABLE,
+  EST_LAST
 };
 
 /* The structure describing non-overflow control induction variable for
    loop's exit edge.  */
 struct GTY ((chain_next ("%h.next"))) control_iv {
-	tree base;
-	tree step;
-	struct control_iv *next;
+  tree base;
+  tree step;
+  struct control_iv *next;
 };
 
 /* Structure to hold information for each natural loop.  */
@@ -320,8 +340,10 @@ void init_loops_structure (struct function *, struct loops *, unsigned);
 extern struct loops *flow_loops_find (struct loops *);
 extern void disambiguate_loops_with_multiple_latches (void);
 extern void flow_loops_free (struct loops *);
-extern void flow_loops_dump (FILE *, void (*)(const class loop *, FILE *, int), int);
-extern void flow_loop_dump (const class loop *, FILE *, void (*)(const class loop *, FILE *, int), int);
+extern void flow_loops_dump (FILE *,
+			     void (*)(const class loop *, FILE *, int), int);
+extern void flow_loop_dump (const class loop *, FILE *,
+			    void (*)(const class loop *, FILE *, int), int);
 class loop *alloc_loop (void);
 extern void flow_loop_free (class loop *);
 int flow_loop_nodes_find (basic_block, class loop *);
@@ -333,7 +355,8 @@ void rescan_loop_exit (edge, bool, bool);
 void sort_sibling_loops (function *);
 
 /* Loop data structure manipulation/querying.  */
-extern void flow_loop_tree_node_add (class loop *, class loop *, class loop * = NULL);
+extern void flow_loop_tree_node_add (class loop *, class loop *,
+				     class loop * = NULL);
 extern void flow_loop_tree_node_remove (class loop *);
 extern bool flow_loop_nested_p	(const class loop *, const class loop *);
 extern bool flow_bb_inside_loop_p (const class loop *, const_basic_block);
@@ -351,11 +374,14 @@ extern dump_user_location_t get_loop_location (class loop *loop);
 
 /* Loops & cfg manipulation.  */
 extern basic_block *get_loop_body (const class loop *);
-extern unsigned get_loop_body_with_size (const class loop *, basic_block *, unsigned);
+extern unsigned get_loop_body_with_size (const class loop *, basic_block *,
+					 unsigned);
 extern basic_block *get_loop_body_in_dom_order (const class loop *);
 extern basic_block *get_loop_body_in_bfs_order (const class loop *);
-extern basic_block *get_loop_body_in_custom_order (const class loop *, int (*) (const void *, const void *));
-extern basic_block *get_loop_body_in_custom_order (const class loop *, void *, int (*) (const void *, const void *, void *));
+extern basic_block *get_loop_body_in_custom_order (const class loop *,
+			       int (*) (const void *, const void *));
+extern basic_block *get_loop_body_in_custom_order (const class loop *, void *,
+			       int (*) (const void *, const void *, void *));
 
 extern auto_vec<edge> get_loop_exit_edges (const class loop *, basic_block * = NULL);
 extern edge single_exit (const class loop *);
@@ -376,7 +402,8 @@ extern void verify_loop_structure (void);
 
 /* Loop analysis.  */
 extern bool just_once_each_iteration_p (const class loop *, const_basic_block);
-gcov_type expected_loop_iterations_unbounded (const class loop *, bool *read_profile_p = NULL, bool by_profile_only = false);
+gcov_type expected_loop_iterations_unbounded (const class loop *,
+					      bool *read_profile_p = NULL, bool by_profile_only = false);
 extern unsigned expected_loop_iterations (class loop *);
 extern rtx doloop_condition_get (rtx_insn *);
 
@@ -403,33 +430,35 @@ void mark_loop_for_removal (loop_p);
    computation is done, which would enable it to be different from the
    outer one?  */
 
-class rtx_iv {
-	public:
-		/* Its base and step (mode of base and step is supposed to be extend_mode,
-		   see the description above).  */
-		rtx base, step;
+class rtx_iv
+{
+public:
+  /* Its base and step (mode of base and step is supposed to be extend_mode,
+     see the description above).  */
+  rtx base, step;
 
-		/* The type of extend applied to it (IV_SIGN_EXTEND, IV_ZERO_EXTEND,
-		   or IV_UNKNOWN_EXTEND).  */
-		enum iv_extend_code extend;
+  /* The type of extend applied to it (IV_SIGN_EXTEND, IV_ZERO_EXTEND,
+     or IV_UNKNOWN_EXTEND).  */
+  enum iv_extend_code extend;
 
-		/* Operations applied in the extended mode.  */
-		rtx delta, mult;
+  /* Operations applied in the extended mode.  */
+  rtx delta, mult;
 
-		/* The mode it is extended to.  */
-		scalar_int_mode extend_mode;
+  /* The mode it is extended to.  */
+  scalar_int_mode extend_mode;
 
-		/* The mode the variable iterates in.  */
-		scalar_int_mode mode;
+  /* The mode the variable iterates in.  */
+  scalar_int_mode mode;
 
-		/* Whether the first iteration needs to be handled specially.  */
-		unsigned first_special : 1;
+  /* Whether the first iteration needs to be handled specially.  */
+  unsigned first_special : 1;
 };
 
 /* The description of an exit from the loop and of the number of iterations
    till we take the exit.  */
 
-class GTY(()) niter_desc {
+class GTY(()) niter_desc
+{
 public:
   /* The edge out of the loop.  */
   edge out_edge;
@@ -470,7 +499,8 @@ public:
 extern void iv_analysis_loop_init (class loop *);
 extern bool iv_analyze (rtx_insn *, scalar_int_mode, rtx, class rtx_iv *);
 extern bool iv_analyze_result (rtx_insn *, rtx, class rtx_iv *);
-extern bool iv_analyze_expr (rtx_insn *, scalar_int_mode, rtx, class rtx_iv *);
+extern bool iv_analyze_expr (rtx_insn *, scalar_int_mode, rtx,
+			     class rtx_iv *);
 extern rtx get_iv_value (class rtx_iv *, rtx);
 extern bool biv_p (rtx_insn *, scalar_int_mode, rtx);
 extern void iv_analysis_done (void);

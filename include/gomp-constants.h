@@ -1,6 +1,30 @@
 /* Communication between GCC and libgomp.
 
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2014-2023 Free Software Foundation, Inc.
+
+   Contributed by Mentor Embedded.
+
+   This file is part of the GNU Offloading and Multi Processing Library
+   (libgomp).
+
+   Libgomp is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3, or (at your option)
+   any later version.
+
+   Libgomp is distributed in the hope that it will be useful, but WITHOUT ANY
+   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+   FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+   more details.
+
+   Under Section 7 of GPL version 3, you are granted additional
+   permissions described in the GCC Runtime Library Exception, version
+   3.1, as published by the Free Software Foundation.
+
+   You should have received a copy of the GNU General Public License and
+   a copy of the GCC Runtime Library Exception along with this program;
+   see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #ifndef GOMP_CONSTANTS_H
 #define GOMP_CONSTANTS_H 1
@@ -205,8 +229,8 @@ enum gomp_map_kind
 /* #define GOMP_DEVICE_HOST_NONSHM	3 removed.  */
 #define GOMP_DEVICE_NOT_HOST		4
 #define GOMP_DEVICE_NVIDIA_PTX		5
-#define GOMP_DEVICE_INTEL_MIC		6
-#define GOMP_DEVICE_HSA			7
+/* #define GOMP_DEVICE_INTEL_MIC	6 removed.  */
+/* #define GOMP_DEVICE_HSA		7 removed.  */
 #define GOMP_DEVICE_GCN			8
 
 /* We have a compatibility issue.  OpenMP 5.2 introduced
@@ -258,9 +282,8 @@ enum gomp_map_kind
 /* Versions of libgomp and device-specific plugins.  GOMP_VERSION
    should be incremented whenever an ABI-incompatible change is introduced
    to the plugin interface defined in libgomp/libgomp.h.  */
-#define GOMP_VERSION	1
+#define GOMP_VERSION	2
 #define GOMP_VERSION_NVIDIA_PTX 1
-#define GOMP_VERSION_INTEL_MIC 0
 #define GOMP_VERSION_GCN 2
 
 #define GOMP_VERSION_PACK(LIB, DEV) (((LIB) << 16) | (DEV))
@@ -316,6 +339,12 @@ enum gomp_map_kind
 #define GOMP_DEPEND_INOUT		3
 #define GOMP_DEPEND_MUTEXINOUTSET	4
 #define GOMP_DEPEND_INOUTSET		5
+
+/* Flag values for OpenMP 'requires' directive features.  */
+#define GOMP_REQUIRES_UNIFIED_ADDRESS       0x10
+#define GOMP_REQUIRES_UNIFIED_SHARED_MEMORY 0x20
+#define GOMP_REQUIRES_REVERSE_OFFLOAD       0x80
+#define GOMP_REQUIRES_TARGET_USED           0x200
 
 /* HSA specific data structures.  */
 

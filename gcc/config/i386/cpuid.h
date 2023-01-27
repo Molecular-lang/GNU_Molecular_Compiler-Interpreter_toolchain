@@ -1,12 +1,37 @@
-/* Please review: $(src-dir)/SPL-README for Licencing info. */
+/*
+ * Copyright (C) 2007-2023 Free Software Foundation, Inc.
+ *
+ * This file is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 3, or (at your option) any
+ * later version.
+ * 
+ * This file is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * Under Section 7 of GPL version 3, you are granted additional
+ * permissions described in the GCC Runtime Library Exception, version
+ * 3.1, as published by the Free Software Foundation.
+ * 
+ * You should have received a copy of the GNU General Public License and
+ * a copy of the GCC Runtime Library Exception along with this program;
+ * see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef _CPUID_H_INCLUDED
 #define _CPUID_H_INCLUDED
 
 /* %eax */
+#define bit_RAOINT	(1 << 3)
 #define bit_AVXVNNI	(1 << 4)
 #define bit_AVX512BF16	(1 << 5)
+#define bit_CMPCCXADD	(1 << 7)
+#define bit_AMX_FP16	(1 << 21)
 #define bit_HRESET	(1 << 22)
+#define bit_AVXIFMA	(1 << 23)
 
 /* %ecx */
 #define bit_SSE3	(1 << 0)
@@ -27,7 +52,10 @@
 #define bit_RDRND	(1 << 30)
 
 /* %edx */
+#define bit_AVXVNNIINT8 (1 << 4)
+#define bit_AVXNECONVERT (1 << 5)
 #define bit_CMPXCHG8B	(1 << 8)
+#define bit_PREFETCHI	(1 << 14)
 #define bit_CMOV	(1 << 15)
 #define bit_MMX		(1 << 23)
 #define bit_FXSAVE	(1 << 24)

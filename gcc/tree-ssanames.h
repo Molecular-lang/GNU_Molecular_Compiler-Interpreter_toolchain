@@ -1,5 +1,21 @@
 /* SSA name expresssons routines
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2013-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_TREE_SSANAMES_H
 #define GCC_TREE_SSANAMES_H
@@ -29,16 +45,6 @@ struct GTY(()) ptr_info_def
   unsigned int misalign;
 };
 
-/* Value range information for SSA_NAMEs representing non-pointer variables.  */
-
-struct GTY ((variable_size)) range_info_def {
-  /* Minimum, maximum and nonzero bits.  */
-  TRAILING_WIDE_INT_ACCESSOR (min, ints, 0)
-  TRAILING_WIDE_INT_ACCESSOR (max, ints, 1)
-  TRAILING_WIDE_INT_ACCESSOR (nonzero_bits, ints, 2)
-  trailing_wide_ints <3> ints;
-};
-
 
 #define SSANAMES(fun) (fun)->gimple_df->ssa_names
 #define DEFAULT_DEFS(fun) (fun)->gimple_df->default_defs
@@ -51,7 +57,7 @@ struct GTY ((variable_size)) range_info_def {
     if (VAR)
 
 /* Sets the value range to SSA.  */
-extern void set_range_info (tree, const value_range &);
+extern bool set_range_info (tree, const vrange &);
 extern void set_nonzero_bits (tree, const wide_int_ref &);
 extern wide_int get_nonzero_bits (const_tree);
 extern bool ssa_name_has_boolean_range (tree);

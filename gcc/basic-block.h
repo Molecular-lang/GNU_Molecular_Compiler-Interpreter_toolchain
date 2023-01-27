@@ -1,5 +1,21 @@
 /* Define control flow data structures for the CFG.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_BASIC_BLOCK_H
 #define GCC_BASIC_BLOCK_H
@@ -132,11 +148,6 @@ struct GTY((chain_next ("%h.next_bb"), chain_prev ("%h.prev_bb"))) basic_block_d
 
   /* Expected number of executions: calculated in profile.cc.  */
   profile_count count;
-
-  /* The discriminator for this block.  The discriminator distinguishes
-     among several basic blocks that share a common locus, allowing for
-     more accurate sample-based profiling.  */
-  int discriminator;
 };
 
 /* This ensures that struct gimple_bb_info is smaller than

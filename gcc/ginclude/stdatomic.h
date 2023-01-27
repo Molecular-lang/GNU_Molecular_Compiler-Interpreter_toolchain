@@ -1,4 +1,25 @@
-/* Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Copyright (C) 2013-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 /* ISO C11 Standard:  7.17  Atomics <stdatomic.h>.  */
 
@@ -28,6 +49,9 @@ typedef _Atomic long atomic_long;
 typedef _Atomic unsigned long atomic_ulong;
 typedef _Atomic long long atomic_llong;
 typedef _Atomic unsigned long long atomic_ullong;
+#ifdef __CHAR8_TYPE__
+typedef _Atomic __CHAR8_TYPE__ atomic_char8_t;
+#endif
 typedef _Atomic __CHAR16_TYPE__ atomic_char16_t;
 typedef _Atomic __CHAR32_TYPE__ atomic_char32_t;
 typedef _Atomic __WCHAR_TYPE__ atomic_wchar_t;
@@ -55,7 +79,9 @@ typedef _Atomic __INTMAX_TYPE__ atomic_intmax_t;
 typedef _Atomic __UINTMAX_TYPE__ atomic_uintmax_t;        
 
 
+#if !(defined __STDC_VERSION__ && __STDC_VERSION__ > 201710L)
 #define ATOMIC_VAR_INIT(VALUE)	(VALUE)
+#endif
 
 /* Initialize an atomic object pointed to by PTR with VAL.  */
 #define atomic_init(PTR, VAL)                           \
@@ -76,6 +102,9 @@ extern void atomic_signal_fence (memory_order);
 
 #define ATOMIC_BOOL_LOCK_FREE		__GCC_ATOMIC_BOOL_LOCK_FREE
 #define ATOMIC_CHAR_LOCK_FREE		__GCC_ATOMIC_CHAR_LOCK_FREE
+#ifdef __GCC_ATOMIC_CHAR8_T_LOCK_FREE
+#define ATOMIC_CHAR8_T_LOCK_FREE	__GCC_ATOMIC_CHAR8_T_LOCK_FREE
+#endif
 #define ATOMIC_CHAR16_T_LOCK_FREE	__GCC_ATOMIC_CHAR16_T_LOCK_FREE
 #define ATOMIC_CHAR32_T_LOCK_FREE	__GCC_ATOMIC_CHAR32_T_LOCK_FREE
 #define ATOMIC_WCHAR_T_LOCK_FREE	__GCC_ATOMIC_WCHAR_T_LOCK_FREE
@@ -218,5 +247,9 @@ extern void atomic_flag_clear (volatile atomic_flag *);
 #define atomic_flag_clear(PTR)	__atomic_clear ((PTR), __ATOMIC_SEQ_CST)
 extern void atomic_flag_clear_explicit (volatile atomic_flag *, memory_order);
 #define atomic_flag_clear_explicit(PTR, MO)   __atomic_clear ((PTR), (MO))
+
+#if defined __STDC_VERSION__ && __STDC_VERSION__ > 201710L
+#define __STDC_VERSION_STDATOMIC_H__	202311L
+#endif
 
 #endif  /* _STDATOMIC_H */

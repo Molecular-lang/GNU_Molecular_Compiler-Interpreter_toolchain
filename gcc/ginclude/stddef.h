@@ -1,4 +1,25 @@
-/* Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Copyright (C) 1989-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 /*
  * ISO C Standard:  7.17  Common definitions  <stddef.h>
@@ -391,6 +412,7 @@ typedef __WINT_TYPE__ wint_t;
 #ifdef _STDDEF_H
 
 /* Offset of member MEMBER in a struct of type TYPE. */
+#undef offsetof		/* in case a system header has defined it. */
 #define offsetof(TYPE, MEMBER) __builtin_offsetof (TYPE, MEMBER)
 
 #if (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 201112L) \
@@ -421,6 +443,19 @@ typedef struct {
   typedef decltype(nullptr) nullptr_t;
 #endif
 #endif /* C++11.  */
+
+#if (defined (__STDC_VERSION__) && __STDC_VERSION__ > 201710L)
+#ifndef _GCC_NULLPTR_T
+#define _GCC_NULLPTR_T
+  typedef __typeof__(nullptr) nullptr_t;
+/* ??? This doesn't define __STDC_VERSION_STDDEF_H__ yet.  */
+#endif
+#endif /* C23.  */
+
+#if defined __STDC_VERSION__ && __STDC_VERSION__ > 201710L
+#define unreachable() (__builtin_unreachable ())
+#define __STDC_VERSION_STDDEF_H__	202311L
+#endif
 
 #endif /* _STDDEF_H was defined this time */
 

@@ -1,5 +1,23 @@
 /* Definitions of target machine GNU compiler.  IA-64 version.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1999-2023 Free Software Foundation, Inc.
+   Contributed by James E. Wilson <wilson@cygnus.com> and
+   		  David Mosberger <davidm@hpl.hp.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* ??? Look at ABI group documents for list of preprocessor macros and
    other features required for ABI compliance.  */
@@ -7,6 +25,7 @@
 /* ??? Functions containing a non-local goto target save many registers.  Why?
    See for instance execute/920428-2.c.  */
 
+
 /* Run-time target specifications */
 
 /* Target CPU builtins.  */
@@ -1403,22 +1422,6 @@ do {									\
 /* Macros Affecting all Debug Formats.  */
 
 /* This is handled in sysv4.h.  */
-
-
-/* Specific Options for DBX Output.  */
-
-/* This is handled by dbxelf.h.  */
-
-
-/* Open ended Hooks for DBX Output.  */
-
-/* Likewise.  */
-
-
-/* File names in DBX format.  */
-
-/* Likewise.  */
-
 
 /* Macros for Dwarf Output.  */
 

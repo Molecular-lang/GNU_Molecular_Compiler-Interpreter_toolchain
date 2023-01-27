@@ -1,5 +1,21 @@
 /* Definitions for the shared dumpfile.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2004-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 
 #ifndef GCC_DUMPFILE_H
@@ -558,7 +574,7 @@ extern void dump_printf (const dump_metadata_t &, const char *, ...)
 
 extern void dump_printf_loc (const dump_metadata_t &, const dump_user_location_t &,
 			     const char *, ...)
-  ATTRIBUTE_GCC_DUMP_PRINTF (3, 0);
+  ATTRIBUTE_GCC_DUMP_PRINTF (3, 4);
 extern void dump_function (int phase, tree fn);
 extern void dump_basic_block (dump_flags_t, basic_block, int);
 extern void dump_generic_expr_loc (const dump_metadata_t &,

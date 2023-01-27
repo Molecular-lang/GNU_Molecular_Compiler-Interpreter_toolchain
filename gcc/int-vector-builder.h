@@ -1,5 +1,21 @@
 /* A class for building vector integer constants.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2017-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_INT_VECTOR_BUILDER_H
 #define GCC_INT_VECTOR_BUILDER_H 1
@@ -10,7 +26,8 @@
    encoding as tree and rtx constants.  See vector_builder for more
    details.  */
 template<typename T>
-class int_vector_builder : public vector_builder<T, poly_uint64, int_vector_builder<T> >
+class int_vector_builder : public vector_builder<T, poly_uint64,
+						 int_vector_builder<T> >
 {
   typedef vector_builder<T, poly_uint64, int_vector_builder> parent;
   friend class vector_builder<T, poly_uint64, int_vector_builder>;

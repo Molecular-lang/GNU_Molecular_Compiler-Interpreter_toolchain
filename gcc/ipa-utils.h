@@ -1,5 +1,22 @@
 /* Utilities for ipa analysis.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2004-2023 Free Software Foundation, Inc.
+   Contributed by Kenneth Zadeck <zadeck@naturalbridge.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_IPA_UTILS_H
 #define GCC_IPA_UTILS_H
@@ -29,6 +46,8 @@ tree get_base_var (tree);
 void ipa_merge_profiles (struct cgraph_node *dst,
 			 struct cgraph_node *src, bool preserve_body = false);
 bool recursive_call_p (tree, tree);
+bool stmt_may_terminate_function_p (function *fun, gimple *stmt, bool assume_return_or_eh);
+bitmap find_always_executed_bbs (function *fun, bool assume_return_or_eh);
 
 /* In ipa-pure-const.cc  */
 bool finite_function_p ();

@@ -1,12 +1,29 @@
 /* Header file for loop interation estimates.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2013-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_TREE_SSA_LOOP_NITER_H
 #define GCC_TREE_SSA_LOOP_NITER_H
 
 extern tree expand_simple_operations (tree, tree = NULL);
 extern tree simplify_using_initial_conditions (class loop *, tree);
-extern bool loop_only_exit_p (const class loop *, basic_block *body, const_edge);
+extern bool loop_only_exit_p (const class loop *, basic_block *body,
+			      const_edge);
 extern bool number_of_iterations_exit (class loop *, edge,
 				       class tree_niter_desc *niter, bool,
 				       bool every_iteration = true,

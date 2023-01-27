@@ -1,5 +1,21 @@
 /* A type-safe hash map.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2014-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 
 #ifndef hash_map_h
@@ -153,11 +169,13 @@ public:
     {
       hash_entry *e = m_table.find_slot_with_hash (k, Traits::hash (k),
 						   INSERT);
-      bool ins = hash_entry::is_empty (*e);
+      bool ins = Traits::is_empty (*e);
       if (ins)
 	{
 	  e->m_key = k;
-	  new ((void *) &e->m_value) Value (v);
+	  new ((void *)&e->m_value) Value (v);
+	  gcc_checking_assert (!Traits::is_empty (*e)
+			       && !Traits::is_deleted (*e));
 	}
       else
 	e->m_value = v;
@@ -187,6 +205,8 @@ public:
 	{
 	  e->m_key = k;
 	  new ((void *)&e->m_value) Value ();
+	  gcc_checking_assert (!Traits::is_empty (*e)
+			       && !Traits::is_deleted (*e));
 	}
 
       if (existed != NULL)

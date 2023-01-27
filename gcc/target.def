@@ -1,5 +1,23 @@
 /* Target hook definitions.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 3, or (at your option) any
+   later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.
+
+   In other words, you are welcome to use, share and improve this program.
+   You are forbidden to forbid anyone else to use, share and improve
+   what you give them.   Help stamp out software-hoarding!  */
 
 /* See target-hooks-macros.h for details of macros that should be
    provided by the including file, and how to use them here.  */
@@ -1611,9 +1629,12 @@ DEFHOOK
 "This hook should set @var{vecsize_mangle}, @var{vecsize_int}, @var{vecsize_float}\n\
 fields in @var{simd_clone} structure pointed by @var{clone_info} argument and also\n\
 @var{simdlen} field if it was previously 0.\n\
+@var{vecsize_mangle} is a marker for the backend only. @var{vecsize_int} and\n\
+@var{vecsize_float} should be left zero on targets where the number of lanes is\n\
+not determined by the bitsize (in which case @var{simdlen} is always used).\n\
 The hook should return 0 if SIMD clones shouldn't be emitted,\n\
 or number of @var{vecsize_mangle} variants that should be emitted.",
-int, (struct cgraph_node *, struct cgraph_simd_clone *, tree, int), NULL)
+int, (struct cgraph_node *, struct cgraph_simd_clone *, tree, int, bool), NULL)
 
 DEFHOOK
 (adjust,
@@ -1883,6 +1904,25 @@ implementation approaches itself.",
  bool, (machine_mode mode, machine_mode op_mode, rtx output, rtx in0, rtx in1,
 	const vec_perm_indices &sel),
  NULL)
+
+DEFHOOK
+(can_special_div_by_const,
+ "This hook is used to test whether the target has a special method of\n\
+division of vectors of type @var{vectype} using the value @var{constant},\n\
+and producing a vector of type @var{vectype}.  The division\n\
+will then not be decomposed by the vectorizer and kept as a div.\n\
+\n\
+When the hook is being used to test whether the target supports a special\n\
+divide, @var{in0}, @var{in1}, and @var{output} are all null.  When the hook\n\
+is being used to emit a division, @var{in0} and @var{in1} are the source\n\
+vectors of type @var{vecttype} and @var{output} is the destination vector of\n\
+type @var{vectype}.\n\
+\n\
+Return true if the operation is possible, emitting instructions for it\n\
+if rtxes are provided and updating @var{output}.",
+ bool, (enum tree_code, tree vectype, wide_int constant, rtx *output,
+	rtx in0, rtx in1),
+ default_can_special_div_by_const)
 
 /* Return true if the target supports misaligned store/load of a
    specific factor denoted in the third parameter.  The last parameter
@@ -4659,7 +4699,9 @@ pass all their arguments on the stack.\n\
 The argument @var{args_so_far} points to the @code{CUMULATIVE_ARGS} data\n\
 structure, containing the values that are obtained after processing the\n\
 named arguments.  The argument @var{arg} describes the last of these named\n\
-arguments.\n\
+arguments.  The argument @var{arg} should not be used if the function type\n\
+satisfies @code{TYPE_NO_NAMED_ARGS_STDARG_P}, since in that case there are\n\
+no named arguments and all arguments are accessed with @code{va_arg}.\n\
 \n\
 The target hook should do two things: first, push onto the stack all the\n\
 argument registers @emph{not} used for the named arguments, and second,\n\
@@ -6160,7 +6202,7 @@ of the excess precision explicitly added.  For\n\
 @code{EXCESS_PRECISION_TYPE_FLOAT16}, and\n\
 @code{EXCESS_PRECISION_TYPE_FAST}, the target should return the\n\
 explicit excess precision that should be added depending on the\n\
-value set for @option{-fexcess-precision=@r{[}standard@r{|}fast@r{]}}.\n\
+value set for @option{-fexcess-precision=@r{[}standard@r{|}fast@r{|}16@r{]}}.\n\
 Note that unpredictable explicit excess precision does not make sense,\n\
 so a target should never return @code{FLT_EVAL_METHOD_UNPREDICTABLE}\n\
 when @var{type} is @code{EXCESS_PRECISION_TYPE_STANDARD},\n\

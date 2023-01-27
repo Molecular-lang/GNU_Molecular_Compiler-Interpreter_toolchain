@@ -1,5 +1,22 @@
 /* Modeling API uses and misuses via state machines.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_ANALYZER_SM_H
 #define GCC_ANALYZER_SM_H
@@ -91,16 +108,29 @@ public:
   {
   }
 
+  virtual void
+  on_bounded_ranges (sm_context *sm_ctxt ATTRIBUTE_UNUSED,
+		     const supernode *node ATTRIBUTE_UNUSED,
+		     const gimple *stmt ATTRIBUTE_UNUSED,
+		     const svalue &sval ATTRIBUTE_UNUSED,
+		     const bounded_ranges &ranges ATTRIBUTE_UNUSED) const
+  {
+  }
+
+  virtual void
+  on_pop_frame (sm_state_map *smap ATTRIBUTE_UNUSED,
+		const frame_region *frame_reg ATTRIBUTE_UNUSED) const
+  {
+  }
+
   /* Return true if it safe to discard the given state (to help
      when simplifying state objects).
      States that need leak detection should return false.  */
   virtual bool can_purge_p (state_t s) const = 0;
 
   /* Called when VAR leaks (and !can_purge_p).  */
-  virtual pending_diagnostic *on_leak (tree var ATTRIBUTE_UNUSED) const
-  {
-    return NULL;
-  }
+  virtual std::unique_ptr<pending_diagnostic>
+  on_leak (tree var ATTRIBUTE_UNUSED) const;
 
   /* Return true if S should be reset to "start" for values passed (or reachable
      from) calls to unknown functions.  IS_MUTABLE is true for pointers as
@@ -113,6 +143,31 @@ public:
 						  bool is_mutable) const
   {
     return is_mutable;
+  }
+
+  /* Attempt to get a state for the merger of STATE_A and STATE_B,
+     or return NULL if merging shouldn't occur, so that differences
+     between sm-state will lead to separate exploded nodes.
+
+     Most state machines will only merge equal states, but can
+     override maybe_get_merged_states_nonequal to support mergers
+     of certain non-equal states.  */
+  state_t maybe_get_merged_state (state_t state_a,
+				  state_t state_b) const
+  {
+    if (state_a == state_b)
+      return state_a;
+    return maybe_get_merged_states_nonequal (state_a, state_b);
+  }
+
+  /* Base implementation of hook for maybe_get_merged_state on non-equal
+     states.  */
+  virtual state_t
+  maybe_get_merged_states_nonequal (state_t state_a ATTRIBUTE_UNUSED,
+				    state_t state_b ATTRIBUTE_UNUSED) const
+  {
+    /* By default, non-equal sm states should inhibit merger of enodes.  */
+    return NULL;
   }
 
   void validate (state_t s) const;
@@ -224,9 +279,11 @@ public:
   /* Called by state_machine in response to pattern matches:
      issue a diagnostic D using NODE and STMT for location information.  */
   virtual void warn (const supernode *node, const gimple *stmt,
-		     tree var, pending_diagnostic *d) = 0;
+		     tree var,
+		     std::unique_ptr<pending_diagnostic> d) = 0;
   virtual void warn (const supernode *node, const gimple *stmt,
-		     const svalue *var, pending_diagnostic *d) = 0;
+		     const svalue *var,
+		     std::unique_ptr<pending_diagnostic> d) = 0;
 
   /* For use when generating trees when creating pending_diagnostics, so that
      rather than e.g.
@@ -262,6 +319,8 @@ public:
   virtual const program_state *get_old_program_state () const = 0;
   virtual const program_state *get_new_program_state () const = 0;
 
+  const region_model *get_old_region_model () const;
+
 protected:
   sm_context (int sm_idx, const state_machine &sm)
   : m_sm_idx (sm_idx), m_sm (sm) {}
@@ -284,6 +343,7 @@ extern state_machine *make_sensitive_state_machine (logger *logger);
 extern state_machine *make_signal_state_machine (logger *logger);
 extern state_machine *make_pattern_test_state_machine (logger *logger);
 extern state_machine *make_va_list_state_machine (logger *logger);
+extern state_machine *make_fd_state_machine (logger *logger);
 
 } // namespace ana
 

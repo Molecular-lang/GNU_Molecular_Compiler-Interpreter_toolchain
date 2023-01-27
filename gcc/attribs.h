@@ -1,5 +1,21 @@
 /* Declarations and definitions dealing with attribute handling.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2013-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_ATTRIBS_H
 #define GCC_ATTRIBS_H
@@ -66,6 +82,10 @@ extern tree merge_type_attributes (tree, tree);
 
 extern tree remove_attribute (const char *, tree);
 
+/* Similarly but also with specific attribute namespace.  */
+
+extern tree remove_attribute (const char *, const char *, tree);
+
 /* Given two attributes lists, return a list of their union.  */
 
 extern tree merge_attributes (tree, tree);
@@ -96,6 +116,10 @@ extern int attribute_list_contained (const_tree, const_tree);
    The function is called from lookup_attribute in order to optimize
    for size.  */
 extern tree private_lookup_attribute (const char *attr_name, size_t attr_len,
+				      tree list);
+extern tree private_lookup_attribute (const char *attr_ns,
+				      const char *attr_name,
+				      size_t attr_ns_len, size_t attr_len,
 				      tree list);
 
 extern unsigned decls_mismatched_attributes (tree, tree, tree,
@@ -164,6 +188,22 @@ is_attribute_p (const char *attr_name, const_tree ident)
 		      IDENTIFIER_POINTER (ident), IDENTIFIER_LENGTH (ident));
 }
 
+/* Given an attribute ATTR and a string ATTR_NS, return true
+   if the attribute namespace is valid for the string.  ATTR_NS "" stands
+   for standard attribute (NULL get_attribute_namespace) or "gnu"
+   namespace.  */
+
+static inline bool
+is_attribute_namespace_p (const char *attr_ns, const_tree attr)
+{
+  tree ident = get_attribute_namespace (attr);
+  if (attr_ns == NULL)
+    return ident == NULL_TREE;
+  if (attr_ns[0])
+    return ident && is_attribute_p (attr_ns, ident);
+  return ident == NULL_TREE || is_attribute_p ("gnu", ident);
+}
+
 /* Given an attribute name ATTR_NAME and a list of attributes LIST,
    return a pointer to the attribute's list element if the attribute
    is part of the list, or NULL_TREE if not found.  If the attribute
@@ -190,6 +230,37 @@ lookup_attribute (const char *attr_name, tree list)
 	 In most cases attr_name is a string constant, and the compiler
 	 will optimize the strlen() away.  */
       return private_lookup_attribute (attr_name, attr_len, list);
+    }
+}
+
+/* Similar to lookup_attribute, but also match the attribute namespace.
+   ATTR_NS "" stands for either standard attribute or "gnu" namespace.  */
+
+static inline tree
+lookup_attribute (const char *attr_ns, const char *attr_name, tree list)
+{
+  if (CHECKING_P && attr_name[0] != '_')
+    {
+      size_t attr_len = strlen (attr_name);
+      gcc_checking_assert (!canonicalize_attr_name (attr_name, attr_len));
+    }
+  if (CHECKING_P && attr_ns && attr_ns[0] != '_')
+    {
+      size_t attr_ns_len = strlen (attr_ns);
+      gcc_checking_assert (!canonicalize_attr_name (attr_ns, attr_ns_len));
+    }
+  /* In most cases, list is NULL_TREE.  */
+  if (list == NULL_TREE)
+    return NULL_TREE;
+  else
+    {
+      size_t attr_ns_len = attr_ns ? strlen (attr_ns) : 0;
+      size_t attr_len = strlen (attr_name);
+      /* Do the strlen() before calling the out-of-line implementation.
+	 In most cases attr_name is a string constant, and the compiler
+	 will optimize the strlen() away.  */
+      return private_lookup_attribute (attr_ns, attr_name,
+				       attr_ns_len, attr_len, list);
     }
 }
 
@@ -220,8 +291,8 @@ lookup_attribute_by_prefix (const char *attr_name, tree list)
 	    }
 
 	  const char *p = IDENTIFIER_POINTER (name);
-	  gcc_checking_assert (attr_len == 0 || p[0] != '_');
-
+	  gcc_checking_assert (attr_len == 0 || p[0] != '_'
+			       || (ident_len > 1 && p[1] != '_'));
 	  if (strncmp (attr_name, p, attr_len) == 0)
 	    break;
 

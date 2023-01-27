@@ -1,6 +1,22 @@
 /* Operating system specific defines to be used when targeting GCC for
    hosting on Windows32, using a Unix style C library and tools.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1995-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #define EXTRA_OS_CPP_BUILTINS()					\
   do								\
@@ -10,15 +26,6 @@
 	builtin_define ("__CYGWIN32__");			\
       builtin_define ("__unix__");				\
       builtin_define ("__unix");				\
-    }								\
-  while (0)
-
-#define EXTRA_TARGET_D_OS_VERSIONS()				\
-  do								\
-    {								\
-      builtin_version ("Cygwin");				\
-      builtin_version ("Posix");				\
-      builtin_version ("CRuntime_Newlib");			\
     }								\
   while (0)
 
@@ -41,7 +48,7 @@
 
 #undef ENDFILE_SPEC
 #define ENDFILE_SPEC \
-  "%{Ofast|ffast-math|funsafe-math-optimizations:crtfastmath.o%s}\
+  "%{mdaz-ftz:crtfastmath.o%s;Ofast|ffast-math|funsafe-math-optimizations:%{!shared:%{!mno-daz-ftz:crtfastmath.o%s}}} \
    %{!shared:%:if-exists(default-manifest.o%s)}\
    %{fvtable-verify=none:%s; \
     fvtable-verify=preinit:vtv_end.o%s; \
