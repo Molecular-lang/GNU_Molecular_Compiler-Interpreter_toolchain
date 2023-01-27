@@ -1,4 +1,4 @@
-# Scpel-1.0.0-Beta
+# Scpel-0.0.1
 Subconscious Electronic Programming Language
 
 # Description
@@ -19,13 +19,13 @@ mathematical computing use cases.
 
 # How to build
 Even in its early stages, I have tried so hard to bootstrap the compiler
-so: To build Scpel, you need a minimal of Scpel-1.0.0. Please visit 
+so: To build Scpel, you need a minimal of Scpel-0.0.1. Please visit 
 "https://www.scpel.org" to download the minimal Scpel binaries or, attached 
-to this exact repo is a debian package "Scpel_1.0.0-1_amd64.deb" ready
+to this exact repo is a debian package "Scpel_0.0.1-1_amd64.deb" ready
 for download.
 
 From your terminal:
-$ sudo dpkg -i /path/to/downloads/Scpel_1.0.0-1_amd64
+$ sudo dpkg -i /path/to/downloads/Scpel_0.0.1-1_amd64
 which will install the binaries in your /usr/local directory.
 
 NOTE:
@@ -35,7 +35,7 @@ NOTE:
 	which will add "amd64" to your architecture list.
 	
 Otherwise, you're now good to go, test the compiler by compiling a simple C
-or C++ "hello_world.co". ".co" is the default Scpel file extension
+"hello_world.co". ".co" is the default Scpel file extension
 
 # How to actually build the binaries from source
 1. Clone the repo. 
@@ -43,7 +43,7 @@ or C++ "hello_world.co". ".co" is the default Scpel file extension
    inside the $(srcdir) or outside the cloned directory.
 3. From your newly created directory, "open terminal there"
    and point to your $(srcdir) with something like:
-   $ ../Scpel-1.0.0/configure --enable-languages=scpel --disable-bootstrap 
+   $ ../Scpel-0.0.1/configure --enable-languages=scpel --disable-bootstrap 
    --enable-checking --enable-multilib --prefix=/usr/local && make -j $(nproc)
    On my:
    CPU    ==> Intel Pentium(R) Silver N5030 CPU @ 1.10GHz x 4
@@ -58,7 +58,7 @@ or C++ "hello_world.co". ".co" is the default Scpel file extension
    Assuming file_name.co is the file that contains your sample hello world
    
 # NOTE:
-  Please visit $(srcdir)/SPL_README, $(srcdir)/LICENCE for licencing info
+  Please visit $(srcdir)/SPL_README, licencing info
   or $(srcdir)/COPYING for more stuff you would'nt love to miss
 
 Best Regards:
