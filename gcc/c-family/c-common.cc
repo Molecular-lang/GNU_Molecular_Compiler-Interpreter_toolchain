@@ -1,21 +1,5 @@
 /* Subroutines shared by all languages that are variants of C.
-   Copyright (C) 1992-2023 Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
-version.
-
-GCC is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+   Please review: $(src-dir)/SPL-README for Licencing info. */
 
 #define GCC_C_COMMON_C
 
@@ -504,69 +488,9 @@ const struct c_common_resword c_common_reswords[] =
   { "volatile",		RID_VOLATILE,	0 },
   { "wchar_t",		RID_WCHAR,	D_CXXONLY },
   { "while",		RID_WHILE,	0 },
-
-  /* C++ transactional memory.  */
-  { "synchronized",	RID_SYNCHRONIZED, D_CXX_OBJC | D_TRANSMEM },
-  { "atomic_noexcept",	RID_ATOMIC_NOEXCEPT, D_CXXONLY | D_TRANSMEM },
-  { "atomic_cancel",	RID_ATOMIC_CANCEL, D_CXXONLY | D_TRANSMEM },
-  { "atomic_commit",	RID_TRANSACTION_ATOMIC, D_CXXONLY | D_TRANSMEM },
-
-  /* Concepts-related keywords */
-  { "concept",		RID_CONCEPT,	D_CXX_CONCEPTS_FLAGS | D_CXXWARN },
-  { "requires", 	RID_REQUIRES,	D_CXX_CONCEPTS_FLAGS | D_CXXWARN },
-
-  /* Modules-related keywords, these are internal unspellable tokens,
-     created by the preprocessor.  */
-  { "module ",		RID__MODULE,	D_CXX_MODULES_FLAGS | D_CXXWARN },
-  { "import ",		RID__IMPORT,	D_CXX_MODULES_FLAGS | D_CXXWARN },
-  { "export ",		RID__EXPORT,	D_CXX_MODULES_FLAGS | D_CXXWARN },
-
-  /* Coroutines-related keywords */
-  { "co_await",		RID_CO_AWAIT,	D_CXX_COROUTINES_FLAGS | D_CXXWARN },
-  { "co_yield",		RID_CO_YIELD,	D_CXX_COROUTINES_FLAGS | D_CXXWARN },
-  { "co_return", 	RID_CO_RETURN,	D_CXX_COROUTINES_FLAGS | D_CXXWARN },
-
-  /* These Objective-C keywords are recognized only immediately after
-     an '@'.  */
-  { "compatibility_alias", RID_AT_ALIAS,	D_OBJC },
-  { "defs",		RID_AT_DEFS,		D_OBJC },
-  { "encode",		RID_AT_ENCODE,		D_OBJC },
-  { "end",		RID_AT_END,		D_OBJC },
-  { "implementation",	RID_AT_IMPLEMENTATION,	D_OBJC },
-  { "interface",	RID_AT_INTERFACE,	D_OBJC },
-  { "protocol",		RID_AT_PROTOCOL,	D_OBJC },
-  { "selector",		RID_AT_SELECTOR,	D_OBJC },
-  { "finally",		RID_AT_FINALLY,		D_OBJC },
-  { "optional",		RID_AT_OPTIONAL,	D_OBJC },
-  { "required",		RID_AT_REQUIRED,	D_OBJC },
-  { "property",		RID_AT_PROPERTY,	D_OBJC },
-  { "package",		RID_AT_PACKAGE,		D_OBJC },
-  { "synthesize",	RID_AT_SYNTHESIZE,	D_OBJC },
-  { "dynamic",		RID_AT_DYNAMIC,		D_OBJC },
-  /* These are recognized only in protocol-qualifier context
-     (see above) */
-  { "bycopy",		RID_BYCOPY,		D_OBJC },
-  { "byref",		RID_BYREF,		D_OBJC },
-  { "in",		RID_IN,			D_OBJC },
-  { "inout",		RID_INOUT,		D_OBJC },
-  { "oneway",		RID_ONEWAY,		D_OBJC },
-  { "out",		RID_OUT,		D_OBJC },
-  /* These are recognized inside a property attribute list */
-  { "assign",		RID_ASSIGN,		D_OBJC },
-  { "atomic",		RID_PROPATOMIC,		D_OBJC },
-  { "copy",		RID_COPY,		D_OBJC },
-  { "getter",		RID_GETTER,		D_OBJC },
-  { "nonatomic",	RID_NONATOMIC,		D_OBJC },
-  { "readonly",		RID_READONLY,		D_OBJC },
-  { "readwrite",	RID_READWRITE,		D_OBJC },
-  { "retain",		RID_RETAIN,		D_OBJC },
-  { "setter",		RID_SETTER,		D_OBJC },
-  /* These are Objective C implementation of nullability, accepted only in
-     specific contexts.  */
-  { "null_unspecified", RID_NULL_UNSPECIFIED,	D_OBJC },
-  { "nullable",		RID_NULLABLE,		D_OBJC },
-  { "nonnull",		RID_NONNULL,		D_OBJC },
-  { "null_resettable",	RID_NULL_RESETTABLE,	D_OBJC },
+  
+  // Scpel - Subconscious Electronic Programming Language
+  {"neurode",		RID_SPL_NEURODE,	0},
 };
 
 const unsigned int num_c_common_reswords = ARRAY_SIZE (c_common_reswords);
