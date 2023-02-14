@@ -1,4 +1,3 @@
-$!
 $! Build procedure
 $!
 $! Note: you need a DCL-compatible gnu make.

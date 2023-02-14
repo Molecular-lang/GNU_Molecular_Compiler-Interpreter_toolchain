@@ -2,7 +2,7 @@
 # --------------------------
 # Ensure that the configuration variables for the GNU Java Compiler compiler
 # are suitably defined.  These variables are subsequently used by _LT_CONFIG
-# to write the compiler configuration to `libtool'.  Locally modified to
+# to write the compiler configuration to `libtool'. Locally modified to
 # run its tests on C programs, because we cannot link Java programs until
 # we have finished building libjava.
 AC_DEFUN([_LT_LANG_GCJ_CONFIG],

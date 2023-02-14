@@ -1,12 +1,5 @@
 # lt~obsolete.m4 -- aclocal satisfying obsolete definitions.    -*-Autoconf-*-
 #
-#   Copyright (C) 2004, 2005, 2007, 2009 Free Software Foundation, Inc.
-#   Written by Scott James Remnant, 2004.
-#
-# This file is free software; the Free Software Foundation gives
-# unlimited permission to copy and/or distribute it, with or without
-# modifications, as long as this notice is preserved.
-
 # serial 4 lt~obsolete.m4
 
 # These exist entirely to fool aclocal when bootstrapping libtool.

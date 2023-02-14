@@ -1,13 +1,5 @@
 # Helper functions for option handling.                    -*- Autoconf -*-
 #
-#   Copyright (C) 2004, 2005, 2007, 2008, 2009 Free Software Foundation,
-#   Inc.
-#   Written by Gary V. Vaughan, 2004
-#
-# This file is free software; the Free Software Foundation gives
-# unlimited permission to copy and/or distribute it, with or without
-# modifications, as long as this notice is preserved.
-
 # serial 6 ltoptions.m4
 
 # This is to help aclocal find these macros, as it can't see m4_define.
