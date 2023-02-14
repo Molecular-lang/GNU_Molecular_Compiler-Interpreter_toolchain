@@ -28,9 +28,9 @@ targeting usecases like [artificial intelligence in the kernel layer](https://ww
 AI libraries and API all accessible at the systems level. For more, please visit [https://www.scpel.org](https://www.scpel.org)
 
 # How to build
-To build Scpel, you need a minimal of Scpel-0.0.1. Please visit 
-"https://www.scpel.org" to download the minimal Scpel binaries or
-download ab appropriet release from the main branch.
+To build Scpel, you need a minimal of Scpel-0.0.1 compiler. Please visit 
+<https://www.scpel.org> to download the minimal Scpel binaries or
+download an appropriate release from the main branch.
 
 From your terminal:
 $ sudo dpkg -i /path/to/downloads/name-of-release-.deb
