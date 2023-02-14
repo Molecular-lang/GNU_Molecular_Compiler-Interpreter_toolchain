@@ -3,21 +3,6 @@ dnl
 dnl And be careful when changing it!  If you must add tests with square
 dnl brackets, be sure changequote invocations surround it.
 dnl
-dnl   Copyright (C) 2012-2022 Free Software Foundation, Inc.
-dnl
-dnl This file is free software; you can redistribute it and/or modify
-dnl it under the terms of the GNU General Public License as published by
-dnl the Free Software Foundation; either version 3 of the License, or
-dnl (at your option) any later version.
-dnl
-dnl This program is distributed in the hope that it will be useful,
-dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
-dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-dnl GNU General Public License for more details.
-dnl
-dnl You should have received a copy of the GNU General Public License
-dnl along with this program; see the file COPYING3.  If not see
-dnl <http://www.gnu.org/licenses/>.
 dnl
 dnl v2.5 needed for --bindir et al
 m4_include([../bfd/version.m4])
@@ -1033,7 +1018,7 @@ dnl the build directory which include the right .h file.  Make sure
 dnl the old symlinks don't exist, so that a reconfigure in an existing
 dnl directory behaves reasonably.
 
-AC_CONFIG_FILES(Makefile po/Makefile.in:po/Make-in)
+AC_CONFIG_FILES(Makefile)
 AC_CONFIG_COMMANDS([default],
 [rm -f targ-cpu.c targ-cpu.h obj-format.h obj-format.c targ-env.h atof-targ.c itbl-cpu.h
  echo '#include "tc-'"${target_cpu_type}"'.h"' > targ-cpu.h

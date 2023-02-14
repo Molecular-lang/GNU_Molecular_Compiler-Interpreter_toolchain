@@ -1,22 +1,4 @@
-/* PDP-11 opcde list.
-   Copyright (C) 2001-2022 Free Software Foundation, Inc.
-
-   This file is part of GDB and GAS.
-
-   GDB and GAS are free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3, or (at your option)
-   any later version.
-
-   GDB and GAS are distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with GDB or GAS; see the file COPYING3.  If not, write to
-   the Free Software Foundation, 51 Franklin Street - Fifth Floor,
-   Boston, MA 02110-1301, USA.  */
+/* PDP-11 opcde list. */
 
 /* PDP-11 opcode types.  */
 
@@ -24,25 +6,19 @@
 #define PDP11_OPCODE_REG	 1	/* register */
 #define PDP11_OPCODE_OP		 2	/* generic operand */
 #define PDP11_OPCODE_REG_OP	 3	/* register and generic operand */
-#define PDP11_OPCODE_REG_OP_REV	 4	/* register and generic operand,
-					   reversed syntax */
-#define PDP11_OPCODE_AC_FOP	 5	/* fpu accumulator and generic float
-					   operand */
+#define PDP11_OPCODE_REG_OP_REV	 4	/* register and generic operand, reversed syntax */
+#define PDP11_OPCODE_AC_FOP	 5	/* fpu accumulator and generic float operand */
 #define PDP11_OPCODE_OP_OP	 6	/* two generic operands */
 #define PDP11_OPCODE_DISPL	 7	/* pc-relative displacement */
-#define PDP11_OPCODE_REG_DISPL	 8	/* redister and pc-relative
-					   displacement */
+#define PDP11_OPCODE_REG_DISPL	 8	/* redister and pc-relative displacement */
 #define PDP11_OPCODE_IMM8	 9	/* 8-bit immediate */
 #define PDP11_OPCODE_IMM6	10	/* 6-bit immediate */
 #define PDP11_OPCODE_IMM3	11	/* 3-bit immediate */
 #define PDP11_OPCODE_ILLEGAL	12	/* illegal instruction */
-#define PDP11_OPCODE_FOP_AC	13	/* generic float argument, then fpu
-					   accumulator */
+#define PDP11_OPCODE_FOP_AC	13	/* generic float argument, then fpu accumulator */
 #define PDP11_OPCODE_FOP	14	/* generic float operand */
-#define PDP11_OPCODE_AC_OP	15	/* fpu accumulator and generic int
-					   operand */
-#define PDP11_OPCODE_OP_AC	16	/* generic int argument, then fpu
-					   accumulator */
+#define PDP11_OPCODE_AC_OP	15	/* fpu accumulator and generic int operand */
+#define PDP11_OPCODE_OP_AC	16	/* generic int argument, then fpu accumulator */
 
 /*
  * PDP-11 instruction set extensions.

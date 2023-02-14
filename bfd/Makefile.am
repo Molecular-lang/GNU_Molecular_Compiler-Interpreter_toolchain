@@ -1,21 +1,4 @@
 ## Process this file with automake to generate Makefile.in
-#
-#   Copyright (C) 2012-2022 Free Software Foundation, Inc.
-#
-# This file is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; see the file COPYING3.  If not see
-# <http://www.gnu.org/licenses/>.
-#
 
 AUTOMAKE_OPTIONS = no-dist foreign info-in-builddir no-texinfo.tex
 ACLOCAL_AMFLAGS = -I . -I .. -I ../config
@@ -28,9 +11,9 @@ MAINTAINERCLEANFILES =
 INCDIR = $(srcdir)/../include
 CSEARCH = -I. -I$(srcdir) -I$(INCDIR)
 
-SUBDIRS = po
+SUBDIRS =
 
-bfddocdir = doc
+bfddocdir =
 
 libbfd_la_LDFLAGS =
 if INSTALL_LIBBFD
@@ -730,15 +713,9 @@ $(BFD32_LIBS) \
 SRC_POTFILES = $(SOURCE_CFILES) $(SOURCE_HFILES)
 BLD_POTFILES = $(BUILD_CFILES) $(BUILD_HFILES)
 
-po/SRC-POTFILES.in: @MAINT@ Makefile $(SRC_POTFILES)
-	for file in $(SRC_POTFILES); do echo $$file; done \
-	  | LC_ALL=C sort > tmp.src \
-	  && mv tmp.src $(srcdir)/po/SRC-POTFILES.in
+po/SRC-POTFILES.in:
 
-po/BLD-POTFILES.in: @MAINT@ Makefile $(BLD_POTFILES)
-	for file in $(BLD_POTFILES); do echo $$file; done \
-	  | LC_ALL=C sort > tmp.bld \
-	  && mv tmp.bld $(srcdir)/po/BLD-POTFILES.in
+po/BLD-POTFILES.in:
 
 all diststuff: info
 
@@ -1005,5 +982,3 @@ coff-tic54x.lo: coff-tic54x.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC)$(LTCOMPILE) -c -o $@ $< $(NO_WERROR)
-
-include doc/local.mk

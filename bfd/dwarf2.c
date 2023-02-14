@@ -1,33 +1,4 @@
-/* DWARF 2 support.
-   Copyright (C) 1994-2022 Free Software Foundation, Inc.
-
-   Adapted from gdb/dwarf2read.c by Gavin Koch of Cygnus Solutions
-   (gavin@cygnus.com).
-
-   From the dwarf2read.c header:
-   Adapted by Gary Funck (gary@intrepid.com), Intrepid Technology,
-   Inc.  with support from Florida State University (under contract
-   with the Ada Joint Program Office), and Silicon Graphics, Inc.
-   Initial contribution by Brent Benson, Harris Computer Systems, Inc.,
-   based on Fred Fish's (Cygnus Support) implementation of DWARF 1
-   support in dwarfread.c
-
-   This file is part of BFD.
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or (at
-   your option) any later version.
-
-   This program is distributed in the hope that it will be useful, but
-   WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,
-   MA 02110-1301, USA.  */
+/* DWARF 2 support. */
 
 #include "sysdep.h"
 #include "bfd.h"

@@ -1,23 +1,4 @@
-/* tic54x.h -- Header file for TI TMS320C54X opcode table
-   Copyright (C) 1999-2022 Free Software Foundation, Inc.
-   Written by Timothy Wall (twall@cygnus.com)
-
-   This file is part of GDB, GAS, and the GNU binutils.
-
-   GDB, GAS, and the GNU binutils are free software; you can redistribute
-   them and/or modify them under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either version 3,
-   or (at your option) any later version.
-
-   GDB, GAS, and the GNU binutils are distributed in the hope that they
-   will be useful, but WITHOUT ANY WARRANTY; without even the implied
-   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
-   the GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this file; see the file COPYING3.  If not, write to the Free
-   Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA
-   02110-1301, USA.  */
+/* tic54x.h -- Header file for TI TMS320C54X opcode table */
 
 #ifndef _opcode_tic54x_h_
 #define _opcode_tic54x_h_

@@ -1,22 +1,4 @@
-/* Output Go language descriptions of types.
-   Copyright (C) 2008-2023 Free Software Foundation, Inc.
-   Written by Ian Lance Taylor <iant@google.com>.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
-version.
-
-GCC is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* Output Go language descriptions of types. */
 
 /* This file is used during the build process to emit Go language
    descriptions of declarations from C header files.  It uses the

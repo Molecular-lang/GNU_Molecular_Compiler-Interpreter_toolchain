@@ -1,6 +1,4 @@
-/* xmemdup.c -- Duplicate a memory buffer, using xmalloc.
-   This trivial function is in the public domain.
-   Jeff Garzik, September 1999.  */
+/* xmemdup.c -- Duplicate a memory buffer, using xmalloc. */
 
 /*
 

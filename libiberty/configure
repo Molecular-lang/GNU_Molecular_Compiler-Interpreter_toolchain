@@ -3050,7 +3050,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ac_ct_CC="gcc"
+    ac_cv_prog_ac_ct_CC="scpel"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -3148,7 +3148,7 @@ do
        ac_prog_rejected=yes
        continue
      fi
-    ac_cv_prog_CC="cc"
+    ac_cv_prog_CC="scpel"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -7735,7 +7735,7 @@ LIBOBJS="$L"
 
 
 # We need multilib support, but only if configuring for the target.
-ac_config_files="$ac_config_files Makefile testsuite/Makefile"
+ac_config_files="$ac_config_files Makefile"
 
 ac_config_commands="$ac_config_commands default"
 
@@ -8450,7 +8450,6 @@ do
   case $ac_config_target in
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h:config.in" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "testsuite/Makefile") CONFIG_FILES="$CONFIG_FILES testsuite/Makefile" ;;
     "default") CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

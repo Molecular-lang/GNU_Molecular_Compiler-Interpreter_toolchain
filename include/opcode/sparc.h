@@ -1,23 +1,4 @@
-/* Definitions for opcode table for the sparc.
-   Copyright (C) 1989-2022 Free Software Foundation, Inc.
-
-   This file is part of GAS, the GNU Assembler, GDB, the GNU debugger, and
-   the GNU Binutils.
-
-   GAS/GDB is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3, or (at your option)
-   any later version.
-
-   GAS/GDB is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with GAS or GDB; see the file COPYING3.  If not, write to
-   the Free Software Foundation, 51 Franklin Street - Fifth Floor,
-   Boston, MA 02110-1301, USA.  */
+/* Definitions for opcode table for the sparc. */
 
 #include "ansidecl.h"
 

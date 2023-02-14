@@ -1,6 +1,4 @@
-/* Extended support for using errno values.
-   Written by Fred Fish.  fnf@cygnus.com
-   This file is in the public domain.  --Per Bothner.  */
+/* Extended support for using errno values. */
 
 #include "config.h"
 

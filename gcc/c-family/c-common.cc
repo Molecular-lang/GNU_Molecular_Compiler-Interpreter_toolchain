@@ -155,7 +155,7 @@ machine_mode c_default_pointer_mode = VOIDmode;
 */
 
 tree c_global_trees[CTI_MAX];
-
+
 /* Switches common to the C front ends.  */
 
 /* Nonzero means don't output line number information.  */
@@ -362,10 +362,7 @@ const struct c_common_resword c_common_reswords[] =
   { "__attribute",	RID_ATTRIBUTE,	0 },
   { "__attribute__",	RID_ATTRIBUTE,	0 },
   { "__auto_type",	RID_AUTO_TYPE,	D_CONLY },
-  { "__builtin_addressof", RID_ADDRESSOF, D_CXXONLY },
-  { "__builtin_bit_cast", RID_BUILTIN_BIT_CAST, D_CXXONLY },
-  { "__builtin_call_with_static_chain",
-    RID_BUILTIN_CALL_WITH_STATIC_CHAIN, D_CONLY },
+  { "__builtin_call_with_static_chain", RID_BUILTIN_CALL_WITH_STATIC_CHAIN, D_CONLY },
   { "__builtin_choose_expr", RID_CHOOSE_EXPR, D_CONLY },
   { "__builtin_complex", RID_BUILTIN_COMPLEX, D_CONLY },
   { "__builtin_convertvector", RID_BUILTIN_CONVERTVECTOR, 0 },
@@ -382,8 +379,6 @@ const struct c_common_resword c_common_reswords[] =
   { "__complex__",	RID_COMPLEX,	0 },
   { "__const",		RID_CONST,	0 },
   { "__const__",	RID_CONST,	0 },
-  { "__constinit",	RID_CONSTINIT,	D_CXXONLY },
-  { "__decltype",       RID_DECLTYPE,   D_CXXONLY },
   { "__extension__",	RID_EXTENSION,	0 },
   { "__func__",		RID_C99_FUNCTION_NAME, 0 },
   { "__imag",		RID_IMAGPART,	0 },
@@ -416,49 +411,25 @@ const struct c_common_resword c_common_reswords[] =
   { "bool",		RID_BOOL,	D_C2X | D_CXXWARN },
   { "break",		RID_BREAK,	0 },
   { "case",		RID_CASE,	0 },
-  { "catch",		RID_CATCH,	D_CXX_OBJC | D_CXXWARN },
   { "char",		RID_CHAR,	0 },
-  { "char8_t",		RID_CHAR8,	D_CXX_CHAR8_T_FLAGS | D_CXXWARN },
-  { "char16_t",		RID_CHAR16,	D_CXXONLY | D_CXX11 | D_CXXWARN },
-  { "char32_t",		RID_CHAR32,	D_CXXONLY | D_CXX11 | D_CXXWARN },
-  { "class",		RID_CLASS,	D_CXX_OBJC | D_CXXWARN },
   { "const",		RID_CONST,	0 },
-  { "consteval",	RID_CONSTEVAL,	D_CXXONLY | D_CXX20 | D_CXXWARN },
-  { "constexpr",	RID_CONSTEXPR,	D_C2X | D_CXX11 | D_CXXWARN },
-  { "constinit",	RID_CONSTINIT,	D_CXXONLY | D_CXX20 | D_CXXWARN },
-  { "const_cast",	RID_CONSTCAST,	D_CXXONLY | D_CXXWARN },
   { "continue",		RID_CONTINUE,	0 },
-  { "decltype",         RID_DECLTYPE,   D_CXXONLY | D_CXX11 | D_CXXWARN },
   { "default",		RID_DEFAULT,	0 },
-  { "delete",		RID_DELETE,	D_CXXONLY | D_CXXWARN },
   { "do",		RID_DO,		0 },
   { "double",		RID_DOUBLE,	0 },
-  { "dynamic_cast",	RID_DYNCAST,	D_CXXONLY | D_CXXWARN },
   { "else",		RID_ELSE,	0 },
   { "enum",		RID_ENUM,	0 },
-  { "explicit",		RID_EXPLICIT,	D_CXXONLY | D_CXXWARN },
-  { "export",		RID_EXPORT,	D_CXXONLY | D_CXXWARN },
   { "extern",		RID_EXTERN,	0 },
   { "false",		RID_FALSE,	D_C2X | D_CXXWARN },
   { "float",		RID_FLOAT,	0 },
   { "for",		RID_FOR,	0 },
-  { "friend",		RID_FRIEND,	D_CXXONLY | D_CXXWARN },
   { "goto",		RID_GOTO,	0 },
   { "if",		RID_IF,		0 },
   { "inline",		RID_INLINE,	D_EXT89 },
   { "int",		RID_INT,	0 },
   { "long",		RID_LONG,	0 },
-  { "mutable",		RID_MUTABLE,	D_CXXONLY | D_CXXWARN },
-  { "namespace",	RID_NAMESPACE,	D_CXXONLY | D_CXXWARN },
-  { "new",		RID_NEW,	D_CXXONLY | D_CXXWARN },
-  { "noexcept",		RID_NOEXCEPT,	D_CXXONLY | D_CXX11 | D_CXXWARN },
   { "nullptr",		RID_NULLPTR,	D_C2X | D_CXX11 | D_CXXWARN },
-  { "operator",		RID_OPERATOR,	D_CXXONLY | D_CXXWARN },
-  { "private",		RID_PRIVATE,	D_CXX_OBJC | D_CXXWARN },
-  { "protected",	RID_PROTECTED,	D_CXX_OBJC | D_CXXWARN },
-  { "public",		RID_PUBLIC,	D_CXX_OBJC | D_CXXWARN },
   { "register",		RID_REGISTER,	0 },
-  { "reinterpret_cast",	RID_REINTCAST,	D_CXXONLY | D_CXXWARN },
   { "restrict",		RID_RESTRICT,	D_CONLY | D_C99 },
   { "return",		RID_RETURN,	0 },
   { "short",		RID_SHORT,	0 },
@@ -466,151 +437,122 @@ const struct c_common_resword c_common_reswords[] =
   { "sizeof",		RID_SIZEOF,	0 },
   { "static",		RID_STATIC,	0 },
   { "static_assert",    RID_STATIC_ASSERT, D_C2X | D_CXX11 | D_CXXWARN },
-  { "static_cast",	RID_STATCAST,	D_CXXONLY | D_CXXWARN },
   { "struct",		RID_STRUCT,	0 },
   { "switch",		RID_SWITCH,	0 },
-  { "template",		RID_TEMPLATE,	D_CXXONLY | D_CXXWARN },
-  { "this",		RID_THIS,	D_CXXONLY | D_CXXWARN },
-  { "thread_local",	RID_THREAD,	D_C2X | D_CXX11 | D_CXXWARN },
-  { "throw",		RID_THROW,	D_CXX_OBJC | D_CXXWARN },
   { "true",		RID_TRUE,	D_C2X | D_CXXWARN },
-  { "try",		RID_TRY,	D_CXX_OBJC | D_CXXWARN },
   { "typedef",		RID_TYPEDEF,	0 },
-  { "typename",		RID_TYPENAME,	D_CXXONLY | D_CXXWARN },
-  { "typeid",		RID_TYPEID,	D_CXXONLY | D_CXXWARN },
   { "typeof",		RID_TYPEOF,	D_EXT11 },
   { "typeof_unqual",	RID_TYPEOF_UNQUAL,	D_CONLY | D_C2X },
   { "union",		RID_UNION,	0 },
   { "unsigned",		RID_UNSIGNED,	0 },
-  { "using",		RID_USING,	D_CXXONLY | D_CXXWARN },
-  { "virtual",		RID_VIRTUAL,	D_CXXONLY | D_CXXWARN },
   { "void",		RID_VOID,	0 },
   { "volatile",		RID_VOLATILE,	0 },
-  { "wchar_t",		RID_WCHAR,	D_CXXONLY },
   { "while",		RID_WHILE,	0 },
   
   // Scpel - Subconscious Electronic Programming Language
-  {"neurode",		RID_SPL_NEURODE,	0},
+  {"neurode",		RID_SPL_NEURODE,	0}, // Neural network formation
+  {"gliad",			RID_SPL_GLIAD,		0}, // Birth of new nodes
+  {"spl_random",	RID_SPL_RANDOM,		0}  // Everything else gets to be random
 };
 
 const unsigned int num_c_common_reswords = ARRAY_SIZE (c_common_reswords);
 
-/* Return identifier for address space AS.  */
-
-const char *
-c_addr_space_name (addr_space_t as)
-{
-  int rid = RID_FIRST_ADDR_SPACE + as;
-  gcc_assert (ridpointers [rid]);
-  return IDENTIFIER_POINTER (ridpointers [rid]);
+/* Return identifier for address space AS. */
+const char *c_addr_space_name(addr_space_t as) {
+	int rid = RID_FIRST_ADDR_SPACE + as;
+	gcc_assert(ridpointers [rid]);
+	return IDENTIFIER_POINTER (ridpointers [rid]);
 }
 
-/* Push current bindings for the function name VAR_DECLS.  */
+/* Push current bindings for the function name VAR_DECLS. */
+void start_fname_decls(void) {
+	unsigned ix;
+	tree saved = NULL_TREE;
 
-void
-start_fname_decls (void)
-{
-  unsigned ix;
-  tree saved = NULL_TREE;
+	for (ix = 0; fname_vars[ix].decl; ix++) {
+		tree decl = *fname_vars[ix].decl;
 
-  for (ix = 0; fname_vars[ix].decl; ix++)
-    {
-      tree decl = *fname_vars[ix].decl;
-
-      if (decl)
-	{
-	  saved = tree_cons (decl, build_int_cst (integer_type_node, ix),
-			     saved);
-	  *fname_vars[ix].decl = NULL_TREE;
+		if (decl) {
+			saved = tree_cons(decl, build_int_cst(integer_type_node, ix), saved);
+			*fname_vars[ix].decl = NULL_TREE;
+		}
 	}
-    }
-  if (saved || saved_function_name_decls)
-    /* Normally they'll have been NULL, so only push if we've got a
-       stack, or they are non-NULL.  */
-    saved_function_name_decls = tree_cons (saved, NULL_TREE,
-					   saved_function_name_decls);
+	if (saved || saved_function_name_decls)
+		/* Normally they'll have been NULL, so only push if we've got a
+		   stack, or they are non-NULL. */
+		saved_function_name_decls = tree_cons(saved, NULL_TREE, saved_function_name_decls);
 }
 
 /* Finish up the current bindings, adding them into the current function's
    statement tree.  This must be done _before_ finish_stmt_tree is called.
    If there is no current function, we must be at file scope and no statements
-   are involved. Pop the previous bindings.  */
+   are involved. Pop the previous bindings. */
+void finish_fname_decls(void) {
+	unsigned ix;
+	tree stmts = NULL_TREE;
+	tree stack = saved_function_name_decls;
 
-void
-finish_fname_decls (void)
-{
-  unsigned ix;
-  tree stmts = NULL_TREE;
-  tree stack = saved_function_name_decls;
+	for (; stack && TREE_VALUE (stack); stack = TREE_CHAIN (stack))
+		append_to_statement_list(TREE_VALUE (stack), &stmts);
 
-  for (; stack && TREE_VALUE (stack); stack = TREE_CHAIN (stack))
-    append_to_statement_list (TREE_VALUE (stack), &stmts);
+	if (stmts) {
+		tree *bodyp = &DECL_SAVED_TREE (current_function_decl);
 
-  if (stmts)
-    {
-      tree *bodyp = &DECL_SAVED_TREE (current_function_decl);
+		if (TREE_CODE (*bodyp) == BIND_EXPR)
+			bodyp = &BIND_EXPR_BODY (*bodyp);
 
-      if (TREE_CODE (*bodyp) == BIND_EXPR)
-	bodyp = &BIND_EXPR_BODY (*bodyp);
-
-      append_to_statement_list_force (*bodyp, &stmts);
-      *bodyp = stmts;
-    }
-
-  for (ix = 0; fname_vars[ix].decl; ix++)
-    *fname_vars[ix].decl = NULL_TREE;
-
-  if (stack)
-    {
-      /* We had saved values, restore them.  */
-      tree saved;
-
-      for (saved = TREE_PURPOSE (stack); saved; saved = TREE_CHAIN (saved))
-	{
-	  tree decl = TREE_PURPOSE (saved);
-	  unsigned ix = TREE_INT_CST_LOW (TREE_VALUE (saved));
-
-	  *fname_vars[ix].decl = decl;
+		append_to_statement_list_force(*bodyp, &stmts);
+		*bodyp = stmts;
 	}
-      stack = TREE_CHAIN (stack);
-    }
-  saved_function_name_decls = stack;
+
+	for (ix = 0; fname_vars[ix].decl; ix++)
+		*fname_vars[ix].decl = NULL_TREE;
+
+	if (stack) {
+		/* We had saved values, restore them. */
+		tree saved;
+
+		for (saved = TREE_PURPOSE (stack); saved; saved = TREE_CHAIN (saved)) {
+			tree decl = TREE_PURPOSE (saved);
+			unsigned ix = TREE_INT_CST_LOW (TREE_VALUE (saved));
+
+			*fname_vars[ix].decl = decl;
+		}
+		stack = TREE_CHAIN (stack);
+	}
+	saved_function_name_decls = stack;
 }
 
 /* Return the text name of the current function, suitably prettified
-   by PRETTY_P.  Return string must be freed by caller.  */
+   by PRETTY_P. Return string must be freed by caller. */
 
-const char *
-fname_as_string (int pretty_p)
-{
-  const char *name = "top level";
-  char *namep;
-  int vrb = 2, len;
-  cpp_string cstr = { 0, 0 }, strname;
+const char *fname_as_string(int pretty_p) {
+	const char *name = "top level";
+	char *namep;
+	int vrb = 2, len;
+	cpp_string cstr = { 0, 0 }, strname;
 
-  if (!pretty_p)
-    {
-      name = "";
-      vrb = 0;
-    }
+	if (!pretty_p) {
+		name = "";
+		vrb = 0;
+	}
 
-  if (current_function_decl)
-    name = lang_hooks.decl_printable_name (current_function_decl, vrb);
+	if (current_function_decl)
+		name = lang_hooks.decl_printable_name(current_function_decl, vrb);
 
-  len = strlen (name) + 3; /* Two for '"'s.  One for NULL.  */
+	len = strlen(name) + 3; /* Two for '"'s.  One for NULL.  */
 
-  namep = XNEWVEC (char, len);
-  snprintf (namep, len, "\"%s\"", name);
-  strname.text = (unsigned char *) namep;
-  strname.len = len - 1;
+	namep = XNEWVEC (char, len);
+	snprintf(namep, len, "\"%s\"", name);
+	strname.text = (unsigned char *) namep;
+	strname.len = len - 1;
 
-  if (cpp_interpret_string (parse_in, &strname, 1, &cstr, CPP_STRING))
-    {
-      XDELETEVEC (namep);
-      return (const char *) cstr.text;
-    }
+	if (cpp_interpret_string(parse_in, &strname, 1, &cstr, CPP_STRING)) {
+		XDELETEVEC (namep);
+		return (const char *) cstr.text;
+	}
 
-  return namep;
+	return namep;
 }
 
 /* Return the VAR_DECL for a const char array naming the current
@@ -619,112 +561,92 @@ fname_as_string (int pretty_p)
    ID is its name (unfortunately C and C++ hold the RID values of
    keywords in different places, so we can't derive RID from ID in
    this language independent code. LOC is the location of the
-   function.  */
+   function. */
+tree fname_decl(location_t loc, unsigned int rid, tree id) {
+	unsigned ix;
+	tree decl = NULL_TREE;
 
-tree
-fname_decl (location_t loc, unsigned int rid, tree id)
-{
-  unsigned ix;
-  tree decl = NULL_TREE;
+	for (ix = 0; fname_vars[ix].decl; ix++)
+		if (fname_vars[ix].rid == rid)
+			break;
 
-  for (ix = 0; fname_vars[ix].decl; ix++)
-    if (fname_vars[ix].rid == rid)
-      break;
+	decl = *fname_vars[ix].decl;
+	if (!decl) {
+		/* If a tree is built here, it would normally have the lineno of
+		   the current statement.  Later this tree will be moved to the
+		   beginning of the function and this line number will be wrong.
+		   To avoid this problem set the lineno to 0 here; that prevents
+		   it from appearing in the RTL. */
+		tree stmts;
+		location_t saved_location = input_location;
+		input_location = UNKNOWN_LOCATION;
 
-  decl = *fname_vars[ix].decl;
-  if (!decl)
-    {
-      /* If a tree is built here, it would normally have the lineno of
-	 the current statement.  Later this tree will be moved to the
-	 beginning of the function and this line number will be wrong.
-	 To avoid this problem set the lineno to 0 here; that prevents
-	 it from appearing in the RTL.  */
-      tree stmts;
-      location_t saved_location = input_location;
-      input_location = UNKNOWN_LOCATION;
+		stmts = push_stmt_list();
+		decl = (*make_fname_decl) (loc, id, fname_vars[ix].pretty);
+		stmts = pop_stmt_list(stmts);
+		if (!IS_EMPTY_STMT (stmts))
+			saved_function_name_decls = tree_cons(decl, stmts, saved_function_name_decls);
+		*fname_vars[ix].decl = decl;
+		input_location = saved_location;
+	}
+	if (!ix && !current_function_decl)
+		pedwarn(loc, 0, "%qD is not defined outside of function scope", decl);
 
-      stmts = push_stmt_list ();
-      decl = (*make_fname_decl) (loc, id, fname_vars[ix].pretty);
-      stmts = pop_stmt_list (stmts);
-      if (!IS_EMPTY_STMT (stmts))
-	saved_function_name_decls
-	  = tree_cons (decl, stmts, saved_function_name_decls);
-      *fname_vars[ix].decl = decl;
-      input_location = saved_location;
-    }
-  if (!ix && !current_function_decl)
-    pedwarn (loc, 0, "%qD is not defined outside of function scope", decl);
-
-  return decl;
+	return decl;
 }
 
 /* Given a STRING_CST, give it a suitable array-of-chars data type.  */
+tree fix_string_type(tree value) {
+	int length = TREE_STRING_LENGTH (value);
+	int nchars, charsz;
+	tree e_type, i_type, a_type;
 
-tree
-fix_string_type (tree value)
-{
-  int length = TREE_STRING_LENGTH (value);
-  int nchars, charsz;
-  tree e_type, i_type, a_type;
+	/* Compute the number of elements, for the array type.  */
+	if (TREE_TYPE (value) == char_array_type_node || !TREE_TYPE (value)) {
+		charsz = 1;
+		e_type = char_type_node;
+	} else if (flag_char8_t && TREE_TYPE (value) == char8_array_type_node) {
+		charsz = TYPE_PRECISION (char8_type_node) / BITS_PER_UNIT;
+		e_type = char8_type_node;
+	} else if (TREE_TYPE (value) == char16_array_type_node) {
+		charsz = TYPE_PRECISION (char16_type_node) / BITS_PER_UNIT;
+		e_type = char16_type_node;
+	} else if (TREE_TYPE (value) == char32_array_type_node) {
+		charsz = TYPE_PRECISION (char32_type_node) / BITS_PER_UNIT;
+		e_type = char32_type_node;
+	} else {
+		charsz = TYPE_PRECISION (wchar_type_node) / BITS_PER_UNIT;
+		e_type = wchar_type_node;
+	}
 
-  /* Compute the number of elements, for the array type.  */
-  if (TREE_TYPE (value) == char_array_type_node || !TREE_TYPE (value))
-    {
-      charsz = 1;
-      e_type = char_type_node;
-    }
-  else if (flag_char8_t && TREE_TYPE (value) == char8_array_type_node)
-    {
-      charsz = TYPE_PRECISION (char8_type_node) / BITS_PER_UNIT;
-      e_type = char8_type_node;
-    }
-  else if (TREE_TYPE (value) == char16_array_type_node)
-    {
-      charsz = TYPE_PRECISION (char16_type_node) / BITS_PER_UNIT;
-      e_type = char16_type_node;
-    }
-  else if (TREE_TYPE (value) == char32_array_type_node)
-    {
-      charsz = TYPE_PRECISION (char32_type_node) / BITS_PER_UNIT;
-      e_type = char32_type_node;
-    }
-  else
-    {
-      charsz = TYPE_PRECISION (wchar_type_node) / BITS_PER_UNIT;
-      e_type = wchar_type_node;
-    }
-
-  /* This matters only for targets where ssizetype has smaller precision
-     than 32 bits.  */
-  if (wi::lts_p (wi::to_wide (TYPE_MAX_VALUE (ssizetype)), length))
-    {
-      error ("size of string literal is too large");
-      length = tree_to_shwi (TYPE_MAX_VALUE (ssizetype)) / charsz * charsz;
-      char *str = CONST_CAST (char *, TREE_STRING_POINTER (value));
-      memset (str + length, '\0',
-	      MIN (TREE_STRING_LENGTH (value) - length, charsz));
-      TREE_STRING_LENGTH (value) = length;
-    }
-  nchars = length / charsz;
+	/* This matters only for targets where ssizetype has smaller precision
+	   than 32 bits. */
+	if (wi::lts_p(wi::to_wide(TYPE_MAX_VALUE (ssizetype)), length)) {
+		error("size of string literal is too large");
+		length = tree_to_shwi(TYPE_MAX_VALUE (ssizetype)) / charsz * charsz;
+		char *str = CONST_CAST (char *, TREE_STRING_POINTER (value));
+		memset(str + length, '\0', MIN (TREE_STRING_LENGTH (value) - length, charsz));
+		TREE_STRING_LENGTH (value) = length;
+	}
+	nchars = length / charsz;
 
   /* C89 2.2.4.1, C99 5.2.4.1 (Translation limits).  The analogous
      limit in C++98 Annex B is very large (65536) and is not normative,
      so we do not diagnose it (warn_overlength_strings is forced off
-     in c_common_post_options).  */
-  if (warn_overlength_strings)
-    {
-      const int nchars_max = flag_isoc99 ? 4095 : 509;
-      const int relevant_std = flag_isoc99 ? 99 : 90;
-      if (nchars - 1 > nchars_max)
-	/* Translators: The %d after 'ISO C' will be 90 or 99.  Do not
-	   separate the %d from the 'C'.  'ISO' should not be
-	   translated, but it may be moved after 'C%d' in languages
-	   where modifiers follow nouns.  */
-	pedwarn (input_location, OPT_Woverlength_strings,
-		 "string length %qd is greater than the length %qd "
-		 "ISO C%d compilers are required to support",
-		 nchars - 1, nchars_max, relevant_std);
-    }
+     in c_common_post_options). */
+	if (warn_overlength_strings) {
+		const int nchars_max = flag_isoc99 ? 4095 : 509;
+		const int relevant_std = flag_isoc99 ? 99 : 90;
+		if (nchars - 1 > nchars_max)
+			/* Translators: The %d after 'ISO C' will be 90 or 99. Do not
+			   separate the %d from the 'C'. 'ISO' should not be
+			   translated, but it may be moved after 'C%d' in languages
+			   where modifiers follow nouns. */
+			pedwarn(input_location, OPT_Woverlength_strings,
+				"string length %qd is greater than the length %qd "
+				"ISO C%d compilers are required to support",
+				nchars - 1, nchars_max, relevant_std);
+	}
 
   /* Create the array type for the string constant.  The ISO C++
      standard says that a string literal has type `const char[N]' or
@@ -741,16 +663,16 @@ fix_string_type (tree value)
      construct the matching unqualified array type first.  The C front
      end does not require this, but it does no harm, so we do it
      unconditionally.  */
-  i_type = build_index_type (size_int (nchars - 1));
-  a_type = build_array_type (e_type, i_type);
-  if (c_dialect_cxx() || warn_write_strings)
-    a_type = c_build_qualified_type (a_type, TYPE_QUAL_CONST);
+	i_type = build_index_type(size_int (nchars - 1));
+	a_type = build_array_type(e_type, i_type);
+	if (c_dialect_cxx() || warn_write_strings)
+		a_type = c_build_qualified_type(a_type, TYPE_QUAL_CONST);
 
-  TREE_TYPE (value) = a_type;
-  TREE_CONSTANT (value) = 1;
-  TREE_READONLY (value) = 1;
-  TREE_STATIC (value) = 1;
-  return value;
+	TREE_TYPE (value) = a_type;
+	TREE_CONSTANT (value) = 1;
+	TREE_READONLY (value) = 1;
+	TREE_STATIC (value) = 1;
+	return value;
 }
 
 /* Given a string of type STRING_TYPE, determine what kind of string
@@ -762,70 +684,55 @@ fix_string_type (tree value)
    at this point.
 
    This effectively reverses part of the logic in lex_string and
-   fix_string_type.  */
+   fix_string_type. */
+static enum cpp_ttype get_cpp_ttype_from_string_type(tree string_type) {
+	gcc_assert(string_type);
+	if (TREE_CODE (string_type) == POINTER_TYPE)
+		string_type = TREE_TYPE (string_type);
 
-static enum cpp_ttype
-get_cpp_ttype_from_string_type (tree string_type)
-{
-  gcc_assert (string_type);
-  if (TREE_CODE (string_type) == POINTER_TYPE)
-    string_type = TREE_TYPE (string_type);
+	if (TREE_CODE (string_type) != ARRAY_TYPE)
+		return CPP_OTHER;
 
-  if (TREE_CODE (string_type) != ARRAY_TYPE)
-    return CPP_OTHER;
+	tree element_type = TREE_TYPE (string_type);
+	if (TREE_CODE (element_type) != INTEGER_TYPE)
+		return CPP_OTHER;
 
-  tree element_type = TREE_TYPE (string_type);
-  if (TREE_CODE (element_type) != INTEGER_TYPE)
-    return CPP_OTHER;
+	int bits_per_character = TYPE_PRECISION (element_type);
+	switch (bits_per_character) {
+		case 8:
+			return CPP_STRING;  /* It could have also been CPP_UTF8STRING.  */
+		case 16:
+			return CPP_STRING16;
+		case 32:
+			return CPP_STRING32;
+	}
 
-  int bits_per_character = TYPE_PRECISION (element_type);
-  switch (bits_per_character)
-    {
-    case 8:
-      return CPP_STRING;  /* It could have also been CPP_UTF8STRING.  */
-    case 16:
-      return CPP_STRING16;
-    case 32:
-      return CPP_STRING32;
-    }
-
-  return CPP_OTHER;
+	return CPP_OTHER;
 }
 
 /* The global record of string concatentations, for use in
-   extracting locations within string literals.  */
-
+   extracting locations within string literals. */
 GTY(()) string_concat_db *g_string_concat_db;
 
 /* Implementation of LANG_HOOKS_GET_SUBSTRING_LOCATION.  */
+const char *c_get_substring_location(const substring_loc &substr_loc, location_t *out_loc) {
+	enum cpp_ttype tok_type = get_cpp_ttype_from_string_type(substr_loc.get_string_type());
+	if (tok_type == CPP_OTHER)
+		return "unrecognized string type";
 
-const char *
-c_get_substring_location (const substring_loc &substr_loc,
-			  location_t *out_loc)
-{
-  enum cpp_ttype tok_type
-    = get_cpp_ttype_from_string_type (substr_loc.get_string_type ());
-  if (tok_type == CPP_OTHER)
-    return "unrecognized string type";
-
-  return get_location_within_string (parse_in, g_string_concat_db,
-				     substr_loc.get_fmt_string_loc (),
-				     tok_type,
-				     substr_loc.get_caret_idx (),
-				     substr_loc.get_start_idx (),
-				     substr_loc.get_end_idx (),
-				     out_loc);
+	return get_location_within_string(parse_in, g_string_concat_db,
+					 substr_loc.get_fmt_string_loc(), tok_type,
+					 substr_loc.get_caret_idx(),
+					 substr_loc.get_start_idx(),
+					 substr_loc.get_end_idx(),
+					 out_loc);
 }
 
-
-/* Return true iff T is a boolean promoted to int.  */
-
-bool
-bool_promoted_to_int_p (tree t)
-{
-  return (CONVERT_EXPR_P (t)
-	  && TREE_TYPE (t) == integer_type_node
-	  && TREE_CODE (TREE_TYPE (TREE_OPERAND (t, 0))) == BOOLEAN_TYPE);
+/* Return true iff T is a boolean promoted to int. */
+bool bool_promoted_to_int_p(tree t) {
+	return (CONVERT_EXPR_P (t)
+		&& TREE_TYPE (t) == integer_type_node
+		&& TREE_CODE (TREE_TYPE (TREE_OPERAND (t, 0))) == BOOLEAN_TYPE);
 }
 
 /* vector_targets_convertible_p is used for vector pointer types.  The
@@ -838,16 +745,14 @@ bool_promoted_to_int_p (tree t)
    vector_types_compatible_elements_p are used for vector value types.  */
 /* True if pointers to distinct types T1 and T2 can be converted to
    each other without an explicit cast.  Only returns true for opaque
-   vector types.  */
-bool
-vector_targets_convertible_p (const_tree t1, const_tree t2)
-{
-  if (VECTOR_TYPE_P (t1) && VECTOR_TYPE_P (t2)
-      && (TYPE_VECTOR_OPAQUE (t1) || TYPE_VECTOR_OPAQUE (t2))
-      && tree_int_cst_equal (TYPE_SIZE (t1), TYPE_SIZE (t2)))
-    return true;
+   vector types. */
+bool vector_targets_convertible_p(const_tree t1, const_tree t2) {
+	if (VECTOR_TYPE_P (t1) && VECTOR_TYPE_P (t2)
+			&& (TYPE_VECTOR_OPAQUE (t1) || TYPE_VECTOR_OPAQUE (t2))
+			&& tree_int_cst_equal (TYPE_SIZE (t1), TYPE_SIZE (t2)))
+		return true;
 
-  return false;
+	return false;
 }
 
 /* vector_types_convertible_p is used for vector value types.
@@ -866,40 +771,36 @@ vector_targets_convertible_p (const_tree t1, const_tree t2)
    can only be converted with -flax-vector-conversions yet that is not
    in effect, emit a note telling the user about that option if such
    a note has not previously been emitted.  */
-bool
-vector_types_convertible_p (const_tree t1, const_tree t2, bool emit_lax_note)
-{
-  static bool emitted_lax_note = false;
-  bool convertible_lax;
+bool vector_types_convertible_p(const_tree t1, const_tree t2, bool emit_lax_note) {
+	static bool emitted_lax_note = false;
+	bool convertible_lax;
 
-  if ((TYPE_VECTOR_OPAQUE (t1) || TYPE_VECTOR_OPAQUE (t2))
-      && tree_int_cst_equal (TYPE_SIZE (t1), TYPE_SIZE (t2)))
-    return true;
+	if ((TYPE_VECTOR_OPAQUE (t1) || TYPE_VECTOR_OPAQUE (t2))
+			&& tree_int_cst_equal(TYPE_SIZE (t1), TYPE_SIZE (t2)))
+		return true;
 
-  convertible_lax =
-    (tree_int_cst_equal (TYPE_SIZE (t1), TYPE_SIZE (t2))
-     && (TREE_CODE (TREE_TYPE (t1)) != REAL_TYPE
-	 || known_eq (TYPE_VECTOR_SUBPARTS (t1),
-		      TYPE_VECTOR_SUBPARTS (t2)))
-     && (INTEGRAL_TYPE_P (TREE_TYPE (t1))
-	 == INTEGRAL_TYPE_P (TREE_TYPE (t2))));
+	convertible_lax = (tree_int_cst_equal(TYPE_SIZE (t1), TYPE_SIZE (t2))
+		&& (TREE_CODE (TREE_TYPE (t1)) != REAL_TYPE
+		|| known_eq(TYPE_VECTOR_SUBPARTS (t1),
+		TYPE_VECTOR_SUBPARTS (t2)))
+		&& (INTEGRAL_TYPE_P (TREE_TYPE (t1))
+		== INTEGRAL_TYPE_P (TREE_TYPE (t2))));
 
-  if (!convertible_lax || flag_lax_vector_conversions)
-    return convertible_lax;
+	if (!convertible_lax || flag_lax_vector_conversions)
+		return convertible_lax;
 
-  if (known_eq (TYPE_VECTOR_SUBPARTS (t1), TYPE_VECTOR_SUBPARTS (t2))
-      && lang_hooks.types_compatible_p (TREE_TYPE (t1), TREE_TYPE (t2)))
-    return true;
+	if (known_eq(TYPE_VECTOR_SUBPARTS (t1), TYPE_VECTOR_SUBPARTS (t2))
+			&& lang_hooks.types_compatible_p(TREE_TYPE (t1), TREE_TYPE (t2)))
+		return true;
 
-  if (emit_lax_note && !emitted_lax_note)
-    {
-      emitted_lax_note = true;
-      inform (input_location, "use %<-flax-vector-conversions%> to permit "
-              "conversions between vectors with differing "
-              "element types or numbers of subparts");
-    }
+	if (emit_lax_note && !emitted_lax_note) {
+		emitted_lax_note = true;
+		inform(input_location, "use %<-flax-vector-conversions%> to permit "
+			"conversions between vectors with differing "
+			"element types or numbers of subparts");
+	}
 
-  return false;
+	return false;
 }
 
 /* Build a VEC_PERM_EXPR if V0, V1 and MASK are not error_mark_nodes
@@ -911,107 +812,88 @@ vector_types_convertible_p (const_tree t1, const_tree t2, bool emit_lax_note)
    first argument twice in order to share the same tree code.  This fact
    could enable the mask-values being twice the vector length.  This is
    an implementation accident and this semantics is not guaranteed to
-   the user.  */
-tree
-c_build_vec_perm_expr (location_t loc, tree v0, tree v1, tree mask,
-		       bool complain)
-{
-  tree ret;
-  bool wrap = true;
-  bool maybe_const = false;
-  bool two_arguments = false;
+   the user. */
+tree c_build_vec_perm_expr(location_t loc, tree v0, tree v1, tree mask, bool complain) {
+	tree ret;
+	bool wrap = true;
+	bool maybe_const = false;
+	bool two_arguments = false;
 
-  if (v1 == NULL_TREE)
-    {
-      two_arguments = true;
-      v1 = v0;
-    }
+	if (v1 == NULL_TREE) {
+		two_arguments = true;
+		v1 = v0;
+	}
 
-  if (v0 == error_mark_node || v1 == error_mark_node
-      || mask == error_mark_node)
-    return error_mark_node;
+	if (v0 == error_mark_node || v1 == error_mark_node || mask == error_mark_node)
+		return error_mark_node;
 
-  if (!gnu_vector_type_p (TREE_TYPE (mask))
-      || !VECTOR_INTEGER_TYPE_P (TREE_TYPE (mask)))
-    {
-      if (complain)
-	error_at (loc, "%<__builtin_shuffle%> last argument must "
-		       "be an integer vector");
-      return error_mark_node;
-    }
+	if (!gnu_vector_type_p(TREE_TYPE (mask)) || !VECTOR_INTEGER_TYPE_P (TREE_TYPE (mask))) {
+		if (complain)
+			error_at(loc, "%<__builtin_shuffle%> last argument must be an integer vector");
+		return error_mark_node;
+	}
 
-  if (!gnu_vector_type_p (TREE_TYPE (v0))
-      || !gnu_vector_type_p (TREE_TYPE (v1)))
-    {
-      if (complain)
-	error_at (loc, "%<__builtin_shuffle%> arguments must be vectors");
-      return error_mark_node;
-    }
+	if (!gnu_vector_type_p(TREE_TYPE (v0)) || !gnu_vector_type_p(TREE_TYPE (v1))) {
+		if (complain)
+			error_at(loc, "%<__builtin_shuffle%> arguments must be vectors");
+		return error_mark_node;
+	}
 
-  if (TYPE_MAIN_VARIANT (TREE_TYPE (v0)) != TYPE_MAIN_VARIANT (TREE_TYPE (v1)))
-    {
-      if (complain)
-	error_at (loc, "%<__builtin_shuffle%> argument vectors must be of "
-		       "the same type");
-      return error_mark_node;
-    }
+	if (TYPE_MAIN_VARIANT (TREE_TYPE (v0)) != TYPE_MAIN_VARIANT (TREE_TYPE (v1))) {
+		if (complain)
+			error_at(loc, "%<__builtin_shuffle%> argument vectors must be of the same type");
+		return error_mark_node;
+	}
 
-  if (maybe_ne (TYPE_VECTOR_SUBPARTS (TREE_TYPE (v0)),
+	if (maybe_ne (TYPE_VECTOR_SUBPARTS (TREE_TYPE (v0)),
 		TYPE_VECTOR_SUBPARTS (TREE_TYPE (mask)))
-      && maybe_ne (TYPE_VECTOR_SUBPARTS (TREE_TYPE (v1)),
-		   TYPE_VECTOR_SUBPARTS (TREE_TYPE (mask))))
-    {
-      if (complain)
-	error_at (loc, "%<__builtin_shuffle%> number of elements of the "
-		       "argument vector(s) and the mask vector should "
-		       "be the same");
-      return error_mark_node;
-    }
+		&& maybe_ne(TYPE_VECTOR_SUBPARTS (TREE_TYPE (v1)),
+		TYPE_VECTOR_SUBPARTS (TREE_TYPE (mask))))
+	{
+		if (complain)
+			error_at(loc, "%<__builtin_shuffle%> number of elements of the "
+				"argument vector(s) and the mask vector should be the same");
+		return error_mark_node;
+	}
 
-  if (GET_MODE_BITSIZE (SCALAR_TYPE_MODE (TREE_TYPE (TREE_TYPE (v0))))
-      != GET_MODE_BITSIZE (SCALAR_TYPE_MODE (TREE_TYPE (TREE_TYPE (mask)))))
-    {
-      if (complain)
-	error_at (loc, "%<__builtin_shuffle%> argument vector(s) inner type "
-		       "must have the same size as inner type of the mask");
-      return error_mark_node;
-    }
+	if (GET_MODE_BITSIZE (SCALAR_TYPE_MODE (TREE_TYPE (TREE_TYPE (v0))))
+		!= GET_MODE_BITSIZE (SCALAR_TYPE_MODE (TREE_TYPE (TREE_TYPE (mask)))))
+	{
+		if (complain)
+			error_at(loc, "%<__builtin_shuffle%> argument vector(s) inner type "
+				"must have the same size as inner type of the mask");
+		return error_mark_node;
+	}
 
-  if (!c_dialect_cxx ())
-    {
-      /* Avoid C_MAYBE_CONST_EXPRs inside VEC_PERM_EXPR.  */
-      v0 = c_fully_fold (v0, false, &maybe_const);
-      wrap &= maybe_const;
+	if (!c_dialect_cxx()) {
+		/* Avoid C_MAYBE_CONST_EXPRs inside VEC_PERM_EXPR. */
+		v0 = c_fully_fold(v0, false, &maybe_const);
+		wrap &= maybe_const;
 
-      if (two_arguments)
-        v1 = v0 = save_expr (v0);
-      else
-        {
-          v1 = c_fully_fold (v1, false, &maybe_const);
-          wrap &= maybe_const;
-        }
+		if (two_arguments)
+			v1 = v0 = save_expr(v0);
+		else {
+			v1 = c_fully_fold(v1, false, &maybe_const);
+			wrap &= maybe_const;
+		}
 
-      mask = c_fully_fold (mask, false, &maybe_const);
-      wrap &= maybe_const;
-    }
-  else if (two_arguments)
-    v1 = v0 = save_expr (v0);
+		mask = c_fully_fold(mask, false, &maybe_const);
+		wrap &= maybe_const;
+	} else if (two_arguments)
+		v1 = v0 = save_expr (v0);
 
-  ret = build3_loc (loc, VEC_PERM_EXPR, TREE_TYPE (v0), v0, v1, mask);
+	ret = build3_loc(loc, VEC_PERM_EXPR, TREE_TYPE (v0), v0, v1, mask);
 
-  if (!c_dialect_cxx () && !wrap)
-    ret = c_wrap_maybe_const (ret, true);
+	if (!c_dialect_cxx() && !wrap)
+		ret = c_wrap_maybe_const(ret, true);
 
-  return ret;
+	return ret;
 }
 
 /* Build a VEC_PERM_EXPR if V0, V1 are not error_mark_nodes
    and have vector types, V0 has the same element type as V1, and the
    number of elements the result is that of MASK.  */
-tree
-c_build_shufflevector (location_t loc, tree v0, tree v1,
-		       const vec<tree> &mask, bool complain)
-{
+tree c_build_shufflevector(location_t loc, tree v0, tree v1, const vec<tree> &mask, bool complain) {
   tree ret;
   bool wrap = true;
   bool maybe_const = false;
@@ -9240,182 +9122,157 @@ maybe_add_include_fixit (rich_location *richloc, const char *header,
    TYPE into a STRING_CST for convenience and efficiency.  Return
    the converted string on success or the original ctor on failure.  */
 
-static tree
-braced_list_to_string (tree type, tree ctor, bool member)
-{
-  /* Ignore non-members with unknown size like arrays with unspecified
-     bound.  */
-  tree typesize = TYPE_SIZE_UNIT (type);
-  if (!member && !tree_fits_uhwi_p (typesize))
-    return ctor;
+static tree braced_list_to_string(tree type, tree ctor, bool member) {
+	/* Ignore non-members with unknown size like arrays with unspecified bound. */
+	tree typesize = TYPE_SIZE_UNIT (type);
+	if (!member && !tree_fits_uhwi_p (typesize))
+		return ctor;
 
-  /* If the target char size differs from the host char size, we'd risk
-     loosing data and getting object sizes wrong by converting to
-     host chars.  */
-  if (TYPE_PRECISION (char_type_node) != CHAR_BIT)
-    return ctor;
+	/* If the target char size differs from the host char size, we'd risk
+	   loosing data and getting object sizes wrong by converting to
+	   host chars. */
+	if (TYPE_PRECISION (char_type_node) != CHAR_BIT)
+		return ctor;
 
-  /* STRING_CST doesn't support wide characters.  */
-  gcc_checking_assert (TYPE_PRECISION (TREE_TYPE (type)) == CHAR_BIT);
+	/* STRING_CST doesn't support wide characters. */
+	gcc_checking_assert(TYPE_PRECISION (TREE_TYPE (type)) == CHAR_BIT);
 
-  /* If the array has an explicit bound, use it to constrain the size
-     of the string.  If it doesn't, be sure to create a string that's
-     as long as implied by the index of the last zero specified via
-     a designator, as in:
-       const char a[] = { [7] = 0 };  */
-  unsigned HOST_WIDE_INT maxelts;
-  if (typesize)
-    {
-      maxelts = tree_to_uhwi (typesize);
-      maxelts /= tree_to_uhwi (TYPE_SIZE_UNIT (TREE_TYPE (type)));
-    }
-  else
-    maxelts = HOST_WIDE_INT_M1U;
+	/* If the array has an explicit bound, use it to constrain the size
+	   of the string.  If it doesn't, be sure to create a string that's
+	   as long as implied by the index of the last zero specified via
+	   a designator, as in:
+	   const char a[] = { [7] = 0 }; */
+	unsigned HOST_WIDE_INT maxelts;
+	if (typesize) {
+		maxelts = tree_to_uhwi (typesize);
+		maxelts /= tree_to_uhwi (TYPE_SIZE_UNIT (TREE_TYPE (type)));
+	} else
+		maxelts = HOST_WIDE_INT_M1U;
 
-  /* Avoid converting initializers for zero-length arrays (but do
-     create them for flexible array members).  */
-  if (!maxelts)
-    return ctor;
+	/* Avoid converting initializers for zero-length arrays (but do
+	   create them for flexible array members). */
+	if (!maxelts)
+		return ctor;
 
-  unsigned HOST_WIDE_INT nelts = CONSTRUCTOR_NELTS (ctor);
+	unsigned HOST_WIDE_INT nelts = CONSTRUCTOR_NELTS (ctor);
 
-  auto_vec<char> str;
-  str.reserve (nelts + 1);
+	auto_vec<char> str;
+	str.reserve (nelts + 1);
 
-  unsigned HOST_WIDE_INT i;
-  tree index, value;
+	unsigned HOST_WIDE_INT i;
+	tree index, value;
 
-  FOR_EACH_CONSTRUCTOR_ELT (CONSTRUCTOR_ELTS (ctor), i, index, value)
-    {
-      unsigned HOST_WIDE_INT idx = i;
-      if (index)
-	{
-	  if (!tree_fits_uhwi_p (index))
-	    return ctor;
-	  idx = tree_to_uhwi (index);
+	FOR_EACH_CONSTRUCTOR_ELT (CONSTRUCTOR_ELTS (ctor), i, index, value) {
+		unsigned HOST_WIDE_INT idx = i;
+		if (index) {
+			if (!tree_fits_uhwi_p (index))
+				return ctor;
+			idx = tree_to_uhwi (index);
+		}
+
+		/* auto_vec is limited to UINT_MAX elements. */
+		if (idx > UINT_MAX)
+			return ctor;
+
+		/* Avoid non-constant initializers. */
+		if (!tree_fits_shwi_p (value))
+			return ctor;
+
+		/* Skip over embedded nuls except the last one (initializer
+		   elements are in ascending order of indices).  */
+		HOST_WIDE_INT val = tree_to_shwi (value);
+		if (!val && i + 1 < nelts)
+			continue;
+
+		if (idx < str.length())
+			return ctor;
+
+		/* Bail if the CTOR has a block of more than 256 embedded nuls
+		   due to implicitly initialized elements. */
+		unsigned nchars = (idx - str.length ()) + 1;
+		if (nchars > 256)
+			return ctor;
+
+		if (nchars > 1){
+			str.reserve(idx);
+			str.quick_grow_cleared(idx);
+		}
+
+		if (idx >= maxelts)
+			return ctor;
+
+		str.safe_insert(idx, val);
 	}
 
-      /* auto_vec is limited to UINT_MAX elements.  */
-      if (idx > UINT_MAX)
-	return ctor;
+	/* Append a nul string termination. */
+	if (maxelts != HOST_WIDE_INT_M1U && str.length() < maxelts)
+		str.safe_push(0);
 
-     /* Avoid non-constant initializers.  */
-     if (!tree_fits_shwi_p (value))
-	return ctor;
-
-      /* Skip over embedded nuls except the last one (initializer
-	 elements are in ascending order of indices).  */
-      HOST_WIDE_INT val = tree_to_shwi (value);
-      if (!val && i + 1 < nelts)
-	continue;
-
-      if (idx < str.length())
-	return ctor;
-
-      /* Bail if the CTOR has a block of more than 256 embedded nuls
-	 due to implicitly initialized elements.  */
-      unsigned nchars = (idx - str.length ()) + 1;
-      if (nchars > 256)
-	return ctor;
-
-      if (nchars > 1)
-	{
-	  str.reserve (idx);
-	  str.quick_grow_cleared (idx);
-	}
-
-      if (idx >= maxelts)
-	return ctor;
-
-      str.safe_insert (idx, val);
-    }
-
-  /* Append a nul string termination.  */
-  if (maxelts != HOST_WIDE_INT_M1U && str.length () < maxelts)
-    str.safe_push (0);
-
-  /* Build a STRING_CST with the same type as the array.  */
-  tree res = build_string (str.length (), str.begin ());
-  TREE_TYPE (res) = type;
-  return res;
+	/* Build a STRING_CST with the same type as the array. */
+	tree res = build_string(str.length(), str.begin());
+	TREE_TYPE (res) = type;
+	return res;
 }
 
 /* Implementation of the two-argument braced_lists_to_string withe
    the same arguments plus MEMBER which is set for struct members
-   to allow initializers for flexible member arrays.  */
+   to allow initializers for flexible member arrays. */
+static tree braced_lists_to_strings(tree type, tree ctor, bool member) {
+	if (TREE_CODE (ctor) != CONSTRUCTOR)
+		return ctor;
 
-static tree
-braced_lists_to_strings (tree type, tree ctor, bool member)
-{
-  if (TREE_CODE (ctor) != CONSTRUCTOR)
-    return ctor;
+	tree_code code = TREE_CODE (type);
 
-  tree_code code = TREE_CODE (type);
+	tree ttp;
+	if (code == ARRAY_TYPE)
+		ttp = TREE_TYPE (type);
+	else if (code == RECORD_TYPE) {
+		ttp = TREE_TYPE (ctor);
+		if (TREE_CODE (ttp) == ARRAY_TYPE) {
+			type = ttp;
+			ttp = TREE_TYPE (ttp);
+		}
+	} else
+		return ctor;
 
-  tree ttp;
-  if (code == ARRAY_TYPE)
-    ttp = TREE_TYPE (type);
-  else if (code == RECORD_TYPE)
-    {
-      ttp = TREE_TYPE (ctor);
-      if (TREE_CODE (ttp) == ARRAY_TYPE)
-	{
-	  type = ttp;
-	  ttp = TREE_TYPE (ttp);
+	if ((TREE_CODE (ttp) == ARRAY_TYPE || TREE_CODE (ttp) == INTEGER_TYPE) && TYPE_STRING_FLAG (ttp))
+		return braced_list_to_string(type, ctor, member);
+
+	code = TREE_CODE (ttp);
+	if (code == ARRAY_TYPE || RECORD_OR_UNION_TYPE_P (ttp)) {
+		bool rec = RECORD_OR_UNION_TYPE_P (ttp);
+
+		/* Handle array of arrays or struct member initializers. */
+		tree val;
+		unsigned HOST_WIDE_INT idx;
+		FOR_EACH_CONSTRUCTOR_VALUE (CONSTRUCTOR_ELTS (ctor), idx, val) {
+			val = braced_lists_to_strings(ttp, val, rec);
+			CONSTRUCTOR_ELT (ctor, idx)->value = val;
+		}
 	}
-    }
-  else
-    return ctor;
 
-  if ((TREE_CODE (ttp) == ARRAY_TYPE || TREE_CODE (ttp) == INTEGER_TYPE)
-      && TYPE_STRING_FLAG (ttp))
-    return braced_list_to_string (type, ctor, member);
-
-  code = TREE_CODE (ttp);
-  if (code == ARRAY_TYPE || RECORD_OR_UNION_TYPE_P (ttp))
-    {
-      bool rec = RECORD_OR_UNION_TYPE_P (ttp);
-
-      /* Handle array of arrays or struct member initializers.  */
-      tree val;
-      unsigned HOST_WIDE_INT idx;
-      FOR_EACH_CONSTRUCTOR_VALUE (CONSTRUCTOR_ELTS (ctor), idx, val)
-	{
-	  val = braced_lists_to_strings (ttp, val, rec);
-	  CONSTRUCTOR_ELT (ctor, idx)->value = val;
-	}
-    }
-
-  return ctor;
+	return ctor;
 }
 
 /* Attempt to convert a CTOR containing braced array initializer lists
    for array TYPE into one containing STRING_CSTs, for convenience and
-   efficiency.  Recurse for arrays of arrays and member initializers.
+   efficiency. Recurse for arrays of arrays and member initializers.
    Return the converted CTOR or STRING_CST on success or the original
-   CTOR otherwise.  */
-
-tree
-braced_lists_to_strings (tree type, tree ctor)
-{
-  return braced_lists_to_strings (type, ctor, false);
+   CTOR otherwise. */
+tree braced_lists_to_strings(tree type, tree ctor) {
+	return braced_lists_to_strings(type, ctor, false);
 }
 
-
-/* Emit debug for functions before finalizing early debug.  */
-
-void
-c_common_finalize_early_debug (void)
-{
+/* Emit debug for functions before finalizing early debug. */
+void c_common_finalize_early_debug(void) {
   /* Emit early debug for reachable functions, and by consequence,
      locally scoped symbols.  Also emit debug for extern declared
-     functions that are still reachable at this point.  */
-  struct cgraph_node *cnode;
-  FOR_EACH_FUNCTION (cnode)
-    if (!cnode->alias && !cnode->thunk
-	&& (cnode->has_gimple_body_p ()
-	    || !DECL_IS_UNDECLARED_BUILTIN (cnode->decl)))
-      (*debug_hooks->early_global_decl) (cnode->decl);
+     functions that are still reachable at this point. */
+	struct cgraph_node *cnode;
+	FOR_EACH_FUNCTION (cnode)
+	if (!cnode->alias && !cnode->thunk && (cnode->has_gimple_body_p()
+			|| !DECL_IS_UNDECLARED_BUILTIN (cnode->decl)))
+		(*debug_hooks->early_global_decl) (cnode->decl);
 }
 
 #include "gt-c-family-c-common.h"

@@ -1,28 +1,6 @@
 /* Declarations of constants for internal format of MIPS ECOFF symbols.
    Originally contributed by MIPS Computer Systems and Third Eye Software.
-   Changes contributed by Cygnus Support are in the public domain.
-
-   This file is just aggregated with the files that make up the GNU
-   release; it is not considered part of GAS, GDB, or other GNU
-   programs.  */
-
-/*
- * |-----------------------------------------------------------|
- * | Copyright (c) 1992, 1991, 1990 MIPS Computer Systems, Inc.|
- * | MIPS Computer Systems, Inc. grants reproduction and use   |
- * | rights to all parties, PROVIDED that this comment is      |
- * | maintained in the copy.                                   |
- * |-----------------------------------------------------------|
- */
-
-/* (C) Copyright 1984 by Third Eye Software, Inc.
- *
- * Third Eye Software, Inc. grants reproduction and use rights to
- * all parties, PROVIDED that this comment is maintained in the copy.
- *
- * Third Eye makes no claims about the applicability of this
- * symbol table to a particular use.
- */
+*/
 
 /* glevels for field in FDR */
 #define GLEVEL_0	2

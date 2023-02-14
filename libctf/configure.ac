@@ -1,22 +1,6 @@
 dnl                                            -*- Autoconf -*-
 dnl Process this file with autoconf to produce a configure script.
 dnl
-dnl   Copyright (C) 2019-2022 Free Software Foundation, Inc.
-dnl
-dnl This file is free software; you can redistribute it and/or modify
-dnl it under the terms of the GNU General Public License as published by
-dnl the Free Software Foundation; either version 2 of the License, or
-dnl (at your option) any later version.
-dnl
-dnl This program is distributed in the hope that it will be useful,
-dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
-dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-dnl GNU General Public License for more details.
-dnl
-dnl You should have received a copy of the GNU General Public License
-dnl along with this program; see the file COPYING.  If not see
-dnl <http://www.gnu.org/licenses/>.
-dnl
 
 AC_PREREQ(2.64)
 AC_INIT([libctf], 1.2.0)

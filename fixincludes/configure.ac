@@ -1,4 +1,3 @@
-
 AC_INIT(fixincludes, [ ])
 AC_CONFIG_SRCDIR(inclhack.def)
 AC_CONFIG_AUX_DIR(..)

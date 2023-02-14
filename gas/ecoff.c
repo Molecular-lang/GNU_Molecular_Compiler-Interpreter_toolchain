@@ -1,26 +1,4 @@
-/* ECOFF debugging support.
-   Copyright (C) 1993-2022 Free Software Foundation, Inc.
-   Contributed by Cygnus Support.
-   This file was put together by Ian Lance Taylor <ian@cygnus.com>.  A
-   good deal of it comes directly from mips-tfile.c, by Michael
-   Meissner <meissner@osf.org>.
-
-   This file is part of GAS.
-
-   GAS is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3, or (at your option)
-   any later version.
-
-   GAS is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with GAS; see the file COPYING.  If not, write to the Free
-   Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA
-   02110-1301, USA.  */
+/* ECOFF debugging support. */
 
 #include "as.h"
 

@@ -1,25 +1,6 @@
 /* Definitions and structures for reading debug symbols from the
    native HP C compiler.
-
-   Written by the Center for Software Science at the University of Utah
-   and by Cygnus Support.
-
-   Copyright (C) 1994-2022 Free Software Foundation, Inc.
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
-   (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,
-   MA 02110-1301, USA.  */
+ */
 
 #ifndef HP_SYMTAB_INCLUDED
 #define HP_SYMTAB_INCLUDED

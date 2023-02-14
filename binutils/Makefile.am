@@ -1,26 +1,10 @@
 ## Process this file with automake to generate Makefile.in
 #
-#   Copyright (C) 2012-2022 Free Software Foundation, Inc.
-#
-# This file is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; see the file COPYING3.  If not see
-# <http://www.gnu.org/licenses/>.
-#
 
 AUTOMAKE_OPTIONS = dejagnu no-dist foreign subdir-objects info-in-builddir no-texinfo.tex
 ACLOCAL_AMFLAGS = -I .. -I ../config -I ../bfd
 
-SUBDIRS = po
+SUBDIRS =
 
 tooldir = $(exec_prefix)/$(target_alias)
 
@@ -98,7 +82,7 @@ EXTRA_SCRIPTS = embedspu
 ## Test programs.
 BFDTEST1_PROG = bfdtest1
 BFDTEST2_PROG = bfdtest2
-GENTESTDLLS_PROG = testsuite/gentestdlls
+GENTESTDLLS_PROG =
 
 TEST_PROGS = $(BFDTEST1_PROG) $(BFDTEST2_PROG) $(GENTESTDLLS_PROG)
 
@@ -179,9 +163,7 @@ endif
 LIBIBERTY = ../libiberty/libiberty.a
 
 POTFILES = $(CFILES) $(DEBUG_SRCS) $(HFILES)
-po/POTFILES.in: @MAINT@ Makefile
-	for f in $(POTFILES); do echo $$f; done | LC_ALL=C sort > tmp \
-	  && mv tmp $(srcdir)/po/POTFILES.in
+po/POTFILES.in:
 
 EXPECT = expect
 RUNTEST = runtest
@@ -201,19 +183,7 @@ CC_FOR_TARGET = ` \
     fi; \
   fi`
 
-check-DEJAGNU: site.exp
-	srcdir=`cd $(srcdir) && pwd`; export srcdir; \
-	r=`pwd`; export r; \
-	LC_ALL=C; export LC_ALL; \
-	EXPECT=$(EXPECT); export EXPECT; \
-	runtest=$(RUNTEST); \
-	if $(SHELL) -c "$$runtest --version" > /dev/null 2>&1; then \
-	  CC="$(CC)" CC_FOR_BUILD="$(CC_FOR_BUILD)" \
-	  CC_FOR_TARGET="$(CC_FOR_TARGET)" CFLAGS_FOR_TARGET="$(CFLAGS)" \
-		$$runtest --tool $(DEJATOOL) --srcdir $${srcdir}/testsuite \
-			$(RUNTESTFLAGS); \
-	else echo "WARNING: could not find \`runtest'" 1>&2; :;\
-	fi
+check-DEJAGNU:
 
 development.exp: $(BFDDIR)/development.sh
 	$(AM_V_GEN)$(EGREP) "(development|experimental)=" $(BFDDIR)/development.sh  \

@@ -121,7 +121,7 @@ enum rid
   RID_RTL,
 
   /* Subconscious Electronic Programming Language*/
-  RID_SPL_NEURODE,
+  RID_SPL_NEURODE, RID_SPL_GLIAD, RID_SPL_RANDOM,
   
   /* C11 */
   RID_ALIGNAS, RID_GENERIC,
