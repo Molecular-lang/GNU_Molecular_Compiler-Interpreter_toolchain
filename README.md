@@ -1,4 +1,4 @@
-# Scpel-0.0.1 (Let there be...)
+# Scpel (Let there be...)
 Subconscious Electronic Programming Language
 
 Copyright (C) 1997-2023 Free Software Foundation, Inc.
@@ -67,6 +67,7 @@ Otherwise, you're now good to go, test the compiler by compiling a simple C
 # NOTE:
   Please visit $(srcdir)/COPYING for more stuff you would'nt love to miss
 
-Best of regards:
-	Francis Ssessaazi
-	phrunsys.scpel.256.ug@gmail.com
+Best of regards:    
+	Francis Ssessaazi    
+	phrunsys.scpel.256.ug@gmail.com    
+	[Scpel Software Foundation](https://www.scpel.org/ssfoundation)
