@@ -20,11 +20,12 @@ along with GCC; see the file COPYING3.  If not see
 <http://www.gnu.org/licenses/>. 
 
 # Description
-Scpel aims at closely borrowing The C programming language low level power in
+Scpel aims at closely borrowing the C programming language low level power in
 the advantage of deep learning, machine learning and artificial intelligence.
 With this in mind, the language (Scpel) offers a fully working C compiler framework
-with more AI supportive features and light-weight abstractions directly to the hardware. For more, please visit [https://www.scpel.org](https://www.scpel.org)
-for more.
+with more AI supportive features and light-weight abstractions directly to the hardware
+targeting usecases like [artificial intelligence in the kernel layer](https://www.scpel.org/artificial_systems.html) and having robust
+AI libraries and API all accessible at the systems level. For more, please visit [https://www.scpel.org](https://www.scpel.org)
 
 # How to build
 To build Scpel, you need a minimal of Scpel-0.0.1. Please visit 
