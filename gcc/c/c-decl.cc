@@ -12328,9 +12328,6 @@ declspecs_add_scspec (location_t loc,
              "%qE is not at beginning of declaration", scspec);
   switch (i)
     {
-    case RID_SPL_NEURODE:
-    	error("%qE feature implementation in progress", scspec);
-    	break;
     case RID_INLINE:
       /* C99 permits duplicate inline.  Although of doubtful utility,
 	 it seems simplest to permit it in gnu89 mode as well, as

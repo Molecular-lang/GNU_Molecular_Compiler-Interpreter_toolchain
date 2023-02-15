@@ -757,9 +757,6 @@ c_token_starts_declspecs (c_token *token)
 	case RID_ATOMIC:
 	case RID_AUTO_TYPE:
 	case RID_CONSTEXPR:
-	case RID_SPL_NEURODE:
-	case RID_SPL_GLIAD:
-	case RID_SPL_RANDOM:
 	  return true;
 	default:
 	  if (token->keyword >= RID_FIRST_INT_N
@@ -3195,13 +3192,6 @@ c_parser_declspecs (c_parser *parser, struct c_declspecs *specs,
 	  specs->locations[cdw_rtl] = loc;
 	  c_parser_gimple_or_rtl_pass_list (parser, specs);
 	  break;
-	  
-	case RID_SPL_NEURODE:
-		break;
-	case RID_SPL_GLIAD:
-		break;
-	case RID_SPL_RANDOM:
-		break;  
 	default:
 	  goto out;
 	}
@@ -4721,9 +4711,6 @@ c_parser_gnu_attribute_any_word (c_parser *parser)
 	case RID_TYPEDEF:
 	case RID_SHORT:
 	case RID_INLINE:
-	case RID_SPL_NEURODE:	// Scpel neurode
-	case RID_SPL_GLIAD:		// Scpel gliad
-	case RID_SPL_RANDOM:	// Scpel random
 	case RID_NORETURN:
 	case RID_VOLATILE:
 	case RID_SIGNED:
