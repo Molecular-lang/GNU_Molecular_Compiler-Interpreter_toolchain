@@ -4,7 +4,6 @@ $!
 $! We do not use the configure script, since we do not have /bin/sh
 $! to execute it.
 $!
-$!
 $ arch=F$GETSYI("ARCH_NAME")
 $ arch=F$EDIT(arch,"LOWERCASE")
 

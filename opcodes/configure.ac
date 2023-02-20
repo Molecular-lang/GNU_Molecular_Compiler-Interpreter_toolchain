@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 m4_include([../bfd/version.m4])
 AC_INIT([opcodes], BFD_VERSION)
-AC_CONFIG_SRCDIR([z8k-dis.co])
+AC_CONFIG_SRCDIR([z8k-dis.c])
 
 AC_CANONICAL_TARGET
 

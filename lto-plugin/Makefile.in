@@ -372,7 +372,7 @@ all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .co .lo .o .obj
+.SUFFIXES: .c .lo .o .obj
 am--refresh: Makefile
 	@:
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -466,13 +466,13 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-.co.o:
+.c.o:
 	$(AM_V_CC)$(COMPILE) -c -o $@ $<
 
-.co.obj:
+.c.obj:
 	$(AM_V_CC)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-.co.lo:
+.c.lo:
 	$(AM_V_CC)$(LTCOMPILE) -c -o $@ $<
 
 mostlyclean-libtool:

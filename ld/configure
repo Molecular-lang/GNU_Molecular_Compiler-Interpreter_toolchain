@@ -17377,7 +17377,7 @@ ac_config_commands="$ac_config_commands default"
 
 
 
-ac_config_files="$ac_config_files Makefile po/Makefile.in:po/Make-in"
+ac_config_files="$ac_config_files Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -18502,7 +18502,6 @@ do
     "default-1") CONFIG_COMMANDS="$CONFIG_COMMANDS default-1" ;;
     "default") CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "po/Makefile.in") CONFIG_FILES="$CONFIG_FILES po/Makefile.in:po/Make-in" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

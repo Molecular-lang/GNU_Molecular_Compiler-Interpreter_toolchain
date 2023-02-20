@@ -31,7 +31,7 @@ version_arg = -export-symbols-regex onload
 version_dep =
 endif
 
-liblto_plugin_la_SOURCES = lto-plugin.co
+liblto_plugin_la_SOURCES = lto-plugin.c
 # Note that we intentionally override the bindir supplied by ACX_LT_HOST_FLAGS.
 liblto_plugin_la_LDFLAGS = $(AM_LDFLAGS) \
 	$(lt_host_flags) -module -avoid-version -bindir $(libexecsubdir) \
