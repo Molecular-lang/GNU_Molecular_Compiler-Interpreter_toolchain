@@ -119,7 +119,7 @@ SUBDIRS =@subdirs@ build
 
 # Selection of languages to be made.
 CONFIG_LANGUAGES = @all_selected_languages@
-LANGUAGES = c $(CONFIG_LANGUAGES)
+LANGUAGES = scpel $(CONFIG_LANGUAGES)
 ifeq (@enable_gcov@,yes)
 LANGUAGES += gcov$(exeext) gcov-dump$(exeext) gcov-tool$(exeext)
 endif
@@ -2130,10 +2130,10 @@ libcommon.a: $(OBJS-libcommon)
 # We call this executable `xgcc' rather than `gcc'
 # to avoid confusion if the current directory is in the path
 # and CC is `gcc'.  It is renamed to `gcc' when it is installed.
-xgcc$(exeext): $(GCC_OBJS) c/gccspec.o libcommon-target.a $(LIBDEPS) \
+xgcc$(exeext): $(GCC_OBJS) scpel/gccspec.o libcommon-target.a $(LIBDEPS) \
 	$(EXTRA_GCC_OBJS)
 	+$(LINKER) $(ALL_LINKERFLAGS) $(LDFLAGS) -o $@ $(GCC_OBJS) \
-	  c/gccspec.o $(EXTRA_GCC_OBJS) libcommon-target.a \
+	  scpel/gccspec.o $(EXTRA_GCC_OBJS) libcommon-target.a \
 	  $(EXTRA_GCC_LIBS) $(LIBS)
 
 # cpp is to cpp0 as e.g. g++ is to cc1plus: Just another driver.
@@ -3050,7 +3050,7 @@ libgcov-merge-tool.o: $(srcdir)/../libgcc/libgcov-merge.c $(GCOV_TOOL_DEP_FILES)
 GCOV_TOOL_OBJS = gcov-tool.o libgcov-util.o libgcov-driver-tool.o libgcov-merge-tool.o
 gcov-tool$(exeext): $(GCOV_TOOL_OBJS) $(LIBDEPS)
 	+$(LINKER) $(ALL_LINKERFLAGS) $(LDFLAGS) $(GCOV_TOOL_OBJS) $(LIBS) -o $@
-#
+
 # Build the include directories.  The stamp files are stmp-* rather than
 # s-* so that mostlyclean does not force the include directory to
 # be rebuilt.
@@ -3346,7 +3346,7 @@ maintainer-clean:
 	-rm -f cpp.??s cpp.*aux
 	-rm -f gcc.??s gcc.*aux
 	-rm -f $(gcc_docdir)/*.info $(gcc_docdir)/*.1 $(gcc_docdir)/*.7 $(gcc_docdir)/*.dvi $(gcc_docdir)/*.pdf
-#
+
 # Entry points `install', `install-strip', and `uninstall'.
 # Also use `install-collect2' to install collect2 when the config files don't.
 
@@ -3661,7 +3661,6 @@ uninstall: lang.uninstall
 	done
 
 # These exist for maintenance purposes.
-
 CTAGS=@CTAGS@
 ETAGS=@ETAGS@
 CSCOPE=@CSCOPE@

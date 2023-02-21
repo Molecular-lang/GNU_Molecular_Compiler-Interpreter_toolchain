@@ -22,7 +22,7 @@
 #include "coretypes.h"
 #include "target.h"
 #include "function.h"
-#include "c-tree.h"
+#include "scpel-tree.h"
 #include "timevar.h"
 #include "stringpool.h"
 #include "cgraph.h"
@@ -31,7 +31,7 @@
 #include "varasm.h"
 #include "trans-mem.h"
 #include "c-family/c-pragma.h"
-#include "c-lang.h"
+#include "scpel-lang.h"
 #include "c-family/c-objc.h"
 #include "plugin.h"
 #include "omp-general.h"
@@ -42,7 +42,7 @@
 #include "gimple-expr.h"
 #include "context.h"
 #include "gcc-rich-location.h"
-#include "c-parser.h"
+#include "scpel-parser.h"
 #include "gimple-parser.h"
 #include "read-rtl-function.h"
 #include "run-rtl-passes.h"
@@ -22762,4 +22762,4 @@ c_parser_parse_rtl_body (c_parser *parser, char *start_with_pass)
   return end_loc;
 }
 
-#include "gt-c-c-parser.h"
+#include "gt-scpel-scpel-parser.h"

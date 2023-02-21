@@ -7,7 +7,7 @@
 #include "system.h"
 #include "coretypes.h"
 #include "tm.h"
-#include "c-tree.h"
+#include "scpel-tree.h"
 
 enum formals_style {
   ansi,

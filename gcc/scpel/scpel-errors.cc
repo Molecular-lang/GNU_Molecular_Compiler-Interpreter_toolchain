@@ -5,7 +5,7 @@
 #include "system.h"
 #include "coretypes.h"
 #include "tm.h"
-#include "c-tree.h"
+#include "scpel-tree.h"
 #include "opts.h"
 
 /* Issue an ISO C11 pedantic warning MSGID if -pedantic outside C2X mode,

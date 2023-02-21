@@ -1930,11 +1930,11 @@ struct file_rule_st files_rules[] = {
     "gt-c-family-$3.h", "c-family/$3.h", NULL_FRULACT},
 
   /* Both c-lang.h & c-tree.h gives gt-c-c-decl.h for c-decl.cc !  */
-  { DIR_PREFIX_REGEX "c/c-lang\\.h$",
-    REG_EXTENDED, NULL_REGEX, "gt-c-c-decl.h", "c/c-decl.cc", NULL_FRULACT},
+  { DIR_PREFIX_REGEX "scpel/scpel-lang\\.h$",
+    REG_EXTENDED, NULL_REGEX, "gt-scpel-scpel-decl.h", "scpel/scpel-decl.cc", NULL_FRULACT},
 
-  { DIR_PREFIX_REGEX "c/c-tree\\.h$",
-    REG_EXTENDED, NULL_REGEX, "gt-c-c-decl.h", "c/c-decl.cc", NULL_FRULACT},
+  { DIR_PREFIX_REGEX "scpel/scpel-tree\\.h$",
+    REG_EXTENDED, NULL_REGEX, "gt-scpel-scpel-decl.h", "scpel/scpel-decl.cc", NULL_FRULACT},
 
   /* cp/cp-tree.h gives gt-cp-tree.h for cp/tree.cc !  */
   { DIR_PREFIX_REGEX "cp/cp-tree\\.h$",

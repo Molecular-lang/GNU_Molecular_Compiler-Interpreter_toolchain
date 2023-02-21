@@ -7,12 +7,11 @@
 #include "target.h"
 #include "function.h"
 #include "bitmap.h"
-#include "c-tree.h"
+#include "scpel-tree.h"
 #include "intl.h"
 #include "gimplify.h"
 
-static tree c_fully_fold_internal (tree expr, bool, bool *, bool *, bool,
-				   bool);
+static tree c_fully_fold_internal (tree expr, bool, bool *, bool *, bool, bool);
 
 /* If DISABLE is true, stop issuing warnings.  This is used when
    parsing code that we know will not be executed.  This function may

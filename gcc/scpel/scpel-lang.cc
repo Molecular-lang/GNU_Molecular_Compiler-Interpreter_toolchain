@@ -4,10 +4,10 @@
 #include "config.h"
 #include "system.h"
 #include "coretypes.h"
-#include "c-tree.h"
+#include "scpel-tree.h"
 #include "langhooks.h"
 #include "langhooks-def.h"
-#include "c-objc-common.h"
+#include "scpel-objc-common.h"
 
 enum c_language_kind c_language = clk_c;
 
@@ -64,4 +64,4 @@ run_c_tests (void)
 #endif /* #if CHECKING_P */
 
 
-#include "gtype-c.h"
+#include "gtype-scpel.h"

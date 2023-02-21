@@ -1,0 +1,15 @@
+# Top level configure fragment for GNU C - C language.
+
+# Configure looks for the existence of this file to auto-config each language.
+# We define several parameters used by configure:
+#
+# language	- name of language as it would appear in $(LANGUAGES)
+# compilers	- value to add to $(COMPILERS)
+
+language="scpel"
+
+compilers="cc1\$(exeext)"
+
+target_libs=
+
+gtfiles="\$(srcdir)/scpel/scpel-lang.cc \$(srcdir)/scpel/scpel-tree.h \$(srcdir)/scpel/scpel-decl.cc \$(srcdir)/c-family/c-common.cc \$(srcdir)/c-family/c-common.h \$(srcdir)/c-family/c-objc.h \$(srcdir)/c-family/c-cppbuiltin.cc \$(srcdir)/c-family/c-pragma.h \$(srcdir)/c-family/c-pragma.cc \$(srcdir)/c-family/c-format.cc \$(srcdir)/scpel/scpel-objc-common.cc \$(srcdir)/scpel/scpel-parser.h \$(srcdir)/scpel/scpel-parser.cc \$(srcdir)/scpel/scpel-lang.h"

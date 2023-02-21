@@ -15,7 +15,7 @@
 #include "coretypes.h"
 #include "target.h"
 #include "function.h"
-#include "c-tree.h"
+#include "scpel-tree.h"
 #include "timevar.h"
 #include "stringpool.h"
 #include "cgraph.h"
@@ -29,7 +29,7 @@
 #include "c-family/c-objc.h"
 #include "c-family/c-pragma.h"
 #include "c-family/c-ubsan.h"
-#include "c-lang.h"
+#include "scpel-lang.h"
 #include "langhooks.h"
 #include "tree-iterator.h"
 #include "dumpfile.h"
@@ -13111,4 +13111,4 @@ c_check_in_current_scope (tree decl)
   return b != NULL && B_IN_CURRENT_SCOPE (b);
 }
 
-#include "gt-c-c-decl.h"
+#include "gt-scpel-scpel-decl.h"

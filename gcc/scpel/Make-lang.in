@@ -18,10 +18,9 @@
 # - the compiler proper (eg: cc1)
 # - define the names for selecting the language in LANGUAGES.
 
-#
 # Define the names for selecting c in LANGUAGES.
-c: cc1$(exeext)
-c.serial = cc1$(exeext)
+scpel: cc1$(exeext)
+scpel.serial = cc1$(exeext)
 
 # Tell GNU make to ignore these if they exist.
 .PHONY: c gcc
@@ -29,22 +28,22 @@ c.serial = cc1$(exeext)
 # The C front end driver.  This is different from the drivers for other
 # front ends, because there is no C language specific driver (i.e. nothing
 # is to cc1 as e.g. g++ is to cc1plus, or gfortran is to f951).
-CFLAGS-c/gccspec.o += $(DRIVER_DEFINES)
+CFLAGS-scpel/gccspec.o += $(DRIVER_DEFINES)
 
 # The C compiler itself.
 
 # Language-specific object files for C and Objective C.
-C_AND_OBJC_OBJS = attribs.o c/c-errors.o c/c-decl.o c/c-typeck.o \
-  c/c-convert.o c/c-aux-info.o c/c-objc-common.o c/c-parser.o \
-  c/c-fold.o c/gimple-parser.o \
+C_AND_OBJC_OBJS = attribs.o scpel/scpel-errors.o scpel/scpel-decl.o scpel/scpel-typeck.o \
+  scpel/scpel-convert.o scpel/scpel-aux-info.o scpel/scpel-objc-common.o scpel/scpel-parser.o \
+  scpel/scpel-fold.o scpel/gimple-parser.o \
   $(C_COMMON_OBJS) $(C_TARGET_OBJS)
 
 # Language-specific object files for C.
-C_OBJS = c/c-lang.o c-family/stub-objc.o $(C_AND_OBJC_OBJS)
-c_OBJS = $(C_OBJS) cc1-checksum.o c/gccspec.o
+C_OBJS = scpel/scpel-lang.o c-family/stub-objc.o $(C_AND_OBJC_OBJS)
+c_OBJS = $(C_OBJS) cc1-checksum.o scpel/gccspec.o
 
 # Use strict warnings for this front end.
-c-warn = $(STRICT_WARN)
+scpel-warn = $(STRICT_WARN)
 
 ifeq ($(if $(wildcard ../stage_current),$(shell cat \
   ../stage_current)),stageautofeedback)
@@ -75,60 +74,59 @@ cc1$(exeext): $(C_OBJS) cc1-checksum.o $(BACKEND) $(LIBDEPS)
 cc1.fda: ../stage1-gcc/cc1$(exeext) ../prev-gcc/$(PERF_DATA)
 	$(CREATE_GCOV) -binary ../stage1-gcc/cc1$(exeext) -gcov cc1.fda -profile ../prev-gcc/$(PERF_DATA) -gcov_version 1
 
-#
 # Build hooks:
 
-c.info:
-c.dvi:
-c.pdf:
-c.html:
-c.install-info:
-c.install-dvi:
-c.install-pdf:
-c.install-html:
-c.all.cross:
-c.start.encap:
-c.rest.encap:
-c.srcinfo:
-c.srcextra: gengtype-lex.cc
+scpel.info:
+scpel.dvi:
+scpel.pdf:
+scpel.html:
+scpel.install-info:
+scpel.install-dvi:
+scpel.install-pdf:
+scpel.install-html:
+scpel.all.cross:
+scpel.start.encap:
+scpel.rest.encap:
+scpel.srcinfo:
+scpel.srcextra: gengtype-lex.cc
 	-cp -p $^ $(srcdir)
-c.tags: force
-	cd $(srcdir)/c; $(ETAGS) -o TAGS.sub *.cc *.h; \
+scpel.tags: force
+	cd $(srcdir)/scpel; $(ETAGS) -o TAGS.sub *.cc *.h; \
 	$(ETAGS) --include TAGS.sub --include ../TAGS.sub
-c.man:
-c.srcman:
+scpel.man:
+scpel.srcman:
 
 # C selftests
 
 # If C is enabled, require the selftests to be run for it
 # at each stage of the build:
-selftest-c: s-selftest-c
+selftest-scpel: s-selftest-scpel
 
 C_SELFTEST_FLAGS = -xc $(SELFTEST_FLAGS)
 C_SELFTEST_DEPS = cc1$(exeext) $(SELFTEST_DEPS)
 
 # Run the C selftests:
-s-selftest-c: $(C_SELFTEST_DEPS)
+s-selftest-scpel: $(C_SELFTEST_DEPS)
 	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS)
 	$(STAMP) $@
 
 # Convenience methods for running C selftests under gdb:
-.PHONY: selftest-c-gdb
-selftest-c-gdb: $(C_SELFTEST_DEPS)
+.PHONY: selftest-scpel-gdb
+selftest-scpel-gdb: $(C_SELFTEST_DEPS)
 	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS) \
 	  -wrapper gdb,--args
 
 .PHONY: selftest-gdb
-selftest-gdb: selftest-c-gdb
+selftest-gdb: selftest-scpel-gdb
 
 # Convenience methods for running C selftests under valgrind:
-.PHONY: selftest-c-valgrind
-selftest-c-valgrind: $(C_SELFTEST_DEPS)
+.PHONY: selftest-scpel-valgrind
+selftest-scpel-valgrind: $(C_SELFTEST_DEPS)
 	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS) \
 	  -wrapper valgrind,--leak-check=full
 
 .PHONY: selftest-valgrind
-selftest-valgrind: selftest-c-valgrind
+selftest-valgrind: selftest-scpel-valgrind
 
 # List of targets that can use the generic check- rule and its // variant.
 lang_checks += check-gcc
@@ -137,55 +135,55 @@ lang_checks_parallelized += check-gcc
 check_gcc_parallelize=10000
 
 # 'make check' in gcc/ looks for check-c.  Redirect it to check-gcc.
-check-c : check-gcc
+check-scpel : check-gcc
 
 #
 # Install hooks:
 # cc1 is installed elsewhere as part of $(COMPILERS).
 
-c.install-common:
-c.install-man:
+scpel.install-common:
+scpel.install-man:
 
-c.install-plugin: installdirs
+scpel.install-plugin: installdirs
 # Install import library.
 ifeq ($(plugin_implib),yes)
 	$(mkinstalldirs) $(DESTDIR)$(plugin_resourcesdir)
 	$(INSTALL_DATA) cc1$(exeext).a $(DESTDIR)$(plugin_resourcesdir)/cc1$(exeext).a
 endif
 
-c.uninstall:
+scpel.uninstall:
 
 #
 # Clean hooks:
 # A lot of the ancillary files are deleted by the main makefile.
 # We just have to delete files specific to us.
 
-c.mostlyclean:
+scpel.mostlyclean:
 	-rm -f cc1$(exeext)
-	-rm -f c/*$(objext)
-	-rm -f c/*$(coverageexts)
+	-rm -f scpel/*$(objext)
+	-rm -f scpel/*$(coverageexts)
 	-rm -f cc1.fda
-c.clean:
-c.distclean:
-	-rm -f c/config.status c/Makefile
-c.maintainer-clean:
+scpel.clean:
+scpel.distclean:
+	-rm -f scpel/config.status scpel/Makefile
+scpel.maintainer-clean:
 #
 # Stage hooks:
 # The main makefile has already created stage?/cp.
 
-c.stage1: stage1-start
-	-mv c/*$(objext) stage1/c
-c.stage2: stage2-start
-	-mv c/*$(objext) stage2/c
-c.stage3: stage3-start
-	-mv c/*$(objext) stage3/c
-c.stage4: stage4-start
-	-mv c/*$(objext) stage4/c
-c.stageprofile: stageprofile-start
-	-mv c/*$(objext) stageprofile/c
-c.stagefeedback: stagefeedback-start
-	-mv c/*$(objext) stagefeedback/c
-c.autostageprofile: autostageprofile-start
-	-mv c/*$(objext) autostageprofile/c
-c.autostagefeedback: autostagefeedback-start
-	-mv c/*$(objext) autostagefeedback/c
+scpel.stage1: stage1-start
+	-mv scpel/*$(objext) stage1/scpel
+scpel.stage2: stage2-start
+	-mv scpel/*$(objext) stage2/scpel
+scpel.stage3: stage3-start
+	-mv scpel/*$(objext) stage3/scpel
+scpel.stage4: stage4-start
+	-mv scpel/*$(objext) stage4/scpel
+scpel.stageprofile: stageprofile-start
+	-mv scpel/*$(objext) stageprofile/scpel
+scpel.stagefeedback: stagefeedback-start
+	-mv scpel/*$(objext) stagefeedback/scpel
+scpel.autostageprofile: autostageprofile-start
+	-mv scpel/*$(objext) autostageprofile/scpel
+scpel.autostagefeedback: autostagefeedback-start
+	-mv scpel/*$(objext) autostagefeedback/scpel

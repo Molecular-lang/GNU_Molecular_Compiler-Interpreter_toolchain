@@ -10,7 +10,7 @@
 #include "system.h"
 #include "coretypes.h"
 #include "target.h"
-#include "c-tree.h"
+#include "scpel-tree.h"
 #include "convert.h"
 #include "langhooks.h"
 #include "ubsan.h"
