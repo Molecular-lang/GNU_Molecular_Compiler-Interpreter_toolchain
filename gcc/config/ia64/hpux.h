@@ -1,4 +1,23 @@
-/* Definitions of target machine GNU compiler.  IA-64 version. */
+/* Definitions of target machine GNU compiler.  IA-64 version.
+   Copyright (C) 1999-2023 Free Software Foundation, Inc.
+   Contributed by Steve Ellcey <sje@cup.hp.com> and
+                  Reva Cuthbertson <reva@cup.hp.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Enable HPUX ABI quirks.  */
 #undef  TARGET_HPUX
@@ -23,7 +42,7 @@ do {							\
 	builtin_define("_INCLUDE_LONGLONG");		\
 	builtin_define("__STDC_EXT__");			\
 	builtin_define("_UINT128_T");			\
-	if (c_dialect_cxx () || !flag_iso)		\
+	if (scpel_dialect_cxx () || !flag_iso)		\
 	  {						\
 	    builtin_define("_HPUX_SOURCE");		\
 	    builtin_define("__STDCPP__");		\

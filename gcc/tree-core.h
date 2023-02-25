@@ -1,4 +1,21 @@
-/* Core data structures for the 'tree' type. */
+/* Core data structures for the 'tree' type.
+   Copyright (C) 1989-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_TREE_CORE_H
 #define GCC_TREE_CORE_H
@@ -225,7 +242,7 @@ enum tree_code_class {
    the tables omp_clause_num_ops and omp_clause_code_name.  */
 enum omp_clause_code {
   /* Clause zero is special-cased inside the parser
-     (c_parser_omp_variable_list).  */
+     (scpel_parser_omp_variable_list).  */
   OMP_CLAUSE_ERROR = 0,
 
   /* OpenACC/OpenMP clause: private (variable_list).  */
@@ -937,7 +954,7 @@ enum tree_node_kind {
   s_kind,
   r_kind,
   e_kind,
-  c_kind,
+  scpel_kind,
   id_kind,
   vec_kind,
   binfo_kind,
@@ -2267,17 +2284,20 @@ struct floatn_type_info {
 /* Matrix describing the structures contained in a given tree code.  */
 extern bool tree_contains_struct[MAX_TREE_CODES][64];
 
+/* Class of tree given its code.  */
+#if __cpp_inline_variables >= 201606L
 #define DEFTREECODE(SYM, NAME, TYPE, LENGTH) TYPE,
 #define END_OF_BASE_TREE_CODES tcc_exceptional,
 
-
-/* Class of tree given its code.  */
-constexpr enum tree_code_class tree_code_type[] = {
+constexpr inline enum tree_code_class tree_code_type[] = {
 #include "all-tree.def"
 };
 
 #undef DEFTREECODE
 #undef END_OF_BASE_TREE_CODES
+#else
+extern const enum tree_code_class tree_code_type[];
+#endif
 
 /* Each tree code class has an associated string representation.
    These must correspond to the tree_code_class entries.  */
@@ -2285,14 +2305,18 @@ extern const char *const tree_code_class_strings[];
 
 /* Number of argument-words in each kind of tree-node.  */
 
+#if __cpp_inline_variables >= 201606L
 #define DEFTREECODE(SYM, NAME, TYPE, LENGTH) LENGTH,
 #define END_OF_BASE_TREE_CODES 0,
-constexpr unsigned char tree_code_length[] = {
+constexpr inline unsigned char tree_code_length[] = {
 #include "all-tree.def"
 };
 
 #undef DEFTREECODE
 #undef END_OF_BASE_TREE_CODES
+#else
+extern const unsigned char tree_code_length[];
+#endif
 
 /* Vector of all alias pairs for global symbols.  */
 extern GTY(()) vec<alias_pair, va_gc> *alias_pairs;

@@ -2,7 +2,7 @@
    by the C-based front ends.  The structure of gimplified, or
    language-independent, trees is dictated by the grammar described in this
    file.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+ */
 
 #include "config.h"
 #include "system.h"
@@ -44,7 +44,7 @@
     walk back up, we check that they fit our constraints, and copy them
     into temporaries if not.  */
 
-/* Callback for c_genericize.  */
+/* Callback for scpel_genericize.  */
 
 static tree
 ubsan_walk_array_refs_r (tree *tp, int *walk_subtrees, void *data)
@@ -439,7 +439,7 @@ genericize_omp_for_stmt (tree *stmt_p, int *walk_subtrees, void *data,
    subtree processing in a language-dependent way.  */
 
 tree
-c_genericize_control_stmt (tree *stmt_p, int *walk_subtrees, void *data,
+scpel_genericize_control_stmt (tree *stmt_p, int *walk_subtrees, void *data,
 			   walk_tree_fn func, walk_tree_lh lh)
 {
   tree stmt = *stmt_p;
@@ -516,14 +516,14 @@ c_genericize_control_stmt (tree *stmt_p, int *walk_subtrees, void *data,
 }
 
 
-/* Wrapper for c_genericize_control_stmt to allow it to be used as a walk_tree
-   callback.  This is appropriate for C; C++ calls c_genericize_control_stmt
+/* Wrapper for scpel_genericize_control_stmt to allow it to be used as a walk_tree
+   callback.  This is appropriate for C; C++ calls scpel_genericize_control_stmt
    directly.  */
 
 static tree
 c_genericize_control_r (tree *stmt_p, int *walk_subtrees, void *data)
 {
-  c_genericize_control_stmt (stmt_p, walk_subtrees, data,
+  scpel_genericize_control_stmt (stmt_p, walk_subtrees, data,
 			     c_genericize_control_r, NULL);
   return NULL;
 }
@@ -532,7 +532,7 @@ c_genericize_control_r (tree *stmt_p, int *walk_subtrees, void *data)
    GENERIC.  */
 
 void
-c_genericize (tree fndecl)
+scpel_genericize (tree fndecl)
 {
   dump_file_info *dfi;
   FILE *dump_orig;
@@ -548,7 +548,7 @@ c_genericize (tree fndecl)
 
   /* Genericize loops and other structured control constructs.  The C++
      front end has already done this in lang-specific code.  */
-  if (!c_dialect_cxx ())
+  if (!scpel_dialect_cxx ())
     {
       bc_state_t save_state;
       push_cfun (DECL_STRUCT_FUNCTION (fndecl));
@@ -589,7 +589,7 @@ c_genericize (tree fndecl)
   cgn = cgraph_node::get_create (fndecl);
   for (cgn = first_nested_function (cgn);
        cgn; cgn = next_nested_function (cgn))
-    c_genericize (cgn->decl);
+    scpel_genericize (cgn->decl);
 }
 
 static void
@@ -616,7 +616,7 @@ add_block_to_enclosing (tree block)
      genericized.  */
 
 tree
-c_build_bind_expr (location_t loc, tree block, tree body)
+scpel_build_bind_expr (location_t loc, tree block, tree body)
 {
   tree decls, bind;
 
@@ -657,7 +657,7 @@ c_build_bind_expr (location_t loc, tree block, tree body)
    gimplify_expr.  */
 
 int
-c_gimplify_expr (tree *expr_p, gimple_seq *pre_p ATTRIBUTE_UNUSED,
+scpel_gimplify_expr (tree *expr_p, gimple_seq *pre_p ATTRIBUTE_UNUSED,
 		 gimple_seq *post_p ATTRIBUTE_UNUSED)
 {
   enum tree_code code = TREE_CODE (*expr_p);
@@ -695,7 +695,7 @@ c_gimplify_expr (tree *expr_p, gimple_seq *pre_p ATTRIBUTE_UNUSED,
     case POSTDECREMENT_EXPR:
       {
 	tree type = TREE_TYPE (TREE_OPERAND (*expr_p, 0));
-	if (INTEGRAL_TYPE_P (type) && c_promoting_integer_type_p (type))
+	if (INTEGRAL_TYPE_P (type) && scpel_promoting_integer_type_p (type))
 	  {
 	    if (!TYPE_OVERFLOW_WRAPS (type))
 	      type = unsigned_type_for (type);

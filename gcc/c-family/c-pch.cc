@@ -1,5 +1,4 @@
-/* Precompiled header implementation for the C languages.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Precompiled header implementation for the C languages. */
 
 #include "config.h"
 #include "system.h"
@@ -61,7 +60,7 @@ get_ident (void)
   static const char c_language_chars[] = "Co+O";
 
   memcpy (result, templ, IDENT_LENGTH);
-  result[4] = c_language_chars[c_language];
+  result[4] = c_language_chars[scpel_language];
 
   return result;
 }
@@ -144,7 +143,7 @@ pch_cpp_save_state (void)
    will produce a PCH file.  */
 
 void
-c_common_write_pch (void)
+scpel_common_write_pch (void)
 {
   timevar_push (TV_PCH_SAVE);
 
@@ -177,7 +176,7 @@ c_common_write_pch (void)
    2 if this file could never be used in the compilation.  */
 
 int
-c_common_valid_pch (cpp_reader *pfile, const char *name, int fd)
+scpel_common_valid_pch (cpp_reader *pfile, const char *name, int fd)
 {
   int sizeread;
   int result;
@@ -295,7 +294,7 @@ void (*lang_post_pch_load) (void);
    by ORIG_NAME.  */
 
 void
-c_common_read_pch (cpp_reader *pfile, const char *name,
+scpel_common_read_pch (cpp_reader *pfile, const char *name,
 		   int fd, const char *orig_name ATTRIBUTE_UNUSED)
 {
   FILE *f;
@@ -354,7 +353,7 @@ end:
 /* Indicate that no more PCH files should be read.  */
 
 void
-c_common_no_more_pch (void)
+scpel_common_no_more_pch (void)
 {
   if (cpp_get_callbacks (parse_in)->valid_pch)
     {
@@ -367,7 +366,7 @@ c_common_no_more_pch (void)
 /* Handle #pragma GCC pch_preprocess, to load in the PCH file.  */
 
 void
-c_common_pch_pragma (cpp_reader *pfile, const char *name)
+scpel_common_pch_pragma (cpp_reader *pfile, const char *name)
 {
   int fd;
 
@@ -383,14 +382,14 @@ c_common_pch_pragma (cpp_reader *pfile, const char *name)
   if (fd == -1)
     fatal_error (input_location, "%s: couldn%'t open PCH file: %m", name);
 
-  if (c_common_valid_pch (pfile, name, fd) != 1)
+  if (scpel_common_valid_pch (pfile, name, fd) != 1)
     {
       if (!cpp_get_options (pfile)->warn_invalid_pch)
 	inform (input_location, "use %<-Winvalid-pch%> for more information");
       fatal_error (input_location, "%s: PCH file was invalid", name);
     }
 
-  c_common_read_pch (pfile, name, fd, name);
+  scpel_common_read_pch (pfile, name, fd, name);
 
   close (fd);
 }

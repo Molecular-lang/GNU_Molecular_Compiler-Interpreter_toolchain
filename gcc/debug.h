@@ -1,4 +1,19 @@
-/* Debug hooks for GCC. */
+/* Debug hooks for GCC.
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 3, or (at your option) any
+   later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_DEBUG_H
 #define GCC_DEBUG_H
@@ -255,7 +270,7 @@ extern decl_to_instance_map_t *decl_to_instance_map;
 /* Allocate decl_to_instance_map with COUNT slots to begin wtih, if it
  * hasn't been allocated yet.  */
 
-static inline decl_to_instance_map_t *
+inline decl_to_instance_map_t *
 maybe_create_decl_to_instance_map (int count = 13)
 {
   if (!decl_to_instance_map)

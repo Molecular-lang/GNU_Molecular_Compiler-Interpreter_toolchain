@@ -1,6 +1,23 @@
 /* This file contains the definitions and documentation for the
    tree codes used in GCC.
- */
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
+
 
 /* For tcc_references, tcc_expression, tcc_comparison, tcc_unary,
    tcc_binary, and tcc_statement nodes, which use struct tree_exp, the
@@ -1324,8 +1341,7 @@ DEFTREECODE (WIDEN_SUM_EXPR, "widen_sum_expr", tcc_binary, 2)
    The first two arguments are of type t1 which should be integer.
    The third argument and the result are of type t2, such that t2 is at least
    twice the size of t1.  Like DOT_PROD_EXPR, SAD_EXPR (arg1,arg2,arg3) is
-   equivalent to (note we don't have WIDEN_MINUS_EXPR now, but we assume its
-   behavior is similar to WIDEN_SUM_EXPR):
+   equivalent to:
        tmp = WIDEN_MINUS_EXPR (arg1, arg2)
        tmp2 = ABS_EXPR (tmp)
        arg3 = PLUS_EXPR (tmp2, arg3)

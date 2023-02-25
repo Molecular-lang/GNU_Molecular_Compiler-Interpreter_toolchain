@@ -1,3 +1,26 @@
+/* Copyright (C) 2013-2023 Free Software Foundation, Inc.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3, or (at your option)
+   any later version.
+
+   GCC is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   Under Section 7 of GPL version 3, you are granted additional
+   permissions described in the GCC Runtime Library Exception, version
+   3.1, as published by the Free Software Foundation.
+
+   You should have received a copy of the GNU General Public License and
+   a copy of the GCC Runtime Library Exception along with this program;
+   see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+   <http://www.gnu.org/licenses/>.  */
+
 #ifndef _IMMINTRIN_H_INCLUDED
 #error "Never use <avx512erintrin.h> directly; include <immintrin.h> instead."
 #endif
@@ -28,9 +51,8 @@ extern __inline __m512d
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
 _mm512_exp2a23_round_pd (__m512d __A, int __R)
 {
-  __m512d __W;
   return (__m512d) __builtin_ia32_exp2pd_mask ((__v8df) __A,
-					       (__v8df) __W,
+					       (__v8df) _mm512_undefined_pd (),
 					       (__mmask8) -1, __R);
 }
 
@@ -56,9 +78,8 @@ extern __inline __m512
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
 _mm512_exp2a23_round_ps (__m512 __A, int __R)
 {
-  __m512 __W;
   return (__m512) __builtin_ia32_exp2ps_mask ((__v16sf) __A,
-					      (__v16sf) __W,
+					      (__v16sf) _mm512_undefined_ps (),
 					      (__mmask16) -1, __R);
 }
 
@@ -84,9 +105,8 @@ extern __inline __m512d
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
 _mm512_rcp28_round_pd (__m512d __A, int __R)
 {
-  __m512d __W;
   return (__m512d) __builtin_ia32_rcp28pd_mask ((__v8df) __A,
-						(__v8df) __W,
+						(__v8df) _mm512_undefined_pd (),
 						(__mmask8) -1, __R);
 }
 
@@ -112,9 +132,8 @@ extern __inline __m512
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
 _mm512_rcp28_round_ps (__m512 __A, int __R)
 {
-  __m512 __W;
   return (__m512) __builtin_ia32_rcp28ps_mask ((__v16sf) __A,
-					       (__v16sf) __W,
+					       (__v16sf) _mm512_undefined_ps (),
 					       (__mmask16) -1, __R);
 }
 
@@ -206,9 +225,8 @@ extern __inline __m512d
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
 _mm512_rsqrt28_round_pd (__m512d __A, int __R)
 {
-  __m512d __W;
   return (__m512d) __builtin_ia32_rsqrt28pd_mask ((__v8df) __A,
-						  (__v8df) __W,
+						  (__v8df) _mm512_undefined_pd (),
 						  (__mmask8) -1, __R);
 }
 
@@ -234,9 +252,8 @@ extern __inline __m512
 __attribute__ ((__gnu_inline__, __always_inline__, __artificial__))
 _mm512_rsqrt28_round_ps (__m512 __A, int __R)
 {
-  __m512 __W;
   return (__m512) __builtin_ia32_rsqrt28ps_mask ((__v16sf) __A,
-						 (__v16sf) __W,
+						 (__v16sf) _mm512_undefined_ps (),
 						 (__mmask16) -1, __R);
 }
 

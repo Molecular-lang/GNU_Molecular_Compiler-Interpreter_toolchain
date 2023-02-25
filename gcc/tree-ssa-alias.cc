@@ -1,4 +1,22 @@
-/* Alias analysis for trees. */
+/* Alias analysis for trees.
+   Copyright (C) 2004-2023 Free Software Foundation, Inc.
+   Contributed by Diego Novillo <dnovillo@redhat.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -3504,6 +3522,7 @@ stmt_kills_ref_p (gimple *stmt, ao_ref *ref)
 			       "ipa-modref: call to %s kills ",
 			       node->dump_name ());
 		      print_generic_expr (dump_file, ref->base);
+		      fprintf (dump_file, "\n");
 		    }
 		    ++alias_stats.modref_kill_yes;
 		    return true;
@@ -3638,7 +3657,10 @@ maybe_skip_until (gimple *phi, tree &target, basic_block target_bb,
   basic_block bb = gimple_bb (phi);
 
   if (!*visited)
-    *visited = BITMAP_ALLOC (NULL);
+    {
+      *visited = BITMAP_ALLOC (NULL);
+      bitmap_tree_view (*visited);
+    }
 
   bitmap_set_bit (*visited, SSA_NAME_VERSION (PHI_RESULT (phi)));
 
@@ -3930,7 +3952,10 @@ walk_aliased_vdefs_1 (ao_ref *ref, tree vdef,
 	{
 	  unsigned i;
 	  if (!*visited)
-	    *visited = BITMAP_ALLOC (NULL);
+	    {
+	      *visited = BITMAP_ALLOC (NULL);
+	      bitmap_tree_view (*visited);
+	    }
 	  for (i = 0; i < gimple_phi_num_args (def_stmt); ++i)
 	    {
 	      int res = walk_aliased_vdefs_1 (ref,

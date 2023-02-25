@@ -1,5 +1,4 @@
-/* Find near-matches for macros.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Find near-matches for macros. */
 
 #include "config.h"
 #include "system.h"
@@ -95,7 +94,7 @@ test_name_reserved_for_implementation_p ()
 /* Run all of the selftests within this file.  */
 
 void
-c_spellcheck_cc_tests ()
+scpel_spellcheck_cc_tests ()
 {
   test_name_reserved_for_implementation_p ();
 }

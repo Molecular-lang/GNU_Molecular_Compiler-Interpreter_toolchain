@@ -1,6 +1,6 @@
 /* Print GENERIC declaration (functions, variables, types) trees coming from
    the C and C++ front-ends as well as macros in Ada syntax.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+ */
 
 #include "config.h"
 #include "system.h"

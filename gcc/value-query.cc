@@ -1,4 +1,23 @@
-/* Support routines for value queries. */
+/* Support routines for value queries.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Contributed by Aldy Hernandez <aldyh@redhat.com> and
+   Andrew MacLeod <amacleod@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -293,7 +312,7 @@ get_ssa_name_ptr_info_nonnull (const_tree name)
 // return VARYING.
 
 static void
-get_range_global (vrange &r, tree name)
+get_range_global (vrange &r, tree name, struct function *fun = cfun)
 {
   tree type = TREE_TYPE (name);
 
@@ -308,7 +327,7 @@ get_range_global (vrange &r, tree name)
 	  // anti-ranges for pointers.  Note that this is only valid with
 	  // default definitions of PARM_DECLs.
 	  if (POINTER_TYPE_P (type)
-	      && ((cfun && nonnull_arg_p (sym))
+	      && ((cfun && fun == cfun && nonnull_arg_p (sym))
 		  || get_ssa_name_ptr_info_nonnull (name)))
 	    r.set_nonzero (type);
 	  else if (!POINTER_TYPE_P (type))
@@ -359,15 +378,15 @@ get_range_global (vrange &r, tree name)
 // https://gcc.gnu.org/pipermail/gcc-patches/2021-June/571709.html
 
 void
-gimple_range_global (vrange &r, tree name)
+gimple_range_global (vrange &r, tree name, struct function *fun)
 {
   tree type = TREE_TYPE (name);
   gcc_checking_assert (TREE_CODE (name) == SSA_NAME);
 
-  if (SSA_NAME_IS_DEFAULT_DEF (name) || (cfun && cfun->after_inlining)
+  if (SSA_NAME_IS_DEFAULT_DEF (name) || (fun && fun->after_inlining)
       || is_a<gphi *> (SSA_NAME_DEF_STMT (name)))
     {
-      get_range_global (r, name);
+      get_range_global (r, name, fun);
       return;
     }
   r.set_varying (type);

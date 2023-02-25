@@ -1,6 +1,22 @@
 /* Instruction scheduling pass.  This file contains definitions used
    internally in the scheduler.
- */
+   Copyright (C) 1992-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_SCHED_INT_H
 #define GCC_SCHED_INT_H
@@ -71,7 +87,7 @@ extern struct common_sched_info_def *common_sched_info;
 extern const struct common_sched_info_def haifa_common_sched_info;
 
 /* Return true if selective scheduling pass is working.  */
-static inline bool
+inline bool
 sel_sched_p (void)
 {
   return common_sched_info->sched_pass_id == SCHED_SEL_PASS;
@@ -1572,7 +1588,7 @@ typedef struct _sd_iterator sd_iterator_def;
    struct _deps_link.  */
 
 /* Return initialized iterator.  */
-static inline sd_iterator_def
+inline sd_iterator_def
 sd_iterator_start (rtx insn, sd_list_types_def types)
 {
   /* Some dep_link a pointer to which will return NULL.  */
@@ -1591,7 +1607,7 @@ sd_iterator_start (rtx insn, sd_list_types_def types)
 }
 
 /* Return the current element.  */
-static inline bool
+inline bool
 sd_iterator_cond (sd_iterator_def *it_ptr, dep_t *dep_ptr)
 {
   while (true)
@@ -1629,7 +1645,7 @@ sd_iterator_cond (sd_iterator_def *it_ptr, dep_t *dep_ptr)
 }
 
 /* Advance iterator.  */
-static inline void
+inline void
 sd_iterator_next (sd_iterator_def *it_ptr)
 {
   it_ptr->linkp = &DEP_LINK_NEXT (*it_ptr->linkp);

@@ -1,4 +1,22 @@
-/* Rich optional information on why an optimization wasn't possible. */
+/* Rich optional information on why an optimization wasn't possible.
+   Copyright (C) 2018-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -306,7 +324,7 @@ test_opt_result_failure_at (const line_table_case &case_)
 /* Run all of the selftests within this file.  */
 
 void
-c_opt_problem_cc_tests ()
+scpel_opt_problem_cc_tests ()
 {
   test_opt_result_success ();
   for_each_line_table_case (test_opt_result_failure_at);

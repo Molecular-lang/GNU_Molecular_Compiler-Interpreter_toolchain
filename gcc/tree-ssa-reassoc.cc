@@ -1,4 +1,22 @@
-/* Reassociation for trees. */
+/* Reassociation for trees.
+   Copyright (C) 2005-2023 Free Software Foundation, Inc.
+   Contributed by Daniel Berlin <dan@dberlin.org>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -2253,6 +2271,15 @@ eliminate_redundant_comparison (enum tree_code opcode,
 	  STRIP_USELESS_TYPE_CONVERSION (newop1);
 	  STRIP_USELESS_TYPE_CONVERSION (newop2);
 	  if (!is_gimple_val (newop1) || !is_gimple_val (newop2))
+	    continue;
+	  if (lcode == TREE_CODE (t)
+	      && operand_equal_p (op1, newop1, 0)
+	      && operand_equal_p (op2, newop2, 0))
+	    t = curr->op;
+	  else if ((TREE_CODE (newop1) == SSA_NAME
+		    && SSA_NAME_OCCURS_IN_ABNORMAL_PHI (newop1))
+		   || (TREE_CODE (newop2) == SSA_NAME
+		       && SSA_NAME_OCCURS_IN_ABNORMAL_PHI (newop2)))
 	    continue;
 	}
 
@@ -4660,6 +4687,9 @@ update_ops (tree var, enum tree_code code, const vec<operand_entry *> &ops,
       gimple_set_uid (g, gimple_uid (stmt));
       gimple_set_visited (g, true);
       gsi_insert_before (&gsi, g, GSI_SAME_STMT);
+      gimple_stmt_iterator gsi2 = gsi_for_stmt (g);
+      if (fold_stmt_inplace (&gsi2))
+	update_stmt (g);
     }
   return var;
 }

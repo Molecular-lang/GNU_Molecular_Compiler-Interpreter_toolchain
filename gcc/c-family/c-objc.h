@@ -1,5 +1,4 @@
-/* Definitions of Objective-C front-end entry points used for C and C++.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Definitions of Objective-C front-end entry points used for C and C++. */
 
 #ifndef GCC_C_COMMON_OBJC_H
 #define GCC_C_COMMON_OBJC_H

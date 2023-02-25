@@ -1,6 +1,26 @@
 /* Form lists of pseudo register references for autoinc optimization
    for GNU compiler.  This is part of flow optimization.
- */
+   Copyright (C) 1999-2023 Free Software Foundation, Inc.
+   Originally contributed by Michael P. Hayes
+             (m.hayes@elec.canterbury.ac.nz, mhayes@redhat.com)
+   Major rewrite contributed by Danny Berlin (dberlin@dberlin.org)
+             and Kenneth Zadeck (zadeck@naturalbridge.com).
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_DF_H
 #define GCC_DF_H
@@ -1077,7 +1097,7 @@ extern void df_scan_verify (void);
    Public functions access functions for the dataflow problems.
 ----------------------------------------------------------------------------*/
 
-static inline struct df_scan_bb_info *
+inline struct df_scan_bb_info *
 df_scan_get_bb_info (unsigned int index)
 {
   if (index < df_scan->block_info_size)
@@ -1086,7 +1106,7 @@ df_scan_get_bb_info (unsigned int index)
     return NULL;
 }
 
-static inline class df_rd_bb_info *
+inline class df_rd_bb_info *
 df_rd_get_bb_info (unsigned int index)
 {
   if (index < df_rd->block_info_size)
@@ -1095,7 +1115,7 @@ df_rd_get_bb_info (unsigned int index)
     return NULL;
 }
 
-static inline class df_lr_bb_info *
+inline class df_lr_bb_info *
 df_lr_get_bb_info (unsigned int index)
 {
   if (index < df_lr->block_info_size)
@@ -1104,7 +1124,7 @@ df_lr_get_bb_info (unsigned int index)
     return NULL;
 }
 
-static inline class df_md_bb_info *
+inline class df_md_bb_info *
 df_md_get_bb_info (unsigned int index)
 {
   if (index < df_md->block_info_size)
@@ -1113,7 +1133,7 @@ df_md_get_bb_info (unsigned int index)
     return NULL;
 }
 
-static inline class df_live_bb_info *
+inline class df_live_bb_info *
 df_live_get_bb_info (unsigned int index)
 {
   if (index < df_live->block_info_size)
@@ -1122,7 +1142,7 @@ df_live_get_bb_info (unsigned int index)
     return NULL;
 }
 
-static inline class df_word_lr_bb_info *
+inline class df_word_lr_bb_info *
 df_word_lr_get_bb_info (unsigned int index)
 {
   if (index < df_word_lr->block_info_size)
@@ -1131,7 +1151,7 @@ df_word_lr_get_bb_info (unsigned int index)
     return NULL;
 }
 
-static inline class df_mir_bb_info *
+inline class df_mir_bb_info *
 df_mir_get_bb_info (unsigned int index)
 {
   if (index < df_mir->block_info_size)
@@ -1145,7 +1165,7 @@ df_mir_get_bb_info (unsigned int index)
    choose different dataflow problems depending on the optimization
    level.  */
 
-static inline bitmap
+inline bitmap
 df_get_live_out (basic_block bb)
 {
   gcc_checking_assert (df_lr);
@@ -1161,7 +1181,7 @@ df_get_live_out (basic_block bb)
    choose different dataflow problems depending on the optimization
    level.  */
 
-static inline bitmap
+inline bitmap
 df_get_live_in (basic_block bb)
 {
   gcc_checking_assert (df_lr);
@@ -1175,7 +1195,7 @@ df_get_live_in (basic_block bb)
 /* Get basic block info.  */
 /* Get the artificial defs for a basic block.  */
 
-static inline df_ref
+inline df_ref
 df_get_artificial_defs (unsigned int bb_index)
 {
   return df_scan_get_bb_info (bb_index)->artificial_defs;
@@ -1184,7 +1204,7 @@ df_get_artificial_defs (unsigned int bb_index)
 
 /* Get the artificial uses for a basic block.  */
 
-static inline df_ref
+inline df_ref
 df_get_artificial_uses (unsigned int bb_index)
 {
   return df_scan_get_bb_info (bb_index)->artificial_uses;
@@ -1193,7 +1213,7 @@ df_get_artificial_uses (unsigned int bb_index)
 /* If INSN defines exactly one register, return the associated reference,
    otherwise return null.  */
 
-static inline df_ref
+inline df_ref
 df_single_def (const df_insn_info *info)
 {
   df_ref defs = DF_INSN_INFO_DEFS (info);
@@ -1203,7 +1223,7 @@ df_single_def (const df_insn_info *info)
 /* If INSN uses exactly one register, return the associated reference,
    otherwise return null.  */
 
-static inline df_ref
+inline df_ref
 df_single_use (const df_insn_info *info)
 {
   df_ref uses = DF_INSN_INFO_USES (info);

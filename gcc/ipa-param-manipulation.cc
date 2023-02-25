@@ -1,6 +1,22 @@
 /* Manipulation of formal and actual parameters of functions and function
    calls.
- */
+   Copyright (C) 2017-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #define INCLUDE_ALGORITHM
 #include "config.h"
@@ -1841,6 +1857,8 @@ ipa_param_body_adjustments::modify_expression (tree *expr_p, bool convert)
   if (convert && !useless_type_conversion_p (TREE_TYPE (expr),
 					     TREE_TYPE (repl)))
     {
+      gcc_checking_assert (tree_to_shwi (TYPE_SIZE (TREE_TYPE (expr)))
+			   == tree_to_shwi (TYPE_SIZE (TREE_TYPE (repl))));
       tree vce = build1 (VIEW_CONVERT_EXPR, TREE_TYPE (expr), repl);
       *expr_p = vce;
     }
@@ -1884,6 +1902,8 @@ ipa_param_body_adjustments::modify_assignment (gimple *stmt,
 	}
       else
 	{
+	  gcc_checking_assert (tree_to_shwi (TYPE_SIZE (TREE_TYPE (*lhs_p)))
+			      == tree_to_shwi (TYPE_SIZE (TREE_TYPE (*rhs_p))));
 	  tree new_rhs = fold_build1_loc (gimple_location (stmt),
 					  VIEW_CONVERT_EXPR, TREE_TYPE (*lhs_p),
 					  *rhs_p);

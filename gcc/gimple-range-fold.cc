@@ -1,4 +1,23 @@
-/* Code for GIMPLE range related routines. */
+/* Code for GIMPLE range related routines.
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by Andrew MacLeod <amacleod@redhat.com>
+   and Aldy Hernandez <aldyh@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -1018,6 +1037,9 @@ fold_using_range::relation_fold_and_or (irange& lhs_range, gimple *s,
   tree ssa2_dep2 = gimple_range_ssa_p (handler2.operand2 ());
 
   if (!ssa1_dep1 || !ssa1_dep2 || !ssa2_dep1 || !ssa2_dep2)
+    return;
+
+  if (HONOR_NANS (TREE_TYPE (ssa1_dep1)))
     return;
 
   // Make sure they are the same dependencies, and detect the order of the

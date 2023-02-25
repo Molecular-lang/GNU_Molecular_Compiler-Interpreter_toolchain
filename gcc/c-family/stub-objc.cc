@@ -1,7 +1,7 @@
 /* Stub functions for Objective-C and Objective-C++ routines
    that are called from within the C and C++ front-ends,
    respectively.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+ */
 
 #include "config.h"
 #include "system.h"

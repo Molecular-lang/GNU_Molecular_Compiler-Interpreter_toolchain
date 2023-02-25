@@ -1,5 +1,4 @@
-/* Define builtin-in macros for the C family front ends.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Define builtin-in macros for the C family front ends. */
 
 #include "config.h"
 #include "system.h"
@@ -263,7 +262,7 @@ builtin_define_float_constants (const char *name_prefix,
   /* The difference between 1 and the least value greater than 1 that is
      representable in the given floating point type, b**(1-p).  */
   sprintf (name, "__%s_EPSILON__", name_prefix);
-  if (fmt->pnan < fmt->p && (c_dialect_cxx () || !flag_isoc2x))
+  if (fmt->pnan < fmt->p && (scpel_dialect_cxx () || !flag_isoc2x))
     /* This is an IBM extended double format, so 1.0 + any double is
        representable precisely.  */
       sprintf (buf, "0x1p%d", fmt->emin - fmt->p);
@@ -455,12 +454,12 @@ builtin_define_stdint_macros (void)
     builtin_define_type_max ("__INT64_MAX__", int64_type_node);
   if (uint8_type_node)
     builtin_define_type_max ("__UINT8_MAX__", uint8_type_node);
-  if (c_uint16_type_node)
-    builtin_define_type_max ("__UINT16_MAX__", c_uint16_type_node);
-  if (c_uint32_type_node)
-    builtin_define_type_max ("__UINT32_MAX__", c_uint32_type_node);
-  if (c_uint64_type_node)
-    builtin_define_type_max ("__UINT64_MAX__", c_uint64_type_node);
+  if (scpel_uint16_type_node)
+    builtin_define_type_max ("__UINT16_MAX__", scpel_uint16_type_node);
+  if (scpel_uint32_type_node)
+    builtin_define_type_max ("__UINT32_MAX__", scpel_uint32_type_node);
+  if (scpel_uint64_type_node)
+    builtin_define_type_max ("__UINT64_MAX__", scpel_uint64_type_node);
   if (int_least8_type_node)
     {
       builtin_define_type_max ("__INT_LEAST8_MAX__", int_least8_type_node);
@@ -557,7 +556,7 @@ builtin_define_stdint_macros (void)
 /* Adjust the optimization macros when a #pragma GCC optimization is done to
    reflect the current level.  */
 void
-c_cpp_builtins_optimize_pragma (cpp_reader *pfile, tree prev_tree,
+scpel_cpp_builtins_optimize_pragma (cpp_reader *pfile, tree prev_tree,
 				tree cur_tree)
 {
   struct cl_optimization *prev = TREE_OPTIMIZATION (prev_tree);
@@ -851,12 +850,12 @@ cpp_iec_559_value (void)
      this to mean a lack of IEEE 754 support.  */
 
   if (flag_iso
-      && !c_dialect_cxx ()
+      && !scpel_dialect_cxx ()
       && !c_cpp_flt_eval_method_iec_559 ())
     ret = 0;
 
   if (flag_iso
-      && !c_dialect_cxx ()
+      && !scpel_dialect_cxx ()
       && flag_fp_contract_mode == FP_CONTRACT_FAST)
     ret = 0;
 
@@ -894,7 +893,7 @@ cpp_iec_559_complex_value (void)
 
 /* Hook that registers front end and target-specific built-ins.  */
 void
-c_cpp_builtins (cpp_reader *pfile)
+scpel_cpp_builtins (cpp_reader *pfile)
 {
   int i;
 
@@ -911,7 +910,7 @@ c_cpp_builtins (cpp_reader *pfile)
     cpp_get_wide_charset_name (pfile), 1);
 
 
-  if (c_dialect_cxx ())
+  if (scpel_dialect_cxx ())
   {
     int major;
     parse_basever (&major, NULL, NULL);
@@ -919,9 +918,9 @@ c_cpp_builtins (cpp_reader *pfile)
   }
 
   /* For stddef.h.  They require macros defined in c-common.cc.  */
-  c_stddef_cpp_builtins ();
+  scpel_stddef_cpp_builtins ();
 
-  if (c_dialect_cxx ())
+  if (scpel_dialect_cxx ())
     {
       if (flag_weak && SUPPORTS_ONE_ONLY)
 	cpp_define (pfile, "__GXX_WEAK__=1");
@@ -951,9 +950,9 @@ c_cpp_builtins (cpp_reader *pfile)
 
       /* Arrays of runtime bound were removed from C++14, but we still
 	 support GNU VLAs.  Let's define this macro to a low number
-	 (corresponding to the initial test release of GNU C++) if we won't
+	 (corresponding to the initial test release of GNU Scpel++) if we won't
 	 complain about use of VLAs.  */
-      if (c_dialect_cxx ()
+      if (scpel_dialect_cxx ()
 	  && (pedantic ? warn_vla == 0 : warn_vla <= 0))
 	cpp_define (pfile, "__cpp_runtime_arrays=198712L");
 
@@ -1115,14 +1114,14 @@ c_cpp_builtins (cpp_reader *pfile)
   if (flag_exceptions)
     {
       cpp_define (pfile, "__EXCEPTIONS");
-      if (c_dialect_cxx ())
+      if (scpel_dialect_cxx ())
 	cpp_define (pfile, "__cpp_exceptions=199711L");
     }
 
   /* Represents the C++ ABI version, always defined so it can be used while
      preprocessing C and assembler.  */
   if (flag_abi_version == 0)
-    /* We should have set this to something real in c_common_post_options.  */
+    /* We should have set this to something real in scpel_common_post_options.  */
     gcc_unreachable ();
   else if (flag_abi_version == 1)
     /* Due to a historical accident, this version had the value
@@ -1167,7 +1166,7 @@ c_cpp_builtins (cpp_reader *pfile)
   builtin_define_type_width ("__PTRDIFF_WIDTH__", ptrdiff_type_node, NULL_TREE);
   builtin_define_type_width ("__SIZE_WIDTH__", size_type_node, NULL_TREE);
 
-  if (c_dialect_cxx ())
+  if (scpel_dialect_cxx ())
     for (i = 0; i < NUM_INT_N_ENTS; i ++)
       if (int_n_enabled_p[i])
 	{
@@ -1208,9 +1207,9 @@ c_cpp_builtins (cpp_reader *pfile)
        Which always permits the values for FLT_EVAL_METHOD defined in
        ISO/IEC TS 18661-3.  */
   builtin_define_with_int_value ("__FLT_EVAL_METHOD__",
-				 c_flt_eval_method (true));
+				 scpel_flt_eval_method (true));
   builtin_define_with_int_value ("__FLT_EVAL_METHOD_TS_18661_3__",
-				 c_flt_eval_method (false));
+				 scpel_flt_eval_method (false));
 
   /* And decfloat.h needs this.  */
   builtin_define_with_int_value ("__DEC_EVAL_METHOD__",
@@ -1223,7 +1222,7 @@ c_cpp_builtins (cpp_reader *pfile)
      macros that include a cast.  We use a different cast for C++ to avoid
      problems with -Wold-style-cast.  */
   builtin_define_float_constants ("DBL", "L",
-				  (c_dialect_cxx ()
+				  (scpel_dialect_cxx ()
 				   ? "double(%s)"
 				   : "((double)%s)"),
 				  "", double_type_node);
@@ -1234,7 +1233,7 @@ c_cpp_builtins (cpp_reader *pfile)
     {
       if (FLOATN_NX_TYPE_NODE (i) == NULL_TREE)
 	continue;
-      if (c_dialect_cxx ()
+      if (scpel_dialect_cxx ()
 	  && cxx_dialect > cxx20
 	  && !floatn_nx_types[i].extended)
 	{
@@ -1252,7 +1251,7 @@ c_cpp_builtins (cpp_reader *pfile)
     }
   if (bfloat16_type_node)
     {
-      if (c_dialect_cxx () && cxx_dialect > cxx20)
+      if (scpel_dialect_cxx () && cxx_dialect > cxx20)
 	cpp_define (pfile, "__STDCPP_BFLOAT16_T__=1");
       builtin_define_float_constants ("BFLT16", "BF16", "%s",
 				      "BF16", bfloat16_type_node);
@@ -1544,7 +1543,7 @@ c_cpp_builtins (cpp_reader *pfile)
   if (!flag_signed_char)
     cpp_define (pfile, "__CHAR_UNSIGNED__");
 
-  if (c_dialect_cxx () && TYPE_UNSIGNED (wchar_type_node))
+  if (scpel_dialect_cxx () && TYPE_UNSIGNED (wchar_type_node))
     cpp_define (pfile, "__WCHAR_UNSIGNED__");
 
   cpp_atomic_builtins (pfile);
@@ -1560,7 +1559,7 @@ c_cpp_builtins (cpp_reader *pfile)
 #endif
 
   /* Make the choice of ObjC runtime visible to source code.  */
-  if (c_dialect_objc () && flag_next_runtime)
+  if (scpel_dialect_objc () && flag_next_runtime)
     cpp_define (pfile, "__NEXT_RUNTIME__");
 
   /* Show the availability of some target pragmas.  */

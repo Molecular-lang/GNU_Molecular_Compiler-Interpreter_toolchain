@@ -1,4 +1,21 @@
-/* High-level loop manipulation functions. */
+/* High-level loop manipulation functions.
+   Copyright (C) 2004-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 3, or (at your option) any
+later version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -664,14 +681,14 @@ verify_loop_closed_ssa (bool verify_ssa_p, class loop *loop)
   if (number_of_loops (cfun) <= 1)
     return;
 
-  if (verify_ssa_p)
-    verify_ssa (false, true);
-
   timevar_push (TV_VERIFY_LOOP_CLOSED);
 
   if (loop == NULL)
     {
       basic_block bb;
+
+      if (verify_ssa_p)
+	verify_ssa (false, true);
 
       FOR_EACH_BB_FN (bb, cfun)
 	if (bb->loop_father && bb->loop_father->num > 0)
@@ -680,6 +697,11 @@ verify_loop_closed_ssa (bool verify_ssa_p, class loop *loop)
   else
     {
       basic_block *bbs = get_loop_body (loop);
+
+      /* We do not have loop-local SSA verification so just
+	 check there's no update queued.  */
+      if (verify_ssa_p)
+	gcc_assert (!need_ssa_update_p (cfun));
 
       for (unsigned i = 0; i < loop->num_nodes; ++i)
 	check_loop_closed_ssa_bb (bbs[i]);

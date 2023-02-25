@@ -1,4 +1,21 @@
-/* Unit tests for GCC's garbage collector (and gengtype etc). */
+/* Unit tests for GCC's garbage collector (and gengtype etc).
+   Copyright (C) 2015-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -11,6 +28,8 @@
 
 /* The various GTY markers must be outside of a namespace to be seen by
    gengtype, so we don't put this file within the selftest namespace.  */
+
+
 
 /* Verify that a simple struct works, and that it can
    own references to non-roots, and have them be marked.  */
@@ -33,6 +52,8 @@ test_basic_struct ()
   ASSERT_TRUE (ggc_marked_p (root_test_struct));
   ASSERT_TRUE (ggc_marked_p (root_test_struct->other));
 }
+
+
 
 /* Selftest for GTY((length)).  */
 

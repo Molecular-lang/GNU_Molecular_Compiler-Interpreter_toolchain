@@ -1,6 +1,24 @@
 /* Tree lowering pass.  This pass converts the GENERIC functions-as-trees
    tree representation into the GIMPLE form.
- */
+   Copyright (C) 2002-2023 Free Software Foundation, Inc.
+   Major work done by Sebastian Pop <s.pop@laposte.net>,
+   Diego Novillo <dnovillo@redhat.com> and Jason Merrill <jason@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -6423,7 +6441,7 @@ gimplify_save_expr (tree *expr_p, gimple_seq *pre_p, gimple_seq *post_p)
   gcc_assert (TREE_CODE (*expr_p) == SAVE_EXPR);
   val = TREE_OPERAND (*expr_p, 0);
 
-  if (TREE_TYPE (val) == error_mark_node)
+  if (val && TREE_TYPE (val) == error_mark_node)
     return GS_ERROR;
 
   /* If the SAVE_EXPR has not been resolved, then evaluate it once.  */

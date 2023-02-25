@@ -1,4 +1,6 @@
-/* Fold a constant sub-tree into a single node for C-compiler */
+/* Fold a constant sub-tree into a single node for C-compiler
+   Copyright (C) 2023 Scpel Software Foundation, Inc.
+ */
 
 /*@@ This file should be rewritten to use an arbitrary precision
   @@ representation for "struct tree_int_cst" and "struct tree_real_cst".
@@ -16539,7 +16541,7 @@ getbyterep (tree src, unsigned HOST_WIDE_INT *strsize)
    offset.  */
 
 const char *
-c_getstr (tree str)
+scpel_getstr (tree str)
 {
   return getbyterep (str, NULL);
 }

@@ -1,3 +1,50 @@
+
+/*
+
+   Test to see if a particular fix should be applied to a header file.
+
+   Copyright (C) 1997, 1998, 1999, 2000, 2009, 2012
+   Free Software Foundation, Inc.
+
+= = = = = = = = = = = = = = = = = = = = = = = = =
+
+NOTE TO DEVELOPERS
+
+The routines you write here must work closely with fixincl.c.
+
+Here are the rules:
+
+1.  Every test procedure name must be suffixed with "_test".
+    These routines will be referenced from inclhack.def, sans the suffix.
+
+2.  Use the "TEST_FOR_FIX_PROC_HEAD()" macro _with_ the "_test" suffix
+    (I cannot use the ## magic from ANSI C) for defining your entry point.
+
+3.  Put your test name into the FIX_TEST_TABLE
+
+4.  Do not write anything to stdout.  It may be closed.
+
+5.  Write to stderr only in the event of a reportable error
+    In such an event, call "exit(1)".
+
+= = = = = = = = = = = = = = = = = = = = = = = = =
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
+
 #include "fixlib.h"
 
 #define _ENV_(v,m,n,t)   extern char const * v;

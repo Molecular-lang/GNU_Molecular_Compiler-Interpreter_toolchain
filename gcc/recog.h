@@ -1,4 +1,21 @@
-/* Declarations for interface to insn recognizer and insn-output.cc. */
+/* Declarations for interface to insn recognizer and insn-output.cc.
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_RECOG_H
 #define GCC_RECOG_H
@@ -59,7 +76,7 @@ struct operand_alternative
 /* Return the class for operand I of alternative ALT, taking matching
    constraints into account.  */
 
-static inline enum reg_class
+inline enum reg_class
 alternative_class (const operand_alternative *alt, int i)
 {
   return alt[i].matches >= 0 ? alt[alt[i].matches].cl : alt[i].cl;
@@ -212,7 +229,7 @@ extern bool mode_dependent_address_p (rtx, addr_space_t);
 
 extern int recog (rtx, rtx_insn *, int *);
 #ifndef GENERATOR_FILE
-static inline int recog_memoized (rtx_insn *insn);
+inline int recog_memoized (rtx_insn *insn);
 #endif
 extern void add_clobbers (rtx, int);
 extern int added_clobbers_hard_reg_p (int);
@@ -249,7 +266,7 @@ extern void copy_frame_info_to_split_insn (rtx_insn *, rtx_insn *);
    The automatically-generated function `recog' is normally called
    through this one.  */
 
-static inline int
+inline int
 recog_memoized (rtx_insn *insn)
 {
   if (INSN_CODE (insn) < 0)
@@ -260,7 +277,7 @@ recog_memoized (rtx_insn *insn)
 
 /* Skip chars until the next ',' or the end of the string.  This is
    useful to skip alternatives in a constraint string.  */
-static inline const char *
+inline const char *
 skip_alternative (const char *p)
 {
   const char *r = p;

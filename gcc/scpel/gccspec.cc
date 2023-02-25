@@ -1,5 +1,4 @@
-/* Specific flags and argument handling of the C front-end.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Specific flags and argument handling of the C front-end. */
 
 #include "config.h"
 #include "system.h"

@@ -1,4 +1,27 @@
-/* DWARF2 EH unwinding support for GNU Hurd: x86. */
+/* DWARF2 EH unwinding support for GNU Hurd: x86.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Contributed by Samuel Thibault <samuel.thibault@gnu.org>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 /* Do code reading to identify a signal frame, and set the frame
    state data appropriately.  See unwind-dw2.c for the structs. */
@@ -6,6 +29,14 @@
 #ifndef inhibit_libc
 
 #include <signal.h>
+
+#ifdef __x86_64__
+
+/*
+ * TODO: support for 64 bits needs to be implemented.
+ */
+
+#else /* ifdef __x86_64__  */
 
 #define MD_FALLBACK_FRAME_STATE_FOR x86_gnu_fallback_frame_state
 
@@ -114,5 +145,7 @@ x86_gnu_fallback_frame_state
 
   return _URC_NO_REASON;
 }
+
+#endif /* ifdef __x86_64__  */
 
 #endif /* ifndef inhibit_libc */

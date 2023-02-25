@@ -1,4 +1,21 @@
-/* IR-agnostic target query functions relating to optabs */
+/* IR-agnostic target query functions relating to optabs
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_OPTABS_QUERY_H
 #define GCC_OPTABS_QUERY_H
@@ -75,7 +92,7 @@ trapv_binoptab_p (optab binoptab)
 /* Return insn code for a comparison operator with VMODE
    resultin MASK_MODE, unsigned if UNS is true.  */
 
-static inline enum insn_code
+inline enum insn_code
 get_vec_cmp_icode (machine_mode vmode, machine_mode mask_mode, bool uns)
 {
   optab tab = uns ? vec_cmpu_optab : vec_cmp_optab;
@@ -85,7 +102,7 @@ get_vec_cmp_icode (machine_mode vmode, machine_mode mask_mode, bool uns)
 /* Return insn code for a comparison operator with VMODE
    resultin MASK_MODE (only for EQ/NE).  */
 
-static inline enum insn_code
+inline enum insn_code
 get_vec_cmp_eq_icode (machine_mode vmode, machine_mode mask_mode)
 {
   return convert_optab_handler (vec_cmpeq_optab, vmode, mask_mode);
@@ -108,7 +125,7 @@ get_vcond_icode (machine_mode vmode, machine_mode cmode, bool uns)
 /* Return insn code for a conditional operator with a mask mode
    MMODE resulting in a value of mode VMODE.  */
 
-static inline enum insn_code
+inline enum insn_code
 get_vcond_mask_icode (machine_mode vmode, machine_mode mmode)
 {
   return convert_optab_handler (vcond_mask_optab, vmode, mmode);
@@ -117,7 +134,7 @@ get_vcond_mask_icode (machine_mode vmode, machine_mode mmode)
 /* Return insn code for a conditional operator with a comparison in
    mode CMODE (only EQ/NE), resulting in a value of mode VMODE.  */
 
-static inline enum insn_code
+inline enum insn_code
 get_vcond_eq_icode (machine_mode vmode, machine_mode cmode)
 {
   return convert_optab_handler (vcondeq_optab, vmode, cmode);

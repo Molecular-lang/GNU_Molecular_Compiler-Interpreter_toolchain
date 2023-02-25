@@ -1,5 +1,4 @@
-/* Specific flags and argument handling of the C preprocessor.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Specific flags and argument handling of the C preprocessor. */
 
 #include "config.h"
 #include "system.h"

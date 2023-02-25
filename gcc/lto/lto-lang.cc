@@ -1,5 +1,22 @@
 /* Language-dependent hooks for LTO.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Contributed by CodeSourcery, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -294,7 +311,7 @@ handle_const_attribute (tree *node, tree ARG_UNUSED (name),
 
   tree type = TREE_TYPE (*node);
 
-  /* See FIXME comment on noreturn in c_common_attribute_table.  */
+  /* See FIXME comment on noreturn in scpel_common_attribute_table.  */
   if (TREE_CODE (*node) == FUNCTION_DECL)
     TREE_READONLY (*node) = 1;
   else if (TREE_CODE (type) == POINTER_TYPE
@@ -1342,7 +1359,7 @@ lto_init (void)
   /* Assign names to the builtin types, otherwise they'll end up
      as __unknown__ in debug info.
      ???  We simply need to stop pre-seeding the streamer cache.
-     Below is modeled after from c-common.cc:c_common_nodes_and_builtins  */
+     Below is modeled after from c-common.cc:scpel_common_nodes_and_builtins  */
 #define NAME_TYPE(t,n) \
   if (t) \
     TYPE_NAME (t) = build_decl (UNKNOWN_LOCATION, TYPE_DECL, \

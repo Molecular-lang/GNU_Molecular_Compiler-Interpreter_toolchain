@@ -1,4 +1,22 @@
-/* __builtin_object_size (ptr, object_size_type) computation */
+/* __builtin_object_size (ptr, object_size_type) computation
+   Copyright (C) 2004-2023 Free Software Foundation, Inc.
+   Contributed by Jakub Jelinek <jakub@redhat.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -38,7 +56,7 @@ struct GTY(()) object_size
   tree wholesize;
 };
 
-static tree compute_object_offset (const_tree, const_tree);
+static tree compute_object_offset (tree, const_tree);
 static bool addr_object_size (struct object_size_info *,
 			      const_tree, int, tree *, tree *t = NULL);
 static tree alloc_object_size (const gcall *, int);
@@ -378,7 +396,7 @@ size_for_offset (tree sz, tree offset, tree wholesize = NULL_TREE)
    if unknown.  */
 
 static tree
-compute_object_offset (const_tree expr, const_tree var)
+compute_object_offset (tree expr, const_tree var)
 {
   enum tree_code code = PLUS_EXPR;
   tree base, off, t;
@@ -395,8 +413,7 @@ compute_object_offset (const_tree expr, const_tree var)
 
       t = TREE_OPERAND (expr, 1);
       off = size_binop (PLUS_EXPR,
-			(TREE_OPERAND (expr, 2) ? TREE_OPERAND (expr, 2)
-			 : DECL_FIELD_OFFSET (t)),
+			component_ref_field_offset (expr),
 			size_int (tree_to_uhwi (DECL_FIELD_BIT_OFFSET (t))
 				  / BITS_PER_UNIT));
       break;

@@ -1,5 +1,22 @@
 /* AddressSanitizer, a fast memory error detector.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2012-2023 Free Software Foundation, Inc.
+   Contributed by Kostya Serebryany <kcc@google.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 
 #include "config.h"
@@ -371,6 +388,46 @@ bool
 asan_memintrin (void)
 {
   return (sanitize_flags_p (SANITIZE_ADDRESS) && param_asan_memintrin);
+}
+
+
+/* Support for --param asan-kernel-mem-intrinsic-prefix=1.  */
+static GTY(()) rtx asan_memfn_rtls[3];
+
+rtx
+asan_memfn_rtl (tree fndecl)
+{
+  int i;
+  const char *f, *p;
+  char buf[sizeof ("__hwasan_memmove")];
+
+  switch (DECL_FUNCTION_CODE (fndecl))
+    {
+    case BUILT_IN_MEMCPY: i = 0; f = "memcpy"; break;
+    case BUILT_IN_MEMSET: i = 1; f = "memset"; break;
+    case BUILT_IN_MEMMOVE: i = 2; f = "memmove"; break;
+    default: gcc_unreachable ();
+    }
+  if (asan_memfn_rtls[i] == NULL_RTX)
+    {
+      tree save_name = DECL_NAME (fndecl);
+      tree save_assembler_name = DECL_ASSEMBLER_NAME (fndecl);
+      rtx save_rtl = DECL_RTL (fndecl);
+      if (flag_sanitize & SANITIZE_KERNEL_HWADDRESS)
+	p = "__hwasan_";
+      else
+	p = "__asan_";
+      strcpy (buf, p);
+      strcat (buf, f);
+      DECL_NAME (fndecl) = get_identifier (buf);
+      DECL_ASSEMBLER_NAME_RAW (fndecl) = NULL_TREE;
+      SET_DECL_RTL (fndecl, NULL_RTX);
+      asan_memfn_rtls[i] = DECL_RTL (fndecl);
+      DECL_NAME (fndecl) = save_name;
+      DECL_ASSEMBLER_NAME_RAW (fndecl) = save_assembler_name;
+      SET_DECL_RTL (fndecl, save_rtl);
+    }
+  return asan_memfn_rtls[i];
 }
 
 
@@ -2934,6 +2991,7 @@ maybe_instrument_call (gimple_stmt_iterator *iter)
 	  switch (DECL_FUNCTION_CODE (callee))
 	    {
 	    case BUILT_IN_UNREACHABLE:
+	    case BUILT_IN_UNREACHABLE_TRAP:
 	    case BUILT_IN_TRAP:
 	      /* Don't instrument these.  */
 	      return false;

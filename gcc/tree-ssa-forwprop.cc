@@ -1,4 +1,21 @@
-/* Forward propagation of expressions for single use variables. */
+/* Forward propagation of expressions for single use variables.
+   Copyright (C) 2004-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -3282,7 +3299,8 @@ optimize_vector_load (gimple_stmt_iterator *gsi)
     {
       if (TREE_CODE (TREE_OPERAND (load_rhs, 0)) == ADDR_EXPR)
 	mark_addressable (TREE_OPERAND (TREE_OPERAND (load_rhs, 0), 0));
-      tree tem = make_ssa_name (TREE_TYPE (TREE_OPERAND (load_rhs, 0)));
+      tree ptrtype = build_pointer_type (TREE_TYPE (load_rhs));
+      tree tem = make_ssa_name (ptrtype);
       gimple *new_stmt
 	= gimple_build_assign (tem, build1 (ADDR_EXPR, TREE_TYPE (tem),
 					    unshare_expr (load_rhs)));

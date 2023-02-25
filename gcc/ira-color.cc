@@ -1,4 +1,22 @@
-/* IRA allocation based on graph coloring. */
+/* IRA allocation based on graph coloring.
+   Copyright (C) 2006-2023 Free Software Foundation, Inc.
+   Contributed by Vladimir Makarov <vmakarov@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -492,6 +510,13 @@ print_hard_reg_set (FILE *f, HARD_REG_SET set, bool new_line_p)
     }
   if (new_line_p)
     fprintf (f, "\n");
+}
+
+/* Dump a hard reg set SET to stderr.  */
+DEBUG_FUNCTION void
+debug_hard_reg_set (HARD_REG_SET set)
+{
+  print_hard_reg_set (stderr, set, true);
 }
 
 /* Print allocno hard register subforest given by ROOTS and its LEVEL

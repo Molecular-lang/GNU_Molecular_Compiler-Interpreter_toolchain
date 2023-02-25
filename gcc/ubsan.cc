@@ -1,4 +1,22 @@
-/* UndefinedBehaviorSanitizer, undefined behavior detector. */
+/* UndefinedBehaviorSanitizer, undefined behavior detector.
+   Copyright (C) 2013-2023 Free Software Foundation, Inc.
+   Contributed by Marek Polacek <polacek@redhat.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -631,7 +649,7 @@ sanitize_unreachable_fn (tree *data, location_t loc)
       ? (flag_sanitize_trap & SANITIZE_UNREACHABLE)
       : flag_unreachable_traps)
     {
-      fn = builtin_decl_explicit (BUILT_IN_TRAP);
+      fn = builtin_decl_explicit (BUILT_IN_UNREACHABLE_TRAP);
       *data = NULL_TREE;
     }
   else if (san)

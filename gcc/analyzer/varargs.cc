@@ -1,5 +1,22 @@
 /* Implementation of <stdarg.h> within analyzer.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2022-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -138,7 +155,7 @@ get_va_list_diag_arg (tree va_list_tree)
    builtin-types.def has:
      DEF_PRIMITIVE_TYPE (BT_VALIST_ARG, va_list_arg_type_node)
 
-   and c_common_nodes_and_builtins initializes va_list_arg_type_node
+   and scpel_common_nodes_and_builtins initializes va_list_arg_type_node
    based on whether TREE_CODE (va_list_type_node) is of ARRAY_TYPE or
    not, giving either one or zero levels of indirection.
 

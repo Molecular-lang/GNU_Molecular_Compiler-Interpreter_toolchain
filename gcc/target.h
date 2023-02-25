@@ -1,4 +1,24 @@
-/* Data structure definitions for a generic GCC target. */
+/* Data structure definitions for a generic GCC target.
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 3, or (at your option) any
+   later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.
+
+   In other words, you are welcome to use, share and improve this program.
+   You are forbidden to forbid anyone else to use, share and improve
+   what you give them.   Help stamp out software-hoarding!  */
+
 
 /* This file contains a data structure that describes a GCC target.
    At present it is incomplete, but in future it should grow to
@@ -259,7 +279,7 @@ extern struct gcc_target targetm;
    runtime value is needed for correctness, since the function only
    provides a rough guess.  */
 
-static inline HOST_WIDE_INT
+inline HOST_WIDE_INT
 estimated_poly_value (poly_int64 x,
 		      poly_value_estimate_kind kind = POLY_VALUE_LIKELY)
 {
@@ -275,7 +295,7 @@ estimated_poly_value (poly_int64 x,
 #define CUMULATIVE_ARGS_MAGIC ((void *) &targetm.calls)
 #endif
 
-static inline CUMULATIVE_ARGS *
+inline CUMULATIVE_ARGS *
 get_cumulative_args (cumulative_args_t arg)
 {
 #if CHECKING_P
@@ -284,7 +304,7 @@ get_cumulative_args (cumulative_args_t arg)
   return (CUMULATIVE_ARGS *) arg.p;
 }
 
-static inline cumulative_args_t
+inline cumulative_args_t
 pack_cumulative_args (CUMULATIVE_ARGS *arg)
 {
   cumulative_args_t ret;

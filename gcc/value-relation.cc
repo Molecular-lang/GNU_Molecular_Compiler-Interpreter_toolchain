@@ -1,4 +1,22 @@
-/* Header file for the value range relational processing. */
+/* Header file for the value range relational processing.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Contributed by Andrew MacLeod <amacleod@redhat.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -14,7 +32,7 @@
 #include "alloc-pool.h"
 #include "dominance.h"
 
-static const char *kind_string[VREL_LAST] =
+static const char *const kind_string[VREL_LAST] =
 { "varying", "undefined", "<", "<=", ">", ">=", "==", "!=", "pe8", "pe16",
   "pe32", "pe64" };
 
@@ -27,7 +45,7 @@ print_relation (FILE *f, relation_kind rel)
 }
 
 // This table is used to negate the operands.  op1 REL op2 -> !(op1 REL op2).
-relation_kind rr_negate_table[VREL_LAST] = {
+static const unsigned char rr_negate_table[VREL_LAST] = {
   VREL_VARYING, VREL_UNDEFINED, VREL_GE, VREL_GT, VREL_LE, VREL_LT, VREL_NE,
   VREL_EQ };
 
@@ -36,11 +54,11 @@ relation_kind rr_negate_table[VREL_LAST] = {
 relation_kind
 relation_negate (relation_kind r)
 {
-  return rr_negate_table [r];
+  return relation_kind (rr_negate_table [r]);
 }
 
 // This table is used to swap the operands.  op1 REL op2 -> op2 REL op1.
-relation_kind rr_swap_table[VREL_LAST] = {
+static const unsigned char rr_swap_table[VREL_LAST] = {
   VREL_VARYING, VREL_UNDEFINED, VREL_GT, VREL_GE, VREL_LT, VREL_LE, VREL_EQ,
   VREL_NE };
 
@@ -49,12 +67,12 @@ relation_kind rr_swap_table[VREL_LAST] = {
 relation_kind
 relation_swap (relation_kind r)
 {
-  return rr_swap_table [r];
+  return relation_kind (rr_swap_table [r]);
 }
 
 // This table is used to perform an intersection between 2 relations.
 
-relation_kind rr_intersect_table[VREL_LAST][VREL_LAST] = {
+static const unsigned char rr_intersect_table[VREL_LAST][VREL_LAST] = {
 // VREL_VARYING
   { VREL_VARYING, VREL_UNDEFINED, VREL_LT, VREL_LE, VREL_GT, VREL_GE, VREL_EQ,
     VREL_NE },
@@ -86,13 +104,13 @@ relation_kind rr_intersect_table[VREL_LAST][VREL_LAST] = {
 relation_kind
 relation_intersect (relation_kind r1, relation_kind r2)
 {
-  return rr_intersect_table[r1][r2];
+  return relation_kind (rr_intersect_table[r1][r2]);
 }
 
 
 // This table is used to perform a union between 2 relations.
 
-relation_kind rr_union_table[VREL_LAST][VREL_LAST] = {
+static const unsigned char rr_union_table[VREL_LAST][VREL_LAST] = {
 // VREL_VARYING
   { VREL_VARYING, VREL_VARYING, VREL_VARYING, VREL_VARYING, VREL_VARYING,
     VREL_VARYING, VREL_VARYING, VREL_VARYING },
@@ -123,14 +141,14 @@ relation_kind rr_union_table[VREL_LAST][VREL_LAST] = {
 relation_kind
 relation_union (relation_kind r1, relation_kind r2)
 {
-  return rr_union_table[r1][r2];
+  return relation_kind (rr_union_table[r1][r2]);
 }
 
 
 // This table is used to determine transitivity between 2 relations.
 // (A relation0 B) and (B relation1 C) implies  (A result C)
 
-relation_kind rr_transitive_table[VREL_LAST][VREL_LAST] = {
+static const unsigned char rr_transitive_table[VREL_LAST][VREL_LAST] = {
 // VREL_VARYING
   { VREL_VARYING, VREL_VARYING, VREL_VARYING, VREL_VARYING, VREL_VARYING,
     VREL_VARYING, VREL_VARYING, VREL_VARYING },
@@ -162,12 +180,12 @@ relation_kind rr_transitive_table[VREL_LAST][VREL_LAST] = {
 relation_kind
 relation_transitive (relation_kind r1, relation_kind r2)
 {
-  return rr_transitive_table[r1][r2];
+  return relation_kind (rr_transitive_table[r1][r2]);
 }
 
 // This vector maps a relation to the equivalent tree code.
 
-tree_code relation_to_code [VREL_LAST] = {
+static const tree_code relation_to_code [VREL_LAST] = {
   ERROR_MARK, ERROR_MARK, LT_EXPR, LE_EXPR, GT_EXPR, GE_EXPR, EQ_EXPR,
   NE_EXPR };
 
@@ -863,6 +881,40 @@ value_relation::apply_transitive (const value_relation &rel)
 	}
     }
   return false;
+}
+
+// Create a trio from this value relation given LHS, OP1 and OP2.
+
+relation_trio
+value_relation::create_trio (tree lhs, tree op1, tree op2)
+{
+  relation_kind lhs_1;
+  if (lhs == name1 && op1 == name2)
+    lhs_1 = related;
+  else if (lhs == name2 && op1 == name1)
+    lhs_1 = relation_swap (related);
+  else
+    lhs_1 = VREL_VARYING;
+
+  relation_kind lhs_2;
+  if (lhs == name1 && op2 == name2)
+    lhs_2 = related;
+  else if (lhs == name2 && op2 == name1)
+    lhs_2 = relation_swap (related);
+  else
+    lhs_2 = VREL_VARYING;
+
+  relation_kind op_op;
+  if (op1 == name1 && op2 == name2)
+    op_op = related;
+  else if (op1 == name2 && op2 == name1)
+    op_op = relation_swap (related);
+  else if  (op1 == op2)
+    op_op = VREL_EQ;
+  else
+    op_op = VREL_VARYING;
+
+  return relation_trio (lhs_1, lhs_2, op_op);
 }
 
 // Dump the relation to file F.
@@ -1709,6 +1761,8 @@ namespace selftest
 void
 relation_tests ()
 {
+  // rr_*_table tables use unsigned char rather than relation_kind.
+  ASSERT_LT (VREL_LAST, UCHAR_MAX);
   // Verify commutativity of relation_intersect and relation_union.
   for (relation_kind r1 = VREL_VARYING; r1 < VREL_PE8;
        r1 = relation_kind (r1 + 1))

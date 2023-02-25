@@ -1,4 +1,23 @@
-/* Language-independent diagnostic subroutines for the GNU Compiler Collection */
+/* Language-independent diagnostic subroutines for the GNU Compiler Collection
+   Copyright (C) 1999-2023 Free Software Foundation, Inc.
+   Contributed by Gabriel Dos Reis <gdr@codesourcery.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
+
 
 /* This file implements the language independent aspect of diagnostic
    message module.  */
@@ -2685,7 +2704,7 @@ test_num_digits ()
 /* Run all of the selftests within this file.  */
 
 void
-c_diagnostic_cc_tests ()
+scpel_diagnostic_cc_tests ()
 {
   test_print_escaped_string ();
   test_print_parseable_fixits_none ();

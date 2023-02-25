@@ -1,4 +1,23 @@
-/* Conditional constant propagation pass for the GNU compiler. */
+/* Conditional constant propagation pass for the GNU compiler.
+   Copyright (C) 2000-2023 Free Software Foundation, Inc.
+   Adapted from original RTL SSA-CCP by Daniel Berlin <dberlin@dberlin.org>
+   Adapted to GIMPLE trees by Diego Novillo <dnovillo@redhat.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 3, or (at your option) any
+later version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Conditional constant propagation (CCP) is based on the SSA
    propagation engine (tree-ssa-propagate.cc).  Constant assignments of

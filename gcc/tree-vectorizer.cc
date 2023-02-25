@@ -1,4 +1,22 @@
-/* Vectorizer */
+/* Vectorizer
+   Copyright (C) 2003-2023 Free Software Foundation, Inc.
+   Contributed by Dorit Naishlos <dorit@il.ibm.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Loop and basic block vectorizer.
 
@@ -1955,9 +1973,11 @@ vector_costs::compare_inside_loop_cost (const vector_costs *other) const
   HOST_WIDE_INT estimated_max_niter = likely_max_stmt_executions_int (loop);
   if (estimated_max_niter != -1)
     {
-      if (known_le (estimated_max_niter, this_vf))
+      if (estimated_poly_value (this_vf, POLY_VALUE_MIN)
+	  >= estimated_max_niter)
 	this_vf = estimated_max_niter;
-      if (known_le (estimated_max_niter, other_vf))
+      if (estimated_poly_value (other_vf, POLY_VALUE_MIN)
+	  >= estimated_max_niter)
 	other_vf = estimated_max_niter;
     }
 

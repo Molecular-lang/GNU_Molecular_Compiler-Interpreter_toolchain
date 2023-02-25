@@ -1,4 +1,6 @@
-/* xstrdup.c -- Duplicate a string in memory, using xmalloc. */
+/* xstrdup.c -- Duplicate a string in memory, using xmalloc.
+   This trivial function is in the public domain.
+   Ian Lance Taylor, Cygnus Support, December 1995.  */
 
 /*
 

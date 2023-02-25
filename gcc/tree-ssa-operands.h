@@ -1,4 +1,21 @@
-/* SSA operand management for trees. */
+/* SSA operand management for trees.
+   Copyright (C) 2003-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_TREE_SSA_OPERANDS_H
 #define GCC_TREE_SSA_OPERANDS_H
@@ -89,14 +106,14 @@ extern void debug_immediate_uses_for (tree var);
 extern void unlink_stmt_vdef (gimple *);
 
 /* Return the tree pointed-to by USE.  */
-static inline tree
+inline tree
 get_use_from_ptr (use_operand_p use)
 {
   return *(use->use);
 }
 
 /* Return the tree pointed-to by DEF.  */
-static inline tree
+inline tree
 get_def_from_ptr (def_operand_p def)
 {
   return *def;

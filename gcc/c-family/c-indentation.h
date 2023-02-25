@@ -1,5 +1,4 @@
-/* Definitions for c-indentation.cc.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Definitions for c-indentation.cc. */
 
 #ifndef GCC_C_INDENTATION_H
 #define GCC_C_INDENTATION_H
@@ -14,7 +13,7 @@ struct token_indent_info
 };
 
 /* Extract token information from TOKEN, which ought to either be a
-   cp_token * or a c_token *.  */
+   cp_token * or a scpel_token *.  */
 
 template <typename T>
 inline token_indent_info

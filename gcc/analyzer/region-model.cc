@@ -1,5 +1,22 @@
 /* Classes for modeling the state of memory.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -59,6 +76,7 @@
 #include "gcc-rich-location.h"
 #include "analyzer/checker-event.h"
 #include "analyzer/checker-path.h"
+#include "analyzer/feasible-graph.h"
 
 #if ENABLE_ANALYZER
 
@@ -451,9 +469,11 @@ class poisoned_value_diagnostic
 {
 public:
   poisoned_value_diagnostic (tree expr, enum poison_kind pkind,
-			     const region *src_region)
+			     const region *src_region,
+			     tree check_expr)
   : m_expr (expr), m_pkind (pkind),
-    m_src_region (src_region)
+    m_src_region (src_region),
+    m_check_expr (check_expr)
   {}
 
   const char *get_kind () const final override { return "poisoned_value_diagnostic"; }
@@ -546,10 +566,47 @@ public:
       interest->add_region_creation (m_src_region);
   }
 
+  /* Attempt to suppress false positives.
+     Reject paths where the value of the underlying region isn't poisoned.
+     This can happen due to state merging when exploring the exploded graph,
+     where the more precise analysis during feasibility analysis finds that
+     the region is in fact valid.
+     To do this we need to get the value from the fgraph.  Unfortunately
+     we can't simply query the state of m_src_region (from the enode),
+     since it might be a different region in the fnode state (e.g. with
+     heap-allocated regions, the numbering could be different).
+     Hence we access m_check_expr, if available.  */
+
+  bool check_valid_fpath_p (const feasible_node &fnode,
+			    const gimple *emission_stmt)
+    const final override
+  {
+    if (!m_check_expr)
+      return true;
+
+    /* We've reached the enode, but not necessarily the right function_point.
+       Try to get the state at the correct stmt.  */
+    region_model emission_model (fnode.get_model ().get_manager());
+    if (!fnode.get_state_at_stmt (emission_stmt, &emission_model))
+      /* Couldn't get state; accept this diagnostic.  */
+      return true;
+
+    const svalue *fsval = emission_model.get_rvalue (m_check_expr, NULL);
+    /* Check to see if the expr is also poisoned in FNODE (and in the
+       same way).  */
+    const poisoned_svalue * fspval = fsval->dyn_cast_poisoned_svalue ();
+    if (!fspval)
+      return false;
+    if (fspval->get_poison_kind () != m_pkind)
+      return false;
+    return true;
+  }
+
 private:
   tree m_expr;
   enum poison_kind m_pkind;
   const region *m_src_region;
+  tree m_check_expr;
 };
 
 /* A subclass of pending_diagnostic for complaining about shifts
@@ -860,10 +917,10 @@ region_model::get_gassign_result (const gassign *assign,
    uninitialized locals.
 
    When optimization is turned on the FE can immediately fold compound
-   conditionals.  Specifically, c_parser_condition parses this condition:
+   conditionals.  Specifically, scpel_parser_condition parses this condition:
      ((A OR-IF B) OR-IF C)
-   and calls c_fully_fold on the condition.
-   Within c_fully_fold, fold_truth_andor is called, which bails when
+   and calls scpel_fully_fold on the condition.
+   Within scpel_fully_fold, fold_truth_andor is called, which bails when
    optimization is off, but if any optimization is turned on can convert the
      ((A OR-IF B) OR-IF C)
    into:
@@ -1033,9 +1090,22 @@ region_model::check_for_poison (const svalue *sval,
       tree diag_arg = fixup_tree_for_diagnostic (expr);
       if (src_region == NULL && pkind == POISON_KIND_UNINIT)
 	src_region = get_region_for_poisoned_expr (expr);
+
+      /* Can we reliably get the poisoned value from "expr"?
+	 This is for use by poisoned_value_diagnostic::check_valid_fpath_p.
+	 Unfortunately, we might not have a reliable value for EXPR.
+	 Hence we only query its value now, and only use it if we get the
+	 poisoned value back again.  */
+      tree check_expr = expr;
+      const svalue *foo_sval = get_rvalue (expr, NULL);
+      if (foo_sval == sval)
+	check_expr = expr;
+      else
+	check_expr = NULL;
       if (ctxt->warn (make_unique<poisoned_value_diagnostic> (diag_arg,
 							      pkind,
-							      src_region)))
+							      src_region,
+							      check_expr)))
 	{
 	  /* We only want to report use of a poisoned value at the first
 	     place it gets used; return an unknown value to avoid generating
@@ -2183,6 +2253,9 @@ region_model::get_rvalue_1 (path_var pv, region_model_context *ctxt) const
     /* Binary ops.  */
     case PLUS_EXPR:
     case MULT_EXPR:
+    case BIT_AND_EXPR:
+    case BIT_IOR_EXPR:
+    case BIT_XOR_EXPR:
 	{
 	  tree expr = pv.m_tree;
 	  tree arg0 = TREE_OPERAND (expr, 0);
@@ -2469,7 +2542,7 @@ region_model::deref_rvalue (const svalue *ptr_sval, tree ptr_tree,
 		  = as_a <const poisoned_svalue *> (ptr_sval);
 		enum poison_kind pkind = poisoned_sval->get_poison_kind ();
 		ctxt->warn (make_unique<poisoned_value_diagnostic>
-			      (ptr, pkind, NULL));
+			      (ptr, pkind, NULL, NULL));
 	      }
 	  }
       }
@@ -4993,6 +5066,16 @@ region_model::get_or_create_region_for_heap_alloc (const svalue *size_in_bytes,
      this path.  */
   auto_bitmap base_regs_in_use;
   get_referenced_base_regions (base_regs_in_use);
+
+  /* Don't reuse regions that are marked as TOUCHED.  */
+  for (store::cluster_map_t::iterator iter = m_store.begin ();
+       iter != m_store.end (); ++iter)
+    if ((*iter).second->touched_p ())
+      {
+	const region *base_reg = (*iter).first;
+	bitmap_set_bit (base_regs_in_use, base_reg->get_id ());
+      }
+
   const region *reg
     = m_mgr->get_or_create_region_for_heap_alloc (base_regs_in_use);
   if (size_in_bytes)

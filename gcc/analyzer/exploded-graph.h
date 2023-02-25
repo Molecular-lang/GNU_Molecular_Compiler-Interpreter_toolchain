@@ -1,5 +1,22 @@
 /* Classes for managing a directed graph of <point, state> pairs.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_ANALYZER_EXPLODED_GRAPH_H
 #define GCC_ANALYZER_EXPLODED_GRAPH_H
@@ -956,6 +973,7 @@ public:
   bool maybe_update_for_edge (logger *logger,
 			      const exploded_edge *eedge,
 			      rejected_constraint **out_rc);
+  void update_for_stmt (const gimple *stmt);
 
   const region_model &get_model () const { return m_model; }
   const auto_sbitmap &get_snodes_visited () const { return m_snodes_visited; }

@@ -1,4 +1,23 @@
-/* Interprocedural semantic function equality pass */
+/* Interprocedural semantic function equality pass
+   Copyright (C) 2014-2023 Free Software Foundation, Inc.
+
+   Contributed by Jan Hubicka <hubicka@ucw.cz> and Martin Liska <mliska@suse.cz>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Gimple identical code folding (class func_checker) is an infrastructure
    capable of comparing two given functions. The class compares every
@@ -20,7 +39,7 @@
 /* Logs a MESSAGE to dump_file if exists and returns false. FUNC is name
    of function and LINE is location in the source file.  */
 
-static inline bool
+inline bool
 return_false_with_message_1 (const char *message, const char *filename,
 			     const char *func, unsigned int line)
 {
@@ -40,7 +59,7 @@ return_false_with_message_1 (const char *message, const char *filename,
 /* Logs return value if RESULT is false. FUNC is name of function and LINE
    is location in the source file.  */
 
-static inline bool
+inline bool
 return_with_result (bool result, const char *filename,
 		    const char *func, unsigned int line)
 {
@@ -58,7 +77,7 @@ return_with_result (bool result, const char *filename,
 /* Verbose logging function logging statements S1 and S2 of a CODE.
    FUNC is name of function and LINE is location in the source file.  */
 
-static inline bool
+inline bool
 return_different_stmts_1 (gimple *s1, gimple *s2, const char *code,
 			  const char *func, unsigned int line)
 {

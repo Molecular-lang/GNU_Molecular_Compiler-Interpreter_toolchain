@@ -1,5 +1,21 @@
 /* Inline functions to test validity of reg classes for addressing modes.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2006-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Wrapper function to unify target macros MODE_CODE_BASE_REG_CLASS,
    MODE_BASE_REG_REG_CLASS, MODE_BASE_REG_CLASS and BASE_REG_CLASS.
@@ -8,7 +24,7 @@
 #ifndef GCC_ADDRESSES_H
 #define GCC_ADDRESSES_H
 
-static inline enum reg_class
+inline enum reg_class
 base_reg_class (machine_mode mode ATTRIBUTE_UNUSED,
 		addr_space_t as ATTRIBUTE_UNUSED,
 		enum rtx_code outer_code ATTRIBUTE_UNUSED,
@@ -35,7 +51,7 @@ base_reg_class (machine_mode mode ATTRIBUTE_UNUSED,
    REGNO_OK_FOR_BASE_P.
    Arguments as for the REGNO_MODE_CODE_OK_FOR_BASE_P macro.  */
 
-static inline bool
+inline bool
 ok_for_base_p_1 (unsigned regno ATTRIBUTE_UNUSED,
 		 machine_mode mode ATTRIBUTE_UNUSED,
 		 addr_space_t as ATTRIBUTE_UNUSED,
@@ -61,7 +77,7 @@ ok_for_base_p_1 (unsigned regno ATTRIBUTE_UNUSED,
 /* Wrapper around ok_for_base_p_1, for use after register allocation is
    complete.  Arguments as for the called function.  */
 
-static inline bool
+inline bool
 regno_ok_for_base_p (unsigned regno, machine_mode mode, addr_space_t as,
 		     enum rtx_code outer_code, enum rtx_code index_code)
 {

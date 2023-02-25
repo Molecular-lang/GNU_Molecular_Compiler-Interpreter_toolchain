@@ -1,4 +1,21 @@
-/* Definitions of target machine for GCC for IA-32. */
+/* Definitions of target machine for GCC for IA-32.
+   Copyright (C) 1988-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* In i386-common.cc.  */
 extern bool ix86_handle_option (struct gcc_options *opts,
@@ -151,6 +168,7 @@ extern void ix86_split_lshr (rtx *, rtx, machine_mode);
 extern void ix86_expand_v1ti_shift (enum rtx_code, rtx[]);
 extern void ix86_expand_v1ti_rotate (enum rtx_code, rtx[]);
 extern void ix86_expand_v1ti_ashiftrt (rtx[]);
+extern rtx ix86_replace_reg_with_reg (rtx, rtx, rtx);
 extern rtx ix86_find_base_term (rtx);
 extern bool ix86_check_movabs (rtx, int);
 extern bool ix86_check_no_addr_space (rtx);

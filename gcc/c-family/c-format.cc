@@ -1,5 +1,4 @@
-/* Check calls to formatted I/O functions (-Wformat).
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Check calls to formatted I/O functions (-Wformat). */
 
 #include "config.h"
 #include "system.h"
@@ -336,7 +335,7 @@ decode_format_attr (const_tree fn, tree atname, tree args,
 
       info->format_type = decode_format_type (p, &info->is_raw);
 
-      if (!c_dialect_objc ()
+      if (!scpel_dialect_objc ()
 	   && info->format_type == gcc_objc_string_format_type)
 	{
 	  gcc_assert (!validated_p);
@@ -380,7 +379,7 @@ decode_format_attr (const_tree fn, tree atname, tree args,
    or inheriting from, for the purpose of format features supported.  */
 #define CPLUSPLUS_STD_VER	(cxx_dialect < cxx11 ? STD_C94 : STD_C99)
 /* The C standard version we are checking formats against when pedantic.  */
-#define C_STD_VER		((int) (c_dialect_cxx ()		   \
+#define C_STD_VER		((int) (scpel_dialect_cxx ()		   \
 				 ? CPLUSPLUS_STD_VER			   \
 				 : (flag_isoc2x				   \
 				    ? STD_C2X				   \
@@ -390,7 +389,7 @@ decode_format_attr (const_tree fn, tree atname, tree args,
 /* The name to give to the standard version we are warning about when
    pedantic.  FEATURE_VER is the version in which the feature warned out
    appeared, which is higher than C_STD_VER.  */
-#define C_STD_NAME(FEATURE_VER) (c_dialect_cxx ()		\
+#define C_STD_NAME(FEATURE_VER) (scpel_dialect_cxx ()		\
 				 ? (cxx_dialect < cxx11 ? "ISO C++98" \
 				    : "ISO C++11")		\
 				 : ((FEATURE_VER) == STD_EXT	\
@@ -787,7 +786,7 @@ static const format_char_info gcc_cdiag_char_table[] =
   /* The conversion specifiers implemented within pp_format.  */
   PP_FORMAT_CHAR_TABLE,
 
-  /* Custom conversion specifiers implemented by c_tree_printer.  */
+  /* Custom conversion specifiers implemented by scpel_tree_printer.  */
 
   /* These will require a "tree" at runtime.  */
   { "DFTV", 1, STD_C89, { T89_T,   BADLEN,  BADLEN,  BADLEN,  BADLEN,  BADLEN,  BADLEN,  BADLEN,  BADLEN,  BADLEN,  BADLEN,  BADLEN  }, "q+", "'",   NULL },
@@ -3391,7 +3390,7 @@ check_plain (location_t format_string_loc, tree format_string_cst,
 					  baltoks))
 	return ret;
 
-      nelts = c_dialect_cxx () ? ARRAY_SIZE (cxx_opers) : 0;
+      nelts = scpel_dialect_cxx () ? ARRAY_SIZE (cxx_opers) : 0;
       if (const char *ret = check_tokens (cxx_opers, nelts,
 					  format_string_loc, format_string_cst,
 					  orig_format_chars, format_chars,
@@ -3408,7 +3407,7 @@ check_plain (location_t format_string_loc, tree format_string_cst,
 					  baltoks))
 	return ret;
 
-      nelts = c_dialect_cxx () ? ARRAY_SIZE (cxx_keywords) : 0;
+      nelts = scpel_dialect_cxx () ? ARRAY_SIZE (cxx_keywords) : 0;
       if (const char *ret = check_tokens (cxx_keywords, nelts,
 					  format_string_loc, format_string_cst,
 					  orig_format_chars, format_chars,
@@ -4222,8 +4221,8 @@ check_format_types (const substring_loc &fmt_loc,
 	      || (i == 0 && !warn_format_signedness)
 	      || (i == 1 && char_type_flag))
 	  && (TYPE_UNSIGNED (wanted_type)
-	      ? wanted_type == c_common_unsigned_type (cur_type)
-	      : wanted_type == c_common_signed_type (cur_type)))
+	      ? wanted_type == scpel_common_unsigned_type (cur_type)
+	      : wanted_type == scpel_common_signed_type (cur_type)))
 	continue;
       /* Don't warn about differences merely in signedness if we know
 	 that the current type is integer-promoted and its original type
@@ -4342,8 +4341,8 @@ matching_type_p (tree spec_type, tree arg_type)
   if (TREE_CODE (spec_type) == INTEGER_TYPE
       && TREE_CODE (arg_type) == INTEGER_TYPE
       && (TYPE_UNSIGNED (spec_type)
-	  ? spec_type == c_common_unsigned_type (arg_type)
-	  : spec_type == c_common_signed_type (arg_type)))
+	  ? spec_type == scpel_common_unsigned_type (arg_type)
+	  : spec_type == scpel_common_signed_type (arg_type)))
     return true;
 
   return spec_type == arg_type;
@@ -4582,7 +4581,7 @@ class indirection_suffix
   {
     if (m_pointer_count == 0)
       dst[0] = 0;
-    else if (c_dialect_cxx ())
+    else if (scpel_dialect_cxx ())
       {
 	memset (dst, '*', m_pointer_count);
 	dst[m_pointer_count] = 0;
@@ -5401,7 +5400,7 @@ test_type_mismatch_range_labels ()
 
   test_diagnostic_context dc;
   diagnostic_show_locus (&dc, &richloc, DK_ERROR);
-  if (c_dialect_cxx ())
+  if (scpel_dialect_cxx ())
     /* "char*", without a space.  */
     ASSERT_STREQ ("   printf (\"msg: %i\\n\", msg);\n"
 		  "                 ~^     ~~~\n"
@@ -5421,7 +5420,7 @@ test_type_mismatch_range_labels ()
 /* Run all of the selftests within this file.  */
 
 void
-c_format_cc_tests ()
+scpel_format_cc_tests ()
 {
   test_get_modifier_for_format_len ();
   test_get_format_for_type_printf ();

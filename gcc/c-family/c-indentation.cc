@@ -1,5 +1,4 @@
-/* Implementation of -Wmisleading-indentation
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Implementation of -Wmisleading-indentation */
 
 #include "config.h"
 #include "system.h"
@@ -788,7 +787,7 @@ test_get_visual_column ()
 /* Run all of the selftests within this file.  */
 
 void
-c_indentation_cc_tests ()
+scpel_indentation_cc_tests ()
 {
   test_next_tab_stop ();
   test_get_visual_column ();

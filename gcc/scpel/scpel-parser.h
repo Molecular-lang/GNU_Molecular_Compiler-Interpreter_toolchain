@@ -1,71 +1,67 @@
-/* Declarations for the parser for C and Objective-C.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
-
+/* Declarations for the parser for Scpel */
 #ifndef GCC_C_PARSER_H
 #define GCC_C_PARSER_H
 
-/* The C lexer intermediates between the lexer in cpplib and c-lex.cc
-   and the C parser.  Unlike the C++ lexer, the parser structure
+/* The Scpel lexer intermediates between the lexer in cpplib and scpel-lex.cc
+   and the Scpel parser.  Unlike the C++ lexer, the parser structure
    stores the lexer information instead of using a separate structure.
    Identifiers are separated into ordinary identifiers, type names,
    keywords and some other Objective-C types of identifiers, and some
    look-ahead is maintained.
 
    ??? It might be a good idea to lex the whole file up front (as for
-   C++).  It would then be possible to share more of the C and C++
+   C++).  It would then be possible to share more of the Scpel and C++
    lexer code, if desired.  */
 
-/* More information about the type of a CPP_NAME token.  */
-enum c_id_kind {
-  /* An ordinary identifier.  */
-  C_ID_ID,
-  /* An identifier declared as a typedef name.  */
-  C_ID_TYPENAME,
-  /* An identifier declared as an Objective-C class name.  */
-  C_ID_CLASSNAME,
-  /* An address space identifier.  */
-  C_ID_ADDRSPACE,
-  /* Not an identifier.  */
-  C_ID_NONE
+/* More information about the type of a CPP_NAME token. */
+enum scpel_id_kind {
+	/* An ordinary identifier. */
+	C_ID_ID,
+	/* An identifier declared as a typedef name. */
+	C_ID_TYPENAME,
+	/* An identifier declared as an Objective-C class name. */
+	C_ID_CLASSNAME,
+	/* An address space identifier. */
+	C_ID_ADDRSPACE,
+	/* Not an identifier. */
+	C_ID_NONE
 };
 
-/* A single C token after string literal concatenation and conversion
-   of preprocessing tokens to tokens.  */
-struct GTY (()) c_token {
-  /* The kind of token.  */
-  ENUM_BITFIELD (cpp_ttype) type : 8;
-  /* If this token is a CPP_NAME, this value indicates whether also
-     declared as some kind of type.  Otherwise, it is C_ID_NONE.  */
-  ENUM_BITFIELD (c_id_kind) id_kind : 8;
-  /* If this token is a keyword, this value indicates which keyword.
-     Otherwise, this value is RID_MAX.  */
-  ENUM_BITFIELD (rid) keyword : 8;
-  /* If this token is a CPP_PRAGMA, this indicates the pragma that
-     was seen.  Otherwise it is PRAGMA_NONE.  */
-  ENUM_BITFIELD (pragma_kind) pragma_kind : 8;
-  /* The location at which this token was found.  */
-  location_t location;
-  /* The value associated with this token, if any.  */
-  tree value;
-  /* Token flags.  */
-  unsigned char flags;
+/* A single Scpel token after string literal concatenation and conversion
+   of preprocessing tokens to tokens. */
+struct GTY (()) scpel_token {
+	/* The kind of token. */
+	ENUM_BITFIELD (cpp_ttype) type : 8;
+	/* If this token is a CPP_NAME, this value indicates whether also
+	   declared as some kind of type. Otherwise, it is C_ID_NONE. */
+	ENUM_BITFIELD (scpel_id_kind) id_kind : 8;
+	/* If this token is a keyword, this value indicates which keyword.
+	   Otherwise, this value is RID_MAX. */
+	ENUM_BITFIELD (rid) keyword : 8;
+	/* If this token is a CPP_PRAGMA, this indicates the pragma that
+	   was seen.  Otherwise it is PRAGMA_NONE. */
+	ENUM_BITFIELD (pragma_kind) pragma_kind : 8;
+	/* The location at which this token was found. */
+	location_t location;
+	/* The value associated with this token, if any. */
+	tree value;
+	/* Token flags. */
+	unsigned char flags;
 
-  source_range get_range () const
-  {
-    return get_range_from_loc (line_table, location);
-  }
+	source_range get_range () const {
+		return get_range_from_loc (line_table, location);
+	}
 
-  location_t get_finish () const
-  {
-    return get_range ().m_finish;
-  }
+	location_t get_finish () const {
+		return get_range ().m_finish;
+	}
 };
 
 /* The parser.  */
-struct c_parser;
+struct scpel_parser;
 
 /* Possibly kinds of declarator to parse.  */
-enum c_dtr_syn {
+enum scpel_dtr_syn {
   /* A normal declarator with an identifier.  */
   C_DTR_NORMAL,
   /* An abstract declarator (maybe empty).  */
@@ -85,7 +81,7 @@ enum c_dtr_syn {
 
 /* The binary operation precedence levels, where 0 is a dummy lowest level
    used for the bottom of the stack.  */
-enum c_parser_prec {
+enum scpel_parser_prec {
   PREC_NONE,
   PREC_LOGOR,
   PREC_LOGAND,
@@ -100,7 +96,7 @@ enum c_parser_prec {
   NUM_PRECS
 };
 
-enum c_lookahead_kind {
+enum scpel_lookahead_kind {
   /* Always treat unknown identifiers as typenames.  */
   cla_prefer_type,
 
@@ -113,28 +109,28 @@ enum c_lookahead_kind {
 };
 
 
-extern c_token * c_parser_peek_token (c_parser *parser);
-extern c_token * c_parser_peek_2nd_token (c_parser *parser);
-extern c_token * c_parser_peek_nth_token (c_parser *parser, unsigned int n);
-extern bool c_parser_require (c_parser *parser, enum cpp_ttype type,
+extern scpel_token * scpel_parser_peek_token (scpel_parser *parser);
+extern scpel_token * scpel_parser_peek_2nd_token (scpel_parser *parser);
+extern scpel_token * scpel_parser_peek_nth_token (scpel_parser *parser, unsigned int n);
+extern bool scpel_parser_require (scpel_parser *parser, enum cpp_ttype type,
 			      const char *msgid,
 			      location_t matching_location = UNKNOWN_LOCATION,
 			      bool type_is_unique=true);
-extern bool c_parser_error (c_parser *parser, const char *gmsgid);
-extern void c_parser_consume_token (c_parser *parser);
-extern void c_parser_skip_until_found (c_parser *parser, enum cpp_ttype type,
+extern bool scpel_parser_error (scpel_parser *parser, const char *gmsgid);
+extern void scpel_parser_consume_token (scpel_parser *parser);
+extern void scpel_parser_skip_until_found (scpel_parser *parser, enum cpp_ttype type,
 				       const char *msgid,
 				       location_t = UNKNOWN_LOCATION);
-extern bool c_parser_next_token_starts_declspecs (c_parser *parser);
-bool c_parser_next_tokens_start_declaration (c_parser *parser);
-bool c_token_starts_typename (c_token *token);
+extern bool scpel_parser_next_token_starts_declspecs (scpel_parser *parser);
+bool scpel_parser_next_tokens_start_declaration (scpel_parser *parser);
+bool scpel_token_starts_typename (scpel_token *token);
 
-/* Abstraction to avoid defining c_parser here which messes up gengtype
-   output wrt ObjC due to vec<c_token> routines being put in gtype-c.h
+/* Abstraction to avoid defining scpel_parser here which messes up gengtype
+   output wrt ObjC due to vec<scpel_token> routines being put in gtype-c.h
    but not gtype-objc.h.  */
-extern c_token * c_parser_tokens_buf (c_parser *parser, unsigned n);
-extern bool c_parser_error (c_parser *parser);
-extern void c_parser_set_error (c_parser *parser, bool);
+extern scpel_token * scpel_parser_tokens_buf (scpel_parser *parser, unsigned n);
+extern bool scpel_parser_error (scpel_parser *parser);
+extern void scpel_parser_set_error (scpel_parser *parser, bool);
 
 /* A bit of a hack to have this here.  It would be better in a c-decl.h.  */
 extern bool old_style_parameter_scope (void);
@@ -142,37 +138,37 @@ extern bool old_style_parameter_scope (void);
 /* Return true if the next token from PARSER has the indicated
    TYPE.  */
 
-static inline bool
-c_parser_next_token_is (c_parser *parser, enum cpp_ttype type)
+inline bool
+scpel_parser_next_token_is (scpel_parser *parser, enum cpp_ttype type)
 {
-  return c_parser_peek_token (parser)->type == type;
+  return scpel_parser_peek_token (parser)->type == type;
 }
 
 /* Return true if the next token from PARSER does not have the
    indicated TYPE.  */
 
-static inline bool
-c_parser_next_token_is_not (c_parser *parser, enum cpp_ttype type)
+inline bool
+scpel_parser_next_token_is_not (scpel_parser *parser, enum cpp_ttype type)
 {
-  return !c_parser_next_token_is (parser, type);
+  return !scpel_parser_next_token_is (parser, type);
 }
 
 /* Return true if the next token from PARSER is the indicated
    KEYWORD.  */
 
-static inline bool
-c_parser_next_token_is_keyword (c_parser *parser, enum rid keyword)
+inline bool
+scpel_parser_next_token_is_keyword (scpel_parser *parser, enum rid keyword)
 {
-  return c_parser_peek_token (parser)->keyword == keyword;
+  return scpel_parser_peek_token (parser)->keyword == keyword;
 }
 
-struct c_expr c_parser_string_literal (c_parser *, bool, bool);
-extern struct c_declarator *
-c_parser_declarator (c_parser *parser, bool type_seen_p, c_dtr_syn kind,
+struct scpel_expr scpel_parser_string_literal (scpel_parser *, bool, bool);
+extern struct scpel_declarator *
+scpel_parser_declarator (scpel_parser *parser, bool type_seen_p, scpel_dtr_syn kind,
 		     bool *seen_id);
-extern void c_parser_declspecs (c_parser *, struct c_declspecs *, bool, bool,
+extern void scpel_parser_declspecs (scpel_parser *, struct scpel_declspecs *, bool, bool,
 				bool, bool, bool, bool, bool,
-				enum c_lookahead_kind);
-extern struct c_type_name *c_parser_type_name (c_parser *, bool = false);
+				enum scpel_lookahead_kind);
+extern struct scpel_type_name *scpel_parser_type_name (scpel_parser *, bool = false);
 
 #endif

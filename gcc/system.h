@@ -1,6 +1,23 @@
 /* Get common system includes and various definitions and declarations based
    on autoconf macros.
- */
+   Copyright (C) 1998-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
+
 
 #ifndef GCC_SYSTEM_H
 #define GCC_SYSTEM_H
@@ -1149,7 +1166,7 @@ extern void fancy_abort (const char *, int, const char *)
    so does GCC 3.4.x (PR17436).  */
 #define CONST_CAST2(TOTYPE,FROMTYPE,X) ((__extension__(union {FROMTYPE _q; TOTYPE _nq;})(X))._nq)
 #elif defined(__GNUC__)
-static inline char *
+inline char *
 helper_const_non_const_cast (const char *p)
 {
   union {
@@ -1291,7 +1308,7 @@ void gcc_stablesort_r (void *, size_t, size_t, sort_r_cmp_fn *, void *data);
 
 /* Return true if STR string starts with PREFIX.  */
 
-static inline bool
+inline bool
 startswith (const char *str, const char *prefix)
 {
   return strncmp (str, prefix, strlen (prefix)) == 0;
@@ -1299,7 +1316,7 @@ startswith (const char *str, const char *prefix)
 
 /* Return true if STR string ends with SUFFIX.  */
 
-static inline bool
+inline bool
 endswith (const char *str, const char *suffix)
 {
   size_t str_len = strlen (str);

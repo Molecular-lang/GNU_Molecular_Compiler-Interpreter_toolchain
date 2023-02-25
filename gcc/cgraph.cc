@@ -1,4 +1,22 @@
-/* Callgraph handling code. */
+/* Callgraph handling code.
+   Copyright (C) 2003-2023 Free Software Foundation, Inc.
+   Contributed by Jan Hubicka
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /*  This file contains basic routines manipulating call graph
 
@@ -2746,6 +2764,9 @@ set_const_flag_1 (cgraph_node *node, bool set_const, bool looping,
       if (!set_const || alias->get_availability () > AVAIL_INTERPOSABLE)
 	set_const_flag_1 (alias, set_const, looping, changed);
     }
+  for (struct cgraph_node *n = node->simd_clones; n != NULL;
+       n = n->simdclone->next_clone)
+    set_const_flag_1 (n, set_const, looping, changed);
   for (cgraph_edge *e = node->callers; e; e = e->next_caller)
     if (e->caller->thunk
 	&& (!set_const || e->caller->get_availability () > AVAIL_INTERPOSABLE))
@@ -2858,6 +2879,9 @@ cgraph_node::set_pure_flag (bool pure, bool looping)
 {
   struct set_pure_flag_info info = {pure, looping, false};
   call_for_symbol_thunks_and_aliases (set_pure_flag_1, &info, !pure, true);
+  for (struct cgraph_node *n = simd_clones; n != NULL;
+       n = n->simdclone->next_clone)
+    set_pure_flag_1 (n, &info);
   return info.changed;
 }
 
@@ -3230,9 +3254,11 @@ cgraph_edge::verify_corresponds_to_fndecl (tree decl)
   node = node->ultimate_alias_target ();
 
   /* Optimizers can redirect unreachable calls or calls triggering undefined
-     behavior to builtin_unreachable.  */
+     behavior to __builtin_unreachable or __builtin_unreachable trap.  */
 
-  if (fndecl_built_in_p (callee->decl, BUILT_IN_UNREACHABLE))
+  if (fndecl_built_in_p (callee->decl, BUILT_IN_NORMAL)
+      && (DECL_FUNCTION_CODE (callee->decl) == BUILT_IN_UNREACHABLE
+	  || DECL_FUNCTION_CODE (callee->decl) == BUILT_IN_UNREACHABLE_TRAP))
     return false;
 
   if (callee->former_clone_of != node->decl
@@ -4163,7 +4189,7 @@ cgraph_edge::possibly_call_in_translation_unit_p (void)
     node = node->previous_sharing_asm_name;
   if (node->previous_sharing_asm_name)
     node = symtab_node::get_for_asmname (DECL_ASSEMBLER_NAME (callee->decl));
-  gcc_assert (TREE_PUBLIC (node->decl));
+  gcc_assert (TREE_PUBLIC (node->decl) || DECL_EXTERNAL (node->decl));
   return node->get_availability () >= AVAIL_INTERPOSABLE;
 }
 

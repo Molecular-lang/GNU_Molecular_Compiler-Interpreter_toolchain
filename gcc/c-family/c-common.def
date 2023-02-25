@@ -1,7 +1,7 @@
 /* This file contains the definitions and documentation for the
-   additional tree codes used in the GNU C compiler (see tree.def
+   additional tree codes used in the GNU Scpel compiler (see tree.def
    for the standard codes).
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+ */
 
 /* Tree nodes used in the C frontend.  These are also shared with the
    C++ and Objective C frontends.  */
@@ -10,7 +10,7 @@
    tracks information about constancy of an expression and VLA type
    sizes or VM expressions from typeof that need to be evaluated
    before the main expression.  It is used during parsing and removed
-   in c_fully_fold.  C_MAYBE_CONST_EXPR_PRE is the expression to
+   in scpel_fully_fold.  C_MAYBE_CONST_EXPR_PRE is the expression to
    evaluate first, if not NULL; C_MAYBE_CONST_EXPR_EXPR is the main
    expression.  If C_MAYBE_CONST_EXPR_INT_OPERANDS is set then the
    expression may be used in an unevaluated part of an integer

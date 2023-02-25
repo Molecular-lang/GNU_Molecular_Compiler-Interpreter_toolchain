@@ -1,4 +1,22 @@
-/* Function splitting pass */
+/* Function splitting pass
+   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+   Contributed by Jan Hubicka  <jh@suse.cz>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* The purpose of this pass is to split function bodies to improve
    inlining.  I.e. for function of the form:
@@ -1697,10 +1715,11 @@ execute_split_functions (void)
   struct cgraph_node *node = cgraph_node::get (current_function_decl);
 
   if (flags_from_decl_or_type (current_function_decl)
-      & (ECF_NORETURN|ECF_MALLOC))
+      & (ECF_NORETURN|ECF_MALLOC|ECF_RETURNS_TWICE))
     {
       if (dump_file)
-	fprintf (dump_file, "Not splitting: noreturn/malloc function.\n");
+	fprintf (dump_file, "Not splitting: noreturn/malloc/returns_twice "
+			    "function.\n");
       return 0;
     }
   if (MAIN_NAME_P (DECL_NAME (current_function_decl)))

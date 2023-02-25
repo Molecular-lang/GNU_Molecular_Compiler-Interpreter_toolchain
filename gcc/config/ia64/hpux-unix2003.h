@@ -1,3 +1,4 @@
+
 /* For HP-UX 11.31 and greater, use unix2003.o instead of unix98.o to
    get correct C99 snprintf behavior with buffer overflow.  */
 

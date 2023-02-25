@@ -1,4 +1,21 @@
-/* Subroutines used for code generation on IA-32. */
+/* Subroutines used for code generation on IA-32.
+   Copyright (C) 1988-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #define IN_TARGET_CODE 1
 
@@ -6859,7 +6876,9 @@ ix86_compute_frame_layout (void)
 	 stack clash protections are enabled and the allocated frame is
 	 larger than the probe interval, then use pushes to save
 	 callee saved registers.  */
-      || (flag_stack_clash_protection && to_allocate > get_probe_interval ()))
+      || (flag_stack_clash_protection
+	  && !ix86_target_stack_probe ()
+	  && to_allocate > get_probe_interval ()))
     frame->save_regs_using_mov = false;
 
   if (ix86_using_red_zone ()
@@ -8744,8 +8763,11 @@ ix86_expand_prologue (void)
       sse_registers_saved = true;
     }
 
-  /* If stack clash protection is requested, then probe the stack.  */
-  if (allocate >= 0 && flag_stack_clash_protection)
+  /* If stack clash protection is requested, then probe the stack, unless it
+     is already probed on the target.  */
+  if (allocate >= 0
+      && flag_stack_clash_protection
+      && !ix86_target_stack_probe ())
     {
       ix86_adjust_stack_and_probe (allocate, int_registers_saved, false);
       allocate = 0;
@@ -17921,7 +17943,7 @@ ix86_fold_builtin (tree fndecl, int n_args,
 	case IX86_BUILTIN_NANSQ:
 	  {
 	    tree type = TREE_TYPE (TREE_TYPE (fndecl));
-	    const char *str = c_getstr (*args);
+	    const char *str = scpel_getstr (*args);
 	    int quiet = fn_code == IX86_BUILTIN_NANQ;
 	    REAL_VALUE_TYPE real;
 
@@ -23018,7 +23040,7 @@ ix86_canonical_va_list_type (tree type)
    Returns zero if there is no element for this index, otherwise
    IDX should be increased upon the next call.
    Note, do not iterate a base builtin's name like __builtin_va_list.
-   Used from c_common_nodes_and_builtins.  */
+   Used from scpel_common_nodes_and_builtins.  */
 
 static int
 ix86_enum_va_list (int idx, const char **pname, tree *ptree)

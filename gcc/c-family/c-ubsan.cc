@@ -1,5 +1,4 @@
-/* UndefinedBehaviorSanitizer, undefined behavior detector.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* UndefinedBehaviorSanitizer, undefined behavior detector. */
 
 #include "config.h"
 #include "system.h"

@@ -1,4 +1,21 @@
-/* The lang_hooks data structure. */
+/* The lang_hooks data structure.
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_LANG_HOOKS_H
 #define GCC_LANG_HOOKS_H
@@ -342,7 +359,7 @@ struct lang_hooks_for_lto
 struct lang_hooks
 {
   /* String identifying the front end and optionally language standard
-     version, e.g. "GNU C++98".  */
+     version, e.g. "GNU Scpel++98".  */
   const char *name;
 
   /* sizeof (struct lang_identifier), so make_node () creates

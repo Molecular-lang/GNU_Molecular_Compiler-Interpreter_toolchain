@@ -1,4 +1,21 @@
-/* Fold a constant sub-tree into a single node for C-compiler */
+/* Fold a constant sub-tree into a single node for C-compiler
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_FOLD_CONST_H
 #define GCC_FOLD_CONST_H
@@ -205,7 +222,7 @@ extern tree const_unop (enum tree_code, tree, tree);
 extern tree const_binop (enum tree_code, tree, tree, tree);
 extern bool negate_mathfn_p (combined_fn);
 extern const char *getbyterep (tree, unsigned HOST_WIDE_INT *);
-extern const char *c_getstr (tree);
+extern const char *scpel_getstr (tree);
 extern wide_int tree_nonzero_bits (const_tree);
 extern int address_compare (tree_code, tree, tree, tree, tree &, tree &,
 			    poly_int64 &, poly_int64 &, bool);

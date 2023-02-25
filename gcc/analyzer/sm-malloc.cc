@@ -1,5 +1,22 @@
 /* A state machine for detecting misuses of the malloc/free API.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -1500,6 +1517,43 @@ public:
       return false;
     if (&m_deref_enode->get_point ().get_call_string ()
 	!= &m_check_enode->get_point ().get_call_string ())
+      return false;
+
+    /* Reject the warning if the check occurs within a macro defintion.
+       This avoids false positives for such code as:
+
+	#define throw_error \
+	   do {             \
+	     if (p)         \
+	       cleanup (p); \
+	     return;        \
+	   } while (0)
+
+	if (p->idx >= n)
+	  throw_error ();
+
+       where the usage of "throw_error" implicitly adds a check
+       on 'p'.
+
+       We do warn when the check is in a macro expansion if we can get
+       at the location of the condition and it is't part of the
+       definition, so that we warn for checks such as:
+	   if (words[0][0] == '@')
+	     return;
+	   g_assert(words[0] != NULL); <--- here
+       Unfortunately we don't have locations for individual gimple
+       arguments, so in:
+	   g_assert (ptr);
+       we merely have a gimple_cond
+	   if (p_2(D) == 0B)
+       with no way of getting at the location of the condition separately
+       from that of the gimple_cond (where the "if" is within the macro
+       definition).  We reject the warning for such cases.
+
+       We do warn when the *deref* occurs in a macro, since this can be
+       a source of real bugs; see e.g. PR 77425.  */
+    location_t check_loc = m_check_enode->get_point ().get_location ();
+    if (linemap_location_from_macro_definition_p (line_table, check_loc))
       return false;
 
     /* Reject the warning if the deref's BB doesn't dominate that

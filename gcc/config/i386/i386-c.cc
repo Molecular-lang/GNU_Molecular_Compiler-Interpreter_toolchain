@@ -1,4 +1,21 @@
-/* Subroutines used for macro/preprocessor support on the ia-32. */
+/* Subroutines used for macro/preprocessor support on the ia-32.
+   Copyright (C) 2008-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #define IN_TARGET_CODE 1
 
@@ -840,8 +857,8 @@ ix86_register_pragmas (void)
   /* Update pragma hook to allow parsing #pragma GCC target.  */
   targetm.target_option.pragma_parse = ix86_pragma_target_parse;
 
-  c_register_addr_space ("__seg_fs", ADDR_SPACE_SEG_FS);
-  c_register_addr_space ("__seg_gs", ADDR_SPACE_SEG_GS);
+  scpel_register_addr_space ("__seg_fs", ADDR_SPACE_SEG_FS);
+  scpel_register_addr_space ("__seg_gs", ADDR_SPACE_SEG_GS);
 
 #ifdef REGISTER_SUBTARGET_PRAGMAS
   REGISTER_SUBTARGET_PRAGMAS ();

@@ -1,4 +1,23 @@
-/* Header file for range operator class. */
+/* Header file for range operator class.
+   Copyright (C) 2017-2023 Free Software Foundation, Inc.
+   Contributed by Andrew MacLeod <amacleod@redhat.com>
+   and Aldy Hernandez <aldyh@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_RANGE_OP_H
 #define GCC_RANGE_OP_H
@@ -89,6 +108,12 @@ protected:
 			 const wide_int &lh_ub,
 			 const wide_int &rh_lb,
 			 const wide_int &rh_ub) const;
+
+  // Called by fold range to split small subranges into parts when op1 == op2
+  void wi_fold_in_parts_equiv (irange &r, tree type,
+			       const wide_int &lb,
+			       const wide_int &ub,
+			       unsigned limit) const;
 
   // Tree code of the range operator or ERROR_MARK if unknown.
   tree_code m_code;

@@ -1,5 +1,21 @@
 /* Save and restore call-clobbered registers which are live across a call.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1989-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -57,25 +73,31 @@ static int n_regs_saved;
 static HARD_REG_SET referenced_regs;
 
 
-typedef void refmarker_fn(rtx *loc, machine_mode mode, int hardregno, void *mark_arg);
+typedef void refmarker_fn (rtx *loc, machine_mode mode, int hardregno,
+			   void *mark_arg);
 
-static int reg_save_code(int, machine_mode);
-static int reg_restore_code(int, machine_mode);
+static int reg_save_code (int, machine_mode);
+static int reg_restore_code (int, machine_mode);
 
 struct saved_hard_reg;
-static void initiate_saved_hard_regs(void);
-static void new_saved_hard_reg(int, int);
-static void finish_saved_hard_regs(void);
-static int saved_hard_reg_compare_func(const void *, const void *);
+static void initiate_saved_hard_regs (void);
+static void new_saved_hard_reg (int, int);
+static void finish_saved_hard_regs (void);
+static int saved_hard_reg_compare_func (const void *, const void *);
 
-static void mark_set_regs(rtx, const_rtx, void *);
-static void mark_referenced_regs(rtx *, refmarker_fn *mark, void *mark_arg);
+static void mark_set_regs (rtx, const_rtx, void *);
+static void mark_referenced_regs (rtx *, refmarker_fn *mark, void *mark_arg);
 static refmarker_fn mark_reg_as_referenced;
 static refmarker_fn replace_reg_with_saved_mem;
-static int insert_save(class insn_chain *, int, HARD_REG_SET *, machine_mode *);
-static int insert_restore(class insn_chain *, int, int, int, machine_mode *);
-static class insn_chain *insert_one_insn(class insn_chain *, int, int, rtx);
-static void add_stored_regs(rtx, const_rtx, void *);
+static int insert_save (class insn_chain *, int, HARD_REG_SET *,
+			machine_mode *);
+static int insert_restore (class insn_chain *, int, int, int,
+			   machine_mode *);
+static class insn_chain *insert_one_insn (class insn_chain *, int, int,
+					   rtx);
+static void add_stored_regs (rtx, const_rtx, void *);
+
+
 
 static GTY(()) rtx savepat;
 static GTY(()) rtx restpat;
@@ -84,8 +106,10 @@ static GTY(()) rtx test_mem;
 static GTY(()) rtx_insn *saveinsn;
 static GTY(()) rtx_insn *restinsn;
 
-/* Return the INSN_CODE used to save register REG in mode MODE. */
-static int reg_save_code(int reg, machine_mode mode) {
+/* Return the INSN_CODE used to save register REG in mode MODE.  */
+static int
+reg_save_code (int reg, machine_mode mode)
+{
   bool ok;
   if (cached_reg_save_code[reg][mode])
      return cached_reg_save_code[reg][mode];

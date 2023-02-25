@@ -1,5 +1,22 @@
 /* AddressSanitizer, a fast memory error detector.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2011-2023 Free Software Foundation, Inc.
+   Contributed by Kostya Serebryany <kcc@google.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef TREE_ASAN
 #define TREE_ASAN
@@ -16,6 +33,7 @@ extern bool asan_expand_check_ifn (gimple_stmt_iterator *, bool);
 extern bool asan_expand_mark_ifn (gimple_stmt_iterator *);
 extern bool asan_expand_poison_ifn (gimple_stmt_iterator *, bool *,
 				    hash_map<tree, tree> &);
+extern rtx asan_memfn_rtl (tree);
 
 extern void hwasan_record_frame_init ();
 extern void hwasan_record_stack_var (rtx, rtx, poly_int64, poly_int64);
@@ -122,7 +140,7 @@ extern bool asan_mark_p (gimple *stmt, enum asan_mark_flags flag);
 /* Return the size of padding needed to insert after a protected
    decl of SIZE.  */
 
-static inline unsigned int
+inline unsigned int
 asan_red_zone_size (unsigned int size)
 {
   unsigned int c = size & (ASAN_RED_ZONE_SIZE - 1);
@@ -132,7 +150,7 @@ asan_red_zone_size (unsigned int size)
 /* Return how much a stack variable occupis on a stack
    including a space for red zone.  */
 
-static inline unsigned HOST_WIDE_INT
+inline unsigned HOST_WIDE_INT
 asan_var_and_redzone_size (unsigned HOST_WIDE_INT size)
 {
   if (size <= 4)
@@ -164,7 +182,7 @@ extern hash_set<tree> *asan_handled_variables;
 /* Return TRUE if builtin with given FCODE will be intercepted by
    libasan.  */
 
-static inline bool
+inline bool
 asan_intercepted_p (enum built_in_function fcode)
 {
   if (hwasan_sanitize_p ())
@@ -195,7 +213,7 @@ asan_intercepted_p (enum built_in_function fcode)
 
 /* Return TRUE if we should instrument for use-after-scope sanity checking.  */
 
-static inline bool
+inline bool
 asan_sanitize_use_after_scope (void)
 {
   return (flag_sanitize_address_use_after_scope
@@ -204,7 +222,7 @@ asan_sanitize_use_after_scope (void)
 
 /* Return true if DECL should be guarded on the stack.  */
 
-static inline bool
+inline bool
 asan_protect_stack_decl (tree decl)
 {
   return DECL_P (decl)
@@ -215,7 +233,7 @@ asan_protect_stack_decl (tree decl)
 /* Return true when flag_sanitize & FLAG is non-zero.  If FN is non-null,
    remove all flags mentioned in "no_sanitize" of DECL_ATTRIBUTES.  */
 
-static inline bool
+inline bool
 sanitize_flags_p (unsigned int flag, const_tree fn = current_function_decl)
 {
   unsigned int result_flags = flag_sanitize & flag;
@@ -234,7 +252,7 @@ sanitize_flags_p (unsigned int flag, const_tree fn = current_function_decl)
 
 /* Return true when coverage sanitization should happend for FN function.  */
 
-static inline bool
+inline bool
 sanitize_coverage_p (const_tree fn = current_function_decl)
 {
   return (flag_sanitize_coverage

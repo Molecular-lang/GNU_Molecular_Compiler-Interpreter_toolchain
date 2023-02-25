@@ -1,4 +1,21 @@
-/* Header file for PHI node routines */
+/* Header file for PHI node routines
+   Copyright (C) 2013-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_TREE_PHINODES_H
 #define GCC_TREE_PHINODES_H
@@ -14,7 +31,7 @@ extern void remove_phi_nodes (basic_block);
 extern tree degenerate_phi_result (gphi *);
 extern void set_phi_nodes (basic_block, gimple_seq);
 
-static inline use_operand_p
+inline use_operand_p
 gimple_phi_arg_imm_use_ptr (gimple *gs, int i)
 {
   return &gimple_phi_arg (gs, i)->imm_use;
@@ -22,7 +39,7 @@ gimple_phi_arg_imm_use_ptr (gimple *gs, int i)
 
 /* Return the phi argument which contains the specified use.  */
 
-static inline int
+inline int
 phi_arg_index_from_use (use_operand_p use)
 {
   struct phi_arg_d *element, *root;

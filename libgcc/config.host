@@ -1,4 +1,21 @@
 # libgcc host-specific configuration file.
+# Copyright (C) 1997-2023 Free Software Foundation, Inc.
+
+#This file is part of GCC.
+
+#GCC is free software; you can redistribute it and/or modify it under
+#the terms of the GNU General Public License as published by the Free
+#Software Foundation; either version 3, or (at your option) any later
+#version.
+
+#GCC is distributed in the hope that it will be useful, but WITHOUT
+#ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with GCC; see the file COPYING3.  If not see
+#<http://www.gnu.org/licenses/>.
 
 # This is the libgcc host-specific configuration file
 # where a configuration type is mapped to different system-specific
@@ -733,6 +750,12 @@ x86_64-*-kfreebsd*-gnu)
 	extra_parts="$extra_parts crtprec32.o crtprec64.o crtprec80.o crtfastmath.o"
 	tmake_file="${tmake_file} i386/t-crtpc t-crtfm i386/t-crtstuff t-dfprules"
 	tm_file="${tm_file} i386/elf-lib.h"
+	;;
+x86_64-*-gnu*)
+	extra_parts="$extra_parts crtprec32.o crtprec64.o crtprec80.o crtfastmath.o"
+	tmake_file="${tmake_file} i386/t-crtpc t-crtfm i386/t-crtstuff t-dfprules"
+	tm_file="${tm_file} i386/elf-lib.h"
+	md_unwind_header=i386/gnu-unwind.h
 	;;
 i[34567]86-pc-msdosdjgpp*)
 	;;
@@ -1506,7 +1529,7 @@ esac
 case ${host} in
 i[34567]86-*-linux* | x86_64-*-linux* | \
   i[34567]86-*-kfreebsd*-gnu | x86_64-*-kfreebsd*-gnu | \
-  i[34567]86-*-gnu*)
+  i[34567]86-*-gnu* | x86_64-*-gnu*)
 	tmake_file="${tmake_file} t-tls i386/t-linux i386/t-msabi t-slibgcc-libgcc"
 	if test "$libgcc_cv_cfi" = "yes"; then
 		tmake_file="${tmake_file} t-stack i386/t-stack-i386"
@@ -1535,6 +1558,9 @@ i[34567]86-*-linux* | x86_64-*-linux*)
 aarch64*-*-*)
 	# ILP32 needs an extra header for unwinding
 	tm_file="${tm_file} aarch64/value-unwind.h"
+	;;
+riscv*-*-*)
+	tm_file="${tm_file} riscv/value-unwind.h"
 	;;
 esac
 

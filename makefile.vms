@@ -1,6 +1,11 @@
 #
 # makefile for bfd, binutils and gas
 #
+# Created by Klaus K"ampf (kkaempf@rmi.de)
+#
+# You must use Version 3.76 of GNU Make
+#
+#
 
 ifeq ($(ARCH),ALPHA)
 CC = gcc

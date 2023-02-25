@@ -1,3 +1,21 @@
+/* Copyright (C) 1988-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
+
 #define IN_TARGET_CODE 1
 
 #include "config.h"
@@ -273,7 +291,9 @@ ix86_convert_const_wide_int_to_broadcast (machine_mode mode, rtx op)
      broadcast only if vector broadcast is available.  */
   if (!TARGET_AVX
       || !CONST_WIDE_INT_P (op)
-      || standard_sse_constant_p (op, mode))
+      || standard_sse_constant_p (op, mode)
+      || (CONST_WIDE_INT_NUNITS (op) * HOST_BITS_PER_WIDE_INT
+	  != GET_MODE_BITSIZE (mode)))
     return nullptr;
 
   HOST_WIDE_INT val = CONST_WIDE_INT_ELT (op, 0);
@@ -7071,6 +7091,37 @@ ix86_expand_v1ti_ashiftrt (rtx operands[])
 
       emit_move_insn (operands[0], gen_lowpart (V1TImode, tmp14));
     }
+}
+
+/* Replace all occurrences of REG FROM with REG TO in X, including
+   occurrences with different modes.  */
+
+rtx
+ix86_replace_reg_with_reg (rtx x, rtx from, rtx to)
+{
+  gcc_checking_assert (REG_P (from)
+		       && REG_P (to)
+		       && GET_MODE (from) == GET_MODE (to));
+  if (!reg_overlap_mentioned_p (from, x))
+    return x;
+  rtx ret = copy_rtx (x);
+  subrtx_ptr_iterator::array_type array;
+  FOR_EACH_SUBRTX_PTR (iter, array, &ret, NONCONST)
+    {
+      rtx *loc = *iter;
+      x = *loc;
+      if (REG_P (x) && REGNO (x) == REGNO (from))
+	{
+	  if (x == from)
+	    *loc = to;
+	  else
+	    {
+	      gcc_checking_assert (REG_NREGS (x) == 1);
+	      *loc = gen_rtx_REG (GET_MODE (x), REGNO (to));
+	    }
+	}
+    }
+  return ret;
 }
 
 /* Return mode for the memcpy/memset loop counter.  Prefer SImode over

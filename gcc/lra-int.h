@@ -1,4 +1,22 @@
-/* Local Register Allocator (LRA) intercommunication header file. */
+/* Local Register Allocator (LRA) intercommunication header file.
+   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+   Contributed by Vladimir Makarov <vmakarov@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.	If not see
+<http://www.gnu.org/licenses/>.	 */
 
 #ifndef GCC_LRA_INT_H
 #define GCC_LRA_INT_H
@@ -401,7 +419,7 @@ extern void lra_eliminate_reg_if_possible (rtx *);
 /* Return the hard register which given pseudo REGNO assigned to.
    Negative value means that the register got memory or we don't know
    allocation yet.  */
-static inline int
+inline int
 lra_get_regno_hard_regno (int regno)
 {
   resize_reg_info ();
@@ -425,7 +443,7 @@ lra_change_class (int regno, enum reg_class new_class,
 
 /* Update insn operands which are duplication of NOP operand.  The
    insn is represented by its LRA internal representation ID.  */
-static inline void
+inline void
 lra_update_dup (lra_insn_recog_data_t id, int nop)
 {
   int i;
@@ -440,7 +458,7 @@ lra_update_dup (lra_insn_recog_data_t id, int nop)
    operands processing.	 Generally speaking, we could do this probably
    simultaneously with operands processing because a common practice
    is to enumerate the operators after their operands.	*/
-static inline void
+inline void
 lra_update_operator_dups (lra_insn_recog_data_t id)
 {
   int i;
@@ -456,7 +474,7 @@ lra_update_operator_dups (lra_insn_recog_data_t id)
 }
 
 /* Return info about INSN.  Set up the info if it is not done yet.  */
-static inline lra_insn_recog_data_t
+inline lra_insn_recog_data_t
 lra_get_insn_recog_data (rtx_insn *insn)
 {
   lra_insn_recog_data_t data;
@@ -476,7 +494,7 @@ lra_get_insn_recog_data (rtx_insn *insn)
 }
 
 /* Update offset from pseudos with VAL by INCR.  */
-static inline void
+inline void
 lra_update_reg_val_offset (int val, poly_int64 incr)
 {
   int i;
@@ -489,7 +507,7 @@ lra_update_reg_val_offset (int val, poly_int64 incr)
 }
 
 /* Return true if register content is equal to VAL with OFFSET.  */
-static inline bool
+inline bool
 lra_reg_val_equal_p (int regno, int val, poly_int64 offset)
 {
   if (lra_reg_info[regno].val == val
@@ -500,7 +518,7 @@ lra_reg_val_equal_p (int regno, int val, poly_int64 offset)
 }
 
 /* Assign value of register FROM to TO.  */
-static inline void
+inline void
 lra_assign_reg_val (int from, int to)
 {
   lra_reg_info[to].val = lra_reg_info[from].val;

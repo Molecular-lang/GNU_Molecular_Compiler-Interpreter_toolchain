@@ -1,4 +1,22 @@
-/* A type-safe hash map. */
+/* A type-safe hash map.
+   Copyright (C) 2014-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
+
 
 #ifndef hash_map_h
 #define hash_map_h
@@ -297,21 +315,21 @@ private:
 /* ggc marking routines.  */
 
 template<typename K, typename V, typename H>
-static inline void
+inline void
 gt_ggc_mx (hash_map<K, V, H> *h)
 {
   gt_ggc_mx (&h->m_table);
 }
 
 template<typename K, typename V, typename H>
-static inline void
+inline void
 gt_pch_nx (hash_map<K, V, H> *h)
 {
   gt_pch_nx (&h->m_table);
 }
 
 template<typename K, typename V, typename H>
-static inline void
+inline void
 gt_cleare_cache (hash_map<K, V, H> *h)
 {
   if (h)
@@ -319,7 +337,7 @@ gt_cleare_cache (hash_map<K, V, H> *h)
 }
 
 template<typename K, typename V, typename H>
-static inline void
+inline void
 gt_pch_nx (hash_map<K, V, H> *h, gt_pointer_operator op, void *cookie)
 {
   op (&h->m_table.m_entries, NULL, cookie);

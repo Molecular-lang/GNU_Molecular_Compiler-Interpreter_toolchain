@@ -1,4 +1,21 @@
-/* Exported functions from emit-rtl.cc */
+/* Exported functions from emit-rtl.cc
+   Copyright (C) 2004-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_EMIT_RTL_H
 #define GCC_EMIT_RTL_H
@@ -383,7 +400,7 @@ extern bool need_atomic_barrier_p (enum memmodel, bool);
 
 /* Return the current sequence.  */
 
-static inline struct sequence_stack *
+inline struct sequence_stack *
 get_current_sequence (void)
 {
   return &crtl->emit.seq;
@@ -391,7 +408,7 @@ get_current_sequence (void)
 
 /* Return the outermost sequence.  */
 
-static inline struct sequence_stack *
+inline struct sequence_stack *
 get_topmost_sequence (void)
 {
   struct sequence_stack *seq, *top;
@@ -407,7 +424,7 @@ get_topmost_sequence (void)
 
 /* Return the first insn of the current sequence or current function.  */
 
-static inline rtx_insn *
+inline rtx_insn *
 get_insns (void)
 {
   return get_current_sequence ()->first;
@@ -415,7 +432,7 @@ get_insns (void)
 
 /* Specify a new insn as the first in the chain.  */
 
-static inline void
+inline void
 set_first_insn (rtx_insn *insn)
 {
   gcc_checking_assert (!insn || !PREV_INSN (insn));
@@ -424,7 +441,7 @@ set_first_insn (rtx_insn *insn)
 
 /* Return the last insn emitted in current sequence or current function.  */
 
-static inline rtx_insn *
+inline rtx_insn *
 get_last_insn (void)
 {
   return get_current_sequence ()->last;
@@ -432,7 +449,7 @@ get_last_insn (void)
 
 /* Specify a new insn as the last in the chain.  */
 
-static inline void
+inline void
 set_last_insn (rtx_insn *insn)
 {
   gcc_checking_assert (!insn || !NEXT_INSN (insn));
@@ -441,7 +458,7 @@ set_last_insn (rtx_insn *insn)
 
 /* Return a number larger than any instruction's uid in this function.  */
 
-static inline int
+inline int
 get_max_uid (void)
 {
   return crtl->emit.x_cur_insn_uid;

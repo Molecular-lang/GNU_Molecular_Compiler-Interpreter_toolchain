@@ -1,4 +1,21 @@
-/* Dwarf2 Call Frame Information helper routines. */
+/* Dwarf2 Call Frame Information helper routines.
+   Copyright (C) 1992-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -1479,10 +1496,12 @@ dwarf2out_frame_debug_cfa_val_expression (rtx set)
   update_row_reg_save (cur_row, dwf_regno (dest), cfi);
 }
 
-/* A subroutine of dwarf2out_frame_debug, process a REG_CFA_RESTORE note.  */
+/* A subroutine of dwarf2out_frame_debug, process a REG_CFA_RESTORE
+   note. When called with EMIT_CFI set to false emitting a CFI
+   statement is suppressed.  */
 
 static void
-dwarf2out_frame_debug_cfa_restore (rtx reg)
+dwarf2out_frame_debug_cfa_restore (rtx reg, bool emit_cfi)
 {
   gcc_assert (REG_P (reg));
 
@@ -1490,7 +1509,8 @@ dwarf2out_frame_debug_cfa_restore (rtx reg)
   if (!span)
     {
       unsigned int regno = dwf_regno (reg);
-      add_cfi_restore (regno);
+      if (emit_cfi)
+	add_cfi_restore (regno);
       update_row_reg_save (cur_row, regno, NULL);
     }
   else
@@ -1505,7 +1525,8 @@ dwarf2out_frame_debug_cfa_restore (rtx reg)
 	  reg = XVECEXP (span, 0, par_index);
 	  gcc_assert (REG_P (reg));
 	  unsigned int regno = dwf_regno (reg);
-	  add_cfi_restore (regno);
+	  if (emit_cfi)
+	    add_cfi_restore (regno);
 	  update_row_reg_save (cur_row, regno, NULL);
 	}
     }
@@ -2292,6 +2313,7 @@ dwarf2out_frame_debug (rtx_insn *insn)
 	break;
 
       case REG_CFA_RESTORE:
+      case REG_CFA_NO_RESTORE:
 	n = XEXP (note, 0);
 	if (n == NULL)
 	  {
@@ -2300,7 +2322,7 @@ dwarf2out_frame_debug (rtx_insn *insn)
 	      n = XVECEXP (n, 0, 0);
 	    n = XEXP (n, 0);
 	  }
-	dwarf2out_frame_debug_cfa_restore (n);
+	dwarf2out_frame_debug_cfa_restore (n, REG_NOTE_KIND (note) == REG_CFA_RESTORE);
 	handled_one = true;
 	break;
 

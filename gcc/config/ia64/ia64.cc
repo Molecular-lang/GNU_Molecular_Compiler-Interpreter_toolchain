@@ -1,4 +1,23 @@
-/* Definitions of target machine for GNU compiler. */
+/* Definitions of target machine for GNU compiler.
+   Copyright (C) 1999-2023 Free Software Foundation, Inc.
+   Contributed by James E. Wilson <wilson@cygnus.com> and
+		  David Mosberger <davidm@hpl.hp.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #define IN_TARGET_CODE 1
 
@@ -10556,7 +10575,7 @@ ia64_fold_builtin (tree fndecl, int n_args ATTRIBUTE_UNUSED,
 	case IA64_BUILTIN_NANSQ:
 	  {
 	    tree type = TREE_TYPE (TREE_TYPE (fndecl));
-	    const char *str = c_getstr (*args);
+	    const char *str = scpel_getstr (*args);
 	    int quiet = fn_code == IA64_BUILTIN_NANQ;
 	    REAL_VALUE_TYPE real;
 

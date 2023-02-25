@@ -1,4 +1,21 @@
-/* Define per-register tables for data flow info and register allocation. */
+/* Define per-register tables for data flow info and register allocation.
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_REGS_H
 #define GCC_REGS_H
@@ -47,7 +64,7 @@ struct regstat_n_sets_and_refs_t
 extern struct regstat_n_sets_and_refs_t *regstat_n_sets_and_refs;
 
 /* Indexed by n, gives number of times (REG n) is used or set.  */
-static inline int
+inline int
 REG_N_REFS (int regno)
 {
   return regstat_n_sets_and_refs[regno].refs;
@@ -58,7 +75,7 @@ REG_N_REFS (int regno)
 #define INC_REG_N_REFS(N,V) (regstat_n_sets_and_refs[N].refs += V)
 
 /* Indexed by n, gives number of times (REG n) is set.  */
-static inline int
+inline int
 REG_N_SETS (int regno)
 {
   return regstat_n_sets_and_refs[regno].sets;
@@ -249,7 +266,7 @@ hard_regno_nregs (unsigned int regno, machine_mode mode)
 /* Return an exclusive upper bound on the registers occupied by hard
    register (reg:MODE REGNO).  */
 
-static inline unsigned int
+inline unsigned int
 end_hard_regno (machine_mode mode, unsigned int regno)
 {
   return regno + hard_regno_nregs (regno, mode);
@@ -258,7 +275,7 @@ end_hard_regno (machine_mode mode, unsigned int regno)
 /* Add to REGS all the registers required to store a value of mode MODE
    in register REGNO.  */
 
-static inline void
+inline void
 add_to_hard_reg_set (HARD_REG_SET *regs, machine_mode mode,
 		     unsigned int regno)
 {
@@ -272,7 +289,7 @@ add_to_hard_reg_set (HARD_REG_SET *regs, machine_mode mode,
 
 /* Likewise, but remove the registers.  */
 
-static inline void
+inline void
 remove_from_hard_reg_set (HARD_REG_SET *regs, machine_mode mode,
 			  unsigned int regno)
 {
@@ -286,7 +303,7 @@ remove_from_hard_reg_set (HARD_REG_SET *regs, machine_mode mode,
 
 /* Return true if REGS contains the whole of (reg:MODE REGNO).  */
 
-static inline bool
+inline bool
 in_hard_reg_set_p (const_hard_reg_set regs, machine_mode mode,
 		   unsigned int regno)
 {
@@ -311,7 +328,7 @@ in_hard_reg_set_p (const_hard_reg_set regs, machine_mode mode,
 
 /* Return true if (reg:MODE REGNO) includes an element of REGS.  */
 
-static inline bool
+inline bool
 overlaps_hard_reg_set_p (const_hard_reg_set regs, machine_mode mode,
 			 unsigned int regno)
 {
@@ -331,7 +348,7 @@ overlaps_hard_reg_set_p (const_hard_reg_set regs, machine_mode mode,
 /* Like add_to_hard_reg_set, but use a REGNO/NREGS range instead of
    REGNO and MODE.  */
 
-static inline void
+inline void
 add_range_to_hard_reg_set (HARD_REG_SET *regs, unsigned int regno,
 			   int nregs)
 {
@@ -341,7 +358,7 @@ add_range_to_hard_reg_set (HARD_REG_SET *regs, unsigned int regno,
 
 /* Likewise, but remove the registers.  */
 
-static inline void
+inline void
 remove_range_from_hard_reg_set (HARD_REG_SET *regs, unsigned int regno,
 				int nregs)
 {
@@ -351,7 +368,7 @@ remove_range_from_hard_reg_set (HARD_REG_SET *regs, unsigned int regno,
 
 /* Like overlaps_hard_reg_set_p, but use a REGNO/NREGS range instead of
    REGNO and MODE.  */
-static inline bool
+inline bool
 range_overlaps_hard_reg_set_p (const_hard_reg_set set, unsigned regno,
 			       int nregs)
 {
@@ -363,7 +380,7 @@ range_overlaps_hard_reg_set_p (const_hard_reg_set set, unsigned regno,
 
 /* Like in_hard_reg_set_p, but use a REGNO/NREGS range instead of
    REGNO and MODE.  */
-static inline bool
+inline bool
 range_in_hard_reg_set_p (const_hard_reg_set set, unsigned regno, int nregs)
 {
   while (nregs-- > 0)

@@ -11,6 +11,32 @@ x=fixincl.x =]
    (shell "date") =]
  *
  * You must regenerate it.  Use the ./genfixes script.
+ *
+ *
+ * This is part of the fixincl program used to install modified versions of
+ * certain ANSI-incompatible system header files which are fixed to work
+ * correctly with ANSI C and placed in a directory that GNU C will search.
+ *
+ * This file contains [=(count "fix")=] fixup descriptions.
+ *
+ * See README for more information.
+ *
+ *  inclhack copyright (c) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+ *                         2006, 2007, 2008
+ *  The Free Software Foundation, Inc.
+ *
+ *  inclhack is free software: you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  inclhack is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef SED_PROGRAM
 #define SED_PROGRAM "/usr/bin/sed"

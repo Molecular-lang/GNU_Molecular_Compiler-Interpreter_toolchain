@@ -30,8 +30,6 @@ compilation is specified by a string called a "spec".  */
 #include "opts-jobserver.h"
 #include "common/common-target.h"
 
-
-
 /* Manage the manipulation of env vars.
 
    We poison "getenv" and "putenv", so that all enviroment-handling is
@@ -825,7 +823,7 @@ proper position among the other output files.  */
 #define LINK_COMPRESS_DEBUG_SPEC \
 	" %{gz|gz=zlib:"  LD_COMPRESS_DEBUG_OPTION "=zlib}" \
 	" %{gz=none:"	  LD_COMPRESS_DEBUG_OPTION "=none}" \
-	" %{gz*:%e-gz=zstd is not supported in this configuration} " \
+	" %{gz=zstd:%e-gz=zstd is not supported in this configuration} " \
 	" %{gz=zlib-gnu:}" /* Ignore silently zlib-gnu option value.  */
 #elif HAVE_LD_COMPRESS_DEBUG == 2
 /* ELF gABI style and ZSTD.  */
@@ -1383,9 +1381,13 @@ static int n_compilers;
 
 static const struct compiler default_compilers[] =
 {
-  /* Next come the entries for C.  */
-  {".co", "@c", 0, 0, 1},
+  /* Add lists of suffixes of known languages here.  If those languages
+     were not present when we built the driver, we will hit these copies
+     and be given a more meaningful error than "file not used since
+     linking is not done".  */
+
   {".c", "@c", 0, 0, 1},
+  {".co", "@c", 0, 0, 1},
   {"@c",
    /* cc1 has an integrated ISO C preprocessor.  We should invoke the
       external preprocessor if -save-temps is given.  */
@@ -1403,8 +1405,8 @@ static const struct compiler default_compilers[] =
   {"-",
    "%{!E:%e-E or -x required when input is from standard input}\
     %(trad_capable_cpp) %(cpp_options) %(cpp_debug_options)", 0, 0, 0},
-  {".ho", "@c-header", 0, 0, 0},
   {".h", "@c-header", 0, 0, 0},
+  {".ho", "@c-header", 0, 0, 0},
   {"@c-header",
    /* cc1 has an integrated ISO C preprocessor.  We should invoke the
       external preprocessor if -save-temps is given.  */
@@ -1469,7 +1471,7 @@ static vec<char_p> assembler_options;
    These options are accumulated by -Wp,
    and substituted into the preprocessor command with %Z.  */
 static vec<char_p> preprocessor_options;
-
+
 static char *
 skip_whitespace (char *p)
 {

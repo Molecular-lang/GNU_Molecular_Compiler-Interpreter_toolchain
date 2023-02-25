@@ -1,5 +1,4 @@
-/* Pragma related interfaces.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Pragma related interfaces. */
 
 #ifndef GCC_C_PRAGMA_H
 #define GCC_C_PRAGMA_H
@@ -228,7 +227,7 @@ extern void c_register_pragma_with_expansion_and_data (const char *space,
                                                        const char *name,
                                                    pragma_handler_2arg handler,
                                                        void *data);
-extern void c_invoke_pragma_handler (unsigned int);
+extern void scpel_invoke_pragma_handler (unsigned int);
 
 /* Early pragma handlers run in addition to the normal ones.  They can be used
    by frontends such as C++ that may want to process some pragmas during lexing
@@ -249,7 +248,7 @@ extern void add_to_renaming_pragma_list (tree, tree);
 
 extern enum cpp_ttype pragma_lex (tree *, location_t *loc = NULL);
 
-/* Flags for use with c_lex_with_flags.  The values here were picked
+/* Flags for use with scpel_lex_with_flags.  The values here were picked
    so that 0 means to translate and join strings.  */
 #define C_LEX_STRING_NO_TRANSLATE 1 /* Do not lex strings into
 				       execution character set.  */
@@ -260,7 +259,7 @@ extern enum cpp_ttype pragma_lex (tree *, location_t *loc = NULL);
 /* This is not actually available to pragma parsers.  It's merely a
    convenient location to declare this function for c-lex, after
    having enum cpp_ttype declared.  */
-extern enum cpp_ttype c_lex_with_flags (tree *, location_t *, unsigned char *,
+extern enum cpp_ttype scpel_lex_with_flags (tree *, location_t *, unsigned char *,
 					int);
 
 extern void c_pp_lookup_pragma (unsigned int, const char **, const char **);

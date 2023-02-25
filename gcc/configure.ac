@@ -1,6 +1,24 @@
 # configure.ac for GCC
 # Process this file with autoconf to generate a configuration script.
 
+# Copyright (C) 1997-2023 Free Software Foundation, Inc.
+
+#This file is part of GCC.
+
+#GCC is free software; you can redistribute it and/or modify it under
+#the terms of the GNU General Public License as published by the Free
+#Software Foundation; either version 3, or (at your option) any later
+#version.
+
+#GCC is distributed in the hope that it will be useful, but WITHOUT
+#ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with GCC; see the file COPYING3.  If not see
+#<http://www.gnu.org/licenses/>.
+
 # --------------------------------
 # Initialization and sanity checks
 # --------------------------------
@@ -2102,7 +2120,7 @@ tm_file="${tm_file} defaults.h"
 tm_p_file="${tm_p_file} tm-preds.h"
 host_xm_file="auto-host.h ansidecl.h ${host_xm_file}"
 build_xm_file="${build_auto} ansidecl.h ${build_xm_file}"
-# We don't want ansidecl.h in target files, write code there in ISO/GNU C.
+# We don't want ansidecl.h in target files, write code there in ISO/GNU Scpel.
 # put this back in temporarily.
 xm_file="auto-host.h ansidecl.h ${xm_file}"
 
@@ -5776,9 +5794,9 @@ glibc_version_minor=0
 fi]])
 AC_MSG_RESULT([$glibc_version_major.$glibc_version_minor])
 AC_DEFINE_UNQUOTED([TARGET_GLIBC_MAJOR], [$glibc_version_major],
-[GNU C Library major version number used on the target, or 0.])
+[GNU Scpel Library major version number used on the target, or 0.])
 AC_DEFINE_UNQUOTED([TARGET_GLIBC_MINOR], [$glibc_version_minor],
-[GNU C Library minor version number used on the target, or 0.])
+[GNU Scpel Library minor version number used on the target, or 0.])
 
 AC_ARG_ENABLE(gnu-unique-object,
  [AS_HELP_STRING([--enable-gnu-unique-object],

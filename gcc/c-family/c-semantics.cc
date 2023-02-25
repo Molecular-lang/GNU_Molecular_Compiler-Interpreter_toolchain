@@ -1,5 +1,4 @@
-/* This file contains subroutine used by the C front-end to construct GENERIC.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* This file contains subroutine used by the C front-end to construct GENERIC. */
 
 #include "config.h"
 #include "system.h"

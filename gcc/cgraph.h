@@ -1,4 +1,22 @@
-/* Callgraph handling code. */
+/* Callgraph handling code.
+   Copyright (C) 2003-2023 Free Software Foundation, Inc.
+   Contributed by Jan Hubicka
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_CGRAPH_H
 #define GCC_CGRAPH_H
@@ -2632,7 +2650,7 @@ symtab_node::real_symbol_p (void)
 /* Return true if DECL should have entry in symbol table if used.
    Those are functions and static & external variables.  */
 
-static inline bool
+inline bool
 decl_in_symtab_p (const_tree decl)
 {
   return (TREE_CODE (decl) == FUNCTION_DECL
@@ -3305,7 +3323,7 @@ cgraph_edge::frequency ()
 
 
 /* Return true if the TM_CLONE bit is set for a given FNDECL.  */
-static inline bool
+inline bool
 decl_is_tm_clone (const_tree fndecl)
 {
   cgraph_node *n = cgraph_node::get (fndecl);
@@ -3521,7 +3539,7 @@ ipa_polymorphic_call_context::useless_p () const
    the name documents the intent.  We require that no GC can occur
    within the fprintf call.  */
 
-static inline const char *
+inline const char *
 xstrdup_for_dump (const char *transient_str)
 {
   return ggc_strdup (transient_str);

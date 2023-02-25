@@ -1,4 +1,21 @@
-/* Instruction scheduling pass.   Log dumping infrastructure. */
+/* Instruction scheduling pass.   Log dumping infrastructure.
+   Copyright (C) 2006-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -16,6 +33,7 @@
 #include "sel-sched-ir.h"
 #include "sel-sched-dump.h"
 #include "print-rtl.h"
+
 
 /* These variables control high-level pretty printing.  */
 static int sel_dump_cfg_flags = SEL_DUMP_CFG_FLAGS;
@@ -964,16 +982,6 @@ debug_blist (blist_t bnds)
 {
   switch_dump (stderr);
   dump_blist (bnds);
-  sel_print ("\n");
-  restore_dump ();
-}
-
-/* Dump a hard reg set SET to stderr.  */
-DEBUG_FUNCTION void
-debug_hard_reg_set (HARD_REG_SET set)
-{
-  switch_dump (stderr);
-  dump_hard_reg_set ("", set);
   sel_print ("\n");
   restore_dump ();
 }

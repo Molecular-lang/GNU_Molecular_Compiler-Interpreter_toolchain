@@ -1,5 +1,4 @@
-/* Data structure definitions for target-specific C-family behavior.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Data structure definitions for target-specific C-family behavior. */
 
 #ifndef GCC_C_TARGET_H
 #define GCC_C_TARGET_H

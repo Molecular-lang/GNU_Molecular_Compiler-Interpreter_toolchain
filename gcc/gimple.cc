@@ -1,4 +1,23 @@
-/* Gimple IR support functions. */
+/* Gimple IR support functions.
+
+   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+   Contributed by Aldy Hernandez <aldyh@redhat.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -411,16 +430,7 @@ gimple_build_builtin_unreachable (location_t loc)
 {
   tree data = NULL_TREE;
   tree fn = sanitize_unreachable_fn (&data, loc);
-  gcall *g;
-  if (DECL_FUNCTION_CODE (fn) != BUILT_IN_TRAP)
-    g = gimple_build_call (fn, data != NULL_TREE, data);
-  else
-    {
-      /* Instead of __builtin_trap use .TRAP, so that it doesn't
-	 need vops.  */
-      gcc_checking_assert (data == NULL_TREE);
-      g = gimple_build_call_internal (IFN_TRAP, 0);
-    }
+  gcall *g = gimple_build_call (fn, data != NULL_TREE, data);
   gimple_call_set_ctrl_altering (g, true);
   gimple_set_location (g, loc);
   return g;

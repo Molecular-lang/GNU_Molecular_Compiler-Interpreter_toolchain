@@ -1,5 +1,22 @@
 /* Classes for analyzer diagnostics.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_ANALYZER_PENDING_DIAGNOSTIC_H
 #define GCC_ANALYZER_PENDING_DIAGNOSTIC_H
@@ -329,6 +346,16 @@ class pending_diagnostic
   virtual void mark_interesting_stuff (interesting_t *)
   {
     /* Default no-op implementation.  */
+  }
+
+  /* Vfunc to give diagnostic subclasses the opportunity to reject diagnostics
+     by imposing their own additional feasibility checks on the path to a
+     given feasible_node.  */
+  virtual bool check_valid_fpath_p (const feasible_node &,
+				    const gimple *) const
+  {
+    /* Default implementation: accept this path.  */
+    return true;
   }
 };
 

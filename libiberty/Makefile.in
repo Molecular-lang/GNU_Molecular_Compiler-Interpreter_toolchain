@@ -1,4 +1,23 @@
 # Makefile for the libiberty library.
+# Originally written by K. Richard Pixley <rich@cygnus.com>.
+#
+# Copyright (C) 1990-2023 Free Software Foundation, Inc.
+#
+# This file is part of the libiberty library.
+# Libiberty is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# Libiberty is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with libiberty; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+# Boston, MA 02110-1301, USA.
 
 libiberty_topdir = @libiberty_topdir@
 srcdir = @srcdir@
@@ -79,7 +98,7 @@ FLAGS_TO_PASS = \
 	"tooldir=$(tooldir)"
 
 # Subdirectories to recurse into. We need to override this during cleaning
-SUBDIRS =
+SUBDIRS = testsuite
 
 # FIXME: add @BUILD_INFO@ once we're sure it works for everyone.
 all: stamp-picdir stamp-noasandir $(TARGETLIB) required-list all-subdir
@@ -463,6 +482,7 @@ distclean: distclean-subdir
 	@$(MULTICLEAN) multi-clean DO=distclean
 	-rm -f *~ Makefile config.cache config.status xhost-mkfrag TAGS multilib.out
 	-rm -f config.log
+	-rmdir testsuite 2>/dev/null
 maintainer-clean realclean: maintainer-clean-subdir
 	$(MAKE) SUBDIRS="" distclean
 

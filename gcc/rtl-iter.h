@@ -1,4 +1,21 @@
-/* RTL iterators */
+/* RTL iterators
+   Copyright (C) 2014-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* This structure describes the subrtxes of an rtx as follows:
 
@@ -22,7 +39,7 @@ extern rtx_subrtx_bound_info rtx_nonconst_subrtx_bounds[];
 
 /* Return true if CODE has no subrtxes.  */
 
-static inline bool
+inline bool
 leaf_code_p (enum rtx_code code)
 {
   return rtx_all_subrtx_bounds[code].count == 0;

@@ -1,4 +1,23 @@
-/* Common VxWorks target definitions for GNU compiler. */
+/* Common VxWorks target definitions for GNU compiler.
+   Copyright (C) 1999-2023 Free Software Foundation, Inc.
+   Contributed by Wind River Systems.
+   Rewritten by CodeSourcery, LLC.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* ??? We use HAVE_INITFINI_ARRAY_SUPPORT in preprocessor guards in this
    header, which is conveyed by auto-host.h despite being a target property.
@@ -360,14 +379,14 @@ extern void vxworks_asm_out_destructor (rtx symbol, int priority);
 	      prevent compilation failures triggered by our		\
 	      definition of "inline" in ansidecl when "inline"		\
 	      is not a keyword.  */					\
-	   if (!flag_isoc99 && !c_dialect_cxx())			\
+	   if (!flag_isoc99 && !scpel_dialect_cxx())			\
              builtin_define ("_ALLOW_KEYWORD_MACROS");			\
         }								\
       /* C++ support relies on C99 features from C++11, even C++98	\
          for listdc++ in particular, with corresponding checks at	\
          configure time.  Make sure C99 features are exposed by the	\
          system headers.  */						\
-      if (c_dialect_cxx())						\
+      if (scpel_dialect_cxx())						\
         builtin_define("_C99");						\
     }									\
   while (0)

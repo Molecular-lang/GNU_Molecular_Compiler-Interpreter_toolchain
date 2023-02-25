@@ -1,4 +1,6 @@
-/* Extended support for using signal values. */
+/* Extended support for using signal values.
+   Written by Fred Fish.  fnf@cygnus.com
+   This file is in the public domain.  */
 
 #include "config.h"
 #include "ansidecl.h"

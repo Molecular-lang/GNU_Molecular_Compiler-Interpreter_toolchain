@@ -1,5 +1,4 @@
-/* Find near-matches for macros.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Find near-matches for macros. */
 
 #ifndef C_SPELLCHECK_H
 #define C_SPELLCHECK_H

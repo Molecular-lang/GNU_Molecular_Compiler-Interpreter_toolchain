@@ -1,4 +1,21 @@
-/* Definitions for code generation pass of GNU compiler. */
+/* Definitions for code generation pass of GNU compiler.
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_OPTABS_H
 #define GCC_OPTABS_H
@@ -53,7 +70,7 @@ public:
 /* Initialize OP with the given fields.  Initialise the other fields
    to their default values.  */
 
-static inline void
+inline void
 create_expand_operand (class expand_operand *op,
 		       enum expand_operand_type type,
 		       rtx value, machine_mode mode,
@@ -70,7 +87,7 @@ create_expand_operand (class expand_operand *op,
 
 /* Make OP describe an operand that must use rtx X, even if X is volatile.  */
 
-static inline void
+inline void
 create_fixed_operand (class expand_operand *op, rtx x)
 {
   create_expand_operand (op, EXPAND_FIXED, x, VOIDmode, false);
@@ -81,7 +98,7 @@ create_fixed_operand (class expand_operand *op, rtx x)
    It is OK for VALUE to be inconsistent with MODE, although it will just
    be ignored in that case.  */
 
-static inline void
+inline void
 create_output_operand (class expand_operand *op, rtx x,
 		       machine_mode mode)
 {
@@ -93,7 +110,7 @@ create_output_operand (class expand_operand *op, rtx x,
    VALUE be copied into a different kind of rtx before being passed
    as an operand.  */
 
-static inline void
+inline void
 create_input_operand (class expand_operand *op, rtx value,
 		      machine_mode mode)
 {
@@ -103,7 +120,7 @@ create_input_operand (class expand_operand *op, rtx value,
 /* Like create_input_operand, except that VALUE must first be converted
    to mode MODE.  UNSIGNED_P says whether VALUE is unsigned.  */
 
-static inline void
+inline void
 create_convert_operand_to (class expand_operand *op, rtx value,
 			   machine_mode mode, bool unsigned_p)
 {
@@ -119,7 +136,7 @@ create_convert_operand_to (class expand_operand *op, rtx value,
    conversion (as for convert_modes) and duplicating a scalar to fill
    a vector (if VALUE is a scalar but the operand is a vector).  */
 
-static inline void
+inline void
 create_convert_operand_from (class expand_operand *op, rtx value,
 			     machine_mode mode, bool unsigned_p)
 {
@@ -130,7 +147,7 @@ create_convert_operand_from (class expand_operand *op, rtx value,
 /* Make OP describe an input Pmode address operand.  VALUE is the value
    of the address, but it may need to be converted to Pmode first.  */
 
-static inline void
+inline void
 create_address_operand (class expand_operand *op, rtx value)
 {
   create_expand_operand (op, EXPAND_ADDRESS, value, Pmode, false);

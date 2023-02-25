@@ -1,7 +1,6 @@
 /* This file contains routines to construct OpenACC and OpenMP constructs,
    called from parsing in the C and C++ front ends.
-
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+ */
 
 #include "config.h"
 #include "system.h"
@@ -24,7 +23,7 @@
    the #pragma.  */
 
 tree
-c_finish_oacc_wait (location_t loc, tree parms, tree clauses)
+scpel_finish_oacc_wait (location_t loc, tree parms, tree clauses)
 {
   const int nparms = list_length (parms);
   tree stmt, t;
@@ -61,7 +60,7 @@ c_finish_oacc_wait (location_t loc, tree parms, tree clauses)
    that follows the pragma.  LOC is the location of the #pragma.  */
 
 tree
-c_finish_omp_master (location_t loc, tree stmt)
+scpel_finish_omp_master (location_t loc, tree stmt)
 {
   tree t = add_stmt (build1 (OMP_MASTER, void_type_node, stmt));
   SET_EXPR_LOCATION (t, loc);
@@ -72,7 +71,7 @@ c_finish_omp_master (location_t loc, tree stmt)
    that follows the pragma.  LOC is the location of the #pragma.  */
 
 tree
-c_finish_omp_masked (location_t loc, tree body, tree clauses)
+scpel_finish_omp_masked (location_t loc, tree body, tree clauses)
 {
   tree stmt = make_node (OMP_MASKED);
   TREE_TYPE (stmt) = void_type_node;
@@ -86,7 +85,7 @@ c_finish_omp_masked (location_t loc, tree body, tree clauses)
    that follows the pragma.  LOC is the location of the #pragma.  */
 
 tree
-c_finish_omp_taskgroup (location_t loc, tree body, tree clauses)
+scpel_finish_omp_taskgroup (location_t loc, tree body, tree clauses)
 {
   tree stmt = make_node (OMP_TASKGROUP);
   TREE_TYPE (stmt) = void_type_node;
@@ -101,7 +100,7 @@ c_finish_omp_taskgroup (location_t loc, tree body, tree clauses)
    if it was omitted.  LOC is the location of the #pragma.  */
 
 tree
-c_finish_omp_critical (location_t loc, tree body, tree name, tree clauses)
+scpel_finish_omp_critical (location_t loc, tree body, tree name, tree clauses)
 {
   gcc_assert (!clauses || OMP_CLAUSE_CODE (clauses) == OMP_CLAUSE_HINT);
   if (name == NULL_TREE
@@ -127,7 +126,7 @@ c_finish_omp_critical (location_t loc, tree body, tree name, tree clauses)
    that follows the pragma.  LOC is the location of the #pragma.  */
 
 tree
-c_finish_omp_ordered (location_t loc, tree clauses, tree stmt)
+scpel_finish_omp_ordered (location_t loc, tree clauses, tree stmt)
 {
   tree t = make_node (OMP_ORDERED);
   TREE_TYPE (t) = void_type_node;
@@ -146,7 +145,7 @@ c_finish_omp_ordered (location_t loc, tree clauses, tree stmt)
    the #pragma.  */
 
 void
-c_finish_omp_barrier (location_t loc)
+scpel_finish_omp_barrier (location_t loc)
 {
   tree x;
 
@@ -160,7 +159,7 @@ c_finish_omp_barrier (location_t loc)
    pragma.  */
 
 void
-c_finish_omp_taskwait (location_t loc)
+scpel_finish_omp_taskwait (location_t loc)
 {
   tree x;
 
@@ -174,7 +173,7 @@ c_finish_omp_taskwait (location_t loc)
    pragma.  */
 
 void
-c_finish_omp_taskyield (location_t loc)
+scpel_finish_omp_taskyield (location_t loc)
 {
   tree x;
 
@@ -195,7 +194,7 @@ c_finish_omp_taskyield (location_t loc)
    or create_tmp_var*.  */
 
 tree
-c_finish_omp_atomic (location_t loc, enum tree_code code,
+scpel_finish_omp_atomic (location_t loc, enum tree_code code,
 		     enum tree_code opcode, tree lhs, tree rhs,
 		     tree v, tree lhs1, tree rhs1, tree r, bool swapped,
 		     enum omp_memory_order memory_order, bool weak,
@@ -421,7 +420,7 @@ c_finish_omp_atomic (location_t loc, enum tree_code code,
 	  if (!clear_padding && tree_fits_uhwi_p (TYPE_SIZE (cmptype)))
 	    {
 	      HOST_WIDE_INT prec = tree_to_uhwi (TYPE_SIZE (cmptype));
-	      inttype = c_common_type_for_size (prec, 1);
+	      inttype = scpel_common_type_for_size (prec, 1);
 	      if (inttype
 		  && (!tree_int_cst_equal (TYPE_SIZE (cmptype),
 					   TYPE_SIZE (inttype))
@@ -648,7 +647,7 @@ c_finish_omp_atomic (location_t loc, enum tree_code code,
 /* Return true if TYPE is the implementation's omp_depend_t.  */
 
 bool
-c_omp_depend_t_p (tree type)
+scpel_omp_depend_t_p (tree type)
 {
   type = TYPE_MAIN_VARIANT (type);
   return (TREE_CODE (type) == RECORD_TYPE
@@ -669,13 +668,13 @@ c_omp_depend_t_p (tree type)
    #pragma.  */
 
 void
-c_finish_omp_depobj (location_t loc, tree depobj,
+scpel_finish_omp_depobj (location_t loc, tree depobj,
 		     enum omp_clause_depend_kind kind, tree clause)
 {
   tree t = NULL_TREE;
   if (!error_operand_p (depobj))
     {
-      if (!c_omp_depend_t_p (TREE_TYPE (depobj)))
+      if (!scpel_omp_depend_t_p (TREE_TYPE (depobj)))
 	{
 	  error_at (EXPR_LOC_OR_LOC (depobj, loc),
 		    "type of %<depobj%> expression is not %<omp_depend_t%>");
@@ -803,7 +802,7 @@ c_finish_omp_depobj (location_t loc, tree depobj,
    the #pragma.  */
 
 void
-c_finish_omp_flush (location_t loc, int mo)
+scpel_finish_omp_flush (location_t loc, int mo)
 {
   tree x;
 
@@ -823,7 +822,7 @@ c_finish_omp_flush (location_t loc, int mo)
 
 
 /* Check and canonicalize OMP_FOR increment expression.
-   Helper function for c_finish_omp_for.  */
+   Helper function for scpel_finish_omp_for.  */
 
 static tree
 check_omp_for_incr_expr (location_t loc, tree exp, tree decl)
@@ -922,7 +921,7 @@ c_omp_for_incr_canonicalize_ptr (location_t loc, tree decl, tree incr)
    the loop.  */
 
 tree
-c_finish_omp_for (location_t locus, enum tree_code code, tree declv,
+scpel_finish_omp_for (location_t locus, enum tree_code code, tree declv,
 		  tree orig_declv, tree initv, tree condv, tree incrv,
 		  tree body, tree pre_body, bool final_p)
 {
@@ -1181,7 +1180,7 @@ c_finish_omp_for (location_t locus, enum tree_code code, tree declv,
 		{
 		  tree i = TREE_OPERAND (incr, 1);
 		  i = TREE_OPERAND (i, TREE_OPERAND (i, 0) == decl);
-		  i = c_fully_fold (i, false, NULL);
+		  i = scpel_fully_fold (i, false, NULL);
 		  if (!final_p
 		      && TREE_CODE (i) != INTEGER_CST)
 		    ;
@@ -1192,7 +1191,7 @@ c_finish_omp_for (location_t locus, enum tree_code code, tree declv,
 		      if (unit)
 			{
 			  enum tree_code ccode = GT_EXPR;
-			  unit = c_fully_fold (unit, false, NULL);
+			  unit = scpel_fully_fold (unit, false, NULL);
 			  i = fold_convert (TREE_TYPE (unit), i);
 			  if (operand_equal_p (unit, i, 0))
 			    ccode = LT_EXPR;
@@ -1262,7 +1261,7 @@ c_finish_omp_for (location_t locus, enum tree_code code, tree declv,
     }
 }
 
-/* Type for passing data in between c_omp_check_loop_iv and
+/* Type for passing data in between scpel_omp_check_loop_iv and
    c_omp_check_loop_iv_r.  */
 
 struct c_omp_check_loop_iv_data
@@ -1570,7 +1569,7 @@ c_omp_check_nonrect_loop_iv (tree *tp, struct c_omp_check_loop_iv_data *d,
    expressions.  */
 
 bool
-c_omp_check_loop_iv (tree stmt, tree declv, walk_tree_lh lh)
+scpel_omp_check_loop_iv (tree stmt, tree declv, walk_tree_lh lh)
 {
   hash_set<tree> pset;
   struct c_omp_check_loop_iv_data data;
@@ -1667,7 +1666,7 @@ c_omp_check_loop_iv (tree stmt, tree declv, walk_tree_lh lh)
 /* Similar, but allows to check the init or cond expressions individually.  */
 
 bool
-c_omp_check_loop_iv_exprs (location_t stmt_loc, enum tree_code code,
+scpel_omp_check_loop_iv_exprs (location_t stmt_loc, enum tree_code code,
 			   tree declv, int i, tree decl, tree init, tree cond,
 			   walk_tree_lh lh)
 {
@@ -1717,7 +1716,7 @@ c_omp_check_loop_iv_exprs (location_t stmt_loc, enum tree_code code,
    #pragma acc parallel loop  */
 
 tree
-c_oacc_split_loop_clauses (tree clauses, tree *not_loop_clauses,
+scpel_oacc_split_loop_clauses (tree clauses, tree *not_loop_clauses,
 			   bool is_parallel)
 {
   tree next, loop_clauses, nc;
@@ -1816,11 +1815,11 @@ c_oacc_split_loop_clauses (tree clauses, tree *not_loop_clauses,
    #pragma omp teams loop  */
 
 void
-c_omp_split_clauses (location_t loc, enum tree_code code,
+scpel_omp_split_clauses (location_t loc, enum tree_code code,
 		     omp_clause_mask mask, tree clauses, tree *cclauses)
 {
   tree next, c;
-  enum c_omp_clause_split s;
+  enum scpel_omp_clause_split s;
   int i;
   bool has_dup_allocate = false;
 
@@ -2617,7 +2616,7 @@ c_omp_split_clauses (location_t loc, enum tree_code code,
 		  cclauses[s] = c;
 		  has_dup_allocate = true;
 		}
-	      s = (enum c_omp_clause_split) i;
+	      s = (enum scpel_omp_clause_split) i;
 	    }
 	  gcc_assert (s != C_OMP_CLAUSE_SPLIT_COUNT);
 	  break;
@@ -2806,7 +2805,7 @@ c_omp_declare_simd_clause_cmp (const void *p, const void *q)
    CLAUSES on FNDECL into argument indexes and sort them.  */
 
 tree
-c_omp_declare_simd_clauses_to_numbers (tree parms, tree clauses)
+scpel_omp_declare_simd_clauses_to_numbers (tree parms, tree clauses)
 {
   tree c;
   vec<tree> clvec = vNULL;
@@ -2868,7 +2867,7 @@ c_omp_declare_simd_clauses_to_numbers (tree parms, tree clauses)
 /* Change argument indexes in CLAUSES of FNDECL back to PARM_DECLs.  */
 
 void
-c_omp_declare_simd_clauses_to_decls (tree fndecl, tree clauses)
+scpel_omp_declare_simd_clauses_to_decls (tree fndecl, tree clauses)
 {
   tree c;
 
@@ -2904,7 +2903,7 @@ c_omp_declare_simd_clauses_to_decls (tree fndecl, tree clauses)
    shared/firstprivate clauses).  */
 
 bool
-c_omp_predefined_variable (tree decl)
+scpel_omp_predefined_variable (tree decl)
 {
   if (VAR_P (decl)
       && DECL_ARTIFICIAL (decl)
@@ -2953,7 +2952,7 @@ c_omp_predefined_variable (tree decl)
    is predetermined.  */
 
 enum omp_clause_default_kind
-c_omp_predetermined_sharing (tree decl)
+scpel_omp_predetermined_sharing (tree decl)
 {
   /* Predetermine artificial variables holding integral values, those
      are usually result of gimplify_one_sizepos or SAVE_EXPR
@@ -2963,7 +2962,7 @@ c_omp_predetermined_sharing (tree decl)
       && INTEGRAL_TYPE_P (TREE_TYPE (decl)))
     return OMP_CLAUSE_DEFAULT_SHARED;
 
-  if (c_omp_predefined_variable (decl))
+  if (scpel_omp_predefined_variable (decl))
     return OMP_CLAUSE_DEFAULT_SHARED;
 
   return OMP_CLAUSE_DEFAULT_UNSPECIFIED;
@@ -2973,7 +2972,7 @@ c_omp_predetermined_sharing (tree decl)
    of DECL is predetermined.  */
 
 enum omp_clause_defaultmap_kind
-c_omp_predetermined_mapping (tree decl)
+scpel_omp_predetermined_mapping (tree decl)
 {
   /* Predetermine artificial variables holding integral values, those
      are usually result of gimplify_one_sizepos or SAVE_EXPR
@@ -2983,14 +2982,14 @@ c_omp_predetermined_mapping (tree decl)
       && INTEGRAL_TYPE_P (TREE_TYPE (decl)))
     return OMP_CLAUSE_DEFAULTMAP_FIRSTPRIVATE;
 
-  if (c_omp_predefined_variable (decl))
+  if (scpel_omp_predefined_variable (decl))
     return OMP_CLAUSE_DEFAULTMAP_TO;
 
   return OMP_CLAUSE_DEFAULTMAP_CATEGORY_UNSPECIFIED;
 }
 
 
-/* Used to merge map clause information in c_omp_adjust_map_clauses.  */
+/* Used to merge map clause information in scpel_omp_adjust_map_clauses.  */
 struct map_clause
 {
   tree clause;
@@ -3004,7 +3003,7 @@ struct map_clause
 /* Adjust map clauses after normal clause parsing, mainly to turn specific
    base-pointer map cases into attach/detach and mark them addressable.  */
 void
-c_omp_adjust_map_clauses (tree clauses, bool is_target)
+scpel_omp_adjust_map_clauses (tree clauses, bool is_target)
 {
   if (!is_target)
     {
@@ -3019,7 +3018,7 @@ c_omp_adjust_map_clauses (tree clauses, bool is_target)
 	  {
 	    tree ptr = OMP_CLAUSE_DECL (c);
 	    OMP_CLAUSE_SET_MAP_KIND (c, GOMP_MAP_ATTACH_DETACH);
-	    c_common_mark_addressable_vec (ptr);
+	    scpel_common_mark_addressable_vec (ptr);
 	  }
       return;
     }
@@ -3075,12 +3074,12 @@ c_omp_adjust_map_clauses (tree clauses, bool is_target)
 	  && (mc.decl_mapped || mc.omp_declare_target))
 	{
 	  OMP_CLAUSE_SET_MAP_KIND (mc.clause, GOMP_MAP_ATTACH_DETACH);
-	  c_common_mark_addressable_vec (OMP_CLAUSE_DECL (mc.clause));
+	  scpel_common_mark_addressable_vec (OMP_CLAUSE_DECL (mc.clause));
 	}
     }
 }
 
-const struct c_omp_directive c_omp_directives[] = {
+const struct scpel_omp_directive scpel_omp_directives[] = {
   /* Keep this alphabetically sorted by the first word.  Non-null second/third
      if any should precede null ones.  */
   { "allocate", nullptr, nullptr, PRAGMA_OMP_ALLOCATE,
@@ -3203,30 +3202,30 @@ const struct c_omp_directive c_omp_directives[] = {
    with FIRST keyword and for multi-word directives has SECOND and
    THIRD keyword after it.  */
 
-const struct c_omp_directive *
-c_omp_categorize_directive (const char *first, const char *second,
+const struct scpel_omp_directive *
+scpel_omp_categorize_directive (const char *first, const char *second,
 			    const char *third)
 {
-  const size_t n_omp_directives = ARRAY_SIZE (c_omp_directives);
+  const size_t n_omp_directives = ARRAY_SIZE (scpel_omp_directives);
   for (size_t i = 0; i < n_omp_directives; i++)
     {
-      if ((unsigned char) c_omp_directives[i].first[0]
+      if ((unsigned char) scpel_omp_directives[i].first[0]
 	  < (unsigned char) first[0])
 	continue;
-      if ((unsigned char) c_omp_directives[i].first[0]
+      if ((unsigned char) scpel_omp_directives[i].first[0]
 	  > (unsigned char) first[0])
 	break;
-      if (strcmp (c_omp_directives[i].first, first))
+      if (strcmp (scpel_omp_directives[i].first, first))
 	continue;
-      if (!c_omp_directives[i].second)
-	return &c_omp_directives[i];
-      if (!second || strcmp (c_omp_directives[i].second, second))
+      if (!scpel_omp_directives[i].second)
+	return &scpel_omp_directives[i];
+      if (!second || strcmp (scpel_omp_directives[i].second, second))
 	continue;
-      if (!c_omp_directives[i].third)
-	return &c_omp_directives[i];
-      if (!third || strcmp (c_omp_directives[i].third, third))
+      if (!scpel_omp_directives[i].third)
+	return &scpel_omp_directives[i];
+      if (!third || strcmp (scpel_omp_directives[i].third, third))
 	continue;
-      return &c_omp_directives[i];
+      return &scpel_omp_directives[i];
     }
   return NULL;
 }

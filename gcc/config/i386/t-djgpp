@@ -1,3 +1,4 @@
+
 EXTRA_OBJS += djgpp.o
 
 djgpp.o:    $(srcdir)/config/i386/djgpp.cc $(CONFIG_H) $(SYSTEM_H) coretypes.h \

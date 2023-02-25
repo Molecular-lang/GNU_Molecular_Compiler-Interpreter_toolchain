@@ -1,5 +1,4 @@
-/* Tree-dumping functionality for C-family languages.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Tree-dumping functionality for C-family languages. */
 
 #include "config.h"
 #include "system.h"
@@ -17,7 +16,7 @@ dump_stmt (dump_info_p di, const_tree t)
 }
 
 bool
-c_dump_tree (void *dump_info, tree t)
+scpel_dump_tree (void *dump_info, tree t)
 {
   enum tree_code code;
   dump_info_p di = (dump_info_p) dump_info;

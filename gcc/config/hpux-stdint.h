@@ -1,3 +1,4 @@
+
 /* These should be correct for ia64-hp-hpux11.23.  */
 
 #define SIG_ATOMIC_TYPE "unsigned int"

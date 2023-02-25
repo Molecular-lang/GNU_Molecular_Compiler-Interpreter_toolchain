@@ -1,4 +1,21 @@
-/* Internal functions. */
+/* Internal functions.
+   Copyright (C) 2011-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* This file specifies a list of internal "functions".  These functions
    differ from built-in functions in that they have no linkage and cannot
@@ -439,11 +456,6 @@ DEF_INTERNAL_FN (SHUFFLEVECTOR, ECF_CONST | ECF_LEAF | ECF_NOTHROW, NULL)
 
 /* <=> optimization.  */
 DEF_INTERNAL_FN (SPACESHIP, ECF_CONST | ECF_LEAF | ECF_NOTHROW, NULL)
-
-/* __builtin_trap created from/for __builtin_unreachable.  */
-DEF_INTERNAL_FN (TRAP, ECF_CONST | ECF_LEAF | ECF_NORETURN
-		       | ECF_NOTHROW | ECF_COLD | ECF_LOOPING_CONST_OR_PURE,
-		 NULL)
 
 /* [[assume (cond)]].  */
 DEF_INTERNAL_FN (ASSUME, ECF_CONST | ECF_LEAF | ECF_NOTHROW

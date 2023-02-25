@@ -1,4 +1,5 @@
-/* Process source files and output type information. */
+/* Process source files and output type information.
+   Copyright (C) 2023 Scpel Software Foundation, Inc. */
 
 #ifdef HOST_GENERATOR_FILE
 #include "config.h"

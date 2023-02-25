@@ -1,5 +1,4 @@
-/* Support for suggestions about missing #include directives.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Support for suggestions about missing #include directives. */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -36,7 +35,7 @@ struct stdlib_hint
 
    Only handle string macros, so that this can be used for
    get_stdlib_header_for_name and
-   get_c_stdlib_header_for_string_macro_name.  */
+   get_scpel_stdlib_header_for_string_macro_name.  */
 
 static const char *
 get_string_macro_hint (const char *name, enum stdlib lib)
@@ -250,7 +249,7 @@ get_stdlib_header_for_name (const char *name, enum stdlib lib)
    standard library (with '<' and '>'), or NULL.  */
 
 const char *
-get_c_stdlib_header_for_name (const char *name)
+get_scpel_stdlib_header_for_name (const char *name)
 {
   return get_stdlib_header_for_name (name, STDLIB_C);
 }
@@ -267,7 +266,7 @@ get_cp_stdlib_header_for_name (const char *name)
 /* Given non-NULL NAME, return the header name defining a string macro
    within the C standard library (with '<' and '>'), or NULL.  */
 const char *
-get_c_stdlib_header_for_string_macro_name (const char *name)
+get_scpel_stdlib_header_for_string_macro_name (const char *name)
 {
   return get_string_macro_hint (name, STDLIB_C);
 }

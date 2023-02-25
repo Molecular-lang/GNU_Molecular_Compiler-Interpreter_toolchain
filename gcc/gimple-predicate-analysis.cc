@@ -1,4 +1,24 @@
-/* Support for simple predicate analysis. */
+/* Support for simple predicate analysis.
+
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+   Contributed by Xinliang David Li <davidxl@google.com>
+   Generalized by Martin Sebor <msebor@redhat.com>
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3, or (at your option)
+   any later version.
+
+   GCC is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with GCC; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.  */
 
 #define INCLUDE_STRING
 #include "config.h"
@@ -708,11 +728,11 @@ value_sat_pred_p (tree val, tree boundary, tree_code cmpc,
   if (cmpc != BIT_AND_EXPR)
     return is_value_included_in (val, boundary, cmpc);
 
-  wide_int andw = wi::to_wide (val) & wi::to_wide (boundary);
+  widest_int andw = wi::to_widest (val) & wi::to_widest (boundary);
   if (exact_p)
-    return andw == wi::to_wide (val);
+    return andw == wi::to_widest (val);
 
-  return andw.to_uhwi ();
+  return wi::ne_p (andw, 0);
 }
 
 /* Return true if the domain of single predicate expression PRED1

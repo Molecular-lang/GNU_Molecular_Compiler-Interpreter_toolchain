@@ -1,5 +1,4 @@
-/* C-family attributes handling.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* C-family attributes handling. */
 
 #define INCLUDE_STRING
 #include "config.h"
@@ -270,7 +269,7 @@ static const struct attribute_spec::exclusions attr_stack_protect_exclusions[] =
 /* Table of machine-independent attributes common to all C-like languages.
 
    Current list of processed common attributes: nonnull.  */
-const struct attribute_spec c_common_attribute_table[] =
+const struct attribute_spec scpel_common_attribute_table[] =
 {
   /* { name, min_len, max_len, decl_req, type_req, fn_type_req,
        affects_type_identity, handler, exclude } */
@@ -560,7 +559,7 @@ const struct attribute_spec c_common_attribute_table[] =
    descendants.
 
    Current list of processed format attributes: format, format_arg.  */
-const struct attribute_spec c_common_format_attribute_table[] =
+const struct attribute_spec scpel_common_format_attribute_table[] =
 {
   /* { name, min_len, max_len, decl_req, type_req, fn_type_req,
        affects_type_identity, handler, exclude } */
@@ -1061,7 +1060,7 @@ handle_noreturn_attribute (tree *node, tree name, tree ARG_UNUSED (args),
 {
   tree type = TREE_TYPE (*node);
 
-  /* See FIXME comment in c_common_attribute_table.  */
+  /* See FIXME comment in scpel_common_attribute_table.  */
   if (TREE_CODE (*node) == FUNCTION_DECL
       || objc_method_decl (TREE_CODE (*node)))
     TREE_THIS_VOLATILE (*node) = 1;
@@ -1728,7 +1727,7 @@ handle_const_attribute (tree *node, tree name, tree ARG_UNUSED (args),
 {
   tree type = TREE_TYPE (*node);
 
-  /* See FIXME comment on noreturn in c_common_attribute_table.  */
+  /* See FIXME comment on noreturn in scpel_common_attribute_table.  */
   if (TREE_CODE (*node) == FUNCTION_DECL)
     TREE_READONLY (*node) = 1;
   else if (TREE_CODE (type) == POINTER_TYPE
@@ -1778,7 +1777,7 @@ handle_scalar_storage_order_attribute (tree *node, tree name, tree args,
       return NULL_TREE;
     }
 
-  if (RECORD_OR_UNION_TYPE_P (type) && !c_dialect_cxx ())
+  if (RECORD_OR_UNION_TYPE_P (type) && !scpel_dialect_cxx ())
     {
       bool reverse = false;
 
@@ -1851,7 +1850,7 @@ handle_transparent_union_attribute (tree *node, tree name,
 	    goto ignored;
 
 	  /* build_duplicate_type doesn't work for C++.  */
-	  if (c_dialect_cxx ())
+	  if (scpel_dialect_cxx ())
 	    goto ignored;
 
 	  /* A type variant isn't good enough, since we don't want a cast
@@ -3417,6 +3416,17 @@ handle_malloc_attribute (tree *node, tree name, tree args, int flags,
 
   if (TREE_CODE (dealloc) != FUNCTION_DECL)
     {
+/*      if (TREE_CODE (dealloc) == OVERLOAD)
+	{
+	  // Handle specially the common case of specifying one of a number
+	  // of overloads, such as operator delete.
+	  error ("%qE attribute argument 1 is ambiguous", name);
+	  inform (input_location,
+		  "use a cast to the expected type to disambiguate");
+	  *no_add_attrs = true;
+	  return NULL_TREE;
+	}
+*/
       error ("%qE attribute argument 1 does not name a function", name);
       if (DECL_P (dealloc))
 	inform (DECL_SOURCE_LOCATION (dealloc),
@@ -4701,22 +4711,27 @@ append_access_attr (tree node[3], tree attrs, const char *attrstr,
   rdwr_map cur_idxs;
   init_attr_rdwr_indices (&cur_idxs, attrs);
 
+  tree args = TYPE_ARG_TYPES (node[0]);
+  int argpos = 0;
   std::string spec;
-  for (auto it = new_idxs.begin (); it != new_idxs.end (); ++it)
+  for (tree arg = args; arg; arg = TREE_CHAIN (arg), argpos++)
     {
-      const auto &newaxsref = *it;
+      const attr_access* const newa = new_idxs.get (argpos);
+
+      if (!newa)
+	continue;
 
       /* The map has two equal entries for each pointer argument that
 	 has an associated size argument.  Process just the entry for
 	 the former.  */
-      if ((unsigned)newaxsref.first != newaxsref.second.ptrarg)
+      if ((unsigned)argpos != newa->ptrarg)
 	continue;
 
-      const attr_access* const cura = cur_idxs.get (newaxsref.first);
+      const attr_access* const cura = cur_idxs.get (argpos);
       if (!cura)
 	{
 	  /* The new attribute needs to be added.  */
-	  tree str = newaxsref.second.to_internal_string ();
+	  tree str = newa->to_internal_string ();
 	  spec += TREE_STRING_POINTER (str);
 	  continue;
 	}
@@ -4724,7 +4739,6 @@ append_access_attr (tree node[3], tree attrs, const char *attrstr,
       /* The new access spec refers to an array/pointer argument for
 	 which an access spec already exists.  Check and diagnose any
 	 conflicts.  If no conflicts are found, merge the two.  */
-      const attr_access* const newa = &newaxsref.second;
 
       if (!attrstr)
 	{
@@ -4859,7 +4873,7 @@ append_access_attr (tree node[3], tree attrs, const char *attrstr,
 	continue;
 
       /* Merge the CURA and NEWA.  */
-      attr_access merged = newaxsref.second;
+      attr_access merged = *newa;
 
       /* VLA seen in a declaration takes precedence.  */
       if (cura->minsize == HOST_WIDE_INT_M1U)
@@ -4885,9 +4899,9 @@ append_access_attr (tree node[3], tree attrs, const char *attrstr,
 
 /* Convenience wrapper for the above.  */
 
-tree
-append_access_attr (tree node[3], tree attrs, const char *attrstr,
-		    char code, HOST_WIDE_INT idxs[2])
+static tree
+append_access_attr_idxs (tree node[3], tree attrs, const char *attrstr,
+			 char code, HOST_WIDE_INT idxs[2])
 {
   char attrspec[80];
   int n = sprintf (attrspec, "%c%u", code, (unsigned) idxs[0] - 1);
@@ -5177,7 +5191,7 @@ handle_access_attribute (tree node[3], tree name, tree args, int flags,
      attributes specified on previous declarations of the same type
      and if not, concatenate the two.  */
   const char code = attr_access::mode_chars[mode];
-  tree new_attrs = append_access_attr (node, attrs, attrstr, code, idxs);
+  tree new_attrs = append_access_attr_idxs (node, attrs, attrstr, code, idxs);
   if (!new_attrs)
     return NULL_TREE;
 
@@ -5190,7 +5204,7 @@ handle_access_attribute (tree node[3], tree name, tree args, int flags,
     {
       /* Repeat for the previously declared type.  */
       attrs = TYPE_ATTRIBUTES (TREE_TYPE (node[1]));
-      new_attrs = append_access_attr (node, attrs, attrstr, code, idxs);
+      new_attrs = append_access_attr_idxs (node, attrs, attrstr, code, idxs);
       if (!new_attrs)
 	return NULL_TREE;
 
@@ -5861,7 +5875,7 @@ handle_objc_root_class_attribute (tree */*node*/, tree name, tree /*args*/,
 				  int /*flags*/, bool *no_add_attrs)
 {
   /* This has no meaning outside Objective-C.  */
-  if (!c_dialect_objc())
+  if (!scpel_dialect_objc())
     warning (OPT_Wattributes, "%qE is only applicable to Objective-C"
 	     " class interfaces, attribute ignored", name);
 

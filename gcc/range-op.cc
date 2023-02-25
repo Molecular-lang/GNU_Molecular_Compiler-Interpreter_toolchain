@@ -1,4 +1,23 @@
-/* Code for range operators. */
+/* Code for range operators.
+   Copyright (C) 2017-2023 Free Software Foundation, Inc.
+   Contributed by Andrew MacLeod <amacleod@redhat.com>
+   and Aldy Hernandez <aldyh@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -141,6 +160,38 @@ range_operator::wi_fold (irange &r, tree type,
   r.set_varying (type);
 }
 
+// Call wi_fold when both op1 and op2 are equivalent. Further split small
+// subranges into constants.  This can provide better precision.
+// For x + y,  when x == y with a range of [0,4] instead of [0, 8] produce
+// [0,0][2, 2][4,4][6, 6][8, 8]
+// LIMIT is the maximum number of elements in range allowed before we
+// do not processs them individually.
+
+void
+range_operator::wi_fold_in_parts_equiv (irange &r, tree type,
+					const wide_int &lh_lb,
+					const wide_int &lh_ub,
+					unsigned limit) const
+{
+  int_range_max tmp;
+  widest_int lh_range = wi::sub (widest_int::from (lh_ub, TYPE_SIGN (type)),
+				 widest_int::from (lh_lb, TYPE_SIGN (type)));
+  // if there are 1 to 8 values in the LH range, split them up.
+  r.set_undefined ();
+  if (lh_range >= 0 && lh_range < limit)
+    {
+      for (unsigned x = 0; x <= lh_range; x++)
+	{
+	  wide_int val = lh_lb + x;
+	  wi_fold (tmp, type, val, val, val, val);
+	  r.union_ (tmp);
+	}
+    }
+  // Otherwise just call wi_fold.
+  else
+    wi_fold (r, type, lh_lb, lh_ub, lh_lb, lh_ub);
+}
+
 // Call wi_fold, except further split small subranges into constants.
 // This can provide better precision. For something   8 >> [0,1]
 // Instead of [8, 16], we will produce [8,8][16,16]
@@ -214,6 +265,28 @@ range_operator::fold_range (irange &r, tree type,
   relation_kind rel = trio.op1_op2 ();
   unsigned num_lh = lh.num_pairs ();
   unsigned num_rh = rh.num_pairs ();
+
+  // If op1 and op2 are equivalences, then we don't need a complete cross
+  // product, just pairs of matching elements.
+  if (relation_equiv_p (rel) && lh == rh)
+    {
+      int_range_max tmp;
+      r.set_undefined ();
+      for (unsigned x = 0; x < num_lh; ++x)
+	{
+	  // If the number of subranges is too high, limit subrange creation.
+	  unsigned limit = (r.num_pairs () > 32) ? 0 : 8;
+	  wide_int lh_lb = lh.lower_bound (x);
+	  wide_int lh_ub = lh.upper_bound (x);
+	  wi_fold_in_parts_equiv (tmp, type, lh_lb, lh_ub, limit);
+	  r.union_ (tmp);
+	  if (r.varying_p ())
+	    break;
+	}
+      op1_op2_relation_effect (r, type, lh, rh, rel);
+      update_known_bitmask (r, m_code, lh, rh);
+      return true;
+    }
 
   // If both ranges are single pairs, fold directly into the result range.
   // If the number of subranges grows too high, produce a summary result as the
@@ -569,7 +642,8 @@ operator_equal::op1_range (irange &r, tree type,
     case BRS_FALSE:
       // If the result is false, the only time we know anything is
       // if OP2 is a constant.
-      if (wi::eq_p (op2.lower_bound(), op2.upper_bound()))
+      if (!op2.undefined_p ()
+	  && wi::eq_p (op2.lower_bound(), op2.upper_bound()))
 	{
 	  r = op2;
 	  r.invert ();
@@ -682,7 +756,8 @@ operator_not_equal::op1_range (irange &r, tree type,
     case BRS_TRUE:
       // If the result is true, the only time we know anything is if
       // OP2 is a constant.
-      if (wi::eq_p (op2.lower_bound(), op2.upper_bound()))
+      if (!op2.undefined_p ()
+	  && wi::eq_p (op2.lower_bound(), op2.upper_bound()))
 	{
 	  r = op2;
 	  r.invert ();
@@ -847,6 +922,9 @@ operator_lt::op1_range (irange &r, tree type,
 			const irange &op2,
 			relation_trio) const
 {
+  if (op2.undefined_p ())
+    return false;
+
   switch (get_bool_state (r, lhs, type))
     {
     case BRS_TRUE:
@@ -869,6 +947,9 @@ operator_lt::op2_range (irange &r, tree type,
 			const irange &op1,
 			relation_trio) const
 {
+  if (op1.undefined_p ())
+    return false;
+
   switch (get_bool_state (r, lhs, type))
     {
     case BRS_TRUE:
@@ -958,6 +1039,9 @@ operator_le::op1_range (irange &r, tree type,
 			const irange &op2,
 			relation_trio) const
 {
+  if (op2.undefined_p ())
+    return false;
+
   switch (get_bool_state (r, lhs, type))
     {
     case BRS_TRUE:
@@ -980,6 +1064,9 @@ operator_le::op2_range (irange &r, tree type,
 			const irange &op1,
 			relation_trio) const
 {
+  if (op1.undefined_p ())
+    return false;
+
   switch (get_bool_state (r, lhs, type))
     {
     case BRS_TRUE:
@@ -1068,6 +1155,9 @@ operator_gt::op1_range (irange &r, tree type,
 			const irange &lhs, const irange &op2,
 			relation_trio) const
 {
+  if (op2.undefined_p ())
+    return false;
+
   switch (get_bool_state (r, lhs, type))
     {
     case BRS_TRUE:
@@ -1090,6 +1180,9 @@ operator_gt::op2_range (irange &r, tree type,
 			const irange &op1,
 			relation_trio) const
 {
+  if (op1.undefined_p ())
+    return false;
+
   switch (get_bool_state (r, lhs, type))
     {
     case BRS_TRUE:
@@ -1179,6 +1272,9 @@ operator_ge::op1_range (irange &r, tree type,
 			const irange &op2,
 			relation_trio) const
 {
+  if (op2.undefined_p ())
+    return false;
+
   switch (get_bool_state (r, lhs, type))
     {
     case BRS_TRUE:
@@ -1201,6 +1297,9 @@ operator_ge::op2_range (irange &r, tree type,
 			const irange &op1,
 			relation_trio) const
 {
+  if (op1.undefined_p ())
+    return false;
+
   switch (get_bool_state (r, lhs, type))
     {
     case BRS_TRUE:
@@ -1441,7 +1540,7 @@ operator_plus::op1_range (irange &r, tree type,
   if (!minus)
     return false;
   bool res = minus.fold_range (r, type, lhs, op2);
-  relation_kind rel = trio.lhs_op2 ();
+  relation_kind rel = trio.lhs_op1 ();
   // Check for a relation refinement.
   if (res)
     adjust_op1_for_overflow (r, op2, rel, true /* PLUS_EXPR */);
@@ -1613,7 +1712,7 @@ operator_minus::op1_range (irange &r, tree type,
   if (!minus)
     return false;
   bool res = minus.fold_range (r, type, lhs, op2);
-  relation_kind rel = trio.lhs_op2 ();
+  relation_kind rel = trio.lhs_op1 ();
   if (res)
     adjust_op1_for_overflow (r, op2, rel, false /* PLUS_EXPR */);
   return res;
@@ -2147,7 +2246,7 @@ operator_lshift::fold_range (irange &r, tree type,
       if (op2.undefined_p ())
 	r.set_undefined ();
       else
-	r.set_varying (type);
+	r.set_zero (type);
       return true;
     }
 
@@ -2421,7 +2520,7 @@ operator_rshift::fold_range (irange &r, tree type,
       if (op2.undefined_p ())
 	r.set_undefined ();
       else
-	r.set_varying (type);
+	r.set_zero (type);
       return true;
     }
 
@@ -4139,6 +4238,10 @@ public:
 		        const wide_int &lh_ub,
 		        const wide_int &rh_lb,
 		        const wide_int &rh_ub) const;
+  virtual bool op2_range (irange &r, tree type,
+			  const irange &lhs,
+			  const irange &op1,
+			  relation_trio = TRIO_VARYING) const;
 } op_pointer_plus;
 
 void
@@ -4185,6 +4288,25 @@ pointer_plus_operator::wi_fold (irange &r, tree type,
    r.set_varying (type);
 }
 
+bool
+pointer_plus_operator::op2_range (irange &r, tree type,
+				  const irange &lhs ATTRIBUTE_UNUSED,
+				  const irange &op1 ATTRIBUTE_UNUSED,
+				  relation_trio trio) const
+{
+  relation_kind rel = trio.lhs_op1 ();
+  r.set_varying (type);
+
+  // If the LHS and OP1 are equal, the op2 must be zero.
+  if (rel == VREL_EQ)
+    r.set_zero (type);
+  // If the LHS and OP1 are not equal, the offset must be non-zero.
+  else if (rel == VREL_NE)
+    r.set_nonzero (type);
+  else
+    return false;
+  return true;
+}
 
 class pointer_min_max_operator : public range_operator
 {

@@ -1,5 +1,4 @@
-/* Target hook definitions for C-family front ends.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Target hook definitions for C-family front ends. */
 
 /* See target-hooks-macros.h for details of macros that should be
    provided by the including file, and how to use them here.  */
@@ -22,7 +21,7 @@ DEFHOOK
 (handle_c_option,
  "",
  bool, (size_t code, const char *arg, int value),
- default_handle_c_option)
+ default_handle_scpel_option)
 
 /* Targets may provide a string object type that can be used within
    and between C, C++, and Objective-C dialects.  */

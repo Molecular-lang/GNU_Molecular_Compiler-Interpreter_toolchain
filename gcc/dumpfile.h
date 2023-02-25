@@ -1,4 +1,22 @@
-/* Definitions for the shared dumpfile. */
+/* Definitions for the shared dumpfile.
+   Copyright (C) 2004-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
+
 
 #ifndef GCC_DUMPFILE_H
 #define GCC_DUMPFILE_H 1
@@ -190,27 +208,27 @@ enum dump_flag : uint32_t
 
 typedef enum dump_flag dump_flags_t;
 
-static inline dump_flags_t
+inline dump_flags_t
 operator| (dump_flags_t lhs, dump_flags_t rhs)
 {
   return (dump_flags_t)((std::underlying_type<dump_flags_t>::type)lhs
 			| (std::underlying_type<dump_flags_t>::type)rhs);
 }
 
-static inline dump_flags_t
+inline dump_flags_t
 operator& (dump_flags_t lhs, dump_flags_t rhs)
 {
   return (dump_flags_t)((std::underlying_type<dump_flags_t>::type)lhs
 			& (std::underlying_type<dump_flags_t>::type)rhs);
 }
 
-static inline dump_flags_t
+inline dump_flags_t
 operator~ (dump_flags_t flags)
 {
   return (dump_flags_t)~((std::underlying_type<dump_flags_t>::type)flags);
 }
 
-static inline dump_flags_t &
+inline dump_flags_t &
 operator|= (dump_flags_t &lhs, dump_flags_t rhs)
 {
   lhs = (dump_flags_t)((std::underlying_type<dump_flags_t>::type)lhs
@@ -218,7 +236,7 @@ operator|= (dump_flags_t &lhs, dump_flags_t rhs)
   return lhs;
 }
 
-static inline dump_flags_t &
+inline dump_flags_t &
 operator&= (dump_flags_t &lhs, dump_flags_t rhs)
 {
   lhs = (dump_flags_t)((std::underlying_type<dump_flags_t>::type)lhs
@@ -258,14 +276,14 @@ enum optgroup_flag
 
 typedef enum optgroup_flag optgroup_flags_t;
 
-static inline optgroup_flags_t
+inline optgroup_flags_t
 operator| (optgroup_flags_t lhs, optgroup_flags_t rhs)
 {
   return (optgroup_flags_t)((std::underlying_type<dump_flags_t>::type)lhs
 			    | (std::underlying_type<dump_flags_t>::type)rhs);
 }
 
-static inline optgroup_flags_t &
+inline optgroup_flags_t &
 operator|= (optgroup_flags_t &lhs, optgroup_flags_t rhs)
 {
   lhs = (optgroup_flags_t)((std::underlying_type<dump_flags_t>::type)lhs
@@ -510,7 +528,7 @@ extern bool dumps_are_enabled;
 extern void set_dump_file (FILE *new_dump_file);
 
 /* Return true if any of the dumps is enabled, false otherwise. */
-static inline bool
+inline bool
 dump_enabled_p (void)
 {
   return dumps_are_enabled;

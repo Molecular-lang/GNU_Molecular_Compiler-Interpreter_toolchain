@@ -1,6 +1,23 @@
 /* General types and functions that are uselful for processing of OpenMP,
    OpenACC and similar directivers at various stages of compilation.
- */
+
+   Copyright (C) 2005-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_OMP_GENERAL_H
 #define GCC_OMP_GENERAL_H
@@ -120,7 +137,7 @@ enum omp_requires {
 
 extern GTY(()) enum omp_requires omp_requires_mask;
 
-static inline dump_flags_t
+inline dump_flags_t
 get_openacc_privatization_dump_flags ()
 {
   dump_flags_t l_dump_flags = MSG_NOTE;

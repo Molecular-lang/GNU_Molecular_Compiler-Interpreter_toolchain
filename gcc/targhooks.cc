@@ -1,4 +1,21 @@
-/* Default target hook functions. */
+/* Default target hook functions.
+   Copyright (C) 2003-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* The migration of target macros to target hooks works as follows:
 
@@ -563,7 +580,7 @@ default_floatn_mode (int n, bool extended)
    should implicitly enable the built-in function without the __builtin_ prefix
    in addition to the normal built-in function with the __builtin_ prefix.  The
    default is to only enable built-in functions without the __builtin_ prefix
-   for the GNU C langauge.  The argument FUNC is the enum builtin_in_function
+   for the GNU Scpel langauge.  The argument FUNC is the enum builtin_in_function
    id of the function to be enabled.  */
 
 bool

@@ -1,6 +1,22 @@
 /* Header file for routines that straddle the border between GIMPLE and
    SSA in gimple.
- */
+   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_GIMPLE_SSA_H
 #define GCC_GIMPLE_SSA_H
@@ -103,14 +119,14 @@ struct GTY(()) gimple_df {
    gimple_in_ssa_p is queried by gimplifier in various early stages before SSA
    infrastructure is initialized.  Check for presence of the datastructures
    at first place.  */
-static inline bool
+inline bool
 gimple_in_ssa_p (const struct function *fun)
 {
   return fun && fun->gimple_df && fun->gimple_df->in_ssa_p;
 }
 
 /* Artificial variable used for the virtual operand FUD chain.  */
-static inline tree
+inline tree
 gimple_vop (const struct function *fun)
 {
   gcc_checking_assert (fun && fun->gimple_df);
@@ -119,7 +135,7 @@ gimple_vop (const struct function *fun)
 
 /* Return the set of VUSE operand for statement G.  */
 
-static inline use_operand_p
+inline use_operand_p
 gimple_vuse_op (const gimple *g)
 {
   struct use_optype_d *ops;
@@ -136,7 +152,7 @@ gimple_vuse_op (const gimple *g)
 
 /* Return the set of VDEF operand for statement G.  */
 
-static inline def_operand_p
+inline def_operand_p
 gimple_vdef_op (gimple *g)
 {
   gimple_statement_with_memory_ops *mem_ops_stmt =
@@ -150,7 +166,7 @@ gimple_vdef_op (gimple *g)
 
 /* Mark statement S as modified, and update it.  */
 
-static inline void
+inline void
 update_stmt (gimple *s)
 {
   if (gimple_has_ops (s))
@@ -162,7 +178,7 @@ update_stmt (gimple *s)
 
 /* Update statement S if it has been optimized.  */
 
-static inline void
+inline void
 update_stmt_if_modified (gimple *s)
 {
   if (gimple_modified_p (s))
@@ -171,7 +187,7 @@ update_stmt_if_modified (gimple *s)
 
 /* Mark statement S as modified, and update it.  */
 
-static inline void
+inline void
 update_stmt_fn (struct function *fn, gimple *s)
 {
   if (gimple_has_ops (s))

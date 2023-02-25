@@ -1,5 +1,22 @@
 /* A graph for exploring trees of feasible paths through the egraph.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2021-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -85,6 +102,36 @@ feasible_node::dump_dot (graphviz_out *gv,
 
   pp_string (pp, "\"];\n\n");
   pp_flush (pp);
+}
+
+/* Attempt to get the region_model for this node's state at TARGET_STMT.
+   Return true and write to *OUT if found.
+   Return false if there's a problem.  */
+
+bool
+feasible_node::get_state_at_stmt (const gimple *target_stmt,
+				  region_model *out) const
+{
+  if (!target_stmt)
+    return false;
+
+  feasibility_state result (m_state);
+
+  /* Update state for the stmts that were processed in each enode.  */
+  for (unsigned stmt_idx = 0; stmt_idx < m_inner_node->m_num_processed_stmts;
+       stmt_idx++)
+    {
+      const gimple *stmt = m_inner_node->get_processed_stmt (stmt_idx);
+      if (stmt == target_stmt)
+	{
+	  *out = result.get_model ();
+	  return true;
+	}
+      result.update_for_stmt (stmt);
+    }
+
+  /* TARGET_STMT not found; wrong node?  */
+  return false;
 }
 
 /* Implementation of dump_dot vfunc for infeasible_node.

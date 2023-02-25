@@ -1,4 +1,21 @@
-/* Default target hook functions. */
+/* Default target hook functions.
+   Copyright (C) 2003-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_TARGHOOKS_H
 #define GCC_TARGHOOKS_H
@@ -7,19 +24,25 @@ extern bool default_legitimate_address_p (machine_mode, rtx, bool);
 
 extern void default_external_libcall (rtx);
 extern rtx default_legitimize_address (rtx, rtx, machine_mode);
-extern bool default_legitimize_address_displacement (rtx *, rtx *, poly_int64, machine_mode);
+extern bool default_legitimize_address_displacement (rtx *, rtx *,
+						     poly_int64, machine_mode);
 extern bool default_const_not_ok_for_debug_p (rtx);
 
 extern int default_unspec_may_trap_p (const_rtx, unsigned);
-extern machine_mode default_promote_function_mode (const_tree, machine_mode, int *, const_tree, int);
-extern machine_mode default_promote_function_mode_always_promote(const_tree, machine_mode, int *, const_tree, int);
+extern machine_mode default_promote_function_mode (const_tree, machine_mode,
+							int *, const_tree, int);
+extern machine_mode default_promote_function_mode_always_promote
+			(const_tree, machine_mode, int *, const_tree, int);
 
-extern machine_mode default_cc_modes_compatible (machine_mode, machine_mode);
+extern machine_mode default_cc_modes_compatible (machine_mode,
+						      machine_mode);
 
 extern bool default_return_in_memory (const_tree, const_tree);
 
 extern rtx default_expand_builtin_saveregs (void);
-extern void default_setup_incoming_varargs (cumulative_args_t, const function_arg_info &, int *, int);
+extern void default_setup_incoming_varargs (cumulative_args_t,
+					    const function_arg_info &,
+					    int *, int);
 extern rtx default_builtin_setjmp_frame_value (void);
 extern bool default_pretend_outgoing_varargs_named (cumulative_args_t);
 

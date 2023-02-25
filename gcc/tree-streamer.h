@@ -1,4 +1,23 @@
-/* Data structures and functions for streaming trees. */
+/* Data structures and functions for streaming trees.
+
+   Copyright (C) 2011-2023 Free Software Foundation, Inc.
+   Contributed by Diego Novillo <dnovillo@google.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_TREE_STREAMER_H
 #define GCC_TREE_STREAMER_H
@@ -71,7 +90,7 @@ void streamer_tree_cache_delete (struct streamer_tree_cache_d *);
 
 /* Return the tree node at slot IX in CACHE.  */
 
-static inline tree
+inline tree
 streamer_tree_cache_get_tree (struct streamer_tree_cache_d *cache, unsigned ix)
 {
   return cache->nodes[ix];
@@ -79,20 +98,20 @@ streamer_tree_cache_get_tree (struct streamer_tree_cache_d *cache, unsigned ix)
 
 /* Return the tree hash value at slot IX in CACHE.  */
 
-static inline hashval_t
+inline hashval_t
 streamer_tree_cache_get_hash (struct streamer_tree_cache_d *cache, unsigned ix)
 {
   return cache->hashes[ix];
 }
 
-static inline void
+inline void
 bp_pack_machine_mode (struct bitpack_d *bp, machine_mode mode)
 {
   streamer_mode_table[mode] = 1;
   bp_pack_enum (bp, machine_mode, 1 << 8, mode);
 }
 
-static inline machine_mode
+inline machine_mode
 bp_unpack_machine_mode (struct bitpack_d *bp)
 {
   return (machine_mode)

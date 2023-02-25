@@ -1,5 +1,22 @@
 /* Classes for purging state at function_points.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -46,6 +63,8 @@ get_candidate_for_purging (tree node)
       default:
 	return NULL_TREE;
 
+      case ADDR_EXPR:
+      case MEM_REF:
       case COMPONENT_REF:
 	iter = TREE_OPERAND (iter, 0);
 	continue;
@@ -905,7 +924,20 @@ process_point_backwards (const function_point &point,
       {
 	/* This is somewhat equivalent to how the SSA case handles
 	   def-stmts.  */
-	if (fully_overwrites_p (point.get_stmt (), m_decl, model))
+	if (fully_overwrites_p (point.get_stmt (), m_decl, model)
+	    /* ...but we mustn't be at a point that also consumes the
+	       current value of the decl when it's generating the new
+	       value, for cases such as
+		  struct st s;
+		  s = foo ();
+		  s = bar (s);
+	       where we want to make sure that we don't stop at the:
+		  s = bar (s);
+	       since otherwise we would erroneously purge the state of "s"
+	       after:
+		  s = foo ();
+	    */
+	    && !m_points_needing_decl.contains (point))
 	  {
 	    if (logger)
 	      logger->log ("stmt fully overwrites %qE; terminating", m_decl);

@@ -1,4 +1,23 @@
-/* Vectorizer Specific Loop Manipulations */
+/* Vectorizer Specific Loop Manipulations
+   Copyright (C) 2003-2023 Free Software Foundation, Inc.
+   Contributed by Dorit Naishlos <dorit@il.ibm.com>
+   and Ira Rosen <irar@il.ibm.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -1367,6 +1386,50 @@ iv_phi_p (stmt_vec_info stmt_info)
   if (STMT_VINFO_DEF_TYPE (stmt_info) == vect_reduction_def
       || STMT_VINFO_DEF_TYPE (stmt_info) == vect_double_reduction_def)
     return false;
+
+  return true;
+}
+
+/* Return true if vectorizer can peel for nonlinear iv.  */
+static bool
+vect_can_peel_nonlinear_iv_p (loop_vec_info loop_vinfo,
+			      enum vect_induction_op_type induction_type)
+{
+  tree niters_skip;
+  /* Init_expr will be update by vect_update_ivs_after_vectorizer,
+     if niters or vf is unkown:
+     For shift, when shift mount >= precision, there would be UD.
+     For mult, don't known how to generate
+     init_expr * pow (step, niters) for variable niters.
+     For neg, it should be ok, since niters of vectorized main loop
+     will always be multiple of 2.  */
+  if ((!LOOP_VINFO_NITERS_KNOWN_P (loop_vinfo)
+       || !LOOP_VINFO_VECT_FACTOR (loop_vinfo).is_constant ())
+      && induction_type != vect_step_op_neg)
+    {
+      if (dump_enabled_p ())
+	dump_printf_loc (MSG_MISSED_OPTIMIZATION, vect_location,
+			 "Peeling for epilogue is not supported"
+			 " for nonlinear induction except neg"
+			 " when iteration count is unknown.\n");
+      return false;
+    }
+
+  /* Also doens't support peel for neg when niter is variable.
+     ??? generate something like niter_expr & 1 ? init_expr : -init_expr?  */
+  niters_skip = LOOP_VINFO_MASK_SKIP_NITERS (loop_vinfo);
+  if ((niters_skip != NULL_TREE
+       && TREE_CODE (niters_skip) != INTEGER_CST)
+      || (!vect_use_loop_mask_for_alignment_p (loop_vinfo)
+	  && LOOP_VINFO_PEELING_FOR_ALIGNMENT (loop_vinfo) < 0))
+    {
+      if (dump_enabled_p ())
+	dump_printf_loc (MSG_MISSED_OPTIMIZATION, vect_location,
+			 "Peeling for alignement is not supported"
+			 " for nonlinear induction when niters_skip"
+			 " is not constant.\n");
+      return false;
+    }
 
   return true;
 }
@@ -3414,7 +3477,7 @@ vect_loop_versioning (loop_vec_info loop_vinfo,
   tree cost_name = NULL_TREE;
   profile_probability prob2 = profile_probability::uninitialized ();
   if (cond_expr
-      && !integer_truep (cond_expr)
+      && EXPR_P (cond_expr)
       && (version_niter
 	  || version_align
 	  || version_alias
@@ -3648,6 +3711,7 @@ vect_loop_versioning (loop_vec_info loop_vinfo,
   if (cost_name && TREE_CODE (cost_name) == SSA_NAME)
     {
       gimple *def = SSA_NAME_DEF_STMT (cost_name);
+      gcc_assert (gimple_bb (def) == condition_bb);
       /* All uses of the cost check are 'true' after the check we
 	 are going to insert.  */
       replace_uses_by (cost_name, boolean_true_node);

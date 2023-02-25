@@ -1,4 +1,23 @@
-/* Support routines for value queries. */
+/* Support routines for value queries.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Contributed by Aldy Hernandez <aldyh@redhat.com> and
+   Andrew Macleod <amacleod@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_QUERY_H
 #define GCC_QUERY_H
@@ -121,9 +140,11 @@ get_global_range_query ()
 ATTRIBUTE_RETURNS_NONNULL inline range_query *
 get_range_query (const struct function *fun)
 {
-  return fun->x_range_query ? fun->x_range_query : &global_ranges;
+  return (fun && fun->x_range_query) ? fun->x_range_query : &global_ranges;
 }
 
-extern void gimple_range_global (vrange &v, tree name);
+// Query the global range of NAME in function F.  Default to cfun.
+extern void gimple_range_global (vrange &v, tree name,
+				 struct function *f = cfun);
 
 #endif // GCC_QUERY_H

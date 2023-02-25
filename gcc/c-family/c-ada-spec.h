@@ -1,5 +1,4 @@
-/* Interface for -fdump-ada-spec capability.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Interface for -fdump-ada-spec capability. */
 
 #ifndef C_ADA_SPEC_H
 #define C_ADA_SPEC_H

@@ -1,5 +1,12 @@
 # ltversion.m4 -- version numbers			-*- Autoconf -*-
 #
+#   Copyright (C) 2004 Free Software Foundation, Inc.
+#   Written by Scott James Remnant, 2004
+#
+# This file is free software; the Free Software Foundation gives
+# unlimited permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
+
 # Generated from ltversion.in.
 
 # serial 3134 ltversion.m4

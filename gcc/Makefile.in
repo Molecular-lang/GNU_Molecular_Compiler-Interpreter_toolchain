@@ -119,7 +119,7 @@ SUBDIRS =@subdirs@ build
 
 # Selection of languages to be made.
 CONFIG_LANGUAGES = @all_selected_languages@
-LANGUAGES = scpel $(CONFIG_LANGUAGES)
+LANGUAGES = c $(CONFIG_LANGUAGES)
 ifeq (@enable_gcov@,yes)
 LANGUAGES += gcov$(exeext) gcov-dump$(exeext) gcov-tool$(exeext)
 endif
@@ -306,8 +306,8 @@ install_sh = $(SHELL) $(srcdir)/../install-sh
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 MAKEINFO = @MAKEINFO@
 MAKEINFOFLAGS = --no-split
-TEXI2DVI =
-TEXI2PDF =
+TEXI2DVI = texi2dvi
+TEXI2PDF = texi2pdf
 TEXI2HTML =
 TEXI2POD =
 POD2MAN =
@@ -514,7 +514,11 @@ LINKER_PLUGIN_API_H = $(srcdir)/../include/plugin-api.h
 # Default native SYSTEM_HEADER_DIR, to be overridden by targets.
 NATIVE_SYSTEM_HEADER_DIR = @NATIVE_SYSTEM_HEADER_DIR@
 # Default cross SYSTEM_HEADER_DIR, to be overridden by targets.
-CROSS_SYSTEM_HEADER_DIR = @CROSS_SYSTEM_HEADER_DIR@
+ifeq (@includedir@,$(prefix)/include)
+  CROSS_SYSTEM_HEADER_DIR = @CROSS_SYSTEM_HEADER_DIR@
+else
+  CROSS_SYSTEM_HEADER_DIR = @includedir@
+endif
 
 # autoconf sets SYSTEM_HEADER_DIR to one of the above.
 # Purge it of unnecessary internal relative paths
@@ -703,7 +707,7 @@ docdir = @docdir@
 # Directory in which to put DVIs
 dvidir = @dvidir@
 # Directory in which to build HTML
-build_htmldir = $(objdir)/HTML/gcc-$(version)
+build_htmldir =
 # Directory in which to put HTML
 htmldir = @htmldir@
 
@@ -809,9 +813,9 @@ BUILD_CPPFLAGS= -I. -I$(@D) -I$(srcdir) -I$(srcdir)/$(@D) \
 GCC_INSTALL_NAME := $(shell echo scpel|sed '$(program_transform_name)')
 GCC_TARGET_INSTALL_NAME := $(target_noncanonical)-$(shell echo scpel|sed '$(program_transform_name)')
 CPP_INSTALL_NAME := $(shell echo scpp|sed '$(program_transform_name)')
-GCOV_INSTALL_NAME := $(shell echo sgcov|sed '$(program_transform_name)')
-GCOV_TOOL_INSTALL_NAME := $(shell echo sgcov-tool|sed '$(program_transform_name)')
-GCOV_DUMP_INSTALL_NAME := $(shell echo sgcov-dump|sed '$(program_transform_name)')
+GCOV_INSTALL_NAME := $(shell echo gcov|sed '$(program_transform_name)')
+GCOV_TOOL_INSTALL_NAME := $(shell echo gcov-tool|sed '$(program_transform_name)')
+GCOV_DUMP_INSTALL_NAME := $(shell echo gcov-dump|sed '$(program_transform_name)')
 
 # Setup the testing framework, if you have one
 EXPECT = `if [ -f $${rootme}/../expect/expect ] ; then \
@@ -1014,7 +1018,6 @@ RTL_SSA_H = $(PRETTY_PRINT_H) insn-config.h splay-tree-utils.h \
 	    rtl-ssa/access-utils.h rtl-ssa/insn-utils.h rtl-ssa/movement.h \
 	    rtl-ssa/change-utils.h rtl-ssa/member-fns.inl
 
-#
 # Now figure out from those variables how to compile and link.
 
 # IN_GCC distinguishes between code compiled into GCC itself and other
@@ -1128,7 +1131,6 @@ endif
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-#
 # Support for additional languages (other than C).
 # C can be supported this way too (leave for later).
 
@@ -1195,7 +1197,7 @@ FLAGS_TO_PASS = \
 	"datadir=$(datadir)" \
 	"libsubdir=$(libsubdir)" \
 	"localedir=$(localedir)"
-#
+
 # Lists of files for various purposes.
 
 # All option source files
@@ -1796,7 +1798,6 @@ $(FULL_DRIVER_NAME): ./xgcc$(exeext)
 	rm -f $@
 	$(LN_S) $< $@
 
-#
 # SELFTEST_DEPS need to be set before including language makefile fragments.
 # Otherwise $(SELFTEST_DEPS) is empty when used from <LANG>/Make-lang.in.
 SELFTEST_DEPS = $(GCC_PASSES) stmp-int-hdrs
@@ -1872,8 +1873,6 @@ s-alltree: Makefile
 # we can avoid introducing dependencies of the front ends on things that
 # no front end should ever look at (e.g. everything RTL related).
 $(foreach file,$(ALL_HOST_FRONTEND_OBJS),$(eval CFLAGS-$(file) += -DIN_GCC_FRONTEND))
-
-#
 
 # -----------------------------
 # Rebuilding this configuration
@@ -1988,7 +1987,7 @@ aclocal_deps = \
 	$(srcdir)/../config/override.m4 \
 	$(srcdir)/../config/picflag.m4 \
 	$(srcdir)/../config/progtest.m4 \
-        $(srcdir)/../config/stdint.m4 \
+    $(srcdir)/../config/stdint.m4 \
 	$(srcdir)/../config/warnings.m4 \
 	$(srcdir)/../config/zlib.m4 \
 	$(srcdir)/acinclude.m4
@@ -2560,8 +2559,6 @@ s-cfn-operators: build/gencfn-macros$(build_exeext)
 cfn-operators.pd: s-cfn-operators; @true
 
 target-hooks-def.h: s-target-hooks-def-h; @true
-# make sure that when we build info files, the used tm.texi is up to date.
-$(srcdir)/doc/tm.texi: s-tm-texi; @true
 
 s-target-hooks-def-h: build/genhooks$(build_exeext)
 	$(RUN_GEN) build/genhooks$(build_exeext) "Target Hook" \
@@ -3519,6 +3516,20 @@ install-common: native lang.install-common installdirs
 install-driver: installdirs xgcc$(exeext)
 	-rm -f $(DESTDIR)$(bindir)/$(GCC_INSTALL_NAME)$(exeext)
 	-$(INSTALL_PROGRAM) xgcc$(exeext) $(DESTDIR)$(bindir)/$(GCC_INSTALL_NAME)$(exeext)
+	-if test "$(enable_as_accelerator)" != "yes" ; then \
+	  if [ "$(GCC_INSTALL_NAME)" != "$(target_noncanonical)-gcc-$(version)" ]; then \
+	    rm -f $(DESTDIR)$(bindir)/$(FULL_DRIVER_NAME); \
+	    ( cd $(DESTDIR)$(bindir) && \
+	      $(LN) $(GCC_INSTALL_NAME)$(exeext) $(FULL_DRIVER_NAME) ); \
+	  fi; \
+	  if [ ! -f gcc-cross$(exeext) ] \
+	      && [ "$(GCC_INSTALL_NAME)" != "$(GCC_TARGET_INSTALL_NAME)" ]; then \
+	    rm -f $(DESTDIR)$(bindir)/$(target_noncanonical)-gcc-tmp$(exeext); \
+	    ( cd $(DESTDIR)$(bindir) && \
+	      $(LN) $(GCC_INSTALL_NAME)$(exeext) $(target_noncanonical)-gcc-tmp$(exeext) && \
+	      mv -f $(target_noncanonical)-gcc-tmp$(exeext) $(GCC_TARGET_INSTALL_NAME)$(exeext) ); \
+	  fi; \
+	fi
 
 # Install all the header files built in the include subdirectory.
 install-headers: $(INSTALL_HEADERS_DIR)
@@ -3661,6 +3672,7 @@ uninstall: lang.uninstall
 	done
 
 # These exist for maintenance purposes.
+
 CTAGS=@CTAGS@
 ETAGS=@ETAGS@
 CSCOPE=@CSCOPE@

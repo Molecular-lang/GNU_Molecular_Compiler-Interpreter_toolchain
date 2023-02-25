@@ -1,4 +1,23 @@
-/* Header file for the GIMPLE fold_using_range interface. */
+/* Header file for the GIMPLE fold_using_range interface.
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by Andrew MacLeod <amacleod@redhat.com>
+   and Aldy Hernandez <aldyh@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_GIMPLE_RANGE_FOLD_H
 #define GCC_GIMPLE_RANGE_FOLD_H
@@ -25,7 +44,7 @@ bool fold_range (vrange &r, gimple *s, unsigned num_elements, vrange **vector);
 // Return the type of range which statement S calculates.  If the type is
 // unsupported or no type can be determined, return NULL_TREE.
 
-static inline tree
+inline tree
 gimple_range_type (const gimple *s)
 {
   tree lhs = gimple_get_lhs (s);
@@ -54,7 +73,7 @@ gimple_range_type (const gimple *s)
 
 // Return EXP if it is an SSA_NAME with a type supported by gimple ranges.
 
-static inline tree
+inline tree
 gimple_range_ssa_p (tree exp)
 {
   if (exp && TREE_CODE (exp) == SSA_NAME &&
@@ -67,7 +86,7 @@ gimple_range_ssa_p (tree exp)
 
 // Return true if TYPE1 and TYPE2 are compatible range types.
 
-static inline bool
+inline bool
 range_compatible_p (tree type1, tree type2)
 {
   // types_compatible_p requires conversion in both directions to be useless.

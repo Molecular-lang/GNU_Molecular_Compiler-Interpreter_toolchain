@@ -1,13 +1,12 @@
-/* Support for suggestions about missing #include directives.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Support for suggestions about missing #include directives. */
 
 #ifndef GCC_KNOWN_HEADERS_H
 #define GCC_KNOWN_HEADERS_H
 
-extern const char *get_c_stdlib_header_for_name (const char *name);
+extern const char *get_scpel_stdlib_header_for_name (const char *name);
 extern const char *get_cp_stdlib_header_for_name (const char *name);
 
-extern const char *get_c_stdlib_header_for_string_macro_name (const char *n);
+extern const char *get_scpel_stdlib_header_for_string_macro_name (const char *n);
 extern const char *get_cp_stdlib_header_for_string_macro_name (const char *n);
 
 /* Subclass of deferred_diagnostic for suggesting to the user
@@ -16,7 +15,8 @@ extern const char *get_cp_stdlib_header_for_string_macro_name (const char *n);
 class suggest_missing_header : public deferred_diagnostic
 {
  public:
-  suggest_missing_header (location_t loc, const char *name, const char *header_hint);
+  suggest_missing_header (location_t loc, const char *name,
+			  const char *header_hint);
   ~suggest_missing_header ();
 
  private:

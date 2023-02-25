@@ -1,4 +1,22 @@
-/* Gimple range inference implementation. */
+/* Gimple range inference implementation.
+   Copyright (C) 2022-2023 Free Software Foundation, Inc.
+   Contributed by Andrew MacLeod <amacleod@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -66,7 +84,7 @@ gimple_infer_range::check_assume_func (gcall *call)
 	    continue;
 	  // Query the global range of the default def in the assume function.
 	  Value_Range assume_range (type);
-	  global_ranges.range_of_expr (assume_range, default_def);
+	  gimple_range_global (assume_range, default_def, fun);
 	  // If there is a non-varying result, add it as an inferred range.
 	  if (!assume_range.varying_p ())
 	    {

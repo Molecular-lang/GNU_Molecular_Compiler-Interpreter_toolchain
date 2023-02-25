@@ -1,5 +1,4 @@
-/* Various diagnostic subroutines for the GNU C language.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Various diagnostic subroutines for the GNU Scpel language. */
 
 #include "config.h"
 #include "system.h"

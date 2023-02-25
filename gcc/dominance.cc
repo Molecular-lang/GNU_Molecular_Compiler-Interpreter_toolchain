@@ -1,4 +1,22 @@
-/* Calculate (post)dominators in slightly super-linear time. */
+/* Calculate (post)dominators in slightly super-linear time.
+   Copyright (C) 2000-2023 Free Software Foundation, Inc.
+   Contributed by Michael Matz (matz@ifh.de).
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3, or (at your option)
+   any later version.
+
+   GCC is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+   License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with GCC; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.  */
 
 /* This file implements the well known algorithm from Lengauer and Tarjan
    to compute the dominators in a control flow graph.  A basic block D is said
@@ -621,18 +639,25 @@ dom_info::calc_idoms ()
 static void
 assign_dfs_numbers (struct et_node *node, int *num)
 {
-  struct et_node *son;
-
-  node->dfs_num_in = (*num)++;
-
-  if (node->son)
+  et_node *n = node;
+  while (1)
     {
-      assign_dfs_numbers (node->son, num);
-      for (son = node->son->right; son != node->son; son = son->right)
-	assign_dfs_numbers (son, num);
+      n->dfs_num_in = (*num)++;
+      if (n->son)
+	n = n->son;
+      else
+	{
+	  while (!n->right || n->right == n->father->son)
+	    {
+	      n->dfs_num_out = (*num)++;
+	      if (n == node)
+		return;
+	      n = n->father;
+	    }
+	  n->dfs_num_out = (*num)++;
+	  n = n->right;
+	}
     }
-
-  node->dfs_num_out = (*num)++;
 }
 
 /* Compute the data necessary for fast resolving of dominator queries in a

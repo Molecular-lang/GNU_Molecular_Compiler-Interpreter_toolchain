@@ -1,6 +1,23 @@
 /* Basic IPA utilities for type inheritance graph construction and
    devirtualization.
- */
+   Copyright (C) 2013-2023 Free Software Foundation, Inc.
+   Contributed by Jan Hubicka
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Brief vocabulary:
      ODR = One Definition Rule
@@ -1283,7 +1300,7 @@ odr_types_equivalent_p (tree t1, tree t2, bool warn, bool *warned,
 	      warn_odr (t1, t2, NULL, NULL, warn, warned,
 			G_("it is defined as a pointer to different type "
 			   "in another translation unit"));
-	      if (warn && warned)
+	      if (warn && (warned == NULL || *warned))
 	        warn_types_mismatch (TREE_TYPE (t1), TREE_TYPE (t2),
 				     loc1, loc2);
 	      return false;
@@ -1298,7 +1315,7 @@ odr_types_equivalent_p (tree t1, tree t2, bool warn, bool *warned,
 	  warn_odr (t1, t2, NULL, NULL, warn, warned,
 		    G_("a different type is defined "
 		       "in another translation unit"));
-	  if (warn && warned)
+	  if (warn && (warned == NULL || *warned))
 	    warn_types_mismatch (TREE_TYPE (t1), TREE_TYPE (t2), loc1, loc2);
 	  return false;
 	}
@@ -1316,7 +1333,7 @@ odr_types_equivalent_p (tree t1, tree t2, bool warn, bool *warned,
 	    warn_odr (t1, t2, NULL, NULL, warn, warned,
 		      G_("a different type is defined in another "
 			 "translation unit"));
-	    if (warn && warned)
+	    if (warn && (warned == NULL || *warned))
 	      warn_types_mismatch (TREE_TYPE (t1), TREE_TYPE (t2), loc1, loc2);
 	  }
 	gcc_assert (TYPE_STRING_FLAG (t1) == TYPE_STRING_FLAG (t2));
@@ -1358,7 +1375,7 @@ odr_types_equivalent_p (tree t1, tree t2, bool warn, bool *warned,
 	  warn_odr (t1, t2, NULL, NULL, warn, warned,
 		    G_("has different return value "
 		       "in another translation unit"));
-	  if (warn && warned)
+	  if (warn && (warned == NULL || *warned))
 	    warn_types_mismatch (TREE_TYPE (t1), TREE_TYPE (t2), loc1, loc2);
 	  return false;
 	}
@@ -1381,7 +1398,7 @@ odr_types_equivalent_p (tree t1, tree t2, bool warn, bool *warned,
 		  warn_odr (t1, t2, NULL, NULL, warn, warned,
 			    G_("has different parameters in another "
 			       "translation unit"));
-		  if (warn && warned)
+		  if (warn && (warned == NULL || *warned))
 		    warn_types_mismatch (TREE_VALUE (parms1),
 					 TREE_VALUE (parms2), loc1, loc2);
 		  return false;
@@ -1467,7 +1484,7 @@ odr_types_equivalent_p (tree t1, tree t2, bool warn, bool *warned,
 		    warn_odr (t1, t2, f1, f2, warn, warned,
 			      G_("a field of same name but different type "
 				 "is defined in another translation unit"));
-		    if (warn && warned)
+		    if (warn && (warned == NULL || *warned))
 		      warn_types_mismatch (TREE_TYPE (f1), TREE_TYPE (f2), loc1, loc2);
 		    return false;
 		  }
@@ -3454,8 +3471,10 @@ possible_polymorphic_call_target_p (tree otr_type,
   unsigned int i;
   bool final;
 
-  if (fndecl_built_in_p (n->decl, BUILT_IN_UNREACHABLE)
-      || fndecl_built_in_p (n->decl, BUILT_IN_TRAP))
+  if (fndecl_built_in_p (n->decl, BUILT_IN_NORMAL)
+      && (DECL_FUNCTION_CODE (n->decl) == BUILT_IN_UNREACHABLE
+	  || DECL_FUNCTION_CODE (n->decl) == BUILT_IN_TRAP
+	  || DECL_FUNCTION_CODE (n->decl) == BUILT_IN_UNREACHABLE_TRAP))
     return true;
 
   if (is_cxa_pure_virtual_p (n->decl))

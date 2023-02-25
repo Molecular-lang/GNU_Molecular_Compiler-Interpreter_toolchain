@@ -1,4 +1,23 @@
-/* Iterator routines for manipulating GENERIC tree statement list. -*- C++ -*- */
+/* Iterator routines for manipulating GENERIC tree statement list. -*- C++ -*-
+   Copyright (C) 2003-2023 Free Software Foundation, Inc.
+   Contributed by Andrew MacLeod  <amacleod@redhat.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
+
 
 /* This file is dependent upon the implementation of tree's. It provides an
    abstract interface to the tree objects such that if all tree creation and
@@ -30,7 +49,7 @@ struct tree_stmt_iterator {
   tree operator* () const { return ptr->stmt; }
 };
 
-static inline tree_stmt_iterator
+inline tree_stmt_iterator
 tsi_start (tree t)
 {
   tree_stmt_iterator i;
@@ -41,7 +60,7 @@ tsi_start (tree t)
   return i;
 }
 
-static inline tree_stmt_iterator
+inline tree_stmt_iterator
 tsi_last (tree t)
 {
   tree_stmt_iterator i;
@@ -52,37 +71,37 @@ tsi_last (tree t)
   return i;
 }
 
-static inline bool
+inline bool
 tsi_end_p (tree_stmt_iterator i)
 {
   return i.ptr == NULL;
 }
 
-static inline bool
+inline bool
 tsi_one_before_end_p (tree_stmt_iterator i)
 {
   return i.ptr != NULL && i.ptr->next == NULL;
 }
 
-static inline void
+inline void
 tsi_next (tree_stmt_iterator *i)
 {
   ++(*i);
 }
 
-static inline void
+inline void
 tsi_prev (tree_stmt_iterator *i)
 {
   --(*i);
 }
 
-static inline tree *
+inline tree *
 tsi_stmt_ptr (tree_stmt_iterator i)
 {
   return &(*i);
 }
 
-static inline tree
+inline tree
 tsi_stmt (tree_stmt_iterator i)
 {
   return *i;

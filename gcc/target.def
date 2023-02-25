@@ -1,4 +1,23 @@
-/* Target hook definitions. */
+/* Target hook definitions.
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 3, or (at your option) any
+   later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.
+
+   In other words, you are welcome to use, share and improve this program.
+   You are forbidden to forbid anyone else to use, share and improve
+   what you give them.   Help stamp out software-hoarding!  */
 
 /* See target-hooks-macros.h for details of macros that should be
    provided by the including file, and how to use them here.  */
@@ -3383,8 +3402,8 @@ DEFHOOK
 command line options and some diagnostics should be printed when the\n\
 address space is used.  This hook is called during parsing and allows\n\
 to emit a better diagnostic compared to the case where the address space\n\
-was not registered with @code{c_register_addr_space}.  @var{as} is\n\
-the address space as registered with @code{c_register_addr_space}.\n\
+was not registered with @code{scpel_register_addr_space}.  @var{as} is\n\
+the address space as registered with @code{scpel_register_addr_space}.\n\
 @var{loc} is the location of the address space qualifier token.\n\
 The default implementation does nothing.",
  void, (addr_space_t as, location_t loc),
@@ -3582,7 +3601,7 @@ DEFHOOK
 built-in function without the @code{__builtin_} prefix in addition to the\n\
 normal built-in function with the @code{__builtin_} prefix.  The default is\n\
 to only enable built-in functions without the @code{__builtin_} prefix for\n\
-the GNU C langauge.  In strict ANSI/ISO mode, the built-in function without\n\
+the GNU Scpel langauge.  In strict ANSI/ISO mode, the built-in function without\n\
 the @code{__builtin_} prefix is not enabled.  The argument @code{FUNC} is the\n\
 @code{enum built_in_function} id of the function to be enabled.",
  bool, (int func),
@@ -4098,7 +4117,7 @@ The default version of the hook returns @code{void*}.",
 /* Enumerate the va list variants.  */
 DEFHOOK
 (enum_va_list_p,
- "This target hook is used in function @code{c_common_nodes_and_builtins}\n\
+ "This target hook is used in function @code{scpel_common_nodes_and_builtins}\n\
 to iterate through the target specific builtin types for va_list. The\n\
 variable @var{idx} is used as iterator. @var{pname} has to be a pointer\n\
 to a @code{const char *} and @var{ptree} a pointer to a @code{tree} typed\n\

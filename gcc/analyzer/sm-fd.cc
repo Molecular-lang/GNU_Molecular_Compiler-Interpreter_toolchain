@@ -1,5 +1,22 @@
 /* A state machine for detecting misuses of POSIX file descriptor APIs.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by Immad Mir <mir@sourceware.org>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -1322,11 +1339,14 @@ fd_state_machine::check_for_fd_attrs (
 	  if (!(is_valid_fd_p (state) || (state == m_stop)))
 	    {
 	      if (!is_constant_fd_p (state))
-		sm_ctxt->warn (node, stmt, arg,
-			       make_unique<fd_use_without_check>
+		{
+		  sm_ctxt->warn (node, stmt, arg,
+				 make_unique<fd_use_without_check>
 				 (*this, diag_arg,
 				  callee_fndecl, attr_name,
 				  arg_idx));
+		  continue;
+		}
 	    }
 
 	  switch (fd_attr_access_dir)
@@ -1889,6 +1909,7 @@ fd_state_machine::on_listen (const call_details &cd,
   if (!(old_state == m_start
 	|| old_state == m_constant_fd
 	|| old_state == m_stop
+	|| old_state == m_invalid
 	|| old_state == m_bound_stream_socket
 	|| old_state == m_bound_unknown_socket
 	/* Assume it's OK to call "listen" more than once.  */
@@ -2638,6 +2659,38 @@ private:
   unsigned m_num_args;
 };
 
+/* Handler for "read".
+     ssize_t read(int fildes, void *buf, size_t nbyte);
+   See e.g. https://man7.org/linux/man-pages/man2/read.2.html   */
+
+class kf_read : public known_function
+{
+public:
+  bool matches_call_types_p (const call_details &cd) const final override
+  {
+    return (cd.num_args () == 3
+	    && cd.arg_is_pointer_p (1)
+	    && cd.arg_is_size_p (2));
+  }
+
+  /* For now, assume that any call to "read" fully clobbers the buffer
+     passed in.  This isn't quite correct (e.g. errors, partial reads;
+     see PR analyzer/108689), but at least stops us falsely complaining
+     about the buffer being uninitialized.  */
+  void impl_call_pre (const call_details &cd) const final override
+  {
+    region_model *model = cd.get_model ();
+    const svalue *ptr_sval = cd.get_arg_svalue (1);
+    if (const region *reg = ptr_sval->maybe_get_region ())
+      {
+	const region *base_reg = reg->get_base_region ();
+	const svalue *new_sval = cd.get_or_create_conjured_svalue (base_reg);
+	model->set_value (base_reg, new_sval, cd.get_ctxt ());
+      }
+  }
+};
+
+
 /* Populate KFM with instances of known functions relating to
    file descriptors.  */
 
@@ -2651,6 +2704,7 @@ register_known_fd_functions (known_function_manager &kfm)
   kfm.add ("listen", make_unique<kf_listen> ());
   kfm.add ("pipe", make_unique<kf_pipe> (1));
   kfm.add ("pipe2", make_unique<kf_pipe> (2));
+  kfm.add ("read", make_unique<kf_read> ());
   kfm.add ("socket", make_unique<kf_socket> ());
 }
 

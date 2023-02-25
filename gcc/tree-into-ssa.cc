@@ -1,4 +1,22 @@
-/* Rewrite a program in Normal form into SSA. */
+/* Rewrite a program in Normal form into SSA.
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+   Contributed by Diego Novillo <dnovillo@redhat.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -3543,6 +3561,8 @@ update_ssa (unsigned update_flags)
 	bitmap_initialize (&dfs[bb->index], &bitmap_default_obstack);
       compute_dominance_frontiers (dfs);
 
+      bitmap_tree_view (blocks_to_update);
+
       /* insert_update_phi_nodes_for will call add_new_name_mapping
 	 when inserting new PHI nodes, but it will not add any
 	 new members to OLD_SSA_NAMES.  */
@@ -3555,6 +3575,8 @@ update_ssa (unsigned update_flags)
       symbols_to_rename.qsort (insert_updated_phi_nodes_compare_uids);
       FOR_EACH_VEC_ELT (symbols_to_rename, i, sym)
 	insert_updated_phi_nodes_for (sym, dfs, update_flags);
+
+      bitmap_list_view (blocks_to_update);
 
       FOR_EACH_BB_FN (bb, cfun)
 	bitmap_clear (&dfs[bb->index]);

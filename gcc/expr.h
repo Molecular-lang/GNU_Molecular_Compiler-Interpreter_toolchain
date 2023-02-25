@@ -1,4 +1,21 @@
-/* Definitions for code generation pass of GNU compiler. */
+/* Definitions for code generation pass of GNU compiler.
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_EXPR_H
 #define GCC_EXPR_H
@@ -67,19 +84,19 @@ extern rtx convert_wider_int_to_float (machine_mode mode, machine_mode imode,
 extern rtx emit_block_op_via_libcall (enum built_in_function, rtx, rtx, rtx,
 				      bool);
 
-static inline rtx
+inline rtx
 emit_block_copy_via_libcall (rtx dst, rtx src, rtx size, bool tailcall = false)
 {
   return emit_block_op_via_libcall (BUILT_IN_MEMCPY, dst, src, size, tailcall);
 }
 
-static inline rtx
+inline rtx
 emit_block_move_via_libcall (rtx dst, rtx src, rtx size, bool tailcall = false)
 {
   return emit_block_op_via_libcall (BUILT_IN_MEMMOVE, dst, src, size, tailcall);
 }
 
-static inline rtx
+inline rtx
 emit_block_comp_via_libcall (rtx dst, rtx src, rtx size, bool tailcall = false)
 {
   return emit_block_op_via_libcall (BUILT_IN_MEMCMP, dst, src, size, tailcall);
@@ -161,14 +178,14 @@ extern void clobber_reg_mode (rtx *, rtx, machine_mode);
 extern rtx copy_blkmode_to_reg (machine_mode, tree);
 
 /* Mark REG as holding a parameter for the next CALL_INSN.  */
-static inline void
+inline void
 use_reg (rtx *fusage, rtx reg)
 {
   use_reg_mode (fusage, reg, VOIDmode);
 }
 
 /* Mark REG as clobbered by the call with FUSAGE as CALL_INSN_FUNCTION_USAGE.  */
-static inline void
+inline void
 clobber_reg (rtx *fusage, rtx reg)
 {
   clobber_reg_mode (fusage, reg, VOIDmode);
@@ -286,14 +303,14 @@ extern rtx expand_expr_real_2 (sepops, rtx, machine_mode,
 /* Generate code for computing expression EXP.
    An rtx for the computed value is returned.  The value is never null.
    In the case of a void EXP, const0_rtx is returned.  */
-static inline rtx
+inline rtx
 expand_expr (tree exp, rtx target, machine_mode mode,
 	     enum expand_modifier modifier)
 {
   return expand_expr_real (exp, target, mode, modifier, NULL, false);
 }
 
-static inline rtx
+inline rtx
 expand_normal (tree exp)
 {
   return expand_expr_real (exp, NULL_RTX, VOIDmode, EXPAND_NORMAL, NULL, false);

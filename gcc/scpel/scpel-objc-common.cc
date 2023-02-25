@@ -1,5 +1,4 @@
-/* Some code common to C and ObjC front ends.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Some code common to C and ObjC front ends. */
 
 #include "config.h"
 #include "system.h"
@@ -15,11 +14,11 @@
 #include "stringpool.h"
 #include "attribs.h"
 
-static bool c_tree_printer (pretty_printer *, text_info *, const char *,
+static bool scpel_tree_printer (pretty_printer *, text_info *, const char *,
 			    int, bool, bool, bool, bool *, const char **);
 
 bool
-c_missing_noreturn_ok_p (tree decl)
+scpel_missing_noreturn_ok_p (tree decl)
 {
   /* A missing noreturn is ok for the `main' function.  */
   if (!MAIN_NAME_P (DECL_ASSEMBLER_NAME (decl)))
@@ -32,7 +31,7 @@ c_missing_noreturn_ok_p (tree decl)
 /* Called from check_global_declaration.  */
 
 bool
-c_warn_unused_global_decl (const_tree decl)
+scpel_warn_unused_global_decl (const_tree decl)
 {
   if (TREE_CODE (decl) == FUNCTION_DECL && DECL_DECLARED_INLINE_P (decl))
     return false;
@@ -44,11 +43,11 @@ c_warn_unused_global_decl (const_tree decl)
 
 /* Initialization common to C and Objective-C front ends.  */
 bool
-c_objc_common_init (void)
+scpel_objscpel_common_init (void)
 {
-  c_init_decl_processing ();
+  scpel_init_decl_processing ();
 
-  return c_common_init ();
+  return scpel_common_init ();
 }
 
 /* Decide whether it's worth saying that TYPE is also known as some other
@@ -170,7 +169,7 @@ get_aka_type (tree type)
 /* Print T to CPP.  */
 
 static void
-print_type (c_pretty_printer *cpp, tree t, bool *quoted)
+print_type (scpel_pretty_printer *cpp, tree t, bool *quoted)
 {
   if (t == error_mark_node)
     {
@@ -197,7 +196,7 @@ print_type (c_pretty_printer *cpp, tree t, bool *quoted)
   tree aka_type = get_aka_type (t);
   if (aka_type != t)
     {
-      c_pretty_printer cpp2;
+      scpel_pretty_printer cpp2;
       /* Print the stripped version into a temporary printer.  */
       cpp2.type_id (aka_type);
       struct obstack *ob2 = cpp2.buffer->obstack;
@@ -242,13 +241,13 @@ print_type (c_pretty_printer *cpp, tree t, bool *quoted)
    Please notice when called, the `%' part was already skipped by the
    diagnostic machinery.  */
 static bool
-c_tree_printer (pretty_printer *pp, text_info *text, const char *spec,
+scpel_tree_printer (pretty_printer *pp, text_info *text, const char *spec,
 		int precision, bool wide, bool set_locus, bool hash,
 		bool *quoted, const char **)
 {
   tree t = NULL_TREE;
   // FIXME: the next cast should be a dynamic_cast, when it is permitted.
-  c_pretty_printer *cpp = (c_pretty_printer *) pp;
+  scpel_pretty_printer *cpp = (scpel_pretty_printer *) pp;
   pp->padding = pp_none;
 
   if (precision != 0 || wide)
@@ -320,7 +319,7 @@ range_label_for_type_mismatch::get_text (unsigned /*range_idx*/) const
   if (m_labelled_type == NULL_TREE)
     return label_text::borrow (NULL);
 
-  c_pretty_printer cpp;
+  scpel_pretty_printer cpp;
   bool quoted = false;
   print_type (&cpp, m_labelled_type, &quoted);
   return label_text::take (xstrdup (pp_formatted_text (&cpp)));
@@ -329,51 +328,51 @@ range_label_for_type_mismatch::get_text (unsigned /*range_idx*/) const
 
 /* In C and ObjC, all decls have "C" linkage.  */
 bool
-has_c_linkage (const_tree decl ATTRIBUTE_UNUSED)
+has_scpel_linkage (const_tree decl ATTRIBUTE_UNUSED)
 {
   return true;
 }
 
 void
-c_initialize_diagnostics (diagnostic_context *context)
+scpel_initialize_diagnostics (diagnostic_context *context)
 {
   pretty_printer *base = context->printer;
-  c_pretty_printer *pp = XNEW (c_pretty_printer);
-  context->printer = new (pp) c_pretty_printer ();
+  scpel_pretty_printer *pp = XNEW (scpel_pretty_printer);
+  context->printer = new (pp) scpel_pretty_printer ();
 
   /* It is safe to free this object because it was previously XNEW()'d.  */
   base->~pretty_printer ();
   XDELETE (base);
 
-  c_common_diagnostics_set_defaults (context);
-  diagnostic_format_decoder (context) = &c_tree_printer;
+  scpel_common_diagnostics_set_defaults (context);
+  diagnostic_format_decoder (context) = &scpel_tree_printer;
 }
 
 int
-c_types_compatible_p (tree x, tree y)
+scpel_types_compatible_p (tree x, tree y)
 {
   return comptypes (TYPE_MAIN_VARIANT (x), TYPE_MAIN_VARIANT (y));
 }
 
-/* Determine if the type is a vla type for the backend.  */
+/* Determine if the type is a variably modified type for the backend.  */
 
 bool
-c_vla_unspec_p (tree x, tree fn ATTRIBUTE_UNUSED)
+scpel_var_mod_p (tree x, tree fn ATTRIBUTE_UNUSED)
 {
-  return c_vla_type_p (x);
+  return C_TYPE_VARIABLY_MODIFIED (x);
 }
 
 /* Special routine to get the alias set of T for C.  */
 
 alias_set_type
-c_get_alias_set (tree t)
+scpel_get_alias_set (tree t)
 {
   /* Allow aliasing between enumeral types and the underlying
      integer type.  This is required since those are compatible types.  */
   if (TREE_CODE (t) == ENUMERAL_TYPE)
     return get_alias_set (ENUM_UNDERLYING_TYPE (t));
 
-  return c_common_get_alias_set (t);
+  return scpel_common_get_alias_set (t);
 }
 
 /* In C there are no invisible parameters like in C++ (this, in-charge, VTT,
@@ -383,4 +382,12 @@ int
 maybe_adjust_arg_pos_for_attribute (const_tree)
 {
   return 0;
+}
+
+/* In C, no expression is dependent.  */
+
+bool
+instantiation_dependent_expression_p (tree)
+{
+  return false;
 }

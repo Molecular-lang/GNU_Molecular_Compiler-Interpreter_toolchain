@@ -1,4 +1,22 @@
-/* Analysis Utilities for Loop Vectorization. */
+/* Analysis Utilities for Loop Vectorization.
+   Copyright (C) 2006-2023 Free Software Foundation, Inc.
+   Contributed by Dorit Nuzman <dorit@il.ibm.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -583,7 +601,25 @@ vect_widened_op_tree (vec_info *vinfo, stmt_vec_info stmt_info, tree_code code,
 	  if (shift_p && i == 1)
 	    return 0;
 
-	  if (!vect_look_through_possible_promotion (vinfo, op, this_unprom))
+	  if (rhs_code != code)
+	    {
+	      /* If rhs_code is widened_code, don't look through further
+		 possible promotions, there is a promotion already embedded
+		 in the WIDEN_*_EXPR.  */
+	      if (TREE_CODE (op) != SSA_NAME
+		  || !INTEGRAL_TYPE_P (TREE_TYPE (op)))
+		return 0;
+
+	      stmt_vec_info def_stmt_info;
+	      gimple *def_stmt;
+	      vect_def_type dt;
+	      if (!vect_is_simple_use (op, vinfo, &dt, &def_stmt_info,
+				       &def_stmt))
+		return 0;
+	      this_unprom->set_op (op, dt, NULL);
+	    }
+	  else if (!vect_look_through_possible_promotion (vinfo, op,
+							  this_unprom))
 	    return 0;
 
 	  if (TYPE_PRECISION (this_unprom->type) == TYPE_PRECISION (type))

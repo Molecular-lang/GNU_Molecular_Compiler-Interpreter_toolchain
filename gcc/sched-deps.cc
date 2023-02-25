@@ -1,7 +1,25 @@
 /* Instruction scheduling pass.  This file computes dependencies between
    instructions.
- */
+   Copyright (C) 1992-2023 Free Software Foundation, Inc.
+   Contributed by Michael Tiemann (tiemann@cygnus.com) Enhanced by,
+   and currently maintained by, Jim Wilson (wilson@cygnus.com)
 
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
+
 #include "config.h"
 #include "system.h"
 #include "coretypes.h"
@@ -2587,7 +2605,14 @@ sched_analyze_2 (class deps_desc *deps, rtx x, rtx_insn *insn)
 
     case MEM:
       {
-	if (!DEBUG_INSN_P (insn))
+	if (DEBUG_INSN_P (insn) && sched_deps_info->use_cselib)
+	  {
+	    machine_mode address_mode = get_address_mode (x);
+
+	    cselib_lookup_from_insn (XEXP (x, 0), address_mode, 1,
+				     GET_MODE (x), insn);
+	  }
+	else if (!DEBUG_INSN_P (insn))
 	  {
 	    /* Reading memory.  */
 	    rtx_insn_list *u;

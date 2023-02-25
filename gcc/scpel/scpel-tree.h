@@ -1,5 +1,4 @@
-/* Definitions for C parsing and type checking.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Definitions for C parsing and type checking. */
 
 #ifndef GCC_C_TREE_H
 #define GCC_C_TREE_H
@@ -10,7 +9,7 @@
 /* struct lang_identifier is private to c-decl.cc, but langhooks.cc needs to
    know how big it is.  This is sanity-checked in c-decl.cc.  */
 #define C_SIZEOF_STRUCT_LANG_IDENTIFIER \
-  (sizeof (struct c_common_identifier) + 3 * sizeof (void *))
+  (sizeof (struct scpel_common_identifier) + 3 * sizeof (void *))
 
 /* In a RECORD_TYPE or UNION_TYPE, nonzero if any component is read-only.  */
 #define C_TYPE_FIELDS_READONLY(TYPE) TREE_LANG_FLAG_1 (TYPE)
@@ -42,6 +41,10 @@
    Note that TYPE_SIZE may have simplified to a constant.  */
 #define C_TYPE_VARIABLE_SIZE(TYPE) TYPE_LANG_FLAG_1 (TYPE)
 #define C_DECL_VARIABLE_SIZE(TYPE) DECL_LANG_FLAG_0 (TYPE)
+
+/* Record whether a type is variably modified. */
+#define C_TYPE_VARIABLY_MODIFIED(TYPE) TYPE_LANG_FLAG_6 (TYPE)
+
 
 /* Record whether a type is defined inside a struct or union type.
    This is used for -Wc++-compat. */
@@ -129,7 +132,7 @@
 
 /* Record parser information about an expression that is irrelevant
    for code generation alongside a tree representing its value.  */
-struct c_expr
+struct scpel_expr
 {
   /* The value of the expression.  */
   tree value;
@@ -179,14 +182,14 @@ struct c_expr
   }
 };
 
-/* Type alias for struct c_expr. This allows to use the structure
+/* Type alias for struct scpel_expr. This allows to use the structure
    inside the VEC types.  */
-typedef struct c_expr c_expr_t;
+typedef struct scpel_expr scpel_expr_t;
 
 /* A kind of type specifier.  Note that this information is currently
    only used to distinguish tag definitions, tag references and typeof
    uses.  */
-enum c_typespec_kind {
+enum scpel_typespec_kind {
   /* No typespec.  This appears only in struct c_declspec.  */
   ctsk_none,
   /* A reserved keyword type specifier.  */
@@ -215,9 +218,9 @@ enum c_typespec_kind {
 
 /* A type specifier: this structure is created in the parser and
    passed to declspecs_add_type only.  */
-struct c_typespec {
+struct scpel_typespec {
   /* What kind of type specifier this is.  */
-  enum c_typespec_kind kind;
+  enum scpel_typespec_kind kind;
   /* Whether the expression has operands suitable for use in constant
      expressions.  */
   bool expr_const_operands;
@@ -239,44 +242,44 @@ struct c_typespec {
 };
 
 /* A storage class specifier.  */
-enum c_storage_class {
-  csc_none,
-  csc_auto,
-  csc_extern,
-  csc_register,
-  csc_static,
-  csc_typedef
+enum scpel_storage_class {
+  ssc_none,
+  ssc_auto,
+  ssc_extern,
+  ssc_register,
+  ssc_static,
+  ssc_typedef
 };
 
 /* A type specifier keyword "void", "_Bool", "char", "int", "float",
    "double", "_Decimal32", "_Decimal64", "_Decimal128", "_Fract", "_Accum",
    or none of these.  */
-enum c_typespec_keyword {
-  cts_none,
-  cts_void,
-  cts_bool,
-  cts_char,
-  cts_int,
-  cts_float,
-  cts_int_n,
-  cts_double,
-  cts_dfloat32,
-  cts_dfloat64,
-  cts_dfloat128,
-  cts_floatn_nx,
-  cts_fract,
-  cts_accum,
-  cts_auto_type
+enum scpel_typespec_keyword {
+  sts_none,
+  sts_void,
+  sts_bool,
+  sts_char,
+  sts_int,
+  sts_float,
+  sts_int_n,
+  sts_double,
+  sts_dfloat32,
+  sts_dfloat64,
+  sts_dfloat128,
+  sts_floatn_nx,
+  sts_fract,
+  sts_accum,
+  sts_auto_type
 };
 
 /* This enum lists all the possible declarator specifiers, storage
    class or attribute that a user can write.  There is at least one
    enumerator per possible declarator specifier in the struct
-   c_declspecs below.
+   scpel_declspecs below.
 
    It is used to index the array of declspec locations in struct
-   c_declspecs.  */
-enum c_declspec_word {
+   scpel_declspecs.  */
+enum scpel_declspec_word {
   cdw_typespec /* A catch-all for a typespec.  */,
   cdw_storage_class  /* A catch-all for a storage class */,
   cdw_attributes,
@@ -306,7 +309,7 @@ enum c_declspec_word {
 			    enumerator.  */
 };
 
-enum c_declspec_il {
+enum scpel_declspec_il {
   cdil_none,
   cdil_gimple,		/* __GIMPLE  */
   cdil_gimple_cfg,	/* __GIMPLE(cfg)  */
@@ -315,9 +318,9 @@ enum c_declspec_il {
 };
 
 /* A sequence of declaration specifiers in C.  When a new declaration
-   specifier is added, please update the enum c_declspec_word above
+   specifier is added, please update the enum scpel_declspec_word above
    accordingly.  */
-struct c_declspecs {
+struct scpel_declspecs {
   location_t locations[cdw_number_of_elements];
   /* The type specified, if a single type specifier such as a struct,
      union or enum specifier, typedef name or typeof specifies the
@@ -351,15 +354,15 @@ struct c_declspecs {
   /* For the _FloatN and _FloatNx declspec, this stores the index into
      the floatn_nx_types array.  */
   int floatn_nx_idx;
-  /* The storage class specifier, or csc_none if none.  */
-  enum c_storage_class storage_class;
+  /* The storage class specifier, or ssc_none if none.  */
+  enum scpel_storage_class storage_class;
   /* Any type specifier keyword used such as "int", not reflecting
-     modifiers such as "short", or cts_none if none.  */
-  ENUM_BITFIELD (c_typespec_keyword) typespec_word : 8;
+     modifiers such as "short", or sts_none if none.  */
+  ENUM_BITFIELD (scpel_typespec_keyword) typespec_word : 8;
   /* The kind of type specifier if one has been seen, ctsk_none
      otherwise.  */
-  ENUM_BITFIELD (c_typespec_kind) typespec_kind : 4;
-  ENUM_BITFIELD (c_declspec_il) declspec_il : 3;
+  ENUM_BITFIELD (scpel_typespec_kind) typespec_kind : 4;
+  ENUM_BITFIELD (scpel_declspec_il) declspec_il : 3;
   /* Whether any expressions in typeof specifiers may appear in
      constant expressions.  */
   BOOL_BITFIELD expr_const_operands : 1;
@@ -439,7 +442,7 @@ struct c_declspecs {
 };
 
 /* The various kinds of declarators in C.  */
-enum c_declarator_kind {
+enum scpel_declarator_kind {
   /* An identifier.  */
   cdk_id,
   /* A function.  */
@@ -452,7 +455,7 @@ enum c_declarator_kind {
   cdk_attrs
 };
 
-struct c_arg_tag {
+struct scpel_arg_tag {
   /* The argument name.  */
   tree id;
   /* The type of the argument.  */
@@ -461,11 +464,11 @@ struct c_arg_tag {
 
 
 /* Information about the parameters in a function declarator.  */
-struct c_arg_info {
+struct scpel_arg_info {
   /* A list of parameter decls.  */
   tree parms;
   /* A list of structure, union and enum tags defined.  */
-  vec<c_arg_tag, va_gc> *tags;
+  vec<scpel_arg_tag, va_gc> *tags;
   /* A list of argument types to go in the FUNCTION_TYPE.  */
   tree types;
   /* A list of non-parameter decls (notably enumeration constants)
@@ -484,12 +487,12 @@ struct c_arg_info {
 };
 
 /* A declarator.  */
-struct c_declarator {
+struct scpel_declarator {
   /* The kind of declarator.  */
-  enum c_declarator_kind kind;
+  enum scpel_declarator_kind kind;
   location_t id_loc; /* Currently only set for cdk_id, cdk_array. */
   /* Except for cdk_id, the contained declarator.  For cdk_id, NULL.  */
-  struct c_declarator *declarator;
+  struct scpel_declarator *declarator;
   union {
     /* For identifiers.  */
     struct {
@@ -501,7 +504,7 @@ struct c_declarator {
       tree attrs;
     } id;
     /* For functions.  */
-    struct c_arg_info *arg_info;
+    struct scpel_arg_info *arg_info;
     /* For arrays.  */
     struct {
       /* The array dimension, or NULL for [] and [*].  */
@@ -523,27 +526,27 @@ struct c_declarator {
 };
 
 /* A type name.  */
-struct c_type_name {
+struct scpel_type_name {
   /* The declaration specifiers.  */
-  struct c_declspecs *specs;
+  struct scpel_declspecs *specs;
   /* The declarator.  */
-  struct c_declarator *declarator;
+  struct scpel_declarator *declarator;
 };
 
 /* A parameter.  */
-struct c_parm {
+struct scpel_parm {
   /* The declaration specifiers, minus any prefix attributes.  */
-  struct c_declspecs *specs;
+  struct scpel_declspecs *specs;
   /* The attributes.  */
   tree attrs;
   /* The declarator.  */
-  struct c_declarator *declarator;
+  struct scpel_declarator *declarator;
   /* The location of the parameter.  */
   location_t loc;
 };
 
 /* Used when parsing an enum.  Initialized by start_enum.  */
-struct c_enum_contents
+struct scpel_enum_contents
 {
   /* While defining an enum type, this is 1 plus the last enumerator
      constant value.  */
@@ -558,7 +561,7 @@ struct c_enum_contents
 
 /* A type of reference to a static identifier in an inline
    function.  */
-enum c_inline_static_type {
+enum scpel_inline_static_type {
   /* Identifier with internal linkage used in function that may be an
      inline definition (i.e., file-scope static).  */
   csi_internal,
@@ -568,17 +571,16 @@ enum c_inline_static_type {
   csi_modifiable
 };
 
-
 /* in c-parser.cc */
-extern void c_parse_init (void);
-extern bool c_keyword_starts_typename (enum rid keyword);
+extern void scpel_parse_init (void);
+extern bool scpel_keyword_starts_typename (enum rid keyword);
 
 /* in c-aux-info.cc */
 extern void gen_aux_info_record (tree, int, int, int);
 
 /* in c-decl.cc */
-struct c_spot_bindings;
-class c_struct_parse_info;
+struct scpel_spot_bindings;
+class scpel_struct_parse_info;
 extern struct obstack parser_obstack;
 /* Set to IN_ITERATION_STMT if parsing an iteration-statement,
    to IN_OMP_BLOCK if parsing OpenMP structured block and
@@ -600,18 +602,18 @@ extern unsigned int start_underspecified_init (location_t, tree);
 extern void finish_underspecified_init (tree, unsigned int);
 extern void push_scope (void);
 extern tree pop_scope (void);
-extern void c_bindings_start_stmt_expr (struct c_spot_bindings *);
-extern void c_bindings_end_stmt_expr (struct c_spot_bindings *);
+extern void scpel_bindings_start_stmt_expr (struct scpel_spot_bindings *);
+extern void scpel_bindings_end_stmt_expr (struct scpel_spot_bindings *);
 
 extern void record_inline_static (location_t, tree, tree,
-				  enum c_inline_static_type);
-extern void c_init_decl_processing (void);
-extern void c_print_identifier (FILE *, tree, int);
-extern int quals_from_declspecs (const struct c_declspecs *);
-extern struct c_declarator *build_array_declarator (location_t, tree,
-    						    struct c_declspecs *,
+				  enum scpel_inline_static_type);
+extern void scpel_init_decl_processing (void);
+extern void scpel_print_identifier (FILE *, tree, int);
+extern int quals_from_declspecs (const struct scpel_declspecs *);
+extern struct scpel_declarator *build_array_declarator (location_t, tree,
+    						    struct scpel_declspecs *,
 						    bool, bool);
-extern tree build_enumerator (location_t, location_t, struct c_enum_contents *,
+extern tree build_enumerator (location_t, location_t, struct scpel_enum_contents *,
 			      tree, tree);
 extern tree check_for_loop_decls (location_t, bool);
 extern void mark_forward_parm_decls (void);
@@ -620,114 +622,123 @@ extern void undeclared_variable (location_t, tree);
 extern tree lookup_label_for_goto (location_t, tree);
 extern tree declare_label (tree);
 extern tree define_label (location_t, tree);
-extern struct c_spot_bindings *c_get_switch_bindings (void);
-extern void c_release_switch_bindings (struct c_spot_bindings *);
-extern bool c_check_switch_jump_warnings (struct c_spot_bindings *,
+extern struct scpel_spot_bindings *scpel_get_switch_bindings (void);
+extern void scpel_release_switch_bindings (struct scpel_spot_bindings *);
+extern bool scpel_check_switch_jump_warnings (struct scpel_spot_bindings *,
 					  location_t, location_t);
 extern void finish_decl (tree, location_t, tree, tree, tree);
 extern tree finish_enum (tree, tree, tree);
 extern void finish_function (location_t = input_location);
 extern tree finish_struct (location_t, tree, tree, tree,
-			   class c_struct_parse_info *);
-extern tree c_simulate_enum_decl (location_t, const char *,
+			   class scpel_struct_parse_info *);
+extern tree scpel_simulate_enum_decl (location_t, const char *,
 				  vec<string_int_pair> *);
-extern tree c_simulate_record_decl (location_t, const char *,
+extern tree scpel_simulate_record_decl (location_t, const char *,
 				    array_slice<const tree>);
-extern struct c_arg_info *build_arg_info (void);
-extern struct c_arg_info *get_parm_info (bool, tree);
-extern tree grokfield (location_t, struct c_declarator *,
-		       struct c_declspecs *, tree, tree *);
-extern tree groktypename (struct c_type_name *, tree *, bool *);
-extern tree grokparm (const struct c_parm *, tree *);
+extern struct scpel_arg_info *build_arg_info (void);
+extern struct scpel_arg_info *get_parm_info (bool, tree);
+extern tree grokfield (location_t, struct scpel_declarator *,
+		       struct scpel_declspecs *, tree, tree *);
+extern tree groktypename (struct scpel_type_name *, tree *, bool *);
+extern tree grokparm (const struct scpel_parm *, tree *);
 extern tree implicitly_declare (location_t, tree);
 extern void keep_next_level (void);
 extern void pending_xref_error (void);
-extern void c_push_function_context (void);
-extern void c_pop_function_context (void);
-extern void push_parm_decl (const struct c_parm *, tree *);
-extern struct c_declarator *set_array_declarator_inner (struct c_declarator *,
-							struct c_declarator *);
-extern tree c_builtin_function (tree);
-extern tree c_builtin_function_ext_scope (tree);
-extern tree c_simulate_builtin_function_decl (tree);
-extern void c_warn_unused_attributes (tree);
-extern tree c_warn_type_attributes (tree);
-extern void shadow_tag (const struct c_declspecs *);
-extern void shadow_tag_warned (const struct c_declspecs *, int);
-extern tree start_enum (location_t, struct c_enum_contents *, tree, tree);
-extern bool start_function (struct c_declspecs *, struct c_declarator *, tree);
-extern tree start_decl (struct c_declarator *, struct c_declspecs *, bool,
+extern void scpel_push_function_context (void);
+extern void scpel_pop_function_context (void);
+extern void push_parm_decl (const struct scpel_parm *, tree *);
+extern struct scpel_declarator *set_array_declarator_inner (struct scpel_declarator *,
+							struct scpel_declarator *);
+extern tree scpel_builtin_function (tree);
+extern tree scpel_builtin_function_ext_scope (tree);
+extern tree scpel_simulate_builtin_function_decl (tree);
+extern void scpel_warn_unused_attributes (tree);
+extern tree scpel_warn_type_attributes (tree);
+extern void shadow_tag (const struct scpel_declspecs *);
+extern void shadow_tag_warned (const struct scpel_declspecs *, int);
+extern tree start_enum (location_t, struct scpel_enum_contents *, tree, tree);
+extern bool start_function (struct scpel_declspecs *, struct scpel_declarator *, tree);
+extern tree start_decl (struct scpel_declarator *, struct scpel_declspecs *, bool,
 			tree, bool = true, location_t * = NULL);
 extern tree start_struct (location_t, enum tree_code, tree,
-			  class c_struct_parse_info **);
+			  class scpel_struct_parse_info **);
 extern void store_parm_decls (void);
-extern void store_parm_decls_from (struct c_arg_info *);
+extern void store_parm_decls_from (struct scpel_arg_info *);
 extern void temp_store_parm_decls (tree, tree);
 extern void temp_pop_parm_decls (void);
 extern tree xref_tag (enum tree_code, tree);
-extern struct c_typespec parser_xref_tag (location_t, enum tree_code, tree,
+extern struct scpel_typespec parser_xref_tag (location_t, enum tree_code, tree,
 					  bool, tree, bool);
-extern struct c_parm *build_c_parm (struct c_declspecs *, tree,
-				    struct c_declarator *, location_t);
-extern struct c_declarator *build_attrs_declarator (tree,
-						    struct c_declarator *);
-extern struct c_declarator *build_function_declarator (struct c_arg_info *,
-						       struct c_declarator *);
-extern struct c_declarator *build_id_declarator (tree);
-extern struct c_declarator *make_pointer_declarator (struct c_declspecs *,
-						     struct c_declarator *);
-extern struct c_declspecs *build_null_declspecs (void);
-extern struct c_declspecs *declspecs_add_qual (location_t,
-					       struct c_declspecs *, tree);
-extern struct c_declspecs *declspecs_add_type (location_t,
-					       struct c_declspecs *,
-					       struct c_typespec);
-extern struct c_declspecs *declspecs_add_scspec (location_t,
-						 struct c_declspecs *, tree);
-extern struct c_declspecs *declspecs_add_attrs (location_t,
-						struct c_declspecs *, tree);
-extern struct c_declspecs *declspecs_add_addrspace (location_t,
-						    struct c_declspecs *,
+extern struct scpel_parm *build_scpel_parm (struct scpel_declspecs *, tree,
+				    struct scpel_declarator *, location_t);
+extern struct scpel_declarator *build_attrs_declarator (tree,
+						    struct scpel_declarator *);
+extern struct scpel_declarator *build_function_declarator (struct scpel_arg_info *,
+						       struct scpel_declarator *);
+extern struct scpel_declarator *build_id_declarator (tree);
+extern struct scpel_declarator *make_pointer_declarator (struct scpel_declspecs *,
+						     struct scpel_declarator *);
+extern struct scpel_declspecs *build_null_declspecs (void);
+extern struct scpel_declspecs *declspecs_add_qual (location_t,
+					       struct scpel_declspecs *, tree);
+extern struct scpel_declspecs *declspecs_add_type (location_t,
+					       struct scpel_declspecs *,
+					       struct scpel_typespec);
+extern struct scpel_declspecs *declspecs_add_scspec (location_t,
+						 struct scpel_declspecs *, tree);
+extern struct scpel_declspecs *declspecs_add_attrs (location_t,
+						struct scpel_declspecs *, tree);
+extern struct scpel_declspecs *declspecs_add_addrspace (location_t,
+						    struct scpel_declspecs *,
 						    addr_space_t);
-extern struct c_declspecs *declspecs_add_alignas (location_t,
-						  struct c_declspecs *, tree);
-extern struct c_declspecs *finish_declspecs (struct c_declspecs *);
+extern struct scpel_declspecs *declspecs_add_alignas (location_t,
+						  struct scpel_declspecs *, tree);
+extern struct scpel_declspecs *finish_declspecs (struct scpel_declspecs *);
 
 /* in c-objc-common.cc */
-extern bool c_objc_common_init (void);
-extern bool c_missing_noreturn_ok_p (tree);
-extern bool c_warn_unused_global_decl (const_tree);
-extern void c_initialize_diagnostics (diagnostic_context *);
-extern bool c_vla_unspec_p (tree x, tree fn);
-extern alias_set_type c_get_alias_set (tree);
+extern bool scpel_objscpel_common_init (void);
+extern bool scpel_missing_noreturn_ok_p (tree);
+extern bool scpel_warn_unused_global_decl (const_tree);
+extern void scpel_initialize_diagnostics (diagnostic_context *);
+extern bool scpel_var_mod_p (tree x, tree fn);
+extern alias_set_type scpel_get_alias_set (tree);
 
 /* in c-typeck.cc */
 extern int in_alignof;
 extern int in_sizeof;
 extern int in_typeof;
-extern bool c_in_omp_for;
+extern bool scpel_in_omp_for;
 
-extern tree c_last_sizeof_arg;
-extern location_t c_last_sizeof_loc;
+extern tree scpel_last_sizeof_arg;
+extern location_t scpel_last_sizeof_loc;
 
-extern struct c_switch *c_switch_stack;
+extern struct scpel_switch *scpel_switch_stack;
+
+extern bool null_pointer_constant_p (const_tree);
+
+
+inline
+bool scpel_type_variably_modified_p (tree t)
+{
+  return error_mark_node != t && C_TYPE_VARIABLY_MODIFIED (t);
+}
+
 
 extern bool char_type_p (tree);
-extern tree c_objc_common_truthvalue_conversion (location_t, tree);
+extern tree scpel_objc_common_truthvalue_conversion (location_t, tree);
 extern tree require_complete_type (location_t, tree);
 extern bool same_translation_unit_p (const_tree, const_tree);
 extern int comptypes (tree, tree);
 extern int comptypes_check_different_types (tree, tree, bool *);
 extern int comptypes_check_enum_int (tree, tree, bool *);
-extern bool c_vla_type_p (const_tree);
-extern bool c_mark_addressable (tree, bool = false);
-extern void c_incomplete_type_error (location_t, const_tree, const_tree);
-extern tree c_type_promotes_to (tree);
-extern struct c_expr default_function_array_conversion (location_t,
-							struct c_expr);
-extern struct c_expr default_function_array_read_conversion (location_t,
-							     struct c_expr);
-extern struct c_expr convert_lvalue_to_rvalue (location_t, struct c_expr,
+extern bool scpel_mark_addressable (tree, bool = false);
+extern void scpel_incomplete_type_error (location_t, const_tree, const_tree);
+extern tree scpel_type_promotes_to (tree);
+extern struct scpel_expr default_function_array_conversion (location_t,
+							struct scpel_expr);
+extern struct scpel_expr default_function_array_read_conversion (location_t,
+							     struct scpel_expr);
+extern struct scpel_expr convert_lvalue_to_rvalue (location_t, struct scpel_expr,
 					       bool, bool, bool = false);
 extern tree decl_constant_value_1 (tree, bool);
 extern void mark_exp_read (tree);
@@ -737,71 +748,71 @@ extern tree build_component_ref (location_t, tree, tree, location_t,
 extern tree build_array_ref (location_t, tree, tree);
 extern tree build_external_ref (location_t, tree, bool, tree *);
 extern void pop_maybe_used (bool);
-extern struct c_expr c_expr_sizeof_expr (location_t, struct c_expr);
-extern struct c_expr c_expr_sizeof_type (location_t, struct c_type_name *);
-extern struct c_expr parser_build_unary_op (location_t, enum tree_code,
-    					    struct c_expr);
-extern struct c_expr parser_build_binary_op (location_t,
-    					     enum tree_code, struct c_expr,
-					     struct c_expr);
+extern struct scpel_expr scpel_expr_sizeof_expr (location_t, struct scpel_expr);
+extern struct scpel_expr scpel_expr_sizeof_type (location_t, struct scpel_type_name *);
+extern struct scpel_expr parser_build_unary_op (location_t, enum tree_code,
+    					    struct scpel_expr);
+extern struct scpel_expr parser_build_binary_op (location_t,
+    					     enum tree_code, struct scpel_expr,
+					     struct scpel_expr);
 extern tree build_conditional_expr (location_t, tree, bool, tree, tree,
 				    location_t, tree, tree, location_t);
 extern tree build_compound_expr (location_t, tree, tree);
-extern tree c_cast_expr (location_t, struct c_type_name *, tree);
-extern tree build_c_cast (location_t, tree, tree);
+extern tree scpel_cast_expr (location_t, struct scpel_type_name *, tree);
+extern tree build_scpel_cast (location_t, tree, tree);
 extern void store_init_value (location_t, tree, tree, tree);
-extern void maybe_warn_string_init (location_t, tree, struct c_expr);
+extern void maybe_warn_string_init (location_t, tree, struct scpel_expr);
 extern void start_init (tree, tree, bool, bool, rich_location *);
 extern void finish_init (void);
 extern void really_start_incremental_init (tree);
 extern void finish_implicit_inits (location_t, struct obstack *);
 extern void push_init_level (location_t, int, struct obstack *);
-extern struct c_expr pop_init_level (location_t, int, struct obstack *,
+extern struct scpel_expr pop_init_level (location_t, int, struct obstack *,
 				     location_t);
 extern void set_init_index (location_t, tree, tree, struct obstack *);
 extern void set_init_label (location_t, tree, location_t, struct obstack *);
-extern void process_init_element (location_t, struct c_expr, bool,
+extern void process_init_element (location_t, struct scpel_expr, bool,
 				  struct obstack *);
 extern tree build_compound_literal (location_t, tree, tree, bool,
-				    unsigned int, struct c_declspecs *);
-extern void check_compound_literal_type (location_t, struct c_type_name *);
-extern tree c_start_switch (location_t, location_t, tree, bool);
-extern void c_finish_switch (tree, tree);
+				    unsigned int, struct scpel_declspecs *);
+extern void check_compound_literal_type (location_t, struct scpel_type_name *);
+extern tree scpel_start_switch (location_t, location_t, tree, bool);
+extern void scpel_finish_switch (tree, tree);
 extern tree build_asm_expr (location_t, tree, tree, tree, tree, tree, bool,
 			    bool);
 extern tree build_asm_stmt (bool, tree);
-extern int c_types_compatible_p (tree, tree);
-extern tree c_begin_compound_stmt (bool);
-extern tree c_end_compound_stmt (location_t, tree, bool);
-extern void c_finish_if_stmt (location_t, tree, tree, tree);
-extern void c_finish_loop (location_t, location_t, tree, location_t, tree,
+extern int scpel_types_compatible_p (tree, tree);
+extern tree scpel_begin_compound_stmt (bool);
+extern tree scpel_end_compound_stmt (location_t, tree, bool);
+extern void scpel_finish_if_stmt (location_t, tree, tree, tree);
+extern void scpel_finish_loop (location_t, location_t, tree, location_t, tree,
 			   tree, tree, tree, bool);
-extern tree c_begin_stmt_expr (void);
-extern tree c_finish_stmt_expr (location_t, tree);
-extern tree c_process_expr_stmt (location_t, tree);
-extern tree c_finish_expr_stmt (location_t, tree);
-extern tree c_finish_return (location_t, tree, tree);
-extern tree c_finish_bc_stmt (location_t, tree, bool);
-extern tree c_finish_goto_label (location_t, tree);
-extern tree c_finish_goto_ptr (location_t, c_expr val);
-extern tree c_expr_to_decl (tree, bool *, bool *);
-extern tree c_finish_omp_construct (location_t, enum tree_code, tree, tree);
-extern tree c_finish_oacc_data (location_t, tree, tree);
-extern tree c_finish_oacc_host_data (location_t, tree, tree);
-extern tree c_begin_omp_parallel (void);
-extern tree c_finish_omp_parallel (location_t, tree, tree);
-extern tree c_begin_omp_task (void);
-extern tree c_finish_omp_task (location_t, tree, tree);
-extern void c_finish_omp_cancel (location_t, tree);
-extern void c_finish_omp_cancellation_point (location_t, tree);
-extern tree c_finish_omp_clauses (tree, enum c_omp_region_type);
-extern tree c_build_va_arg (location_t, tree, location_t, tree);
-extern tree c_finish_transaction (location_t, tree, int);
-extern bool c_tree_equal (tree, tree);
-extern tree c_build_function_call_vec (location_t, const vec<location_t>&,
+extern tree scpel_begin_stmt_expr (void);
+extern tree scpel_finish_stmt_expr (location_t, tree);
+extern tree scpel_process_expr_stmt (location_t, tree);
+extern tree scpel_finish_expr_stmt (location_t, tree);
+extern tree scpel_finish_return (location_t, tree, tree);
+extern tree scpel_finish_bc_stmt (location_t, tree, bool);
+extern tree scpel_finish_goto_label (location_t, tree);
+extern tree scpel_finish_goto_ptr (location_t, scpel_expr val);
+extern tree scpel_expr_to_decl (tree, bool *, bool *);
+extern tree scpel_finish_omp_construct (location_t, enum tree_code, tree, tree);
+extern tree scpel_finish_oacc_data (location_t, tree, tree);
+extern tree scpel_finish_oacc_host_data (location_t, tree, tree);
+extern tree scpel_begin_omp_parallel (void);
+extern tree scpel_finish_omp_parallel (location_t, tree, tree);
+extern tree scpel_begin_omp_task (void);
+extern tree scpel_finish_omp_task (location_t, tree, tree);
+extern void scpel_finish_omp_cancel (location_t, tree);
+extern void scpel_finish_omp_cancellation_point (location_t, tree);
+extern tree scpel_finish_omp_clauses (tree, enum scpel_omp_region_type);
+extern tree scpel_build_va_arg (location_t, tree, location_t, tree);
+extern tree scpel_finish_transaction (location_t, tree, int);
+extern bool scpel_tree_equal (tree, tree);
+extern tree scpel_build_function_call_vec (location_t, const vec<location_t>&,
 				       tree, vec<tree, va_gc> *,
 				       vec<tree, va_gc> *);
-extern tree c_omp_clause_copy_ctor (tree, tree, tree);
+extern tree scpel_omp_clause_copy_ctor (tree, tree, tree);
 
 /* Set to 0 at beginning of a function definition, set to 1 if
    a return statement that specifies a return value is seen.  */
@@ -822,11 +833,11 @@ extern int current_function_returns_abnormally;
 
 /* Tell the binding oracle what kind of binding we are looking for.  */
 
-enum c_oracle_request
+enum scpel_oracle_request
 {
-  C_ORACLE_SYMBOL,
-  C_ORACLE_TAG,
-  C_ORACLE_LABEL
+  SCPEL_ORACLE_SYMBOL,
+  SCPEL_ORACLE_TAG,
+  SCPEL_ORACLE_LABEL
 };
 
 /* If this is non-NULL, then it is a "binding oracle" which can lazily
@@ -837,18 +848,18 @@ enum c_oracle_request
    oracle has been called and will not call it again if it fails to
    create a given binding.  */
 
-typedef void c_binding_oracle_function (enum c_oracle_request, tree identifier);
+typedef void scpel_binding_oracle_function (enum scpel_oracle_request, tree identifier);
 
-extern c_binding_oracle_function *c_binding_oracle;
+extern scpel_binding_oracle_function *scpel_binding_oracle;
 
-extern void c_finish_incomplete_decl (tree);
-extern tree c_omp_reduction_id (enum tree_code, tree);
-extern tree c_omp_reduction_decl (tree);
-extern tree c_omp_reduction_lookup (tree, tree);
-extern tree c_check_omp_declare_reduction_r (tree *, int *, void *);
-extern bool c_check_in_current_scope (tree);
-extern void c_pushtag (location_t, tree, tree);
-extern void c_bind (location_t, tree, bool);
+extern void scpel_finish_incomplete_decl (tree);
+extern tree scpel_omp_reduction_id (enum tree_code, tree);
+extern tree scpel_omp_reduction_decl (tree);
+extern tree scpel_omp_reduction_lookup (tree, tree);
+extern tree scpel_check_omp_declare_reduction_r (tree *, int *, void *);
+extern bool scpel_check_in_current_scope (tree);
+extern void scpel_pushtag (location_t, tree, tree);
+extern void scpel_bind (location_t, tree, bool);
 extern bool tag_exists_p (enum tree_code, tree);
 
 /* In c-errors.cc */
@@ -860,21 +871,21 @@ extern bool pedwarn_c11 (location_t, int opt, const char *, ...)
     ATTRIBUTE_GCC_DIAG(3,4);
 
 extern void
-set_c_expr_source_range (c_expr *expr,
+set_scpel_expr_source_range (scpel_expr *expr,
 			 location_t start, location_t finish);
 
 extern void
-set_c_expr_source_range (c_expr *expr,
+set_scpel_expr_source_range (scpel_expr *expr,
 			 source_range src_range);
 
 /* In c-fold.cc */
 extern vec<tree> incomplete_record_decls;
 
-extern const char *c_get_sarif_source_language (const char *filename);
+extern const char *scpel_get_sarif_source_language (const char *filename);
 
 #if CHECKING_P
 namespace selftest {
-  extern void run_c_tests (void);
+  extern void run_scpel_tests (void);
 } // namespace selftest
 #endif /* #if CHECKING_P */
 

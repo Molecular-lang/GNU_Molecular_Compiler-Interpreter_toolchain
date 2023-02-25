@@ -1,5 +1,4 @@
-/* Support for offering suggestions for handling unrecognized names.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Support for offering suggestions for handling unrecognized names. */
 
 #ifndef GCC_NAME_HINT_H
 #define GCC_NAME_HINT_H

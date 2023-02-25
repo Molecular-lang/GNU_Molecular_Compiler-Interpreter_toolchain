@@ -1,4 +1,21 @@
-/* Header file for gimplification. */
+/* Header file for gimplification.
+   Copyright (C) 2013-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_GIMPLIFY_H
 #define GCC_GIMPLIFY_H
@@ -56,7 +73,7 @@ extern tree gimple_boolify (tree);
 extern gimple_predicate rhs_predicate_for (tree);
 extern bool gimplify_stmt (tree *, gimple_seq *);
 extern void omp_firstprivatize_variable (struct gimplify_omp_ctx *, tree);
-extern enum gimplify_status gimplify_expr(tree *, gimple_seq *, gimple_seq *,
+extern enum gimplify_status gimplify_expr (tree *, gimple_seq *, gimple_seq *,
 					   bool (*) (tree), fallback_t);
 
 int omp_construct_selector_matches (enum tree_code *, int, int *);

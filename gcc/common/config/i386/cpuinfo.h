@@ -1,6 +1,30 @@
-/* Get CPU type and Features for x86 processors. */
+/* Get CPU type and Features for x86 processors.
+   Copyright (C) 2012-2023 Free Software Foundation, Inc.
+   Contributed by Sriraman Tallam (tmsriram@google.com)
 
-struct __processor_model {
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
+
+struct __processor_model
+{
   unsigned int __cpu_vendor;
   unsigned int __cpu_type;
   unsigned int __cpu_subtype;
@@ -10,7 +34,8 @@ struct __processor_model {
   unsigned int __cpu_features[1];
 };
 
-struct __processor_model2 {
+struct __processor_model2
+{
   unsigned int __cpu_family;
   unsigned int __cpu_model;
   unsigned int __cpu_max_level;
@@ -576,8 +601,8 @@ get_intel_cpu (struct __processor_model *cpu_model,
 
 static inline const char *
 get_zhaoxin_cpu (struct __processor_model *cpu_model,
-		struct __processor_model2 *cpu_model2,
-		unsigned int *cpu_features2)
+		 struct __processor_model2 *cpu_model2,
+		 unsigned int *cpu_features2)
 {
   const char *cpu = NULL;
   unsigned int family = cpu_model2->__cpu_family;
@@ -991,6 +1016,10 @@ cpu_indicator_init (struct __processor_model *cpu_model,
   extended_model = (eax >> 12) & 0xf0;
   extended_family = (eax >> 20) & 0xff;
 
+  /* Find available features. */
+  get_available_features (cpu_model, cpu_model2, cpu_features2,
+			  ecx, edx);
+
   if (vendor == signature_INTEL_ebx)
     {
       /* Adjust model and family for Intel CPUS. */
@@ -1005,9 +1034,6 @@ cpu_indicator_init (struct __processor_model *cpu_model,
       cpu_model2->__cpu_family = family;
       cpu_model2->__cpu_model = model;
 
-      /* Find available features. */
-      get_available_features (cpu_model, cpu_model2, cpu_features2,
-			      ecx, edx);
       /* Get CPU type.  */
       get_intel_cpu (cpu_model, cpu_model2, cpu_features2);
       cpu_model->__cpu_vendor = VENDOR_INTEL;
@@ -1024,9 +1050,6 @@ cpu_indicator_init (struct __processor_model *cpu_model,
       cpu_model2->__cpu_family = family;
       cpu_model2->__cpu_model = model;
 
-      /* Find available features. */
-      get_available_features (cpu_model, cpu_model2, cpu_features2,
-			      ecx, edx);
       /* Get CPU type.  */
       get_amd_cpu (cpu_model, cpu_model2, cpu_features2);
       cpu_model->__cpu_vendor = VENDOR_AMD;
@@ -1034,22 +1057,17 @@ cpu_indicator_init (struct __processor_model *cpu_model,
   else if (vendor == signature_CENTAUR_ebx && family < 0x07)
     cpu_model->__cpu_vendor = VENDOR_CENTAUR;
   else if (vendor == signature_SHANGHAI_ebx
-		|| vendor == signature_CENTAUR_ebx)
+	   || vendor == signature_CENTAUR_ebx)
     {
       /* Adjust model and family for ZHAOXIN CPUS.  */
       if (family == 0x07)
-	{
-	  model += extended_model;
-	}
+	model += extended_model;
 
       cpu_model2->__cpu_family = family;
       cpu_model2->__cpu_model = model;
 
-      /* Find available features.  */
-      get_available_features (cpu_model, cpu_model2, cpu_features2,
-				  ecx, edx);
       /* Get CPU type.  */
-      get_zhaoxin_cpu (cpu_model, cpu_model2,cpu_features2);
+      get_zhaoxin_cpu (cpu_model, cpu_model2, cpu_features2);
       cpu_model->__cpu_vendor = VENDOR_ZHAOXIN;
     }
   else if (vendor == signature_CYRIX_ebx)

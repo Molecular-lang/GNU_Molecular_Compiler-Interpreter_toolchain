@@ -1,4 +1,21 @@
-/* Process source files and output type information. */
+/* Process source files and output type information.
+   Copyright (C) 2002-2023 Free Software Foundation, Inc.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify it under
+   the terms of the GNU General Public License as published by the Free
+   Software Foundation; either version 3, or (at your option) any later
+   version.
+
+   GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+   WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+   for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with GCC; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_GENGTYPE_H
 #define GCC_GENGTYPE_H
@@ -60,7 +77,7 @@ input_file* input_file_by_name (const char* name);
 const char *get_file_srcdir_relative_path (const input_file *inpf);
 
 /* Get the name of an input file.  */
-static inline const char*
+inline const char*
 get_input_file_name (const input_file *inpf)
 {
   if (inpf)
@@ -77,7 +94,7 @@ get_input_file_name (const input_file *inpf)
    some GC roots may be missed, which is a much harder-to-debug problem.
   */
 
-static inline lang_bitmap
+inline lang_bitmap
 get_lang_bitmap (const input_file* inpf)
 {
   if (inpf == NULL)
@@ -87,7 +104,7 @@ get_lang_bitmap (const input_file* inpf)
 
 /* Set the bitmap returned by get_lang_bitmap.  The only legitimate
    callers of this function are read_input_list & read_state_*.  */
-static inline void
+inline void
 set_lang_bitmap (input_file* inpf, lang_bitmap n)
 {
   gcc_assert (inpf);
@@ -329,7 +346,7 @@ extern struct type callback_type;
 
 /* Test if a type is a union or a structure, perhaps a language
    specific one.  */
-static inline bool
+inline bool
 union_or_struct_p (enum typekind kind)
 {
   return (kind == TYPE_UNION
@@ -338,14 +355,14 @@ union_or_struct_p (enum typekind kind)
 	  || kind == TYPE_USER_STRUCT);
 }
 
-static inline bool
+inline bool
 union_or_struct_p (const_type_p x)
 {
   return union_or_struct_p (x->kind);
 }
 
 /* Give the file location of a type, if any. */
-static inline struct fileloc* 
+inline struct fileloc* 
 type_fileloc (type_p t)
 {
   if (!t) 

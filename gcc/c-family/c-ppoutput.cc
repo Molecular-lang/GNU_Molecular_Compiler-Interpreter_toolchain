@@ -1,5 +1,4 @@
-/* Preprocess only, using cpplib.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Preprocess only, using cpplib. */
 
 #include "config.h"
 #include "system.h"
@@ -128,7 +127,7 @@ init_pp_output (FILE *out_stream)
 
   if (flag_pch_preprocess)
     {
-      cb->valid_pch = c_common_valid_pch;
+      cb->valid_pch = scpel_common_valid_pch;
       cb->read_pch = cb_read_pch;
     }
 
@@ -145,8 +144,8 @@ init_pp_output (FILE *out_stream)
       cb->used_undef = cb_used_undef;
     }
 
-  cb->has_attribute = c_common_has_attribute;
-  cb->has_builtin = c_common_has_builtin;
+  cb->has_attribute = scpel_common_has_attribute;
+  cb->has_builtin = scpel_common_has_builtin;
   cb->get_source_date_epoch = cb_get_source_date_epoch;
   cb->remap_filename = remap_macro_filename;
 
@@ -812,7 +811,7 @@ cb_def_pragma (cpp_reader *pfile, location_t line)
    in case a token was lexed externally, e.g. while processing a
    pragma.  */
 void
-c_pp_stream_token (cpp_reader *pfile, const cpp_token *tok, location_t loc)
+scpel_pp_stream_token (cpp_reader *pfile, const cpp_token *tok, location_t loc)
 {
   gcc_assert (print.streamer);
   print.streamer->stream (pfile, tok, loc);
@@ -843,7 +842,7 @@ static void
 cb_read_pch (cpp_reader *pfile, const char *name,
 	     int fd, const char *orig_name ATTRIBUTE_UNUSED)
 {
-  c_common_read_pch (pfile, name, fd, orig_name);
+  scpel_common_read_pch (pfile, name, fd, orig_name);
 
   fprintf (print.outf, "#pragma GCC pch_preprocess \"%s\"\n", name);
   print.src_line++;

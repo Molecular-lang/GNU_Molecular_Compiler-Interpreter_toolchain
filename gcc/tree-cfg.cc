@@ -1,4 +1,22 @@
-/* Control flow functions for trees. */
+/* Control flow functions for trees.
+   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+   Contributed by Diego Novillo <dnovillo@redhat.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -3485,6 +3503,7 @@ verify_gimple_call (gcall *stmt)
       switch (DECL_FUNCTION_CODE (fndecl))
 	{
 	case BUILT_IN_UNREACHABLE:
+	case BUILT_IN_UNREACHABLE_TRAP:
 	case BUILT_IN_TRAP:
 	  if (gimple_call_num_args (stmt) > 0)
 	    {
@@ -9663,6 +9682,8 @@ pass_warn_function_return::execute (function *fun)
 		  && ((LOCATION_LOCUS (gimple_location (last))
 		       == BUILTINS_LOCATION
 		       && (gimple_call_builtin_p (last, BUILT_IN_UNREACHABLE)
+			   || gimple_call_builtin_p (last,
+						     BUILT_IN_UNREACHABLE_TRAP)
 			   || gimple_call_builtin_p (last, BUILT_IN_TRAP)))
 		      || gimple_call_builtin_p (last, ubsan_missing_ret)))
 		{

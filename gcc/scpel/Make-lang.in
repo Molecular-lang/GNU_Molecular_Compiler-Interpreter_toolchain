@@ -1,5 +1,4 @@
-# Top level -*- makefile -*- fragment for GNU C - C language.
-# Please review: $(src-dir)/SPL-README for Licencing info.
+# Top level -*- makefile -*- fragment for GNU Scpel - C language.
 
 # This file provides the language dependent support in the main Makefile.
 # Each language makefile fragment must provide the following targets:
@@ -19,8 +18,8 @@
 # - define the names for selecting the language in LANGUAGES.
 
 # Define the names for selecting c in LANGUAGES.
-scpel: cc1$(exeext)
-scpel.serial = cc1$(exeext)
+c: cc1$(exeext)
+c.serial = cc1$(exeext)
 
 # Tell GNU make to ignore these if they exist.
 .PHONY: c gcc
@@ -43,7 +42,7 @@ C_OBJS = scpel/scpel-lang.o c-family/stub-objc.o $(C_AND_OBJC_OBJS)
 c_OBJS = $(C_OBJS) cc1-checksum.o scpel/gccspec.o
 
 # Use strict warnings for this front end.
-scpel-warn = $(STRICT_WARN)
+c-warn = $(STRICT_WARN)
 
 ifeq ($(if $(wildcard ../stage_current),$(shell cat \
   ../stage_current)),stageautofeedback)
@@ -76,57 +75,57 @@ cc1.fda: ../stage1-gcc/cc1$(exeext) ../prev-gcc/$(PERF_DATA)
 
 # Build hooks:
 
-scpel.info:
-scpel.dvi:
-scpel.pdf:
-scpel.html:
-scpel.install-info:
-scpel.install-dvi:
-scpel.install-pdf:
-scpel.install-html:
-scpel.all.cross:
-scpel.start.encap:
-scpel.rest.encap:
-scpel.srcinfo:
-scpel.srcextra: gengtype-lex.cc
+c.info:
+c.dvi:
+c.pdf:
+c.html:
+c.install-info:
+c.install-dvi:
+c.install-pdf:
+c.install-html:
+c.all.cross:
+c.start.encap:
+c.rest.encap:
+c.srcinfo:
+c.srcextra: gengtype-lex.cc
 	-cp -p $^ $(srcdir)
-scpel.tags: force
+c.tags: force
 	cd $(srcdir)/scpel; $(ETAGS) -o TAGS.sub *.cc *.h; \
 	$(ETAGS) --include TAGS.sub --include ../TAGS.sub
-scpel.man:
-scpel.srcman:
+c.man:
+c.srcman:
 
 # C selftests
 
 # If C is enabled, require the selftests to be run for it
 # at each stage of the build:
-selftest-scpel: s-selftest-scpel
+selftest-c: s-selftest-c
 
 C_SELFTEST_FLAGS = -xc $(SELFTEST_FLAGS)
 C_SELFTEST_DEPS = cc1$(exeext) $(SELFTEST_DEPS)
 
 # Run the C selftests:
-s-selftest-scpel: $(C_SELFTEST_DEPS)
+s-selftest-c: $(C_SELFTEST_DEPS)
 	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS)
 	$(STAMP) $@
 
 # Convenience methods for running C selftests under gdb:
-.PHONY: selftest-scpel-gdb
-selftest-scpel-gdb: $(C_SELFTEST_DEPS)
+.PHONY: selftest-c-gdb
+selftest-c-gdb: $(C_SELFTEST_DEPS)
 	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS) \
 	  -wrapper gdb,--args
 
 .PHONY: selftest-gdb
-selftest-gdb: selftest-scpel-gdb
+selftest-gdb: selftest-c-gdb
 
 # Convenience methods for running C selftests under valgrind:
-.PHONY: selftest-scpel-valgrind
-selftest-scpel-valgrind: $(C_SELFTEST_DEPS)
+.PHONY: selftest-c-valgrind
+selftest-c-valgrind: $(C_SELFTEST_DEPS)
 	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS) \
 	  -wrapper valgrind,--leak-check=full
 
 .PHONY: selftest-valgrind
-selftest-valgrind: selftest-scpel-valgrind
+selftest-valgrind: selftest-c-valgrind
 
 # List of targets that can use the generic check- rule and its // variant.
 lang_checks += check-gcc
@@ -135,55 +134,53 @@ lang_checks_parallelized += check-gcc
 check_gcc_parallelize=10000
 
 # 'make check' in gcc/ looks for check-c.  Redirect it to check-gcc.
-check-scpel : check-gcc
+check-c : check-gcc
 
-#
 # Install hooks:
 # cc1 is installed elsewhere as part of $(COMPILERS).
 
-scpel.install-common:
-scpel.install-man:
+c.install-common:
+c.install-man:
 
-scpel.install-plugin: installdirs
+c.install-plugin: installdirs
 # Install import library.
 ifeq ($(plugin_implib),yes)
 	$(mkinstalldirs) $(DESTDIR)$(plugin_resourcesdir)
 	$(INSTALL_DATA) cc1$(exeext).a $(DESTDIR)$(plugin_resourcesdir)/cc1$(exeext).a
 endif
 
-scpel.uninstall:
+c.uninstall:
 
-#
 # Clean hooks:
 # A lot of the ancillary files are deleted by the main makefile.
 # We just have to delete files specific to us.
 
-scpel.mostlyclean:
+c.mostlyclean:
 	-rm -f cc1$(exeext)
 	-rm -f scpel/*$(objext)
 	-rm -f scpel/*$(coverageexts)
 	-rm -f cc1.fda
-scpel.clean:
-scpel.distclean:
+c.clean:
+c.distclean:
 	-rm -f scpel/config.status scpel/Makefile
-scpel.maintainer-clean:
-#
+c.maintainer-clean:
+
 # Stage hooks:
 # The main makefile has already created stage?/cp.
 
-scpel.stage1: stage1-start
+c.stage1: stage1-start
 	-mv scpel/*$(objext) stage1/scpel
-scpel.stage2: stage2-start
+c.stage2: stage2-start
 	-mv scpel/*$(objext) stage2/scpel
-scpel.stage3: stage3-start
+c.stage3: stage3-start
 	-mv scpel/*$(objext) stage3/scpel
-scpel.stage4: stage4-start
+c.stage4: stage4-start
 	-mv scpel/*$(objext) stage4/scpel
-scpel.stageprofile: stageprofile-start
+c.stageprofile: stageprofile-start
 	-mv scpel/*$(objext) stageprofile/scpel
-scpel.stagefeedback: stagefeedback-start
+c.stagefeedback: stagefeedback-start
 	-mv scpel/*$(objext) stagefeedback/scpel
-scpel.autostageprofile: autostageprofile-start
+c.autostageprofile: autostageprofile-start
 	-mv scpel/*$(objext) autostageprofile/scpel
-scpel.autostagefeedback: autostagefeedback-start
+c.autostagefeedback: autostagefeedback-start
 	-mv scpel/*$(objext) autostagefeedback/scpel

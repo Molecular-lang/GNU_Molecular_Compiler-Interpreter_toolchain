@@ -1,4 +1,21 @@
-/* Common subexpression elimination for GNU compiler. */
+/* Common subexpression elimination for GNU compiler.
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_CSELIB_H
 #define GCC_CSELIB_H
@@ -96,7 +113,7 @@ extern void dump_cselib_table (FILE *);
 /* Return the canonical value for VAL, following the equivalence chain
    towards the earliest (== lowest uid) equivalent value.  */
 
-static inline cselib_val *
+inline cselib_val *
 canonical_cselib_val (cselib_val *val)
 {
   cselib_val *canon;
@@ -114,7 +131,7 @@ canonical_cselib_val (cselib_val *val)
 /* Return nonzero if we can prove that X and Y contain the same value, taking
    our gathered information into account.  */
 
-static inline int
+inline int
 rtx_equal_for_cselib_p (rtx x, rtx y)
 {
   if (x == y)

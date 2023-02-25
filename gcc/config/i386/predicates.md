@@ -1,4 +1,21 @@
 ;; Predicate definitions for IA-32 and x86-64.
+;; Copyright (C) 2004-2023 Free Software Foundation, Inc.
+;;
+;; This file is part of GCC.
+;;
+;; GCC is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; GCC is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with GCC; see the file COPYING3.  If not see
+;; <http://www.gnu.org/licenses/>.
 
 ;; Return true if OP is either a i387 or SSE fp register.
 (define_predicate "any_fp_register_operand"
@@ -75,6 +92,14 @@
   (and (match_code "reg")
        (match_test "MASK_REGNO_P (REGNO (op))")))
 
+;; Match a DI, SI or HImode register operand.
+(define_special_predicate "int248_register_operand"
+  (and (match_operand 0 "register_operand")
+       (ior (and (match_test "TARGET_64BIT")
+		 (match_test "GET_MODE (op) == DImode"))
+	    (match_test "GET_MODE (op) == SImode")
+	    (match_test "GET_MODE (op) == HImode"))))
+
 ;; Match a DI, SI, HI or QImode nonimmediate_operand.
 (define_special_predicate "int_nonimmediate_operand"
   (and (match_operand 0 "nonimmediate_operand")
@@ -83,6 +108,20 @@
 	    (match_test "GET_MODE (op) == SImode")
 	    (match_test "GET_MODE (op) == HImode")
 	    (match_test "GET_MODE (op) == QImode"))))
+
+;; Match nonimmediate operand, but exclude non-constant addresses for x86_64.
+(define_predicate "nonimm_x64constmem_operand"
+  (ior (match_operand 0 "register_operand")
+       (and (match_operand 0 "memory_operand")
+	    (ior (not (match_test "TARGET_64BIT"))
+		 (match_test "constant_address_p (XEXP (op, 0))")))))
+
+;; Match general operand, but exclude non-constant addresses for x86_64.
+(define_predicate "general_x64constmem_operand"
+  (ior (match_operand 0 "nonmemory_operand")
+       (and (match_operand 0 "memory_operand")
+	    (ior (not (match_test "TARGET_64BIT"))
+		 (match_test "constant_address_p (XEXP (op, 0))")))))
 
 ;; Match register operands, but include memory operands for TARGET_SSE_MATH.
 (define_predicate "register_ssemem_operand"

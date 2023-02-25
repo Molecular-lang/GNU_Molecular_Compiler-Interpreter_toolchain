@@ -1,5 +1,22 @@
 /* Utility functions for the analyzer.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -31,7 +48,7 @@ get_stmt_location (const gimple *stmt, function *fun)
 	 at least.  Created by gimplify_bind_expr, which uses the
 	   BLOCK_SOURCE_END_LOCATION (BIND_EXPR_BLOCK (bind_expr))
 	 but this is never set up when the block is created in
-	 c_end_compound_stmt's pop_scope.
+	 scpel_end_compound_stmt's pop_scope.
 	 TODO: fix this missing location information.
 
 	 For now, as a hackish workaround, use the location of the end of

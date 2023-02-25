@@ -1,5 +1,21 @@
 /* Natural loop functions
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_CFGLOOP_H
 #define GCC_CFGLOOP_H
@@ -264,21 +280,21 @@ public:
 #define LOOP_C_FINITE		(1 << 1)
 
 /* Set C to the LOOP constraint.  */
-static inline void
+inline void
 loop_constraint_set (class loop *loop, unsigned c)
 {
   loop->constraints |= c;
 }
 
 /* Clear C from the LOOP constraint.  */
-static inline void
+inline void
 loop_constraint_clear (class loop *loop, unsigned c)
 {
   loop->constraints &= ~c;
 }
 
 /* Check if C is set in the LOOP constraint.  */
-static inline bool
+inline bool
 loop_constraint_set_p (class loop *loop, unsigned c)
 {
   return (loop->constraints & c) == c;
@@ -492,7 +508,7 @@ extern void iv_analysis_done (void);
 extern class niter_desc *get_simple_loop_desc (class loop *loop);
 extern void free_simple_loop_desc (class loop *loop);
 
-static inline class niter_desc *
+inline class niter_desc *
 simple_loop_desc (class loop *loop)
 {
   return loop->simple_loop_desc;
@@ -502,7 +518,7 @@ simple_loop_desc (class loop *loop)
 
 /* Returns the loop with index NUM from FNs loop tree.  */
 
-static inline class loop *
+inline class loop *
 get_loop (struct function *fn, unsigned num)
 {
   return (*loops_for_fn (fn)->larray)[num];
@@ -510,7 +526,7 @@ get_loop (struct function *fn, unsigned num)
 
 /* Returns the number of superloops of LOOP.  */
 
-static inline unsigned
+inline unsigned
 loop_depth (const class loop *loop)
 {
   return vec_safe_length (loop->superloops);
@@ -519,7 +535,7 @@ loop_depth (const class loop *loop)
 /* Returns the immediate superloop of LOOP, or NULL if LOOP is the outermost
    loop.  */
 
-static inline class loop *
+inline class loop *
 loop_outer (const class loop *loop)
 {
   unsigned n = vec_safe_length (loop->superloops);
@@ -532,7 +548,7 @@ loop_outer (const class loop *loop)
 
 /* Returns true if LOOP has at least one exit edge.  */
 
-static inline bool
+inline bool
 loop_has_exit_edges (const class loop *loop)
 {
   return loop->exits->next->e != NULL;
@@ -553,7 +569,7 @@ get_loops (struct function *fn)
 /* Returns the number of loops in FN (including the removed
    ones and the fake loop that forms the root of the loop tree).  */
 
-static inline unsigned
+inline unsigned
 number_of_loops (struct function *fn)
 {
   struct loops *loops = loops_for_fn (fn);
@@ -566,13 +582,13 @@ number_of_loops (struct function *fn)
 /* Returns true if state of the loops satisfies all properties
    described by FLAGS.  */
 
-static inline bool
+inline bool
 loops_state_satisfies_p (function *fn, unsigned flags)
 {
   return (loops_for_fn (fn)->state & flags) == flags;
 }
 
-static inline bool
+inline bool
 loops_state_satisfies_p (unsigned flags)
 {
   return loops_state_satisfies_p (cfun, flags);
@@ -580,13 +596,13 @@ loops_state_satisfies_p (unsigned flags)
 
 /* Sets FLAGS to the loops state.  */
 
-static inline void
+inline void
 loops_state_set (function *fn, unsigned flags)
 {
   loops_for_fn (fn)->state |= flags;
 }
 
-static inline void
+inline void
 loops_state_set (unsigned flags)
 {
   loops_state_set (cfun, flags);
@@ -594,13 +610,13 @@ loops_state_set (unsigned flags)
 
 /* Clears FLAGS from the loops state.  */
 
-static inline void
+inline void
 loops_state_clear (function *fn, unsigned flags)
 {
   loops_for_fn (fn)->state &= ~flags;
 }
 
-static inline void
+inline void
 loops_state_clear (unsigned flags)
 {
   if (!current_loops)
@@ -611,7 +627,7 @@ loops_state_clear (unsigned flags)
 /* Check loop structure invariants, if internal consistency checks are
    enabled.  */
 
-static inline void
+inline void
 checking_verify_loop_structure (void)
 {
   /* VERIFY_LOOP_STRUCTURE essentially asserts that no loops need fixups.
@@ -881,7 +897,7 @@ extern void move_loop_invariants (void);
 extern auto_vec<basic_block> get_loop_hot_path (const class loop *loop);
 
 /* Returns the outermost loop of the loop nest that contains LOOP.*/
-static inline class loop *
+inline class loop *
 loop_outermost (class loop *loop)
 {
   unsigned n = vec_safe_length (loop->superloops);
@@ -903,7 +919,7 @@ extern int bb_loop_depth (const_basic_block);
 
 /* Converts VAL to widest_int.  */
 
-static inline widest_int
+inline widest_int
 gcov_type_to_wide_int (gcov_type val)
 {
   HOST_WIDE_INT a[2];

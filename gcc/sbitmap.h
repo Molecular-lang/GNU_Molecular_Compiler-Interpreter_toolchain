@@ -1,4 +1,21 @@
-/* Simple bitmaps. */
+/* Simple bitmaps.
+   Copyright (C) 1999-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_SBITMAP_H
 #define GCC_SBITMAP_H
@@ -81,7 +98,7 @@ struct simple_bitmap_def
 
 /* Verify that access at INDEX in bitmap MAP is valid.  */ 
 
-static inline void
+inline void
 bitmap_check_index (const_sbitmap map, int index)
 {
   gcc_checking_assert (index >= 0);
@@ -90,14 +107,14 @@ bitmap_check_index (const_sbitmap map, int index)
 
 /* Verify that bitmaps A and B have same size.  */ 
 
-static inline void
+inline void
 bitmap_check_sizes (const_sbitmap a, const_sbitmap b)
 {
   gcc_checking_assert (a->n_bits == b->n_bits);
 }
 
 /* Test if bit number bitno in the bitmap is set.  */
-static inline bool
+inline bool
 bitmap_bit_p (const_sbitmap map, int bitno)
 {
   bitmap_check_index (map, bitno);
@@ -110,7 +127,7 @@ bitmap_bit_p (const_sbitmap map, int bitno)
 /* Set bit number BITNO in the sbitmap MAP.
    Return true if the bit changed.  */
 
-static inline bool
+inline bool
 bitmap_set_bit (sbitmap map, int bitno)
 {
   bitmap_check_index (map, bitno);
@@ -126,7 +143,7 @@ bitmap_set_bit (sbitmap map, int bitno)
 /* Reset bit number BITNO in the sbitmap MAP.
    Return true if the bit changed.  */
 
-static inline bool
+inline bool
 bitmap_clear_bit (sbitmap map, int bitno)
 {
   bitmap_check_index (map, bitno);
@@ -160,7 +177,7 @@ struct sbitmap_iterator {
 /* Initialize the iterator I with sbitmap BMP and the initial index
    MIN.  */
 
-static inline void
+inline void
 bmp_iter_set_init (sbitmap_iterator *i, const_sbitmap bmp,
 		   unsigned int min, unsigned *bit_no ATTRIBUTE_UNUSED)
 {
@@ -180,7 +197,7 @@ bmp_iter_set_init (sbitmap_iterator *i, const_sbitmap bmp,
    to the index of the bit to be visited.  Otherwise, return
    false.  */
 
-static inline bool
+inline bool
 bmp_iter_set (sbitmap_iterator *i, unsigned int *n)
 {
   /* Skip words that are zeros.  */
@@ -206,7 +223,7 @@ bmp_iter_set (sbitmap_iterator *i, unsigned int *n)
 
 /* Advance to the next bit.  */
 
-static inline void
+inline void
 bmp_iter_next (sbitmap_iterator *i, unsigned *bit_no ATTRIBUTE_UNUSED)
 {
   i->word >>= 1;

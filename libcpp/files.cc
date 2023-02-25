@@ -1,4 +1,24 @@
-/* Part of CPP library.  File handling. */
+/* Part of CPP library.  File handling.
+   Copyright (C) 1986-2023 Free Software Foundation, Inc.
+   Written by Per Bothner, 1994.
+   Based on CCCP program by Paul Rubin, June 1986
+   Adapted to ANSI C, Richard Stallman, Jan 1987
+   Split out of cpplib.c, Zack Weinberg, Oct 1998
+   Reimplemented, Neil Booth, Jul 2003
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 3, or (at your option) any
+later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"

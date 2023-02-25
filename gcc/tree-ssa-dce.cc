@@ -1,4 +1,24 @@
-/* Dead code elimination pass for the GNU compiler. */
+/* Dead code elimination pass for the GNU compiler.
+   Copyright (C) 2002-2023 Free Software Foundation, Inc.
+   Contributed by Ben Elliston <bje@redhat.com>
+   and Andrew MacLeod <amacleod@redhat.com>
+   Adapted to use control dependence by Steven Bosscher, SUSE Labs.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 3, or (at your option) any
+later version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Dead code elimination.
 
@@ -307,17 +327,23 @@ mark_stmt_if_obviously_necessary (gimple *stmt, bool aggressive)
 
 /* Mark the last statement of BB as necessary.  */
 
-static void
+static bool
 mark_last_stmt_necessary (basic_block bb)
 {
   gimple *stmt = last_stmt (bb);
 
-  bitmap_set_bit (last_stmt_necessary, bb->index);
+  if (!bitmap_set_bit (last_stmt_necessary, bb->index))
+    return true;
+
   bitmap_set_bit (bb_contains_live_stmts, bb->index);
 
   /* We actually mark the statement only if it is a control statement.  */
   if (stmt && is_ctrl_stmt (stmt))
-    mark_stmt_necessary (stmt, true);
+    {
+      mark_stmt_necessary (stmt, true);
+      return true;
+    }
+  return false;
 }
 
 
@@ -349,8 +375,8 @@ mark_control_dependent_edges_necessary (basic_block bb, bool ignore_self)
 	  continue;
 	}
 
-      if (!bitmap_bit_p (last_stmt_necessary, cd_bb->index))
-	mark_last_stmt_necessary (cd_bb);
+      if (!mark_last_stmt_necessary (cd_bb))
+	mark_control_dependent_edges_necessary (cd_bb, false);
     }
 
   if (!skipped)
@@ -770,8 +796,8 @@ propagate_necessity (bool aggressive)
 		  if (gimple_bb (stmt)
 		      != get_immediate_dominator (CDI_POST_DOMINATORS, arg_bb))
 		    {
-		      if (!bitmap_bit_p (last_stmt_necessary, arg_bb->index))
-			mark_last_stmt_necessary (arg_bb);
+		      if (!mark_last_stmt_necessary (arg_bb))
+			mark_control_dependent_edges_necessary (arg_bb, false);
 		    }
 		  else if (arg_bb != ENTRY_BLOCK_PTR_FOR_FN (cfun)
 		           && !bitmap_bit_p (visited_control_parents,
@@ -1486,10 +1512,12 @@ eliminate_unnecessary_stmts (bool aggressive)
 	remove_edge (to_remove_edges[i]);
       cfg_altered = true;
     }
-  /* When we cleared calls_setjmp we can purge all abnormal edges.  Do so.  */
-  if (cfun->calls_setjmp != had_setjmp)
+  /* When we cleared calls_setjmp we can purge all abnormal edges.  Do so.
+     ???  We'd like to assert that setjmp calls do not pop out of nothing
+     but we currently lack a per-stmt way of noting whether a call was
+     recognized as returns-twice (or rather receives-control).  */
+  if (!cfun->calls_setjmp && had_setjmp)
     {
-      gcc_assert (!cfun->calls_setjmp);
       /* Make sure we only remove the edges, not dominated blocks.  Using
 	 gimple_purge_dead_abnormal_call_edges would do that and we
 	 cannot free dominators yet.  */
@@ -2088,9 +2116,9 @@ simple_dce_from_worklist (bitmap worklist)
 
       /* The defining statement needs to be defining only this name.
 	 ASM is the only statement that can define more than one
-	 (non-virtual) name. */
+	 name. */
       if (is_a<gasm *>(t)
-	  && !single_ssa_def_operand (t, SSA_OP_DEF))
+	  && !single_ssa_def_operand (t, SSA_OP_ALL_DEFS))
 	continue;
 
       /* Don't remove statements that are needed for non-call
@@ -2120,6 +2148,7 @@ simple_dce_from_worklist (bitmap worklist)
 	remove_phi_node (&gsi, true);
       else
 	{
+	  unlink_stmt_vdef (t);
 	  gsi_remove (&gsi, true);
 	  release_defs (t);
 	}

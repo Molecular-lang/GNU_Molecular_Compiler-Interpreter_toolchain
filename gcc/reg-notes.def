@@ -1,4 +1,21 @@
-/* Register note definitions. */
+/* Register note definitions.
+   Copyright (C) 2004-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* This file defines all the codes that may appear on individual
    EXPR_LIST, INSN_LIST and INT_LIST rtxes in the REG_NOTES chain of an insn.
@@ -139,6 +156,11 @@ REG_CFA_NOTE (CFA_VAL_EXPRESSION)
    or the like.  Either the attached rtx, or the destination of the insn's
    first pattern is the register to be restored.  */
 REG_CFA_NOTE (CFA_RESTORE)
+
+/* Like CFA_RESTORE but without actually emitting CFI.  This can be
+   used to tell the verification infrastructure that a register is
+   saved without intending to restore it.  */
+REG_CFA_NOTE (CFA_NO_RESTORE)
 
 /* Attached to insns that are RTX_FRAME_RELATED_P, marks insn that sets
    vDRAP from DRAP.  If vDRAP is a register, vdrap_reg is initalized

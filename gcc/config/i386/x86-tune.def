@@ -1,4 +1,22 @@
-/* Definitions of x86 tunable features. */
+/* Definitions of x86 tunable features.
+   Copyright (C) 2013-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
 
 /* Tuning for a given CPU XXXX consists of:
     - adding new CPU into:
@@ -533,7 +551,7 @@ DEF_TUNE (X86_TUNE_AVX128_OPTIMAL, "avx128_optimal", m_BDVER | m_BTVER2
 
 /* X86_TUNE_AVX256_OPTIMAL: Use 256-bit AVX instructions instead of 512-bit AVX
    instructions in the auto-vectorizer.  */
-DEF_TUNE (X86_TUNE_AVX256_OPTIMAL, "avx256_optimal", m_CORE_AVX512 | m_ZNVER4)
+DEF_TUNE (X86_TUNE_AVX256_OPTIMAL, "avx256_optimal", m_CORE_AVX512)
 
 /* X86_TUNE_AVX256_SPLIT_REGS: if true, AVX512 ops are split into two AVX256 ops.  */
 DEF_TUNE (X86_TUNE_AVX512_SPLIT_REGS, "avx512_split_regs", m_ZNVER4)

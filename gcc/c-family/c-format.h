@@ -1,5 +1,4 @@
-/* Check calls to formatted I/O functions (-Wformat).
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Check calls to formatted I/O functions (-Wformat). */
 
 #ifndef GCC_C_FORMAT_H
 #define GCC_C_FORMAT_H

@@ -1,4 +1,21 @@
-/* Post-reload compare elimination. */
+/* Post-reload compare elimination.
+   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* There is a set of targets whose general-purpose move or addition
    instructions clobber the flags.  These targets cannot split their
@@ -237,7 +254,8 @@ find_flags_uses_in_insn (struct comparison *cmp, rtx_insn *insn)
 	x = PATTERN (insn);
 	if (GET_CODE (x) == PARALLEL)
 	  x = XVECEXP (x, 0, 0);
-	x = SET_SRC (x);
+	if (GET_CODE (x) == SET)
+	  x = SET_SRC (x);
 	if (GET_CODE (x) == IF_THEN_ELSE)
 	  x = XEXP (x, 0);
 	if (COMPARISON_P (x)

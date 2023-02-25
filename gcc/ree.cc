@@ -1,4 +1,26 @@
-/* Redundant Extension Elimination pass for the GNU compiler. */
+/* Redundant Extension Elimination pass for the GNU compiler.
+   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+   Contributed by Ilya Enkovich (ilya.enkovich@intel.com)
+
+   Based on the Redundant Zero-extension elimination pass contributed by
+   Sriraman Tallam (tmsriram@google.com) and Silvius Rus (rus@google.com).
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
+
 
 /* Problem Description :
    --------------------
@@ -853,7 +875,8 @@ combine_reaching_defs (ext_cand *cand, const_rtx set_pat, ext_state *state)
 
 	  for (df_link *use = uses; use; use = use->next)
 	    if (paradoxical_subreg_p (GET_MODE (*DF_REF_LOC (use->ref)),
-				      GET_MODE (SET_DEST (*dest_sub_rtx))))
+				      GET_MODE (SET_DEST (*dest_sub_rtx)))
+		&& !DEBUG_INSN_P (DF_REF_INSN (use->ref)))
 	      return false;
 	}
 
@@ -941,7 +964,8 @@ combine_reaching_defs (ext_cand *cand, const_rtx set_pat, ext_state *state)
 	      rtx dest2 = SET_DEST (*dest_sub_rtx2);
 	      for (use = uses; use; use = use->next)
 		if (paradoxical_subreg_p (GET_MODE (*DF_REF_LOC (use->ref)),
-					  GET_MODE (dest2)))
+					  GET_MODE (dest2))
+		    && !DEBUG_INSN_P (DF_REF_INSN (use->ref)))
 		  break;
 	      if (use)
 		break;

@@ -1,5 +1,22 @@
 /* Tracking equivalence classes and constraints at a point on an execution path.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Contributed by David Malcolm <dmalcolm@redhat.com>.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_ANALYZER_CONSTRAINT_MANAGER_H
 #define GCC_ANALYZER_CONSTRAINT_MANAGER_H
@@ -82,6 +99,11 @@ struct bounded_range
   }
 
   static int cmp (const bounded_range &a, const bounded_range &b);
+
+  bool singleton_p () const
+  {
+    return tree_int_cst_equal (m_lower, m_upper);
+  }
 
   tree m_lower;
   tree m_upper;
@@ -481,6 +503,8 @@ public:
   void add_constraint_internal (equiv_class_id lhs_id,
 				enum constraint_op c_op,
 				equiv_class_id rhs_id);
+  bool impossible_derived_conditions_p (const svalue *lhs,
+					const svalue *rhs) const;
 
   region_model_manager *m_mgr;
 };

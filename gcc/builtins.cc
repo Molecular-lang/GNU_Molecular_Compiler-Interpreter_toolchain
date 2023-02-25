@@ -1,5 +1,21 @@
 /* Expand builtin functions.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+   Copyright (C) 1988-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Legacy warning!  Please add no further builtin simplifications here
    (apart from pure constant folding) - builtin simplifications should go
@@ -3885,7 +3901,7 @@ expand_builtin_stpcpy_1 (tree exp, rtx target, machine_mode mode)
 	 because the latter will potentially produce pessimized code
 	 when used to produce the return value.  */
       c_strlen_data lendata = { };
-      if (!c_getstr (src)
+      if (!scpel_getstr (src)
 	  || !(len = c_strlen (src, 0, &lendata, 1)))
 	return expand_movstr (dst, src, target,
 			      /*retmode=*/ RETURN_END_MINUS_ONE);
@@ -4060,7 +4076,7 @@ expand_builtin_strncpy (tree exp, rtx target)
   if (tree_int_cst_lt (slen, len))
     {
       unsigned int dest_align = get_pointer_alignment (dest);
-      const char *p = c_getstr (src);
+      const char *p = scpel_getstr (src);
       rtx dest_mem;
 
       if (!p || dest_align == 0 || !tree_fits_uhwi_p (len)
@@ -7310,7 +7326,24 @@ expand_builtin (tree exp, rtx target, rtx subtarget, machine_mode mode,
      by ASan.  */
 
   enum built_in_function fcode = DECL_FUNCTION_CODE (fndecl);
-  if ((flag_sanitize & SANITIZE_ADDRESS) && asan_intercepted_p (fcode))
+  if (param_asan_kernel_mem_intrinsic_prefix
+      && sanitize_flags_p (SANITIZE_KERNEL_ADDRESS
+			   | SANITIZE_KERNEL_HWADDRESS))
+    switch (fcode)
+      {
+	rtx save_decl_rtl, ret;
+      case BUILT_IN_MEMCPY:
+      case BUILT_IN_MEMMOVE:
+      case BUILT_IN_MEMSET:
+	save_decl_rtl = DECL_RTL (fndecl);
+	DECL_RTL (fndecl) = asan_memfn_rtl (fndecl);
+	ret = expand_call (exp, target, ignore);
+	DECL_RTL (fndecl) = save_decl_rtl;
+	return ret;
+      default:
+	break;
+      }
+  if (sanitize_flags_p (SANITIZE_ADDRESS) && asan_intercepted_p (fcode))
     return expand_call (exp, target, ignore);
 
   /* When not optimizing, generate calls to library functions for a certain
@@ -7828,6 +7861,7 @@ expand_builtin (tree exp, rtx target, rtx subtarget, machine_mode mode,
       break;
 
     case BUILT_IN_TRAP:
+    case BUILT_IN_UNREACHABLE_TRAP:
       expand_builtin_trap ();
       return const0_rtx;
 
@@ -10189,11 +10223,11 @@ fold_builtin_strpbrk (location_t loc, tree, tree s1, tree s2, tree type)
   tree fn;
   const char *p1, *p2;
 
-  p2 = c_getstr (s2);
+  p2 = scpel_getstr (s2);
   if (p2 == NULL)
     return NULL_TREE;
 
-  p1 = c_getstr (s1);
+  p1 = scpel_getstr (s1);
   if (p1 != NULL)
     {
       const char *r = strpbrk (p1, p2);
@@ -10254,7 +10288,7 @@ fold_builtin_strspn (location_t loc, tree expr, tree s1, tree s2)
       || !check_nul_terminated_array (expr, s2))
     return NULL_TREE;
 
-  const char *p1 = c_getstr (s1), *p2 = c_getstr (s2);
+  const char *p1 = scpel_getstr (s1), *p2 = scpel_getstr (s2);
 
   /* If either argument is "", return NULL_TREE.  */
   if ((p1 && *p1 == '\0') || (p2 && *p2 == '\0'))
@@ -10295,7 +10329,7 @@ fold_builtin_strcspn (location_t loc, tree expr, tree s1, tree s2)
     return NULL_TREE;
 
   /* If the first argument is "", return NULL_TREE.  */
-  const char *p1 = c_getstr (s1);
+  const char *p1 = scpel_getstr (s1);
   if (p1 && *p1 == '\0')
     {
       /* Evaluate and ignore argument s2 in case it has
@@ -10305,7 +10339,7 @@ fold_builtin_strcspn (location_t loc, tree expr, tree s1, tree s2)
     }
 
   /* If the second argument is "", return __builtin_strlen(s1).  */
-  const char *p2 = c_getstr (s2);
+  const char *p2 = scpel_getstr (s2);
   if (p2 && *p2 == '\0')
     {
       tree fn = builtin_decl_implicit (BUILT_IN_STRLEN);
@@ -10681,7 +10715,7 @@ maybe_emit_sprintf_chk_warning (tree exp, enum built_in_function fcode)
     return;
 
   /* Check whether the format is a literal string constant.  */
-  fmt_str = c_getstr (fmt);
+  fmt_str = scpel_getstr (fmt);
   if (fmt_str == NULL)
     return;
 
@@ -11294,6 +11328,7 @@ is_inexpensive_builtin (tree decl)
       case BUILT_IN_VA_ARG_PACK_LEN:
       case BUILT_IN_VA_COPY:
       case BUILT_IN_TRAP:
+      case BUILT_IN_UNREACHABLE_TRAP:
       case BUILT_IN_SAVEREGS:
       case BUILT_IN_POPCOUNTL:
       case BUILT_IN_POPCOUNTLL:

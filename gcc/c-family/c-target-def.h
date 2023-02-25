@@ -1,5 +1,4 @@
-/* Default initializers for C-family target hooks.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Default initializers for C-family target hooks. */
 
 #include "c-family/c-target-hooks-def.h"
 #include "tree.h"

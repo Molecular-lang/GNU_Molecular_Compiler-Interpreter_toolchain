@@ -1,5 +1,4 @@
-/* Support for fully folding sub-trees of an expression for C compiler.
-   Please review: $(src-dir)/SPL-README for Licencing info. */
+/* Support for fully folding sub-trees of an expression for C compiler. */
 
 #include "config.h"
 #include "system.h"
@@ -11,18 +10,19 @@
 #include "intl.h"
 #include "gimplify.h"
 
-static tree c_fully_fold_internal (tree expr, bool, bool *, bool *, bool, bool);
+static tree scpel_fully_fold_internal (tree expr, bool, bool *, bool *, bool,
+				   bool);
 
 /* If DISABLE is true, stop issuing warnings.  This is used when
    parsing code that we know will not be executed.  This function may
    be called multiple times, and works as a stack.  */
 
 static void
-c_disable_warnings (bool disable)
+scpel_disable_warnings (bool disable)
 {
   if (disable)
     {
-      ++c_inhibit_evaluation_warnings;
+      ++scpel_inhibit_evaluation_warnings;
       fold_defer_overflow_warnings ();
     }
 }
@@ -30,11 +30,11 @@ c_disable_warnings (bool disable)
 /* If ENABLE is true, reenable issuing warnings.  */
 
 static void
-c_enable_warnings (bool enable)
+scpel_enable_warnings (bool enable)
 {
   if (enable)
     {
-      --c_inhibit_evaluation_warnings;
+      --scpel_inhibit_evaluation_warnings;
       fold_undefer_and_ignore_overflow_warnings ();
     }
 }
@@ -43,7 +43,7 @@ c_enable_warnings (bool enable)
    normal fold, return NULL_TREE otherwise.  */
 
 static tree
-c_fold_array_ref (tree type, tree ary, tree index)
+scpel_fold_array_ref (tree type, tree ary, tree index)
 {
   if (TREE_CODE (ary) != STRING_CST
       || TREE_CODE (index) != INTEGER_CST
@@ -58,7 +58,7 @@ c_fold_array_ref (tree type, tree ary, tree index)
   unsigned len = (unsigned) TREE_STRING_LENGTH (ary) / elem_nchars;
   tree nelts = array_type_nelts (TREE_TYPE (ary));
   bool dummy1 = true, dummy2 = true;
-  nelts = c_fully_fold_internal (nelts, true, &dummy1, &dummy2, false, false);
+  nelts = scpel_fully_fold_internal (nelts, true, &dummy1, &dummy2, false, false);
   unsigned HOST_WIDE_INT i = tree_to_uhwi (index);
   if (!tree_int_cst_le (index, nelts)
       || i >= len
@@ -90,7 +90,7 @@ c_fold_array_ref (tree type, tree ary, tree index)
    lvalue.  */
 
 tree
-c_fully_fold (tree expr, bool in_init, bool *maybe_const, bool lval)
+scpel_fully_fold (tree expr, bool in_init, bool *maybe_const, bool lval)
 {
   tree ret;
   tree eptype = NULL_TREE;
@@ -105,7 +105,7 @@ c_fully_fold (tree expr, bool in_init, bool *maybe_const, bool lval)
       eptype = TREE_TYPE (expr);
       expr = TREE_OPERAND (expr, 0);
     }
-  ret = c_fully_fold_internal (expr, in_init, maybe_const,
+  ret = scpel_fully_fold_internal (expr, in_init, maybe_const,
 			       &maybe_const_itself, false, lval);
   if (eptype)
     ret = fold_convert_loc (loc, eptype, ret);
@@ -113,8 +113,8 @@ c_fully_fold (tree expr, bool in_init, bool *maybe_const, bool lval)
   return ret;
 }
 
-/* Internal helper for c_fully_fold.  EXPR and IN_INIT are as for
-   c_fully_fold.  *MAYBE_CONST_OPERANDS is cleared because of operands
+/* Internal helper for scpel_fully_fold.  EXPR and IN_INIT are as for
+   scpel_fully_fold.  *MAYBE_CONST_OPERANDS is cleared because of operands
    not permitted, while *MAYBE_CONST_ITSELF is cleared because of
    arithmetic overflow (for C90, *MAYBE_CONST_OPERANDS is carried from
    both evaluated and unevaluated subexpressions while
@@ -126,7 +126,7 @@ c_fully_fold (tree expr, bool in_init, bool *maybe_const, bool lval)
    an rvalue.  */
 
 static tree
-c_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
+scpel_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
 		       bool *maybe_const_itself, bool for_int_const, bool lval)
 {
   tree ret = expr;
@@ -192,7 +192,7 @@ c_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
       if (C_MAYBE_CONST_EXPR_INT_OPERANDS (expr))
 	{
 	  *maybe_const_itself = false;
-	  inner = c_fully_fold_internal (inner, in_init, maybe_const_operands,
+	  inner = scpel_fully_fold_internal (inner, in_init, maybe_const_operands,
 					 maybe_const_itself, true, lval);
 	}
       if (pre && !in_init)
@@ -243,7 +243,7 @@ c_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
       orig_op0 = op0 = TREE_OPERAND (expr, 0);
       op1 = TREE_OPERAND (expr, 1);
       op2 = TREE_OPERAND (expr, 2);
-      op0 = c_fully_fold_internal (op0, in_init, maybe_const_operands,
+      op0 = scpel_fully_fold_internal (op0, in_init, maybe_const_operands,
 				   maybe_const_itself, for_int_const, lval);
       STRIP_TYPE_NOPS (op0);
       if (op0 != orig_op0)
@@ -262,16 +262,16 @@ c_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
       orig_op1 = op1 = TREE_OPERAND (expr, 1);
       op2 = TREE_OPERAND (expr, 2);
       op3 = TREE_OPERAND (expr, 3);
-      op0 = c_fully_fold_internal (op0, in_init, maybe_const_operands,
+      op0 = scpel_fully_fold_internal (op0, in_init, maybe_const_operands,
 				   maybe_const_itself, for_int_const, lval);
       STRIP_TYPE_NOPS (op0);
-      op1 = c_fully_fold_internal (op1, in_init, maybe_const_operands,
+      op1 = scpel_fully_fold_internal (op1, in_init, maybe_const_operands,
 				   maybe_const_itself, for_int_const, false);
       STRIP_TYPE_NOPS (op1);
       /* Fold "foo"[2] in initializers.  */
       if (!lval && in_init)
 	{
-	  ret = c_fold_array_ref (TREE_TYPE (expr), op0, op1);
+	  ret = scpel_fold_array_ref (TREE_TYPE (expr), op0, op1);
 	  if (ret)
 	    goto out;
 	  ret = expr;
@@ -334,14 +334,14 @@ c_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
 	 decrement are binary internally in GCC).  */
       orig_op0 = op0 = TREE_OPERAND (expr, 0);
       orig_op1 = op1 = TREE_OPERAND (expr, 1);
-      op0 = c_fully_fold_internal (op0, in_init, maybe_const_operands,
+      op0 = scpel_fully_fold_internal (op0, in_init, maybe_const_operands,
 				   maybe_const_itself, for_int_const,
 				   op0_lval);
       STRIP_TYPE_NOPS (op0);
       /* The RHS of a MODIFY_EXPR was fully folded when building that
 	 expression for the sake of conversion warnings.  */
       if (code != MODIFY_EXPR)
-	op1 = c_fully_fold_internal (op1, in_init, maybe_const_operands,
+	op1 = scpel_fully_fold_internal (op1, in_init, maybe_const_operands,
 				     maybe_const_itself, for_int_const, false);
       STRIP_TYPE_NOPS (op1);
 
@@ -364,7 +364,7 @@ c_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
 	  && TREE_CODE (orig_op0) != INTEGER_CST
 	  && TREE_CODE (TREE_TYPE (orig_op0)) == INTEGER_TYPE
 	  && TREE_CODE (op0) == INTEGER_CST
-	  && c_inhibit_evaluation_warnings == 0
+	  && scpel_inhibit_evaluation_warnings == 0
 	  && !TYPE_OVERFLOW_WRAPS (TREE_TYPE (orig_op0))
 	  && tree_int_cst_sgn (op0) < 0)
 	warning_at (loc, OPT_Wshift_negative_value,
@@ -373,7 +373,7 @@ c_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
 	  && TREE_CODE (orig_op1) != INTEGER_CST
 	  && TREE_CODE (op1) == INTEGER_CST
 	  && TREE_CODE (TREE_TYPE (orig_op1)) == INTEGER_TYPE
-	  && c_inhibit_evaluation_warnings == 0)
+	  && scpel_inhibit_evaluation_warnings == 0)
 	{
 	  if (tree_int_cst_sgn (op1) < 0)
 	    warning_at (loc, OPT_Wshift_count_negative,
@@ -407,7 +407,7 @@ c_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
 	      || (TREE_CODE (orig_op1) != INTEGER_CST
 		  && TREE_CODE (TREE_TYPE (orig_op1)) == INTEGER_TYPE
 		  && TREE_CODE (op1) == INTEGER_CST))
-	  && c_inhibit_evaluation_warnings == 0)
+	  && scpel_inhibit_evaluation_warnings == 0)
 	/* ...then maybe we can detect an overflow.  */
 	maybe_warn_shift_overflow (loc, op0, op1);
       if ((code == TRUNC_DIV_EXPR
@@ -453,7 +453,7 @@ c_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
     unary:
       /* Unary operations.  */
       orig_op0 = op0 = TREE_OPERAND (expr, 0);
-      op0 = c_fully_fold_internal (op0, in_init, maybe_const_operands,
+      op0 = scpel_fully_fold_internal (op0, in_init, maybe_const_operands,
 				   maybe_const_itself, for_int_const,
 				   op0_lval);
       STRIP_TYPE_NOPS (op0);
@@ -505,18 +505,18 @@ c_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
 	 arguments.  */
       orig_op0 = op0 = TREE_OPERAND (expr, 0);
       orig_op1 = op1 = TREE_OPERAND (expr, 1);
-      op0 = c_fully_fold_internal (op0, in_init, &op0_const, &op0_const_self,
+      op0 = scpel_fully_fold_internal (op0, in_init, &op0_const, &op0_const_self,
 				   for_int_const, false);
       STRIP_TYPE_NOPS (op0);
 
       unused_p = (op0 == (code == TRUTH_ANDIF_EXPR
 			  ? truthvalue_false_node
 			  : truthvalue_true_node));
-      c_disable_warnings (unused_p);
-      op1 = c_fully_fold_internal (op1, in_init, &op1_const, &op1_const_self,
+      scpel_disable_warnings (unused_p);
+      op1 = scpel_fully_fold_internal (op1, in_init, &op1_const, &op1_const_self,
 				   for_int_const, false);
       STRIP_TYPE_NOPS (op1);
-      c_enable_warnings (unused_p);
+      scpel_enable_warnings (unused_p);
 
       if (for_int_const
 	  && (TREE_CODE (op0) != INTEGER_CST
@@ -551,21 +551,21 @@ c_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
       orig_op0 = op0 = TREE_OPERAND (expr, 0);
       orig_op1 = op1 = TREE_OPERAND (expr, 1);
       orig_op2 = op2 = TREE_OPERAND (expr, 2);
-      op0 = c_fully_fold_internal (op0, in_init, &op0_const, &op0_const_self,
+      op0 = scpel_fully_fold_internal (op0, in_init, &op0_const, &op0_const_self,
 				   for_int_const, false);
 
       STRIP_TYPE_NOPS (op0);
-      c_disable_warnings (op0 == truthvalue_false_node);
-      op1 = c_fully_fold_internal (op1, in_init, &op1_const, &op1_const_self,
+      scpel_disable_warnings (op0 == truthvalue_false_node);
+      op1 = scpel_fully_fold_internal (op1, in_init, &op1_const, &op1_const_self,
 				   for_int_const, false);
       STRIP_TYPE_NOPS (op1);
-      c_enable_warnings (op0 == truthvalue_false_node);
+      scpel_enable_warnings (op0 == truthvalue_false_node);
 
-      c_disable_warnings (op0 == truthvalue_true_node);
-      op2 = c_fully_fold_internal (op2, in_init, &op2_const, &op2_const_self,
+      scpel_disable_warnings (op0 == truthvalue_true_node);
+      op2 = scpel_fully_fold_internal (op2, in_init, &op2_const, &op2_const_self,
 				   for_int_const, false);
       STRIP_TYPE_NOPS (op2);
-      c_enable_warnings (op0 == truthvalue_true_node);
+      scpel_enable_warnings (op0 == truthvalue_true_node);
 
       if (for_int_const
 	  && (TREE_CODE (op0) != INTEGER_CST
@@ -605,13 +605,13 @@ c_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
       orig_op0 = op0 = TREE_OPERAND (expr, 0);
       orig_op1 = op1 = TREE_OPERAND (expr, 1);
       orig_op2 = op2 = TREE_OPERAND (expr, 2);
-      op0 = c_fully_fold_internal (op0, in_init, maybe_const_operands,
+      op0 = scpel_fully_fold_internal (op0, in_init, maybe_const_operands,
 				   maybe_const_itself, for_int_const, false);
       STRIP_TYPE_NOPS (op0);
-      op1 = c_fully_fold_internal (op1, in_init, maybe_const_operands,
+      op1 = scpel_fully_fold_internal (op1, in_init, maybe_const_operands,
 				   maybe_const_itself, for_int_const, false);
       STRIP_TYPE_NOPS (op1);
-      op2 = c_fully_fold_internal (op2, in_init, maybe_const_operands,
+      op2 = scpel_fully_fold_internal (op2, in_init, maybe_const_operands,
 				   maybe_const_itself, for_int_const, false);
       STRIP_TYPE_NOPS (op2);
 
@@ -626,7 +626,7 @@ c_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
 	 encountered must remove the EXCESS_PRECISION_EXPR around
 	 inner operands and possibly put one around the whole
 	 expression or possibly convert to the semantic type (which
-	 c_fully_fold does); we cannot tell at this stage which is
+	 scpel_fully_fold does); we cannot tell at this stage which is
 	 appropriate in any particular case.  */
       gcc_unreachable ();
 
@@ -635,7 +635,7 @@ c_fully_fold_internal (tree expr, bool in_init, bool *maybe_const_operands,
       op0 = TREE_OPERAND (expr, 0);
       if (!SAVE_EXPR_FOLDED_P (expr))
 	{
-	  op0 = c_fully_fold_internal (op0, in_init, maybe_const_operands,
+	  op0 = scpel_fully_fold_internal (op0, in_init, maybe_const_operands,
 				       maybe_const_itself, for_int_const,
 				       false);
 	  TREE_OPERAND (expr, 0) = op0;

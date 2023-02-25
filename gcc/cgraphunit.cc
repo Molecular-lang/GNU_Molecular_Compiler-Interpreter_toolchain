@@ -1,4 +1,22 @@
-/* Driver of optimization process */
+/* Driver of optimization process
+   Copyright (C) 2003-2023 Free Software Foundation, Inc.
+   Contributed by Jan Hubicka
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* This module implements main driver of compilation process.
 
@@ -982,7 +1000,7 @@ walk_polymorphic_call_targets (hash_set<void *> *reachable_call_targets,
     = possible_polymorphic_call_targets
 	(edge, &final, &cache_token);
 
-  if (!reachable_call_targets->add (cache_token))
+  if (cache_token != NULL && !reachable_call_targets->add (cache_token))
     {
       if (symtab->dump_file)
 	dump_possible_polymorphic_call_targets 

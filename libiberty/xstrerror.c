@@ -1,4 +1,6 @@
-/* xstrerror.c -- jacket routine for more robust strerror() usage. */
+/* xstrerror.c -- jacket routine for more robust strerror() usage.
+   Fri Jun 16 18:30:00 1995  Pat Rankin  <rankin@eql.caltech.edu>
+   This code is in the public domain.  */
 
 /*
 

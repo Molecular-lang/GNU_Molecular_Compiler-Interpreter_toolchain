@@ -1,4 +1,21 @@
-/* If-conversion support. */
+/* If-conversion support.
+   Copyright (C) 2000-2023 Free Software Foundation, Inc.
+
+   This file is part of GCC.
+
+   GCC is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3, or (at your option)
+   any later version.
+
+   GCC is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+   License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with GCC; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -4236,6 +4253,9 @@ cond_move_convert_if_block (struct noce_if_info *if_infop,
 	    e = dest;
 	}
 
+      if (if_infop->cond_inverted)
+	std::swap (t, e);
+
       target = noce_emit_cmove (if_infop, dest, code, cond_arg0, cond_arg1,
 				t, e);
       if (!target)
@@ -4388,7 +4408,6 @@ noce_find_if_block (basic_block test_bb, edge then_edge, edge else_edge,
   basic_block then_bb, else_bb, join_bb;
   bool then_else_reversed = false;
   rtx_insn *jump;
-  rtx cond;
   rtx_insn *cond_earliest;
   struct noce_if_info if_info;
   bool speed_p = optimize_bb_for_speed_p (test_bb);
@@ -4464,25 +4483,28 @@ noce_find_if_block (basic_block test_bb, edge then_edge, edge else_edge,
   if (! onlyjump_p (jump))
     return FALSE;
 
-  /* If this is not a standard conditional jump, we can't parse it.  */
-  cond = noce_get_condition (jump, &cond_earliest, then_else_reversed);
-  if (!cond)
-    return FALSE;
-
-  /* We must be comparing objects whose modes imply the size.  */
-  if (GET_MODE (XEXP (cond, 0)) == BLKmode)
-    return FALSE;
-
   /* Initialize an IF_INFO struct to pass around.  */
   memset (&if_info, 0, sizeof if_info);
   if_info.test_bb = test_bb;
   if_info.then_bb = then_bb;
   if_info.else_bb = else_bb;
   if_info.join_bb = join_bb;
-  if_info.cond = cond;
+  if_info.cond = noce_get_condition (jump, &cond_earliest,
+				     then_else_reversed);
   rtx_insn *rev_cond_earliest;
   if_info.rev_cond = noce_get_condition (jump, &rev_cond_earliest,
 					 !then_else_reversed);
+  if (!if_info.cond && !if_info.rev_cond)
+    return FALSE;
+  if (!if_info.cond)
+    {
+      std::swap (if_info.cond, if_info.rev_cond);
+      std::swap (cond_earliest, rev_cond_earliest);
+      if_info.cond_inverted = true;
+    }
+  /* We must be comparing objects whose modes imply the size.  */
+  if (GET_MODE (XEXP (if_info.cond, 0)) == BLKmode)
+    return FALSE;
   gcc_assert (if_info.rev_cond == NULL_RTX
 	      || rev_cond_earliest == cond_earliest);
   if_info.cond_earliest = cond_earliest;
@@ -4501,7 +4523,9 @@ noce_find_if_block (basic_block test_bb, edge then_edge, edge else_edge,
 
   /* Do the real work.  */
 
-  if (noce_process_if_block (&if_info))
+  /* ??? noce_process_if_block has not yet been updated to handle
+     inverted conditions.  */
+  if (!if_info.cond_inverted && noce_process_if_block (&if_info))
     return TRUE;
 
   if (HAVE_conditional_move

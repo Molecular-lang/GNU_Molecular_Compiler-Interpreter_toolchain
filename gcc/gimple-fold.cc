@@ -1,4 +1,22 @@
-/* Statement simplification on GIMPLE. */
+/* Statement simplification on GIMPLE.
+   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+   Split out from tree-ssa-ccp.cc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 3, or (at your option) any
+later version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -2196,7 +2214,7 @@ gimple_fold_builtin_strchr (gimple_stmt_iterator *gsi, bool is_strrchr)
   if (!check_nul_terminated_array (NULL_TREE, str))
     return false;
 
-  if ((p = c_getstr (str)) && target_char_cst_p (c, &ch))
+  if ((p = scpel_getstr (str)) && target_char_cst_p (c, &ch))
     {
       const char *p1 = is_strrchr ? strrchr (p, ch) : strchr (p, ch);
 
@@ -2282,11 +2300,11 @@ gimple_fold_builtin_strstr (gimple_stmt_iterator *gsi)
       || !check_nul_terminated_array (NULL_TREE, needle))
     return false;
 
-  const char *q = c_getstr (needle);
+  const char *q = scpel_getstr (needle);
   if (q == NULL)
     return false;
 
-  if (const char *p = c_getstr (haystack))
+  if (const char *p = scpel_getstr (haystack))
     {
       const char *r = strstr (p, q);
 
@@ -2353,7 +2371,7 @@ gimple_fold_builtin_strcat (gimple_stmt_iterator *gsi, tree dst, tree src)
   gimple *stmt = gsi_stmt (*gsi);
   location_t loc = gimple_location (stmt);
 
-  const char *p = c_getstr (src);
+  const char *p = scpel_getstr (src);
 
   /* If the string length is zero, return the dst parameter.  */
   if (p && *p == '\0')
@@ -2435,7 +2453,7 @@ gimple_fold_builtin_strcat_chk (gimple_stmt_iterator *gsi)
   const char *p;
 
 
-  p = c_getstr (src);
+  p = scpel_getstr (src);
   /* If the SRC parameter is "", return DEST.  */
   if (p && *p == '\0')
     {
@@ -2559,7 +2577,7 @@ gimple_fold_builtin_strncat_chk (gimple_stmt_iterator *gsi)
   tree fn;
   const char *p;
 
-  p = c_getstr (src);
+  p = scpel_getstr (src);
   /* If the SRC parameter is "" or if LEN is 0, return DEST.  */
   if ((p && *p == '\0')
       || integer_zerop (len))
@@ -2948,7 +2966,7 @@ gimple_fold_builtin_fputs (gimple_stmt_iterator *gsi,
 
     case 0: /* length is 1, call fputc.  */
       {
-	const char *p = c_getstr (arg0);
+	const char *p = scpel_getstr (arg0);
 	if (p != NULL)
 	  {
 	    if (!fn_fputc)
@@ -3336,7 +3354,7 @@ gimple_fold_builtin_snprintf_chk (gimple_stmt_iterator *gsi,
      or if format doesn't contain % chars or is "%s".  */
   if (! integer_zerop (flag))
     {
-      fmt_str = c_getstr (fmt);
+      fmt_str = scpel_getstr (fmt);
       if (fmt_str == NULL)
 	return false;
       if (strchr (fmt_str, target_percent) != NULL
@@ -3393,7 +3411,7 @@ gimple_fold_builtin_sprintf_chk (gimple_stmt_iterator *gsi,
     return false;
 
   /* Check whether the format is a literal string constant.  */
-  fmt_str = c_getstr (fmt);
+  fmt_str = scpel_getstr (fmt);
   if (fmt_str != NULL)
     {
       /* If the format doesn't contain % args or %%, we know the size.  */
@@ -3474,7 +3492,7 @@ gimple_fold_builtin_sprintf (gimple_stmt_iterator *gsi)
 
   /* Check whether the format is a literal string constant.  */
   tree fmt = gimple_call_arg (stmt, 1);
-  const char *fmt_str = c_getstr (fmt);
+  const char *fmt_str = scpel_getstr (fmt);
   if (fmt_str == NULL)
     return false;
 
@@ -3604,7 +3622,7 @@ gimple_fold_builtin_snprintf (gimple_stmt_iterator *gsi)
     orig = gimple_call_arg (stmt, 3);
 
   /* Check whether the format is a literal string constant.  */
-  fmt_str = c_getstr (fmt);
+  fmt_str = scpel_getstr (fmt);
   if (fmt_str == NULL)
     return false;
 
@@ -3735,7 +3753,7 @@ gimple_fold_builtin_fprintf (gimple_stmt_iterator *gsi,
     return false;
 
   /* Check whether the format is a literal string constant.  */
-  fmt_str = c_getstr (fmt);
+  fmt_str = scpel_getstr (fmt);
   if (fmt_str == NULL)
     return false;
 
@@ -3835,7 +3853,7 @@ gimple_fold_builtin_printf (gimple_stmt_iterator *gsi, tree fmt,
     return false;
 
   /* Check whether the format is a literal string constant.  */
-  fmt_str = c_getstr (fmt);
+  fmt_str = scpel_getstr (fmt);
   if (fmt_str == NULL)
     return false;
 
@@ -3868,7 +3886,7 @@ gimple_fold_builtin_printf (gimple_stmt_iterator *gsi, tree fmt,
 	  if (!arg || ! POINTER_TYPE_P (TREE_TYPE (arg)))
 	    return false;
 
-	  str = c_getstr (arg);
+	  str = scpel_getstr (arg);
 	  if (str == NULL)
 	    return false;
 	}
@@ -5749,15 +5767,17 @@ gimple_fold_call (gimple_stmt_iterator *gsi, bool inplace)
 }
 
 
-/* Return true whether NAME has a use on STMT.  */
+/* Return true whether NAME has a use on STMT.  Note this can return
+   false even though there's a use on STMT if SSA operands are not
+   up-to-date.  */
 
 static bool
 has_use_on_stmt (tree name, gimple *stmt)
 {
-  imm_use_iterator iter;
-  use_operand_p use_p;
-  FOR_EACH_IMM_USE_FAST (use_p, iter, name)
-    if (USE_STMT (use_p) == stmt)
+  ssa_op_iter iter;
+  tree op;
+  FOR_EACH_SSA_TREE_OPERAND (op, stmt, iter, SSA_OP_USE)
+    if (op == name)
       return true;
   return false;
 }
