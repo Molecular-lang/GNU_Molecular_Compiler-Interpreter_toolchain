@@ -857,8 +857,8 @@ ix86_register_pragmas (void)
   /* Update pragma hook to allow parsing #pragma GCC target.  */
   targetm.target_option.pragma_parse = ix86_pragma_target_parse;
 
-  scpel_register_addr_space ("__seg_fs", ADDR_SPACE_SEG_FS);
-  scpel_register_addr_space ("__seg_gs", ADDR_SPACE_SEG_GS);
+  c_register_addr_space ("__seg_fs", ADDR_SPACE_SEG_FS);
+  c_register_addr_space ("__seg_gs", ADDR_SPACE_SEG_GS);
 
 #ifdef REGISTER_SUBTARGET_PRAGMAS
   REGISTER_SUBTARGET_PRAGMAS ();

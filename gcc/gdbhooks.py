@@ -133,10 +133,10 @@ vector: attempting to do so instead gives you the vec itself (for vec[0]),
 or a (probably) invalid cast to vec<> for the memory after the vec (for
 vec[1] onwards).
 
-Instead (for now) you must access m_vecdata:
-  (gdb) p bb->preds->m_vecdata[0]
+Instead (for now) you must access the payload directly:
+  (gdb) p ((edge_def**)(bb->preds+1))[0]
   $20 = <edge 0x7ffff044d380 (3 -> 5)>
-  (gdb) p bb->preds->m_vecdata[1]
+  (gdb) p ((edge_def**)(bb->preds+1))[1]
   $21 = <edge 0x7ffff044d3b8 (4 -> 5)>
 """
 import os.path
@@ -461,9 +461,16 @@ class VecPrinter:
             return
         m_vecpfx = self.gdbval['m_vecpfx']
         m_num = m_vecpfx['m_num']
-        m_vecdata = self.gdbval['m_vecdata']
+        val = self.gdbval
+        typ = val.type
+        if typ.code == gdb.TYPE_CODE_PTR:
+            typ = typ.target()
+        else:
+            val = val.address
+        typ_T = typ.template_argument(0) # the type T
+        vecdata = (val + 1).cast(typ_T.pointer())
         for i in range(m_num):
-            yield ('[%d]' % i, m_vecdata[i])
+            yield ('[%d]' % i, vecdata[i])
 
 ######################################################################
 

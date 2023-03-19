@@ -5566,7 +5566,7 @@ is_cxx (const_tree decl)
     {
       const_tree context = get_ultimate_context (decl);
       if (context && TRANSLATION_UNIT_LANGUAGE (context))
-	return startswith (TRANSLATION_UNIT_LANGUAGE (context), "GNU Scpel++");
+	return startswith (TRANSLATION_UNIT_LANGUAGE (context), "GNU C++");
     }
   return is_cxx ();
 }
@@ -20222,7 +20222,7 @@ insert_float (const_rtx rtl, unsigned char *array)
 
 /* Attach a DW_AT_const_value attribute for a variable or a parameter which
    does not have a "location" either in memory or in a register.  These
-   things can arise in GNU Scpel when a constant is passed as an actual parameter
+   things can arise in GNU C when a constant is passed as an actual parameter
    to an inlined function.  They can also arise in C++ where declared
    constants do not necessarily get memory "homes".  */
 
@@ -21625,7 +21625,7 @@ add_subscript_info (dw_die_ref type_die, tree type, bool collapse_p)
 	break;
 
       /* Arrays come in three flavors: Unspecified bounds, fixed bounds,
-	 and (in GNU Scpel only) variable bounds.  Handle all three forms
+	 and (in GNU C only) variable bounds.  Handle all three forms
 	 here.  */
 
       /* Find and reuse a previously generated DW_TAG_subrange_type if
@@ -22804,7 +22804,7 @@ gen_enumeration_type_die (tree type, dw_die_ref context_die)
   else
     remove_AT (type_die, DW_AT_declaration);
 
-  /* Handle a GNU Scpel/C++ extension, i.e. incomplete enum types.  If the
+  /* Handle a GNU C/C++ extension, i.e. incomplete enum types.  If the
      given enum type is incomplete, do not generate the DW_AT_byte_size
      attribute or the DW_AT_element_list attribute.  */
   if (TYPE_SIZE (type))
@@ -23566,7 +23566,7 @@ gen_subprogram_die (tree decl, dw_die_ref context_die)
     {
       if (!get_AT_flag (old_die, DW_AT_declaration)
 	  /* We can have a normal definition following an inline one in the
-	     case of redefinition of GNU Scpel extern inlines.
+	     case of redefinition of GNU C extern inlines.
 	     It seems reasonable to use AT_specification in this case.  */
 	  && !get_AT (old_die, DW_AT_inline))
 	{
@@ -25104,18 +25104,18 @@ static char *producer_string;
 static const char *
 highest_c_language (const char *lang1, const char *lang2)
 {
-  if (strcmp ("GNU Scpel++23", lang1) == 0 || strcmp ("GNU Scpel++23", lang2) == 0)
-    return "GNU Scpel++23";
-  if (strcmp ("GNU Scpel++20", lang1) == 0 || strcmp ("GNU Scpel++20", lang2) == 0)
-    return "GNU Scpel++20";
-  if (strcmp ("GNU Scpel++17", lang1) == 0 || strcmp ("GNU Scpel++17", lang2) == 0)
-    return "GNU Scpel++17";
-  if (strcmp ("GNU Scpel++14", lang1) == 0 || strcmp ("GNU Scpel++14", lang2) == 0)
-    return "GNU Scpel++14";
-  if (strcmp ("GNU Scpel++11", lang1) == 0 || strcmp ("GNU Scpel++11", lang2) == 0)
-    return "GNU Scpel++11";
-  if (strcmp ("GNU Scpel++98", lang1) == 0 || strcmp ("GNU Scpel++98", lang2) == 0)
-    return "GNU Scpel++98";
+  if (strcmp ("GNU C++23", lang1) == 0 || strcmp ("GNU C++23", lang2) == 0)
+    return "GNU C++23";
+  if (strcmp ("GNU C++20", lang1) == 0 || strcmp ("GNU C++20", lang2) == 0)
+    return "GNU C++20";
+  if (strcmp ("GNU C++17", lang1) == 0 || strcmp ("GNU C++17", lang2) == 0)
+    return "GNU C++17";
+  if (strcmp ("GNU C++14", lang1) == 0 || strcmp ("GNU C++14", lang2) == 0)
+    return "GNU C++14";
+  if (strcmp ("GNU C++11", lang1) == 0 || strcmp ("GNU C++11", lang2) == 0)
+    return "GNU C++11";
+  if (strcmp ("GNU C++98", lang1) == 0 || strcmp ("GNU C++98", lang2) == 0)
+    return "GNU C++98";
 
   if (strcmp ("GNU C2X", lang1) == 0 || strcmp ("GNU C2X", lang2) == 0)
     return "GNU C2X";
@@ -25169,8 +25169,8 @@ gen_compile_unit_die (const char *filename)
 	    common_lang = TRANSLATION_UNIT_LANGUAGE (t);
 	  else if (strcmp (common_lang, TRANSLATION_UNIT_LANGUAGE (t)) == 0)
 	    ;
-	  else if (startswith (common_lang, "GNU Scpel")
-		    && startswith (TRANSLATION_UNIT_LANGUAGE (t), "GNU Scpel"))
+	  else if (startswith (common_lang, "GNU C")
+		    && startswith (TRANSLATION_UNIT_LANGUAGE (t), "GNU C"))
 	    /* Mixing C and C++ is ok, use C++ in that case.  */
 	    common_lang = highest_c_language (common_lang,
 					      TRANSLATION_UNIT_LANGUAGE (t));
@@ -25187,7 +25187,7 @@ gen_compile_unit_die (const char *filename)
     }
 
   language = DW_LANG_C;
-  if (startswith (language_string, "GNU Scpel")
+  if (startswith (language_string, "GNU C")
       && ISDIGIT (language_string[5]))
     {
       language = DW_LANG_C89;
@@ -25203,18 +25203,18 @@ gen_compile_unit_die (const char *filename)
 	      language = DW_LANG_C11;
 	}
     }
-  else if (startswith (language_string, "GNU Scpel++"))
+  else if (startswith (language_string, "GNU C++"))
     {
       language = DW_LANG_C_plus_plus;
       if (dwarf_version >= 5 /* || !dwarf_strict */)
 	{
-	  if (strcmp (language_string, "GNU Scpel++11") == 0)
+	  if (strcmp (language_string, "GNU C++11") == 0)
 	    language = DW_LANG_C_plus_plus_11;
-	  else if (strcmp (language_string, "GNU Scpel++14") == 0)
+	  else if (strcmp (language_string, "GNU C++14") == 0)
 	    language = DW_LANG_C_plus_plus_14;
-	  else if (strcmp (language_string, "GNU Scpel++17") == 0
-		   || strcmp (language_string, "GNU Scpel++20") == 0
-		   || strcmp (language_string, "GNU Scpel++23") == 0)
+	  else if (strcmp (language_string, "GNU C++17") == 0
+		   || strcmp (language_string, "GNU C++20") == 0
+		   || strcmp (language_string, "GNU C++23") == 0)
 	    /* For now.  */
 	    language = DW_LANG_C_plus_plus_14;
 	}
@@ -27282,7 +27282,10 @@ dwarf2out_late_global_decl (tree decl)
       /* We may have to generate full debug late for LTO in case debug
          was not enabled at compile-time or the target doesn't support
 	 the LTO early debug scheme.  */
-      if (! die && in_lto_p)
+      if (! die && in_lto_p
+	  /* Function scope variables are emitted when emitting the
+	     DIE for the function.  */
+	  && ! local_function_static (decl))
 	dwarf2out_decl (decl);
       else if (die)
 	{

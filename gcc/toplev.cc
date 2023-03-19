@@ -600,7 +600,7 @@ print_version (FILE *file, const char *indent, bool show_global_state)
 {
   static const char fmt1[] =
 #ifdef __GNUC__
-    N_("%s%s%s %sversion %s (%s)\n%s\tcompiled by GNU Scpel version %s, ")
+    N_("%s%s%s %sversion %s (%s)\n%s\tcompiled by GNU C version %s, ")
 #else
     N_("%s%s%s %sversion %s (%s) compiled by CC, ")
 #endif
@@ -1580,7 +1580,7 @@ process_options (bool no_backend)
   if (flag_stack_check != NO_STACK_CHECK && flag_stack_clash_protection)
     {
       warning_at (UNKNOWN_LOCATION, 0,
-		  "%<-fstack-check=%> and %<-fstack-clash_protection%> are "
+		  "%<-fstack-check=%> and %<-fstack-clash-protection%> are "
 		  "mutually exclusive; disabling %<-fstack-check=%>");
       flag_stack_check = NO_STACK_CHECK;
     }

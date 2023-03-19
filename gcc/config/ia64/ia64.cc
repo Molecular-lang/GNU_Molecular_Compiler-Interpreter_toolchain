@@ -10575,7 +10575,7 @@ ia64_fold_builtin (tree fndecl, int n_args ATTRIBUTE_UNUSED,
 	case IA64_BUILTIN_NANSQ:
 	  {
 	    tree type = TREE_TYPE (TREE_TYPE (fndecl));
-	    const char *str = scpel_getstr (*args);
+	    const char *str = c_getstr (*args);
 	    int quiet = fn_code == IA64_BUILTIN_NANQ;
 	    REAL_VALUE_TYPE real;
 

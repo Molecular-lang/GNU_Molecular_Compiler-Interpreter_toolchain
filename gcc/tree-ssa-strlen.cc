@@ -609,7 +609,7 @@ get_stridx (tree exp, gimple *stmt,
 	return idx;
     }
 
-  const char *p = scpel_getstr (exp);
+  const char *p = c_getstr (exp);
   if (p)
     return ~(int) strlen (p);
 

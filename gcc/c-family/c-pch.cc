@@ -1,4 +1,21 @@
-/* Precompiled header implementation for the C languages. */
+/* Precompiled header implementation for the C languages.
+   Copyright (C) 2000-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -60,7 +77,7 @@ get_ident (void)
   static const char c_language_chars[] = "Co+O";
 
   memcpy (result, templ, IDENT_LENGTH);
-  result[4] = c_language_chars[scpel_language];
+  result[4] = c_language_chars[c_language];
 
   return result;
 }
@@ -143,7 +160,7 @@ pch_cpp_save_state (void)
    will produce a PCH file.  */
 
 void
-scpel_common_write_pch (void)
+c_common_write_pch (void)
 {
   timevar_push (TV_PCH_SAVE);
 
@@ -176,7 +193,7 @@ scpel_common_write_pch (void)
    2 if this file could never be used in the compilation.  */
 
 int
-scpel_common_valid_pch (cpp_reader *pfile, const char *name, int fd)
+c_common_valid_pch (cpp_reader *pfile, const char *name, int fd)
 {
   int sizeread;
   int result;
@@ -294,7 +311,7 @@ void (*lang_post_pch_load) (void);
    by ORIG_NAME.  */
 
 void
-scpel_common_read_pch (cpp_reader *pfile, const char *name,
+c_common_read_pch (cpp_reader *pfile, const char *name,
 		   int fd, const char *orig_name ATTRIBUTE_UNUSED)
 {
   FILE *f;
@@ -353,7 +370,7 @@ end:
 /* Indicate that no more PCH files should be read.  */
 
 void
-scpel_common_no_more_pch (void)
+c_common_no_more_pch (void)
 {
   if (cpp_get_callbacks (parse_in)->valid_pch)
     {
@@ -366,7 +383,7 @@ scpel_common_no_more_pch (void)
 /* Handle #pragma GCC pch_preprocess, to load in the PCH file.  */
 
 void
-scpel_common_pch_pragma (cpp_reader *pfile, const char *name)
+c_common_pch_pragma (cpp_reader *pfile, const char *name)
 {
   int fd;
 
@@ -382,14 +399,14 @@ scpel_common_pch_pragma (cpp_reader *pfile, const char *name)
   if (fd == -1)
     fatal_error (input_location, "%s: couldn%'t open PCH file: %m", name);
 
-  if (scpel_common_valid_pch (pfile, name, fd) != 1)
+  if (c_common_valid_pch (pfile, name, fd) != 1)
     {
       if (!cpp_get_options (pfile)->warn_invalid_pch)
 	inform (input_location, "use %<-Winvalid-pch%> for more information");
       fatal_error (input_location, "%s: PCH file was invalid", name);
     }
 
-  scpel_common_read_pch (pfile, name, fd, name);
+  c_common_read_pch (pfile, name, fd, name);
 
   close (fd);
 }

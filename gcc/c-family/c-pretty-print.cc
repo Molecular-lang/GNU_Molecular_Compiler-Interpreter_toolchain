@@ -1,4 +1,22 @@
-/* Subroutines common to both C and C++ pretty-printers. */
+/* Subroutines common to both C and C++ pretty-printers.
+   Copyright (C) 2002-2023 Free Software Foundation, Inc.
+   Contributed by Gabriel Dos Reis <gdr@integrable-solutions.net>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -31,20 +49,20 @@
    } while (0)
 
 /* literal  */
-static void pp_c_char (scpel_pretty_printer *, int);
+static void pp_c_char (c_pretty_printer *, int);
 
 /* postfix-expression  */
-static void pp_c_initializer_list (scpel_pretty_printer *, tree);
-static void pp_c_brace_enclosed_initializer_list (scpel_pretty_printer *, tree);
+static void pp_c_initializer_list (c_pretty_printer *, tree);
+static void pp_c_brace_enclosed_initializer_list (c_pretty_printer *, tree);
 
-static void pp_c_additive_expression (scpel_pretty_printer *, tree);
-static void pp_c_shift_expression (scpel_pretty_printer *, tree);
-static void pp_c_relational_expression (scpel_pretty_printer *, tree);
-static void pp_c_equality_expression (scpel_pretty_printer *, tree);
-static void pp_c_and_expression (scpel_pretty_printer *, tree);
-static void pp_c_exclusive_or_expression (scpel_pretty_printer *, tree);
-static void pp_c_inclusive_or_expression (scpel_pretty_printer *, tree);
-static void pp_c_logical_and_expression (scpel_pretty_printer *, tree);
+static void pp_c_additive_expression (c_pretty_printer *, tree);
+static void pp_c_shift_expression (c_pretty_printer *, tree);
+static void pp_c_relational_expression (c_pretty_printer *, tree);
+static void pp_c_equality_expression (c_pretty_printer *, tree);
+static void pp_c_and_expression (c_pretty_printer *, tree);
+static void pp_c_exclusive_or_expression (c_pretty_printer *, tree);
+static void pp_c_inclusive_or_expression (c_pretty_printer *, tree);
+static void pp_c_logical_and_expression (c_pretty_printer *, tree);
 
 /* declarations.  */
 
@@ -52,98 +70,98 @@ static void pp_c_logical_and_expression (scpel_pretty_printer *, tree);
 /* Helper functions.  */
 
 void
-pp_c_whitespace (scpel_pretty_printer *pp)
+pp_c_whitespace (c_pretty_printer *pp)
 {
   pp_space (pp);
   pp->padding = pp_none;
 }
 
 void
-pp_c_left_paren (scpel_pretty_printer *pp)
+pp_c_left_paren (c_pretty_printer *pp)
 {
   pp_left_paren (pp);
   pp->padding = pp_none;
 }
 
 void
-pp_c_right_paren (scpel_pretty_printer *pp)
+pp_c_right_paren (c_pretty_printer *pp)
 {
   pp_right_paren (pp);
   pp->padding = pp_none;
 }
 
 void
-pp_c_left_brace (scpel_pretty_printer *pp)
+pp_c_left_brace (c_pretty_printer *pp)
 {
   pp_left_brace (pp);
   pp->padding = pp_none;
 }
 
 void
-pp_c_right_brace (scpel_pretty_printer *pp)
+pp_c_right_brace (c_pretty_printer *pp)
 {
   pp_right_brace (pp);
   pp->padding = pp_none;
 }
 
 void
-pp_c_left_bracket (scpel_pretty_printer *pp)
+pp_c_left_bracket (c_pretty_printer *pp)
 {
   pp_left_bracket (pp);
   pp->padding = pp_none;
 }
 
 void
-pp_c_right_bracket (scpel_pretty_printer *pp)
+pp_c_right_bracket (c_pretty_printer *pp)
 {
   pp_right_bracket (pp);
   pp->padding = pp_none;
 }
 
 void
-pp_c_dot (scpel_pretty_printer *pp)
+pp_c_dot (c_pretty_printer *pp)
 {
   pp_dot (pp);
   pp->padding = pp_none;
 }
 
 void
-pp_c_ampersand (scpel_pretty_printer *pp)
+pp_c_ampersand (c_pretty_printer *pp)
 {
   pp_ampersand (pp);
   pp->padding = pp_none;
 }
 
 void
-pp_c_star (scpel_pretty_printer *pp)
+pp_c_star (c_pretty_printer *pp)
 {
   pp_star (pp);
   pp->padding = pp_none;
 }
 
 void
-pp_c_arrow (scpel_pretty_printer *pp)
+pp_c_arrow (c_pretty_printer *pp)
 {
   pp_arrow (pp);
   pp->padding = pp_none;
 }
 
 void
-pp_c_semicolon (scpel_pretty_printer *pp)
+pp_c_semicolon (c_pretty_printer *pp)
 {
   pp_semicolon (pp);
   pp->padding = pp_none;
 }
 
 void
-pp_c_complement (scpel_pretty_printer *pp)
+pp_c_complement (c_pretty_printer *pp)
 {
   pp_complement (pp);
   pp->padding = pp_none;
 }
 
 void
-pp_c_exclamation (scpel_pretty_printer *pp)
+pp_c_exclamation (c_pretty_printer *pp)
 {
   pp_exclamation (pp);
   pp->padding = pp_none;
@@ -152,7 +170,7 @@ pp_c_exclamation (scpel_pretty_printer *pp)
 /* Print out the external representation of QUALIFIERS.  */
 
 void
-pp_c_cv_qualifiers (scpel_pretty_printer *pp, int qualifiers, bool func_type)
+pp_c_cv_qualifiers (c_pretty_printer *pp, int qualifiers, bool func_type)
 {
   const char *p = pp_last_position_in_text (pp);
 
@@ -172,14 +190,14 @@ pp_c_cv_qualifiers (scpel_pretty_printer *pp, int qualifiers, bool func_type)
   if (qualifiers & TYPE_QUAL_VOLATILE)
     pp_c_ws_string (pp, func_type ? "__attribute__((noreturn))" : "volatile");
   if (qualifiers & TYPE_QUAL_RESTRICT)
-    pp_c_ws_string (pp, (flag_isoc99 && !scpel_dialect_cxx ()
+    pp_c_ws_string (pp, (flag_isoc99 && !c_dialect_cxx ()
 			 ? "restrict" : "__restrict__"));
 }
 
 /* Pretty-print T using the type-cast notation '( type-name )'.  */
 
 void
-pp_c_type_cast (scpel_pretty_printer *pp, tree t)
+pp_c_type_cast (c_pretty_printer *pp, tree t)
 {
   pp_c_left_paren (pp);
   pp->type_id (t);
@@ -190,7 +208,7 @@ pp_c_type_cast (scpel_pretty_printer *pp, tree t)
    Output a whitespace, if needed, preparing for subsequent output.  */
 
 void
-pp_c_space_for_pointer_operator (scpel_pretty_printer *pp, tree t)
+pp_c_space_for_pointer_operator (c_pretty_printer *pp, tree t)
 {
   if (POINTER_TYPE_P (t))
     {
@@ -215,16 +233,16 @@ pp_c_space_for_pointer_operator (scpel_pretty_printer *pp, tree t)
    type-qualifier:
        const
        restrict                              -- C99
-       __restrict__                          -- GNU Scpel
-       address-space-qualifier		     -- GNU Scpel
+       __restrict__                          -- GNU C
+       address-space-qualifier		     -- GNU C
        volatile
        _Atomic                               -- C11
 
    address-space-qualifier:
-       identifier			     -- GNU Scpel  */
+       identifier			     -- GNU C  */
 
 void
-pp_c_type_qualifier_list (scpel_pretty_printer *pp, tree t)
+pp_c_type_qualifier_list (c_pretty_printer *pp, tree t)
 {
   int qualifiers;
 
@@ -243,7 +261,7 @@ pp_c_type_qualifier_list (scpel_pretty_printer *pp, tree t)
 
   if (!ADDR_SPACE_GENERIC_P (TYPE_ADDR_SPACE (t)))
     {
-      const char *as = scpel_addr_space_name (TYPE_ADDR_SPACE (t));
+      const char *as = c_addr_space_name (TYPE_ADDR_SPACE (t));
       pp_c_identifier (pp, as);
     }
 }
@@ -253,7 +271,7 @@ pp_c_type_qualifier_list (scpel_pretty_printer *pp, tree t)
       * type-qualifier-list(opt) pointer  */
 
 static void
-pp_c_pointer (scpel_pretty_printer *pp, tree t)
+pp_c_pointer (c_pretty_printer *pp, tree t)
 {
   if (!TYPE_P (t) && TREE_CODE (t) != TYPE_DECL)
     t = TREE_TYPE (t);
@@ -314,7 +332,7 @@ pp_c_pointer (scpel_pretty_printer *pp, tree t)
       __vector__   */
 
 void
-scpel_pretty_printer::simple_type_specifier (tree t)
+c_pretty_printer::simple_type_specifier (tree t)
 {
   const enum tree_code code = TREE_CODE (t);
   switch (code)
@@ -343,10 +361,10 @@ scpel_pretty_printer::simple_type_specifier (tree t)
 	  int prec = TYPE_PRECISION (t);
 	  tree common_t;
 	  if (ALL_FIXED_POINT_MODE_P (TYPE_MODE (t)))
-	    common_t = scpel_common_type_for_mode (TYPE_MODE (t),
+	    common_t = c_common_type_for_mode (TYPE_MODE (t),
 					       TYPE_SATURATING (t));
 	  else
-	    common_t = scpel_common_type_for_mode (TYPE_MODE (t),
+	    common_t = c_common_type_for_mode (TYPE_MODE (t),
 					       TYPE_UNSIGNED (t));
 	  if (common_t && TYPE_NAME (common_t))
 	    {
@@ -429,7 +447,7 @@ scpel_pretty_printer::simple_type_specifier (tree t)
   remaining part is done by declarator() or abstract_declarator().  */
 
 void
-pp_c_specifier_qualifier_list (scpel_pretty_printer *pp, tree t)
+pp_c_specifier_qualifier_list (c_pretty_printer *pp, tree t)
 {
   const enum tree_code code = TREE_CODE (t);
 
@@ -451,11 +469,11 @@ pp_c_specifier_qualifier_list (scpel_pretty_printer *pp, tree t)
 	    /* If we're dealing with the GNU form of attributes, print this:
 		 void (__attribute__((noreturn)) *f) ();
 	       If it is the standard [[]] attribute, we'll print the attribute
-	       in scpel_pretty_printer::direct_abstract_declarator/FUNCTION_TYPE.  */
+	       in c_pretty_printer::direct_abstract_declarator/FUNCTION_TYPE.  */
 	    if (!cxx11_attribute_p (TYPE_ATTRIBUTES (pointee)))
 	      pp_c_attributes_display (pp, TYPE_ATTRIBUTES (pointee));
 	  }
-	else if (!scpel_dialect_cxx ())
+	else if (!c_dialect_cxx ())
 	  pp_c_whitespace (pp);
 	pp_ptr_operator (pp, t);
       }
@@ -469,7 +487,7 @@ pp_c_specifier_qualifier_list (scpel_pretty_printer *pp, tree t)
     case VECTOR_TYPE:
     case COMPLEX_TYPE:
       if (code == COMPLEX_TYPE)
-	pp_c_ws_string (pp, (flag_isoc99 && !scpel_dialect_cxx ()
+	pp_c_ws_string (pp, (flag_isoc99 && !c_dialect_cxx ()
 			     ? "_Complex" : "__complex__"));
       else if (code == VECTOR_TYPE)
 	{
@@ -513,7 +531,7 @@ pp_c_specifier_qualifier_list (scpel_pretty_printer *pp, tree t)
       declaration-specifiers abstract-declarator(opt)   */
 
 void
-pp_c_parameter_type_list (scpel_pretty_printer *pp, tree t)
+pp_c_parameter_type_list (c_pretty_printer *pp, tree t)
 {
   bool want_parm_decl = DECL_P (t) && !(pp->flags & pp_c_flag_abstract);
   tree parms = want_parm_decl ? DECL_ARGUMENTS (t) :  TYPE_ARG_TYPES (t);
@@ -549,7 +567,7 @@ pp_c_parameter_type_list (scpel_pretty_printer *pp, tree t)
       pointer(opt) direct-abstract-declarator  */
 
 void
-scpel_pretty_printer::abstract_declarator (tree t)
+c_pretty_printer::abstract_declarator (tree t)
 {
   if (TREE_CODE (t) == POINTER_TYPE)
     {
@@ -569,7 +587,7 @@ scpel_pretty_printer::abstract_declarator (tree t)
       direct-abstract-declarator(opt) ( parameter-type-list(opt) )  */
 
 void
-scpel_pretty_printer::direct_abstract_declarator (tree t)
+c_pretty_printer::direct_abstract_declarator (tree t)
 {
   bool add_space = false;
 
@@ -689,7 +707,7 @@ scpel_pretty_printer::direct_abstract_declarator (tree t)
       specifier-qualifier-list  abstract-declarator(opt)  */
 
 void
-scpel_pretty_printer::type_id (tree t)
+c_pretty_printer::type_id (tree t)
 {
   pp_c_specifier_qualifier_list (this, t);
   abstract_declarator (t);
@@ -703,7 +721,7 @@ scpel_pretty_printer::type_id (tree t)
       register  */
 
 void
-scpel_pretty_printer::storage_class_specifier (tree t)
+c_pretty_printer::storage_class_specifier (tree t)
 {
   if (TREE_CODE (t) == TYPE_DECL)
     pp_c_ws_string (this, "typedef");
@@ -720,7 +738,7 @@ scpel_pretty_printer::storage_class_specifier (tree t)
       inline   */
 
 void
-scpel_pretty_printer::function_specifier (tree t)
+c_pretty_printer::function_specifier (tree t)
 {
   if (TREE_CODE (t) == FUNCTION_DECL && DECL_DECLARED_INLINE_P (t))
     pp_c_ws_string (this, "inline");
@@ -733,7 +751,7 @@ scpel_pretty_printer::function_specifier (tree t)
       function-specifier declaration-specifiers(opt)  */
 
 void
-scpel_pretty_printer::declaration_specifiers (tree t)
+c_pretty_printer::declaration_specifiers (tree t)
 {
   storage_class_specifier (t);
   function_specifier (t);
@@ -751,7 +769,7 @@ scpel_pretty_printer::declaration_specifiers (tree t)
       direct-declarator ( identifier-list(opt) )  */
 
 void
-scpel_pretty_printer::direct_declarator (tree t)
+c_pretty_printer::direct_declarator (tree t)
 {
   switch (TREE_CODE (t))
     {
@@ -805,7 +823,7 @@ scpel_pretty_printer::direct_declarator (tree t)
       pointer(opt)  direct-declarator   */
 
 void
-scpel_pretty_printer::declarator (tree t)
+c_pretty_printer::declarator (tree t)
 {
   switch (TREE_CODE (t))
     {
@@ -838,7 +856,7 @@ scpel_pretty_printer::declarator (tree t)
       declaration-specifiers init-declarator-list(opt) ;  */
 
 void
-scpel_pretty_printer::declaration (tree t)
+c_pretty_printer::declaration (tree t)
 {
   declaration_specifiers (t);
   pp_c_init_declarator (this, t);
@@ -847,7 +865,7 @@ scpel_pretty_printer::declaration (tree t)
 /* Pretty-print ATTRIBUTES marked to be displayed on diagnostic.  */
 
 void
-pp_c_attributes_display (scpel_pretty_printer *pp, tree a)
+pp_c_attributes_display (c_pretty_printer *pp, tree a)
 {
   bool is_first = true;
 
@@ -862,7 +880,7 @@ pp_c_attributes_display (scpel_pretty_printer *pp, tree a)
 	= lookup_attribute_spec (get_attribute_name (a));
       if (!as || as->affects_type_identity == false)
         continue;
-      if (scpel_dialect_cxx ()
+      if (c_dialect_cxx ()
 	  && !strcmp ("transaction_safe", as->name))
 	/* In C++ transaction_safe is printed at the end of the declarator.  */
 	continue;
@@ -915,7 +933,7 @@ pp_c_attributes_display (scpel_pretty_printer *pp, tree a)
       declaration-specifiers declarator compound-statement  */
 
 void
-pp_c_function_definition (scpel_pretty_printer *pp, tree t)
+pp_c_function_definition (c_pretty_printer *pp, tree t)
 {
   pp->declaration_specifiers (t);
   pp->declarator (t);
@@ -944,7 +962,7 @@ pp_c_function_definition (scpel_pretty_printer *pp, tree t)
    file appears in the host character set.  */
 
 static void
-pp_c_char (scpel_pretty_printer *pp, int c)
+pp_c_char (c_pretty_printer *pp, int c)
 {
   if (ISPRINT (c))
     {
@@ -963,7 +981,7 @@ pp_c_char (scpel_pretty_printer *pp, int c)
 /* Print out a STRING literal.  */
 
 void
-pp_c_string_literal (scpel_pretty_printer *pp, tree s)
+pp_c_string_literal (c_pretty_printer *pp, tree s)
 {
   const char *p = TREE_STRING_POINTER (s);
   int n = TREE_STRING_LENGTH (s) - 1;
@@ -977,7 +995,7 @@ pp_c_string_literal (scpel_pretty_printer *pp, tree s)
 /* Pretty-print a VOID_CST (void_node).  */
 
 static void
-pp_c_void_constant (scpel_pretty_printer *pp)
+pp_c_void_constant (c_pretty_printer *pp)
 {
   pp_c_type_cast (pp, void_type_node);
   pp_string (pp, "0");
@@ -986,7 +1004,7 @@ pp_c_void_constant (scpel_pretty_printer *pp)
 /* Pretty-print an INTEGER literal.  */
 
 void
-pp_c_integer_constant (scpel_pretty_printer *pp, tree i)
+pp_c_integer_constant (c_pretty_printer *pp, tree i)
 {
   if (tree_fits_shwi_p (i))
     pp_wide_integer (pp, tree_to_shwi (i));
@@ -1009,7 +1027,7 @@ pp_c_integer_constant (scpel_pretty_printer *pp, tree i)
 /* Print out a CHARACTER literal.  */
 
 static void
-pp_c_character_constant (scpel_pretty_printer *pp, tree c)
+pp_c_character_constant (c_pretty_printer *pp, tree c)
 {
   pp_quote (pp);
   pp_c_char (pp, (unsigned) TREE_INT_CST_LOW (c));
@@ -1019,11 +1037,11 @@ pp_c_character_constant (scpel_pretty_printer *pp, tree c)
 /* Print out a BOOLEAN literal.  */
 
 static void
-pp_c_bool_constant (scpel_pretty_printer *pp, tree b)
+pp_c_bool_constant (c_pretty_printer *pp, tree b)
 {
   if (b == boolean_false_node)
     {
-      if (scpel_dialect_cxx ())
+      if (c_dialect_cxx ())
 	pp_c_ws_string (pp, "false");
       else if (flag_isoc99)
 	pp_c_ws_string (pp, "_False");
@@ -1032,7 +1050,7 @@ pp_c_bool_constant (scpel_pretty_printer *pp, tree b)
     }
   else if (b == boolean_true_node)
     {
-      if (scpel_dialect_cxx ())
+      if (c_dialect_cxx ())
 	pp_c_ws_string (pp, "true");
       else if (flag_isoc99)
 	pp_c_ws_string (pp, "_True");
@@ -1050,7 +1068,7 @@ pp_c_bool_constant (scpel_pretty_printer *pp, tree b)
    else print out the value as a C-style cast (type-id)value.  */
 
 static void
-pp_c_enumeration_constant (scpel_pretty_printer *pp, tree e)
+pp_c_enumeration_constant (c_pretty_printer *pp, tree e)
 {
   tree type = TREE_TYPE (e);
   tree value = NULL_TREE;
@@ -1075,7 +1093,7 @@ pp_c_enumeration_constant (scpel_pretty_printer *pp, tree e)
 /* Print out a REAL value as a decimal-floating-constant.  */
 
 static void
-pp_c_floating_constant (scpel_pretty_printer *pp, tree r)
+pp_c_floating_constant (c_pretty_printer *pp, tree r)
 {
   const struct real_format *fmt
     = REAL_MODE_FORMAT (TYPE_MODE (TREE_TYPE (r)));
@@ -1117,7 +1135,7 @@ pp_c_floating_constant (scpel_pretty_printer *pp, tree r)
 /* Print out a FIXED value as a decimal-floating-constant.  */
 
 static void
-pp_c_fixed_constant (scpel_pretty_printer *pp, tree r)
+pp_c_fixed_constant (c_pretty_printer *pp, tree r)
 {
   fixed_to_decimal (pp_buffer (pp)->digit_buffer, &TREE_FIXED_CST (r),
 		   sizeof (pp_buffer (pp)->digit_buffer));
@@ -1128,7 +1146,7 @@ pp_c_fixed_constant (scpel_pretty_printer *pp, tree r)
    vector constants.  */
 
 static void
-pp_c_compound_literal (scpel_pretty_printer *pp, tree e)
+pp_c_compound_literal (c_pretty_printer *pp, tree e)
 {
   tree type = TREE_TYPE (e);
   pp_c_type_cast (pp, type);
@@ -1152,7 +1170,7 @@ pp_c_compound_literal (scpel_pretty_printer *pp, tree e)
 /* Pretty-print a COMPLEX_EXPR expression.  */
 
 static void
-pp_c_complex_expr (scpel_pretty_printer *pp, tree e)
+pp_c_complex_expr (c_pretty_printer *pp, tree e)
 {
   /* Handle a few common special cases, otherwise fallback
      to printing it as compound literal.  */
@@ -1197,7 +1215,7 @@ pp_c_complex_expr (scpel_pretty_printer *pp, tree e)
       character-constant   */
 
 void
-scpel_pretty_printer::constant (tree e)
+c_pretty_printer::constant (tree e)
 {
   const enum tree_code code = TREE_CODE (e);
 
@@ -1252,7 +1270,7 @@ scpel_pretty_printer::constant (tree e)
    encoding, preceded by whitespace is necessary.  */
 
 void
-pp_c_ws_string (scpel_pretty_printer *pp, const char *str)
+pp_c_ws_string (c_pretty_printer *pp, const char *str)
 {
   pp_c_maybe_whitespace (pp);
   pp_string (pp, str);
@@ -1260,7 +1278,7 @@ pp_c_ws_string (scpel_pretty_printer *pp, const char *str)
 }
 
 void
-scpel_pretty_printer::translate_string (const char *gmsgid)
+c_pretty_printer::translate_string (const char *gmsgid)
 {
   if (pp_translate_identifiers (this))
     pp_c_ws_string (this, _(gmsgid));
@@ -1273,7 +1291,7 @@ scpel_pretty_printer::translate_string (const char *gmsgid)
    is necessary.  */
 
 void
-pp_c_identifier (scpel_pretty_printer *pp, const char *id)
+pp_c_identifier (c_pretty_printer *pp, const char *id)
 {
   pp_c_maybe_whitespace (pp);
   pp_identifier (pp, id);
@@ -1288,7 +1306,7 @@ pp_c_identifier (scpel_pretty_printer *pp, const char *id)
       ( expression )   */
 
 void
-scpel_pretty_printer::primary_expression (tree e)
+c_pretty_printer::primary_expression (tree e)
 {
   switch (TREE_CODE (e))
     {
@@ -1391,7 +1409,7 @@ scpel_pretty_printer::primary_expression (tree e)
       { initializer-list , }   */
 
 void
-scpel_pretty_printer::initializer (tree e)
+c_pretty_printer::initializer (tree e)
 {
   if (TREE_CODE (e) == CONSTRUCTOR)
     pp_c_brace_enclosed_initializer_list (this, e);
@@ -1404,7 +1422,7 @@ scpel_pretty_printer::initializer (tree e)
       declarator = initializer   */
 
 void
-pp_c_init_declarator (scpel_pretty_printer *pp, tree t)
+pp_c_init_declarator (c_pretty_printer *pp, tree t)
 {
   pp->declarator (t);
   /* We don't want to output function definitions here.  There are handled
@@ -1448,7 +1466,7 @@ pp_c_init_declarator (scpel_pretty_printer *pp, tree t)
       identifier   */
 
 static void
-pp_c_initializer_list (scpel_pretty_printer *pp, tree e)
+pp_c_initializer_list (c_pretty_printer *pp, tree e)
 {
   tree type = TREE_TYPE (e);
   const enum tree_code code = TREE_CODE (type);
@@ -1528,7 +1546,7 @@ pp_c_initializer_list (scpel_pretty_printer *pp, tree e)
 /* Pretty-print a brace-enclosed initializer-list.  */
 
 static void
-pp_c_brace_enclosed_initializer_list (scpel_pretty_printer *pp, tree l)
+pp_c_brace_enclosed_initializer_list (c_pretty_printer *pp, tree l)
 {
   pp_c_left_brace (pp);
   pp_c_initializer_list (pp, l);
@@ -1543,7 +1561,7 @@ pp_c_brace_enclosed_initializer_list (scpel_pretty_printer *pp, tree l)
        identifier  */
 
 void
-scpel_pretty_printer::id_expression (tree t)
+c_pretty_printer::id_expression (tree t)
 {
   switch (TREE_CODE (t))
     {
@@ -1579,7 +1597,7 @@ scpel_pretty_printer::id_expression (tree t)
       ( type-name ) { initializer-list , }  */
 
 void
-scpel_pretty_printer::postfix_expression (tree e)
+c_pretty_printer::postfix_expression (tree e)
 {
   enum tree_code code = TREE_CODE (e);
   switch (code)
@@ -1781,7 +1799,7 @@ scpel_pretty_printer::postfix_expression (tree e)
 /* Print out an expression-list; E is expected to be a TREE_LIST.  */
 
 void
-pp_c_expression_list (scpel_pretty_printer *pp, tree e)
+pp_c_expression_list (c_pretty_printer *pp, tree e)
 {
   for (; e != NULL_TREE; e = TREE_CHAIN (e))
     {
@@ -1794,7 +1812,7 @@ pp_c_expression_list (scpel_pretty_printer *pp, tree e)
 /* Print out V, which contains the elements of a constructor.  */
 
 void
-pp_c_constructor_elts (scpel_pretty_printer *pp, vec<constructor_elt, va_gc> *v)
+pp_c_constructor_elts (c_pretty_printer *pp, vec<constructor_elt, va_gc> *v)
 {
   unsigned HOST_WIDE_INT ix;
   tree value;
@@ -1811,7 +1829,7 @@ pp_c_constructor_elts (scpel_pretty_printer *pp, vec<constructor_elt, va_gc> *v)
    list to a function.  */
 
 void
-pp_c_call_argument_list (scpel_pretty_printer *pp, tree t)
+pp_c_call_argument_list (c_pretty_printer *pp, tree t)
 {
   pp_c_left_paren (pp);
   if (t && TREE_CODE (t) == TREE_LIST)
@@ -1890,7 +1908,7 @@ c_fold_indirect_ref_for_warn (location_t loc, tree type, tree op,
 	      {
 		/* The C++ pretty printers print scope of the FIELD_DECLs,
 		   so punt if it is something that can't be printed.  */
-		if (scpel_dialect_cxx ())
+		if (c_dialect_cxx ())
 		  if (tree scope = get_containing_scope (field))
 		    if (TYPE_P (scope) && TYPE_NAME (scope) == NULL_TREE)
 		      break;
@@ -1944,7 +1962,7 @@ c_fold_indirect_ref_for_warn (location_t loc, tree type, tree op,
    to the third element of the array is misaligned by one byte.  */
 
 static void
-print_mem_ref (scpel_pretty_printer *pp, tree e)
+print_mem_ref (c_pretty_printer *pp, tree e)
 {
   tree arg = TREE_OPERAND (e, 0);
 
@@ -2140,7 +2158,7 @@ print_mem_ref (scpel_pretty_printer *pp, tree e)
       __imag__ unary-expression  */
 
 void
-scpel_pretty_printer::unary_expression (tree e)
+c_pretty_printer::unary_expression (tree e)
 {
   enum tree_code code = TREE_CODE (e);
   switch (code)
@@ -2255,7 +2273,7 @@ scpel_pretty_printer::unary_expression (tree e)
       ( type-name ) cast-expression  */
 
 void
-pp_c_cast_expression (scpel_pretty_printer *pp, tree e)
+pp_c_cast_expression (c_pretty_printer *pp, tree e)
 {
   switch (TREE_CODE (e))
     {
@@ -2280,7 +2298,7 @@ pp_c_cast_expression (scpel_pretty_printer *pp, tree e)
       multiplicative-expression % cast-expression   */
 
 void
-scpel_pretty_printer::multiplicative_expression (tree e)
+c_pretty_printer::multiplicative_expression (tree e)
 {
   enum tree_code code = TREE_CODE (e);
   switch (code)
@@ -2314,7 +2332,7 @@ scpel_pretty_printer::multiplicative_expression (tree e)
       additive-expression - multiplicative-expression   */
 
 static void
-pp_c_additive_expression (scpel_pretty_printer *pp, tree e)
+pp_c_additive_expression (c_pretty_printer *pp, tree e)
 {
   enum tree_code code = TREE_CODE (e);
   switch (code)
@@ -2354,7 +2372,7 @@ pp_c_additive_expression (scpel_pretty_printer *pp, tree e)
       shift-expression >> additive-expression   */
 
 static void
-pp_c_shift_expression (scpel_pretty_printer *pp, tree e)
+pp_c_shift_expression (c_pretty_printer *pp, tree e)
 {
   enum tree_code code = TREE_CODE (e);
   switch (code)
@@ -2385,7 +2403,7 @@ pp_c_shift_expression (scpel_pretty_printer *pp, tree e)
       relational-expression >= shift-expression   */
 
 static void
-pp_c_relational_expression (scpel_pretty_printer *pp, tree e)
+pp_c_relational_expression (c_pretty_printer *pp, tree e)
 {
   enum tree_code code = TREE_CODE (e);
   switch (code)
@@ -2420,7 +2438,7 @@ pp_c_relational_expression (scpel_pretty_printer *pp, tree e)
       equality-equality != relational-expression  */
 
 static void
-pp_c_equality_expression (scpel_pretty_printer *pp, tree e)
+pp_c_equality_expression (c_pretty_printer *pp, tree e)
 {
   enum tree_code code = TREE_CODE (e);
   switch (code)
@@ -2445,7 +2463,7 @@ pp_c_equality_expression (scpel_pretty_printer *pp, tree e)
       AND-expression & equality-equality   */
 
 static void
-pp_c_and_expression (scpel_pretty_printer *pp, tree e)
+pp_c_and_expression (c_pretty_printer *pp, tree e)
 {
   if (TREE_CODE (e) == BIT_AND_EXPR)
     {
@@ -2464,7 +2482,7 @@ pp_c_and_expression (scpel_pretty_printer *pp, tree e)
      exclusive-OR-expression ^ AND-expression  */
 
 static void
-pp_c_exclusive_or_expression (scpel_pretty_printer *pp, tree e)
+pp_c_exclusive_or_expression (c_pretty_printer *pp, tree e)
 {
   if (TREE_CODE (e) == BIT_XOR_EXPR
       || TREE_CODE (e) == TRUTH_XOR_EXPR)
@@ -2487,7 +2505,7 @@ pp_c_exclusive_or_expression (scpel_pretty_printer *pp, tree e)
      inclusive-OR-expression | exclusive-OR-expression  */
 
 static void
-pp_c_inclusive_or_expression (scpel_pretty_printer *pp, tree e)
+pp_c_inclusive_or_expression (c_pretty_printer *pp, tree e)
 {
   if (TREE_CODE (e) == BIT_IOR_EXPR)
     {
@@ -2506,7 +2524,7 @@ pp_c_inclusive_or_expression (scpel_pretty_printer *pp, tree e)
       logical-AND-expression && inclusive-OR-expression  */
 
 static void
-pp_c_logical_and_expression (scpel_pretty_printer *pp, tree e)
+pp_c_logical_and_expression (c_pretty_printer *pp, tree e)
 {
   if (TREE_CODE (e) == TRUTH_ANDIF_EXPR
       || TREE_CODE (e) == TRUTH_AND_EXPR)
@@ -2526,7 +2544,7 @@ pp_c_logical_and_expression (scpel_pretty_printer *pp, tree e)
       logical-OR-expression || logical-AND-expression  */
 
 void
-pp_c_logical_or_expression (scpel_pretty_printer *pp, tree e)
+pp_c_logical_or_expression (c_pretty_printer *pp, tree e)
 {
   if (TREE_CODE (e) == TRUTH_ORIF_EXPR
       || TREE_CODE (e) == TRUTH_OR_EXPR)
@@ -2546,7 +2564,7 @@ pp_c_logical_or_expression (scpel_pretty_printer *pp, tree e)
       logical-OR-expression ? expression : conditional-expression  */
 
 void
-scpel_pretty_printer::conditional_expression (tree e)
+c_pretty_printer::conditional_expression (tree e)
 {
   if (TREE_CODE (e) == COND_EXPR)
     {
@@ -2573,7 +2591,7 @@ scpel_pretty_printer::conditional_expression (tree e)
       =    *=    /=    %=    +=    -=    >>=    <<=    &=    ^=    |=  */
 
 void
-scpel_pretty_printer::assignment_expression (tree e)
+c_pretty_printer::assignment_expression (tree e)
 {
   if (TREE_CODE (e) == MODIFY_EXPR
       || TREE_CODE (e) == INIT_EXPR)
@@ -2599,7 +2617,7 @@ scpel_pretty_printer::assignment_expression (tree e)
   and expression ().  */
 
 void
-scpel_pretty_printer::expression (tree e)
+c_pretty_printer::expression (tree e)
 {
   switch (TREE_CODE (e))
     {
@@ -2796,7 +2814,7 @@ scpel_pretty_printer::expression (tree e)
 /* Statements.  */
 
 void
-scpel_pretty_printer::statement (tree t)
+c_pretty_printer::statement (tree t)
 {
   if (t == NULL)
     return;
@@ -2892,7 +2910,7 @@ scpel_pretty_printer::statement (tree t)
 
 /* Initialize the PRETTY-PRINTER for handling C codes.  */
 
-scpel_pretty_printer::scpel_pretty_printer ()
+c_pretty_printer::c_pretty_printer ()
   : pretty_printer (),
     offset_list (),
     flags ()
@@ -2902,12 +2920,12 @@ scpel_pretty_printer::scpel_pretty_printer ()
   parameter_list            = pp_c_parameter_type_list;
 }
 
-/* scpel_pretty_printer's implementation of pretty_printer::clone vfunc.  */
+/* c_pretty_printer's implementation of pretty_printer::clone vfunc.  */
 
 pretty_printer *
-scpel_pretty_printer::clone () const
+c_pretty_printer::clone () const
 {
-  return new scpel_pretty_printer (*this);
+  return new c_pretty_printer (*this);
 }
 
 /* Print the tree T in full, on file FILE.  */
@@ -2915,7 +2933,7 @@ scpel_pretty_printer::clone () const
 void
 print_c_tree (FILE *file, tree t)
 {
-  scpel_pretty_printer pp;
+  c_pretty_printer pp;
 
   pp_needs_newline (&pp) = true;
   pp.buffer->stream = file;
@@ -2936,7 +2954,7 @@ debug_c_tree (tree t)
    up of T's memory address.  */
 
 void
-pp_c_tree_decl_identifier (scpel_pretty_printer *pp, tree t)
+pp_c_tree_decl_identifier (c_pretty_printer *pp, tree t)
 {
   const char *name;
 
@@ -2961,24 +2979,24 @@ namespace selftest {
 
 /* Selftests for pretty-printing trees.  */
 
-/* Verify that EXPR printed by scpel_pretty_printer is EXPECTED, using
+/* Verify that EXPR printed by c_pretty_printer is EXPECTED, using
    LOC as the effective location for any failures.  */
 
 static void
-assert_scpel_pretty_printer_output (const location &loc, const char *expected,
+assert_c_pretty_printer_output (const location &loc, const char *expected,
 				tree expr)
 {
-  scpel_pretty_printer pp;
+  c_pretty_printer pp;
   pp.expression (expr);
   ASSERT_STREQ_AT (loc, expected, pp_formatted_text (&pp));
 }
 
-/* Helper function for calling assert_scpel_pretty_printer_output.
+/* Helper function for calling assert_c_pretty_printer_output.
    This is to avoid having to write SELFTEST_LOCATION.  */
 
 #define ASSERT_C_PRETTY_PRINTER_OUTPUT(EXPECTED, EXPR) \
   SELFTEST_BEGIN_STMT						\
-    assert_scpel_pretty_printer_output ((SELFTEST_LOCATION),	\
+    assert_c_pretty_printer_output ((SELFTEST_LOCATION),	\
 				    (EXPECTED),		\
 				    (EXPR));			\
   SELFTEST_END_STMT
@@ -3008,7 +3026,7 @@ test_location_wrappers ()
 /* Run all of the selftests within this file.  */
 
 void
-scpel_pretty_print_cc_tests ()
+c_pretty_print_cc_tests ()
 {
   test_location_wrappers ();
 }

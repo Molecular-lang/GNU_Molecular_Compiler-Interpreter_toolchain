@@ -747,7 +747,7 @@ public:
    a leaf operand in the AST.  This class is also used to represent
    the code to be generated for 'if' and 'with' expressions.  */
 
-class scpel_expr : public operand
+class c_expr : public operand
 {
 public:
   /* A mapping of an identifier and its replacement.  Used to apply
@@ -759,7 +759,7 @@ public:
     id_tab (const char *id_, const char *oper_): id (id_), oper (oper_) {}
   };
 
-  scpel_expr (cpp_reader *r_, location_t loc,
+  c_expr (cpp_reader *r_, location_t loc,
 	  vec<cpp_token> code_, unsigned nr_stmts_,
 	  vec<id_tab> ids_, cid_map_t *capture_ids_)
     : operand (OP_C_EXPR, loc), r (r_), code (code_),
@@ -805,7 +805,7 @@ class if_expr : public operand
 public:
   if_expr (location_t loc)
     : operand (OP_IF, loc), cond (NULL), trueexpr (NULL), falseexpr (NULL) {}
-  scpel_expr *cond;
+  c_expr *cond;
   operand *trueexpr;
   operand *falseexpr;
 };
@@ -817,7 +817,7 @@ class with_expr : public operand
 public:
   with_expr (location_t loc)
     : operand (OP_WITH, loc), with (NULL), subexpr (NULL) {}
-  scpel_expr *with;
+  c_expr *with;
   operand *subexpr;
 };
 
@@ -840,7 +840,7 @@ is_a_helper <predicate *>::test (operand *op)
 template<>
 template<>
 inline bool
-is_a_helper <scpel_expr *>::test (operand *op)
+is_a_helper <c_expr *>::test (operand *op)
 {
   return op->type == operand::OP_C_EXPR;
 }
@@ -921,8 +921,8 @@ print_operand (operand *o, FILE *f = stderr, bool flattened = false)
   else if (predicate *p = dyn_cast<predicate *> (o))
     fprintf (f, "%s", p->p->id);
 
-  else if (is_a<scpel_expr *> (o))
-    fprintf (f, "scpel_expr");
+  else if (is_a<c_expr *> (o))
+    fprintf (f, "c_expr");
 
   else if (expr *e = dyn_cast<expr *> (o))
     {
@@ -1353,7 +1353,7 @@ contains_id (operand *o, user_id *id)
 	    || contains_id (ife->trueexpr, id)
 	    || (ife->falseexpr && contains_id (ife->falseexpr, id)));
 
-  if (scpel_expr *ce = dyn_cast<scpel_expr *> (o))
+  if (c_expr *ce = dyn_cast<c_expr *> (o))
     return ce->capture_ids && ce->capture_ids->get (id->id);
 
   return false;
@@ -1386,27 +1386,27 @@ replace_id (operand *o, user_id *id, id_base *with)
   else if (with_expr *w = dyn_cast <with_expr *> (o))
     {
       with_expr *nw = new with_expr (w->location);
-      nw->with = as_a <scpel_expr *> (replace_id (w->with, id, with));
+      nw->with = as_a <c_expr *> (replace_id (w->with, id, with));
       nw->subexpr = replace_id (w->subexpr, id, with);
       return nw;
     }
   else if (if_expr *ife = dyn_cast <if_expr *> (o))
     {
       if_expr *nife = new if_expr (ife->location);
-      nife->cond = as_a <scpel_expr *> (replace_id (ife->cond, id, with));
+      nife->cond = as_a <c_expr *> (replace_id (ife->cond, id, with));
       nife->trueexpr = replace_id (ife->trueexpr, id, with);
       if (ife->falseexpr)
 	nife->falseexpr = replace_id (ife->falseexpr, id, with);
       return nife;
     }
 
-  /* For scpel_expr we simply record a string replacement table which is
+  /* For c_expr we simply record a string replacement table which is
      applied at code-generation time.  */
-  if (scpel_expr *ce = dyn_cast<scpel_expr *> (o))
+  if (c_expr *ce = dyn_cast<c_expr *> (o))
     {
-      vec<scpel_expr::id_tab> ids = ce->ids.copy ();
-      ids.safe_push (scpel_expr::id_tab (id->id, with->id));
-      return new scpel_expr (ce->r, ce->location,
+      vec<c_expr::id_tab> ids = ce->ids.copy ();
+      ids.safe_push (c_expr::id_tab (id->id, with->id));
+      return new c_expr (ce->r, ce->location,
 			 ce->code, ce->nr_stmts, ids, ce->capture_ids);
     }
 
@@ -2106,7 +2106,7 @@ public:
   capture_info (simplify *s, operand *, bool);
   void walk_match (operand *o, unsigned toplevel_arg, bool, bool);
   bool walk_result (operand *o, bool, operand *);
-  void walk_c_expr (scpel_expr *);
+  void walk_c_expr (c_expr *);
 
   struct cinfo
     {
@@ -2308,7 +2308,7 @@ capture_info::walk_result (operand *o, bool conditional_p, operand *result)
 	walk_c_expr (we->with);
       return res;
     }
-  else if (scpel_expr *ce = dyn_cast <scpel_expr *> (o))
+  else if (c_expr *ce = dyn_cast <c_expr *> (o))
     walk_c_expr (ce);
   else
     gcc_unreachable ();
@@ -2319,7 +2319,7 @@ capture_info::walk_result (operand *o, bool conditional_p, operand *result)
 /* Look for captures in the C expr E.  */
 
 void
-capture_info::walk_c_expr (scpel_expr *e)
+capture_info::walk_c_expr (c_expr *e)
 {
   /* Give up for C exprs mentioning captures not inside TREE_TYPE,
      TREE_REAL_CST, TREE_CODE or a predicate where they cannot
@@ -2596,12 +2596,12 @@ expr::gen_transform (FILE *f, int indent, const char *dest, bool gimple,
   fprintf_indent (f, indent, "}\n");
 }
 
-/* Generate code for a scpel_expr which is either the expression inside
+/* Generate code for a c_expr which is either the expression inside
    an if statement or a sequence of statements which computes a
    result to be stored to DEST.  */
 
 void
-scpel_expr::gen_transform (FILE *f, int indent, const char *dest,
+c_expr::gen_transform (FILE *f, int indent, const char *dest,
 		       bool, int, const char *, capture_info *,
 		       dt_operand **, int)
 {
@@ -4037,7 +4037,7 @@ private:
   id_base *parse_operation (unsigned char &);
   operand *parse_capture (operand *, bool);
   operand *parse_expr ();
-  scpel_expr *parse_c_expr (cpp_ttype);
+  c_expr *parse_c_expr (cpp_ttype);
   operand *parse_op ();
 
   void record_operlist (location_t, user_id *);
@@ -4057,7 +4057,7 @@ private:
 
   cpp_reader *r;
   bool gimple;
-  vec<scpel_expr *> active_ifs;
+  vec<c_expr *> active_ifs;
   vec<vec<user_id *> > active_fors;
   hash_set<user_id *> *oper_lists_set;
   vec<user_id *> oper_lists;
@@ -4434,9 +4434,9 @@ parser::parse_expr ()
 
 /* Lex native C code delimited by START recording the preprocessing tokens
    for later processing.
-     scpel_expr = ('{'|'(') <pp token>... ('}'|')')  */
+     c_expr = ('{'|'(') <pp token>... ('}'|')')  */
 
-scpel_expr *
+c_expr *
 parser::parse_c_expr (cpp_ttype start)
 {
   const cpp_token *token;
@@ -4486,12 +4486,12 @@ parser::parse_c_expr (cpp_ttype start)
       code.safe_push (*token);
     }
   while (1);
-  return new scpel_expr (r, loc, code, nr_stmts, vNULL, capture_ids);
+  return new c_expr (r, loc, code, nr_stmts, vNULL, capture_ids);
 }
 
 /* Parse an operand which is either an expression, a predicate or
    a standalone capture.
-     op = predicate | expr | scpel_expr | capture  */
+     op = predicate | expr | c_expr | capture  */
 
 class operand *
 parser::parse_op ()
@@ -4939,7 +4939,7 @@ parser::parse_operator_list (location_t)
 void
 parser::parse_if (location_t)
 {
-  scpel_expr *ifexpr = parse_c_expr (CPP_OPEN_PAREN);
+  c_expr *ifexpr = parse_c_expr (CPP_OPEN_PAREN);
 
   const cpp_token *token = peek ();
   if (token->type == CPP_CLOSE_PAREN)

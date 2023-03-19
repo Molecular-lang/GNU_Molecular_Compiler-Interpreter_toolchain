@@ -308,7 +308,7 @@ MAKEINFO = @MAKEINFO@
 MAKEINFOFLAGS = --no-split
 TEXI2DVI = texi2dvi
 TEXI2PDF = texi2pdf
-TEXI2HTML =
+TEXI2HTML = $(MAKEINFO) --html
 TEXI2POD =
 POD2MAN =
 # Some versions of `touch' (such as the version on Solaris 2.8)
@@ -707,7 +707,7 @@ docdir = @docdir@
 # Directory in which to put DVIs
 dvidir = @dvidir@
 # Directory in which to build HTML
-build_htmldir =
+build_htmldir = $(objdir)/HTML/gcc-$(version)
 # Directory in which to put HTML
 htmldir = @htmldir@
 
@@ -810,9 +810,9 @@ BUILD_CPPFLAGS= -I. -I$(@D) -I$(srcdir) -I$(srcdir)/$(@D) \
 		-I$(srcdir)/../include $(INCINTL) $(CPPINC) $(CPPFLAGS)
 
 # Actual name to use when installing a native compiler.
-GCC_INSTALL_NAME := $(shell echo scpel|sed '$(program_transform_name)')
-GCC_TARGET_INSTALL_NAME := $(target_noncanonical)-$(shell echo scpel|sed '$(program_transform_name)')
-CPP_INSTALL_NAME := $(shell echo scpp|sed '$(program_transform_name)')
+GCC_INSTALL_NAME := $(shell echo gcc|sed '$(program_transform_name)')
+GCC_TARGET_INSTALL_NAME := $(target_noncanonical)-$(shell echo gcc|sed '$(program_transform_name)')
+CPP_INSTALL_NAME := $(shell echo spp|sed '$(program_transform_name)')
 GCOV_INSTALL_NAME := $(shell echo gcov|sed '$(program_transform_name)')
 GCOV_TOOL_INSTALL_NAME := $(shell echo gcov-tool|sed '$(program_transform_name)')
 GCOV_DUMP_INSTALL_NAME := $(shell echo gcov-dump|sed '$(program_transform_name)')
@@ -1019,7 +1019,6 @@ RTL_SSA_H = $(PRETTY_PRINT_H) insn-config.h splay-tree-utils.h \
 	    rtl-ssa/change-utils.h rtl-ssa/member-fns.inl
 
 # Now figure out from those variables how to compile and link.
-
 # IN_GCC distinguishes between code compiled into GCC itself and other
 # programs built during a bootstrap.
 # autoconf inserts -DCROSS_DIRECTORY_STRUCTURE if we are building a
@@ -1199,7 +1198,6 @@ FLAGS_TO_PASS = \
 	"localedir=$(localedir)"
 
 # Lists of files for various purposes.
-
 # All option source files
 ALL_OPT_FILES=$(lang_opt_files) $(extra_opt_files)
 
@@ -2050,10 +2048,10 @@ config.status: $(srcdir)/configure $(srcdir)/config.gcc $(LANG_CONFIGUREFRAGS)
 quickstrap: all
 	cd $(toplevel_builddir) && $(MAKE) all-target-libgcc
 
-all.internal: start.encap rest.encap doc selftest
+all.internal: start.encap rest.encap selftest
 # This is what to compile if making a cross-compiler.
 all.cross: native gcc-cross$(exeext) cpp$(exeext) specs \
-	libgcc-support lang.all.cross doc selftest @GENINSRC@ srcextra
+	libgcc-support lang.all.cross selftest @GENINSRC@ srcextra
 # This is what must be made before installing GCC and converting libraries.
 start.encap: native xgcc$(exeext) cpp$(exeext) specs \
 	libgcc-support lang.start.encap @GENINSRC@ srcextra
@@ -2129,10 +2127,10 @@ libcommon.a: $(OBJS-libcommon)
 # We call this executable `xgcc' rather than `gcc'
 # to avoid confusion if the current directory is in the path
 # and CC is `gcc'.  It is renamed to `gcc' when it is installed.
-xgcc$(exeext): $(GCC_OBJS) scpel/gccspec.o libcommon-target.a $(LIBDEPS) \
+xgcc$(exeext): $(GCC_OBJS) c/gccspec.o libcommon-target.a $(LIBDEPS) \
 	$(EXTRA_GCC_OBJS)
 	+$(LINKER) $(ALL_LINKERFLAGS) $(LDFLAGS) -o $@ $(GCC_OBJS) \
-	  scpel/gccspec.o $(EXTRA_GCC_OBJS) libcommon-target.a \
+	  c/gccspec.o $(EXTRA_GCC_OBJS) libcommon-target.a \
 	  $(EXTRA_GCC_LIBS) $(LIBS)
 
 # cpp is to cpp0 as e.g. g++ is to cc1plus: Just another driver.
@@ -2159,8 +2157,8 @@ checksum-options:
 	echo "$(LINKER) $(ALL_LINKERFLAGS) $(LDFLAGS)" > checksum-options.tmp \
 	&& $(srcdir)/../move-if-change checksum-options.tmp checksum-options
 
-# Build libgcc.a.
 
+# Build libgcc.a.
 libgcc-support: libgcc.mvars stmp-int-hdrs $(TCONFIG_H) \
 	$(MACHMODE_H) version.h
 
@@ -2205,7 +2203,7 @@ s-mlib: $(srcdir)/genmultilib Makefile
 	fi
 	$(SHELL) $(srcdir)/../move-if-change tmp-mlib.h multilib.h
 	$(STAMP) s-mlib
-#
+
 # Compiling object files from source files.
 
 # Note that dependencies on obstack.h are not written
@@ -2270,7 +2268,6 @@ lto-wrapper$(exeext): $(LTO_WRAPPER_OBJS) libcommon-target.a $(LIBDEPS)
 	mv -f T$@ $@
 
 # Files used by all variants of C or by the stand-alone pre-processor.
-
 CFLAGS-c-family/c-opts.o += @TARGET_SYSTEM_ROOT_DEFINE@
 
 CFLAGS-c-family/c-pch.o += -DHOST_MACHINE=\"$(host)\" \
@@ -2688,7 +2685,6 @@ GTFILES = $(CPPLIB_H) $(srcdir)/input.h $(srcdir)/coretypes.h \
 # behavior in this respect: gt-LANG-file.h for "file" anywhere within a LANG
 # language subdir, gt-file.h otherwise (no subdir indication for config/
 # related sources).
-
 GTFILES_H = $(subst /,-, \
 	    $(shell echo $(patsubst $(srcdir)/%,gt-%, \
 			   $(patsubst %.cc,%.h, \
@@ -2701,7 +2697,6 @@ ALL_GTFILES_H := $(sort $(GTFILES_H) $(GTFILES_LANG_H))
 # $(GTFILES) may be too long to put on a command line, so we have to
 # write it out to a file (taking care not to do that in a way that
 # overflows a command line!) and then have gengtype read the file in.
-
 $(ALL_GTFILES_H) gtype-desc.cc gtype-desc.h gtype.state: s-gtype ; @true
 
 ### Common flags to gengtype [e.g. -v or -B backupdir]
@@ -2738,7 +2733,6 @@ generated_files = config.h tm.h $(TM_P_H) $(TM_D_H) $(TM_H) multilib.h \
        cfn-operators.pd omp-device-properties.h
 
 # How to compile object files to run on the build machine.
-
 build/%.o :  # dependencies provided by explicit rule later
 	$(COMPILER_FOR_BUILD) -c $(BUILD_COMPILERFLAGS) $(BUILD_CPPFLAGS) \
 		-o $@ $<
@@ -2974,8 +2968,8 @@ gengtype-lex.cc : gengtype-lex.l
 # Remake internationalization support.
 CFLAGS-intl.o += -DLOCALEDIR=\"$(localedir)\"
 
-# Remake cpp.
 
+# Remake cpp.
 PREPROCESSOR_DEFINES = \
   -DGCC_INCLUDE_DIR=\"$(libsubdir)/include\" \
   -DFIXED_INCLUDE_DIR=\"$(libsubdir)/include-fixed\" \
@@ -3513,23 +3507,7 @@ install-common: native lang.install-common installdirs
 
 # Install the driver program as $(target_noncanonical)-gcc,
 # $(target_noncanonical)-gcc-$(version), and also as gcc if native.
-install-driver: installdirs xgcc$(exeext)
-	-rm -f $(DESTDIR)$(bindir)/$(GCC_INSTALL_NAME)$(exeext)
-	-$(INSTALL_PROGRAM) xgcc$(exeext) $(DESTDIR)$(bindir)/$(GCC_INSTALL_NAME)$(exeext)
-	-if test "$(enable_as_accelerator)" != "yes" ; then \
-	  if [ "$(GCC_INSTALL_NAME)" != "$(target_noncanonical)-gcc-$(version)" ]; then \
-	    rm -f $(DESTDIR)$(bindir)/$(FULL_DRIVER_NAME); \
-	    ( cd $(DESTDIR)$(bindir) && \
-	      $(LN) $(GCC_INSTALL_NAME)$(exeext) $(FULL_DRIVER_NAME) ); \
-	  fi; \
-	  if [ ! -f gcc-cross$(exeext) ] \
-	      && [ "$(GCC_INSTALL_NAME)" != "$(GCC_TARGET_INSTALL_NAME)" ]; then \
-	    rm -f $(DESTDIR)$(bindir)/$(target_noncanonical)-gcc-tmp$(exeext); \
-	    ( cd $(DESTDIR)$(bindir) && \
-	      $(LN) $(GCC_INSTALL_NAME)$(exeext) $(target_noncanonical)-gcc-tmp$(exeext) && \
-	      mv -f $(target_noncanonical)-gcc-tmp$(exeext) $(GCC_TARGET_INSTALL_NAME)$(exeext) ); \
-	  fi; \
-	fi
+install-driver:
 
 # Install all the header files built in the include subdirectory.
 install-headers: $(INSTALL_HEADERS_DIR)
@@ -3633,22 +3611,7 @@ install-collect2: collect2 installdirs
 install-lto-wrapper: lto-wrapper$(exeext)
 	$(INSTALL_PROGRAM) lto-wrapper$(exeext) $(DESTDIR)$(libexecsubdir)/lto-wrapper$(exeext)
 
-install-gcc-ar: installdirs gcc-ar$(exeext) gcc-nm$(exeext) gcc-ranlib$(exeext)
-	if test "$(enable_as_accelerator)" != "yes" ; then \
-	  for i in gcc-ar gcc-nm gcc-ranlib; do \
-	    install_name=`echo $$i|sed '$(program_transform_name)'` ;\
-	    target_install_name=$(target_noncanonical)-`echo $$i|sed '$(program_transform_name)'` ; \
-	    rm -f $(DESTDIR)$(bindir)/$$install_name$(exeext) ; \
-	    $(INSTALL_PROGRAM) $$i$(exeext) $(DESTDIR)$(bindir)/$$install_name$(exeext) ;\
-	    if test -f gcc-cross$(exeext); then \
-	      :; \
-	    else \
-	      rm -f $(DESTDIR)$(bindir)/$$target_install_name$(exeext); \
-	      ( cd $(DESTDIR)$(bindir) && \
-		$(LN) $$install_name$(exeext) $$target_install_name$(exeext) ) ; \
-	    fi ; \
-	  done; \
-	fi
+install-gcc-ar:
 
 # Cancel installation by deleting the installed files.
 uninstall: lang.uninstall

@@ -364,7 +364,7 @@ struct moveop_static_params
   rtx dest;
 
   /* Current C_EXPR.  */
-  expr_t scpel_expr;
+  expr_t c_expr;
 
   /* An UID of expr_vliw which is to be moved up.  If we find other exprs,
      they are to be removed.  */
@@ -1758,7 +1758,7 @@ can_speculate_dep_p (ds_t ds)
    CHECK_DS describes speculations that should be checked,
    ORIG_INSN is the original non-speculative insn in the stream.  */
 static insn_t
-create_speculation_check (expr_t scpel_expr, ds_t check_ds, insn_t orig_insn)
+create_speculation_check (expr_t c_expr, ds_t check_ds, insn_t orig_insn)
 {
   rtx check_pattern;
   rtx_insn *insn_rtx;
@@ -1781,7 +1781,7 @@ create_speculation_check (expr_t scpel_expr, ds_t check_ds, insn_t orig_insn)
     }
 
   /* Get pattern of the check.  */
-  check_pattern = targetm.sched.gen_spec_check (EXPR_INSN_RTX (scpel_expr), label,
+  check_pattern = targetm.sched.gen_spec_check (EXPR_INSN_RTX (c_expr), label,
 						check_ds);
 
   gcc_assert (check_pattern != NULL);
@@ -1807,7 +1807,7 @@ create_speculation_check (expr_t scpel_expr, ds_t check_ds, insn_t orig_insn)
     {
       rtx twin_rtx;
 
-      twin_rtx = copy_rtx (PATTERN (EXPR_INSN_RTX (scpel_expr)));
+      twin_rtx = copy_rtx (PATTERN (EXPR_INSN_RTX (c_expr)));
       twin_rtx = create_insn_rtx_from_pattern (twin_rtx, NULL_RTX);
       sel_gen_recovery_insn_from_rtx_after (twin_rtx,
 					    INSN_EXPR (orig_insn),
@@ -1823,7 +1823,7 @@ create_speculation_check (expr_t scpel_expr, ds_t check_ds, insn_t orig_insn)
      speculative mode, because failing to do so will bring us an exception
      thrown by the non-control-speculative load.  */
   check_ds = ds_get_max_dep_weak (check_ds);
-  speculate_expr (scpel_expr, check_ds);
+  speculate_expr (c_expr, check_ds);
 
   return insn;
 }
@@ -4749,15 +4749,15 @@ find_seqno_for_bookkeeping (insn_t place_to_insert, insn_t join_point)
 /* Insert bookkeeping copy of C_EXPS's insn after PLACE_TO_INSERT, assigning
    NEW_SEQNO to it.  Return created insn.  */
 static insn_t
-emit_bookkeeping_insn (insn_t place_to_insert, expr_t scpel_expr, int new_seqno)
+emit_bookkeeping_insn (insn_t place_to_insert, expr_t c_expr, int new_seqno)
 {
-  rtx_insn *new_insn_rtx = create_copy_of_insn_rtx (EXPR_INSN_RTX (scpel_expr));
+  rtx_insn *new_insn_rtx = create_copy_of_insn_rtx (EXPR_INSN_RTX (c_expr));
 
   vinsn_t new_vinsn
     = create_vinsn_from_insn_rtx (new_insn_rtx,
-				  VINSN_UNIQUE_P (EXPR_VINSN (scpel_expr)));
+				  VINSN_UNIQUE_P (EXPR_VINSN (c_expr)));
 
-  insn_t new_insn = emit_insn_from_expr_after (scpel_expr, new_vinsn, new_seqno,
+  insn_t new_insn = emit_insn_from_expr_after (c_expr, new_vinsn, new_seqno,
 					       place_to_insert);
 
   INSN_SCHED_TIMES (new_insn) = 0;
@@ -4771,7 +4771,7 @@ emit_bookkeeping_insn (insn_t place_to_insert, expr_t scpel_expr, int new_seqno)
    between E1->src and E2->dest).  Return block containing the copy.
    All scheduler data is initialized for the newly created insn.  */
 static basic_block
-generate_bookkeeping_insn (expr_t scpel_expr, edge e1, edge e2)
+generate_bookkeeping_insn (expr_t c_expr, edge e1, edge e2)
 {
   insn_t join_point, place_to_insert, new_insn;
   int new_seqno;
@@ -4788,7 +4788,7 @@ generate_bookkeeping_insn (expr_t scpel_expr, edge e1, edge e2)
   need_to_exchange_data_sets
     = sel_bb_empty_p (BLOCK_FOR_INSN (place_to_insert));
 
-  new_insn = emit_bookkeeping_insn (place_to_insert, scpel_expr, new_seqno);
+  new_insn = emit_bookkeeping_insn (place_to_insert, c_expr, new_seqno);
 
   if (fence_to_rewind)
     FENCE_INSN (fence_to_rewind) = new_insn;
@@ -5204,7 +5204,7 @@ prepare_place_to_insert (bnd_t bnd)
    Return the expression to emit in C_EXPR.  */
 static bool
 move_exprs_to_boundary (bnd_t bnd, expr_t expr_vliw,
-                        av_set_t expr_seq, expr_t scpel_expr)
+                        av_set_t expr_seq, expr_t c_expr)
 {
   bool b, should_move;
   unsigned book_uid;
@@ -5221,7 +5221,7 @@ move_exprs_to_boundary (bnd_t bnd, expr_t expr_vliw,
   bitmap_clear (current_originators);
 
   b = move_op (BND_TO (bnd), expr_seq, expr_vliw,
-               get_dest_from_orig_ops (expr_seq), scpel_expr, &should_move);
+               get_dest_from_orig_ops (expr_seq), c_expr, &should_move);
 
   /* We should be able to find the expression we've chosen for
      scheduling.  */
@@ -5411,7 +5411,7 @@ static insn_t
 schedule_expr_on_boundary (bnd_t bnd, expr_t expr_vliw, int seqno)
 {
   av_set_t expr_seq;
-  expr_t scpel_expr = XALLOCA (expr_def);
+  expr_t c_expr = XALLOCA (expr_def);
   insn_t place_to_insert;
   insn_t insn;
   bool should_move;
@@ -5433,8 +5433,8 @@ schedule_expr_on_boundary (bnd_t bnd, expr_t expr_vliw, int seqno)
 
   /* Find a place for C_EXPR to schedule.  */
   place_to_insert = prepare_place_to_insert (bnd);
-  should_move = move_exprs_to_boundary (bnd, expr_vliw, expr_seq, scpel_expr);
-  clear_expr (scpel_expr);
+  should_move = move_exprs_to_boundary (bnd, expr_vliw, expr_seq, c_expr);
+  clear_expr (c_expr);
 
   /* Add the instruction.  The corner case to care about is when
      the expr_seq set has more than one expr, and we chose the one that
@@ -5700,10 +5700,10 @@ update_and_record_unavailable_insns (basic_block book_block)
     }
 }
 
-/* The main effect of this function is that sparams->scpel_expr is merged
+/* The main effect of this function is that sparams->c_expr is merged
    with (or copied to) lparams->c_expr_merged.  If there's only one successor,
-   we avoid merging anything by copying sparams->scpel_expr to lparams->c_expr_merged.
-   lparams->c_expr_merged is copied back to sparams->scpel_expr after all
+   we avoid merging anything by copying sparams->c_expr to lparams->c_expr_merged.
+   lparams->c_expr_merged is copied back to sparams->c_expr after all
    successors has been traversed.  lparams->c_expr_local is an expr allocated
    on stack in the caller function, and is used if there is more than one
    successor.
@@ -5726,8 +5726,8 @@ move_op_merge_succs (insn_t insn ATTRIBUTE_UNUSED,
   /* If this is a first successor.  */
   if (!lparams->c_expr_merged)
     {
-      lparams->c_expr_merged = sparams->scpel_expr;
-      sparams->scpel_expr = lparams->c_expr_local;
+      lparams->c_expr_merged = sparams->c_expr;
+      sparams->c_expr = lparams->c_expr_local;
     }
   else
     {
@@ -5751,11 +5751,11 @@ move_op_merge_succs (insn_t insn ATTRIBUTE_UNUSED,
 	 below function.  */
       int old_times = EXPR_SCHED_TIMES (lparams->c_expr_merged);
 
-      merge_expr_data (lparams->c_expr_merged, sparams->scpel_expr, NULL);
-      if (EXPR_SCHED_TIMES (sparams->scpel_expr) == 0)
+      merge_expr_data (lparams->c_expr_merged, sparams->c_expr, NULL);
+      if (EXPR_SCHED_TIMES (sparams->c_expr) == 0)
 	EXPR_SCHED_TIMES (lparams->c_expr_merged) = old_times;
 
-      clear_expr (sparams->scpel_expr);
+      clear_expr (sparams->c_expr);
     }
 }
 
@@ -5797,7 +5797,7 @@ move_op_after_merge_succs (cmpd_local_params_p lp, void *sparams)
 {
   moveop_static_params_p sp = (moveop_static_params_p) sparams;
 
-  sp->scpel_expr = lp->c_expr_merged;
+  sp->c_expr = lp->c_expr_merged;
 }
 
 /* Track bookkeeping copies created, insns scheduled, and blocks for
@@ -5822,7 +5822,7 @@ track_scheduled_insns_and_blocks (rtx_insn *insn)
   /* For instructions we must immediately remove insn from the
      stream, so subsequent update_data_sets () won't include this
      insn into av_set.
-     For expr we must make insn look like "INSN_REG (insn) := scpel_expr".  */
+     For expr we must make insn look like "INSN_REG (insn) := c_expr".  */
   if (INSN_UID (insn) > max_uid_before_move_op)
     stat_bookkeeping_copies--;
 }
@@ -5837,10 +5837,10 @@ maybe_emit_renaming_copy (rtx_insn *insn,
   rtx cur_reg;
 
   /* Bail out early when expression cannot be renamed at all.  */
-  if (!EXPR_SEPARABLE_P (params->scpel_expr))
+  if (!EXPR_SEPARABLE_P (params->c_expr))
     return false;
 
-  cur_reg = expr_dest_reg (params->scpel_expr);
+  cur_reg = expr_dest_reg (params->c_expr);
   gcc_assert (cur_reg && params->dest && REG_P (params->dest));
 
   /* If original operation has expr and the register chosen for
@@ -5857,7 +5857,7 @@ maybe_emit_renaming_copy (rtx_insn *insn,
                                                    INSN_SEQNO (insn),
                                                    insn);
       EXPR_SPEC_DONE_DS (INSN_EXPR (reg_move_insn)) = 0;
-      replace_dest_with_reg_in_expr (params->scpel_expr, params->dest);
+      replace_dest_with_reg_in_expr (params->c_expr, params->dest);
 
       insn_emitted = true;
       params->was_renamed = true;
@@ -5881,7 +5881,7 @@ maybe_emit_speculative_check (rtx_insn *insn, expr_t expr,
   if (check_ds != 0)
     {
       /* A speculation check should be inserted.  */
-      x = create_speculation_check (params->scpel_expr, check_ds, insn);
+      x = create_speculation_check (params->c_expr, check_ds, insn);
       insn_emitted = true;
     }
   else
@@ -5986,7 +5986,7 @@ move_op_orig_expr_found (insn_t insn, expr_t expr,
   bool only_disconnect;
   moveop_static_params_p params = (moveop_static_params_p) static_params;
 
-  copy_expr_onside (params->scpel_expr, INSN_EXPR (insn));
+  copy_expr_onside (params->c_expr, INSN_EXPR (insn));
   track_scheduled_insns_and_blocks (insn);
   handle_emitting_transformations (insn, expr, params);
   only_disconnect = params->uid == INSN_UID (insn);
@@ -6060,7 +6060,7 @@ move_op_at_first_insn (insn_t insn, cmpd_local_params_p lparams,
       /* We should generate bookkeeping code only if we are not at the
          top level of the move_op.  */
       if (sel_num_cfg_preds_gt_1 (insn))
-        book_block = generate_bookkeeping_insn (sparams->scpel_expr,
+        book_block = generate_bookkeeping_insn (sparams->c_expr,
                                                 lparams->e1, lparams->e2);
       /* Update data sets for the current insn.  */
       update_data_sets (insn);
@@ -6137,7 +6137,7 @@ fur_at_first_insn (insn_t insn,
 }
 
 /* Called on the backward stage of recursion to call moveup_expr for insn
-   and sparams->scpel_expr.  */
+   and sparams->c_expr.  */
 static void
 move_op_ascend (insn_t insn, void *static_params)
 {
@@ -6146,7 +6146,7 @@ move_op_ascend (insn_t insn, void *static_params)
 
   if (! INSN_NOP_P (insn))
     {
-      res = moveup_expr_cached (sparams->scpel_expr, insn, false);
+      res = moveup_expr_cached (sparams->c_expr, insn, false);
       gcc_assert (res != MOVEUP_EXPR_NULL);
     }
 
@@ -6680,7 +6680,7 @@ code_motion_path_driver (insn_t insn, av_set_t orig_ops, ilist_t path,
    to be true in the caller.  */
 static bool
 move_op (insn_t insn, av_set_t orig_ops, expr_t expr_vliw,
-         rtx dest, expr_t scpel_expr, bool *should_move)
+         rtx dest, expr_t c_expr, bool *should_move)
 {
   struct moveop_static_params sparams;
   struct cmpd_local_params lparams;
@@ -6688,7 +6688,7 @@ move_op (insn_t insn, av_set_t orig_ops, expr_t expr_vliw,
 
   /* Init params for code_motion_path_driver.  */
   sparams.dest = dest;
-  sparams.scpel_expr = scpel_expr;
+  sparams.c_expr = c_expr;
   sparams.uid = INSN_UID (EXPR_INSN_RTX (expr_vliw));
   sparams.failed_insn = NULL;
   sparams.was_renamed = false;

@@ -470,7 +470,7 @@ darwin_register_objc_includes (const char *sysroot ATTRIBUTE_UNUSED,
      This path is compiler-relative, we don't want to prepend the sysroot
      since it's not expected to find the headers there.  */
 
-  if (stdinc && scpel_dialect_objc () && !flag_next_runtime)
+  if (stdinc && c_dialect_objc () && !flag_next_runtime)
     {
       const char *fname = GCC_INCLUDE_DIR "-gnu-runtime";
       char *str;

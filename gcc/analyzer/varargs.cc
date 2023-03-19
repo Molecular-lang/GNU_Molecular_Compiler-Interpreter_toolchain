@@ -155,7 +155,7 @@ get_va_list_diag_arg (tree va_list_tree)
    builtin-types.def has:
      DEF_PRIMITIVE_TYPE (BT_VALIST_ARG, va_list_arg_type_node)
 
-   and scpel_common_nodes_and_builtins initializes va_list_arg_type_node
+   and c_common_nodes_and_builtins initializes va_list_arg_type_node
    based on whether TREE_CODE (va_list_type_node) is of ARRAY_TYPE or
    not, giving either one or zero levels of indirection.
 

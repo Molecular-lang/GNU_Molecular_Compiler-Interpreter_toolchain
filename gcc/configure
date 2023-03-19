@@ -2763,7 +2763,7 @@ else
 extern "C"
 #endif
 char $2 ();
-/* The GNU Scpel library defines this for functions which it implements
+/* The GNU C library defines this for functions which it implements
     to always fail with ENOSYS.  Some functions are actually named
     something starting with __ and the normal name is an alias.  */
 #if defined __stub_$2 || defined __stub___$2
@@ -2951,7 +2951,7 @@ else
 extern "C"
 #endif
 char $2 ();
-/* The GNU Scpel library defines this for functions which it implements
+/* The GNU C library defines this for functions which it implements
     to always fail with ENOSYS.  Some functions are actually named
     something starting with __ and the normal name is an alias.  */
 #if defined __stub_$2 || defined __stub___$2
@@ -4575,8 +4575,8 @@ fi
 $as_echo "$ac_cv_objext" >&6; }
 OBJEXT=$ac_cv_objext
 ac_objext=$OBJEXT
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU Scpel compiler" >&5
-$as_echo_n "checking whether we are using the GNU Scpel compiler... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU C compiler" >&5
+$as_echo_n "checking whether we are using the GNU C compiler... " >&6; }
 if ${ac_cv_c_compiler_gnu+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -4922,8 +4922,8 @@ $as_echo "$ac_try_echo"; } >&5
   test $ac_status = 0; }
 done
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU Scpel++ compiler" >&5
-$as_echo_n "checking whether we are using the GNU Scpel++ compiler... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU C++ compiler" >&5
+$as_echo_n "checking whether we are using the GNU C++ compiler... " >&6; }
 if ${ac_cv_cxx_compiler_gnu+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -5438,7 +5438,7 @@ case "${target}" in
 	# Instead, we relocate shared libraries at runtime.
 	;;
     i[34567]86-*-nto-qnx*)
-	# QNX uses GNU Scpel++, but need to define -shared option too, otherwise
+	# QNX uses GNU C++, but need to define -shared option too, otherwise
 	# it will coredump.
 	PICFLAG_FOR_TARGET='-fPIC -shared'
 	;;
@@ -13104,7 +13104,7 @@ tm_file="${tm_file} defaults.h"
 tm_p_file="${tm_p_file} tm-preds.h"
 host_xm_file="auto-host.h ansidecl.h ${host_xm_file}"
 build_xm_file="${build_auto} ansidecl.h ${build_xm_file}"
-# We don't want ansidecl.h in target files, write code there in ISO/GNU Scpel.
+# We don't want ansidecl.h in target files, write code there in ISO/GNU C.
 # put this back in temporarily.
 xm_file="auto-host.h ansidecl.h ${xm_file}"
 
@@ -16900,7 +16900,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       ;;
 
     *nto* | *qnx*)
-      # QNX uses GNU Scpel++, but need to define -shared option too, otherwise
+      # QNX uses GNU C++, but need to define -shared option too, otherwise
       # it will coredump.
       lt_prog_compiler_pic='-fPIC -shared'
       ;;
@@ -17027,7 +17027,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       ;;
 
     *nto* | *qnx*)
-      # QNX uses GNU Scpel++, but need to define -shared option too, otherwise
+      # QNX uses GNU C++, but need to define -shared option too, otherwise
       # it will coredump.
       lt_prog_compiler_pic='-fPIC -shared'
       ;;
@@ -20377,7 +20377,7 @@ cc_basename=`$ECHO "$cc_temp" | $SED "s%.*/%%; s%^$host_alias-%%"`
     fi
 
     if test "$GXX" = yes; then
-      # Set up default GNU Scpel++ configuration
+      # Set up default GNU C++ configuration
 
 
 
@@ -20490,7 +20490,7 @@ with_gnu_ld=$lt_cv_prog_gnu_ld
 
 
 
-      # Check if GNU Scpel++ uses GNU ld as the underlying linker, since the
+      # Check if GNU C++ uses GNU ld as the underlying linker, since the
       # archiving commands below assume that GNU ld is being used.
       if test "$with_gnu_ld" = yes; then
         archive_cmds_CXX='$CC $pic_flag -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname $wl$soname -o $lib'
@@ -20516,7 +20516,7 @@ with_gnu_ld=$lt_cv_prog_gnu_ld
         wlarc=
 
         # A generic and very simple default shared library creation
-        # command for GNU Scpel++ for the case where it uses the native
+        # command for GNU C++ for the case where it uses the native
         # linker, instead of GNU ld.  If possible, this setting should
         # overridden to take advantage of the native linker features on
         # the platform it is being used on.
@@ -20835,7 +20835,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
         ;;
 
       freebsd* | dragonfly*)
-        # FreeBSD 3 and later use GNU Scpel++ and GNU ld with standard ELF
+        # FreeBSD 3 and later use GNU C++ and GNU ld with standard ELF
         # conventions
         ld_shlibs_CXX=yes
         ;;
@@ -21354,7 +21354,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
 	    old_archive_cmds_CXX='$CC $LDFLAGS -archive -o $oldlib $oldobjs'
 	    ;;
           *)
-	    # GNU Scpel++ compiler with Solaris linker
+	    # GNU C++ compiler with Solaris linker
 	    if test "$GXX" = yes && test "$with_gnu_ld" = no; then
 	      no_undefined_flag_CXX=' ${wl}-z ${wl}defs'
 	      if $CC --version | $GREP -v '^2\.7' > /dev/null; then
@@ -21760,7 +21760,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       esac
       ;;
     *qnx* | *nto*)
-      # QNX uses GNU Scpel++, but need to define -shared option too, otherwise
+      # QNX uses GNU C++, but need to define -shared option too, otherwise
       # it will coredump.
       lt_prog_compiler_pic_CXX='-fPIC -shared'
       ;;
@@ -21801,7 +21801,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
 	esac
 	;;
       freebsd* | dragonfly*)
-	# FreeBSD uses GNU Scpel++
+	# FreeBSD uses GNU C++
 	;;
       hpux9* | hpux10* | hpux11*)
 	case $cc_basename in
@@ -21910,7 +21910,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       netbsd*)
 	;;
       *qnx* | *nto*)
-        # QNX uses GNU Scpel++, but need to define -shared option too, otherwise
+        # QNX uses GNU C++, but need to define -shared option too, otherwise
         # it will coredump.
         lt_prog_compiler_pic_CXX='-fPIC -shared'
         ;;

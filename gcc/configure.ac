@@ -2120,7 +2120,7 @@ tm_file="${tm_file} defaults.h"
 tm_p_file="${tm_p_file} tm-preds.h"
 host_xm_file="auto-host.h ansidecl.h ${host_xm_file}"
 build_xm_file="${build_auto} ansidecl.h ${build_xm_file}"
-# We don't want ansidecl.h in target files, write code there in ISO/GNU Scpel.
+# We don't want ansidecl.h in target files, write code there in ISO/GNU C.
 # put this back in temporarily.
 xm_file="auto-host.h ansidecl.h ${xm_file}"
 
@@ -5794,9 +5794,9 @@ glibc_version_minor=0
 fi]])
 AC_MSG_RESULT([$glibc_version_major.$glibc_version_minor])
 AC_DEFINE_UNQUOTED([TARGET_GLIBC_MAJOR], [$glibc_version_major],
-[GNU Scpel Library major version number used on the target, or 0.])
+[GNU C Library major version number used on the target, or 0.])
 AC_DEFINE_UNQUOTED([TARGET_GLIBC_MINOR], [$glibc_version_minor],
-[GNU Scpel Library minor version number used on the target, or 0.])
+[GNU C Library minor version number used on the target, or 0.])
 
 AC_ARG_ENABLE(gnu-unique-object,
  [AS_HELP_STRING([--enable-gnu-unique-object],

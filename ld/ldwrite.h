@@ -1,1 +1,0 @@
-extern void ldwrite (void);

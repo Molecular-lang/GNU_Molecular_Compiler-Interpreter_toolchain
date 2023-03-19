@@ -1,4 +1,6 @@
-/* Compiler driver program that can handle many languages. */
+/* Compiler driver program that can handle many languages.
+   Modified to for Scpel
+ */
 
 /* This program is the user interface to the C compiler and possibly to
 other compilers.  It is used because compilation is a complicated procedure
@@ -40,24 +42,21 @@ compilation is specified by a string called a "spec".  */
      getenv ();
    Hence we need to use "get" for the accessor method, not "getenv".  */
 
-struct env_manager
-{
- public:
-  void init (bool can_restore, bool debug);
-  const char *get (const char *name);
-  void xput (const char *string);
-  void restore ();
+struct env_manager {
+	public:
+		void init (bool can_restore, bool debug);
+		const char *get (const char *name);
+		void xput (const char *string);
+		void restore ();
 
- private:
-  bool m_can_restore;
-  bool m_debug;
-  struct kv
-  {
-    char *m_key;
-    char *m_value;
-  };
-  vec<kv> m_keys;
-
+	private:
+		bool m_can_restore;
+		bool m_debug;
+		struct kv {
+			char *m_key;
+			char *m_value;
+		};
+		vec<kv> m_keys;
 };
 
 /* The singleton instance of class env_manager.  */
@@ -72,8 +71,8 @@ static env_manager env;
 void
 env_manager::init (bool can_restore, bool debug)
 {
-  m_can_restore = can_restore;
-  m_debug = debug;
+	m_can_restore = can_restore;
+	m_debug = debug;
 }
 
 /* Get the value of NAME within the environment.  Essentially
@@ -83,10 +82,10 @@ env_manager::init (bool can_restore, bool debug)
 const char *
 env_manager::get (const char *name)
 {
-  const char *result = ::getenv (name);
-  if (m_debug)
-    fprintf (stderr, "env_manager::getenv (%s) -> %s\n", name, result);
-  return result;
+	const char *result = ::getenv (name);
+	if (m_debug)
+		fprintf (stderr, "env_manager::getenv (%s) -> %s\n", name, result);
+	return result;
 }
 
 /* Put the given KEY=VALUE entry STRING into the environment.
@@ -97,26 +96,25 @@ env_manager::get (const char *name)
 void
 env_manager::xput (const char *string)
 {
-  if (m_debug)
-    fprintf (stderr, "env_manager::xput (%s)\n", string);
-  if (verbose_flag)
-    fnotice (stderr, "%s\n", string);
+	if (m_debug)
+		fprintf (stderr, "env_manager::xput (%s)\n", string);
+	if (verbose_flag)
+		fnotice (stderr, "%s\n", string);
 
-  if (m_can_restore)
-    {
-      char *equals = strchr (const_cast <char *> (string), '=');
-      gcc_assert (equals);
+	if (m_can_restore) {
+		char *equals = strchr (const_cast <char *> (string), '=');
+		gcc_assert (equals);
 
-      struct kv kv;
-      kv.m_key = xstrndup (string, equals - string);
-      const char *cur_value = ::getenv (kv.m_key);
-      if (m_debug)
-	fprintf (stderr, "saving old value: %s\n",cur_value);
-      kv.m_value = cur_value ? xstrdup (cur_value) : NULL;
-      m_keys.safe_push (kv);
-    }
+		struct kv kv;
+		kv.m_key = xstrndup (string, equals - string);
+		const char *cur_value = ::getenv (kv.m_key);
+		if (m_debug)
+			fprintf (stderr, "saving old value: %s\n",cur_value);
+		kv.m_value = cur_value ? xstrdup (cur_value) : NULL;
+		m_keys.safe_push (kv);
+	}
 
-  ::putenv (CONST_CAST (char *, string));
+	::putenv (CONST_CAST (char *, string));
 }
 
 /* Undo any xputenv changes made since last restore.
@@ -126,32 +124,30 @@ env_manager::xput (const char *string)
 void
 env_manager::restore ()
 {
-  unsigned int i;
-  struct kv *item;
+	unsigned int i;
+	struct kv *item;
 
-  gcc_assert (m_can_restore);
+	gcc_assert (m_can_restore);
 
-  FOR_EACH_VEC_ELT_REVERSE (m_keys, i, item)
-    {
-      if (m_debug)
-	printf ("restoring saved key: %s value: %s\n", item->m_key, item->m_value);
-      if (item->m_value)
-	::setenv (item->m_key, item->m_value, 1);
-      else
-	::unsetenv (item->m_key);
-      free (item->m_key);
-      free (item->m_value);
-    }
+	FOR_EACH_VEC_ELT_REVERSE (m_keys, i, item)
+	{
+		if (m_debug)
+			printf ("restoring saved key: %s value: %s\n", item->m_key, item->m_value);
+		if (item->m_value)
+			::setenv (item->m_key, item->m_value, 1);
+		else
+			::unsetenv (item->m_key);
+		free (item->m_key);
+		free (item->m_value);
+	}
 
-  m_keys.truncate (0);
+	m_keys.truncate (0);
 }
 
 /* Forbid other uses of getenv and putenv.  */
 #if (GCC_VERSION >= 3000)
 #pragma GCC poison getenv putenv
 #endif
-
-
 
 /* By default there is no special suffix for target executables.  */
 #ifdef TARGET_EXECUTABLE_SUFFIX
@@ -252,10 +248,10 @@ static const char *target_sysroot_hdrs_suffix = 0;
    and use the source file's name in them, and don't delete them.  */
 
 static enum save_temps {
-  SAVE_TEMPS_NONE,		/* no -save-temps */
-  SAVE_TEMPS_CWD,		/* -save-temps in current directory */
-  SAVE_TEMPS_DUMP,              /* -save-temps in dumpdir */
-  SAVE_TEMPS_OBJ		/* -save-temps in object directory */
+	SAVE_TEMPS_NONE,		/* no -save-temps */
+	SAVE_TEMPS_CWD,		/* -save-temps in current directory */
+	SAVE_TEMPS_DUMP,              /* -save-temps in dumpdir */
+	SAVE_TEMPS_OBJ		/* -save-temps in object directory */
 } save_temps_flag;
 
 /* Set this iff the dumppfx implied by a -save-temps=* option is to
@@ -344,18 +340,14 @@ static char *load_specs (const char *);
 static void read_specs (const char *, bool, bool);
 static void set_spec (const char *, const char *, bool);
 static struct compiler *lookup_compiler (const char *, size_t, const char *);
-static char *build_search_list (const struct path_prefix *, const char *,
-				bool, bool);
+static char *build_search_list (const struct path_prefix *, const char *, bool, bool);
 static void xputenv (const char *);
-static void putenv_from_prefixes (const struct path_prefix *, const char *,
-				  bool);
+static void putenv_from_prefixes (const struct path_prefix *, const char *, bool);
 static int access_check (const char *, int);
 static char *find_a_file (const struct path_prefix *, const char *, int, bool);
 static char *find_a_program (const char *);
-static void add_prefix (struct path_prefix *, const char *, const char *,
-			int, int, int);
-static void add_sysrooted_prefix (struct path_prefix *, const char *,
-				  const char *, int, int, int);
+static void add_prefix (struct path_prefix *, const char *, const char *, int, int, int);
+static void add_sysrooted_prefix (struct path_prefix *, const char *, const char *, int, int, int);
 static char *skip_whitespace (char *);
 static void delete_if_ordinary (const char *);
 static void delete_temp_files (void);
@@ -396,8 +388,7 @@ static void alloc_args (void);
 static void clear_args (void);
 static void fatal_signal (int);
 #if defined(ENABLE_SHARED_LIBGCC) && !defined(REAL_LIBGCC_SPEC)
-static void init_gcc_specs (struct obstack *, const char *, const char *,
-			    const char *);
+static void init_gcc_specs (struct obstack *, const char *, const char *, const char *);
 #endif
 #if defined(HAVE_TARGET_OBJECT_SUFFIX) || defined(HAVE_TARGET_EXECUTABLE_SUFFIX)
 static const char *convert_filename (const char *, int, int);
@@ -429,7 +420,6 @@ static char *quote_spec (char *);
 static char *quote_spec_arg (char *);
 static bool not_actual_file_p (const char *);
 
-
 /* The Specs Language
 
 Specs are strings containing lines, each of which (if not blank)
@@ -659,7 +649,7 @@ to tell which compilers to run.
 GCC also knows implicitly that arguments starting in `-l' are to be
 treated as compiler output files, and passed to the linker in their
 proper position among the other output files.  */
-
+
 /* Define the macros used for specs %a, %l, %L, %S, %C, %1.  */
 
 /* config.h can define ASM_SPEC to provide extra args to the assembler
@@ -1381,13 +1371,8 @@ static int n_compilers;
 
 static const struct compiler default_compilers[] =
 {
-  /* Add lists of suffixes of known languages here.  If those languages
-     were not present when we built the driver, we will hit these copies
-     and be given a more meaningful error than "file not used since
-     linking is not done".  */
-
+  /* Next come the entries for C.  */
   {".c", "@c", 0, 0, 1},
-  {".co", "@c", 0, 0, 1},
   {"@c",
    /* cc1 has an integrated ISO C preprocessor.  We should invoke the
       external preprocessor if -save-temps is given.  */
@@ -1406,7 +1391,6 @@ static const struct compiler default_compilers[] =
    "%{!E:%e-E or -x required when input is from standard input}\
     %(trad_capable_cpp) %(cpp_options) %(cpp_debug_options)", 0, 0, 0},
   {".h", "@c-header", 0, 0, 0},
-  {".ho", "@c-header", 0, 0, 0},
   {"@c-header",
    /* cc1 has an integrated ISO C preprocessor.  We should invoke the
       external preprocessor if -save-temps is given.  */
@@ -1471,48 +1455,43 @@ static vec<char_p> assembler_options;
    These options are accumulated by -Wp,
    and substituted into the preprocessor command with %Z.  */
 static vec<char_p> preprocessor_options;
-
+
 static char *
 skip_whitespace (char *p)
 {
-  while (1)
-    {
-      /* A fully-blank line is a delimiter in the SPEC file and shouldn't
-	 be considered whitespace.  */
-      if (p[0] == '\n' && p[1] == '\n' && p[2] == '\n')
-	return p + 1;
-      else if (*p == '\n' || *p == ' ' || *p == '\t')
-	p++;
-      else if (*p == '#')
-	{
-	  while (*p != '\n')
-	    p++;
-	  p++;
+	while (1) {
+		/* A fully-blank line is a delimiter in the SPEC file and shouldn't
+		   be considered whitespace.  */
+		if (p[0] == '\n' && p[1] == '\n' && p[2] == '\n')
+			return p + 1;
+		else if (*p == '\n' || *p == ' ' || *p == '\t')
+			p++;
+		else if (*p == '#') {
+			while (*p != '\n')
+				p++;
+			p++;
+		} else
+			break;
 	}
-      else
-	break;
-    }
 
-  return p;
+	return p;
 }
 /* Structures to keep track of prefixes to try when looking for files.  */
 
-struct prefix_list
-{
-  const char *prefix;	      /* String to prepend to the path.  */
-  struct prefix_list *next;   /* Next in linked list.  */
-  int require_machine_suffix; /* Don't use without machine_suffix.  */
-  /* 2 means try both machine_suffix and just_machine_suffix.  */
-  int priority;		      /* Sort key - priority within list.  */
-  int os_multilib;	      /* 1 if OS multilib scheme should be used,
+struct prefix_list {
+	const char *prefix;	      /* String to prepend to the path.  */
+	struct prefix_list *next;   /* Next in linked list.  */
+	int require_machine_suffix; /* Don't use without machine_suffix.  */
+	/* 2 means try both machine_suffix and just_machine_suffix.  */
+	int priority;		      /* Sort key - priority within list.  */
+	int os_multilib;	      /* 1 if OS multilib scheme should be used,
 				 0 for GCC multilib scheme.  */
 };
 
-struct path_prefix
-{
-  struct prefix_list *plist;  /* List of prefixes to try */
-  int max_len;                /* Max length of a prefix in PLIST */
-  const char *name;           /* Name of this list (used in config stuff) */
+struct path_prefix {
+	struct prefix_list *plist;  /* List of prefixes to try */
+	int max_len;                /* Max length of a prefix in PLIST */
+	const char *name;           /* Name of this list (used in config stuff) */
 };
 
 /* List of prefixes to try when looking for executables.  */
@@ -1614,7 +1593,7 @@ static const char *multilib_os_dir;
    set_multilib_dir based on the compilation options.  */
 
 static const char *multiarch_dir;
-
+
 /* Structure to keep track of the specs that have been defined so far.
    These are accessed using %(specname) in a compiler or link
    spec.  */
@@ -1693,10 +1672,9 @@ static struct spec_list static_specs[] =
 #ifdef EXTRA_SPECS		/* additional specs needed */
 /* Structure to keep track of just the first two args of a spec_list.
    That is all that the EXTRA_SPECS macro gives us.  */
-struct spec_list_1
-{
-  const char *const name;
-  const char *const ptr;
+struct spec_list_1 {
+	const char *const name;
+	const char *const ptr;
 };
 
 static const struct spec_list_1 extra_specs_1[] = { EXTRA_SPECS };
@@ -1704,11 +1682,9 @@ static struct spec_list *extra_specs = (struct spec_list *) 0;
 #endif
 
 /* List of dynamically allocates specs that have been defined so far.  */
-
 static struct spec_list *specs = (struct spec_list *) 0;
-
-/* List of static spec functions.  */
 
+/* List of static spec functions.  */
 static const struct spec_function static_spec_functions[] =
 {
   { "getenv",                   getenv_spec_function },
@@ -8749,7 +8725,7 @@ driver::prepare_infiles ()
   int lang_n_infiles = 0;
 
   if (n_infiles == added_libraries)
-    fatal_error (input_location, "no input files");
+    fatal_error (input_location, "no input files - you'll have to say more than that!..");
 
   if (seen_error ())
     /* Early exit needed from main.  */

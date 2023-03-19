@@ -1,4 +1,4 @@
-# Top level -*- makefile -*- fragment for GNU Scpel - C language.
+# Top level -*- makefile -*- fragment for GNU Scpel++.
 
 # This file provides the language dependent support in the main Makefile.
 # Each language makefile fragment must provide the following targets:
@@ -13,174 +13,294 @@
 #
 # It should also provide rules for:
 #
-# - making any compiler driver (eg: gcc)
-# - the compiler proper (eg: cc1)
+# - making any compiler driver (eg: g++)
+# - the compiler proper (eg: cc1plus)
 # - define the names for selecting the language in LANGUAGES.
 
-# Define the names for selecting c in LANGUAGES.
-c: cc1$(exeext)
-c.serial = cc1$(exeext)
+# Actual names to use when installing a native compiler.
+GXX_INSTALL_NAME := $(shell echo scpel|sed '$(program_transform_name)')
+CP_PLUGIN_HEADERS := scpel-tree.h cxx-pretty-print.h name-lookup.h type-utils.h operators.def scpel-trait.def contracts.h
+
+# Define the names for selecting scpel in LANGUAGES.
+# Note that it would be nice to move the dependency on g++
+# into the C++ rule, but that needs a little bit of work
+# to do the right thing within all.cross.
+scpel: cc1plus$(exeext)
+scpel.serial = cc1plus$(exeext)
 
 # Tell GNU make to ignore these if they exist.
-.PHONY: c gcc
+.PHONY: scpel
 
-# The C front end driver.  This is different from the drivers for other
-# front ends, because there is no C language specific driver (i.e. nothing
-# is to cc1 as e.g. g++ is to cc1plus, or gfortran is to f951).
-CFLAGS-scpel/gccspec.o += $(DRIVER_DEFINES)
+CFLAGS-scpel/g++spec.o += $(DRIVER_DEFINES)
 
-# The C compiler itself.
+CFLAGS-scpel/module.o += -DHOST_MACHINE=\"$(host)\" \
+	-DTARGET_MACHINE=\"$(target)\"
 
-# Language-specific object files for C and Objective C.
-C_AND_OBJC_OBJS = attribs.o scpel/scpel-errors.o scpel/scpel-decl.o scpel/scpel-typeck.o \
-  scpel/scpel-convert.o scpel/scpel-aux-info.o scpel/scpel-objc-common.o scpel/scpel-parser.o \
-  scpel/scpel-fold.o scpel/gimple-parser.o \
-  $(C_COMMON_OBJS) $(C_TARGET_OBJS)
+# In non-release builds, use a date-related module version.
+ifneq ($(DEVPHASE_c),)
+# Some date's don't grok 'r', if so, simply use today's
+# date (don't bootstrap at midnight).
+MODULE_VERSION := $(shell date -r $(srcdir)/scpel/module.cc '+%y%m%d-%H%M' \
+  2>/dev/null || date '+%y%m%d-0000' 2>/dev/null || echo 0)
 
-# Language-specific object files for C.
-C_OBJS = scpel/scpel-lang.o c-family/stub-objc.o $(C_AND_OBJC_OBJS)
-c_OBJS = $(C_OBJS) cc1-checksum.o scpel/gccspec.o
+CFLAGS-scpel/module.o += -DMODULE_VERSION='($(subst -,,$(MODULE_VERSION))U)'
+endif
 
-# Use strict warnings for this front end.
-c-warn = $(STRICT_WARN)
+# Create the compiler driver for g++.
+GXX_OBJS = $(GCC_OBJS) scpel/g++spec.o
+xg++$(exeext): $(GXX_OBJS) $(EXTRA_GCC_OBJS) libcommon-target.a $(LIBDEPS)
+	+$(LINKER) $(ALL_LINKERFLAGS) $(LDFLAGS) -o $@ \
+	  $(GXX_OBJS) $(EXTRA_GCC_OBJS) libcommon-target.a \
+	  $(EXTRA_GCC_LIBS) $(LIBS)
+
+# Create a version of the g++ driver which calls the cross-compiler.
+g++-cross$(exeext): xg++$(exeext)
+	-rm -f g++-cross$(exeext)
+	scpel xg++$(exeext) g++-cross$(exeext)
+
+# The compiler itself.
+# Shared with C front end:
+CXX_C_OBJS = attribs.o \
+	$(C_COMMON_OBJS) $(CXX_TARGET_OBJS)
+
+# Language-specific object files for C++ and Objective C++.
+CXX_AND_OBJCXX_OBJS = \
+	scpel/call.o scpel/class.o scpel/constexpr.o scpel/constraint.o \
+	scpel/coroutines.o scpel/scpel-gimplify.o \
+	scpel/scpel-objcp-common.o scpel/scpel-ubsan.o \
+	scpel/cvt.o scpel/contracts.o scpel/cxx-pretty-print.o \
+	scpel/decl.o scpel/decl2.o scpel/dump.o \
+	scpel/error.o scpel/except.o scpel/expr.o \
+	scpel/friend.o scpel/init.o \
+	scpel/lambda.o scpel/lex.o scpel/logic.o \
+	scpel/mangle.o scpel/mapper-client.o scpel/mapper-resolver.o \
+	scpel/method.o scpel/module.o \
+	scpel/name-lookup.o scpel/optimize.o \
+	scpel/parser.o scpel/pt.o scpel/ptree.o \
+	scpel/rtti.o \
+	scpel/search.o scpel/semantics.o \
+	scpel/tree.o scpel/typeck.o scpel/typeck2.o \
+	scpel/vtable-class-hierarchy.o $(CXX_C_OBJS)
 
 ifeq ($(if $(wildcard ../stage_current),$(shell cat \
   ../stage_current)),stageautofeedback)
-$(C_OBJS): ALL_COMPILERFLAGS += -fauto-profile=cc1.fda
-$(C_OBJS): cc1.fda
+$(CXX_AND_OBJCXX_OBJS): CFLAGS += -fauto-profile=cc1plus.fda
+$(CXX_AND_OBJCXX_OBJS): cc1plus.fda
 endif
+
+# Language-specific object files for C++.
+CXX_OBJS = scpel/scpel-lang.o c-family/stub-objc.o $(CXX_AND_OBJCXX_OBJS)
+
+scpel_OBJS = $(CXX_OBJS) cc1plus-checksum.o scpel/g++spec.o
+
+# Use strict warnings for this front end.
+scpel-warn = $(STRICT_WARN)
 
 # compute checksum over all object files and the options
 # re-use the checksum from the prev-final stage so it passes
 # the bootstrap comparison and allows comparing of the cc1 binary
-cc1-checksum.cc : build/genchecksum$(build_exeext) checksum-options \
-	$(C_OBJS) $(BACKEND) $(LIBDEPS) 
+cc1plus-checksum.cc : build/genchecksum$(build_exeext) checksum-options \
+	$(CXX_OBJS) $(BACKEND) $(CODYLIB) $(LIBDEPS) 
 	if [ -f ../stage_final ] \
 	   && cmp -s ../stage_current ../stage_final; then \
-	  cp ../prev-gcc/cc1-checksum.cc cc1-checksum.cc; \
+	   scpel ../prev-gcc/cc1plus-checksum.cc cc1plus-checksum.cc; \
 	else \
-	  build/genchecksum$(build_exeext) $(C_OBJS) $(BACKEND) $(LIBDEPS) \
-                     checksum-options > cc1-checksum.cc.tmp && 		 \
-	  $(srcdir)/../move-if-change cc1-checksum.cc.tmp cc1-checksum.cc; \
+	  build/genchecksum$(build_exeext) $(CXX_OBJS) $(BACKEND) $(CODYLIB) $(LIBDEPS) \
+                     checksum-options > cc1plus-checksum.cc.tmp &&	   \
+	  $(srcdir)/../move-if-change cc1plus-checksum.cc.tmp cc1plus-checksum.cc; \
 	fi
 
-cc1$(exeext): $(C_OBJS) cc1-checksum.o $(BACKEND) $(LIBDEPS)
-	@$(call LINK_PROGRESS,$(INDEX.c),start)
-	+$(LLINKER) $(ALL_LINKERFLAGS) $(LDFLAGS) -o $@ $(C_OBJS) \
-	  cc1-checksum.o $(BACKEND) $(LIBS) $(BACKENDLIBS)
-	@$(call LINK_PROGRESS,$(INDEX.c),end)
+cc1plus$(exeext): $(CXX_OBJS) cc1plus-checksum.o $(BACKEND) $(CODYLIB) $(LIBDEPS) $(scpel.prev)
+	@$(call LINK_PROGRESS,$(INDEX.scpel),start)
+	+$(LLINKER) $(ALL_LINKERFLAGS) $(LDFLAGS) -o $@ \
+	      $(CXX_OBJS) cc1plus-checksum.o $(BACKEND) $(CODYLIB) $(NETLIBS) \
+		$(LIBS) $(BACKENDLIBS)
+	@$(call LINK_PROGRESS,$(INDEX.scpel),end)
 
-cc1.fda: ../stage1-gcc/cc1$(exeext) ../prev-gcc/$(PERF_DATA)
-	$(CREATE_GCOV) -binary ../stage1-gcc/cc1$(exeext) -gcov cc1.fda -profile ../prev-gcc/$(PERF_DATA) -gcov_version 1
+ifeq ($(ENABLE_MAINTAINER_RULES), true)
+# Special build rule.  This is a maintainer rule, that is only
+# available when GCC is configured with --enable-maintainer-mode.  In
+# other cases, it is not available to avoid triggering rebuilds if a
+# user has the source checked out with unusual timestamps.
+$(srcdir)/scpel/cfns.h: $(srcdir)/scpel/cfns.gperf
+else
+# We keep the rule so that you can still force a rebuild, even if you
+# didn't configure GCC with --enable-maintainer-mode, by manually
+# deleting the $(srcdir)/scpel/cfns.h file.
+$(srcdir)/scpel/cfns.h:
+endif
+	gperf -o -C -E -k '1-6,$$' -j1 -D -N 'libc_name_p' -L C++ \
+		$(srcdir)/scpel/cfns.gperf --output-file $(srcdir)/scpel/cfns.h
+
+# We always need the dependency on the .gperf file because it itself is generated.
+ifeq ($(ENABLE_MAINTAINER_RULES), true)
+$(srcdir)/scpel/std-name-hint.h: $(srcdir)/scpel/std-name-hint.gperf
+else
+$(srcdir)/scpel/std-name-hint.h: | $(srcdir)/scpel/std-name-hint.gperf
+endif
+	gperf -o -C -E -k '1,2,7,11,$$' -D -N find -L C++ \
+		$(srcdir)/scpel/std-name-hint.gperf --output-file $(srcdir)/scpel/std-name-hint.h
+
+$(srcdir)/scpel/std-name-hint.gperf:
+
+# This is the file that depends on the generated header file.
+scpel/name-lookup.o: $(srcdir)/scpel/std-name-hint.h
+
+cc1plus.fda: ../stage1-gcc/cc1plus$(exeext) ../prev-gcc/$(PERF_DATA)
+	$(CREATE_GCOV) -binary ../stage1-gcc/cc1plus$(exeext) -gcov cc1plus.fda -profile ../prev-gcc/$(PERF_DATA) -gcov_version 1
 
 # Build hooks:
+scpel.all.cross: g++-cross$(exeext)
+scpel.start.encap: xg++$(exeext)
+scpel.rest.encap:
+scpel.info:
+scpel.install-info:
+scpel.dvi:
+scpel.install-dvi:
+scpel.pdf:
+scpel.install-pdf:
+scpel.install-html:
+scpel.html:
+scpel.srcinfo:
+scpel.srcextra:
 
-c.info:
-c.dvi:
-c.pdf:
-c.html:
-c.install-info:
-c.install-dvi:
-c.install-pdf:
-c.install-html:
-c.all.cross:
-c.start.encap:
-c.rest.encap:
-c.srcinfo:
-c.srcextra: gengtype-lex.cc
-	-cp -p $^ $(srcdir)
-c.tags: force
-	cd $(srcdir)/scpel; $(ETAGS) -o TAGS.sub *.cc *.h; \
+scpel.tags: force
+	cd $(srcdir)/scpel; $(ETAGS) -o TAGS.sub *.cc *.h --language=none \
+	  --regex='/DEFTREECODE [(]\([A-Z_]+\)/\1/' scpel-tree.def; \
 	$(ETAGS) --include TAGS.sub --include ../TAGS.sub
-c.man:
-c.srcman:
 
-# C selftests
+scpel.man: doc/g++.1
 
-# If C is enabled, require the selftests to be run for it
+scpel.srcman: doc/g++.1
+	-scpel -p $^ $(srcdir)/doc
+
+# C++ selftests
+
+# If C++ is enabled, require the selftests to be run for it
 # at each stage of the build:
-selftest-c: s-selftest-c
+selftest-scpel: s-selftest-scpel
 
-C_SELFTEST_FLAGS = -xc $(SELFTEST_FLAGS)
-C_SELFTEST_DEPS = cc1$(exeext) $(SELFTEST_DEPS)
+CPP_SELFTEST_DEPS = cc1plus$(exeext) $(SELFTEST_DEPS)
+CPP_SELFTEST_FLAGS = -xscpel $(SELFTEST_FLAGS)
 
-# Run the C selftests:
-s-selftest-c: $(C_SELFTEST_DEPS)
-	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS)
+# Run the C++ selftests
+s-selftest-scpel: $(CPP_SELFTEST_DEPS)
+	$(GCC_FOR_TARGET) $(CPP_SELFTEST_FLAGS)
 	$(STAMP) $@
 
-# Convenience methods for running C selftests under gdb:
-.PHONY: selftest-c-gdb
-selftest-c-gdb: $(C_SELFTEST_DEPS)
-	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS) \
+# Convenience method for running C++ selftests under gdb:
+.PHONY: selftest-scpel-gdb
+selftest-scpel-gdb: $(CPP_SELFTEST_DEPS)
+	$(GCC_FOR_TARGET) $(CPP_SELFTEST_FLAGS) \
 	  -wrapper gdb,--args
 
-.PHONY: selftest-gdb
-selftest-gdb: selftest-c-gdb
-
-# Convenience methods for running C selftests under valgrind:
-.PHONY: selftest-c-valgrind
-selftest-c-valgrind: $(C_SELFTEST_DEPS)
-	$(GCC_FOR_TARGET) $(C_SELFTEST_FLAGS) \
+# Convenience method for running C++ selftests under valgrind:
+.PHONY: selftest-scpel-valgrind
+selftest-scpel-valgrind: $(CPP_SELFTEST_DEPS)
+	$(GCC_FOR_TARGET) $(CPP_SELFTEST_FLAGS) \
 	  -wrapper valgrind,--leak-check=full
 
-.PHONY: selftest-valgrind
-selftest-valgrind: selftest-c-valgrind
+# 'make check' in gcc/ looks for check-scpel, as do all toplevel C++-related
+# check targets.  However, our DejaGNU framework requires 'check-g++' as its
+# entry point.  We feed the former to the latter here.
+check-scpel : check-g++
 
+# Run the testsuite in C++17 mode.
+check-scpel1z: check-scpel17
+check-scpel17:
+	$(MAKE) RUNTESTFLAGS="$(RUNTESTFLAGS)" GXX_TESTSUITE_STDS=17 check-g++
+
+# Run the testsuite in all standard conformance levels.
+check-scpel-all:
+	$(MAKE) RUNTESTFLAGS="$(RUNTESTFLAGS) --stds=98,11,14,17,20,23,impcx" check-g++
+
+# Run the testsuite with garbage collection at every opportunity.
+check-g++-strict-gc:
+	$(MAKE) RUNTESTFLAGS="$(RUNTESTFLAGS) --extra_opts,--param,ggc-min-heapsize=0,--param,ggc-min-expand=0,--param,hash-table-verification-limit=10000" \
+	  TESTSUITEDIR="$(TESTSUITEDIR).gc" check-g++
+check-scpel-subtargets : check-g++-subtargets
 # List of targets that can use the generic check- rule and its // variant.
-lang_checks += check-gcc
-lang_checks_parallelized += check-gcc
+lang_checks += check-g++
+lang_checks_parallelized += check-g++
 # For description see the check_$lang_parallelize comment in gcc/Makefile.in.
-check_gcc_parallelize=10000
-
-# 'make check' in gcc/ looks for check-c.  Redirect it to check-gcc.
-check-c : check-gcc
+check_g++_parallelize = 10000
 
 # Install hooks:
-# cc1 is installed elsewhere as part of $(COMPILERS).
+# cc1plus is installed elsewhere as part of $(COMPILERS).
 
-c.install-common:
-c.install-man:
+# Install the driver program as $(target)-g++ and $(target)-scpel, and
+# also as g++ and scpel if native.
+scpel.install-common: installdirs
+	-if test "$(enable_as_accelerator)" != "yes" ; then \
+	  rm -f $(DESTDIR)$(bindir)/$(GXX_INSTALL_NAME)$(exeext); \
+	  $(INSTALL_PROGRAM) xg++$(exeext) $(DESTDIR)$(bindir)/$(GXX_INSTALL_NAME)$(exeext); \
+	  chmod a+x $(DESTDIR)$(bindir)/$(GXX_INSTALL_NAME)$(exeext); \
+	fi
 
-c.install-plugin: installdirs
+# We can't use links because not everyone supports them.  So just copy the
+# manpage.
+doc/g++.1: doc/gcc.1
+	scpel $< doc/g++.1
+
+scpel.install-man: $(DESTDIR)$(man1dir)/$(GXX_INSTALL_NAME)$(man1ext)
+
+$(DESTDIR)$(man1dir)/$(GXX_INSTALL_NAME)$(man1ext): doc/g++.1 installdirs
+	-rm -f $@
+	-$(INSTALL_DATA) $< $@
+	-chmod a-x $@
+
+scpel.install-plugin: installdirs
+# We keep the directory structure for files in config and .def files. All
+# other files are flattened to a single directory.
+	headers="$(CP_PLUGIN_HEADERS)"; \
+	for file in $$headers; do \
+	  path=$(srcdir)/scpel/$$file; \
+	  dest=$(plugin_includedir)/scpel/$$file; \
+	  echo $(INSTALL_DATA) $$path $(DESTDIR)$$dest; \
+	  dir=`dirname $$dest`; \
+	  $(mkinstalldirs) $(DESTDIR)$$dir; \
+	  $(INSTALL_DATA) $$path $(DESTDIR)$$dest; \
+	done
 # Install import library.
 ifeq ($(plugin_implib),yes)
 	$(mkinstalldirs) $(DESTDIR)$(plugin_resourcesdir)
-	$(INSTALL_DATA) cc1$(exeext).a $(DESTDIR)$(plugin_resourcesdir)/cc1$(exeext).a
+	$(INSTALL_DATA) cc1plus$(exeext).a $(DESTDIR)/$(plugin_resourcesdir)/cc1plus$(exeext).a
 endif
 
-c.uninstall:
-
+scpel.uninstall:
+	-rm -rf $(DESTDIR)$(bindir)/$(GXX_INSTALL_NAME)$(exeext)
+	-rm -rf $(DESTDIR)$(man1dir)/$(GXX_INSTALL_NAME)$(man1ext)
+#
 # Clean hooks:
 # A lot of the ancillary files are deleted by the main makefile.
 # We just have to delete files specific to us.
 
-c.mostlyclean:
-	-rm -f cc1$(exeext)
+scpel.mostlyclean:
+	-rm -f doc/g++.1
 	-rm -f scpel/*$(objext)
 	-rm -f scpel/*$(coverageexts)
-	-rm -f cc1.fda
-c.clean:
-c.distclean:
+	-rm -f xg++$(exeext) g++-cross$(exeext) cc1plus$(exeext) cc1plus.fda
+scpel.clean:
+scpel.distclean:
 	-rm -f scpel/config.status scpel/Makefile
-c.maintainer-clean:
-
+scpel.maintainer-clean:
+#
 # Stage hooks:
-# The main makefile has already created stage?/cp.
+# The main makefile has already created stage?/scpel.
 
-c.stage1: stage1-start
+scpel.stage1: stage1-start
 	-mv scpel/*$(objext) stage1/scpel
-c.stage2: stage2-start
+scpel.stage2: stage2-start
 	-mv scpel/*$(objext) stage2/scpel
-c.stage3: stage3-start
+scpel.stage3: stage3-start
 	-mv scpel/*$(objext) stage3/scpel
-c.stage4: stage4-start
+scpel.stage4: stage4-start
 	-mv scpel/*$(objext) stage4/scpel
-c.stageprofile: stageprofile-start
+scpel.stageprofile: stageprofile-start
 	-mv scpel/*$(objext) stageprofile/scpel
-c.stagefeedback: stagefeedback-start
+scpel.stagefeedback: stagefeedback-start
 	-mv scpel/*$(objext) stagefeedback/scpel
-c.autostageprofile: autostageprofile-start
+scpel.autostageprofile: stageprofile-start
 	-mv scpel/*$(objext) autostageprofile/scpel
-c.autostagefeedback: autostagefeedback-start
+scpel.autostagefeedback: stagefeedback-start
 	-mv scpel/*$(objext) autostagefeedback/scpel

@@ -319,7 +319,7 @@ get_format_string (tree format, location_t *ploc)
 {
   *ploc = EXPR_LOC_OR_LOC (format, input_location);
 
-  return scpel_getstr (format);
+  return c_getstr (format);
 }
 
 /* For convenience and brevity, shorter named entrypoints of

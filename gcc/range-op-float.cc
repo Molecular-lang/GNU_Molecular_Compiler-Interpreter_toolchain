@@ -2199,6 +2199,79 @@ zero_to_inf_range (REAL_VALUE_TYPE &lb, REAL_VALUE_TYPE &ub, int signbit_known)
     }
 }
 
+/* Extend the LHS range by 1ulp in each direction.  For op1_range
+   or op2_range of binary operations just computing the inverse
+   operation on ranges isn't sufficient.  Consider e.g.
+   [1., 1.] = op1 + [1., 1.].  op1's range is not [0., 0.], but
+   [-0x1.0p-54, 0x1.0p-53] (when not -frounding-math), any value for
+   which adding 1. to it results in 1. after rounding to nearest.
+   So, for op1_range/op2_range extend the lhs range by 1ulp (or 0.5ulp)
+   in each direction.  See PR109008 for more details.  */
+
+static frange
+float_widen_lhs_range (tree type, const frange &lhs)
+{
+  frange ret = lhs;
+  if (lhs.known_isnan ())
+    return ret;
+  REAL_VALUE_TYPE lb = lhs.lower_bound ();
+  REAL_VALUE_TYPE ub = lhs.upper_bound ();
+  if (real_isfinite (&lb))
+    {
+      frange_nextafter (TYPE_MODE (type), lb, dconstninf);
+      if (real_isinf (&lb))
+	{
+	  /* For -DBL_MAX, instead of -Inf use
+	     nexttoward (-DBL_MAX, -LDBL_MAX) in a hypothetical
+	     wider type with the same mantissa precision but larger
+	     exponent range; it is outside of range of double values,
+	     but makes it clear it is just one ulp larger rather than
+	     infinite amount larger.  */
+	  lb = dconstm1;
+	  SET_REAL_EXP (&lb, FLOAT_MODE_FORMAT (TYPE_MODE (type))->emax + 1);
+	}
+      if (!flag_rounding_math && !MODE_COMPOSITE_P (TYPE_MODE (type)))
+	{
+	  /* If not -frounding-math nor IBM double double, actually widen
+	     just by 0.5ulp rather than 1ulp.  */
+	  REAL_VALUE_TYPE tem;
+	  real_arithmetic (&tem, PLUS_EXPR, &lhs.lower_bound (), &lb);
+	  real_arithmetic (&lb, RDIV_EXPR, &tem, &dconst2);
+	}
+    }
+  if (real_isfinite (&ub))
+    {
+      frange_nextafter (TYPE_MODE (type), ub, dconstinf);
+      if (real_isinf (&ub))
+	{
+	  /* For DBL_MAX similarly.  */
+	  ub = dconst1;
+	  SET_REAL_EXP (&ub, FLOAT_MODE_FORMAT (TYPE_MODE (type))->emax + 1);
+	}
+      if (!flag_rounding_math && !MODE_COMPOSITE_P (TYPE_MODE (type)))
+	{
+	  /* If not -frounding-math nor IBM double double, actually widen
+	     just by 0.5ulp rather than 1ulp.  */
+	  REAL_VALUE_TYPE tem;
+	  real_arithmetic (&tem, PLUS_EXPR, &lhs.upper_bound (), &ub);
+	  real_arithmetic (&ub, RDIV_EXPR, &tem, &dconst2);
+	}
+    }
+  /* Temporarily disable -ffinite-math-only, so that frange::set doesn't
+     reduce the range back to real_min_representable (type) as lower bound
+     or real_max_representable (type) as upper bound.  */
+  bool save_flag_finite_math_only = flag_finite_math_only;
+  flag_finite_math_only = false;
+  ret.set (type, lb, ub);
+  if (lhs.kind () != VR_VARYING)
+    {
+      ret.clear_nan ();
+      ret.union_ (lhs);
+    }
+  flag_finite_math_only = save_flag_finite_math_only;
+  return ret;
+}
+
 class foperator_plus : public range_operator_float
 {
   using range_operator_float::op1_range;
@@ -2214,8 +2287,9 @@ public:
     range_op_handler minus (MINUS_EXPR, type);
     if (!minus)
       return false;
-    return float_binary_op_range_finish (minus.fold_range (r, type, lhs, op2),
-					 r, type, lhs);
+    frange wlhs = float_widen_lhs_range (type, lhs);
+    return float_binary_op_range_finish (minus.fold_range (r, type, wlhs, op2),
+					 r, type, wlhs);
   }
   virtual bool op2_range (frange &r, tree type,
 			  const frange &lhs,
@@ -2260,9 +2334,10 @@ public:
   {
     if (lhs.undefined_p ())
       return false;
-    return float_binary_op_range_finish (fop_plus.fold_range (r, type, lhs,
+    frange wlhs = float_widen_lhs_range (type, lhs);
+    return float_binary_op_range_finish (fop_plus.fold_range (r, type, wlhs,
 							      op2),
-					 r, type, lhs);
+					 r, type, wlhs);
   }
   virtual bool op2_range (frange &r, tree type,
 			  const frange &lhs,
@@ -2271,8 +2346,9 @@ public:
   {
     if (lhs.undefined_p ())
       return false;
-    return float_binary_op_range_finish (fold_range (r, type, op1, lhs),
-					 r, type, lhs);
+    frange wlhs = float_widen_lhs_range (type, lhs);
+    return float_binary_op_range_finish (fold_range (r, type, op1, wlhs),
+					 r, type, wlhs);
   }
 private:
   void rv_fold (REAL_VALUE_TYPE &lb, REAL_VALUE_TYPE &ub, bool &maybe_nan,
@@ -2338,13 +2414,14 @@ public:
     range_op_handler rdiv (RDIV_EXPR, type);
     if (!rdiv)
       return false;
-    bool ret = rdiv.fold_range (r, type, lhs, op2);
+    frange wlhs = float_widen_lhs_range (type, lhs);
+    bool ret = rdiv.fold_range (r, type, wlhs, op2);
     if (ret == false)
       return false;
-    if (lhs.known_isnan () || op2.known_isnan () || op2.undefined_p ())
-      return float_binary_op_range_finish (ret, r, type, lhs);
-    const REAL_VALUE_TYPE &lhs_lb = lhs.lower_bound ();
-    const REAL_VALUE_TYPE &lhs_ub = lhs.upper_bound ();
+    if (wlhs.known_isnan () || op2.known_isnan () || op2.undefined_p ())
+      return float_binary_op_range_finish (ret, r, type, wlhs);
+    const REAL_VALUE_TYPE &lhs_lb = wlhs.lower_bound ();
+    const REAL_VALUE_TYPE &lhs_ub = wlhs.upper_bound ();
     const REAL_VALUE_TYPE &op2_lb = op2.lower_bound ();
     const REAL_VALUE_TYPE &op2_ub = op2.upper_bound ();
     if ((contains_zero_p (lhs_lb, lhs_ub) && contains_zero_p (op2_lb, op2_ub))
@@ -2363,7 +2440,7 @@ public:
     // or if lhs must be zero and op2 doesn't include zero, it would be
     // UNDEFINED, while rdiv.fold_range computes a zero or singleton INF
     // range.  Those are supersets of UNDEFINED, so let's keep that way.
-    return float_binary_op_range_finish (ret, r, type, lhs);
+    return float_binary_op_range_finish (ret, r, type, wlhs);
   }
   virtual bool op2_range (frange &r, tree type,
 			  const frange &lhs,
@@ -2490,13 +2567,14 @@ public:
   {
     if (lhs.undefined_p ())
       return false;
-    bool ret = fop_mult.fold_range (r, type, lhs, op2);
+    frange wlhs = float_widen_lhs_range (type, lhs);
+    bool ret = fop_mult.fold_range (r, type, wlhs, op2);
     if (!ret)
       return ret;
-    if (lhs.known_isnan () || op2.known_isnan () || op2.undefined_p ())
-      return float_binary_op_range_finish (ret, r, type, lhs);
-    const REAL_VALUE_TYPE &lhs_lb = lhs.lower_bound ();
-    const REAL_VALUE_TYPE &lhs_ub = lhs.upper_bound ();
+    if (wlhs.known_isnan () || op2.known_isnan () || op2.undefined_p ())
+      return float_binary_op_range_finish (ret, r, type, wlhs);
+    const REAL_VALUE_TYPE &lhs_lb = wlhs.lower_bound ();
+    const REAL_VALUE_TYPE &lhs_ub = wlhs.upper_bound ();
     const REAL_VALUE_TYPE &op2_lb = op2.lower_bound ();
     const REAL_VALUE_TYPE &op2_ub = op2.upper_bound ();
     if ((contains_zero_p (lhs_lb, lhs_ub)
@@ -2512,7 +2590,7 @@ public:
 	zero_to_inf_range (lb, ub, signbit_known);
 	r.set (type, lb, ub);
       }
-    return float_binary_op_range_finish (ret, r, type, lhs);
+    return float_binary_op_range_finish (ret, r, type, wlhs);
   }
   virtual bool op2_range (frange &r, tree type,
 			  const frange &lhs,
@@ -2521,13 +2599,14 @@ public:
   {
     if (lhs.undefined_p ())
       return false;
-    bool ret = fold_range (r, type, op1, lhs);
+    frange wlhs = float_widen_lhs_range (type, lhs);
+    bool ret = fold_range (r, type, op1, wlhs);
     if (!ret)
       return ret;
-    if (lhs.known_isnan () || op1.known_isnan () || op1.undefined_p ())
-      return float_binary_op_range_finish (ret, r, type, lhs, true);
-    const REAL_VALUE_TYPE &lhs_lb = lhs.lower_bound ();
-    const REAL_VALUE_TYPE &lhs_ub = lhs.upper_bound ();
+    if (wlhs.known_isnan () || op1.known_isnan () || op1.undefined_p ())
+      return float_binary_op_range_finish (ret, r, type, wlhs, true);
+    const REAL_VALUE_TYPE &lhs_lb = wlhs.lower_bound ();
+    const REAL_VALUE_TYPE &lhs_ub = wlhs.upper_bound ();
     const REAL_VALUE_TYPE &op1_lb = op1.lower_bound ();
     const REAL_VALUE_TYPE &op1_ub = op1.upper_bound ();
     if ((contains_zero_p (lhs_lb, lhs_ub) && contains_zero_p (op1_lb, op1_ub))
@@ -2542,7 +2621,7 @@ public:
 	zero_to_inf_range (lb, ub, signbit_known);
 	r.set (type, lb, ub);
       }
-    return float_binary_op_range_finish (ret, r, type, lhs, true);
+    return float_binary_op_range_finish (ret, r, type, wlhs, true);
   }
 private:
   void rv_fold (REAL_VALUE_TYPE &lb, REAL_VALUE_TYPE &ub, bool &maybe_nan,

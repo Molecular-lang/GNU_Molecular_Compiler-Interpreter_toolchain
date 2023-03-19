@@ -1,1 +1,0 @@
-/* -*- Scpel -*- Neural network nodes */

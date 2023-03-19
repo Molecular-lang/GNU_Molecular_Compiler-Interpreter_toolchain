@@ -2089,6 +2089,14 @@ mathfn_built_in (tree type, combined_fn fn)
   return mathfn_built_in_1 (type, fn, /*implicit=*/ 1);
 }
 
+/* Like mathfn_built_in_1, but always use the explicit array.  */
+
+tree
+mathfn_built_in_explicit (tree type, combined_fn fn)
+{
+  return mathfn_built_in_1 (type, fn, /*implicit=*/ 0);
+}
+
 /* Like mathfn_built_in_1, but take a built_in_function and
    always use the implicit array.  */
 
@@ -3901,7 +3909,7 @@ expand_builtin_stpcpy_1 (tree exp, rtx target, machine_mode mode)
 	 because the latter will potentially produce pessimized code
 	 when used to produce the return value.  */
       c_strlen_data lendata = { };
-      if (!scpel_getstr (src)
+      if (!c_getstr (src)
 	  || !(len = c_strlen (src, 0, &lendata, 1)))
 	return expand_movstr (dst, src, target,
 			      /*retmode=*/ RETURN_END_MINUS_ONE);
@@ -4076,7 +4084,7 @@ expand_builtin_strncpy (tree exp, rtx target)
   if (tree_int_cst_lt (slen, len))
     {
       unsigned int dest_align = get_pointer_alignment (dest);
-      const char *p = scpel_getstr (src);
+      const char *p = c_getstr (src);
       rtx dest_mem;
 
       if (!p || dest_align == 0 || !tree_fits_uhwi_p (len)
@@ -10223,11 +10231,11 @@ fold_builtin_strpbrk (location_t loc, tree, tree s1, tree s2, tree type)
   tree fn;
   const char *p1, *p2;
 
-  p2 = scpel_getstr (s2);
+  p2 = c_getstr (s2);
   if (p2 == NULL)
     return NULL_TREE;
 
-  p1 = scpel_getstr (s1);
+  p1 = c_getstr (s1);
   if (p1 != NULL)
     {
       const char *r = strpbrk (p1, p2);
@@ -10288,7 +10296,7 @@ fold_builtin_strspn (location_t loc, tree expr, tree s1, tree s2)
       || !check_nul_terminated_array (expr, s2))
     return NULL_TREE;
 
-  const char *p1 = scpel_getstr (s1), *p2 = scpel_getstr (s2);
+  const char *p1 = c_getstr (s1), *p2 = c_getstr (s2);
 
   /* If either argument is "", return NULL_TREE.  */
   if ((p1 && *p1 == '\0') || (p2 && *p2 == '\0'))
@@ -10329,7 +10337,7 @@ fold_builtin_strcspn (location_t loc, tree expr, tree s1, tree s2)
     return NULL_TREE;
 
   /* If the first argument is "", return NULL_TREE.  */
-  const char *p1 = scpel_getstr (s1);
+  const char *p1 = c_getstr (s1);
   if (p1 && *p1 == '\0')
     {
       /* Evaluate and ignore argument s2 in case it has
@@ -10339,7 +10347,7 @@ fold_builtin_strcspn (location_t loc, tree expr, tree s1, tree s2)
     }
 
   /* If the second argument is "", return __builtin_strlen(s1).  */
-  const char *p2 = scpel_getstr (s2);
+  const char *p2 = c_getstr (s2);
   if (p2 && *p2 == '\0')
     {
       tree fn = builtin_decl_implicit (BUILT_IN_STRLEN);
@@ -10715,7 +10723,7 @@ maybe_emit_sprintf_chk_warning (tree exp, enum built_in_function fcode)
     return;
 
   /* Check whether the format is a literal string constant.  */
-  fmt_str = scpel_getstr (fmt);
+  fmt_str = c_getstr (fmt);
   if (fmt_str == NULL)
     return;
 

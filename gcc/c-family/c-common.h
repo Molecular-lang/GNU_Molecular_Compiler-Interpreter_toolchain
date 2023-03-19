@@ -47,218 +47,226 @@ enum rid
 {
   /* Modifiers: */
   /* C, in empirical order of frequency.  */
-  RID_STATIC = 0,
-  RID_UNSIGNED, RID_LONG,    RID_CONST, RID_EXTERN,
-  RID_REGISTER, RID_TYPEDEF, RID_SHORT, RID_INLINE,
-  RID_VOLATILE, RID_SIGNED,  RID_AUTO,  RID_RESTRICT,
-  RID_NORETURN, RID_ATOMIC,
+  RID_SPL_STATIC = 0,
+  RID_SPL_UNSIGNED, RID_SPL_LONG,    RID_SPL_CONST, RID_SPL_EXTERN,
+  RID_SPL_REGISTER, RID_SPL_TYPEDEF, RID_SPL_SHORT, RID_SPL_INLINE,
+  RID_SPL_VOLATILE, RID_SPL_SIGNED,  RID_SPL_AUTO,  RID_SPL_RESTRICT,
+  RID_SPL_NORETURN, RID_SPL_ATOMIC,
 
   /* C extensions */
-  RID_COMPLEX, RID_THREAD, RID_SAT,
+  RID_SPL_COMPLEX, RID_SPL_THREAD, RID_SPL_SAT,
 
   /* C++ */
-  RID_FRIEND, RID_VIRTUAL, RID_EXPLICIT, RID_EXPORT, RID_MUTABLE,
+  RID_SPL_FRIEND, RID_SPL_VIRTUAL, RID_SPL_EXPLICIT, RID_SPL_EXPORT, RID_SPL_MUTABLE,
 
   /* ObjC ("PQ" reserved words - they do not appear after a '@' and
      are keywords only in specific contexts)  */
-  RID_IN, RID_OUT, RID_INOUT, RID_BYCOPY, RID_BYREF, RID_ONEWAY,
+  RID_SPL_IN, RID_SPL_OUT, RID_SPL_INOUT, RID_SPL_BYCOPY, RID_SPL_BYREF, RID_SPL_ONEWAY,
 
   /* ObjC ("PATTR" reserved words - they do not appear after a '@' 
      and are keywords only as property attributes)  */
-  RID_GETTER, RID_SETTER,
-  RID_READONLY, RID_READWRITE,
-  RID_ASSIGN, RID_RETAIN, RID_COPY,
-  RID_PROPATOMIC, RID_NONATOMIC,
+  RID_SPL_GETTER, RID_SPL_SETTER,
+  RID_SPL_READONLY, RID_SPL_READWRITE,
+  RID_SPL_ASSIGN, RID_SPL_RETAIN, RID_SPL_COPY,
+  RID_SPL_PROPATOMIC, RID_SPL_NONATOMIC,
 
   /* ObjC nullability support keywords that also can appear in the
      property attribute context.  These values should remain contiguous
      with the other property attributes.  */
-  RID_NULL_UNSPECIFIED, RID_NULLABLE, RID_NONNULL, RID_NULL_RESETTABLE,
+  RID_SPL_NULL_UNSPECIFIED, RID_SPL_NULLABLE, RID_SPL_NONNULL, RID_SPL_NULL_RESETTABLE,
 
   /* C (reserved and imaginary types not implemented, so any use is a
      syntax error) */
-  RID_IMAGINARY,
+  RID_SPL_IMAGINARY,
 
   /* C */
-  RID_INT,     RID_CHAR,   RID_FLOAT,    RID_DOUBLE, RID_VOID,
-  RID_ENUM,    RID_STRUCT, RID_UNION,    RID_IF,     RID_ELSE,
-  RID_WHILE,   RID_DO,     RID_FOR,      RID_SWITCH, RID_CASE,
-  RID_DEFAULT, RID_BREAK,  RID_CONTINUE, RID_RETURN, RID_GOTO,
-  RID_SIZEOF,
+  RID_SPL_INT,     RID_SPL_CHAR,   RID_SPL_FLOAT,    RID_SPL_DOUBLE, RID_SPL_VOID,
+  RID_SPL_ENUM,    RID_SPL_STRUCT, RID_SPL_UNION,    RID_SPL_IF,     RID_SPL_ELSE,
+  RID_SPL_WHILE,   RID_SPL_DO,     RID_SPL_FOR,      RID_SPL_SWITCH, RID_SPL_CASE,
+  RID_SPL_DEFAULT, RID_SPL_BREAK,  RID_SPL_CONTINUE, RID_SPL_RETURN, RID_SPL_GOTO,
+  RID_SPL_SIZEOF,
 
   /* C extensions */
-  RID_ASM,       RID_TYPEOF,   RID_TYPEOF_UNQUAL, RID_ALIGNOF,  RID_ATTRIBUTE,
-  RID_VA_ARG,
-  RID_EXTENSION, RID_IMAGPART, RID_REALPART, RID_LABEL,      RID_CHOOSE_EXPR,
-  RID_TYPES_COMPATIBLE_P,      RID_BUILTIN_COMPLEX,	     RID_BUILTIN_SHUFFLE,
-  RID_BUILTIN_SHUFFLEVECTOR,   RID_BUILTIN_CONVERTVECTOR,   RID_BUILTIN_TGMATH,
-  RID_BUILTIN_HAS_ATTRIBUTE,   RID_BUILTIN_ASSOC_BARRIER,
-  RID_DFLOAT32, RID_DFLOAT64, RID_DFLOAT128,
+  RID_SPL_ASM,       RID_SPL_TYPEOF,   RID_SPL_TYPEOF_UNQUAL, RID_SPL_ALIGNOF,  RID_SPL_ATTRIBUTE,
+  RID_SPL_VA_ARG,
+  RID_SPL_EXTENSION, RID_SPL_IMAGPART, RID_SPL_REALPART, RID_SPL_LABEL,      RID_SPL_CHOOSE_EXPR,
+  RID_SPL_TYPES_COMPATIBLE_P,      RID_SPL_BUILTIN_COMPLEX,	     RID_SPL_BUILTIN_SHUFFLE,
+  RID_SPL_BUILTIN_SHUFFLEVECTOR,   RID_SPL_BUILTIN_CONVERTVECTOR,   RID_SPL_BUILTIN_TGMATH,
+  RID_SPL_BUILTIN_HAS_ATTRIBUTE,   RID_SPL_BUILTIN_ASSOC_BARRIER,
+  RID_SPL_DFLOAT32, RID_SPL_DFLOAT64, RID_SPL_DFLOAT128,
 
   /* TS 18661-3 keywords, in the same sequence as the TI_* values.  */
-  RID_FLOAT16,
-  RID_FLOATN_NX_FIRST = RID_FLOAT16,
-  RID_FLOAT32,
-  RID_FLOAT64,
-  RID_FLOAT128,
-  RID_FLOAT32X,
-  RID_FLOAT64X,
-  RID_FLOAT128X,
-#define CASE_RID_FLOATN_NX						\
-  case RID_FLOAT16: case RID_FLOAT32: case RID_FLOAT64: case RID_FLOAT128: \
-  case RID_FLOAT32X: case RID_FLOAT64X: case RID_FLOAT128X
+  RID_SPL_FLOAT16,
+  RID_SPL_FLOATN_NX_FIRST = RID_SPL_FLOAT16,
+  RID_SPL_FLOAT32,
+  RID_SPL_FLOAT64,
+  RID_SPL_FLOAT128,
+  RID_SPL_FLOAT32X,
+  RID_SPL_FLOAT64X,
+  RID_SPL_FLOAT128X,
+#define CASE_RID_SPL_FLOATN_NX						\
+  case RID_SPL_FLOAT16: case RID_SPL_FLOAT32: case RID_SPL_FLOAT64: case RID_SPL_FLOAT128: \
+  case RID_SPL_FLOAT32X: case RID_SPL_FLOAT64X: case RID_SPL_FLOAT128X
 
-  RID_FRACT, RID_ACCUM, RID_AUTO_TYPE, RID_BUILTIN_CALL_WITH_STATIC_CHAIN,
+  RID_SPL_FRACT, RID_SPL_ACCUM, RID_SPL_AUTO_TYPE, RID_SPL_BUILTIN_CALL_WITH_STATIC_CHAIN,
 
   /* "__GIMPLE", for the GIMPLE-parsing extension to the C frontend. */
-  RID_GIMPLE,
+  RID_SPL_GIMPLE,
 
   /* "__PHI", for parsing PHI function in GIMPLE FE.  */
-  RID_PHI,
+  RID_SPL_PHI,
 
   /* "__RTL", for the RTL-parsing extension to the C frontend.  */
-  RID_RTL,
+  RID_SPL_RTL,
 
   /* C11 */
-  RID_ALIGNAS, RID_GENERIC,
+  RID_SPL_ALIGNAS, RID_SPL_GENERIC,
 
   /* This means to warn that this is a C++ keyword, and then treat it
      as a normal identifier.  */
-  RID_CXX_COMPAT_WARN,
+  RID_SPL_CXX_COMPAT_WARN,
 
   /* GNU transactional memory extension */
-  RID_TRANSACTION_ATOMIC, RID_TRANSACTION_RELAXED, RID_TRANSACTION_CANCEL,
+  RID_SPL_TRANSACTION_ATOMIC, RID_SPL_TRANSACTION_RELAXED, RID_SPL_TRANSACTION_CANCEL,
 
   /* Too many ways of getting the name of a function as a string */
-  RID_FUNCTION_NAME, RID_PRETTY_FUNCTION_NAME, RID_C99_FUNCTION_NAME,
+  RID_SPL_FUNCTION_NAME, RID_SPL_PRETTY_FUNCTION_NAME, RID_SPL_C99_FUNCTION_NAME,
 
   /* C++ (some of these are keywords in Objective-C as well, but only
      if they appear after a '@') */
-  RID_BOOL,     RID_WCHAR,    RID_CLASS,
-  RID_PUBLIC,   RID_PRIVATE,  RID_PROTECTED,
-  RID_TEMPLATE, RID_NULL,     RID_CATCH,
-  RID_DELETE,   RID_FALSE,    RID_NAMESPACE,
-  RID_NEW,      RID_OFFSETOF, RID_OPERATOR,
-  RID_THIS,     RID_THROW,    RID_TRUE,
-  RID_TRY,      RID_TYPENAME, RID_TYPEID,
-  RID_USING,    RID_CHAR16,   RID_CHAR32,
+  RID_SPL_BOOL,     RID_SPL_WCHAR,    RID_SPL_CLASS,
+  RID_SPL_PUBLIC,   RID_SPL_PRIVATE,  RID_SPL_PROTECTED,
+  RID_SPL_TEMPLATE, RID_SPL_NULL,     RID_SPL_CATCH,
+  RID_SPL_DELETE,   RID_SPL_FALSE,    RID_SPL_NAMESPACE,
+  RID_SPL_NEW,      RID_SPL_OFFSETOF, RID_SPL_OPERATOR,
+  RID_SPL_THIS,     RID_SPL_THROW,    RID_SPL_TRUE,
+  RID_SPL_TRY,      RID_SPL_TYPENAME, RID_SPL_TYPEID,
+  RID_SPL_USING,    RID_SPL_CHAR16,   RID_SPL_CHAR32,
 
   /* casts */
-  RID_CONSTCAST, RID_DYNCAST, RID_REINTCAST, RID_STATCAST,
+  RID_SPL_CONSTCAST, RID_SPL_DYNCAST, RID_SPL_REINTCAST, RID_SPL_STATCAST,
 
   /* C++ extensions */
-  RID_ADDRESSOF,
-  RID_BUILTIN_LAUNDER,
-  RID_BUILTIN_BIT_CAST,
+  RID_SPL_ADDRESSOF,
+  RID_SPL_BUILTIN_LAUNDER,
+  RID_SPL_BUILTIN_BIT_CAST,
+
+#define DEFTRAIT(TCC, CODE, NAME, ARITY) \
+  RID_SPL_##CODE,
+#include "scpel/scpel-trait.def"
+#undef DEFTRAIT
 
   /* C++11 */
-  RID_CONSTEXPR, RID_DECLTYPE, RID_NOEXCEPT, RID_NULLPTR, RID_STATIC_ASSERT,
+  RID_SPL_CONSTEXPR, RID_SPL_DECLTYPE, RID_SPL_NOEXCEPT, RID_SPL_NULLPTR, RID_SPL_STATIC_ASSERT,
 
   /* C++20 */
-  RID_CONSTINIT, RID_CONSTEVAL,
+  RID_SPL_CONSTINIT, RID_SPL_CONSTEVAL,
 
   /* char8_t */
-  RID_CHAR8,
+  RID_SPL_CHAR8,
 
   /* C++ concepts */
-  RID_CONCEPT, RID_REQUIRES,
+  RID_SPL_CONCEPT, RID_SPL_REQUIRES,
 
   /* C++ modules.  */
-  RID__MODULE, RID__IMPORT, RID__EXPORT, /* Internal tokens.  */
+  RID_SPL__MODULE, RID_SPL__IMPORT, RID_SPL__EXPORT, /* Internal tokens.  */
 
   /* C++ coroutines */
-  RID_CO_AWAIT, RID_CO_YIELD, RID_CO_RETURN,
+  RID_SPL_CO_AWAIT, RID_SPL_CO_YIELD, RID_SPL_CO_RETURN,
 
+	/* Scpel 1.0.0 */
+	RID_SPL_RANDOM, RID_SPL_NEURODE, RID_SPL_GLIAD,
+	
   /* C++ transactional memory.  */
-  RID_ATOMIC_NOEXCEPT, RID_ATOMIC_CANCEL, RID_SYNCHRONIZED,
+  RID_SPL_ATOMIC_NOEXCEPT, RID_SPL_ATOMIC_CANCEL, RID_SPL_SYNCHRONIZED,
 
   /* Objective-C ("AT" reserved words - they are only keywords when
      they follow '@')  */
-  RID_AT_ENCODE,   RID_AT_END,
-  RID_AT_CLASS,    RID_AT_ALIAS,     RID_AT_DEFS,
-  RID_AT_PRIVATE,  RID_AT_PROTECTED, RID_AT_PUBLIC,  RID_AT_PACKAGE,
-  RID_AT_PROTOCOL, RID_AT_SELECTOR,
-  RID_AT_THROW,	   RID_AT_TRY,       RID_AT_CATCH,
-  RID_AT_FINALLY,  RID_AT_SYNCHRONIZED, 
-  RID_AT_OPTIONAL, RID_AT_REQUIRED, RID_AT_PROPERTY,
-  RID_AT_SYNTHESIZE, RID_AT_DYNAMIC,
-  RID_AT_INTERFACE,
-  RID_AT_IMPLEMENTATION,
+  RID_SPL_AT_ENCODE,   RID_SPL_AT_END,
+  RID_SPL_AT_CLASS,    RID_SPL_AT_ALIAS,     RID_SPL_AT_DEFS,
+  RID_SPL_AT_PRIVATE,  RID_SPL_AT_PROTECTED, RID_SPL_AT_PUBLIC,  RID_SPL_AT_PACKAGE,
+  RID_SPL_AT_PROTOCOL, RID_SPL_AT_SELECTOR,
+  RID_SPL_AT_THROW,	   RID_SPL_AT_TRY,       RID_SPL_AT_CATCH,
+  RID_SPL_AT_FINALLY,  RID_SPL_AT_SYNCHRONIZED, 
+  RID_SPL_AT_OPTIONAL, RID_SPL_AT_REQUIRED, RID_SPL_AT_PROPERTY,
+  RID_SPL_AT_SYNTHESIZE, RID_SPL_AT_DYNAMIC,
+  RID_SPL_AT_INTERFACE,
+  RID_SPL_AT_IMPLEMENTATION,
 
   /* OpenMP */
-  RID_OMP_ALL_MEMORY,
+  RID_SPL_OMP_ALL_MEMORY,
 
   /* Named address support, mapping the keyword to a particular named address
      number.  Named address space 0 is reserved for the generic address.  If
      there are more than 254 named addresses, the addr_space_t type will need
      to be grown from an unsigned char to unsigned short.  */
-  RID_ADDR_SPACE_0,		/* generic address */
-  RID_ADDR_SPACE_1,
-  RID_ADDR_SPACE_2,
-  RID_ADDR_SPACE_3,
-  RID_ADDR_SPACE_4,
-  RID_ADDR_SPACE_5,
-  RID_ADDR_SPACE_6,
-  RID_ADDR_SPACE_7,
-  RID_ADDR_SPACE_8,
-  RID_ADDR_SPACE_9,
-  RID_ADDR_SPACE_10,
-  RID_ADDR_SPACE_11,
-  RID_ADDR_SPACE_12,
-  RID_ADDR_SPACE_13,
-  RID_ADDR_SPACE_14,
-  RID_ADDR_SPACE_15,
+  RID_SPL_ADDR_SPACE_0,		/* generic address */
+  RID_SPL_ADDR_SPACE_1,
+  RID_SPL_ADDR_SPACE_2,
+  RID_SPL_ADDR_SPACE_3,
+  RID_SPL_ADDR_SPACE_4,
+  RID_SPL_ADDR_SPACE_5,
+  RID_SPL_ADDR_SPACE_6,
+  RID_SPL_ADDR_SPACE_7,
+  RID_SPL_ADDR_SPACE_8,
+  RID_SPL_ADDR_SPACE_9,
+  RID_SPL_ADDR_SPACE_10,
+  RID_SPL_ADDR_SPACE_11,
+  RID_SPL_ADDR_SPACE_12,
+  RID_SPL_ADDR_SPACE_13,
+  RID_SPL_ADDR_SPACE_14,
+  RID_SPL_ADDR_SPACE_15,
 
-  RID_FIRST_ADDR_SPACE = RID_ADDR_SPACE_0,
-  RID_LAST_ADDR_SPACE = RID_ADDR_SPACE_15,
+  RID_SPL_FIRST_ADDR_SPACE = RID_SPL_ADDR_SPACE_0,
+  RID_SPL_LAST_ADDR_SPACE = RID_SPL_ADDR_SPACE_15,
 
   /* __intN keywords.  The _N_M here doesn't correspond to the intN
      in the keyword; use the bitsize in int_n_t_data_t[M] for that.
-     For example, if int_n_t_data_t[0].bitsize is 13, then RID_INT_N_0
+     For example, if int_n_t_data_t[0].bitsize is 13, then RID_SPL_INT_N_0
      is for __int13.  */
 
-  /* Note that the range to use is RID_FIRST_INT_N through
-     RID_FIRST_INT_N + NUM_INT_N_ENTS - 1 and c-parser.cc has a list of
-     all RID_INT_N_* in a case statement.  */
+  /* Note that the range to use is RID_SPL_FIRST_INT_N through
+     RID_SPL_FIRST_INT_N + NUM_INT_N_ENTS - 1 and c-parser.cc has a list of
+     all RID_SPL_INT_N_* in a case statement.  */
 
-  RID_INT_N_0,
-  RID_INT_N_1,
-  RID_INT_N_2,
-  RID_INT_N_3,
+  RID_SPL_INT_N_0,
+  RID_SPL_INT_N_1,
+  RID_SPL_INT_N_2,
+  RID_SPL_INT_N_3,
 
-  RID_FIRST_INT_N = RID_INT_N_0,
-  RID_LAST_INT_N = RID_INT_N_3,
+  RID_SPL_FIRST_INT_N = RID_SPL_INT_N_0,
+  RID_SPL_LAST_INT_N = RID_SPL_INT_N_3,
 
-  RID_MAX,
+  RID_SPL_MAX,
 
-  RID_FIRST_MODIFIER = RID_STATIC,
-  RID_LAST_MODIFIER = RID_ONEWAY,
+  RID_SPL_FIRST_MODIFIER = RID_SPL_STATIC,
+  RID_SPL_LAST_MODIFIER = RID_SPL_ONEWAY,
 
-  RID_FIRST_CXX11 = RID_CONSTEXPR,
-  RID_LAST_CXX11 = RID_STATIC_ASSERT,
-  RID_FIRST_CXX20 = RID_CONSTINIT,
-  RID_LAST_CXX20 = RID_CO_RETURN,
-  RID_FIRST_AT = RID_AT_ENCODE,
-  RID_LAST_AT = RID_AT_IMPLEMENTATION,
-  RID_FIRST_PQ = RID_IN,
-  RID_LAST_PQ = RID_ONEWAY,
-  RID_FIRST_PATTR = RID_GETTER,
-  RID_LAST_PATTR = RID_NULL_RESETTABLE
+  RID_SPL_FIRST_CXX11 = RID_SPL_CONSTEXPR,
+  RID_SPL_LAST_CXX11 = RID_SPL_STATIC_ASSERT,
+  RID_SPL_FIRST_CXX20 = RID_SPL_CONSTINIT,
+  RID_SPL_LAST_CXX20 = RID_SPL_CO_RETURN,
+  RID_SPL_FIRST_AT = RID_SPL_AT_ENCODE,
+  RID_SPL_LAST_AT = RID_SPL_AT_IMPLEMENTATION,
+  RID_SPL_FIRST_PQ = RID_SPL_IN,
+  RID_SPL_LAST_PQ = RID_SPL_ONEWAY,
+  RID_SPL_FIRST_PATTR = RID_SPL_GETTER,
+  RID_SPL_LAST_PATTR = RID_SPL_NULL_RESETTABLE
 };
 
 #define OBJC_IS_AT_KEYWORD(rid) \
-  ((unsigned int) (rid) >= (unsigned int) RID_FIRST_AT && \
-   (unsigned int) (rid) <= (unsigned int) RID_LAST_AT)
+  ((unsigned int) (rid) >= (unsigned int) RID_SPL_FIRST_AT && \
+   (unsigned int) (rid) <= (unsigned int) RID_SPL_LAST_AT)
 
 #define OBJC_IS_PQ_KEYWORD(rid) \
-  ((unsigned int) (rid) >= (unsigned int) RID_FIRST_PQ && \
-   (unsigned int) (rid) <= (unsigned int) RID_LAST_PQ)
+  ((unsigned int) (rid) >= (unsigned int) RID_SPL_FIRST_PQ && \
+   (unsigned int) (rid) <= (unsigned int) RID_SPL_LAST_PQ)
 
 /* Keywords permitted in an @property attribute context.  */
 #define OBJC_IS_PATTR_KEYWORD(rid) \
-  ((((unsigned int) (rid) >= (unsigned int) RID_FIRST_PATTR && \
-     (unsigned int) (rid) <= (unsigned int) RID_LAST_PATTR)) \
-   || rid == RID_CLASS)
+  ((((unsigned int) (rid) >= (unsigned int) RID_SPL_FIRST_PATTR && \
+     (unsigned int) (rid) <= (unsigned int) RID_SPL_LAST_PATTR)) \
+   || rid == RID_SPL_CLASS)
 
 /* OBJC_IS_CXX_KEYWORD recognizes the 'CXX_OBJC' keywords (such as
    'class') which are shared in a subtle way between Objective-C and
@@ -268,17 +276,17 @@ enum rid
    is found elsewhere, it follows the rules of the C/C++ language.
  */
 #define OBJC_IS_CXX_KEYWORD(rid) \
-  (rid == RID_CLASS || rid == RID_SYNCHRONIZED			\
-   || rid == RID_PUBLIC || rid == RID_PROTECTED || rid == RID_PRIVATE	\
-   || rid == RID_TRY || rid == RID_THROW || rid == RID_CATCH)
+  (rid == RID_SPL_CLASS || rid == RID_SPL_SYNCHRONIZED			\
+   || rid == RID_SPL_PUBLIC || rid == RID_SPL_PROTECTED || rid == RID_SPL_PRIVATE	\
+   || rid == RID_SPL_TRY || rid == RID_SPL_THROW || rid == RID_SPL_CATCH)
 
 /* The elements of `ridpointers' are identifier nodes for the reserved
-   type names and storage classes.  It is indexed by a RID_... value.  */
-extern GTY ((length ("(int) RID_MAX"))) tree *ridpointers;
+   type names and storage classes.  It is indexed by a RID_SPL_... value.  */
+extern GTY ((length ("(int) RID_SPL_MAX"))) tree *ridpointers;
 
 /* Standard named or nameless data types of the C compiler.  */
 
-enum scpel_tree_index
+enum c_tree_index
 {
     CTI_CHAR8_TYPE,
     CTI_CHAR16_TYPE,
@@ -356,22 +364,22 @@ enum scpel_tree_index
 };
 
 #define C_CPP_HASHNODE(id) \
-  (&(((struct scpel_common_identifier *) (id))->node))
-#define C_RID_CODE(id) \
-  ((enum rid) (((struct scpel_common_identifier *) (id))->node.rid_code))
-#define C_SET_RID_CODE(id, code) \
-  (((struct scpel_common_identifier *) (id))->node.rid_code = (unsigned char) code)
+  (&(((struct c_common_identifier *) (id))->node))
+#define C_RID_SPL_CODE(id) \
+  ((enum rid) (((struct c_common_identifier *) (id))->node.rid_code))
+#define C_SET_RID_SPL_CODE(id, code) \
+  (((struct c_common_identifier *) (id))->node.rid_code = (unsigned char) code)
 
 /* Identifier part common to the C front ends.  Inherits from
    tree_identifier, despite appearances.  */
-struct GTY(()) scpel_common_identifier {
+struct GTY(()) c_common_identifier {
   struct tree_common common;
   struct cpp_hashnode node;
 };
 
 /* An entry in the reserved keyword table.  */
 
-struct scpel_common_resword
+struct c_common_resword
 {
   const char *const word;
   ENUM_BITFIELD(rid) const rid : 16;
@@ -380,7 +388,7 @@ struct scpel_common_resword
 
 /* Mode used to build pointers (VOIDmode means ptr_mode).  */
 
-extern machine_mode scpel_default_pointer_mode;
+extern machine_mode c_default_pointer_mode;
 
 /* Extra cpp_ttype values for C++.  */
 
@@ -435,84 +443,84 @@ extern machine_mode scpel_default_pointer_mode;
 #define D_CXX_COROUTINES_FLAGS (D_CXXONLY | D_CXX_COROUTINES)
 
 /* The reserved keyword table.  */
-extern const struct scpel_common_resword scpel_common_reswords[];
+extern const struct c_common_resword c_common_reswords[];
 
 /* The number of items in the reserved keyword table.  */
-extern const unsigned int num_scpel_common_reswords;
+extern const unsigned int num_c_common_reswords;
 
-#define char8_type_node			scpel_global_trees[CTI_CHAR8_TYPE]
-#define char16_type_node		scpel_global_trees[CTI_CHAR16_TYPE]
-#define char32_type_node		scpel_global_trees[CTI_CHAR32_TYPE]
-#define wchar_type_node			scpel_global_trees[CTI_WCHAR_TYPE]
-#define underlying_wchar_type_node	scpel_global_trees[CTI_UNDERLYING_WCHAR_TYPE]
-#define wint_type_node			scpel_global_trees[CTI_WINT_TYPE]
-#define signed_size_type_node		scpel_global_trees[CTI_SIGNED_SIZE_TYPE]
-#define unsigned_ptrdiff_type_node	scpel_global_trees[CTI_UNSIGNED_PTRDIFF_TYPE]
-#define intmax_type_node		scpel_global_trees[CTI_INTMAX_TYPE]
-#define uintmax_type_node		scpel_global_trees[CTI_UINTMAX_TYPE]
-#define widest_integer_literal_type_node scpel_global_trees[CTI_WIDEST_INT_LIT_TYPE]
-#define widest_unsigned_literal_type_node scpel_global_trees[CTI_WIDEST_UINT_LIT_TYPE]
+#define char8_type_node			c_global_trees[CTI_CHAR8_TYPE]
+#define char16_type_node		c_global_trees[CTI_CHAR16_TYPE]
+#define char32_type_node		c_global_trees[CTI_CHAR32_TYPE]
+#define wchar_type_node			c_global_trees[CTI_WCHAR_TYPE]
+#define underlying_wchar_type_node	c_global_trees[CTI_UNDERLYING_WCHAR_TYPE]
+#define wint_type_node			c_global_trees[CTI_WINT_TYPE]
+#define signed_size_type_node		c_global_trees[CTI_SIGNED_SIZE_TYPE]
+#define unsigned_ptrdiff_type_node	c_global_trees[CTI_UNSIGNED_PTRDIFF_TYPE]
+#define intmax_type_node		c_global_trees[CTI_INTMAX_TYPE]
+#define uintmax_type_node		c_global_trees[CTI_UINTMAX_TYPE]
+#define widest_integer_literal_type_node c_global_trees[CTI_WIDEST_INT_LIT_TYPE]
+#define widest_unsigned_literal_type_node c_global_trees[CTI_WIDEST_UINT_LIT_TYPE]
 
-#define sig_atomic_type_node		scpel_global_trees[CTI_SIG_ATOMIC_TYPE]
-#define int8_type_node			scpel_global_trees[CTI_INT8_TYPE]
-#define int16_type_node			scpel_global_trees[CTI_INT16_TYPE]
-#define int32_type_node			scpel_global_trees[CTI_INT32_TYPE]
-#define int64_type_node			scpel_global_trees[CTI_INT64_TYPE]
-#define uint8_type_node			scpel_global_trees[CTI_UINT8_TYPE]
-#define scpel_uint16_type_node		scpel_global_trees[CTI_UINT16_TYPE]
-#define scpel_uint32_type_node		scpel_global_trees[CTI_UINT32_TYPE]
-#define scpel_uint64_type_node		scpel_global_trees[CTI_UINT64_TYPE]
-#define int_least8_type_node		scpel_global_trees[CTI_INT_LEAST8_TYPE]
-#define int_least16_type_node		scpel_global_trees[CTI_INT_LEAST16_TYPE]
-#define int_least32_type_node		scpel_global_trees[CTI_INT_LEAST32_TYPE]
-#define int_least64_type_node		scpel_global_trees[CTI_INT_LEAST64_TYPE]
-#define uint_least8_type_node		scpel_global_trees[CTI_UINT_LEAST8_TYPE]
-#define uint_least16_type_node		scpel_global_trees[CTI_UINT_LEAST16_TYPE]
-#define uint_least32_type_node		scpel_global_trees[CTI_UINT_LEAST32_TYPE]
-#define uint_least64_type_node		scpel_global_trees[CTI_UINT_LEAST64_TYPE]
-#define int_fast8_type_node		scpel_global_trees[CTI_INT_FAST8_TYPE]
-#define int_fast16_type_node		scpel_global_trees[CTI_INT_FAST16_TYPE]
-#define int_fast32_type_node		scpel_global_trees[CTI_INT_FAST32_TYPE]
-#define int_fast64_type_node		scpel_global_trees[CTI_INT_FAST64_TYPE]
-#define uint_fast8_type_node		scpel_global_trees[CTI_UINT_FAST8_TYPE]
-#define uint_fast16_type_node		scpel_global_trees[CTI_UINT_FAST16_TYPE]
-#define uint_fast32_type_node		scpel_global_trees[CTI_UINT_FAST32_TYPE]
-#define uint_fast64_type_node		scpel_global_trees[CTI_UINT_FAST64_TYPE]
-#define intptr_type_node		scpel_global_trees[CTI_INTPTR_TYPE]
-#define uintptr_type_node		scpel_global_trees[CTI_UINTPTR_TYPE]
+#define sig_atomic_type_node		c_global_trees[CTI_SIG_ATOMIC_TYPE]
+#define int8_type_node			c_global_trees[CTI_INT8_TYPE]
+#define int16_type_node			c_global_trees[CTI_INT16_TYPE]
+#define int32_type_node			c_global_trees[CTI_INT32_TYPE]
+#define int64_type_node			c_global_trees[CTI_INT64_TYPE]
+#define uint8_type_node			c_global_trees[CTI_UINT8_TYPE]
+#define c_uint16_type_node		c_global_trees[CTI_UINT16_TYPE]
+#define c_uint32_type_node		c_global_trees[CTI_UINT32_TYPE]
+#define c_uint64_type_node		c_global_trees[CTI_UINT64_TYPE]
+#define int_least8_type_node		c_global_trees[CTI_INT_LEAST8_TYPE]
+#define int_least16_type_node		c_global_trees[CTI_INT_LEAST16_TYPE]
+#define int_least32_type_node		c_global_trees[CTI_INT_LEAST32_TYPE]
+#define int_least64_type_node		c_global_trees[CTI_INT_LEAST64_TYPE]
+#define uint_least8_type_node		c_global_trees[CTI_UINT_LEAST8_TYPE]
+#define uint_least16_type_node		c_global_trees[CTI_UINT_LEAST16_TYPE]
+#define uint_least32_type_node		c_global_trees[CTI_UINT_LEAST32_TYPE]
+#define uint_least64_type_node		c_global_trees[CTI_UINT_LEAST64_TYPE]
+#define int_fast8_type_node		c_global_trees[CTI_INT_FAST8_TYPE]
+#define int_fast16_type_node		c_global_trees[CTI_INT_FAST16_TYPE]
+#define int_fast32_type_node		c_global_trees[CTI_INT_FAST32_TYPE]
+#define int_fast64_type_node		c_global_trees[CTI_INT_FAST64_TYPE]
+#define uint_fast8_type_node		c_global_trees[CTI_UINT_FAST8_TYPE]
+#define uint_fast16_type_node		c_global_trees[CTI_UINT_FAST16_TYPE]
+#define uint_fast32_type_node		c_global_trees[CTI_UINT_FAST32_TYPE]
+#define uint_fast64_type_node		c_global_trees[CTI_UINT_FAST64_TYPE]
+#define intptr_type_node		c_global_trees[CTI_INTPTR_TYPE]
+#define uintptr_type_node		c_global_trees[CTI_UINTPTR_TYPE]
 
-#define truthvalue_type_node		scpel_global_trees[CTI_TRUTHVALUE_TYPE]
-#define truthvalue_true_node		scpel_global_trees[CTI_TRUTHVALUE_TRUE]
-#define truthvalue_false_node		scpel_global_trees[CTI_TRUTHVALUE_FALSE]
+#define truthvalue_type_node		c_global_trees[CTI_TRUTHVALUE_TYPE]
+#define truthvalue_true_node		c_global_trees[CTI_TRUTHVALUE_TRUE]
+#define truthvalue_false_node		c_global_trees[CTI_TRUTHVALUE_FALSE]
 
-#define char_array_type_node		scpel_global_trees[CTI_CHAR_ARRAY_TYPE]
-#define char8_array_type_node		scpel_global_trees[CTI_CHAR8_ARRAY_TYPE]
-#define char16_array_type_node		scpel_global_trees[CTI_CHAR16_ARRAY_TYPE]
-#define char32_array_type_node		scpel_global_trees[CTI_CHAR32_ARRAY_TYPE]
-#define wchar_array_type_node		scpel_global_trees[CTI_WCHAR_ARRAY_TYPE]
-#define string_type_node		scpel_global_trees[CTI_STRING_TYPE]
-#define const_string_type_node		scpel_global_trees[CTI_CONST_STRING_TYPE]
+#define char_array_type_node		c_global_trees[CTI_CHAR_ARRAY_TYPE]
+#define char8_array_type_node		c_global_trees[CTI_CHAR8_ARRAY_TYPE]
+#define char16_array_type_node		c_global_trees[CTI_CHAR16_ARRAY_TYPE]
+#define char32_array_type_node		c_global_trees[CTI_CHAR32_ARRAY_TYPE]
+#define wchar_array_type_node		c_global_trees[CTI_WCHAR_ARRAY_TYPE]
+#define string_type_node		c_global_trees[CTI_STRING_TYPE]
+#define const_string_type_node		c_global_trees[CTI_CONST_STRING_TYPE]
 
-#define default_function_type		scpel_global_trees[CTI_DEFAULT_FUNCTION_TYPE]
+#define default_function_type		c_global_trees[CTI_DEFAULT_FUNCTION_TYPE]
 
-#define function_name_decl_node		scpel_global_trees[CTI_FUNCTION_NAME_DECL]
-#define pretty_function_name_decl_node	scpel_global_trees[CTI_PRETTY_FUNCTION_NAME_DECL]
-#define c99_function_name_decl_node		scpel_global_trees[CTI_C99_FUNCTION_NAME_DECL]
-#define saved_function_name_decls	scpel_global_trees[CTI_SAVED_FUNCTION_NAME_DECLS]
+#define function_name_decl_node		c_global_trees[CTI_FUNCTION_NAME_DECL]
+#define pretty_function_name_decl_node	c_global_trees[CTI_PRETTY_FUNCTION_NAME_DECL]
+#define c99_function_name_decl_node		c_global_trees[CTI_C99_FUNCTION_NAME_DECL]
+#define saved_function_name_decls	c_global_trees[CTI_SAVED_FUNCTION_NAME_DECLS]
 
 /* The node for C++ `__null'.  */
-#define null_node                       scpel_global_trees[CTI_NULL]
+#define null_node                       c_global_trees[CTI_NULL]
 /* The nodes for `nullptr'.  */
-#define nullptr_node                    scpel_global_trees[CTI_NULLPTR]
-#define nullptr_type_node               scpel_global_trees[CTI_NULLPTR_TYPE]
+#define nullptr_node                    c_global_trees[CTI_NULLPTR]
+#define nullptr_type_node               c_global_trees[CTI_NULLPTR_TYPE]
 
-extern GTY(()) tree scpel_global_trees[CTI_MAX];
+extern GTY(()) tree c_global_trees[CTI_MAX];
 
 /* Mark which labels are explicitly declared.
    These may be shadowed, and may be referenced from nested functions.  */
 #define C_DECLARED_LABEL_FLAG(label) TREE_LANG_FLAG_1 (label)
 
-enum scpel_language_kind
+enum c_language_kind
 {
   clk_c		= 0,		/* C90, C94, C99, C11 or C2X */
   clk_objc	= 1,		/* clk_c with ObjC features.  */
@@ -520,12 +528,12 @@ enum scpel_language_kind
   clk_objcxx	= 3		/* clk_cxx with ObjC features.  */
 };
 
-/* To test for a specific language use scpel_language, defined by each
+/* To test for a specific language use c_language, defined by each
    front end.  For "ObjC features" or "not C++" use the macros.  */
-extern scpel_language_kind scpel_language;
+extern c_language_kind c_language;
 
-#define scpel_dialect_cxx()		((scpel_language & clk_cxx) != 0)
-#define scpel_dialect_objc()	((scpel_language & clk_objc) != 0)
+#define c_dialect_cxx()		((c_language & clk_cxx) != 0)
+#define c_dialect_objc()	((c_language & clk_objc) != 0)
 
 /* The various name of operator that appears in error messages. */
 enum ref_operator {
@@ -566,7 +574,7 @@ typedef struct stmt_tree_s *stmt_tree;
 /* Global state pertinent to the current function.  Some C dialects
    extend this structure with additional fields.  */
 
-struct GTY(()) scpel_language_function {
+struct GTY(()) c_language_function {
   /* While we are parsing the function, this contains information
      about the statement-tree that we are building.  */
   struct stmt_tree_s x_stmt_tree;
@@ -602,8 +610,8 @@ extern tree build_modify_expr (location_t, tree, tree, enum tree_code,
 			       location_t, tree, tree);
 extern tree build_indirect_ref (location_t, tree, ref_operator);
 
-extern bool has_scpel_linkage (const_tree decl);
-extern bool scpel_decl_implicit (const_tree);
+extern bool has_c_linkage (const_tree decl);
+extern bool c_decl_implicit (const_tree);
 
 /* Switches common to the C front ends.  */
 
@@ -736,7 +744,7 @@ extern int max_tinst_depth;
    is used for cases like sizeof() and "0 ? a : b".  This is a count,
    not a bool, because unexecuted expressions can nest.  */
 
-extern int scpel_inhibit_evaluation_warnings;
+extern int c_inhibit_evaluation_warnings;
 
 /* Depending on which phase of processing we are in, we may need
    to prefer input_location to libcpp's locations.  (Specifically,
@@ -797,8 +805,8 @@ enum conversion_safety {
 extern struct visibility_flags visibility_options;
 
 /* Attribute table common to the C front ends.  */
-extern const struct attribute_spec scpel_common_attribute_table[];
-extern const struct attribute_spec scpel_common_format_attribute_table[];
+extern const struct attribute_spec c_common_attribute_table[];
+extern const struct attribute_spec c_common_format_attribute_table[];
 
 /* Pointer to function to lazily generate the VAR_DECL for __FUNCTION__ etc.
    ID is the identifier to use, NAME is the string.
@@ -808,15 +816,15 @@ extern const struct attribute_spec scpel_common_format_attribute_table[];
 extern tree (*make_fname_decl) (location_t, tree, int);
 
 /* In c-decl.cc and cp/tree.cc.  FIXME.  */
-extern void scpel_register_addr_space (const char *str, addr_space_t as);
+extern void c_register_addr_space (const char *str, addr_space_t as);
 
 /* In c-common.cc.  */
 extern bool in_late_binary_op;
-extern const char *scpel_addr_space_name (addr_space_t as);
+extern const char *c_addr_space_name (addr_space_t as);
 extern tree identifier_global_value (tree);
 extern tree identifier_global_tag (tree);
 extern bool names_builtin_p (const char *);
-extern tree scpel_linkage_bindings (tree);
+extern tree c_linkage_bindings (tree);
 extern void record_builtin_type (enum rid, const char *, tree);
 extern void start_fname_decls (void);
 extern void finish_fname_decls (void);
@@ -839,33 +847,33 @@ extern void check_function_format (const_tree, tree, int, tree *,
 extern bool attribute_fallthrough_p (tree);
 extern tree handle_format_attribute (tree *, tree, tree, int, bool *);
 extern tree handle_format_arg_attribute (tree *, tree, tree, int, bool *);
-extern bool scpel_common_handle_option (size_t, const char *, HOST_WIDE_INT, int,
+extern bool c_common_handle_option (size_t, const char *, HOST_WIDE_INT, int,
 				    location_t,
 				    const struct cl_option_handlers *);
-extern bool default_handle_scpel_option (size_t, const char *, int);
-extern tree scpel_common_type_for_mode (machine_mode, int);
-extern tree scpel_common_type_for_size (unsigned int, int);
-extern tree scpel_common_fixed_point_type_for_size (unsigned int, unsigned int,
+extern bool default_handle_c_option (size_t, const char *, int);
+extern tree c_common_type_for_mode (machine_mode, int);
+extern tree c_common_type_for_size (unsigned int, int);
+extern tree c_common_fixed_point_type_for_size (unsigned int, unsigned int,
 						int, int);
-extern tree scpel_common_unsigned_type (tree);
-extern tree scpel_common_signed_type (tree);
-extern tree scpel_common_signed_or_unsigned_type (int, tree);
-extern void scpel_common_init_ts (void);
-extern tree scpel_build_bitfield_integer_type (unsigned HOST_WIDE_INT, int);
+extern tree c_common_unsigned_type (tree);
+extern tree c_common_signed_type (tree);
+extern tree c_common_signed_or_unsigned_type (int, tree);
+extern void c_common_init_ts (void);
+extern tree c_build_bitfield_integer_type (unsigned HOST_WIDE_INT, int);
 extern enum conversion_safety unsafe_conversion_p (tree, tree, tree, bool);
 extern bool decl_with_nonnull_addr_p (const_tree);
-extern tree scpel_fully_fold (tree, bool, bool *, bool = false);
-extern tree scpel_wrap_maybe_const (tree, bool);
-extern tree scpel_common_truthvalue_conversion (location_t, tree);
-extern void scpel_apply_type_quals_to_decl (int, tree);
-extern tree scpel_sizeof_or_alignof_type (location_t, tree, bool, bool, int);
-extern tree scpel_alignof_expr (location_t, tree);
+extern tree c_fully_fold (tree, bool, bool *, bool = false);
+extern tree c_wrap_maybe_const (tree, bool);
+extern tree c_common_truthvalue_conversion (location_t, tree);
+extern void c_apply_type_quals_to_decl (int, tree);
+extern tree c_sizeof_or_alignof_type (location_t, tree, bool, bool, int);
+extern tree c_alignof_expr (location_t, tree);
 /* Print an error message for invalid operands to arith operation CODE.
    NOP_EXPR is used as a special case (see truthvalue_conversion).  */
 extern void binary_op_error (rich_location *, enum tree_code, tree, tree);
 extern tree fix_string_type (tree);
 extern tree convert_and_check (location_t, tree, tree, bool = false);
-extern bool scpel_determine_visibility (tree);
+extern bool c_determine_visibility (tree);
 extern bool vector_types_compatible_elements_p (tree, tree);
 extern void mark_valid_location_for_stdc_pragma (bool);
 extern bool valid_location_for_stdc_pragma_p (void);
@@ -882,16 +890,17 @@ extern bool cxx_fundamental_alignment_p (unsigned);
 extern bool pointer_to_zero_sized_aggr_p (tree);
 extern bool bool_promoted_to_int_p (tree);
 extern tree fold_for_warn (tree);
-extern tree scpel_common_get_narrower (tree, int *);
+extern tree c_common_get_narrower (tree, int *);
 extern bool get_attribute_operand (tree, unsigned HOST_WIDE_INT *);
-extern void scpel_common_finalize_early_debug (void);
-extern bool scpel_option_is_from_cpp_diagnostics (int);
+extern void c_common_finalize_early_debug (void);
+extern unsigned int c_strict_flex_array_level_of (tree);
+extern bool c_option_is_from_cpp_diagnostics (int);
 
 /* Used by convert_and_check; in front ends.  */
 extern tree convert_init (tree, tree);
 
-#define scpel_sizeof(LOC, T)  scpel_sizeof_or_alignof_type (LOC, T, true, false, 1)
-#define scpel_alignof(LOC, T) scpel_sizeof_or_alignof_type (LOC, T, false, false, 1)
+#define c_sizeof(LOC, T)  c_sizeof_or_alignof_type (LOC, T, true, false, 1)
+#define c_alignof(LOC, T) c_sizeof_or_alignof_type (LOC, T, false, false, 1)
 
 /* Subroutine of build_binary_op, used for certain operations.  */
 extern tree shorten_binary_op (tree result_type, tree op0, tree op1, bool bitwise);
@@ -930,11 +939,11 @@ extern tree pointer_int_sum (location_t, enum tree_code, tree, tree,
 			     bool = true);
 
 /* Add qualifiers to a type, in the fashion for C.  */
-extern tree scpel_build_qualified_type (tree, int, tree = NULL_TREE, size_t = 0);
+extern tree c_build_qualified_type (tree, int, tree = NULL_TREE, size_t = 0);
 
 /* Build tree nodes and builtin functions common to both C and C++ language
    frontends.  */
-extern void scpel_common_nodes_and_builtins (void);
+extern void c_common_nodes_and_builtins (void);
 
 extern void disable_builtin_function (const char *);
 
@@ -942,28 +951,28 @@ extern void set_compound_literal_name (tree decl);
 
 extern tree build_va_arg (location_t, tree, tree);
 
-extern const unsigned int scpel_family_lang_mask;
-extern unsigned int scpel_common_option_lang_mask (void);
-extern void scpel_common_diagnostics_set_defaults (diagnostic_context *);
-extern bool scpel_common_complain_wrong_lang_p (const struct cl_option *);
-extern void scpel_common_init_options_struct (struct gcc_options *);
-extern void scpel_common_init_options (unsigned int, struct cl_decoded_option *);
-extern bool scpel_common_post_options (const char **);
-extern bool scpel_common_init (void);
-extern void scpel_common_finish (void);
-extern void scpel_common_parse_file (void);
-extern alias_set_type scpel_common_get_alias_set (tree);
-extern void scpel_register_builtin_type (tree, const char*);
-extern bool scpel_promoting_integer_type_p (const_tree);
+extern const unsigned int c_family_lang_mask;
+extern unsigned int c_common_option_lang_mask (void);
+extern void c_common_diagnostics_set_defaults (diagnostic_context *);
+extern bool c_common_complain_wrong_lang_p (const struct cl_option *);
+extern void c_common_init_options_struct (struct gcc_options *);
+extern void c_common_init_options (unsigned int, struct cl_decoded_option *);
+extern bool c_common_post_options (const char **);
+extern bool c_common_init (void);
+extern void c_common_finish (void);
+extern void c_common_parse_file (void);
+extern alias_set_type c_common_get_alias_set (tree);
+extern void c_register_builtin_type (tree, const char*);
+extern bool c_promoting_integer_type_p (const_tree);
 extern bool self_promoting_args_p (const_tree);
 extern tree strip_pointer_operator (tree);
 extern tree strip_pointer_or_array_types (tree);
-extern HOST_WIDE_INT scpel_common_to_target_charset (HOST_WIDE_INT);
+extern HOST_WIDE_INT c_common_to_target_charset (HOST_WIDE_INT);
 
 /* This is the basic parsing function.  */
-extern void scpel_parse_file (void);
+extern void c_parse_file (void);
 
-extern void scpel_parse_final_cleanups (void);
+extern void c_parse_final_cleanups (void);
 
 /* These macros provide convenient access to the various _STMT nodes.  */
 
@@ -1058,10 +1067,10 @@ extern tree boolean_increment (enum tree_code, tree);
 
 extern int case_compare (splay_tree_key, splay_tree_key);
 
-extern tree scpel_add_case_label (location_t, splay_tree, tree, tree, tree,
+extern tree c_add_case_label (location_t, splay_tree, tree, tree, tree,
 			      tree = NULL_TREE);
-extern bool scpel_switch_covers_all_cases_p (splay_tree, tree);
-extern bool scpel_block_may_fallthru (const_tree);
+extern bool c_switch_covers_all_cases_p (splay_tree, tree);
+extern bool c_block_may_fallthru (const_tree);
 
 extern tree build_function_call (location_t, tree, tree);
 
@@ -1083,21 +1092,21 @@ extern bool instantiation_dependent_expression_p (tree);
 
 extern bool vector_targets_convertible_p (const_tree t1, const_tree t2);
 extern bool vector_types_convertible_p (const_tree t1, const_tree t2, bool emit_lax_note);
-extern tree scpel_build_vec_perm_expr (location_t, tree, tree, tree, bool = true);
-extern tree scpel_build_shufflevector (location_t, tree, tree,
+extern tree c_build_vec_perm_expr (location_t, tree, tree, tree, bool = true);
+extern tree c_build_shufflevector (location_t, tree, tree,
 				   const vec<tree> &, bool = true);
-extern tree scpel_build_vec_convert (location_t, tree, location_t, tree, bool = true);
+extern tree c_build_vec_convert (location_t, tree, location_t, tree, bool = true);
 
-extern void init_scpel_lex (void);
+extern void init_c_lex (void);
 
-extern void scpel_cpp_builtins (cpp_reader *);
-extern void scpel_cpp_builtins_optimize_pragma (cpp_reader *, tree, tree);
-extern bool scpel_cpp_diagnostic (cpp_reader *, enum cpp_diagnostic_level,
+extern void c_cpp_builtins (cpp_reader *);
+extern void c_cpp_builtins_optimize_pragma (cpp_reader *, tree, tree);
+extern bool c_cpp_diagnostic (cpp_reader *, enum cpp_diagnostic_level,
 			      enum cpp_warning_reason, rich_location *,
 			      const char *, va_list *)
      ATTRIBUTE_GCC_DIAG(5,0);
-extern int scpel_common_has_attribute (cpp_reader *, bool);
-extern int scpel_common_has_builtin (cpp_reader *);
+extern int c_common_has_attribute (cpp_reader *, bool);
+extern int c_common_has_builtin (cpp_reader *);
 
 extern bool parse_optimize_options (tree, bool);
 
@@ -1107,7 +1116,7 @@ extern GTY(()) int pending_lang_change;
 
 /* Information recorded about each file examined during compilation.  */
 
-struct scpel_fileinfo
+struct c_fileinfo
 {
   int time;	/* Time spent in the file.  */
 
@@ -1121,10 +1130,10 @@ struct scpel_fileinfo
   short interface_unknown;
 };
 
-struct scpel_fileinfo *get_fileinfo (const char *);
+struct c_fileinfo *get_fileinfo (const char *);
 extern void dump_time_statistics (void);
 
-extern bool scpel_dump_tree (void *, tree);
+extern bool c_dump_tree (void *, tree);
 
 extern void verify_sequence_points (tree);
 
@@ -1136,7 +1145,7 @@ extern void complete_flexible_array_elts (tree);
 
 extern tree builtin_type_for_size (int, bool);
 
-extern void scpel_common_mark_addressable_vec (tree);
+extern void c_common_mark_addressable_vec (tree);
 
 extern void set_underlying_type (tree);
 extern bool user_facing_original_type_p (const_tree);
@@ -1148,8 +1157,8 @@ extern vec<tree, va_gc> *make_tree_vector_from_list (tree);
 extern vec<tree, va_gc> *make_tree_vector_from_ctor (tree);
 extern vec<tree, va_gc> *make_tree_vector_copy (const vec<tree, va_gc> *);
 
-/* Used for communication between scpel_common_type_for_mode and
-   scpel_register_builtin_type.  */
+/* Used for communication between c_common_type_for_mode and
+   c_register_builtin_type.  */
 extern GTY(()) tree registered_builtin_types;
 
 /* Read SOURCE_DATE_EPOCH from environment to have a deterministic
@@ -1170,7 +1179,7 @@ extern const char *cb_get_suggestion (cpp_reader *, const char *,
 extern GTY(()) string_concat_db *g_string_concat_db;
 
 class substring_loc;
-extern const char *scpel_get_substring_location (const substring_loc &substr_loc,
+extern const char *c_get_substring_location (const substring_loc &substr_loc,
 					     location_t *out_loc);
 
 /* In c-gimplify.cc.  */
@@ -1180,11 +1189,11 @@ typedef struct bc_state
 } bc_state_t;
 extern void save_bc_state (bc_state_t *);
 extern void restore_bc_state (bc_state_t *);
-extern tree scpel_genericize_control_stmt (tree *, int *, void *,
+extern tree c_genericize_control_stmt (tree *, int *, void *,
 				       walk_tree_fn, walk_tree_lh);
-extern void scpel_genericize (tree);
-extern int scpel_gimplify_expr (tree *, gimple_seq *, gimple_seq *);
-extern tree scpel_build_bind_expr (location_t, tree, tree);
+extern void c_genericize (tree);
+extern int c_gimplify_expr (tree *, gimple_seq *, gimple_seq *);
+extern tree c_build_bind_expr (location_t, tree, tree);
 
 /* In c-lex.cc.  */
 extern enum cpp_ttype
@@ -1193,12 +1202,12 @@ conflict_marker_get_final_tok_kind (enum cpp_ttype tok1_kind);
 /* In c-pch.cc  */
 extern void pch_init (void);
 extern void pch_cpp_save_state (void);
-extern int scpel_common_valid_pch (cpp_reader *pfile, const char *name, int fd);
-extern void scpel_common_read_pch (cpp_reader *pfile, const char *name, int fd,
+extern int c_common_valid_pch (cpp_reader *pfile, const char *name, int fd);
+extern void c_common_read_pch (cpp_reader *pfile, const char *name, int fd,
 			       const char *orig);
-extern void scpel_common_write_pch (void);
-extern void scpel_common_no_more_pch (void);
-extern void scpel_common_pch_pragma (cpp_reader *pfile, const char *);
+extern void c_common_write_pch (void);
+extern void c_common_no_more_pch (void);
+extern void c_common_pch_pragma (cpp_reader *pfile, const char *);
 
 /* In *-checksum.c */
 extern const unsigned char executable_checksum[16];
@@ -1208,9 +1217,9 @@ extern void builtin_define_std (const char *macro);
 extern void builtin_define_with_value (const char *, const char *, int);
 extern void builtin_define_with_int_value (const char *, HOST_WIDE_INT);
 extern void builtin_define_type_sizeof (const char *, tree);
-extern void scpel_stddef_cpp_builtins (void);
+extern void c_stddef_cpp_builtins (void);
 extern void fe_file_change (const line_map_ordinary *);
-extern void scpel_parse_error (const char *, enum cpp_ttype, tree, unsigned char,
+extern void c_parse_error (const char *, enum cpp_ttype, tree, unsigned char,
 			   rich_location *richloc);
 
 /* In c-ppoutput.cc  */
@@ -1219,14 +1228,14 @@ extern void preprocess_file (cpp_reader *);
 extern void pp_file_change (const line_map_ordinary *);
 extern void pp_dir_change (cpp_reader *, const char *);
 extern bool check_missing_format_attribute (tree, tree);
-extern void scpel_pp_stream_token (cpp_reader *, const cpp_token *, location_t loc);
+extern void c_pp_stream_token (cpp_reader *, const cpp_token *, location_t loc);
 
 /* In c-omp.cc  */
 typedef wide_int_bitmask omp_clause_mask;
 
 #define OMP_CLAUSE_MASK_1 omp_clause_mask (1)
 
-enum scpel_omp_clause_split
+enum c_omp_clause_split
 {
   C_OMP_CLAUSE_SPLIT_TARGET = 0,
   C_OMP_CLAUSE_SPLIT_TEAMS,
@@ -1241,7 +1250,7 @@ enum scpel_omp_clause_split
   C_OMP_CLAUSE_SPLIT_MASKED = C_OMP_CLAUSE_SPLIT_DISTRIBUTE
 };
 
-enum scpel_omp_region_type
+enum c_omp_region_type
 {
   C_ORT_OMP			= 1 << 0,
   C_ORT_ACC			= 1 << 1,
@@ -1251,40 +1260,40 @@ enum scpel_omp_region_type
   C_ORT_OMP_TARGET		= C_ORT_OMP | C_ORT_TARGET
 };
 
-extern tree scpel_finish_omp_master (location_t, tree);
-extern tree scpel_finish_omp_masked (location_t, tree, tree);
-extern tree scpel_finish_omp_taskgroup (location_t, tree, tree);
-extern tree scpel_finish_omp_critical (location_t, tree, tree, tree);
-extern tree scpel_finish_omp_ordered (location_t, tree, tree);
-extern void scpel_finish_omp_barrier (location_t);
-extern tree scpel_finish_omp_atomic (location_t, enum tree_code, enum tree_code,
+extern tree c_finish_omp_master (location_t, tree);
+extern tree c_finish_omp_masked (location_t, tree, tree);
+extern tree c_finish_omp_taskgroup (location_t, tree, tree);
+extern tree c_finish_omp_critical (location_t, tree, tree, tree);
+extern tree c_finish_omp_ordered (location_t, tree, tree);
+extern void c_finish_omp_barrier (location_t);
+extern tree c_finish_omp_atomic (location_t, enum tree_code, enum tree_code,
 				 tree, tree, tree, tree, tree, tree, bool,
 				 enum omp_memory_order, bool, bool = false);
-extern bool scpel_omp_depend_t_p (tree);
-extern void scpel_finish_omp_depobj (location_t, tree, enum omp_clause_depend_kind,
+extern bool c_omp_depend_t_p (tree);
+extern void c_finish_omp_depobj (location_t, tree, enum omp_clause_depend_kind,
 				 tree);
-extern void scpel_finish_omp_flush (location_t, int);
-extern void scpel_finish_omp_taskwait (location_t);
-extern void scpel_finish_omp_taskyield (location_t);
-extern tree scpel_finish_omp_for (location_t, enum tree_code, tree, tree, tree,
+extern void c_finish_omp_flush (location_t, int);
+extern void c_finish_omp_taskwait (location_t);
+extern void c_finish_omp_taskyield (location_t);
+extern tree c_finish_omp_for (location_t, enum tree_code, tree, tree, tree,
 			      tree, tree, tree, tree, bool);
-extern bool scpel_omp_check_loop_iv (tree, tree, walk_tree_lh);
-extern bool scpel_omp_check_loop_iv_exprs (location_t, enum tree_code, tree, int,
+extern bool c_omp_check_loop_iv (tree, tree, walk_tree_lh);
+extern bool c_omp_check_loop_iv_exprs (location_t, enum tree_code, tree, int,
 				       tree, tree, tree, walk_tree_lh);
-extern tree scpel_finish_oacc_wait (location_t, tree, tree);
-extern tree scpel_oacc_split_loop_clauses (tree, tree *, bool);
-extern void scpel_omp_split_clauses (location_t, enum tree_code, omp_clause_mask,
+extern tree c_finish_oacc_wait (location_t, tree, tree);
+extern tree c_oacc_split_loop_clauses (tree, tree *, bool);
+extern void c_omp_split_clauses (location_t, enum tree_code, omp_clause_mask,
 				 tree, tree *);
-extern tree scpel_omp_declare_simd_clauses_to_numbers (tree, tree);
-extern void scpel_omp_declare_simd_clauses_to_decls (tree, tree);
-extern bool scpel_omp_predefined_variable (tree);
-extern enum omp_clause_default_kind scpel_omp_predetermined_sharing (tree);
-extern enum omp_clause_defaultmap_kind scpel_omp_predetermined_mapping (tree);
-extern tree scpel_omp_check_context_selector (location_t, tree);
-extern void scpel_omp_mark_declare_variant (location_t, tree, tree);
-extern void scpel_omp_adjust_map_clauses (tree, bool);
+extern tree c_omp_declare_simd_clauses_to_numbers (tree, tree);
+extern void c_omp_declare_simd_clauses_to_decls (tree, tree);
+extern bool c_omp_predefined_variable (tree);
+extern enum omp_clause_default_kind c_omp_predetermined_sharing (tree);
+extern enum omp_clause_defaultmap_kind c_omp_predetermined_mapping (tree);
+extern tree c_omp_check_context_selector (location_t, tree);
+extern void c_omp_mark_declare_variant (location_t, tree, tree);
+extern void c_omp_adjust_map_clauses (tree, bool);
 
-enum scpel_omp_directive_kind {
+enum c_omp_directive_kind {
   C_OMP_DIR_STANDALONE,
   C_OMP_DIR_CONSTRUCT,
   C_OMP_DIR_DECLARATIVE,
@@ -1292,21 +1301,21 @@ enum scpel_omp_directive_kind {
   C_OMP_DIR_INFORMATIONAL
 };
 
-struct scpel_omp_directive {
+struct c_omp_directive {
   const char *first, *second, *third;
   unsigned int id;
-  enum scpel_omp_directive_kind kind;
+  enum c_omp_directive_kind kind;
   bool simd;
 };
 
-extern const struct scpel_omp_directive scpel_omp_directives[];
-extern const struct scpel_omp_directive *scpel_omp_categorize_directive (const char *,
+extern const struct c_omp_directive c_omp_directives[];
+extern const struct c_omp_directive *c_omp_categorize_directive (const char *,
 								 const char *,
 								 const char *);
 
 /* Return next tree in the chain for chain_next walking of tree nodes.  */
 inline tree
-scpel_tree_chain_next (tree t)
+c_tree_chain_next (tree t)
 {
   /* TREE_CHAIN of a type is TYPE_STUB_DECL, which is different
      kind of object, never a long chain of nodes.  Prefer
@@ -1450,7 +1459,7 @@ extern void sizeof_pointer_memaccess_warning (location_t *, tree,
 					      bool (*) (tree, tree));
 extern void check_main_parameter_types (tree decl);
 extern void warnings_for_convert_and_check (location_t, tree, tree, tree);
-extern void scpel_do_switch_warnings (splay_tree, location_t, tree, tree, bool);
+extern void c_do_switch_warnings (splay_tree, location_t, tree, tree, bool);
 extern void warn_for_omitted_condop (location_t, tree);
 extern bool warn_for_restrict (unsigned, tree *, unsigned);
 extern void warn_for_address_or_pointer_of_packed_member (tree, tree);
@@ -1536,7 +1545,7 @@ extern tree positional_argument (const_tree, const_tree, tree &, tree_code,
 extern enum flt_eval_method
 excess_precision_mode_join (enum flt_eval_method, enum flt_eval_method);
 
-extern int scpel_flt_eval_method (bool ts18661_p);
+extern int c_flt_eval_method (bool ts18661_p);
 extern void add_no_sanitize_value (tree node, unsigned int flags);
 
 extern void maybe_add_include_fixit (rich_location *, const char *, bool);
@@ -1549,15 +1558,15 @@ extern tree braced_lists_to_strings (tree, tree);
 namespace selftest {
   /* Declarations for specific families of tests within c-family,
      by source file, in alphabetical order.  */
-  extern void scpel_diagnostic_cc_tests (void);
-  extern void scpel_format_cc_tests (void);
-  extern void scpel_indentation_cc_tests (void);
-  extern void scpel_opt_problem_cc_tests (void);
-  extern void scpel_pretty_print_cc_tests (void);
-  extern void scpel_spellcheck_cc_tests (void);
+  extern void c_diagnostic_cc_tests (void);
+  extern void c_format_cc_tests (void);
+  extern void c_indentation_cc_tests (void);
+  extern void c_opt_problem_cc_tests (void);
+  extern void c_pretty_print_cc_tests (void);
+  extern void c_spellcheck_cc_tests (void);
 
   /* The entrypoint for running all of the above tests.  */
-  extern void scpel_family_tests (void);
+  extern void c_family_tests (void);
 } // namespace selftest
 #endif /* #if CHECKING_P */
 

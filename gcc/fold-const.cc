@@ -1,6 +1,21 @@
 /* Fold a constant sub-tree into a single node for C-compiler
-   Copyright (C) 2023 Scpel Software Foundation, Inc.
- */
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /*@@ This file should be rewritten to use an arbitrary precision
   @@ representation for "struct tree_int_cst" and "struct tree_real_cst".
@@ -3468,6 +3483,7 @@ operand_compare::operand_equal_p (const_tree arg0, const_tree arg1,
 	  return false;
 
 	case CLEANUP_POINT_EXPR:
+	case EXPR_STMT:
 	case SAVE_EXPR:
 	  if (flags & OEP_LEXICOGRAPHIC)
 	    return OP_SAME (0);
@@ -7077,6 +7093,7 @@ extract_muldiv_1 (tree t, tree c, enum tree_code code, tree wide_type,
 	 If we have an unsigned type, we cannot do this since it will change
 	 the result if the original computation overflowed.  */
       if (TYPE_OVERFLOW_UNDEFINED (ctype)
+	  && !TYPE_OVERFLOW_SANITIZED (ctype)
 	  && ((code == MULT_EXPR && tcode == EXACT_DIV_EXPR)
 	      || (tcode == MULT_EXPR
 		  && code != TRUNC_MOD_EXPR && code != CEIL_MOD_EXPR
@@ -7086,8 +7103,7 @@ extract_muldiv_1 (tree t, tree c, enum tree_code code, tree wide_type,
 	  if (wi::multiple_of_p (wi::to_wide (op1), wi::to_wide (c),
 				 TYPE_SIGN (type)))
 	    {
-	      if (TYPE_OVERFLOW_UNDEFINED (ctype))
-		*strict_overflow_p = true;
+	      *strict_overflow_p = true;
 	      return fold_build2 (tcode, ctype, fold_convert (ctype, op0),
 				  fold_convert (ctype,
 						const_binop (TRUNC_DIV_EXPR,
@@ -7096,8 +7112,7 @@ extract_muldiv_1 (tree t, tree c, enum tree_code code, tree wide_type,
 	  else if (wi::multiple_of_p (wi::to_wide (c), wi::to_wide (op1),
 				      TYPE_SIGN (type)))
 	    {
-	      if (TYPE_OVERFLOW_UNDEFINED (ctype))
-		*strict_overflow_p = true;
+	      *strict_overflow_p = true;
 	      return fold_build2 (code, ctype, fold_convert (ctype, op0),
 				  fold_convert (ctype,
 						const_binop (TRUNC_DIV_EXPR,
@@ -8857,11 +8872,13 @@ native_interpret_expr (tree type, const unsigned char *ptr, int len)
 	     valid values that GCC can't really represent accurately.
 	     See PR95450.  Even for other modes, e.g. x86 XFmode can have some
 	     bit combinationations which GCC doesn't preserve.  */
-	  unsigned char buf[24];
+	  unsigned char buf[24 * 2];
 	  scalar_float_mode mode = SCALAR_FLOAT_TYPE_MODE (type);
 	  int total_bytes = GET_MODE_SIZE (mode);
+	  memcpy (buf + 24, ptr, total_bytes);
+	  clear_type_padding_in_mask (type, buf + 24);
 	  if (native_encode_expr (ret, buf, total_bytes, 0) != total_bytes
-	      || memcmp (ptr, buf, total_bytes) != 0)
+	      || memcmp (buf + 24, buf, total_bytes) != 0)
 	    return NULL_TREE;
 	  return ret;
 	}
@@ -16541,7 +16558,7 @@ getbyterep (tree src, unsigned HOST_WIDE_INT *strsize)
    offset.  */
 
 const char *
-scpel_getstr (tree str)
+c_getstr (tree str)
 {
   return getbyterep (str, NULL);
 }

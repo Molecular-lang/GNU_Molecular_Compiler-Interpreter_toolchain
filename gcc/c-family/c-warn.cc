@@ -1,4 +1,21 @@
-/* Diagnostic routines shared by all languages that are variants of C. */
+/* Diagnostic routines shared by all languages that are variants of C.
+   Copyright (C) 1992-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #define INCLUDE_STRING
 #include "config.h"
@@ -22,6 +39,7 @@
 #include "calls.h"
 #include "stor-layout.h"
 #include "tree-pretty-print.h"
+#include "langhooks.h"
 
 /* Print a warning if a constant expression had overflow in folding.
    Invoke this function on every expression that the language
@@ -69,7 +87,7 @@ constant_expression_error (tree value)
 void
 overflow_warning (location_t loc, tree value, tree expr)
 {
-  if (scpel_inhibit_evaluation_warnings != 0)
+  if (c_inhibit_evaluation_warnings != 0)
     return;
 
   const char *warnfmt = NULL;
@@ -1299,8 +1317,8 @@ conversion_warning (location_t loc, tree type, tree expr, tree result)
 	    /* If one of the operands is a non-negative constant
 	       that fits in the target type, then the type of the
 	       other operand does not matter.  */
-	    if (int_fits_type_p (op, scpel_common_signed_type (type))
-		&& int_fits_type_p (op, scpel_common_unsigned_type (type)))
+	    if (int_fits_type_p (op, c_common_signed_type (type))
+		&& int_fits_type_p (op, c_common_unsigned_type (type)))
 	      return false;
 
 	    /* If constant is unsigned and fits in the target
@@ -1411,7 +1429,7 @@ warnings_for_convert_and_check (location_t loc, tree type, tree expr,
 	{
 	  /* This detects cases like converting -129 or 256 to
 	     unsigned char.  */
-	  if (!int_fits_type_p (expr, scpel_common_signed_type (type)))
+	  if (!int_fits_type_p (expr, c_common_signed_type (type)))
 	    {
 	      if (cst)
 		warning_at (loc, OPT_Woverflow,
@@ -1433,7 +1451,7 @@ warnings_for_convert_and_check (location_t loc, tree type, tree expr,
 	  else
 	    conversion_warning (loc, type, expr, result);
 	}
-      else if (!int_fits_type_p (expr, scpel_common_unsigned_type (type)))
+      else if (!int_fits_type_p (expr, c_common_unsigned_type (type)))
 	{
 	  if (cst)
 	    warning_at (loc, OPT_Woverflow,
@@ -1484,7 +1502,7 @@ warnings_for_convert_and_check (location_t loc, tree type, tree expr,
     conversion_warning (loc, type, expr, result);
 }
 
-/* Subroutines of scpel_do_switch_warnings, called via splay_tree_foreach.
+/* Subroutines of c_do_switch_warnings, called via splay_tree_foreach.
    Used to verify that case values match up with enumerator values.  */
 
 static void
@@ -1515,7 +1533,7 @@ match_case_to_enum_1 (tree key, tree type, tree label)
 		buf, type);
 }
 
-/* Subroutine of scpel_do_switch_warnings, called via splay_tree_foreach.
+/* Subroutine of c_do_switch_warnings, called via splay_tree_foreach.
    Used to verify that case values match up with enumerator values.  */
 
 static int
@@ -1557,7 +1575,7 @@ match_case_to_enum (splay_tree_node node, void *data)
    so the point is moot.  */
 
 void
-scpel_do_switch_warnings (splay_tree cases, location_t switch_location,
+c_do_switch_warnings (splay_tree cases, location_t switch_location,
 		      tree type, tree cond, bool bool_cond_p)
 {
   splay_tree_node default_node;
@@ -1862,7 +1880,7 @@ readonly_error (location_t loc, tree arg, enum lvalue_use use)
 	      arg);
   else if (TREE_CODE (arg) == RESULT_DECL)
     {
-      gcc_assert (scpel_dialect_cxx ());
+      gcc_assert (c_dialect_cxx ());
       error_at (loc, READONLY_MSG (G_("assignment of "
 				      "read-only named return value %qD"),
 				   G_("increment of "
@@ -1925,7 +1943,7 @@ invalid_indirection_error (location_t loc, tree type, ref_operator errstring)
   switch (errstring)
     {
     case RO_NULL:
-      gcc_assert (scpel_dialect_cxx ());
+      gcc_assert (c_dialect_cxx ());
       error_at (loc, "invalid type argument (have %qT)", type);
       break;
     case RO_ARRAY_INDEXING:
@@ -2188,7 +2206,7 @@ warn_for_div_by_zero (location_t loc, tree divisor)
      about division by zero.  Do not issue a warning if DIVISOR has a
      floating-point type, since we consider 0.0/0.0 a valid way of
      generating a NaN.  */
-  if (scpel_inhibit_evaluation_warnings == 0
+  if (c_inhibit_evaluation_warnings == 0
       && (integer_zerop (divisor) || fixed_zerop (divisor)))
     warning_at (loc, OPT_Wdiv_by_zero, "division by zero");
 }
@@ -2302,15 +2320,15 @@ warn_for_sign_compare (location_t location,
 	 in the result if the result were signed.  */
       else if (TREE_CODE (uop) == INTEGER_CST
 	       && (resultcode == EQ_EXPR || resultcode == NE_EXPR)
-	       && int_fits_type_p (uop, scpel_common_signed_type (base_type)))
+	       && int_fits_type_p (uop, c_common_signed_type (base_type)))
 	/* OK */;
       /* In C, do not warn if the unsigned quantity is an enumeration
 	 constant and its maximum value would fit in the result if the
 	 result were signed.  */
-      else if (!scpel_dialect_cxx() && TREE_CODE (uop) == INTEGER_CST
+      else if (!c_dialect_cxx() && TREE_CODE (uop) == INTEGER_CST
 	       && TREE_CODE (TREE_TYPE (uop)) == ENUMERAL_TYPE
 	       && int_fits_type_p (TYPE_MAX_VALUE (TREE_TYPE (uop)),
-				   scpel_common_signed_type (base_type)))
+				   c_common_signed_type (base_type)))
 	/* OK */;
       else
 	warning_at (location, OPT_Wsign_compare,
@@ -2327,42 +2345,63 @@ warn_for_sign_compare (location_t location,
      have all bits set that are set in the ~ operand when it is
      extended.  */
 
-  op0 = scpel_common_get_narrower (op0, &unsignedp0);
-  op1 = scpel_common_get_narrower (op1, &unsignedp1);
+  /* bits0 is the bit index of op0 extended to result_type, which will
+     be always 0 and so all bits above it.  If there is a BIT_NOT_EXPR
+     in that operand possibly sign or zero extended to op0 and then
+     possibly further sign or zero extended to result_type, bits0 will
+     be the precision of result type if all the extensions involved
+     if any are sign extensions, and will be the place of the innermost
+     zero extension otherwise.  We warn only if BIT_NOT_EXPR's operand is
+     zero extended from some even smaller precision, in that case after
+     BIT_NOT_EXPR some bits below bits0 will be guaranteed to be set.
+     Similarly for bits1.  */
+  int bits0 = TYPE_PRECISION (result_type);
+  if (TYPE_UNSIGNED (TREE_TYPE (op0)))
+    bits0 = TYPE_PRECISION (TREE_TYPE (op0));
+  tree arg0 = c_common_get_narrower (op0, &unsignedp0);
+  if (TYPE_PRECISION (TREE_TYPE (arg0)) == TYPE_PRECISION (TREE_TYPE (op0)))
+    unsignedp0 = TYPE_UNSIGNED (TREE_TYPE (op0));
+  else if (unsignedp0)
+    bits0 = TYPE_PRECISION (TREE_TYPE (arg0));
+  op0 = arg0;
+  int bits1 = TYPE_PRECISION (result_type);
+  if (TYPE_UNSIGNED (TREE_TYPE (op1)))
+    bits1 = TYPE_PRECISION (TREE_TYPE (op1));
+  tree arg1 = c_common_get_narrower (op1, &unsignedp1);
+  if (TYPE_PRECISION (TREE_TYPE (arg1)) == TYPE_PRECISION (TREE_TYPE (op1)))
+    unsignedp1 = TYPE_UNSIGNED (TREE_TYPE (op1));
+  else if (unsignedp1)
+    bits1 = TYPE_PRECISION (TREE_TYPE (arg1));
+  op1 = arg1;
 
   if ((TREE_CODE (op0) == BIT_NOT_EXPR)
       ^ (TREE_CODE (op1) == BIT_NOT_EXPR))
     {
-      if (TREE_CODE (op0) == BIT_NOT_EXPR)
-	op0 = scpel_common_get_narrower (TREE_OPERAND (op0, 0), &unsignedp0);
       if (TREE_CODE (op1) == BIT_NOT_EXPR)
-	op1 = scpel_common_get_narrower (TREE_OPERAND (op1, 0), &unsignedp1);
-
-      if (tree_fits_shwi_p (op0) || tree_fits_shwi_p (op1))
 	{
-	  tree primop;
-	  HOST_WIDE_INT constant, mask;
-	  int unsignedp;
-	  unsigned int bits;
+	  std::swap (op0, op1);
+	  std::swap (unsignedp0, unsignedp1);
+	  std::swap (bits0, bits1);
+	}
 
-	  if (tree_fits_shwi_p (op0))
-	    {
-	      primop = op1;
-	      unsignedp = unsignedp1;
-	      constant = tree_to_shwi (op0);
-	    }
-	  else
-	    {
-	      primop = op0;
-	      unsignedp = unsignedp0;
-	      constant = tree_to_shwi (op1);
-	    }
+      int unsignedp;
+      arg0 = c_common_get_narrower (TREE_OPERAND (op0, 0), &unsignedp);
 
-	  bits = TYPE_PRECISION (TREE_TYPE (primop));
-	  if (bits < TYPE_PRECISION (result_type)
-	      && bits < HOST_BITS_PER_LONG && unsignedp)
+      /* For these warnings, we need BIT_NOT_EXPR operand to be
+	 zero extended from narrower type to BIT_NOT_EXPR's type.
+	 In that case, all those bits above the narrower's type
+	 are after BIT_NOT_EXPR set to 1.  */
+      if (tree_fits_shwi_p (op1))
+	{
+	  HOST_WIDE_INT constant = tree_to_shwi (op1);
+	  unsigned int bits = TYPE_PRECISION (TREE_TYPE (arg0));
+	  if (unsignedp
+	      && bits < TYPE_PRECISION (TREE_TYPE (op0))
+	      && bits < HOST_BITS_PER_WIDE_INT)
 	    {
-	      mask = HOST_WIDE_INT_M1U << bits;
+	      HOST_WIDE_INT mask = HOST_WIDE_INT_M1U << bits;
+	      if (bits0 < HOST_BITS_PER_WIDE_INT)
+		mask &= ~(HOST_WIDE_INT_M1U << bits0);
 	      if ((mask & constant) != mask)
 		{
 		  if (constant == 0)
@@ -2376,11 +2415,11 @@ warn_for_sign_compare (location_t location,
 		}
 	    }
 	}
-      else if (unsignedp0 && unsignedp1
-	       && (TYPE_PRECISION (TREE_TYPE (op0))
-		   < TYPE_PRECISION (result_type))
-	       && (TYPE_PRECISION (TREE_TYPE (op1))
-		   < TYPE_PRECISION (result_type)))
+      else if ((TYPE_PRECISION (TREE_TYPE (arg0))
+		< TYPE_PRECISION (TREE_TYPE (op0)))
+	       && unsignedp
+	       && unsignedp1
+	       && TYPE_PRECISION (TREE_TYPE (op1)) < bits0)
 	warning_at (location, OPT_Wsign_compare,
 		    "comparison of promoted bitwise complement "
 		    "of an unsigned value with unsigned");
@@ -2388,7 +2427,7 @@ warn_for_sign_compare (location_t location,
 }
 
 /* RESULT_TYPE is the result of converting TYPE1 and TYPE2 to a common
-   type via scpel_common_type.  If -Wdouble-promotion is in use, and the
+   type via c_common_type.  If -Wdouble-promotion is in use, and the
    conditions for warning have been met, issue a warning.  GMSGID is
    the warning message.  It must have two %T specifiers for the type
    that was converted (generally "float") and the type to which it was
@@ -2405,7 +2444,7 @@ do_warn_double_promotion (tree result_type, tree type1, tree type2,
     return;
   /* If the conversion will not occur at run-time, there is no need to
      warn about it.  */
-  if (scpel_inhibit_evaluation_warnings)
+  if (c_inhibit_evaluation_warnings)
     return;
   /* If an invalid conversion has occurred, don't warn.  */
   if (result_type == error_mark_node)
@@ -2446,7 +2485,7 @@ do_warn_unused_parameter (tree fn)
 void
 record_locally_defined_typedef (tree decl)
 {
-  struct scpel_language_function *l;
+  struct c_language_function *l;
 
   if (!warn_unused_local_typedefs
       || cfun == NULL
@@ -2456,7 +2495,7 @@ record_locally_defined_typedef (tree decl)
       || !decl_function_context (decl))
     return;
 
-  l = (struct scpel_language_function *) cfun->language;
+  l = (struct c_language_function *) cfun->language;
   vec_safe_push (l->local_typedefs, decl);
 }
 
@@ -2484,12 +2523,12 @@ maybe_warn_unused_local_typedefs (void)
      unrelated errors have been issued.  In which case, we'll avoid
      emitting "unused-local-typedefs" warnings.  */
   static int unused_local_typedefs_warn_count;
-  struct scpel_language_function *l;
+  struct c_language_function *l;
 
   if (cfun == NULL)
     return;
 
-  if ((l = (struct scpel_language_function *) cfun->language) == NULL)
+  if ((l = (struct c_language_function *) cfun->language) == NULL)
     return;
 
   if (warn_unused_local_typedefs
@@ -2598,14 +2637,19 @@ maybe_warn_shift_overflow (location_t loc, tree op0, tree op1)
       || TREE_CODE (op1) != INTEGER_CST)
     return false;
 
-  tree type0 = TREE_TYPE (op0);
+  /* match.pd could have narrowed the left shift already,
+     take type promotion into account.  */
+  tree type0 = lang_hooks.types.type_promotes_to (TREE_TYPE (op0));
   unsigned int prec0 = TYPE_PRECISION (type0);
 
   /* Left-hand operand must be signed.  */
   if (TYPE_OVERFLOW_WRAPS (type0) || cxx_dialect >= cxx20)
     return false;
 
-  unsigned int min_prec = (wi::min_precision (wi::to_wide (op0), SIGNED)
+  signop sign = SIGNED;
+  if (TYPE_PRECISION (TREE_TYPE (op0)) < TYPE_PRECISION (type0))
+    sign = TYPE_SIGN (TREE_TYPE (op0));
+  unsigned int min_prec = (wi::min_precision (wi::to_wide (op0), sign)
 			   + TREE_INT_CST_LOW (op1));
   /* Handle the case of left-shifting 1 into the sign bit.
    * However, shifting 1 _out_ of the sign bit, as in
@@ -2624,11 +2668,12 @@ maybe_warn_shift_overflow (location_t loc, tree op0, tree op1)
     }
 
   bool overflowed = min_prec > prec0;
-  if (overflowed && scpel_inhibit_evaluation_warnings == 0)
+  if (overflowed && c_inhibit_evaluation_warnings == 0)
     warning_at (loc, OPT_Wshift_overflow_,
 		"result of %qE requires %u bits to represent, "
 		"but %qT only has %u bits",
-		build2_loc (loc, LSHIFT_EXPR, type0, op0, op1),
+		build2_loc (loc, LSHIFT_EXPR, type0,
+			    fold_convert (type0, op0), op1),
 		min_prec, type0, prec0);
 
   return overflowed;
@@ -2804,7 +2849,7 @@ do_warn_duplicated_branches (tree expr)
 		"this condition has identical branches");
 }
 
-/* Callback for scpel_genericize to implement -Wduplicated-branches.  */
+/* Callback for c_genericize to implement -Wduplicated-branches.  */
 
 tree
 do_warn_duplicated_branches_r (tree *tp, int *, void *)
@@ -2983,6 +3028,10 @@ check_address_or_pointer_of_packed_member (tree type, tree rhs)
 	  if (rhs == NULL_TREE)
 	    return NULL_TREE;
 	  rhs = TREE_TYPE (rhs);	/* Pointer type.  */
+	  /* We could be called while processing a template and RHS could be
+	     a functor.  In that case it's a class, not a pointer.  */
+	  if (!POINTER_TYPE_P (rhs))
+	    return NULL_TREE;
 	  rhs = TREE_TYPE (rhs);	/* Function type.  */
 	  rhstype = TREE_TYPE (rhs);
 	  if (!rhstype || !POINTER_TYPE_P (rhstype))
@@ -3771,12 +3820,12 @@ do_warn_array_compare (location_t location, tree_code code, tree op0, tree op1)
 
   auto_diagnostic_group d;
   if (warning_at (location, OPT_Warray_compare,
-		  (scpel_dialect_cxx () && cxx_dialect >= cxx20)
+		  (c_dialect_cxx () && cxx_dialect >= cxx20)
 		  ? G_("comparison between two arrays is deprecated in C++20")
 		  : G_("comparison between two arrays")))
     {
       /* C doesn't allow +arr.  */
-      if (scpel_dialect_cxx ())
+      if (c_dialect_cxx ())
 	inform (location, "use unary %<+%> which decays operands to pointers "
 		"or %<&%D[0] %s &%D[0]%> to compare the addresses",
 		op0, op_symbol_code (code), op1);

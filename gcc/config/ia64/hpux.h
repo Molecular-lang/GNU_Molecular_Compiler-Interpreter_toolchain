@@ -42,7 +42,7 @@ do {							\
 	builtin_define("_INCLUDE_LONGLONG");		\
 	builtin_define("__STDC_EXT__");			\
 	builtin_define("_UINT128_T");			\
-	if (scpel_dialect_cxx () || !flag_iso)		\
+	if (c_dialect_cxx () || !flag_iso)		\
 	  {						\
 	    builtin_define("_HPUX_SOURCE");		\
 	    builtin_define("__STDCPP__");		\

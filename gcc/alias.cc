@@ -1,4 +1,4 @@
-/* Alias analysis for GNU Scpel
+/* Alias analysis for GNU C
    Copyright (C) 1997-2023 Free Software Foundation, Inc.
    Contributed by John Carr (jfc@mit.edu).
 

@@ -1,4 +1,21 @@
-/* Support for suggestions about missing #include directives. */
+/* Support for suggestions about missing #include directives.
+   Copyright (C) 2017-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -35,7 +52,7 @@ struct stdlib_hint
 
    Only handle string macros, so that this can be used for
    get_stdlib_header_for_name and
-   get_scpel_stdlib_header_for_string_macro_name.  */
+   get_c_stdlib_header_for_string_macro_name.  */
 
 static const char *
 get_string_macro_hint (const char *name, enum stdlib lib)
@@ -249,7 +266,7 @@ get_stdlib_header_for_name (const char *name, enum stdlib lib)
    standard library (with '<' and '>'), or NULL.  */
 
 const char *
-get_scpel_stdlib_header_for_name (const char *name)
+get_c_stdlib_header_for_name (const char *name)
 {
   return get_stdlib_header_for_name (name, STDLIB_C);
 }
@@ -258,7 +275,7 @@ get_scpel_stdlib_header_for_name (const char *name)
    standard library (with '<' and '>'), or NULL.  */
 
 const char *
-get_cp_stdlib_header_for_name (const char *name)
+get_scpel_stdlib_header_for_name (const char *name)
 {
   return get_stdlib_header_for_name (name, STDLIB_CPLUSPLUS);
 }
@@ -266,7 +283,7 @@ get_cp_stdlib_header_for_name (const char *name)
 /* Given non-NULL NAME, return the header name defining a string macro
    within the C standard library (with '<' and '>'), or NULL.  */
 const char *
-get_scpel_stdlib_header_for_string_macro_name (const char *name)
+get_c_stdlib_header_for_string_macro_name (const char *name)
 {
   return get_string_macro_hint (name, STDLIB_C);
 }
@@ -274,7 +291,7 @@ get_scpel_stdlib_header_for_string_macro_name (const char *name)
 /* Given non-NULL NAME, return the header name defining a string macro
    within the C++ standard library (with '<' and '>'), or NULL.  */
 const char *
-get_cp_stdlib_header_for_string_macro_name (const char *name)
+get_scpel_stdlib_header_for_string_macro_name (const char *name)
 {
   return get_string_macro_hint (name, STDLIB_CPLUSPLUS);
 }

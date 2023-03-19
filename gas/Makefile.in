@@ -1643,10 +1643,9 @@ ps: ps-recursive
 
 ps-am: $(PSS)
 
-uninstall-am: uninstall-dvi-am uninstall-html-am uninstall-info-am \
-	uninstall-man uninstall-pdf-am uninstall-ps-am
+uninstall-am:
 
-uninstall-man: uninstall-man1
+uninstall-man:
 
 .MAKE: $(am__recursive_targets) all check-am install-am install-strip
 

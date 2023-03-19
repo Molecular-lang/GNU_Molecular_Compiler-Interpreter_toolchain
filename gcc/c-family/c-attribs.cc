@@ -1,4 +1,21 @@
-/* C-family attributes handling. */
+/* C-family attributes handling.
+   Copyright (C) 1992-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #define INCLUDE_STRING
 #include "config.h"
@@ -269,7 +286,7 @@ static const struct attribute_spec::exclusions attr_stack_protect_exclusions[] =
 /* Table of machine-independent attributes common to all C-like languages.
 
    Current list of processed common attributes: nonnull.  */
-const struct attribute_spec scpel_common_attribute_table[] =
+const struct attribute_spec c_common_attribute_table[] =
 {
   /* { name, min_len, max_len, decl_req, type_req, fn_type_req,
        affects_type_identity, handler, exclude } */
@@ -559,7 +576,7 @@ const struct attribute_spec scpel_common_attribute_table[] =
    descendants.
 
    Current list of processed format attributes: format, format_arg.  */
-const struct attribute_spec scpel_common_format_attribute_table[] =
+const struct attribute_spec c_common_format_attribute_table[] =
 {
   /* { name, min_len, max_len, decl_req, type_req, fn_type_req,
        affects_type_identity, handler, exclude } */
@@ -1060,7 +1077,7 @@ handle_noreturn_attribute (tree *node, tree name, tree ARG_UNUSED (args),
 {
   tree type = TREE_TYPE (*node);
 
-  /* See FIXME comment in scpel_common_attribute_table.  */
+  /* See FIXME comment in c_common_attribute_table.  */
   if (TREE_CODE (*node) == FUNCTION_DECL
       || objc_method_decl (TREE_CODE (*node)))
     TREE_THIS_VOLATILE (*node) = 1;
@@ -1727,7 +1744,7 @@ handle_const_attribute (tree *node, tree name, tree ARG_UNUSED (args),
 {
   tree type = TREE_TYPE (*node);
 
-  /* See FIXME comment on noreturn in scpel_common_attribute_table.  */
+  /* See FIXME comment on noreturn in c_common_attribute_table.  */
   if (TREE_CODE (*node) == FUNCTION_DECL)
     TREE_READONLY (*node) = 1;
   else if (TREE_CODE (type) == POINTER_TYPE
@@ -1777,7 +1794,7 @@ handle_scalar_storage_order_attribute (tree *node, tree name, tree args,
       return NULL_TREE;
     }
 
-  if (RECORD_OR_UNION_TYPE_P (type) && !scpel_dialect_cxx ())
+  if (RECORD_OR_UNION_TYPE_P (type) && !c_dialect_cxx ())
     {
       bool reverse = false;
 
@@ -1850,7 +1867,7 @@ handle_transparent_union_attribute (tree *node, tree name,
 	    goto ignored;
 
 	  /* build_duplicate_type doesn't work for C++.  */
-	  if (scpel_dialect_cxx ())
+	  if (c_dialect_cxx ())
 	    goto ignored;
 
 	  /* A type variant isn't good enough, since we don't want a cast
@@ -3416,17 +3433,17 @@ handle_malloc_attribute (tree *node, tree name, tree args, int flags,
 
   if (TREE_CODE (dealloc) != FUNCTION_DECL)
     {
-/*      if (TREE_CODE (dealloc) == OVERLOAD)
+      if (TREE_CODE (dealloc) == OVERLOAD)
 	{
-	  // Handle specially the common case of specifying one of a number
-	  // of overloads, such as operator delete.
+	  /* Handle specially the common case of specifying one of a number
+	     of overloads, such as operator delete.  */
 	  error ("%qE attribute argument 1 is ambiguous", name);
 	  inform (input_location,
 		  "use a cast to the expected type to disambiguate");
 	  *no_add_attrs = true;
 	  return NULL_TREE;
 	}
-*/
+
       error ("%qE attribute argument 1 does not name a function", name);
       if (DECL_P (dealloc))
 	inform (DECL_SOURCE_LOCATION (dealloc),
@@ -5875,7 +5892,7 @@ handle_objc_root_class_attribute (tree */*node*/, tree name, tree /*args*/,
 				  int /*flags*/, bool *no_add_attrs)
 {
   /* This has no meaning outside Objective-C.  */
-  if (!scpel_dialect_objc())
+  if (!c_dialect_objc())
     warning (OPT_Wattributes, "%qE is only applicable to Objective-C"
 	     " class interfaces, attribute ignored", name);
 

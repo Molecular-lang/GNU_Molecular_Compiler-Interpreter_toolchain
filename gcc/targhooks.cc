@@ -580,7 +580,7 @@ default_floatn_mode (int n, bool extended)
    should implicitly enable the built-in function without the __builtin_ prefix
    in addition to the normal built-in function with the __builtin_ prefix.  The
    default is to only enable built-in functions without the __builtin_ prefix
-   for the GNU Scpel langauge.  The argument FUNC is the enum builtin_in_function
+   for the GNU C langauge.  The argument FUNC is the enum builtin_in_function
    id of the function to be enabled.  */
 
 bool
@@ -750,6 +750,11 @@ tree
 default_builtin_reciprocal (tree)
 {
   return NULL_TREE;
+}
+
+void
+default_emit_support_tinfos (emit_support_tinfos_callback)
+{
 }
 
 bool
@@ -1483,6 +1488,15 @@ default_preferred_vector_alignment (const_tree type)
   return TYPE_ALIGN (type);
 }
 
+/* The default implementation of
+   TARGET_VECTORIZE_PREFERRED_DIV_AS_SHIFTS_OVER_MULT.  */
+
+bool
+default_preferred_div_as_shifts_over_mult (const_tree type)
+{
+  return !can_mult_highpart_p (TYPE_MODE (type), TYPE_UNSIGNED (type));
+}
+
 /* By default assume vectors of element TYPE require a multiple of the natural
    alignment of TYPE.  TYPE is naturally aligned if IS_PACKED is false.  */
 bool
@@ -1838,14 +1852,6 @@ bool
 default_have_conditional_execution (void)
 {
   return HAVE_conditional_execution;
-}
-
-/* Default that no division by constant operations are special.  */
-bool
-default_can_special_div_by_const (enum tree_code, tree, wide_int, rtx *, rtx,
-				  rtx)
-{
-  return false;
 }
 
 /* By default we assume that c99 functions are present at the runtime,

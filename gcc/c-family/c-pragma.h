@@ -1,4 +1,21 @@
-/* Pragma related interfaces. */
+/* Pragma related interfaces.
+   Copyright (C) 1995-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #ifndef GCC_C_PRAGMA_H
 #define GCC_C_PRAGMA_H
@@ -227,7 +244,7 @@ extern void c_register_pragma_with_expansion_and_data (const char *space,
                                                        const char *name,
                                                    pragma_handler_2arg handler,
                                                        void *data);
-extern void scpel_invoke_pragma_handler (unsigned int);
+extern void c_invoke_pragma_handler (unsigned int);
 
 /* Early pragma handlers run in addition to the normal ones.  They can be used
    by frontends such as C++ that may want to process some pragmas during lexing
@@ -248,7 +265,7 @@ extern void add_to_renaming_pragma_list (tree, tree);
 
 extern enum cpp_ttype pragma_lex (tree *, location_t *loc = NULL);
 
-/* Flags for use with scpel_lex_with_flags.  The values here were picked
+/* Flags for use with c_lex_with_flags.  The values here were picked
    so that 0 means to translate and join strings.  */
 #define C_LEX_STRING_NO_TRANSLATE 1 /* Do not lex strings into
 				       execution character set.  */
@@ -259,7 +276,7 @@ extern enum cpp_ttype pragma_lex (tree *, location_t *loc = NULL);
 /* This is not actually available to pragma parsers.  It's merely a
    convenient location to declare this function for c-lex, after
    having enum cpp_ttype declared.  */
-extern enum cpp_ttype scpel_lex_with_flags (tree *, location_t *, unsigned char *,
+extern enum cpp_ttype c_lex_with_flags (tree *, location_t *, unsigned char *,
 					int);
 
 extern void c_pp_lookup_pragma (unsigned int, const char **, const char **);

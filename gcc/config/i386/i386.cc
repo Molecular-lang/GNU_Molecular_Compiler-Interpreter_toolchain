@@ -17943,7 +17943,7 @@ ix86_fold_builtin (tree fndecl, int n_args,
 	case IX86_BUILTIN_NANSQ:
 	  {
 	    tree type = TREE_TYPE (TREE_TYPE (fndecl));
-	    const char *str = scpel_getstr (*args);
+	    const char *str = c_getstr (*args);
 	    int quiet = fn_code == IX86_BUILTIN_NANQ;
 	    REAL_VALUE_TYPE real;
 
@@ -22775,6 +22775,27 @@ ix86_mangle_type (const_tree type)
     }
 }
 
+/* Create C++ tinfo symbols for only conditionally available fundamental
+   types.  */
+
+static void
+ix86_emit_support_tinfos (emit_support_tinfos_callback callback)
+{
+  extern tree ix86_float16_type_node;
+  extern tree ix86_bf16_type_node;
+
+  if (!TARGET_SSE2)
+    {
+      gcc_checking_assert (!float16_type_node && !bfloat16_type_node);
+      float16_type_node = ix86_float16_type_node;
+      bfloat16_type_node = ix86_bf16_type_node;
+      callback (float16_type_node);
+      callback (bfloat16_type_node);
+      float16_type_node = NULL_TREE;
+      bfloat16_type_node = NULL_TREE;
+    }
+}
+
 static GTY(()) tree ix86_tls_stack_chk_guard_decl;
 
 static tree
@@ -23040,7 +23061,7 @@ ix86_canonical_va_list_type (tree type)
    Returns zero if there is no element for this index, otherwise
    IDX should be increased upon the next call.
    Note, do not iterate a base builtin's name like __builtin_va_list.
-   Used from scpel_common_nodes_and_builtins.  */
+   Used from c_common_nodes_and_builtins.  */
 
 static int
 ix86_enum_va_list (int idx, const char **pname, tree *ptree)
@@ -24953,6 +24974,9 @@ ix86_libgcc_floating_mode_supported_p
 
 #undef TARGET_MANGLE_TYPE
 #define TARGET_MANGLE_TYPE ix86_mangle_type
+
+#undef TARGET_EMIT_SUPPORT_TINFOS
+#define TARGET_EMIT_SUPPORT_TINFOS ix86_emit_support_tinfos
 
 #undef TARGET_STACK_PROTECT_GUARD
 #define TARGET_STACK_PROTECT_GUARD ix86_stack_protect_guard

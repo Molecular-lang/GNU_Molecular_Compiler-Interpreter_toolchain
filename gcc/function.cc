@@ -998,7 +998,7 @@ assign_temp (tree type_or_decl, int memory_required,
       if (!poly_int_tree_p (TYPE_SIZE_UNIT (type), &size))
 	size = max_int_size_in_bytes (type);
 
-      /* Zero sized arrays are a GNU Scpel extension.  Set size to 1 to avoid
+      /* Zero sized arrays are a GNU C extension.  Set size to 1 to avoid
 	 problems with allocating the stack space.  */
       if (known_eq (size, 0))
 	size = 1;

@@ -505,6 +505,8 @@ public:
       }
   }
 
+  bool terminate_path_p () const final override { return true; }
+
   bool emit (rich_location *rich_loc) final override
   {
     switch (m_pkind)
@@ -917,10 +919,10 @@ region_model::get_gassign_result (const gassign *assign,
    uninitialized locals.
 
    When optimization is turned on the FE can immediately fold compound
-   conditionals.  Specifically, scpel_parser_condition parses this condition:
+   conditionals.  Specifically, c_parser_condition parses this condition:
      ((A OR-IF B) OR-IF C)
-   and calls scpel_fully_fold on the condition.
-   Within scpel_fully_fold, fold_truth_andor is called, which bails when
+   and calls c_fully_fold on the condition.
+   Within c_fully_fold, fold_truth_andor is called, which bails when
    optimization is off, but if any optimization is turned on can convert the
      ((A OR-IF B) OR-IF C)
    into:
@@ -1475,8 +1477,6 @@ region_model::on_call_pre (const gcall *call, region_model_context *ctxt)
 {
   call_details cd (call, this, ctxt);
 
-  bool unknown_side_effects = false;
-
   /* Special-case for IFN_DEFERRED_INIT.
      We want to report uninitialized variables with -fanalyzer (treating
      -ftrivial-auto-var-init= as purely a mitigation feature).
@@ -1485,7 +1485,7 @@ region_model::on_call_pre (const gcall *call, region_model_context *ctxt)
      view of the analyzer.  */
   if (gimple_call_internal_p (call)
       && gimple_call_internal_fn (call) == IFN_DEFERRED_INIT)
-    return false;
+    return false; /* No side effects.  */
 
   /* Get svalues for all of the arguments at the callsite, to ensure that we
      complain about any uninitialized arguments.  This might lead to
@@ -1530,33 +1530,29 @@ region_model::on_call_pre (const gcall *call, region_model_context *ctxt)
 	  = get_known_function (gimple_call_internal_fn (call)))
       {
 	kf->impl_call_pre (cd);
-	return false;
+	return false; /* No further side effects.  */
       }
 
-  if (callee_fndecl)
+  if (!callee_fndecl)
+    return true; /* Unknown side effects.  */
+
+  if (const known_function *kf = get_known_function (callee_fndecl, cd))
     {
-      int callee_fndecl_flags = flags_from_decl_or_type (callee_fndecl);
-
-      if (const known_function *kf = get_known_function (callee_fndecl, cd))
-	{
-	  kf->impl_call_pre (cd);
-	  return false;
-	}
-      else if (fndecl_built_in_p (callee_fndecl, BUILT_IN_NORMAL)
-	  && gimple_builtin_call_types_compatible_p (call, callee_fndecl))
-	{
-	  if (!(callee_fndecl_flags & (ECF_CONST | ECF_PURE)))
-	    unknown_side_effects = true;
-	}
-      else if (!fndecl_has_gimple_body_p (callee_fndecl)
-	       && (!(callee_fndecl_flags & (ECF_CONST | ECF_PURE)))
-	       && !fndecl_built_in_p (callee_fndecl))
-	unknown_side_effects = true;
+      kf->impl_call_pre (cd);
+      return false; /* No further side effects.  */
     }
-  else
-    unknown_side_effects = true;
 
-  return unknown_side_effects;
+  const int callee_fndecl_flags = flags_from_decl_or_type (callee_fndecl);
+  if (callee_fndecl_flags & (ECF_CONST | ECF_PURE))
+    return false; /* No side effects.  */
+
+  if (fndecl_built_in_p (callee_fndecl))
+    return true; /* Unknown side effects.  */
+
+  if (!fndecl_has_gimple_body_p (callee_fndecl))
+    return true; /* Unknown side effects.  */
+
+  return false; /* No side effects.  */
 }
 
 /* Update this model for the CALL stmt, using CTXT to report any
@@ -2207,9 +2203,16 @@ region_model::get_rvalue_1 (path_var pv, region_model_context *ctxt) const
 	return get_rvalue_for_bits (TREE_TYPE (expr), reg, bits, ctxt);
       }
 
-    case SSA_NAME:
     case VAR_DECL:
+      if (DECL_HARD_REGISTER (pv.m_tree))
+	{
+	  /* If it has a hard register, it doesn't have a memory region
+	     and can't be referred to as an lvalue.  */
+	  return m_mgr->get_or_create_unknown_svalue (TREE_TYPE (pv.m_tree));
+	}
+      /* Fall through. */
     case PARM_DECL:
+    case SSA_NAME:
     case RESULT_DECL:
     case ARRAY_REF:
       {
@@ -3293,8 +3296,10 @@ void
 region_model::mark_region_as_unknown (const region *reg,
 				      uncertainty_t *uncertainty)
 {
+  svalue_set maybe_live_values;
   m_store.mark_region_as_unknown (m_mgr->get_store_manager(), reg,
-				  uncertainty);
+				  uncertainty, &maybe_live_values);
+  m_store.on_maybe_live_values (maybe_live_values);
 }
 
 /* Determine what is known about the condition "LHS_SVAL OP RHS_SVAL" within

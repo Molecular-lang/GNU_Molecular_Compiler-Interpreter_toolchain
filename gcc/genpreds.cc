@@ -672,7 +672,7 @@ public:
   class constraint_data *next_this_letter;
   class constraint_data *next_textual;
   const char *name;
-  const char *scpel_name;    /* same as .name unless mangling is necessary */
+  const char *c_name;    /* same as .name unless mangling is necessary */
   file_location loc;     /* location of definition */
   size_t namelen;
   const char *regclass;  /* for register constraints */
@@ -903,7 +903,7 @@ add_constraint (const char *name, const char *regclass,
 
   c = XOBNEW (rtl_obstack, class constraint_data);
   c->name = name;
-  c->scpel_name = need_mangled_name ? mangle (name) : name;
+  c->c_name = need_mangled_name ? mangle (name) : name;
   c->loc = loc;
   c->namelen = namelen;
   c->regclass = regclass;
@@ -1060,7 +1060,7 @@ write_enum_constraint_num (void)
 	 "{\n"
 	 "  CONSTRAINT__UNKNOWN = 0", stdout);
   for (unsigned int i = 0; i < num_constraints; ++i)
-    printf (",\n  CONSTRAINT_%s", enum_order[i]->scpel_name);
+    printf (",\n  CONSTRAINT_%s", enum_order[i]->c_name);
   puts (",\n  CONSTRAINT__LIMIT\n};\n");
 }
 
@@ -1084,7 +1084,7 @@ write_lookup_constraint_1 (void)
 
       printf ("    case '%c':\n", i);
       if (c->namelen == 1)
-	printf ("      return CONSTRAINT_%s;\n", c->scpel_name);
+	printf ("      return CONSTRAINT_%s;\n", c->c_name);
       else
 	{
 	  do
@@ -1093,11 +1093,11 @@ write_lookup_constraint_1 (void)
 		printf ("      if (!strncmp (str + 1, \"%s\", %lu))\n"
 			"        return CONSTRAINT_%s;\n",
 			c->name + 1, (unsigned long int) c->namelen - 1,
-			c->scpel_name);
+			c->c_name);
 	      else
 		printf ("      if (str[1] == '%c')\n"
 			"        return CONSTRAINT_%s;\n",
-			c->name[1], c->scpel_name);
+			c->name[1], c->c_name);
 	      c = c->next_this_letter;
 	    }
 	  while (c);
@@ -1127,7 +1127,7 @@ write_lookup_constraint_array (void)
       if (!c)
 	printf ("CONSTRAINT__UNKNOWN");
       else if (c->namelen == 1)
-	printf ("MIN ((int) CONSTRAINT_%s, (int) UCHAR_MAX)", c->scpel_name);
+	printf ("MIN ((int) CONSTRAINT_%s, (int) UCHAR_MAX)", c->c_name);
       else
 	printf ("UCHAR_MAX");
     }
@@ -1194,7 +1194,7 @@ write_reg_class_for_constraint_1 (void)
 
   FOR_ALL_CONSTRAINTS (c)
     if (c->is_register)
-      printf ("    case CONSTRAINT_%s: return %s;\n", c->scpel_name, c->regclass);
+      printf ("    case CONSTRAINT_%s: return %s;\n", c->c_name, c->regclass);
 
   puts ("    default: break;\n"
 	"    }\n"
@@ -1232,7 +1232,7 @@ write_tm_constrs_h (void)
 
 	printf ("static inline bool\n"
 		"satisfies_constraint_%s (rtx %s)\n"
-		"{\n", c->scpel_name,
+		"{\n", c->c_name,
 		needs_op ? "op" : "ARG_UNUSED (op)");
 	if (needs_mode)
 	  puts ("  machine_mode mode = GET_MODE (op);");
@@ -1283,7 +1283,7 @@ write_constraint_satisfied_p_array (void)
     {
       if (i != satisfied_start)
 	printf (",\n  ");
-      printf ("satisfies_constraint_%s", enum_order[i]->scpel_name);
+      printf ("satisfies_constraint_%s", enum_order[i]->c_name);
     }
   printf ("\n};\n\n");
 }
@@ -1306,7 +1306,7 @@ write_insn_const_int_ok_for_constraint (void)
   FOR_ALL_CONSTRAINTS (c)
     if (c->is_const_int)
       {
-	printf ("    case CONSTRAINT_%s:\n      return ", c->scpel_name);
+	printf ("    case CONSTRAINT_%s:\n      return ", c->c_name);
 	/* c->exp is guaranteed to be (and (match_code "const_int") (...));
 	   we know at this point that we have a const_int, so we need not
 	   bother with that part of the test.  */
@@ -1331,7 +1331,7 @@ write_range_function (const char *name, unsigned int start, unsigned int end)
 	    "{\n"
 	    "  return c >= CONSTRAINT_%s && c <= CONSTRAINT_%s;\n"
 	    "}\n\n",
-	    name, enum_order[start]->scpel_name, enum_order[end - 1]->scpel_name);
+	    name, enum_order[start]->c_name, enum_order[end - 1]->c_name);
   else
     printf ("%s (enum constraint_num)\n"
 	    "{\n"
@@ -1350,24 +1350,24 @@ write_allows_reg_mem_function (void)
   if (maybe_allows_none_start != maybe_allows_none_end)
     printf ("  if (c >= CONSTRAINT_%s && c <= CONSTRAINT_%s)\n"
 	    "    return;\n",
-	    enum_order[maybe_allows_none_start]->scpel_name,
-	    enum_order[maybe_allows_none_end - 1]->scpel_name);
+	    enum_order[maybe_allows_none_start]->c_name,
+	    enum_order[maybe_allows_none_end - 1]->c_name);
   if (maybe_allows_reg_start != maybe_allows_reg_end)
     printf ("  if (c >= CONSTRAINT_%s && c <= CONSTRAINT_%s)\n"
 	    "    {\n"
 	    "      *allows_reg = true;\n"
 	    "      return;\n"
 	    "    }\n",
-	    enum_order[maybe_allows_reg_start]->scpel_name,
-	    enum_order[maybe_allows_reg_end - 1]->scpel_name);
+	    enum_order[maybe_allows_reg_start]->c_name,
+	    enum_order[maybe_allows_reg_end - 1]->c_name);
   if (maybe_allows_mem_start != maybe_allows_mem_end)
     printf ("  if (c >= CONSTRAINT_%s && c <= CONSTRAINT_%s)\n"
 	    "    {\n"
 	    "      *allows_mem = true;\n"
 	    "      return;\n"
 	    "    }\n",
-	    enum_order[maybe_allows_mem_start]->scpel_name,
-	    enum_order[maybe_allows_mem_end - 1]->scpel_name);
+	    enum_order[maybe_allows_mem_start]->c_name,
+	    enum_order[maybe_allows_mem_end - 1]->c_name);
   printf ("  (void) c;\n"
 	  "  *allows_reg = true;\n"
 	  "  *allows_mem = true;\n"
@@ -1387,7 +1387,7 @@ print_type_tree (const vec <std::pair <unsigned int, const char *> > &vec,
     {
       unsigned int mid = (start + end) / 2;
       printf ("%*sif (c >= CONSTRAINT_%s)\n",
-	      indent, "", enum_order[vec[mid].first]->scpel_name);
+	      indent, "", enum_order[vec[mid].first]->c_name);
       if (mid + 1 == end)
 	print_type_tree (vec, mid + 1, end, vec[mid].second, indent + 2);
       else

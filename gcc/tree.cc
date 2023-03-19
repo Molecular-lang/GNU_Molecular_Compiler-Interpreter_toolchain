@@ -1,4 +1,21 @@
-/* Language-independent node constructors for parse phase of GNU compiler. */
+/* Language-independent node constructors for parse phase of GNU compiler.
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* This file contains the low level primitives for operating on tree nodes,
    including allocation, list operations, interning of identifiers,
@@ -56,34 +73,6 @@
 #include "dfp.h"
 #include "asan.h"
 #include "ubsan.h"
-
-#if __cpp_inline_variables < 201606L
-/* Tree code classes.  */
-
-#define DEFTREECODE(SYM, NAME, TYPE, LENGTH) TYPE,
-#define END_OF_BASE_TREE_CODES tcc_exceptional,
-
-const enum tree_code_class tree_code_type[] = {
-#include "all-tree.def"
-};
-
-#undef DEFTREECODE
-#undef END_OF_BASE_TREE_CODES
-
-/* Table indexed by tree code giving number of expression
-   operands beyond the fixed part of the node structure.
-   Not used for types or decls.  */
-
-#define DEFTREECODE(SYM, NAME, TYPE, LENGTH) LENGTH,
-#define END_OF_BASE_TREE_CODES 0,
-
-const unsigned char tree_code_length[] = {
-#include "all-tree.def"
-};
-
-#undef DEFTREECODE
-#undef END_OF_BASE_TREE_CODES
-#endif
 
 /* Names of tree components.
    Used for printing out the tree and error messages.  */
@@ -1128,7 +1117,7 @@ get_stats_node_kind (enum tree_code code)
     case tcc_binary:  /* a binary arithmetic expression */
       return e_kind;
     case tcc_constant:  /* a constant */
-      return scpel_kind;
+      return c_kind;
     case tcc_exceptional:  /* something random, like an identifier.  */
       switch (code)
 	{
@@ -8253,7 +8242,7 @@ find_var_from_fn (tree *tp, int *walk_subtrees, void *data)
 
    This concept is more general than that of C99 'variably modified types':
    in C99, a struct type is never variably modified because a VLA may not
-   appear as a structure member.  However, in GNU Scpel code like:
+   appear as a structure member.  However, in GNU C code like:
 
      struct S { int i[f()]; };
 
@@ -9642,7 +9631,7 @@ build_common_tree_nodes (bool signed_char)
     /* Many back-ends define record types without setting TYPE_NAME.
        If we copied the record type here, we'd keep the original
        record type without a name.  This breaks name mangling.  So,
-       don't copy record types and let scpel_common_nodes_and_builtins()
+       don't copy record types and let c_common_nodes_and_builtins()
        declare the type to be __builtin_va_list.  */
     if (TREE_CODE (t) != RECORD_TYPE)
       t = build_variant_type_copy (t);
@@ -14183,10 +14172,10 @@ verify_type (const_tree t)
 	    ;
 	  else if (VAR_P (fld))
 	    ;
-//	  else if (TREE_CODE (fld) == TEMPLATE_DECL)
-//	    ;
-//	  else if (TREE_CODE (fld) == USING_DECL)
-//	    ;
+	  else if (TREE_CODE (fld) == TEMPLATE_DECL)
+	    ;
+	  else if (TREE_CODE (fld) == USING_DECL)
+	    ;
 	  else if (TREE_CODE (fld) == FUNCTION_DECL)
 	    ;
 	  else

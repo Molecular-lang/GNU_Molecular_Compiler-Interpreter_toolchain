@@ -1,1 +1,0 @@
-/* -*- Scpel -*- Random variables */

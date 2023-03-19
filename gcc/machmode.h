@@ -1001,7 +1001,7 @@ struct int_n_data_t {
   /* These parts are initailized by genmodes output */
   unsigned int bitsize;
   scalar_int_mode_pod m;
-  /* RID_* is RID_INTN_BASE + index into this array */
+  /* RID_SPL_* is RID_SPL_INTN_BASE + index into this array */
 };
 
 /* This is also in tree.h.  genmodes.cc guarantees the're sorted from

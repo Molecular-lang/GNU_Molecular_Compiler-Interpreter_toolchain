@@ -1,4 +1,20 @@
-/* Preprocess only, using cpplib. */
+/* Preprocess only, using cpplib.
+   Copyright (C) 1995-2023 Free Software Foundation, Inc.
+   Written by Per Bothner, 1994-95.
+
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 3, or (at your option) any
+   later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING3.  If not see
+   <http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -127,7 +143,7 @@ init_pp_output (FILE *out_stream)
 
   if (flag_pch_preprocess)
     {
-      cb->valid_pch = scpel_common_valid_pch;
+      cb->valid_pch = c_common_valid_pch;
       cb->read_pch = cb_read_pch;
     }
 
@@ -144,8 +160,8 @@ init_pp_output (FILE *out_stream)
       cb->used_undef = cb_used_undef;
     }
 
-  cb->has_attribute = scpel_common_has_attribute;
-  cb->has_builtin = scpel_common_has_builtin;
+  cb->has_attribute = c_common_has_attribute;
+  cb->has_builtin = c_common_has_builtin;
   cb->get_source_date_epoch = cb_get_source_date_epoch;
   cb->remap_filename = remap_macro_filename;
 
@@ -811,7 +827,7 @@ cb_def_pragma (cpp_reader *pfile, location_t line)
    in case a token was lexed externally, e.g. while processing a
    pragma.  */
 void
-scpel_pp_stream_token (cpp_reader *pfile, const cpp_token *tok, location_t loc)
+c_pp_stream_token (cpp_reader *pfile, const cpp_token *tok, location_t loc)
 {
   gcc_assert (print.streamer);
   print.streamer->stream (pfile, tok, loc);
@@ -842,7 +858,7 @@ static void
 cb_read_pch (cpp_reader *pfile, const char *name,
 	     int fd, const char *orig_name ATTRIBUTE_UNUSED)
 {
-  scpel_common_read_pch (pfile, name, fd, orig_name);
+  c_common_read_pch (pfile, name, fd, orig_name);
 
   fprintf (print.outf, "#pragma GCC pch_preprocess \"%s\"\n", name);
   print.src_line++;

@@ -6563,38 +6563,6 @@ $as_echo "yes" >&6; }
 
 $as_echo "#define ENABLE_NLS 1" >>confdefs.h
 
-
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for catalogs to be installed" >&5
-$as_echo_n "checking for catalogs to be installed... " >&6; }
-  # Look for .po and .gmo files in the source directory.
-  CATALOGS=
-  XLINGUAS=
-  for cat in $srcdir/po/*.gmo $srcdir/po/*.po; do
-    # If there aren't any .gmo files the shell will give us the
-    # literal string "../path/to/srcdir/po/*.gmo" which has to be
-    # weeded out.
-    case "$cat" in *\**)
-      continue;;
-    esac
-    # The quadruple backslash is collapsed to a double backslash
-    # by the backticks, then collapsed again by the double quotes,
-    # leaving us with one backslash in the sed expression (right
-    # before the dot that mustn't act as a wildcard).
-    cat=`echo $cat | sed -e "s!$srcdir/po/!!" -e "s!\\\\.po!.gmo!"`
-    lang=`echo $cat | sed -e "s!\\\\.gmo!!"`
-    # The user is allowed to set LINGUAS to a list of languages to
-    # install catalogs for.  If it's empty that means "all of them."
-    if test "x$LINGUAS" = x; then
-      CATALOGS="$CATALOGS $cat"
-      XLINGUAS="$XLINGUAS $lang"
-    else
-      case "$LINGUAS" in *$lang*)
-        CATALOGS="$CATALOGS $cat"
-        XLINGUAS="$XLINGUAS $lang"
-        ;;
-      esac
-    fi
-  done
   LINGUAS="$XLINGUAS"
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $LINGUAS" >&5
 $as_echo "$LINGUAS" >&6; }

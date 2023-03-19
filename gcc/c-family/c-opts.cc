@@ -1,4 +1,22 @@
-/* C/ObjC/C++ command line option handling. */
+/* C/ObjC/C++ command line option handling.
+   Copyright (C) 2002-2023 Free Software Foundation, Inc.
+   Contributed by Neil Booth.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -111,8 +129,8 @@ static void c_finish_options (void);
 #define STDC_0_IN_SYSTEM_HEADERS 0
 #endif
 
-/* Holds switches parsed by scpel_common_handle_option (), but whose
-   handling is deferred to scpel_common_post_options ().  */
+/* Holds switches parsed by c_common_handle_option (), but whose
+   handling is deferred to c_common_post_options ().  */
 static void defer_opt (enum opt_code, const char *);
 static struct deferred_opt
 {
@@ -122,7 +140,7 @@ static struct deferred_opt
 
 
 extern const unsigned int 
-scpel_family_lang_mask = (CL_C | CL_CXX | CL_ObjC | CL_ObjCXX);
+c_family_lang_mask = (CL_C | CL_CXX | CL_ObjC | CL_ObjCXX);
 
 /* Defer option CODE with argument ARG.  */
 static void
@@ -135,11 +153,11 @@ defer_opt (enum opt_code code, const char *arg)
 
 /* Return language mask for option parsing.  */
 unsigned int
-scpel_common_option_lang_mask (void)
+c_common_option_lang_mask (void)
 {
   static const unsigned int lang_flags[] = {CL_C, CL_ObjC, CL_CXX, CL_ObjCXX};
 
-  return lang_flags[scpel_language];
+  return lang_flags[c_language];
 }
 
 /* Diagnostic finalizer for C/C++/Objective-C/Objective-C++.  */
@@ -161,7 +179,7 @@ c_diagnostic_finalizer (diagnostic_context *context,
 
 /* Common default settings for diagnostics.  */
 void
-scpel_common_diagnostics_set_defaults (diagnostic_context *context)
+c_common_diagnostics_set_defaults (diagnostic_context *context)
 {
   diagnostic_finalizer (context) = c_diagnostic_finalizer;
   context->opt_permissive = OPT_fpermissive;
@@ -181,10 +199,10 @@ static bool accept_all_c_family_options = false;
 
 /* Return whether to complain about a wrong-language option.  */
 bool
-scpel_common_complain_wrong_lang_p (const struct cl_option *option)
+c_common_complain_wrong_lang_p (const struct cl_option *option)
 {
   if (accept_all_c_family_options
-      && (option->flags & scpel_family_lang_mask))
+      && (option->flags & c_family_lang_mask))
     return false;
 
   return true;
@@ -192,11 +210,11 @@ scpel_common_complain_wrong_lang_p (const struct cl_option *option)
 
 /* Initialize options structure OPTS.  */
 void
-scpel_common_init_options_struct (struct gcc_options *opts)
+c_common_init_options_struct (struct gcc_options *opts)
 {
-  opts->x_flag_exceptions = scpel_dialect_cxx ();
-  opts->x_warn_pointer_arith = scpel_dialect_cxx ();
-  opts->x_warn_write_strings = scpel_dialect_cxx ();
+  opts->x_flag_exceptions = c_dialect_cxx ();
+  opts->x_warn_pointer_arith = c_dialect_cxx ();
+  opts->x_warn_write_strings = c_dialect_cxx ();
   opts->x_flag_warn_unused_result = true;
 
   /* By default, C99-like requirements for complex multiply and divide.  */
@@ -206,7 +224,7 @@ scpel_common_init_options_struct (struct gcc_options *opts)
 
 /* Common initialization before calling option handlers.  */
 void
-scpel_common_init_options (unsigned int decoded_options_count,
+c_common_init_options (unsigned int decoded_options_count,
 		       struct cl_decoded_option *decoded_options)
 {
   unsigned int i;
@@ -215,14 +233,14 @@ scpel_common_init_options (unsigned int decoded_options_count,
   g_string_concat_db
     = new (ggc_alloc <string_concat_db> ()) string_concat_db ();
 
-  parse_in = cpp_create_reader (scpel_dialect_cxx () ? CLK_GNUCXX: CLK_GNUC89,
+  parse_in = cpp_create_reader (c_dialect_cxx () ? CLK_GNUCXX: CLK_GNUC89,
 				ident_hash, line_table);
   cb = cpp_get_callbacks (parse_in);
-  cb->diagnostic = scpel_cpp_diagnostic;
+  cb->diagnostic = c_cpp_diagnostic;
 
   cpp_opts = cpp_get_options (parse_in);
   cpp_opts->dollars_in_ident = DOLLARS_IN_IDENTIFIERS;
-  cpp_opts->objc = scpel_dialect_objc ();
+  cpp_opts->objc = c_dialect_objc ();
   cpp_opts->deps.modules = true;
 
   /* Reset to avoid warnings on internal definitions.  We set it just
@@ -231,7 +249,7 @@ scpel_common_init_options (unsigned int decoded_options_count,
 
   deferred_opts = XNEWVEC (struct deferred_opt, decoded_options_count);
 
-  if (scpel_language == clk_c)
+  if (c_language == clk_c)
     {
       /* The default for C is gnu17.  */
       set_std_c17 (false /* ISO */);
@@ -247,7 +265,7 @@ scpel_common_init_options (unsigned int decoded_options_count,
     }
 
   /* Set C++ standard to C++17 if not specified on the command line.  */
-  if (scpel_dialect_cxx ())
+  if (c_dialect_cxx ())
     set_std_cxx17 (/*ISO*/false);
 
   global_dc->colorize_source_p = true;
@@ -257,7 +275,7 @@ scpel_common_init_options (unsigned int decoded_options_count,
    form of an -f or -W option was given.  Returns false if the switch was
    invalid, true if valid.  Use HANDLERS in recursive handle_option calls.  */
 bool
-scpel_common_handle_option (size_t scode, const char *arg, HOST_WIDE_INT value,
+c_common_handle_option (size_t scode, const char *arg, HOST_WIDE_INT value,
 			int kind, location_t loc,
 			const struct cl_option_handlers *handlers)
 {
@@ -272,7 +290,7 @@ scpel_common_handle_option (size_t scode, const char *arg, HOST_WIDE_INT value,
   switch (code)
     {
     default:
-      if (cl_options[code].flags & scpel_family_lang_mask)
+      if (cl_options[code].flags & c_family_lang_mask)
 	{
 	  if ((option->flags & CL_TARGET)
 	      && ! targetcm.handle_c_option (scode, arg, value))
@@ -397,7 +415,7 @@ scpel_common_handle_option (size_t scode, const char *arg, HOST_WIDE_INT value,
       break;
 
     case OPT_ansi:
-      if (!scpel_dialect_cxx ())
+      if (!c_dialect_cxx ())
 	set_std_c89 (false, true);
       else
 	set_std_cxx98 (true);
@@ -422,7 +440,7 @@ scpel_common_handle_option (size_t scode, const char *arg, HOST_WIDE_INT value,
       break;
 
     case OPT_fcond_mismatch:
-      if (!scpel_dialect_cxx ())
+      if (!c_dialect_cxx ())
 	{
 	  flag_cond_mismatch = value;
 	  break;
@@ -709,33 +727,33 @@ scpel_common_handle_option (size_t scode, const char *arg, HOST_WIDE_INT value,
       break;
     }
 
-  switch (scpel_language)
+  switch (c_language)
     {
     case clk_c:
       C_handle_option_auto (&global_options, &global_options_set, 
                             scode, arg, value, 
-                            scpel_family_lang_mask, kind,
+                            c_family_lang_mask, kind,
                             loc, handlers, global_dc);
       break;
 
     case clk_objc:
       ObjC_handle_option_auto (&global_options, &global_options_set,
                                scode, arg, value, 
-                               scpel_family_lang_mask, kind,
+                               c_family_lang_mask, kind,
                                loc, handlers, global_dc);
       break;
 
     case clk_cxx:
       CXX_handle_option_auto (&global_options, &global_options_set,
                               scode, arg, value,
-                              scpel_family_lang_mask, kind,
+                              c_family_lang_mask, kind,
                               loc, handlers, global_dc);
       break;
 
     case clk_objcxx:
       ObjCXX_handle_option_auto (&global_options, &global_options_set,
                                  scode, arg, value,
-                                 scpel_family_lang_mask, kind,
+                                 c_family_lang_mask, kind,
                                  loc, handlers, global_dc);
       break;
 
@@ -750,7 +768,7 @@ scpel_common_handle_option (size_t scode, const char *arg, HOST_WIDE_INT value,
 /* Default implementation of TARGET_HANDLE_C_OPTION.  */
 
 bool
-default_handle_scpel_option (size_t code ATTRIBUTE_UNUSED,
+default_handle_c_option (size_t code ATTRIBUTE_UNUSED,
 			 const char *arg ATTRIBUTE_UNUSED,
 			 int value ATTRIBUTE_UNUSED)
 {
@@ -759,7 +777,7 @@ default_handle_scpel_option (size_t code ATTRIBUTE_UNUSED,
 
 /* Post-switch processing.  */
 bool
-scpel_common_post_options (const char **pfilename)
+c_common_post_options (const char **pfilename)
 {
   /* Canonicalize the input and output filenames.  */
   if (in_fnames == NULL)
@@ -786,7 +804,7 @@ scpel_common_post_options (const char **pfilename)
   sanitize_cpp_opts ();
 
   register_include_chains (parse_in, sysroot, iprefix, imultilib,
-			   std_inc, std_cxx_inc && scpel_dialect_cxx (), verbose);
+			   std_inc, std_cxx_inc && c_dialect_cxx (), verbose);
 
 #ifdef C_COMMON_OVERRIDE_OPTIONS
   /* Some machines may reject certain combinations of C
@@ -802,7 +820,7 @@ scpel_common_post_options (const char **pfilename)
      source-language expressions (-ffp-contract=on, currently an alias
      for -ffp-contract=off).  */
   if (flag_iso
-      && !scpel_dialect_cxx ()
+      && !c_dialect_cxx ()
       && (OPTION_SET_P (flag_fp_contract_mode)
 	  == (enum fp_contract_mode) 0)
       && flag_unsafe_math_optimizations == 0)
@@ -813,7 +831,7 @@ scpel_common_post_options (const char **pfilename)
      FLT_EVAL_METHOD.  Otherwise, we must restrict the possible values to
      the set specified in ISO C99/C11.  */
   if (!flag_iso
-      && !scpel_dialect_cxx ()
+      && !c_dialect_cxx ()
       && (OPTION_SET_P (flag_permitted_flt_eval_methods)
 	  == PERMITTED_FLT_EVAL_METHODS_DEFAULT))
     flag_permitted_flt_eval_methods = PERMITTED_FLT_EVAL_METHODS_TS_18661;
@@ -848,7 +866,7 @@ scpel_common_post_options (const char **pfilename)
   /* -Woverlength-strings is off by default, but is enabled by -Wpedantic.
      It is never enabled in C++, as the minimum limit is not normative
      in that standard.  */
-  if (scpel_dialect_cxx ())
+  if (c_dialect_cxx ())
     warn_overlength_strings = 0;
 
   /* Wmain is enabled by default in C++ but not in C.  */
@@ -856,7 +874,7 @@ scpel_common_post_options (const char **pfilename)
      even if -Wall or -Wpedantic was given (warn_main will be 2 if set
      by -Wall, 1 if set by -Wmain).  */
   if (warn_main == -1)
-    warn_main = (scpel_dialect_cxx () && flag_hosted) ? 1 : 0;
+    warn_main = (c_dialect_cxx () && flag_hosted) ? 1 : 0;
   else if (warn_main == 2)
     warn_main = flag_hosted ? 1 : 0;
 
@@ -864,7 +882,7 @@ scpel_common_post_options (const char **pfilename)
      yet been set, it is disabled by default.  In C++, it is enabled
      by default.  */
   if (warn_enum_compare == -1)
-    warn_enum_compare = scpel_dialect_cxx () ? 1 : 0;
+    warn_enum_compare = c_dialect_cxx () ? 1 : 0;
 
   /* -Wpacked-bitfield-compat is on by default for the C languages.  The
      warning is issued in stor-layout.cc which is not part of the front-end so
@@ -948,7 +966,7 @@ scpel_common_post_options (const char **pfilename)
     }
 
   /* Change flag_abi_version to be the actual current ABI level, for the
-     benefit of scpel_cpp_builtins, and to make comparison simpler.  */
+     benefit of c_cpp_builtins, and to make comparison simpler.  */
   const int latest_abi_version = 18;
   /* Generate compatibility aliases for ABI v13 (8.2) by default.  */
   const int abi_compat_default = 13;
@@ -1030,7 +1048,7 @@ scpel_common_post_options (const char **pfilename)
 
   /* C++17 has stricter evaluation order requirements; let's use some of them
      for earlier C++ as well, so chaining works as expected.  */
-  if (scpel_dialect_cxx ()
+  if (c_dialect_cxx ()
       && flag_strong_eval_order == -1)
     flag_strong_eval_order = (cxx_dialect >= cxx17 ? 2 : 1);
 
@@ -1067,7 +1085,7 @@ scpel_common_post_options (const char **pfilename)
     }
 
   /* Enable by default only for C++ and C++ with ObjC extensions.  */
-  if (warn_return_type == -1 && scpel_dialect_cxx ())
+  if (warn_return_type == -1 && c_dialect_cxx ())
     warn_return_type = 1;
 
   /* C++20 is the final version of concepts. We still use -fconcepts
@@ -1098,14 +1116,14 @@ scpel_common_post_options (const char **pfilename)
     }
   else
     {
-      init_scpel_lex ();
+      init_c_lex ();
 
       /* When writing a PCH file, avoid reading some other PCH file,
 	 because the default address space slot then can't be used
 	 for the output PCH file.  */
       if (pch_file)
 	{
-	  scpel_common_no_more_pch ();
+	  c_common_no_more_pch ();
 	  /* Only -g0 and -gdwarf* are supported with PCH, for other
 	     debug formats we warn here and refuse to load any PCH files.  */
 	  if (write_symbols != NO_DEBUG && write_symbols != DWARF2_DEBUG)
@@ -1115,7 +1133,7 @@ scpel_common_post_options (const char **pfilename)
 		       debug_set_names (write_symbols & ~DWARF2_DEBUG));
 	}
       else if (write_symbols != NO_DEBUG && write_symbols != DWARF2_DEBUG)
-	scpel_common_no_more_pch ();
+	c_common_no_more_pch ();
 
       /* Yuk.  WTF is this?  I do know ObjC relies on it somewhere.  */
       input_location = UNKNOWN_LOCATION;
@@ -1176,10 +1194,10 @@ scpel_common_post_options (const char **pfilename)
 
 /* Front end initialization common to C, ObjC and C++.  */
 bool
-scpel_common_init (void)
+c_common_init (void)
 {
   /* Set up preprocessor arithmetic.  Must be done after call to
-     scpel_common_nodes_and_builtins for type nodes to be good.  */
+     c_common_nodes_and_builtins for type nodes to be good.  */
   cpp_opts->precision = TYPE_PRECISION (intmax_type_node);
   cpp_opts->char_precision = TYPE_PRECISION (char_type_node);
   cpp_opts->int_precision = TYPE_PRECISION (integer_type_node);
@@ -1216,7 +1234,7 @@ scpel_common_init (void)
 /* Initialize the integrated preprocessor after debug output has been
    initialized; loop over each input file.  */
 void
-scpel_common_parse_file (void)
+c_common_parse_file (void)
 {
   auto dumps = g->get_dumps ();
   for (unsigned int i = 0;;)
@@ -1227,7 +1245,7 @@ scpel_common_parse_file (void)
       dumps->dump_start (TDI_original, &dump_flags);
       pch_init ();
       push_file_scope ();
-      scpel_parse_file ();
+      c_parse_file ();
       pop_file_scope ();
       /* And end the main input file, if the debug writer wants it  */
       if (debug_hooks->start_end_main_source_file)
@@ -1245,13 +1263,13 @@ scpel_common_parse_file (void)
       dumps->dump_finish (TDI_original);
     }
 
-  scpel_parse_final_cleanups ();
+  c_parse_final_cleanups ();
   dumps->dump_finish (TDI_original);
 }
 
 /* Common finish hook for the C, ObjC and C++ front ends.  */
 void
-scpel_common_finish (void)
+c_common_finish (void)
 {
   FILE *deps_stream = NULL;
 
@@ -1278,7 +1296,7 @@ scpel_common_finish (void)
 
   /* When we call cpp_finish (), it may generate some diagnostics using
      locations it remembered from the preprocessing phase, e.g. for
-     -Wunused-macros.  So inform scpel_cpp_diagnostic () not to override those
+     -Wunused-macros.  So inform c_cpp_diagnostic () not to override those
      locations with input_location, which would be incorrect now.  */
   override_libcpp_locations = false;
 
@@ -1405,7 +1423,7 @@ sanitize_cpp_opts (void)
   if (warn_long_long == -1)
     {
       warn_long_long = ((pedantic || warn_traditional)
-			&& (scpel_dialect_cxx () ? cxx_dialect == cxx98 : !flag_isoc99));
+			&& (c_dialect_cxx () ? cxx_dialect == cxx98 : !flag_isoc99));
       cpp_opts->cpp_warn_long_long = warn_long_long;
     }
 
@@ -1468,7 +1486,7 @@ c_finish_options (void)
       cpp_force_token_locations (parse_in, BUILTINS_LOCATION);
 
       cpp_init_builtins (parse_in, flag_hosted);
-      scpel_cpp_builtins (parse_in);
+      c_cpp_builtins (parse_in);
 
       /* We're about to send user input to cpplib, so make it warn for
 	 things that we previously (when we sent it internal definitions)
@@ -1717,7 +1735,7 @@ set_std_cxx98 (int iso)
   flag_isoc94 = 0;
   flag_isoc99 = 0;
   cxx_dialect = cxx98;
-  lang_hooks.name = "GNU Scpel++98";
+  lang_hooks.name = "GNU C++98";
 }
 
 /* Set the C++ 2011 standard (without GNU extensions if ISO).  */
@@ -1732,7 +1750,7 @@ set_std_cxx11 (int iso)
   flag_isoc94 = 1;
   flag_isoc99 = 1;
   cxx_dialect = cxx11;
-  lang_hooks.name = "GNU Scpel++11";
+  lang_hooks.name = "GNU C++11";
 }
 
 /* Set the C++ 2014 standard (without GNU extensions if ISO).  */
@@ -1747,7 +1765,7 @@ set_std_cxx14 (int iso)
   flag_isoc94 = 1;
   flag_isoc99 = 1;
   cxx_dialect = cxx14;
-  lang_hooks.name = "GNU Scpel++14";
+  lang_hooks.name = "GNU C++14";
 }
 
 /* Set the C++ 2017 standard (without GNU extensions if ISO).  */
@@ -1763,7 +1781,7 @@ set_std_cxx17 (int iso)
   flag_isoc99 = 1;
   flag_isoc11 = 1;
   cxx_dialect = cxx17;
-  lang_hooks.name = "GNU Scpel++17";
+  lang_hooks.name = "GNU C++17";
 }
 
 /* Set the C++ 2020 standard (without GNU extensions if ISO).  */
@@ -1781,7 +1799,7 @@ set_std_cxx20 (int iso)
   /* C++20 includes coroutines. */
   flag_coroutines = true;
   cxx_dialect = cxx20;
-  lang_hooks.name = "GNU Scpel++20";
+  lang_hooks.name = "GNU C++20";
 }
 
 /* Set the C++ 2023 standard (without GNU extensions if ISO).  */
@@ -1799,7 +1817,7 @@ set_std_cxx23 (int iso)
   /* C++23 includes coroutines.  */
   flag_coroutines = true;
   cxx_dialect = cxx23;
-  lang_hooks.name = "GNU Scpel++23";
+  lang_hooks.name = "GNU C++23";
 }
 
 /* Args to -d specify what to dump.  Silently ignore

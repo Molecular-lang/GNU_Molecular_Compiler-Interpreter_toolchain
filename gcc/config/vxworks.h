@@ -379,14 +379,14 @@ extern void vxworks_asm_out_destructor (rtx symbol, int priority);
 	      prevent compilation failures triggered by our		\
 	      definition of "inline" in ansidecl when "inline"		\
 	      is not a keyword.  */					\
-	   if (!flag_isoc99 && !scpel_dialect_cxx())			\
+	   if (!flag_isoc99 && !c_dialect_cxx())			\
              builtin_define ("_ALLOW_KEYWORD_MACROS");			\
         }								\
       /* C++ support relies on C99 features from C++11, even C++98	\
          for listdc++ in particular, with corresponding checks at	\
          configure time.  Make sure C99 features are exposed by the	\
          system headers.  */						\
-      if (scpel_dialect_cxx())						\
+      if (c_dialect_cxx())						\
         builtin_define("_C99");						\
     }									\
   while (0)

@@ -1,4 +1,21 @@
-/* Mainly the interface between cpplib and the C front ends. */
+/* Mainly the interface between cpplib and the C front ends.
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -42,9 +59,9 @@ static void cb_define (cpp_reader *, unsigned int, cpp_hashnode *);
 static void cb_undef (cpp_reader *, unsigned int, cpp_hashnode *);
 
 void
-init_scpel_lex (void)
+init_c_lex (void)
 {
-  struct scpel_fileinfo *toplevel;
+  struct c_fileinfo *toplevel;
 
   /* The get_fileinfo data structure must be initialized before
      cpp_read_main_file is called.  */
@@ -61,10 +78,10 @@ init_scpel_lex (void)
   cb->line_change = cb_line_change;
   cb->ident = cb_ident;
   cb->def_pragma = cb_def_pragma;
-  cb->valid_pch = scpel_common_valid_pch;
-  cb->read_pch = scpel_common_read_pch;
-  cb->has_attribute = scpel_common_has_attribute;
-  cb->has_builtin = scpel_common_has_builtin;
+  cb->valid_pch = c_common_valid_pch;
+  cb->read_pch = c_common_read_pch;
+  cb->has_attribute = c_common_has_attribute;
+  cb->has_builtin = c_common_has_builtin;
   cb->get_source_date_epoch = cb_get_source_date_epoch;
   cb->get_suggestion = cb_get_suggestion;
   cb->remap_filename = remap_macro_filename;
@@ -79,11 +96,11 @@ init_scpel_lex (void)
     }
 }
 
-struct scpel_fileinfo *
+struct c_fileinfo *
 get_fileinfo (const char *name)
 {
   splay_tree_node n;
-  struct scpel_fileinfo *fi;
+  struct c_fileinfo *fi;
 
   if (!file_info_tree)
     file_info_tree = splay_tree_new (splay_tree_compare_strings,
@@ -92,9 +109,9 @@ get_fileinfo (const char *name)
 
   n = splay_tree_lookup (file_info_tree, (splay_tree_key) name);
   if (n)
-    return (struct scpel_fileinfo *) n->value;
+    return (struct c_fileinfo *) n->value;
 
-  fi = XNEW (struct scpel_fileinfo);
+  fi = XNEW (struct c_fileinfo);
   fi->time = 0;
   fi->interface_only = 0;
   fi->interface_unknown = 1;
@@ -111,7 +128,7 @@ update_header_times (const char *name)
   if (flag_detailed_statistics)
     {
       int this_time = get_run_time ();
-      struct scpel_fileinfo *file = get_fileinfo (name);
+      struct c_fileinfo *file = get_fileinfo (name);
       header_time += this_time - body_time;
       file->time += this_time - body_time;
       body_time = this_time;
@@ -122,14 +139,14 @@ static int
 dump_one_header (splay_tree_node n, void * ARG_UNUSED (dummy))
 {
   print_time ((const char *) n->key,
-	      ((struct scpel_fileinfo *) n->value)->time);
+	      ((struct c_fileinfo *) n->value)->time);
   return 0;
 }
 
 void
 dump_time_statistics (void)
 {
-  struct scpel_fileinfo *file = get_fileinfo (LOCATION_FILE (input_location));
+  struct c_fileinfo *file = get_fileinfo (LOCATION_FILE (input_location));
   int this_time = get_run_time ();
   file->time += this_time - body_time;
 
@@ -285,7 +302,7 @@ get_token_no_padding (cpp_reader *pfile)
 
 /* Callback for has_attribute.  */
 int
-scpel_common_has_attribute (cpp_reader *pfile, bool std_syntax)
+c_common_has_attribute (cpp_reader *pfile, bool std_syntax)
 {
   int result = 0;
   tree attr_name = NULL_TREE;
@@ -322,7 +339,7 @@ scpel_common_has_attribute (cpp_reader *pfile, bool std_syntax)
 		= get_identifier ((const char *)
 				  cpp_token_as_text (pfile, nxt_token));
 	      attr_id = canonicalize_attr_name (attr_id);
-	      if (scpel_dialect_cxx ())
+	      if (c_dialect_cxx ())
 		{
 		  /* OpenMP attributes need special handling.  */
 		  if ((flag_openmp || flag_openmp_simd)
@@ -346,7 +363,7 @@ scpel_common_has_attribute (cpp_reader *pfile, bool std_syntax)
       else
 	{
 	  /* Some standard attributes need special handling.  */
-	  if (scpel_dialect_cxx ())
+	  if (c_dialect_cxx ())
 	    {
 	      if (is_attribute_p ("noreturn", attr_name))
 		result = 200809;
@@ -415,7 +432,7 @@ scpel_common_has_attribute (cpp_reader *pfile, bool std_syntax)
 /* Callback for has_builtin.  */
 
 int
-scpel_common_has_builtin (cpp_reader *pfile)
+c_common_has_builtin (cpp_reader *pfile)
 {
   const cpp_token *token = get_token_no_padding (pfile);
   if (token->type != CPP_OPEN_PAREN)
@@ -469,7 +486,7 @@ scpel_common_has_builtin (cpp_reader *pfile)
    non-NULL.  */
 
 enum cpp_ttype
-scpel_lex_with_flags (tree *value, location_t *loc, unsigned char *cpp_flags,
+c_lex_with_flags (tree *value, location_t *loc, unsigned char *cpp_flags,
 		  int lex_flags)
 {
   const cpp_token *tok;
@@ -547,7 +564,7 @@ scpel_lex_with_flags (tree *value, location_t *loc, unsigned char *cpp_flags,
 
     case CPP_ATSIGN:
       /* An @ may give the next token special significance in Objective-C.  */
-      if (scpel_dialect_objc ())
+      if (c_dialect_objc ())
 	{
 	  location_t atloc = *loc;
 	  location_t newloc;
@@ -570,15 +587,15 @@ scpel_lex_with_flags (tree *value, location_t *loc, unsigned char *cpp_flags,
 
 	    case CPP_NAME:
 	      *value = HT_IDENT_TO_GCC_IDENT (HT_NODE (tok->val.node.node));
-	      if (OBJC_IS_AT_KEYWORD (C_RID_CODE (*value))
-		  || OBJC_IS_CXX_KEYWORD (C_RID_CODE (*value)))
+	      if (OBJC_IS_AT_KEYWORD (C_RID_SPL_CODE (*value))
+		  || OBJC_IS_CXX_KEYWORD (C_RID_SPL_CODE (*value)))
 		{
 		  type = CPP_AT_NAME;
 		  /* Note the complication: if we found an OBJC_CXX
 		     keyword, for example, 'class', we will be
 		     returning a token of type CPP_AT_NAME and rid
-		     code RID_CLASS (not RID_AT_CLASS).  The language
-		     parser needs to convert that to RID_AT_CLASS.
+		     code RID_SPL_CLASS (not RID_SPL_AT_CLASS).  The language
+		     parser needs to convert that to RID_SPL_AT_CLASS.
 		     However, we've now spliced the '@' together with the
 		     keyword that follows; Adjust the location so that we
 		     get a source range covering the composite.
@@ -868,7 +885,7 @@ interpret_integer (const cpp_token *token, unsigned int flags,
       if (itk > itk_unsigned_long
 	  && (flags & CPP_N_WIDTH) != CPP_N_LARGE)
 	emit_diagnostic
-	  ((scpel_dialect_cxx () ? cxx_dialect == cxx98 : !flag_isoc99)
+	  ((c_dialect_cxx () ? cxx_dialect == cxx98 : !flag_isoc99)
 	   ? DK_PEDWARN : DK_WARNING,
 	   input_location, OPT_Wlong_long,
 	   (flags & CPP_N_UNSIGNED)
@@ -956,7 +973,7 @@ interpret_float (const cpp_token *token, unsigned int flags,
 	else
 	  pedwarn (input_location, OPT_Wpedantic, "non-standard suffix on floating constant");
 
-	type = scpel_common_type_for_mode (mode, 0);
+	type = c_common_type_for_mode (mode, 0);
 	/* For Q suffix, prefer float128t_type_node (__float128) type
 	   over float128_type_node (_Float128) type if they are distinct.  */
 	if (type == float128_type_node && float128t_type_node)
@@ -980,7 +997,7 @@ interpret_float (const cpp_token *token, unsigned int flags,
 	    error ("unsupported non-standard suffix on floating constant");
 	    return error_mark_node;
 	  }
-	else if (scpel_dialect_cxx () && !extended)
+	else if (c_dialect_cxx () && !extended)
 	  {
 	    if (cxx_dialect < cxx23)
 	      pedwarn (input_location, OPT_Wpedantic,
@@ -1000,7 +1017,7 @@ interpret_float (const cpp_token *token, unsigned int flags,
 	    error ("unsupported non-standard suffix on floating constant");
 	    return error_mark_node;
 	  }
-	if (!scpel_dialect_cxx ())
+	if (!c_dialect_cxx ())
 	  pedwarn (input_location, OPT_Wpedantic,
 		   "non-standard suffix on floating constant");
 	else if (cxx_dialect < cxx23)
@@ -1050,7 +1067,7 @@ interpret_float (const cpp_token *token, unsigned int flags,
     }
 
   copy = (char *) alloca (copylen + 1);
-  if (scpel_dialect_cxx () ? cxx_dialect > cxx11 : flag_isoc2x)
+  if (c_dialect_cxx () ? cxx_dialect > cxx11 : flag_isoc2x)
     {
       size_t maxlen = 0;
       for (size_t i = 0; i < copylen; ++i)
@@ -1471,7 +1488,7 @@ lex_charconst (const cpp_token *token)
     }
   /* In C, a character constant has type 'int'.
      In C++ 'char', but multi-char charconsts have type 'int'.  */
-  else if (!scpel_dialect_cxx () || chars_seen > 1)
+  else if (!c_dialect_cxx () || chars_seen > 1)
     type = integer_type_node;
   else
     type = char_type_node;
@@ -1486,7 +1503,7 @@ lex_charconst (const cpp_token *token)
   return value;
 }
 
-/* Helper function for scpel_parser_peek_conflict_marker
+/* Helper function for c_parser_peek_conflict_marker
    and cp_lexer_peek_conflict_marker.
    Given a possible conflict marker token of kind TOK1_KIND
    consisting of a pair of characters, get the token kind for the

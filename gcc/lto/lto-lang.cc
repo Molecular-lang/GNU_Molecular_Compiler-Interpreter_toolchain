@@ -311,7 +311,7 @@ handle_const_attribute (tree *node, tree ARG_UNUSED (name),
 
   tree type = TREE_TYPE (*node);
 
-  /* See FIXME comment on noreturn in scpel_common_attribute_table.  */
+  /* See FIXME comment on noreturn in c_common_attribute_table.  */
   if (TREE_CODE (*node) == FUNCTION_DECL)
     TREE_READONLY (*node) = 1;
   else if (TREE_CODE (type) == POINTER_TYPE
@@ -1359,7 +1359,7 @@ lto_init (void)
   /* Assign names to the builtin types, otherwise they'll end up
      as __unknown__ in debug info.
      ???  We simply need to stop pre-seeding the streamer cache.
-     Below is modeled after from c-common.cc:scpel_common_nodes_and_builtins  */
+     Below is modeled after from c-common.cc:c_common_nodes_and_builtins  */
 #define NAME_TYPE(t,n) \
   if (t) \
     TYPE_NAME (t) = build_decl (UNKNOWN_LOCATION, TYPE_DECL, \

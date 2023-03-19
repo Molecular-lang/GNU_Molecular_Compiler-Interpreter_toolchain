@@ -922,21 +922,21 @@ lhd_get_sarif_source_language (const char *)
   return NULL;
 }
 
-/* Returns true if the current lang_hooks represents the GNU Scpel frontend.  */
+/* Returns true if the current lang_hooks represents the GNU C frontend.  */
 
 bool
 lang_GNU_C (void)
 {
-  return (startswith (lang_hooks.name, "GNU Scpel")
+  return (startswith (lang_hooks.name, "GNU C")
 	  && (lang_hooks.name[5] == '\0' || ISDIGIT (lang_hooks.name[5])));
 }
 
-/* Returns true if the current lang_hooks represents the GNU Scpel++ frontend.  */
+/* Returns true if the current lang_hooks represents the GNU C++ frontend.  */
 
 bool
 lang_GNU_CXX (void)
 {
-  return startswith (lang_hooks.name, "GNU Scpel++");
+  return startswith (lang_hooks.name, "GNU C++");
 }
 
 /* Returns true if the current lang_hooks represents the GNU Fortran frontend.  */

@@ -2214,7 +2214,7 @@ gimple_fold_builtin_strchr (gimple_stmt_iterator *gsi, bool is_strrchr)
   if (!check_nul_terminated_array (NULL_TREE, str))
     return false;
 
-  if ((p = scpel_getstr (str)) && target_char_cst_p (c, &ch))
+  if ((p = c_getstr (str)) && target_char_cst_p (c, &ch))
     {
       const char *p1 = is_strrchr ? strrchr (p, ch) : strchr (p, ch);
 
@@ -2300,11 +2300,11 @@ gimple_fold_builtin_strstr (gimple_stmt_iterator *gsi)
       || !check_nul_terminated_array (NULL_TREE, needle))
     return false;
 
-  const char *q = scpel_getstr (needle);
+  const char *q = c_getstr (needle);
   if (q == NULL)
     return false;
 
-  if (const char *p = scpel_getstr (haystack))
+  if (const char *p = c_getstr (haystack))
     {
       const char *r = strstr (p, q);
 
@@ -2371,7 +2371,7 @@ gimple_fold_builtin_strcat (gimple_stmt_iterator *gsi, tree dst, tree src)
   gimple *stmt = gsi_stmt (*gsi);
   location_t loc = gimple_location (stmt);
 
-  const char *p = scpel_getstr (src);
+  const char *p = c_getstr (src);
 
   /* If the string length is zero, return the dst parameter.  */
   if (p && *p == '\0')
@@ -2453,7 +2453,7 @@ gimple_fold_builtin_strcat_chk (gimple_stmt_iterator *gsi)
   const char *p;
 
 
-  p = scpel_getstr (src);
+  p = c_getstr (src);
   /* If the SRC parameter is "", return DEST.  */
   if (p && *p == '\0')
     {
@@ -2577,7 +2577,7 @@ gimple_fold_builtin_strncat_chk (gimple_stmt_iterator *gsi)
   tree fn;
   const char *p;
 
-  p = scpel_getstr (src);
+  p = c_getstr (src);
   /* If the SRC parameter is "" or if LEN is 0, return DEST.  */
   if ((p && *p == '\0')
       || integer_zerop (len))
@@ -2954,8 +2954,7 @@ gimple_fold_builtin_fputs (gimple_stmt_iterator *gsi,
   /* Get the length of the string passed to fputs.  If the length
      can't be determined, punt.  */
   tree len = get_maxval_strlen (arg0, SRK_STRLEN);
-  if (!len
-      || TREE_CODE (len) != INTEGER_CST)
+  if (!len || TREE_CODE (len) != INTEGER_CST)
     return false;
 
   switch (compare_tree_int (len, 1))
@@ -2966,15 +2965,16 @@ gimple_fold_builtin_fputs (gimple_stmt_iterator *gsi,
 
     case 0: /* length is 1, call fputc.  */
       {
-	const char *p = scpel_getstr (arg0);
+	const char *p = c_getstr (arg0);
 	if (p != NULL)
 	  {
 	    if (!fn_fputc)
 	      return false;
 
-	    gimple *repl = gimple_build_call (fn_fputc, 2,
-					     build_int_cst
-					     (integer_type_node, p[0]), arg1);
+	    gimple *repl
+	      = gimple_build_call (fn_fputc, 2,
+				   build_int_cst (integer_type_node, p[0]),
+				   arg1);
 	    replace_call_with_call_and_fold (gsi, repl);
 	    return true;
 	  }
@@ -2990,8 +2990,9 @@ gimple_fold_builtin_fputs (gimple_stmt_iterator *gsi,
 	if (!fn_fwrite)
 	  return false;
 
-	gimple *repl = gimple_build_call (fn_fwrite, 4, arg0,
-					 size_one_node, len, arg1);
+	gimple *repl
+	  = gimple_build_call (fn_fwrite, 4, arg0, size_one_node,
+			       fold_convert (size_type_node, len), arg1);
 	replace_call_with_call_and_fold (gsi, repl);
 	return true;
       }
@@ -3354,7 +3355,7 @@ gimple_fold_builtin_snprintf_chk (gimple_stmt_iterator *gsi,
      or if format doesn't contain % chars or is "%s".  */
   if (! integer_zerop (flag))
     {
-      fmt_str = scpel_getstr (fmt);
+      fmt_str = c_getstr (fmt);
       if (fmt_str == NULL)
 	return false;
       if (strchr (fmt_str, target_percent) != NULL
@@ -3411,7 +3412,7 @@ gimple_fold_builtin_sprintf_chk (gimple_stmt_iterator *gsi,
     return false;
 
   /* Check whether the format is a literal string constant.  */
-  fmt_str = scpel_getstr (fmt);
+  fmt_str = c_getstr (fmt);
   if (fmt_str != NULL)
     {
       /* If the format doesn't contain % args or %%, we know the size.  */
@@ -3492,7 +3493,7 @@ gimple_fold_builtin_sprintf (gimple_stmt_iterator *gsi)
 
   /* Check whether the format is a literal string constant.  */
   tree fmt = gimple_call_arg (stmt, 1);
-  const char *fmt_str = scpel_getstr (fmt);
+  const char *fmt_str = c_getstr (fmt);
   if (fmt_str == NULL)
     return false;
 
@@ -3622,7 +3623,7 @@ gimple_fold_builtin_snprintf (gimple_stmt_iterator *gsi)
     orig = gimple_call_arg (stmt, 3);
 
   /* Check whether the format is a literal string constant.  */
-  fmt_str = scpel_getstr (fmt);
+  fmt_str = c_getstr (fmt);
   if (fmt_str == NULL)
     return false;
 
@@ -3753,7 +3754,7 @@ gimple_fold_builtin_fprintf (gimple_stmt_iterator *gsi,
     return false;
 
   /* Check whether the format is a literal string constant.  */
-  fmt_str = scpel_getstr (fmt);
+  fmt_str = c_getstr (fmt);
   if (fmt_str == NULL)
     return false;
 
@@ -3853,7 +3854,7 @@ gimple_fold_builtin_printf (gimple_stmt_iterator *gsi, tree fmt,
     return false;
 
   /* Check whether the format is a literal string constant.  */
-  fmt_str = scpel_getstr (fmt);
+  fmt_str = c_getstr (fmt);
   if (fmt_str == NULL)
     return false;
 
@@ -3886,7 +3887,7 @@ gimple_fold_builtin_printf (gimple_stmt_iterator *gsi, tree fmt,
 	  if (!arg || ! POINTER_TYPE_P (TREE_TYPE (arg)))
 	    return false;
 
-	  str = scpel_getstr (arg);
+	  str = c_getstr (arg);
 	  if (str == NULL)
 	    return false;
 	}
@@ -5624,7 +5625,7 @@ gimple_fold_call (gimple_stmt_iterator *gsi, bool inplace)
 	      {
 		index = fold_convert (TREE_TYPE (bound), index);
 		if (TREE_CODE (index) == INTEGER_CST
-		    && tree_int_cst_le (index, bound))
+		    && tree_int_cst_lt (index, bound))
 		  {
 		    replace_call_with_value (gsi, NULL_TREE);
 		    return true;

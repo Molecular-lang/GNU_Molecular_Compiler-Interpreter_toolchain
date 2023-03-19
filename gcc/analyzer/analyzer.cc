@@ -48,7 +48,7 @@ get_stmt_location (const gimple *stmt, function *fun)
 	 at least.  Created by gimplify_bind_expr, which uses the
 	   BLOCK_SOURCE_END_LOCATION (BIND_EXPR_BLOCK (bind_expr))
 	 but this is never set up when the block is created in
-	 scpel_end_compound_stmt's pop_scope.
+	 c_end_compound_stmt's pop_scope.
 	 TODO: fix this missing location information.
 
 	 For now, as a hackish workaround, use the location of the end of

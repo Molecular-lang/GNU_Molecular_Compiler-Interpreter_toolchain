@@ -1,7 +1,24 @@
 /* This file contains the definitions and documentation for the
-   additional tree codes used in the GNU Scpel compiler (see tree.def
+   additional tree codes used in the GNU C compiler (see tree.def
    for the standard codes).
- */
+   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+   Written by Benjamin Chelf <chelf@codesourcery.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* Tree nodes used in the C frontend.  These are also shared with the
    C++ and Objective C frontends.  */
@@ -10,7 +27,7 @@
    tracks information about constancy of an expression and VLA type
    sizes or VM expressions from typeof that need to be evaluated
    before the main expression.  It is used during parsing and removed
-   in scpel_fully_fold.  C_MAYBE_CONST_EXPR_PRE is the expression to
+   in c_fully_fold.  C_MAYBE_CONST_EXPR_PRE is the expression to
    evaluate first, if not NULL; C_MAYBE_CONST_EXPR_EXPR is the main
    expression.  If C_MAYBE_CONST_EXPR_INT_OPERANDS is set then the
    expression may be used in an unevaluated part of an integer

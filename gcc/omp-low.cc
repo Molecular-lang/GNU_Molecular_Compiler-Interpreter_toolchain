@@ -5072,7 +5072,7 @@ lower_rec_input_clauses (tree clauses, gimple_seq *ilist, gimple_seq *dlist,
       task_reduction_other_cnt = 0;
       for (c = clauses; c ; c = OMP_CLAUSE_CHAIN (c))
 	{
-	  enum omp_clause_code scpel_kind = OMP_CLAUSE_CODE (c);
+	  enum omp_clause_code c_kind = OMP_CLAUSE_CODE (c);
 	  tree var, new_var;
 	  bool by_ref;
 	  location_t clause_loc = OMP_CLAUSE_LOCATION (c);
@@ -5081,7 +5081,7 @@ lower_rec_input_clauses (tree clauses, gimple_seq *ilist, gimple_seq *dlist,
 	  tree cond = NULL_TREE;
 	  tree allocator, allocate_ptr;
 
-	  switch (scpel_kind)
+	  switch (c_kind)
 	    {
 	    case OMP_CLAUSE_PRIVATE:
 	      if (OMP_CLAUSE_PRIVATE_DEBUG (c))
@@ -5221,8 +5221,8 @@ lower_rec_input_clauses (tree clauses, gimple_seq *ilist, gimple_seq *dlist,
 	  allocator = NULL_TREE;
 	  allocate_ptr = NULL_TREE;
 	  new_var = var = OMP_CLAUSE_DECL (c);
-	  if ((scpel_kind == OMP_CLAUSE_REDUCTION
-	       || scpel_kind == OMP_CLAUSE_IN_REDUCTION)
+	  if ((c_kind == OMP_CLAUSE_REDUCTION
+	       || c_kind == OMP_CLAUSE_IN_REDUCTION)
 	      && TREE_CODE (var) == MEM_REF)
 	    {
 	      var = TREE_OPERAND (var, 0);
@@ -5241,22 +5241,22 @@ lower_rec_input_clauses (tree clauses, gimple_seq *ilist, gimple_seq *dlist,
 		}
 	      new_var = var;
 	    }
-	  if (scpel_kind == OMP_CLAUSE_IN_REDUCTION && is_omp_target (ctx->stmt))
+	  if (c_kind == OMP_CLAUSE_IN_REDUCTION && is_omp_target (ctx->stmt))
 	    {
 	      splay_tree_key key = (splay_tree_key) &DECL_CONTEXT (var);
 	      new_var = (tree) splay_tree_lookup (ctx->field_map, key)->value;
 	    }
-	  else if (scpel_kind != OMP_CLAUSE_COPYIN)
+	  else if (c_kind != OMP_CLAUSE_COPYIN)
 	    new_var = lookup_decl (var, ctx);
 
-	  if (scpel_kind == OMP_CLAUSE_SHARED || scpel_kind == OMP_CLAUSE_COPYIN)
+	  if (c_kind == OMP_CLAUSE_SHARED || c_kind == OMP_CLAUSE_COPYIN)
 	    {
 	      if (pass != 0)
 		continue;
 	    }
 	  /* C/C++ array section reductions.  */
-	  else if ((scpel_kind == OMP_CLAUSE_REDUCTION
-		    || scpel_kind == OMP_CLAUSE_IN_REDUCTION)
+	  else if ((c_kind == OMP_CLAUSE_REDUCTION
+		    || c_kind == OMP_CLAUSE_IN_REDUCTION)
 		   && var != OMP_CLAUSE_DECL (c))
 	    {
 	      if (pass == 0)
@@ -5792,7 +5792,7 @@ lower_rec_input_clauses (tree clauses, gimple_seq *ilist, gimple_seq *dlist,
 	      if (pass == 0)
 		continue;
 
-	      if (scpel_kind != OMP_CLAUSE_FIRSTPRIVATE || !is_task_ctx (ctx))
+	      if (c_kind != OMP_CLAUSE_FIRSTPRIVATE || !is_task_ctx (ctx))
 		{
 		  tree tmp;
 
@@ -5827,7 +5827,7 @@ lower_rec_input_clauses (tree clauses, gimple_seq *ilist, gimple_seq *dlist,
 		}
 	    }
 	  else if (omp_privatize_by_reference (var)
-		   && (scpel_kind != OMP_CLAUSE_FIRSTPRIVATE
+		   && (c_kind != OMP_CLAUSE_FIRSTPRIVATE
 		       || !OMP_CLAUSE_FIRSTPRIVATE_NO_REFERENCE (c)))
 	    {
 	      /* For references that are being privatized for Fortran,
@@ -5839,7 +5839,7 @@ lower_rec_input_clauses (tree clauses, gimple_seq *ilist, gimple_seq *dlist,
 		continue;
 
 	      x = TYPE_SIZE_UNIT (TREE_TYPE (TREE_TYPE (new_var)));
-	      if (scpel_kind == OMP_CLAUSE_FIRSTPRIVATE && is_task_ctx (ctx))
+	      if (c_kind == OMP_CLAUSE_FIRSTPRIVATE && is_task_ctx (ctx))
 		{
 		  x = build_receiver_ref (var, false, ctx);
 		  if (ctx->allocate_map)
@@ -5895,8 +5895,8 @@ lower_rec_input_clauses (tree clauses, gimple_seq *ilist, gimple_seq *dlist,
 
 	      new_var = build_simple_mem_ref_loc (clause_loc, new_var);
 	    }
-	  else if ((scpel_kind == OMP_CLAUSE_REDUCTION
-		    || scpel_kind == OMP_CLAUSE_IN_REDUCTION)
+	  else if ((c_kind == OMP_CLAUSE_REDUCTION
+		    || c_kind == OMP_CLAUSE_IN_REDUCTION)
 		   && OMP_CLAUSE_REDUCTION_PLACEHOLDER (c))
 	    {
 	      if (pass == 0)
@@ -6655,7 +6655,7 @@ lower_rec_input_clauses (tree clauses, gimple_seq *ilist, gimple_seq *dlist,
 		  if (OMP_CLAUSE_REDUCTION_GIMPLE_INIT (c))
 		    {
 		      tseq = OMP_CLAUSE_REDUCTION_GIMPLE_INIT (c);
-		      if (scpel_kind == OMP_CLAUSE_IN_REDUCTION
+		      if (c_kind == OMP_CLAUSE_IN_REDUCTION
 			  && is_omp_target (ctx->stmt))
 			{
 			  tree d = maybe_lookup_decl_in_outer_ctx (var, ctx);
@@ -13942,7 +13942,8 @@ lower_omp_target (gimple_stmt_iterator *gsi_p, omp_context *ctx)
 	      }
 	    tree present;
 	    present = ((do_optional_check
-			&& OMP_CLAUSE_CODE (c) != OMP_CLAUSE_HAS_DEVICE_ADDR)
+			&& OMP_CLAUSE_CODE (c) != OMP_CLAUSE_HAS_DEVICE_ADDR
+			&& OMP_CLAUSE_CODE (c) != OMP_CLAUSE_IS_DEVICE_PTR)
 		       ? omp_check_optional_argument (OMP_CLAUSE_DECL (c), true)
 		       : NULL_TREE);
 	    if (present)

@@ -1,4 +1,4 @@
-/* Convert function calls to rtl insns, for GNU Scpel compiler.
+/* Convert function calls to rtl insns, for GNU C compiler.
    Copyright (C) 1989-2023 Free Software Foundation, Inc.
 
 This file is part of GCC.

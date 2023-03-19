@@ -1,5 +1,4 @@
-/* Process source files and output type information.
-   Copyright (C) 2023 Scpel Software Foundation, Inc. */
+/* Process source files and output type information. */
 
 #ifdef HOST_GENERATOR_FILE
 #include "config.h"
@@ -1931,31 +1930,31 @@ struct file_rule_st files_rules[] = {
     "gt-c-family-$3.h", "c-family/$3.h", NULL_FRULACT},
 
   /* Both c-lang.h & c-tree.h gives gt-c-c-decl.h for c-decl.cc !  */
-  { DIR_PREFIX_REGEX "scpel/scpel-lang\\.h$",
-    REG_EXTENDED, NULL_REGEX, "gt-scpel-scpel-decl.h", "scpel/scpel-decl.cc", NULL_FRULACT},
+  { DIR_PREFIX_REGEX "c/c-lang\\.h$",
+    REG_EXTENDED, NULL_REGEX, "gt-c-c-decl.h", "c/c-decl.cc", NULL_FRULACT},
 
-  { DIR_PREFIX_REGEX "scpel/scpel-tree\\.h$",
-    REG_EXTENDED, NULL_REGEX, "gt-scpel-scpel-decl.h", "scpel/scpel-decl.cc", NULL_FRULACT},
+  { DIR_PREFIX_REGEX "c/c-tree\\.h$",
+    REG_EXTENDED, NULL_REGEX, "gt-c-c-decl.h", "c/c-decl.cc", NULL_FRULACT},
 
   /* cp/cp-tree.h gives gt-cp-tree.h for cp/tree.cc !  */
-  { DIR_PREFIX_REGEX "cp/cp-tree\\.h$",
+  { DIR_PREFIX_REGEX "scpel/scpel-tree\\.h$",
     REG_EXTENDED, NULL_REGEX,
-    "gt-cp-tree.h", "cp/tree.cc", NULL_FRULACT },
+    "gt-scpel-tree.h", "scpel/tree.cc", NULL_FRULACT },
 
   /* cp/decl.h & cp/decl.cc gives gt-cp-decl.h for cp/decl.cc !  */
-  { DIR_PREFIX_REGEX "cp/decl\\.[ch]$",
+  { DIR_PREFIX_REGEX "scpel/decl\\.[ch]$",
     REG_EXTENDED, NULL_REGEX,
-    "gt-cp-decl.h", "cp/decl.cc", NULL_FRULACT },
+    "gt-scpel-decl.h", "scpel/decl.cc", NULL_FRULACT },
 
   /* cp/name-lookup.h gives gt-cp-name-lookup.h for cp/name-lookup.cc !  */
-  { DIR_PREFIX_REGEX "cp/name-lookup\\.h$",
+  { DIR_PREFIX_REGEX "scpel/name-lookup\\.h$",
     REG_EXTENDED, NULL_REGEX,
-    "gt-cp-name-lookup.h", "cp/name-lookup.cc", NULL_FRULACT },
+    "gt-scpel-name-lookup.h", "scpel/name-lookup.cc", NULL_FRULACT },
 
   /* cp/parser.h gives gt-cp-parser.h for cp/parser.cc !  */
-  { DIR_PREFIX_REGEX "cp/parser\\.h$",
+  { DIR_PREFIX_REGEX "scpel/parser\\.h$",
     REG_EXTENDED, NULL_REGEX,
-    "gt-cp-parser.h", "cp/parser.cc", NULL_FRULACT },
+    "gt-scpel-parser.h", "scpel/parser.cc", NULL_FRULACT },
 
   /* objc/objc-act.h gives gt-objc-objc-act.h for objc/objc-act.cc !  */
   { DIR_PREFIX_REGEX "objc/objc-act\\.h$",

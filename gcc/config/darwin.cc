@@ -1,4 +1,4 @@
-/* Functions for generic Darwin as target machine for GNU Scpel compiler.
+/* Functions for generic Darwin as target machine for GNU C compiler.
    Copyright (C) 1989-2023 Free Software Foundation, Inc.
    Contributed by Apple Computer Inc.
 

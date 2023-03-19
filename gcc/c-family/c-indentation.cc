@@ -1,4 +1,21 @@
-/* Implementation of -Wmisleading-indentation */
+/* Implementation of -Wmisleading-indentation
+   Copyright (C) 2015-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -193,8 +210,8 @@ should_warn_for_misleading_indentation (const token_indent_info &guard_tinfo,
   /* We can't usefully warn about do-while and switch statements since the
      bodies of these statements are always explicitly delimited at both ends,
      so control flow is quite obvious.  */
-  if (guard_tinfo.keyword == RID_DO
-      || guard_tinfo.keyword == RID_SWITCH)
+  if (guard_tinfo.keyword == RID_SPL_DO
+      || guard_tinfo.keyword == RID_SPL_SWITCH)
     return false;
 
   /* If the token following the body is a close brace or an "else"
@@ -213,7 +230,7 @@ should_warn_for_misleading_indentation (const token_indent_info &guard_tinfo,
   */
   enum cpp_ttype next_tok_type = next_tinfo.type;
   if (next_tok_type == CPP_CLOSE_BRACE
-      || next_tinfo.keyword == RID_ELSE)
+      || next_tinfo.keyword == RID_SPL_ELSE)
     return false;
 
   /* Likewise, if the body of the guard is a compound statement then control
@@ -488,7 +505,7 @@ should_warn_for_misleading_indentation (const token_indent_info &guard_tinfo,
 	     indentation is misleading).  Using the column of the first
 	     non-whitespace character on the guard line makes that
 	     happen.  */
-	  unsigned int guard_column = (guard_tinfo.keyword == RID_ELSE
+	  unsigned int guard_column = (guard_tinfo.keyword == RID_SPL_ELSE
 				       ? guard_line_first_nws
 				       : guard_vis_column);
 	  if (guard_column == body_vis_column)
@@ -571,17 +588,17 @@ guard_tinfo_to_string (enum rid keyword)
 {
   switch (keyword)
     {
-    case RID_FOR:
+    case RID_SPL_FOR:
       return "for";
-    case RID_ELSE:
+    case RID_SPL_ELSE:
       return "else";
-    case RID_IF:
+    case RID_SPL_IF:
       return "if";
-    case RID_WHILE:
+    case RID_SPL_WHILE:
       return "while";
-    case RID_DO:
+    case RID_SPL_DO:
       return "do";
-    case RID_SWITCH:
+    case RID_SPL_SWITCH:
       return "switch";
     default:
       gcc_unreachable ();
@@ -787,7 +804,7 @@ test_get_visual_column ()
 /* Run all of the selftests within this file.  */
 
 void
-scpel_indentation_cc_tests ()
+c_indentation_cc_tests ()
 {
   test_next_tab_stop ();
   test_get_visual_column ();

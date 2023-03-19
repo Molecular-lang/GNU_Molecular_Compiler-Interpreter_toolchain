@@ -1,4 +1,21 @@
-/* Handle #pragma, system V.4 style.  Supports #pragma weak and #pragma pack. */
+/* Handle #pragma, system V.4 style.  Supports #pragma weak and #pragma pack.
+   Copyright (C) 1992-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -414,7 +431,7 @@ handle_pragma_scalar_storage_order (cpp_reader *)
       return;
     }
 
-  if (scpel_dialect_cxx ())
+  if (c_dialect_cxx ())
     {
       if (warn_unknown_pragmas > in_system_header_at (input_location))
 	warning (OPT_Wunknown_pragmas,
@@ -497,7 +514,7 @@ handle_pragma_redefine_extname (cpp_reader *)
     warning (OPT_Wpragmas, "junk at end of %<#pragma redefine_extname%>");
 
   found = false;
-  for (decls = scpel_linkage_bindings (oldname);
+  for (decls = c_linkage_bindings (oldname);
        decls; )
     {
       tree decl;
@@ -575,7 +592,7 @@ maybe_apply_renaming_pragma (tree decl, tree asmname)
      external linkage.  */
   if (!VAR_OR_FUNCTION_DECL_P (decl)
       || (!TREE_PUBLIC (decl) && !DECL_EXTERNAL (decl))
-      || !has_scpel_linkage (decl))
+      || !has_c_linkage (decl))
     return asmname;
 
   /* If the DECL_ASSEMBLER_NAME is already set, it does not change,
@@ -852,7 +869,7 @@ pragma_diagnostic_lex_normal (pragma_diagnostic_data *result)
 /* When preprocessing only, pragma_lex () is not available, so obtain the
    tokens directly from libcpp.  We also need to inform the token streamer
    about all tokens we lex ourselves here, so it outputs them too; this is
-   done by calling scpel_pp_stream_token () for each.
+   done by calling c_pp_stream_token () for each.
 
    ???  If we need to support more pragmas in the future, maybe initialize
    this_parser with the pragma tokens and call pragma_lex () instead?  */
@@ -863,7 +880,7 @@ pragma_diagnostic_lex_pp (pragma_diagnostic_data *result)
   result->clear ();
 
   auto tok = cpp_get_token_with_location (parse_in, &result->loc_kind);
-  scpel_pp_stream_token (parse_in, tok, result->loc_kind);
+  c_pp_stream_token (parse_in, tok, result->loc_kind);
   if (!(tok->type == CPP_NAME || tok->type == CPP_KEYWORD))
     return;
   const unsigned char *const kind_u = cpp_token_as_text (parse_in, tok);
@@ -874,7 +891,7 @@ pragma_diagnostic_lex_pp (pragma_diagnostic_data *result)
   if (result->needs_option ())
     {
       tok = cpp_get_token_with_location (parse_in, &result->loc_option);
-      scpel_pp_stream_token (parse_in, tok, result->loc_option);
+      c_pp_stream_token (parse_in, tok, result->loc_option);
       if (tok->type != CPP_STRING)
 	return;
       cpp_string str;
@@ -985,11 +1002,11 @@ handle_pragma_diagnostic_impl ()
   gcc_assert (data.pd_kind == pragma_diagnostic_data::PK_DIAGNOSTIC);
   gcc_assert (data.valid);
 
-  unsigned int lang_mask = scpel_common_option_lang_mask () | CL_COMMON;
+  unsigned int lang_mask = c_common_option_lang_mask () | CL_COMMON;
   /* option_string + 1 to skip the initial '-' */
   unsigned int option_index = find_opt (data.option_str + 1, lang_mask);
 
-  if (early && !scpel_option_is_from_cpp_diagnostics (option_index))
+  if (early && !c_option_is_from_cpp_diagnostics (option_index))
     return;
 
   if (option_index == OPT_SPECIAL_unknown)
@@ -1021,7 +1038,7 @@ handle_pragma_diagnostic_impl ()
       if (want_diagnostics)
 	{
 	  char *ok_langs = write_langs (cl_options[option_index].flags);
-	  char *bad_lang = write_langs (scpel_common_option_lang_mask ());
+	  char *bad_lang = write_langs (c_common_option_lang_mask ());
 	  warning_at (data.loc_option, OPT_Wpragmas,
 		      "option %qs is valid for %s but not for %s",
 		      data.option_str, ok_langs, bad_lang);
@@ -1201,7 +1218,7 @@ handle_pragma_optimize (cpp_reader *)
       current_optimize_pragma = chainon (current_optimize_pragma, args);
       optimization_current_node
 	= build_optimization_node (&global_options, &global_options_set);
-      scpel_cpp_builtins_optimize_pragma (parse_in,
+      c_cpp_builtins_optimize_pragma (parse_in,
 				      optimization_previous_node,
 				      optimization_current_node);
     }
@@ -1300,7 +1317,7 @@ handle_pragma_pop_options (cpp_reader *)
 
   if (p->optimize_binary != optimization_current_node)
     {
-      scpel_cpp_builtins_optimize_pragma (parse_in, optimization_current_node,
+      c_cpp_builtins_optimize_pragma (parse_in, optimization_current_node,
 				      p->optimize_binary);
       optimization_current_node = p->optimize_binary;
     }
@@ -1343,7 +1360,7 @@ handle_pragma_reset_options (cpp_reader *)
       tree old_optimize = optimization_current_node;
       cl_optimization_restore (&global_options, &global_options_set,
 			       TREE_OPTIMIZATION (new_optimize));
-      scpel_cpp_builtins_optimize_pragma (parse_in, old_optimize, new_optimize);
+      c_cpp_builtins_optimize_pragma (parse_in, old_optimize, new_optimize);
       optimization_current_node = new_optimize;
     }
 
@@ -1470,7 +1487,7 @@ handle_stdc_pragma (const char *pname)
 static void
 handle_pragma_float_const_decimal64 (cpp_reader *)
 {
-  if (scpel_dialect_cxx ())
+  if (c_dialect_cxx ())
     {
       if (warn_unknown_pragmas > in_system_header_at (input_location))
 	warning (OPT_Wunknown_pragmas,
@@ -1651,7 +1668,7 @@ c_register_pragma_1 (const char *space, const char *name,
       id = registered_pragmas.length ();
       id += PRAGMA_FIRST_EXTERNAL - 1;
 
-      /* The C front end allocates 8 bits in scpel_token.  The C++ front end
+      /* The C front end allocates 8 bits in c_token.  The C++ front end
 	 keeps the pragma kind in the form of INTEGER_CST, so no small
 	 limit applies.  At present this is sufficient.  */
       gcc_assert (id < 256);
@@ -1742,7 +1759,7 @@ c_register_pragma_with_expansion_and_data (const char *space, const char *name,
 }
 
 void
-scpel_invoke_pragma_handler (unsigned int id)
+c_invoke_pragma_handler (unsigned int id)
 {
   internal_pragma_handler *ihandler;
   pragma_handler_1arg handler_1arg;

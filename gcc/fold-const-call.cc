@@ -617,7 +617,7 @@ static tree
 fold_const_builtin_nan (tree type, tree arg, bool quiet)
 {
   REAL_VALUE_TYPE real;
-  const char *str = scpel_getstr (arg);
+  const char *str = c_getstr (arg);
   if (str && real_nan (&real, str, quiet, TYPE_MODE (type)))
     return build_real (type, real);
   return NULL_TREE;
@@ -1334,7 +1334,7 @@ fold_const_call (combined_fn fn, tree type, tree arg)
   switch (fn)
     {
     case CFN_BUILT_IN_STRLEN:
-      if (const char *str = scpel_getstr (arg))
+      if (const char *str = c_getstr (arg))
 	return build_int_cst (type, strlen (str));
       return NULL_TREE;
 
@@ -1675,22 +1675,22 @@ fold_const_call (combined_fn fn, tree type, tree arg0, tree arg1)
   switch (fn)
     {
     case CFN_BUILT_IN_STRSPN:
-      if ((p0 = scpel_getstr (arg0)) && (p1 = scpel_getstr (arg1)))
+      if ((p0 = c_getstr (arg0)) && (p1 = c_getstr (arg1)))
 	return build_int_cst (type, strspn (p0, p1));
       return NULL_TREE;
 
     case CFN_BUILT_IN_STRCSPN:
-      if ((p0 = scpel_getstr (arg0)) && (p1 = scpel_getstr (arg1)))
+      if ((p0 = c_getstr (arg0)) && (p1 = c_getstr (arg1)))
 	return build_int_cst (type, strcspn (p0, p1));
       return NULL_TREE;
 
     case CFN_BUILT_IN_STRCMP:
-      if ((p0 = scpel_getstr (arg0)) && (p1 = scpel_getstr (arg1)))
+      if ((p0 = c_getstr (arg0)) && (p1 = c_getstr (arg1)))
 	return build_cmp_result (type, strcmp (p0, p1));
       return NULL_TREE;
 
     case CFN_BUILT_IN_STRCASECMP:
-      if ((p0 = scpel_getstr (arg0)) && (p1 = scpel_getstr (arg1)))
+      if ((p0 = c_getstr (arg0)) && (p1 = c_getstr (arg1)))
 	{
 	  int r = strcmp (p0, p1);
 	  if (r == 0)
@@ -1700,7 +1700,7 @@ fold_const_call (combined_fn fn, tree type, tree arg0, tree arg1)
 
     case CFN_BUILT_IN_INDEX:
     case CFN_BUILT_IN_STRCHR:
-      if ((p0 = scpel_getstr (arg0)) && target_char_cst_p (arg1, &c))
+      if ((p0 = c_getstr (arg0)) && target_char_cst_p (arg1, &c))
 	{
 	  const char *r = strchr (p0, c);
 	  if (r == NULL)
@@ -1712,7 +1712,7 @@ fold_const_call (combined_fn fn, tree type, tree arg0, tree arg1)
 
     case CFN_BUILT_IN_RINDEX:
     case CFN_BUILT_IN_STRRCHR:
-      if ((p0 = scpel_getstr (arg0)) && target_char_cst_p (arg1, &c))
+      if ((p0 = c_getstr (arg0)) && target_char_cst_p (arg1, &c))
 	{
 	  const char *r = strrchr (p0, c);
 	  if (r == NULL)
@@ -1723,9 +1723,9 @@ fold_const_call (combined_fn fn, tree type, tree arg0, tree arg1)
       return NULL_TREE;
 
     case CFN_BUILT_IN_STRSTR:
-      if ((p1 = scpel_getstr (arg1)))
+      if ((p1 = c_getstr (arg1)))
 	{
-	  if ((p0 = scpel_getstr (arg0)))
+	  if ((p0 = c_getstr (arg0)))
 	    {
 	      const char *r = strstr (p0, p1);
 	      if (r == NULL)
@@ -1840,7 +1840,7 @@ fold_const_call (combined_fn fn, tree type, tree arg0, tree arg1, tree arg2)
 	  && !TREE_SIDE_EFFECTS (arg0)
 	  && !TREE_SIDE_EFFECTS (arg1))
 	return build_int_cst (type, 0);
-      else if ((p0 = scpel_getstr (arg0)) && (p1 = scpel_getstr (arg1)))
+      else if ((p0 = c_getstr (arg0)) && (p1 = c_getstr (arg1)))
 	return build_int_cst (type, strncmp (p0, p1, MIN (s2, SIZE_MAX)));
       return NULL_TREE;
 
@@ -1851,8 +1851,8 @@ fold_const_call (combined_fn fn, tree type, tree arg0, tree arg1, tree arg2)
 	  && !TREE_SIDE_EFFECTS (arg0)
 	  && !TREE_SIDE_EFFECTS (arg1))
 	return build_int_cst (type, 0);
-      else if ((p0 = scpel_getstr (arg0))
-	       && (p1 = scpel_getstr (arg1))
+      else if ((p0 = c_getstr (arg0))
+	       && (p1 = c_getstr (arg1))
 	       && strncmp (p0, p1, MIN (s2, SIZE_MAX)) == 0)
 	return build_int_cst (type, 0);
       return NULL_TREE;

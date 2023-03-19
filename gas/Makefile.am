@@ -6,7 +6,7 @@ ACLOCAL_AMFLAGS = -I .. -I ../config -I ../bfd
 
 MAINTAINERCLEANFILES =
 
-SUBDIRS = po
+SUBDIRS =
 
 tooldir = $(exec_prefix)/$(target_alias)
 
@@ -346,9 +346,7 @@ POTFILES = $(MULTI_CFILES) $(CONFIG_ATOF_CFILES) \
 	$(TARG_ENV_HFILES) $(TARG_ENV_CFILES) $(OBJ_FORMAT_HFILES) \
 	$(OBJ_FORMAT_CFILES) $(TARGET_CPU_HFILES) $(TARGET_CPU_CFILES) \
 	$(TARGET_EXTRA_FILES) $(HFILES) $(CFILES)
-po/POTFILES.in: @MAINT@ Makefile
-	for f in $(POTFILES); do echo $$f; done | LC_ALL=C sort > tmp \
-	  && mv tmp $(srcdir)/po/POTFILES.in
+po/POTFILES.in:
 
 # Note: GASP is now deprecated and has been removed.  It is still
 # available in the CVS archive or older binutils releases if it is needed.

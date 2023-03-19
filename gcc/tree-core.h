@@ -242,7 +242,7 @@ enum tree_code_class {
    the tables omp_clause_num_ops and omp_clause_code_name.  */
 enum omp_clause_code {
   /* Clause zero is special-cased inside the parser
-     (scpel_parser_omp_variable_list).  */
+     (c_parser_omp_variable_list).  */
   OMP_CLAUSE_ERROR = 0,
 
   /* OpenACC/OpenMP clause: private (variable_list).  */
@@ -671,7 +671,7 @@ enum tree_index {
   /* The _FloatN and _FloatNx types must be consecutive, and in the
      same sequence as the corresponding complex types, which must also
      be consecutive; _FloatN must come before _FloatNx; the order must
-     also be the same as in the floatn_nx_types array and the RID_*
+     also be the same as in the floatn_nx_types array and the RID_SPL_*
      values in c-common.h.  This is so that iterations over these
      types work as intended.  */
   TI_FLOAT16_TYPE,
@@ -954,7 +954,7 @@ enum tree_node_kind {
   s_kind,
   r_kind,
   e_kind,
-  scpel_kind,
+  c_kind,
   id_kind,
   vec_kind,
   binfo_kind,
@@ -2285,19 +2285,27 @@ struct floatn_type_info {
 extern bool tree_contains_struct[MAX_TREE_CODES][64];
 
 /* Class of tree given its code.  */
-#if __cpp_inline_variables >= 201606L
 #define DEFTREECODE(SYM, NAME, TYPE, LENGTH) TYPE,
 #define END_OF_BASE_TREE_CODES tcc_exceptional,
 
+#if __cpp_inline_variables < 201606L
+template <int N>
+struct tree_code_type_tmpl {
+  static constexpr enum tree_code_class tree_code_type[] = {
+#include "all-tree.def"
+  };
+};
+
+template <int N>
+constexpr enum tree_code_class tree_code_type_tmpl<N>::tree_code_type[];
+#else
 constexpr inline enum tree_code_class tree_code_type[] = {
 #include "all-tree.def"
 };
+#endif
 
 #undef DEFTREECODE
 #undef END_OF_BASE_TREE_CODES
-#else
-extern const enum tree_code_class tree_code_type[];
-#endif
 
 /* Each tree code class has an associated string representation.
    These must correspond to the tree_code_class entries.  */
@@ -2305,18 +2313,27 @@ extern const char *const tree_code_class_strings[];
 
 /* Number of argument-words in each kind of tree-node.  */
 
-#if __cpp_inline_variables >= 201606L
 #define DEFTREECODE(SYM, NAME, TYPE, LENGTH) LENGTH,
 #define END_OF_BASE_TREE_CODES 0,
+
+#if __cpp_inline_variables < 201606L
+template <int N>
+struct tree_code_length_tmpl {
+  static constexpr unsigned char tree_code_length[] = {
+#include "all-tree.def"
+  };
+};
+
+template <int N>
+constexpr unsigned char tree_code_length_tmpl<N>::tree_code_length[];
+#else
 constexpr inline unsigned char tree_code_length[] = {
 #include "all-tree.def"
 };
+#endif
 
 #undef DEFTREECODE
 #undef END_OF_BASE_TREE_CODES
-#else
-extern const unsigned char tree_code_length[];
-#endif
 
 /* Vector of all alias pairs for global symbols.  */
 extern GTY(()) vec<alias_pair, va_gc> *alias_pairs;

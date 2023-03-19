@@ -1466,7 +1466,7 @@ struct gather_scatter_info {
 
 #define STMT_VINFO_RELEVANT_P(S)          ((S)->relevant != vect_unused_in_scope)
 
-#define HYBRID_SLP_STMT(S)                ((S)->slp_type == hybrid)
+#define HYBRID_SPL_SLP_STMT(S)                ((S)->slp_type == hybrid)
 #define PURE_SLP_STMT(S)                  ((S)->slp_type == pure_slp)
 #define STMT_SLP_TYPE(S)                   (S)->slp_type
 

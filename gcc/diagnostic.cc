@@ -2704,7 +2704,7 @@ test_num_digits ()
 /* Run all of the selftests within this file.  */
 
 void
-scpel_diagnostic_cc_tests ()
+c_diagnostic_cc_tests ()
 {
   test_print_escaped_string ();
   test_print_parseable_fixits_none ();

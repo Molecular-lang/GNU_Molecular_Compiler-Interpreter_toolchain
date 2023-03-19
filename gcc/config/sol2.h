@@ -92,7 +92,7 @@ along with GCC; see the file COPYING3.  If not see
     /* For C++ we need to add some additional macro	\
        definitions required by the C++ standard		\
        library.  */					\
-    if (scpel_dialect_cxx ())				\
+    if (c_dialect_cxx ())				\
       {							\
 	switch (cxx_dialect)				\
 	  {						\

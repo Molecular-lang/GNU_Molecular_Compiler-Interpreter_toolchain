@@ -41,17 +41,17 @@ const struct default_include cpp_include_defaults[]
 #else
 = {
 #ifdef GPLUSPLUS_INCLUDE_DIR
-    /* Pick up GNU Scpel++ generic include files.  */
+    /* Pick up GNU C++ generic include files.  */
     { GPLUSPLUS_INCLUDE_DIR, "G++", 1, 1,
       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 0 },
 #endif
 #ifdef GPLUSPLUS_TOOL_INCLUDE_DIR
-    /* Pick up GNU Scpel++ target-dependent include files.  */
+    /* Pick up GNU C++ target-dependent include files.  */
     { GPLUSPLUS_TOOL_INCLUDE_DIR, "G++", 1, 1,
       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 1 },
 #endif
 #ifdef GPLUSPLUS_BACKWARD_INCLUDE_DIR
-    /* Pick up GNU Scpel++ backward and deprecated include files.  */
+    /* Pick up GNU C++ backward and deprecated include files.  */
     { GPLUSPLUS_BACKWARD_INCLUDE_DIR, "G++", 1, 1,
       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 0 },
 #endif

@@ -2,7 +2,26 @@
    by the C-based front ends.  The structure of gimplified, or
    language-independent, trees is dictated by the grammar described in this
    file.
- */
+   Copyright (C) 2002-2023 Free Software Foundation, Inc.
+   Lowering of expressions contributed by Sebastian Pop <s.pop@laposte.net>
+   Re-written to support lowering of whole function trees, documentation
+   and miscellaneous cleanups by Diego Novillo <dnovillo@redhat.com>
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+GCC is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 #include "config.h"
 #include "system.h"
@@ -44,7 +63,7 @@
     walk back up, we check that they fit our constraints, and copy them
     into temporaries if not.  */
 
-/* Callback for scpel_genericize.  */
+/* Callback for c_genericize.  */
 
 static tree
 ubsan_walk_array_refs_r (tree *tp, int *walk_subtrees, void *data)
@@ -87,6 +106,18 @@ ubsan_walk_array_refs_r (tree *tp, int *walk_subtrees, void *data)
     }
   else if (TREE_CODE (*tp) == ARRAY_REF)
     ubsan_maybe_instrument_array_ref (tp, false);
+  else if (TREE_CODE (*tp) == MODIFY_EXPR)
+    {
+      /* Since r7-1900, we gimplify RHS before LHS.  Consider
+	   a[b] |= c;
+	 wherein we can have a single shared tree a[b] in both LHS and RHS.
+	 If we only instrument the LHS and the access is invalid, the program
+	 could crash before emitting a UBSan error.  So instrument the RHS
+	 first.  */
+      *walk_subtrees = 0;
+      walk_tree (&TREE_OPERAND (*tp, 1), ubsan_walk_array_refs_r, pset, pset);
+      walk_tree (&TREE_OPERAND (*tp, 0), ubsan_walk_array_refs_r, pset, pset);
+    }
   return NULL_TREE;
 }
 
@@ -439,7 +470,7 @@ genericize_omp_for_stmt (tree *stmt_p, int *walk_subtrees, void *data,
    subtree processing in a language-dependent way.  */
 
 tree
-scpel_genericize_control_stmt (tree *stmt_p, int *walk_subtrees, void *data,
+c_genericize_control_stmt (tree *stmt_p, int *walk_subtrees, void *data,
 			   walk_tree_fn func, walk_tree_lh lh)
 {
   tree stmt = *stmt_p;
@@ -492,12 +523,15 @@ scpel_genericize_control_stmt (tree *stmt_p, int *walk_subtrees, void *data,
 	     STATEMENT_LIST wouldn't be present at all the resulting
 	     expression wouldn't have TREE_SIDE_EFFECTS set, so make sure
 	     to clear it even on the STATEMENT_LIST in such cases.  */
+	  hash_set<tree> *pset = (c_dialect_cxx ()
+				  ? nullptr
+				  : static_cast<hash_set<tree> *>(data));
 	  for (i = tsi_start (stmt); !tsi_end_p (i); tsi_next (&i))
 	    {
 	      tree t = tsi_stmt (i);
 	      if (TREE_CODE (t) != DEBUG_BEGIN_STMT && nondebug_stmts < 2)
 		nondebug_stmts++;
-	      walk_tree_1 (tsi_stmt_ptr (i), func, data, NULL, lh);
+	      walk_tree_1 (tsi_stmt_ptr (i), func, data, pset, lh);
 	      if (TREE_CODE (t) != DEBUG_BEGIN_STMT
 		  && (nondebug_stmts > 1 || TREE_SIDE_EFFECTS (tsi_stmt (i))))
 		clear_side_effects = false;
@@ -516,14 +550,14 @@ scpel_genericize_control_stmt (tree *stmt_p, int *walk_subtrees, void *data,
 }
 
 
-/* Wrapper for scpel_genericize_control_stmt to allow it to be used as a walk_tree
-   callback.  This is appropriate for C; C++ calls scpel_genericize_control_stmt
+/* Wrapper for c_genericize_control_stmt to allow it to be used as a walk_tree
+   callback.  This is appropriate for C; C++ calls c_genericize_control_stmt
    directly.  */
 
 static tree
 c_genericize_control_r (tree *stmt_p, int *walk_subtrees, void *data)
 {
-  scpel_genericize_control_stmt (stmt_p, walk_subtrees, data,
+  c_genericize_control_stmt (stmt_p, walk_subtrees, data,
 			     c_genericize_control_r, NULL);
   return NULL;
 }
@@ -532,7 +566,7 @@ c_genericize_control_r (tree *stmt_p, int *walk_subtrees, void *data)
    GENERIC.  */
 
 void
-scpel_genericize (tree fndecl)
+c_genericize (tree fndecl)
 {
   dump_file_info *dfi;
   FILE *dump_orig;
@@ -548,13 +582,14 @@ scpel_genericize (tree fndecl)
 
   /* Genericize loops and other structured control constructs.  The C++
      front end has already done this in lang-specific code.  */
-  if (!scpel_dialect_cxx ())
+  if (!c_dialect_cxx ())
     {
       bc_state_t save_state;
       push_cfun (DECL_STRUCT_FUNCTION (fndecl));
       save_bc_state (&save_state);
-      walk_tree_without_duplicates (&DECL_SAVED_TREE (fndecl),
-				    c_genericize_control_r, NULL);
+      hash_set<tree> pset;
+      walk_tree (&DECL_SAVED_TREE (fndecl), c_genericize_control_r, &pset,
+		 &pset);
       restore_bc_state (&save_state);
       pop_cfun ();
     }
@@ -589,7 +624,7 @@ scpel_genericize (tree fndecl)
   cgn = cgraph_node::get_create (fndecl);
   for (cgn = first_nested_function (cgn);
        cgn; cgn = next_nested_function (cgn))
-    scpel_genericize (cgn->decl);
+    c_genericize (cgn->decl);
 }
 
 static void
@@ -616,7 +651,7 @@ add_block_to_enclosing (tree block)
      genericized.  */
 
 tree
-scpel_build_bind_expr (location_t loc, tree block, tree body)
+c_build_bind_expr (location_t loc, tree block, tree body)
 {
   tree decls, bind;
 
@@ -657,7 +692,7 @@ scpel_build_bind_expr (location_t loc, tree block, tree body)
    gimplify_expr.  */
 
 int
-scpel_gimplify_expr (tree *expr_p, gimple_seq *pre_p ATTRIBUTE_UNUSED,
+c_gimplify_expr (tree *expr_p, gimple_seq *pre_p ATTRIBUTE_UNUSED,
 		 gimple_seq *post_p ATTRIBUTE_UNUSED)
 {
   enum tree_code code = TREE_CODE (*expr_p);
@@ -695,7 +730,7 @@ scpel_gimplify_expr (tree *expr_p, gimple_seq *pre_p ATTRIBUTE_UNUSED,
     case POSTDECREMENT_EXPR:
       {
 	tree type = TREE_TYPE (TREE_OPERAND (*expr_p, 0));
-	if (INTEGRAL_TYPE_P (type) && scpel_promoting_integer_type_p (type))
+	if (INTEGRAL_TYPE_P (type) && c_promoting_integer_type_p (type))
 	  {
 	    if (!TYPE_OVERFLOW_WRAPS (type))
 	      type = unsigned_type_for (type);
