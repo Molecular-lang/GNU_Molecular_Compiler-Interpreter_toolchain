@@ -1,22 +1,4 @@
-/* Various declarations for the C and C++ pretty-printers.
-   Copyright (C) 2002-2023 Free Software Foundation, Inc.
-   Contributed by Gabriel Dos Reis <gdr@integrable-solutions.net>
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
-version.
-
-GCC is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* Various declarations for the C and C++ pretty-printers. */
 
 #ifndef GCC_C_PRETTY_PRINTER
 #define GCC_C_PRETTY_PRINTER
@@ -45,8 +27,8 @@ typedef void (*c_pretty_print_fn) (c_pretty_printer *, tree);
    a tree that represents a C construct.  Any pretty-printer for a
    language using C syntax can derive from this datatype and reuse
    facilities provided here.  A derived pretty-printer can override
-   any function listed in the vtable below.  See cp/cxx-pretty-print.h
-   and cp/cxx-pretty-print.cc for an example of derivation.  */
+   any function listed in the vtable below.  See scpel/cxx-pretty-print.h
+   and scpel/cxx-pretty-print.cc for an example of derivation.  */
 class c_pretty_printer : public pretty_printer
 {
 public:

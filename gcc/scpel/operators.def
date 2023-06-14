@@ -1,5 +1,4 @@
 /* -*-C-*-
-
    This file contains definitions of the various C++ operators,
    including both overloadable operators (like `+') and
    non-overloadable operators (like the `?:' ternary operator).

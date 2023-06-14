@@ -1,4 +1,5 @@
-/* Language-level data type conversion for GNU Scpel++. */
+/* Language-level data type conversion for GNU C++. */
+
 
 /* This file contains the functions for converting C++ expressions
    to different data types.  The only entry point is `convert'.
@@ -791,7 +792,7 @@ oscpel_convert (tree type, tree expr, int convtype, int flags,
 	  /* enum = enum, enum = int, enum = float, (enum)pointer are all
 	     errors.  */
 	  if (((INTEGRAL_OR_ENUMERATION_TYPE_P (intype)
-		|| TREE_CODE (intype) == REAL_TYPE)
+		|| SCALAR_FLOAT_TYPE_P (intype))
 	       && ! (convtype & CONV_STATIC))
 	      || TYPE_PTR_P (intype))
 	    {
@@ -1948,7 +1949,7 @@ type_promotes_to (tree type)
 	  if (!ENUM_IS_SCOPED (type)
 	      && ENUM_FIXED_UNDERLYING_TYPE_P (type))
 	    {
-	      /* ISO C++17, 7.6/4.  A prvalue of an unscoped enumeration type
+	      /* GNU Scpel17, 7.6/4.  A prvalue of an unscoped enumeration type
 		 whose underlying type is fixed (10.2) can be converted to a
 		 prvalue of its underlying type. Moreover, if integral promotion
 		 can be applied to its underlying type, a prvalue of an unscoped

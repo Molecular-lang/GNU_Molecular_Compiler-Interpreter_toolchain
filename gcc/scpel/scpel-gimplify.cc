@@ -38,6 +38,13 @@ enum fold_flags {
 
 using fold_flags_t = int;
 
+struct scpel_fold_data
+{
+  hash_set<tree> pset;
+  fold_flags_t flags;
+  scpel_fold_data (fold_flags_t flags): flags (flags) {}
+};
+
 /* Forward declarations.  */
 
 static tree scpel_genericize_r (tree *, int *, void *);
@@ -317,7 +324,7 @@ gimplify_must_not_throw_expr (tree *expr_p, gimple_seq *pre_p)
   gimple *mnt;
 
   gimplify_and_add (body, &try_);
-  mnt = gimple_build_eh_must_not_throw (terminate_fn);
+  mnt = gimple_build_eh_must_not_throw (call_terminate_fn);
   gimple_seq_add_stmt_without_update (&catch_, mnt);
   mnt = gimple_build_try (try_, catch_, GIMPLE_TRY_CATCH);
 
@@ -486,8 +493,8 @@ scpel_gimplify_expr (tree *expr_p, gimple_seq *pre_p, gimple_seq *post_p)
 	*expr_p = expand_vec_init_expr (NULL_TREE, *expr_p,
 					tf_warning_or_error);
 
-	hash_set<tree> pset;
-	scpel_walk_tree (expr_p, scpel_fold_r, &pset, NULL);
+	scpel_fold_data data (ff_genericize | ff_mce_false);
+	scpel_walk_tree (expr_p, scpel_fold_r, &data, NULL);
 	scpel_genericize_tree (expr_p, false);
 	copy_if_shared (expr_p);
 	ret = GS_OK;
@@ -1010,13 +1017,6 @@ struct scpel_genericize_data
      in fold-const, we need to perform this before transformation to
      GIMPLE-form.  */
 
-struct scpel_fold_data
-{
-  hash_set<tree> pset;
-  fold_flags_t flags;
-  scpel_fold_data (fold_flags_t flags): flags (flags) {}
-};
-
 static tree
 scpel_fold_r (tree *stmt_p, int *walk_subtrees, void *data_)
 {
@@ -1193,7 +1193,7 @@ static tree genericize_spaceship (tree expr)
 
 /* If EXPR involves an anonymous VLA type, prepend a DECL_EXPR for that type
    to trigger gimplify_type_sizes; otherwise a cast to pointer-to-VLA confuses
-   the middle-end (scpel/88256).  If EXPR is a DECL, use add_stmt and return
+   the middle-end (c++/88256).  If EXPR is a DECL, use add_stmt and return
    NULL_TREE; otherwise return a COMPOUND_STMT of the DECL_EXPR and EXPR.  */
 
 tree
@@ -3248,6 +3248,16 @@ process_stmt_assume_attribute (tree std_attrs, tree statement,
   for (; attr; attr = lookup_attribute ("gnu", "assume", TREE_CHAIN (attr)))
     {
       tree args = TREE_VALUE (attr);
+      if (args && PACK_EXPANSION_P (args))
+	{
+	  auto_diagnostic_group d;
+	  error_at (attrs_loc, "pack expansion of %qE attribute",
+		    get_attribute_name (attr));
+	  if (cxx_dialect >= cxx17)
+	    inform (attrs_loc, "use fold expression in the attribute "
+			       "argument instead");
+	  continue;
+	}
       int nargs = list_length (args);
       if (nargs != 1)
 	{

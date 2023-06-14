@@ -1,4 +1,4 @@
-/* Interface for the GNU Scpel++ pretty-printer. */
+/* Interface for the GNU C++ pretty-printer. */
 
 #ifndef GCC_CXX_PRETTY_PRINT_H
 #define GCC_CXX_PRETTY_PRINT_H
@@ -54,10 +54,10 @@ public:
 #define pp_cxx_right_brace(PP)		pp_c_right_brace (PP)
 #define pp_cxx_left_bracket(PP)		pp_c_left_bracket (PP)
 #define pp_cxx_right_bracket(PP)	pp_c_right_bracket (PP)
-#define pp_cxx_dot(PP)			    pp_c_dot (PP)
+#define pp_cxx_dot(PP)			pp_c_dot (PP)
 #define pp_cxx_ampersand(PP)		pp_c_ampersand (PP)
-#define pp_cxx_star(PP)			    pp_c_star (PP)
-#define pp_cxx_arrow(PP)		    pp_c_arrow (PP)
+#define pp_cxx_star(PP)			pp_c_star (PP)
+#define pp_cxx_arrow(PP)		pp_c_arrow (PP)
 #define pp_cxx_semicolon(PP)		pp_c_semicolon (PP)
 #define pp_cxx_complement(PP)		pp_c_complement (PP)
 

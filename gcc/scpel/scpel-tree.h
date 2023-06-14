@@ -31,7 +31,7 @@ c-common.h, not after.
    but not all node kinds do (e.g. constants, and references to
    params, locals, etc), so we stash a copy here.  */
 
-extern location_t scpel_expr_location		(const_tree);
+inline location_t scpel_expr_location		(const_tree);
 
 class scpel_expr
 {
@@ -199,6 +199,7 @@ enum scpel_tree_index
        definitions.  */
     CPTI_ALIGN_TYPE,
     CPTI_TERMINATE_FN,
+    CPTI_CALL_TERMINATE_FN,
     CPTI_CALL_UNEXPECTED_FN,
 
     /* These are lazily inited.  */
@@ -340,6 +341,7 @@ extern GTY(()) tree scpel_global_trees[CPTI_MAX];
 /* Exception handling function declarations.  */
 #define terminate_fn			scpel_global_trees[CPTI_TERMINATE_FN]
 #define call_unexpected_fn		scpel_global_trees[CPTI_CALL_UNEXPECTED_FN]
+#define call_terminate_fn		scpel_global_trees[CPTI_CALL_TERMINATE_FN]
 #define get_exception_ptr_fn		scpel_global_trees[CPTI_GET_EXCEPTION_PTR_FN]
 #define begin_catch_fn			scpel_global_trees[CPTI_BEGIN_CATCH_FN]
 #define end_catch_fn			scpel_global_trees[CPTI_END_CATCH_FN]
@@ -1224,8 +1226,8 @@ enum scpel_identifier_kind {
 #define IDENTIFIER_VIRTUAL_P(NODE) \
   TREE_LANG_FLAG_5 (IDENTIFIER_NODE_CHECK (NODE))
 
-/* True if this identifier is a reserved word.  C_RID_SPL_CODE (node) is
-   then the RID_SPL_* value of the keyword.  Value 1.  */
+/* True if this identifier is a reserved word.  C_RID_CODE (node) is
+   then the RID_* value of the keyword.  Value 1.  */
 #define IDENTIFIER_KEYWORD_P(NODE)		\
   ((!IDENTIFIER_KIND_BIT_2 (NODE))		\
    & (!IDENTIFIER_KIND_BIT_1 (NODE))		\
@@ -1618,7 +1620,7 @@ check_constraint_info (tree t)
    holds the set of template parameters that were in-scope when this 'auto'
    was formed.  */
 #define PLACEHOLDER_TYPE_CONSTRAINTS_INFO(NODE) \
-  DECL_SIZE_UNIT (TYPE_NAME (NODE))
+  DECL_SIZE_UNIT (TYPE_NAME (TEMPLATE_TYPE_PARM_CHECK (NODE)))
 
 /* The constraints on the 'auto' placeholder type NODE.  */
 #define PLACEHOLDER_TYPE_CONSTRAINTS(NODE)		   \
@@ -1906,6 +1908,7 @@ extern GTY(()) struct saved_scope *scope_chain;
 #define current_template_parms scope_chain->template_parms
 #define current_template_depth \
   (current_template_parms ? TMPL_PARMS_DEPTH (current_template_parms) : 0)
+#define in_template_context (current_template_parms != NULL_TREE)
 
 #define processing_template_decl scope_chain->x_processing_template_decl
 #define processing_specialization scope_chain->x_processing_specialization
@@ -2962,7 +2965,7 @@ struct GTY(()) lang_decl_ns {
 
   /* Hash table of bound decls. It'd be nice to have this inline, but
      as the hash_map has a dtor, we can't then put this struct into a
-     union (until moving to scpel11).  */
+     union (until moving to c++11).  */
   hash_table<named_decl_hash> *bindings;
 };
 
@@ -3171,7 +3174,7 @@ struct GTY(()) lang_decl {
 
 /* Nonzero if NODE has DECL_DISCRIMINATOR and not DECL_ACCESS.  */
 #define DECL_DISCRIMINATOR_P(NODE)				\
-  (((TREE_CODE (NODE) == VAR_DECL && TREE_STATIC (NODE))	\
+  (((VAR_P (NODE) && TREE_STATIC (NODE))	\
     || DECL_IMPLICIT_TYPEDEF_P (NODE))				\
    && DECL_FUNCTION_SCOPE_P (NODE))
 
@@ -4435,7 +4438,7 @@ get_vec_init_expr (tree t)
    Keep these checks in ascending code order.  */
 #define ARITHMETIC_TYPE_P(TYPE) \
   (CP_INTEGRAL_TYPE_P (TYPE) \
-   || TREE_CODE (TYPE) == REAL_TYPE \
+   || SCALAR_FLOAT_TYPE_P (TYPE) \
    || TREE_CODE (TYPE) == COMPLEX_TYPE)
 
 /* [basic.types]
@@ -5066,7 +5069,7 @@ get_vec_init_expr (tree t)
    templates are primary, too.  */
 
 /* Returns the primary template corresponding to these parameters.  */
-#define TPARMS_PRIMARY_TEMPLATE(NODE) (TREE_TYPE (NODE))
+#define TPARMS_PRIMARY_TEMPLATE(NODE) (TREE_TYPE (TREE_VEC_CHECK (NODE)))
 
 #define DECL_PRIMARY_TEMPLATE(NODE) \
   (TPARMS_PRIMARY_TEMPLATE (DECL_INNERMOST_TEMPLATE_PARMS (NODE)))
@@ -6080,7 +6083,7 @@ const unsigned int STF_STRIP_DEPENDENT = 1U << 1;
 #define TEMPLATE_TEMPLATE_PARM_TEMPLATE_DECL(NODE)	\
   ((TREE_CODE (NODE) == BOUND_TEMPLATE_TEMPLATE_PARM)	\
    ? TYPE_TI_TEMPLATE (NODE)				\
-   : TYPE_NAME (NODE))
+   : TYPE_NAME (TEMPLATE_TEMPLATE_PARM_CHECK (NODE)))
 
 /* in lex.cc  */
 
@@ -6249,7 +6252,7 @@ struct scpel_decl_specifier_seq {
   tree type;
   /* The attributes, if any, provided with the specifier sequence.  */
   tree attributes;
-  /* The scpel11 attributes that follows the type specifier.  */
+  /* The c++11 attributes that follows the type specifier.  */
   tree std_attributes;
   /* If non-NULL, a built-in type that the user attempted to redefine
      to some other type.  */
@@ -6971,6 +6974,7 @@ extern void copy_linkage			(tree, tree);
 extern tree get_guard				(tree);
 extern tree get_guard_cond			(tree, bool);
 extern tree set_guard				(tree);
+extern bool var_needs_tls_wrapper		(tree);
 extern tree maybe_get_tls_wrapper_call		(tree);
 extern void mark_needed				(tree);
 extern bool decl_needed_p			(tree);
@@ -7068,6 +7072,7 @@ extern bool is_copy_initialization		(tree);
 extern tree build_zero_init			(tree, tree, bool);
 extern tree build_value_init			(tree, tsubst_flags_t);
 extern tree build_value_init_noctor		(tree, tsubst_flags_t);
+extern tree maybe_instantiate_nsdmi_init	(tree, tsubst_flags_t);
 extern tree get_nsdmi				(tree, bool, tsubst_flags_t);
 extern tree build_offset_ref			(tree, tree, bool,
 						 tsubst_flags_t);
@@ -7259,9 +7264,6 @@ extern bool maybe_clone_body			(tree);
 /* In parser.cc */
 extern tree scpel_convert_range_for (tree, tree, tree, tree, unsigned int, bool,
 				  unsigned short);
-extern void scpel_convert_omp_range_for (tree &, vec<tree, va_gc> *, tree &,
-				      tree &, tree &, tree &, tree &, tree &);
-extern void scpel_finish_omp_range_for (tree, tree);
 extern bool parsing_nsdmi (void);
 extern bool parsing_function_declarator ();
 extern bool parsing_default_capturing_generic_lambda_in_template (void);
@@ -7306,7 +7308,8 @@ extern tree do_auto_deduction                   (tree, tree, tree,
                                                  auto_deduction_context
 						 = adc_unspecified,
 						 tree = NULL_TREE,
-						 int = LOOKUP_NORMAL);
+						 int = LOOKUP_NORMAL,
+						 tree = NULL_TREE);
 extern tree type_uses_auto			(tree);
 extern tree type_uses_auto_or_concept		(tree);
 extern void append_type_to_template_for_access_check (tree, tree, tree,
@@ -7332,7 +7335,6 @@ extern tree lookup_template_variable		(tree, tree);
 extern bool uses_template_parms			(tree);
 extern bool uses_template_parms_level		(tree, int);
 extern bool uses_outer_template_parms_in_constraints (tree);
-extern bool in_template_function		(void);
 extern bool need_generic_capture		(void);
 extern tree instantiate_class_template		(tree);
 extern tree instantiate_template		(tree, tree, tsubst_flags_t);
@@ -7494,7 +7496,8 @@ extern tree build_if_nonnull			(tree, tree, tsubst_flags_t);
 extern tree get_parent_with_private_access 	(tree decl, tree binfo);
 extern bool accessible_base_p			(tree, tree, bool);
 extern tree lookup_base                         (tree, tree, base_access,
-						 base_kind *, tsubst_flags_t);
+						 base_kind *, tsubst_flags_t,
+						 HOST_WIDE_INT = -1);
 extern tree dcast_base_hint			(tree, tree);
 extern int accessible_p				(tree, tree, bool);
 extern int accessible_in_template_p		(tree, tree);
@@ -7514,6 +7517,7 @@ extern int at_function_scope_p			(void);
 extern bool at_class_scope_p			(void);
 extern bool at_namespace_scope_p		(void);
 extern tree context_for_name_lookup		(tree);
+extern tree type_context_for_name_lookup	(tree);
 extern tree lookup_conversions			(tree);
 extern tree binfo_from_vbase			(tree);
 extern tree binfo_for_vbase			(tree, tree);
@@ -7691,7 +7695,6 @@ extern tree finish_qualified_id_expr		(tree, tree, bool, bool,
 extern void simplify_aggr_init_expr		(tree *);
 extern void finalize_nrv			(tree *, tree, tree);
 extern tree omp_reduction_id			(enum tree_code, tree, tree);
-extern tree scpel_remove_omp_priv_cleanup_stmt	(tree *, int *, void *);
 extern bool scpel_check_omp_declare_reduction	(tree);
 extern void finish_omp_declare_simd_methods	(tree);
 extern tree finish_omp_clauses			(tree, enum c_omp_region_type);
@@ -7739,7 +7742,7 @@ extern tree finish_decltype_type                (tree, bool, tsubst_flags_t);
 extern tree fold_builtin_is_corresponding_member (location_t, int, tree *);
 extern tree fold_builtin_is_pointer_inverconvertible_with_class (location_t, int, tree *);
 extern tree finish_trait_expr			(location_t, enum scpel_trait_kind, tree, tree);
-extern tree finish_trait_type			(enum scpel_trait_kind, tree, tree);
+extern tree finish_trait_type			(enum scpel_trait_kind, tree, tree, tsubst_flags_t);
 extern tree build_lambda_expr                   (void);
 extern tree build_lambda_object			(tree);
 extern tree begin_lambda_type                   (tree);
@@ -8133,12 +8136,36 @@ extern void maybe_warn_pessimizing_move	     (tree, tree, bool);
 
 /* in typeck2.cc */
 extern void require_complete_eh_spec_types	(tree, tree);
-extern void cxx_incomplete_type_diagnostic	(location_t, const_tree,
+extern bool cxx_incomplete_type_diagnostic	(location_t, const_tree,
 						 const_tree, diagnostic_t);
 inline location_t
 loc_or_input_loc (location_t loc)
 {
   return loc == UNKNOWN_LOCATION ? input_location : loc;
+}
+
+/* Like EXPR_LOCATION, but also handle some tcc_exceptional that have
+   locations.  */
+
+inline location_t
+scpel_expr_location (const_tree t_)
+{
+  tree t = CONST_CAST_TREE (t_);
+  if (t == NULL_TREE)
+    return UNKNOWN_LOCATION;
+  switch (TREE_CODE (t))
+    {
+    case LAMBDA_EXPR:
+      return LAMBDA_EXPR_LOCATION (t);
+    case STATIC_ASSERT:
+      return STATIC_ASSERT_SOURCE_LOCATION (t);
+    case TRAIT_EXPR:
+      return TRAIT_EXPR_LOCATION (t);
+    case PTRMEM_CST:
+      return PTRMEM_CST_LOCATION (t);
+    default:
+      return EXPR_LOCATION (t);
+    }
 }
 
 inline location_t
@@ -8156,12 +8183,12 @@ scpel_expr_loc_or_input_loc (const_tree t)
   return scpel_expr_loc_or_loc (t, input_location);
 }
 
-inline void
+inline bool
 cxx_incomplete_type_diagnostic (const_tree value, const_tree type,
 				diagnostic_t diag_kind)
 {
-  cxx_incomplete_type_diagnostic (scpel_expr_loc_or_input_loc (value),
-				  value, type, diag_kind);
+  return cxx_incomplete_type_diagnostic (scpel_expr_loc_or_input_loc (value),
+					 value, type, diag_kind);
 }
 
 extern void cxx_incomplete_type_error		(location_t, const_tree,
@@ -8809,7 +8836,7 @@ extended_float_type_p (tree type)
 namespace selftest {
   extern void run_scpel_tests (void);
 
-  /* Declarations for specific families of tests within scpel,
+  /* Declarations for specific families of tests within cp,
      by source file, in alphabetical order.  */
   extern void scpel_pt_cc_tests ();
   extern void scpel_tree_cc_tests (void);

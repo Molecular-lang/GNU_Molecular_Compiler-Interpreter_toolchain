@@ -2237,7 +2237,7 @@ const pass_data pass_data_cse_sincos =
   OPTGROUP_NONE, /* optinfo_flags */
   TV_TREE_SINCOS, /* tv_id */
   PROP_ssa, /* properties_required */
-  PROP_gimple_opt_math, /* properties_provided */
+  0, /* properties_provided */
   0, /* properties_destroyed */
   0, /* todo_flags_start */
   TODO_update_ssa, /* todo_flags_finish */
@@ -2331,7 +2331,7 @@ const pass_data pass_data_expand_powcabs =
   OPTGROUP_NONE, /* optinfo_flags */
   TV_TREE_POWCABS, /* tv_id */
   PROP_ssa, /* properties_required */
-  0, /* properties_provided */
+  PROP_gimple_opt_math, /* properties_provided */
   0, /* properties_destroyed */
   0, /* todo_flags_start */
   TODO_update_ssa, /* todo_flags_finish */
@@ -3320,7 +3320,7 @@ convert_mult_to_fma (gimple *mul_stmt, tree op1, tree op2,
   imm_use_iterator imm_iter;
 
   if (FLOAT_TYPE_P (type)
-      && flag_fp_contract_mode == FP_CONTRACT_OFF)
+      && flag_fp_contract_mode != FP_CONTRACT_FAST)
     return false;
 
   /* We don't want to do bitfield reduction ops.  */
@@ -3605,9 +3605,8 @@ maybe_optimize_guarding_check (vec<gimple *> &mul_stmts, gimple *cond_stmt,
     }
   else if (!single_succ_p (bb) || other_edge->dest != single_succ (bb))
     return;
-  gimple *zero_cond = last_stmt (pred_bb);
+  gcond *zero_cond = safe_dyn_cast <gcond *> (*gsi_last_bb (pred_bb));
   if (zero_cond == NULL
-      || gimple_code (zero_cond) != GIMPLE_COND
       || (gimple_cond_code (zero_cond)
 	  != ((pred_edge->flags & EDGE_TRUE_VALUE) ? NE_EXPR : EQ_EXPR))
       || !integer_zerop (gimple_cond_rhs (zero_cond)))
@@ -3726,11 +3725,10 @@ maybe_optimize_guarding_check (vec<gimple *> &mul_stmts, gimple *cond_stmt,
       else if (!integer_onep (other_val))
 	return;
     }
-  gcond *zero_gcond = as_a <gcond *> (zero_cond);
   if (pred_edge->flags & EDGE_TRUE_VALUE)
-    gimple_cond_make_true (zero_gcond);
+    gimple_cond_make_true (zero_cond);
   else
-    gimple_cond_make_false (zero_gcond);
+    gimple_cond_make_false (zero_cond);
   update_stmt (zero_cond);
   *cfg_changed = true;
 }
@@ -3804,6 +3802,21 @@ arith_overflow_check_p (gimple *stmt, gimple *cast_stmt, gimple *&use_stmt,
       use_operand_p use;
       if (!single_imm_use (divlhs, &use, &cur_use_stmt))
 	return 0;
+      if (cast_stmt && gimple_assign_cast_p (cur_use_stmt))
+	{
+	  tree cast_lhs = gimple_assign_lhs (cur_use_stmt);
+	  if (INTEGRAL_TYPE_P (TREE_TYPE (cast_lhs))
+	      && TYPE_UNSIGNED (TREE_TYPE (cast_lhs))
+	      && (TYPE_PRECISION (TREE_TYPE (cast_lhs))
+		  == TYPE_PRECISION (TREE_TYPE (divlhs)))
+	      && single_imm_use (cast_lhs, &use, &cur_use_stmt))
+	    {
+	      cast_stmt = NULL;
+	      divlhs = cast_lhs;
+	    }
+	  else
+	    return 0;
+	}
     }
   if (gimple_code (cur_use_stmt) == GIMPLE_COND)
     {
@@ -4076,7 +4089,10 @@ match_arith_overflow (gimple_stmt_iterator *gsi, gimple *stmt,
 			    TYPE_MODE (type)) == CODE_FOR_nothing)
       || (code == MULT_EXPR
 	  && optab_handler (cast_stmt ? mulv4_optab : umulv4_optab,
-			    TYPE_MODE (type)) == CODE_FOR_nothing))
+			    TYPE_MODE (type)) == CODE_FOR_nothing
+	  && (use_seen
+	      || cast_stmt
+	      || !can_mult_highpart_p (TYPE_MODE (type), true))))
     {
       if (code != PLUS_EXPR)
 	return false;
@@ -4389,6 +4405,16 @@ match_arith_overflow (gimple_stmt_iterator *gsi, gimple *stmt,
 	  gimple_stmt_iterator gsi2 = gsi_for_stmt (orig_use_stmt);
 	  maybe_optimize_guarding_check (mul_stmts, use_stmt, orig_use_stmt,
 					 cfg_changed);
+	  use_operand_p use;
+	  gimple *cast_stmt;
+	  if (single_imm_use (gimple_assign_lhs (orig_use_stmt), &use,
+			      &cast_stmt)
+	      && gimple_assign_cast_p (cast_stmt))
+	    {
+	      gimple_stmt_iterator gsi3 = gsi_for_stmt (cast_stmt);
+	      gsi_remove (&gsi3, true);
+	      release_ssa_name (gimple_assign_lhs (cast_stmt));
+	    }
 	  gsi_remove (&gsi2, true);
 	  release_ssa_name (gimple_assign_lhs (orig_use_stmt));
 	}
@@ -4778,7 +4804,7 @@ convert_mult_to_highpart (gassign *stmt, gimple_stmt_iterator *gsi)
    conditional jump sequence.  */
 
 static void
-optimize_spaceship (gimple *stmt)
+optimize_spaceship (gcond *stmt)
 {
   enum tree_code code = gimple_cond_code (stmt);
   if (code != EQ_EXPR && code != NE_EXPR)
@@ -4797,9 +4823,8 @@ optimize_spaceship (gimple *stmt)
   if (((EDGE_SUCC (bb0, 0)->flags & EDGE_TRUE_VALUE) != 0) ^ (code == EQ_EXPR))
     bb1 = EDGE_SUCC (bb0, 0)->dest;
 
-  gimple *g = last_stmt (bb1);
+  gcond *g = safe_dyn_cast <gcond *> (*gsi_last_bb (bb1));
   if (g == NULL
-      || gimple_code (g) != GIMPLE_COND
       || !single_pred_p (bb1)
       || (operand_equal_p (gimple_cond_lhs (g), arg1, 0)
 	  ? !operand_equal_p (gimple_cond_rhs (g), arg2, 0)
@@ -4833,9 +4858,8 @@ optimize_spaceship (gimple *stmt)
 	continue;
 
       bb2 = EDGE_SUCC (bb1, i)->dest;
-      g = last_stmt (bb2);
+      g = safe_dyn_cast <gcond *> (*gsi_last_bb (bb2));
       if (g == NULL
-	  || gimple_code (g) != GIMPLE_COND
 	  || !single_pred_p (bb2)
 	  || (operand_equal_p (gimple_cond_lhs (g), arg1, 0)
 	      ? !operand_equal_p (gimple_cond_rhs (g), arg2, 0)
@@ -4899,19 +4923,17 @@ optimize_spaceship (gimple *stmt)
 	}
     }
 
-  g = gimple_build_call_internal (IFN_SPACESHIP, 2, arg1, arg2);
+  gcall *gc = gimple_build_call_internal (IFN_SPACESHIP, 2, arg1, arg2);
   tree lhs = make_ssa_name (integer_type_node);
-  gimple_call_set_lhs (g, lhs);
+  gimple_call_set_lhs (gc, lhs);
   gimple_stmt_iterator gsi = gsi_for_stmt (stmt);
-  gsi_insert_before (&gsi, g, GSI_SAME_STMT);
+  gsi_insert_before (&gsi, gc, GSI_SAME_STMT);
 
-  gcond *cond = as_a <gcond *> (stmt);
-  gimple_cond_set_lhs (cond, lhs);
-  gimple_cond_set_rhs (cond, integer_zero_node);
+  gimple_cond_set_lhs (stmt, lhs);
+  gimple_cond_set_rhs (stmt, integer_zero_node);
   update_stmt (stmt);
 
-  g = last_stmt (bb1);
-  cond = as_a <gcond *> (g);
+  gcond *cond = as_a <gcond *> (*gsi_last_bb (bb1));
   gimple_cond_set_lhs (cond, lhs);
   if (em1->src == bb1 && e2 != em1)
     {
@@ -4926,12 +4948,11 @@ optimize_spaceship (gimple *stmt)
       gimple_cond_set_code (cond, (e1->flags & EDGE_TRUE_VALUE)
 				  ? EQ_EXPR : NE_EXPR);
     }
-  update_stmt (g);
+  update_stmt (cond);
 
   if (e2 != e1 && e2 != em1)
     {
-      g = last_stmt (bb2);
-      cond = as_a <gcond *> (g);
+      cond = as_a <gcond *> (*gsi_last_bb (bb2));
       gimple_cond_set_lhs (cond, lhs);
       if (em1->src == bb2)
 	gimple_cond_set_rhs (cond, integer_minus_one_node);
@@ -4942,7 +4963,7 @@ optimize_spaceship (gimple *stmt)
 	}
       gimple_cond_set_code (cond,
 			    (e2->flags & EDGE_TRUE_VALUE) ? NE_EXPR : EQ_EXPR);
-      update_stmt (g);
+      update_stmt (cond);
     }
 
   wide_int wm1 = wi::minus_one (TYPE_PRECISION (integer_type_node));
@@ -5113,7 +5134,7 @@ math_opts_dom_walker::after_dom_children (basic_block bb)
 	    }
 	}
       else if (gimple_code (stmt) == GIMPLE_COND)
-	optimize_spaceship (stmt);
+	optimize_spaceship (as_a <gcond *> (stmt));
       gsi_next (&gsi);
     }
   if (fma_state.m_deferring_p

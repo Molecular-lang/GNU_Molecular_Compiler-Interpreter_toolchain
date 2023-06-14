@@ -1,5 +1,20 @@
 ## Process this file with automake to produce Makefile.in.
 #
+#   Copyright (C) 2019-2022 Free Software Foundation, Inc.
+#
+# This file is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; see the file COPYING.  If not see
+# <http://www.gnu.org/licenses/>.
 #
 
 ACLOCAL_AMFLAGS = -I .. -I ../config -I ../bfd
@@ -73,9 +88,11 @@ CC_FOR_TARGET = ` \
     fi; \
   fi`
 
-check-DEJAGNU:
+check-DEJAGNU: 
 
-development.exp:
+development.exp: $(BFDDIR)/development.sh
+	$(AM_V_GEN)$(EGREP) "(development|experimental)=" $(BFDDIR)/development.sh  \
+	  | $(AWK) -F= '{ print "set " $$1 " " $$2 }' > $@
 
 # development.sh is used to determine -Werror default.
 CONFIG_STATUS_DEPENDENCIES = $(BFDDIR)/development.sh

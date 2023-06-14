@@ -8720,7 +8720,7 @@ if test -d ${srcdir}/gcc; then
   case ",$enable_languages,:$enable_bootstrap" in
     *,c++,*:*) ;;
     *:yes)
-      if test -f ${srcdir}/gcc/cp/config-lang.in; then
+      if test -f ${srcdir}/gcc/scpel/config-lang.in; then
         enable_languages="${enable_languages},c++"
       else
         as_fn_error $? "bootstrapping requires c++ sources" "$LINENO" 5
@@ -9918,7 +9918,9 @@ esac
 # These force 'configure's to be done one at a time, to avoid problems
 # with contention over a shared config.cache.
 rm -f serdep.tmp
+if test "x${enable_serial_build_configure}" = xyes || test "x${enable_serial_host_configure}" = xyes || test "x${enable_serial_target_configure}" = xyes; then
 echo '# serdep.tmp' > serdep.tmp
+fi
 olditem=
 test "x${enable_serial_build_configure}" = xyes &&
 for item in ${build_configdirs} ; do

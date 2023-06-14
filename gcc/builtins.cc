@@ -1446,18 +1446,19 @@ apply_args_size (void)
 	  {
 	    fixed_size_mode mode = targetm.calls.get_raw_arg_mode (regno);
 
-	    gcc_assert (mode != VOIDmode);
-
-	    align = GET_MODE_ALIGNMENT (mode) / BITS_PER_UNIT;
-	    if (size % align != 0)
-	      size = CEIL (size, align) * align;
-	    size += GET_MODE_SIZE (mode);
-	    apply_args_mode[regno] = mode;
+	    if (mode != VOIDmode)
+	      {
+		align = GET_MODE_ALIGNMENT (mode) / BITS_PER_UNIT;
+		if (size % align != 0)
+		  size = CEIL (size, align) * align;
+		size += GET_MODE_SIZE (mode);
+		apply_args_mode[regno] = mode;
+	      }
+	    else
+	      apply_args_mode[regno] = as_a <fixed_size_mode> (VOIDmode);
 	  }
 	else
-	  {
-	    apply_args_mode[regno] = as_a <fixed_size_mode> (VOIDmode);
-	  }
+	  apply_args_mode[regno] = as_a <fixed_size_mode> (VOIDmode);
     }
   return size;
 }
@@ -1481,13 +1482,16 @@ apply_result_size (void)
 	  {
 	    fixed_size_mode mode = targetm.calls.get_raw_result_mode (regno);
 
-	    gcc_assert (mode != VOIDmode);
-
-	    align = GET_MODE_ALIGNMENT (mode) / BITS_PER_UNIT;
-	    if (size % align != 0)
-	      size = CEIL (size, align) * align;
-	    size += GET_MODE_SIZE (mode);
-	    apply_result_mode[regno] = mode;
+	    if (mode != VOIDmode)
+	      {
+		align = GET_MODE_ALIGNMENT (mode) / BITS_PER_UNIT;
+		if (size % align != 0)
+		  size = CEIL (size, align) * align;
+		size += GET_MODE_SIZE (mode);
+		apply_result_mode[regno] = mode;
+	      }
+	    else
+	      apply_result_mode[regno] = as_a <fixed_size_mode> (VOIDmode);
 	  }
 	else
 	  apply_result_mode[regno] = as_a <fixed_size_mode> (VOIDmode);
@@ -3490,7 +3494,7 @@ expand_builtin_strnlen (tree exp, rtx target, machine_mode target_mode)
   wide_int min, max;
   value_range r;
   get_global_range_query ()->range_of_expr (r, bound);
-  if (r.kind () != VR_RANGE)
+  if (r.varying_p () || r.undefined_p ())
     return NULL_RTX;
   min = r.lower_bound ();
   max = r.upper_bound ();
@@ -3566,12 +3570,13 @@ determine_block_size (tree len, rtx len_rtx,
       if (TREE_CODE (len) == SSA_NAME)
 	{
 	  value_range r;
+	  tree tmin, tmax;
 	  get_global_range_query ()->range_of_expr (r, len);
-	  range_type = r.kind ();
+	  range_type = get_legacy_range (r, tmin, tmax);
 	  if (range_type != VR_UNDEFINED)
 	    {
-	      min = wi::to_wide (r.min ());
-	      max = wi::to_wide (r.max ());
+	      min = wi::to_wide (tmin);
+	      max = wi::to_wide (tmax);
 	    }
 	}
       if (range_type == VR_RANGE)
@@ -4212,7 +4217,7 @@ builtin_memset_read_str (void *data, void *prev,
 	return const_vec;
 
       /* Use the move expander with CONST_VECTOR.  */
-      target = targetm.gen_memset_scratch_rtx (mode);
+      target = gen_reg_rtx (mode);
       emit_move_insn (target, const_vec);
       return target;
     }
@@ -4256,7 +4261,7 @@ builtin_memset_gen_str (void *data, void *prev,
 	 the memset expander.  */
       insn_code icode = optab_handler (vec_duplicate_optab, mode);
 
-      target = targetm.gen_memset_scratch_rtx (mode);
+      target = gen_reg_rtx (mode);
       class expand_operand ops[2];
       create_output_operand (&ops[0], target, mode);
       create_input_operand (&ops[1], (rtx) data, QImode);
@@ -7142,8 +7147,16 @@ inline_string_cmp (rtx target, tree var_str, const char *const_str,
 
       op0 = convert_modes (mode, unit_mode, op0, 1);
       op1 = convert_modes (mode, unit_mode, op1, 1);
-      result = expand_simple_binop (mode, MINUS, op0, op1,
-				    result, 1, OPTAB_WIDEN);
+      rtx diff = expand_simple_binop (mode, MINUS, op0, op1,
+				      result, 1, OPTAB_WIDEN);
+
+      /* Force the difference into result register.  We cannot reassign
+	 result here ("result = diff") or we may end up returning
+	 uninitialized result when expand_simple_binop allocates a new
+	 pseudo-register for returning.  */
+      if (diff != result)
+	emit_move_insn (result, diff);
+
       if (i < length - 1)
 	emit_cmp_and_jump_insns (result, CONST0_RTX (mode), NE, NULL_RTX,
 	    			 mode, true, ne_label);
@@ -7170,8 +7183,8 @@ inline_expand_builtin_bytecmp (tree exp, rtx target)
   bool is_ncmp = (fcode == BUILT_IN_STRNCMP || fcode == BUILT_IN_MEMCMP);
 
   /* Do NOT apply this inlining expansion when optimizing for size or
-     optimization level below 2.  */
-  if (optimize < 2 || optimize_insn_for_size_p ())
+     optimization level below 2 or if unused *cmp hasn't been DCEd.  */
+  if (optimize < 2 || optimize_insn_for_size_p () || target == const0_rtx)
     return NULL_RTX;
 
   gcc_checking_assert (fcode == BUILT_IN_STRCMP
@@ -8633,8 +8646,8 @@ fold_builtin_expect (location_t loc, tree arg0, tree arg1, tree arg2,
 
   if (TREE_CODE (inner) == CALL_EXPR
       && (fndecl = get_callee_fndecl (inner))
-      && (fndecl_built_in_p (fndecl, BUILT_IN_EXPECT)
-	  || fndecl_built_in_p (fndecl, BUILT_IN_EXPECT_WITH_PROBABILITY)))
+      && fndecl_built_in_p (fndecl, BUILT_IN_EXPECT,
+			    BUILT_IN_EXPECT_WITH_PROBABILITY))
     return arg0;
 
   inner = inner_arg0;
@@ -8924,7 +8937,7 @@ static tree
 fold_builtin_carg (location_t loc, tree arg, tree type)
 {
   if (validate_arg (arg, COMPLEX_TYPE)
-      && TREE_CODE (TREE_TYPE (TREE_TYPE (arg))) == REAL_TYPE)
+      && SCALAR_FLOAT_TYPE_P (TREE_TYPE (TREE_TYPE (arg))))
     {
       tree atan2_fn = mathfn_built_in (type, BUILT_IN_ATAN2);
 
@@ -10432,7 +10445,7 @@ fold_builtin_next_arg (tree exp, bool va_start_p)
 	 We must also strip off INDIRECT_EXPR for C++ reference
 	 parameters.  */
       while (CONVERT_EXPR_P (arg)
-	     || TREE_CODE (arg) == INDIRECT_REF)
+	     || INDIRECT_REF_P (arg))
 	arg = TREE_OPERAND (arg, 0);
       if (arg != last_parm)
 	{
@@ -10898,7 +10911,7 @@ do_mpfr_ckconv (mpfr_srcptr m, tree type, int inexact)
       real_from_mpfr (&rr, m, type, MPFR_RNDN);
       /* Proceed iff GCC's REAL_VALUE_TYPE can hold the MPFR value,
 	 check for overflow/underflow.  If the REAL_VALUE_TYPE is zero
-	 but the mpft_t is not, then we underflowed in the
+	 but the mpfr_t is not, then we underflowed in the
 	 conversion.  */
       if (real_isfinite (&rr)
 	  && (rr.cl == rvc_zero) == (mpfr_zero_p (m) != 0))
@@ -10939,7 +10952,7 @@ do_mpc_ckconv (mpc_srcptr m, tree type, int inexact, int force_convert)
       real_from_mpfr (&im, mpc_imagref (m), TREE_TYPE (type), MPFR_RNDN);
       /* Proceed iff GCC's REAL_VALUE_TYPE can hold the MPFR values,
 	 check for overflow/underflow.  If the REAL_VALUE_TYPE is zero
-	 but the mpft_t is not, then we underflowed in the
+	 but the mpfr_t is not, then we underflowed in the
 	 conversion.  */
       if (force_convert
 	  || (real_isfinite (&re) && real_isfinite (&im)
@@ -11072,15 +11085,13 @@ do_mpfr_lgamma_r (tree arg, tree arg_sg, tree type)
 	  const int prec = fmt->p;
 	  const mpfr_rnd_t rnd = fmt->round_towards_zero? MPFR_RNDZ : MPFR_RNDN;
 	  int inexact, sg;
-	  mpfr_t m;
 	  tree result_lg;
 
-	  mpfr_init2 (m, prec);
+	  auto_mpfr m (prec);
 	  mpfr_from_real (m, ra, MPFR_RNDN);
 	  mpfr_clear_flags ();
 	  inexact = mpfr_lgamma (m, &sg, m, rnd);
 	  result_lg = do_mpfr_ckconv (m, type, inexact);
-	  mpfr_clear (m);
 	  if (result_lg)
 	    {
 	      tree result_sg;
@@ -11122,9 +11133,9 @@ do_mpc_arg2 (tree arg0, tree arg1, tree type, int do_nonfinite,
   /* To proceed, MPFR must exactly represent the target floating point
      format, which only happens when the target base equals two.  */
   if (TREE_CODE (arg0) == COMPLEX_CST && !TREE_OVERFLOW (arg0)
-      && TREE_CODE (TREE_TYPE (TREE_TYPE (arg0))) == REAL_TYPE
+      && SCALAR_FLOAT_TYPE_P (TREE_TYPE (TREE_TYPE (arg0)))
       && TREE_CODE (arg1) == COMPLEX_CST && !TREE_OVERFLOW (arg1)
-      && TREE_CODE (TREE_TYPE (TREE_TYPE (arg1))) == REAL_TYPE
+      && SCALAR_FLOAT_TYPE_P (TREE_TYPE (TREE_TYPE (arg1)))
       && REAL_MODE_FORMAT (TYPE_MODE (TREE_TYPE (TREE_TYPE (arg0))))->b == 2)
     {
       const REAL_VALUE_TYPE *const re0 = TREE_REAL_CST_PTR (TREE_REALPART (arg0));
@@ -11707,6 +11718,8 @@ builtin_fnspec (tree callee)
       case BUILT_IN_RETURN_ADDRESS:
 	return ".c";
       case BUILT_IN_ASSUME_ALIGNED:
+      case BUILT_IN_EXPECT:
+      case BUILT_IN_EXPECT_WITH_PROBABILITY:
 	return "1cX ";
       /* But posix_memalign stores a pointer into the memory pointed to
 	 by its first argument.  */

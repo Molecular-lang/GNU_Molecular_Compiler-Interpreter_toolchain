@@ -1,22 +1,4 @@
-/* Classes for modeling the state of memory.
-   Copyright (C) 2020-2023 Free Software Foundation, Inc.
-   Contributed by David Malcolm <dmalcolm@redhat.com>.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* Classes for modeling the state of memory. */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -2710,6 +2692,18 @@ tristate
 store::eval_alias_1 (const region *base_reg_a,
 		     const region *base_reg_b) const
 {
+  /* If they're in different memory spaces, they can't alias.  */
+  {
+    enum memory_space memspace_a = base_reg_a->get_memory_space ();
+    if (memspace_a != MEMSPACE_UNKNOWN)
+      {
+	enum memory_space memspace_b = base_reg_b->get_memory_space ();
+	if (memspace_b != MEMSPACE_UNKNOWN
+	    && memspace_a != memspace_b)
+	  return tristate::TS_FALSE;
+      }
+  }
+
   if (const symbolic_region *sym_reg_a
       = base_reg_a->dyn_cast_symbolic_region ())
     {

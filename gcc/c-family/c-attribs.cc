@@ -1,21 +1,4 @@
-/* C-family attributes handling.
-   Copyright (C) 1992-2023 Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
-version.
-
-GCC is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* C-family attributes handling. */
 
 #define INCLUDE_STRING
 #include "config.h"
@@ -5278,6 +5261,15 @@ build_attr_access_from_parms (tree parms, bool skip_voidptr)
       tree argtype = TREE_TYPE (arg);
       if (DECL_NAME (arg) && INTEGRAL_TYPE_P (argtype))
 	arg2pos.put (arg, argpos);
+    }
+
+  argpos = 0;
+  for (tree arg = parms; arg; arg = TREE_CHAIN (arg), ++argpos)
+    {
+      if (!DECL_P (arg))
+	continue;
+
+      tree argtype = TREE_TYPE (arg);
 
       tree argspec = DECL_ATTRIBUTES (arg);
       if (!argspec)

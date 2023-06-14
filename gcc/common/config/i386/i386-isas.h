@@ -1,4 +1,21 @@
-/* i386 ISA table. */
+/* i386 ISA table.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GCC; see the file COPYING3.  If not see
+<http://www.gnu.org/licenses/>.  */
 
 /* These are the target attribute strings for which a dispatcher is
    available, from fold_builtin_cpu.  */
@@ -167,4 +184,6 @@ ISA_NAMES_TABLE_START
   ISA_NAMES_TABLE_ENTRY("amx-fp16", FEATURE_AMX_FP16, P_NONE, "-mamx-fp16")
   ISA_NAMES_TABLE_ENTRY("prefetchi", FEATURE_PREFETCHI, P_NONE, "-mprefetchi")
   ISA_NAMES_TABLE_ENTRY("raoint", FEATURE_RAOINT, P_NONE, "-mraoint")
+  ISA_NAMES_TABLE_ENTRY("amx-complex", FEATURE_AMX_COMPLEX,
+			P_NONE, "-mamx-complex")
 ISA_NAMES_TABLE_END

@@ -1,4 +1,4 @@
-/* Definitions for Scpel++ name lookup routines. */
+/* Definitions for C++ name lookup routines. */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -3346,7 +3346,7 @@ push_local_extern_decl_alias (tree decl)
 	  && VAR_P (decl)
 	  && CP_DECL_THREAD_LOCAL_P (decl)))
     return;
-  /* EH specs were not part of the function type prior to scpel17, but
+  /* EH specs were not part of the function type prior to c++17, but
      we still can't go pushing dependent eh specs into the namespace.  */
   if (cxx_dialect < cxx17
       && TREE_CODE (decl) == FUNCTION_DECL
@@ -3470,7 +3470,7 @@ maybe_record_mergeable_decl (tree *slot, tree name, tree decl)
 
   tree not_tmpl = STRIP_TEMPLATE (decl);
   if ((TREE_CODE (not_tmpl) == FUNCTION_DECL
-       || TREE_CODE (not_tmpl) == VAR_DECL)
+       || VAR_P (not_tmpl))
       && DECL_THIS_STATIC (not_tmpl))
     /* Internal linkage.  */
     return;
@@ -5334,7 +5334,7 @@ push_class_level_binding (tree name, tree x)
   if (name == error_mark_node)
     return false;
 
-  /* Can happen for an erroneous declaration (scpel/60384).  */
+  /* Can happen for an erroneous declaration (c++/60384).  */
   if (!identifier_p (name))
     {
       gcc_assert (errorcount || sorrycount);
@@ -5524,7 +5524,7 @@ lookup_using_decl (tree scope, name_lookup &lookup)
       && UNSCOPED_ENUM_P (scope)
       && !TYPE_FUNCTION_SCOPE_P (scope))
     {
-      /* PR scpel/60265 argued that since C++11 added explicit enum scope, we
+      /* PR c++/60265 argued that since C++11 added explicit enum scope, we
 	 should allow it as meaning the enclosing scope.  I don't see any
 	 justification for this in C++11, but let's keep allowing it.  */
       tree ctx = CP_TYPE_CONTEXT (scope);
@@ -5560,7 +5560,7 @@ lookup_using_decl (tree scope, name_lookup &lookup)
       /* Naming an enumeration member.  */
       if (cxx_dialect < cxx20)
 	error ("%<using%> with enumeration scope %q#T "
-	       "only available with %<-std=scpel20%> or %<-std=gnu++20%>",
+	       "only available with %<-std=c++20%> or %<-std=gnu++20%>",
 	       scope);
       lookup.value = lookup_enumerator (scope, lookup.name);
     }
@@ -5920,6 +5920,7 @@ set_decl_namespace (tree decl, tree scope, bool friendp)
 
 	 So tell check_explicit_specialization to look for a match.  */
       SET_DECL_IMPLICIT_INSTANTIATION (decl);
+      DECL_TEMPLATE_INFO (decl) = build_template_info (old, NULL_TREE);
       return;
     }
 
@@ -6913,7 +6914,7 @@ consider_decl (tree decl,  best_match <tree, const char *> &bm,
 {
   /* Skip compiler-generated variables (e.g. __for_begin/__for_end
      within range for).  */
-  if (TREE_CODE (decl) == VAR_DECL && DECL_ARTIFICIAL (decl))
+  if (VAR_P (decl) && DECL_ARTIFICIAL (decl))
     return;
 
   tree suggestion = DECL_NAME (decl);
@@ -6948,7 +6949,7 @@ maybe_add_fuzzy_decl (auto_vec<tree> &vec, tree decl)
 {
   /* Skip compiler-generated variables (e.g. __for_begin/__for_end
      within range for).  */
-  if (TREE_CODE (decl) == VAR_DECL && DECL_ARTIFICIAL (decl))
+  if (VAR_P (decl) && DECL_ARTIFICIAL (decl))
     return false;
 
   tree suggestion = DECL_NAME (decl);
@@ -7203,7 +7204,7 @@ suggest_rid_p  (enum rid rid)
   switch (rid)
     {
     /* Support suggesting function-like keywords.  */
-    case RID_SPL_STATIC_ASSERT:
+    case RID_STATIC_ASSERT:
       return true;
 
     default:
@@ -8187,9 +8188,6 @@ pop_from_top_level (void)
 
   auto_cond_timevar tv (TV_NAME_LOOKUP);
 
-  /* Clear out class-level bindings cache.  */
-  if (previous_class_level)
-    invalidate_class_lookup_cache ();
   pop_class_stack ();
 
   release_tree_vector (current_lang_base);
@@ -8216,6 +8214,43 @@ pop_from_top_level (void)
      push_to_top_level.  */
   s->prev = free_saved_scope;
   free_saved_scope = s;
+}
+
+/* Like push_to_top_level, but not if D is function-local.  Returns whether we
+   did push to top.  */
+
+bool
+maybe_push_to_top_level (tree d)
+{
+  /* Push if D isn't function-local, or is a lambda function, for which name
+     resolution is already done.  */
+  bool push_to_top
+    = !(current_function_decl
+	&& !LAMBDA_FUNCTION_P (d)
+	&& decl_function_context (d) == current_function_decl);
+
+  if (push_to_top)
+    push_to_top_level ();
+  else
+    {
+      gcc_assert (!processing_template_decl);
+      push_function_context ();
+      scpel_unevaluated_operand = 0;
+      c_inhibit_evaluation_warnings = 0;
+    }
+
+  return push_to_top;
+}
+
+/* Return from whatever maybe_push_to_top_level did.  */
+
+void
+maybe_pop_from_top_level (bool push_to_top)
+{
+  if (push_to_top)
+    pop_from_top_level ();
+  else
+    pop_function_context ();
 }
 
 /* Push into the scope of the namespace NS, even if it is deeply

@@ -34,7 +34,7 @@
 				 QUAL_UNION_TYPE, ENUMERAL_TYPE))
 
 /* In an IDENTIFIER_NODE, nonzero if this identifier is actually a
-   keyword.  C_RID_SPL_CODE (node) is then the RID_SPL_* value of the keyword.  */
+   keyword.  C_RID_CODE (node) is then the RID_* value of the keyword.  */
 #define C_IS_RESERVED_WORD(ID) TREE_LANG_FLAG_0 (ID)
 
 /* Record whether a type or decl was written with nonconstant size.
@@ -639,7 +639,7 @@ extern tree c_simulate_record_decl (location_t, const char *,
 extern struct c_arg_info *build_arg_info (void);
 extern struct c_arg_info *get_parm_info (bool, tree);
 extern tree grokfield (location_t, struct c_declarator *,
-		       struct c_declspecs *, tree, tree *);
+		       struct c_declspecs *, tree, tree *, tree *);
 extern tree groktypename (struct c_type_name *, tree *, bool *);
 extern tree grokparm (const struct c_parm *, tree *);
 extern tree implicitly_declare (location_t, tree);

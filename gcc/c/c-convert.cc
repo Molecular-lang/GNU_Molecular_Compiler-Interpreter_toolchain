@@ -1,6 +1,5 @@
 /* Language-level data type conversion for GNU C. */
 
-
 /* This file contains the functions for converting C expressions
    to different data types.  The only entry point is `convert'.
    Every language front end must have a `convert' function
@@ -34,9 +33,11 @@
      In expr.cc: expand_expr, for operands of a MULT_EXPR.
      In fold-const.cc: fold.
      In tree.cc: get_narrower and get_unwidened.  */
-
+
 /* Subroutines of `convert'.  */
 
+
+
 /* Create an expression whose value is that of EXPR,
    converted to type TYPE.  The TREE_TYPE of the value
    is always TYPE.  This function implements all reasonable
@@ -80,7 +81,7 @@ c_convert (tree type, tree expr, bool init_const)
     return fold_convert_loc (loc, type, expr);
   if (TREE_CODE (TREE_TYPE (expr)) == ERROR_MARK)
     return error_mark_node;
-  if (TREE_CODE (TREE_TYPE (expr)) == VOID_TYPE)
+  if (VOID_TYPE_P (TREE_TYPE (expr)))
     {
       error ("void value not ignored as it ought to be");
       return error_mark_node;
@@ -100,7 +101,7 @@ c_convert (tree type, tree expr, bool init_const)
     case INTEGER_TYPE:
       if (sanitize_flags_p (SANITIZE_FLOAT_CAST)
 	  && current_function_decl != NULL_TREE
-	  && TREE_CODE (TREE_TYPE (expr)) == REAL_TYPE
+	  && SCALAR_FLOAT_TYPE_P (TREE_TYPE (expr))
 	  && COMPLETE_TYPE_P (type))
 	{
 	  expr = save_expr (expr);

@@ -1,4 +1,6 @@
-/* Separate lexical analyzer for GNU Scpel++. */
+/* Separate lexical analyzer for GNU C++. */
+
+/* This file is the lexical analyzer for GNU C++.  */
 
 #include "config.h"
 /* For use with name_hint.  */
@@ -227,13 +229,13 @@ init_reswords (void)
   /* The Objective-C keywords are all context-dependent.  */
   mask |= D_OBJC;
 
-  ridpointers = ggc_cleared_vec_alloc<tree> ((int) RID_SPL_MAX);
+  ridpointers = ggc_cleared_vec_alloc<tree> ((int) RID_MAX);
   for (i = 0; i < num_c_common_reswords; i++)
     {
       if (c_common_reswords[i].disable & D_CONLY)
 	continue;
       id = get_identifier (c_common_reswords[i].word);
-      C_SET_RID_SPL_CODE (id, c_common_reswords[i].rid);
+      C_SET_RID_CODE (id, c_common_reswords[i].rid);
       ridpointers [(int) c_common_reswords[i].rid] = id;
       if (! (c_common_reswords[i].disable & mask))
 	set_identifier_kind (id, cik_keyword);
@@ -244,21 +246,21 @@ init_reswords (void)
       char name[50];
       sprintf (name, "__int%d", int_n_data[i].bitsize);
       id = get_identifier (name);
-      C_SET_RID_SPL_CODE (id, RID_SPL_FIRST_INT_N + i);
+      C_SET_RID_CODE (id, RID_FIRST_INT_N + i);
       set_identifier_kind (id, cik_keyword);
 
       sprintf (name, "__int%d__", int_n_data[i].bitsize);
       id = get_identifier (name);
-      C_SET_RID_SPL_CODE (id, RID_SPL_FIRST_INT_N + i);
+      C_SET_RID_CODE (id, RID_FIRST_INT_N + i);
       set_identifier_kind (id, cik_keyword);
     }
 
   if (flag_openmp)
     {
       id = get_identifier ("omp_all_memory");
-      C_SET_RID_SPL_CODE (id, RID_SPL_OMP_ALL_MEMORY);
+      C_SET_RID_CODE (id, RID_OMP_ALL_MEMORY);
       set_identifier_kind (id, cik_keyword);
-      ridpointers [RID_SPL_OMP_ALL_MEMORY] = id;
+      ridpointers [RID_OMP_ALL_MEMORY] = id;
     }
 }
 
@@ -310,7 +312,7 @@ cxx_init (void)
 
   current_function_decl = NULL;
 
-  class_type_node = ridpointers[(int) RID_SPL_CLASS];
+  class_type_node = ridpointers[(int) RID_CLASS];
 
   cxx_init_decl_processing ();
 
@@ -413,15 +415,15 @@ struct module_token_filter
 	    default:
 	      break;
 
-	    case RID_SPL__EXPORT:
+	    case RID__EXPORT:
 	      got_export = true;
 	      res = lang_hooks::PT_begin_pragma;
 	      break;
 
-	    case RID_SPL__IMPORT:
+	    case RID__IMPORT:
 	      is_import = true;
 	      /* FALLTHRU */
-	    case RID_SPL__MODULE:
+	    case RID__MODULE:
 	      state = module_first;
 	      want_dot = false;
 	      got_colon = false;
@@ -549,7 +551,7 @@ module_token_pre (cpp_reader *pfile, const cpp_token *tok, uintptr_t data_)
     return module_token_cdtor (pfile, data_);
 
   int type = tok->type;
-  int keyword = RID_SPL_MAX;
+  int keyword = RID_MAX;
   tree value = NULL_TREE;
 
   if (tok->type == CPP_NAME)
@@ -557,7 +559,7 @@ module_token_pre (cpp_reader *pfile, const cpp_token *tok, uintptr_t data_)
       value = HT_IDENT_TO_GCC_IDENT (HT_NODE (tok->val.node.node));
       if (IDENTIFIER_KEYWORD_P (value))
 	{
-	  keyword = C_RID_SPL_CODE (value);
+	  keyword = C_RID_CODE (value);
 	  type = CPP_KEYWORD;
 	}
     }

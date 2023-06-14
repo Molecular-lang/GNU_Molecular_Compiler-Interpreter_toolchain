@@ -1,4 +1,23 @@
-/* C-SKY assembler/disassembler support. */
+/* C-SKY assembler/disassembler support.
+   Copyright (C) 2004-2022 Free Software Foundation, Inc.
+   Contributed by C-SKY Microsystems and Mentor Graphics.
+
+   This file is part of GDB and GAS.
+
+   GDB and GAS are free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation; either version 3, or (at
+   your option) any later version.
+
+   GDB and GAS are distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with GDB or GAS; see the file COPYING3.  If not, write to the
+   Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston,
+   MA 02110-1301, USA.  */
 
 #include "dis-asm.h"
 

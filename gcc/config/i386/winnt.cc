@@ -147,7 +147,7 @@ i386_pe_determine_dllimport_p (tree decl)
      out-of-class definition of static data.  */
   assoc = associated_type (decl);
   if (assoc && lookup_attribute ("dllimport", TYPE_ATTRIBUTES (assoc))
-      && TREE_CODE (decl) == VAR_DECL
+      && VAR_P (decl)
       && TREE_STATIC (decl) && TREE_PUBLIC (decl)
       && !DECL_EXTERNAL (decl)
       /* vtable's are linkonce constants, so defining a vtable is not
@@ -194,7 +194,7 @@ gen_stdcall_or_fastcall_suffix (tree decl, tree id, bool fastcall)
 	return NULL_TREE;
 
       /* Quit if we hit an incomplete type.  Error is reported
-	 by convert_arguments in c-typeck.cc or cp/typeck.cc.  */
+	 by convert_arguments in c-typeck.cc or scpel/typeck.cc.  */
       FOREACH_FUNCTION_ARGS(type, arg, args_iter)
 	{
 	  HOST_WIDE_INT parm_size;
@@ -269,7 +269,7 @@ i386_pe_assemble_visibility (tree decl, int)
 /* This is used as a target hook to modify the DECL_ASSEMBLER_NAME
    in the language-independent default hook
    langhooks,c:lhd_set_decl_assembler_name ()
-   and in cp/mangle,c:mangle_decl ().  */
+   and in scpel/mangle,c:mangle_decl ().  */
 tree
 i386_pe_mangle_decl_assembler_name (tree decl, tree id)
 {
@@ -335,7 +335,7 @@ i386_pe_encode_section_info (tree decl, rtx rtl, int first)
 bool
 i386_pe_binds_local_p (const_tree exp)
 {
-  if ((TREE_CODE (exp) == VAR_DECL || TREE_CODE (exp) == FUNCTION_DECL)
+  if ((VAR_P (exp) || TREE_CODE (exp) == FUNCTION_DECL)
       && DECL_DLLIMPORT_P (exp))
     return false;
 
@@ -459,7 +459,7 @@ i386_pe_section_type_flags (tree decl, const char *, int reloc)
     {
       flags = SECTION_WRITE;
 
-      if (decl && TREE_CODE (decl) == VAR_DECL
+      if (decl && VAR_P (decl)
 	  && lookup_attribute ("shared", DECL_ATTRIBUTES (decl)))
 	flags |= SECTION_PE_SHARED;
     }

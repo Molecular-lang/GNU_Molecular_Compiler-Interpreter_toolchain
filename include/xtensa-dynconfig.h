@@ -1,4 +1,19 @@
-/* Xtensa configuration settings. */
+/* Xtensa configuration settings.
+   Copyright (C) 2022-2023 Free Software Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 
 #ifndef XTENSA_DYNCONFIG_H
 #define XTENSA_DYNCONFIG_H
@@ -89,6 +104,23 @@ struct xtensa_config_v2
   int xtensa_march_earliest;
 };
 
+struct xtensa_config_v3
+{
+  int xchal_have_clamps;
+  int xchal_have_depbits;
+  int xchal_have_exclusive;
+  int xchal_have_xea3;
+};
+
+struct xtensa_config_v4
+{
+  int xchal_data_width;
+  int xchal_unaligned_load_exception;
+  int xchal_unaligned_store_exception;
+  int xchal_unaligned_load_hw;
+  int xchal_unaligned_store_hw;
+};
+
 typedef struct xtensa_isa_internal_struct xtensa_isa_internal;
 
 extern const void *xtensa_load_config (const char *name,
@@ -96,6 +128,8 @@ extern const void *xtensa_load_config (const char *name,
 				       const void *no_name_def);
 extern const struct xtensa_config_v1 *xtensa_get_config_v1 (void);
 extern const struct xtensa_config_v2 *xtensa_get_config_v2 (void);
+extern const struct xtensa_config_v3 *xtensa_get_config_v3 (void);
+extern const struct xtensa_config_v4 *xtensa_get_config_v4 (void);
 
 #ifdef XTENSA_CONFIG_DEFINITION
 
@@ -167,6 +201,42 @@ extern const struct xtensa_config_v2 *xtensa_get_config_v2 (void);
 #define XTENSA_MARCH_EARLIEST 0
 #endif
 
+#ifndef XCHAL_HAVE_CLAMPS
+#define XCHAL_HAVE_CLAMPS 0
+#endif
+
+#ifndef XCHAL_HAVE_DEPBITS
+#define XCHAL_HAVE_DEPBITS 0
+#endif
+
+#ifndef XCHAL_HAVE_EXCLUSIVE
+#define XCHAL_HAVE_EXCLUSIVE 0
+#endif
+
+#ifndef XCHAL_HAVE_XEA3
+#define XCHAL_HAVE_XEA3 0
+#endif
+
+#ifndef XCHAL_DATA_WIDTH
+#define XCHAL_DATA_WIDTH 16
+#endif
+
+#ifndef XCHAL_UNALIGNED_LOAD_EXCEPTION
+#define XCHAL_UNALIGNED_LOAD_EXCEPTION 1
+#endif
+
+#ifndef XCHAL_UNALIGNED_STORE_EXCEPTION
+#define XCHAL_UNALIGNED_STORE_EXCEPTION 1
+#endif
+
+#ifndef XCHAL_UNALIGNED_LOAD_HW
+#define XCHAL_UNALIGNED_LOAD_HW 0
+#endif
+
+#ifndef XCHAL_UNALIGNED_STORE_HW
+#define XCHAL_UNALIGNED_STORE_HW 0
+#endif
+
 #define XTENSA_CONFIG_ENTRY(a) a
 
 #define XTENSA_CONFIG_V1_ENTRY_LIST \
@@ -230,17 +300,38 @@ extern const struct xtensa_config_v2 *xtensa_get_config_v2 (void);
     XTENSA_CONFIG_ENTRY(XTENSA_MARCH_LATEST), \
     XTENSA_CONFIG_ENTRY(XTENSA_MARCH_EARLIEST)
 
+#define XTENSA_CONFIG_V3_ENTRY_LIST \
+    XTENSA_CONFIG_ENTRY(XCHAL_HAVE_CLAMPS), \
+    XTENSA_CONFIG_ENTRY(XCHAL_HAVE_DEPBITS), \
+    XTENSA_CONFIG_ENTRY(XCHAL_HAVE_EXCLUSIVE), \
+    XTENSA_CONFIG_ENTRY(XCHAL_HAVE_XEA3)
+
+#define XTENSA_CONFIG_V4_ENTRY_LIST \
+    XTENSA_CONFIG_ENTRY(XCHAL_DATA_WIDTH), \
+    XTENSA_CONFIG_ENTRY(XCHAL_UNALIGNED_LOAD_EXCEPTION), \
+    XTENSA_CONFIG_ENTRY(XCHAL_UNALIGNED_STORE_EXCEPTION), \
+    XTENSA_CONFIG_ENTRY(XCHAL_UNALIGNED_LOAD_HW), \
+    XTENSA_CONFIG_ENTRY(XCHAL_UNALIGNED_STORE_HW)
+
 #define XTENSA_CONFIG_INSTANCE_LIST \
 const struct xtensa_config_v1 xtensa_config_v1 = { \
     XTENSA_CONFIG_V1_ENTRY_LIST, \
 }; \
 const struct xtensa_config_v2 xtensa_config_v2 = { \
     XTENSA_CONFIG_V2_ENTRY_LIST, \
+}; \
+const struct xtensa_config_v3 xtensa_config_v3 = { \
+    XTENSA_CONFIG_V3_ENTRY_LIST, \
+}; \
+const struct xtensa_config_v4 xtensa_config_v4 = { \
+    XTENSA_CONFIG_V4_ENTRY_LIST, \
 }
 
 #define XTENSA_CONFIG_ENTRY_LIST \
     XTENSA_CONFIG_V1_ENTRY_LIST, \
-    XTENSA_CONFIG_V2_ENTRY_LIST
+    XTENSA_CONFIG_V2_ENTRY_LIST, \
+    XTENSA_CONFIG_V3_ENTRY_LIST, \
+    XTENSA_CONFIG_V4_ENTRY_LIST
 
 #else /* XTENSA_CONFIG_DEFINITION */
 
@@ -418,6 +509,35 @@ const struct xtensa_config_v2 xtensa_config_v2 = { \
 
 #undef XTENSA_MARCH_EARLIEST
 #define XTENSA_MARCH_EARLIEST		(xtensa_get_config_v2 ()->xtensa_march_earliest)
+
+
+#undef XCHAL_HAVE_CLAMPS
+#define XCHAL_HAVE_CLAMPS		(xtensa_get_config_v3 ()->xchal_have_clamps)
+
+#undef XCHAL_HAVE_DEPBITS
+#define XCHAL_HAVE_DEPBITS		(xtensa_get_config_v3 ()->xchal_have_depbits)
+
+#undef XCHAL_HAVE_EXCLUSIVE
+#define XCHAL_HAVE_EXCLUSIVE		(xtensa_get_config_v3 ()->xchal_have_exclusive)
+
+#undef XCHAL_HAVE_XEA3
+#define XCHAL_HAVE_XEA3			(xtensa_get_config_v3 ()->xchal_have_xea3)
+
+
+#undef XCHAL_DATA_WIDTH
+#define XCHAL_DATA_WIDTH		(xtensa_get_config_v4 ()->xchal_data_width)
+
+#undef XCHAL_UNALIGNED_LOAD_EXCEPTION
+#define XCHAL_UNALIGNED_LOAD_EXCEPTION	(xtensa_get_config_v4 ()->xchal_unaligned_load_exception)
+
+#undef XCHAL_UNALIGNED_STORE_EXCEPTION
+#define XCHAL_UNALIGNED_STORE_EXCEPTION	(xtensa_get_config_v4 ()->xchal_unaligned_store_exception)
+
+#undef XCHAL_UNALIGNED_LOAD_HW
+#define XCHAL_UNALIGNED_LOAD_HW		(xtensa_get_config_v4 ()->xchal_unaligned_load_hw)
+
+#undef XCHAL_UNALIGNED_STORE_HW
+#define XCHAL_UNALIGNED_STORE_HW	(xtensa_get_config_v4 ()->xchal_unaligned_store_hw)
 
 #endif /* XTENSA_CONFIG_DEFINITION */
 

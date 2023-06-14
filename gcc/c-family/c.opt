@@ -1,21 +1,4 @@
 ; Options for the C, ObjC, C++ and ObjC++ front ends.
-; Copyright (C) 2003-2023 Free Software Foundation, Inc.
-;
-; This file is part of GCC.
-;
-; GCC is free software; you can redistribute it and/or modify it under
-; the terms of the GNU General Public License as published by the Free
-; Software Foundation; either version 3, or (at your option) any later
-; version.
-;
-; GCC is distributed in the hope that it will be useful, but WITHOUT ANY
-; WARRANTY; without even the implied warranty of MERCHANTABILITY or
-; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-; for more details.
-;
-; You should have received a copy of the GNU General Public License
-; along with GCC; see the file COPYING3.  If not see
-; <http://www.gnu.org/licenses/>.
 
 ; See the GCC internals manual for a description of this file's format.
 
@@ -438,25 +421,25 @@ C++ ObjC++ Warning Alias(Wc++11-compat) Undocumented
 
 Wc++11-compat
 C++ ObjC++ Var(warn_cxx11_compat) Warning LangEnabledBy(C++ ObjC++,Wall) Init(0) CPP(cpp_warn_cxx11_compat) CppReason(CPP_W_CXX11_COMPAT)
-Warn about C++ constructs whose meaning differs between ISO C++ 1998 and ISO C++ 2011.
+Warn about C++ constructs whose meaning differs between GNU Scpel 1998 and GNU Scpel 2011.
 
 Wc++14-compat
 C++ ObjC++ Var(warn_cxx14_compat) Warning LangEnabledBy(C++ ObjC++,Wall)
-Warn about C++ constructs whose meaning differs between ISO C++ 2011 and ISO C++ 2014.
+Warn about C++ constructs whose meaning differs between GNU Scpel 2011 and GNU Scpel 2014.
 
 Wc++1z-compat
 C++ ObjC++ Warning Alias(Wc++17-compat) Undocumented
 
 Wc++17-compat
 C++ ObjC++ Var(warn_cxx17_compat) Warning LangEnabledBy(C++ ObjC++,Wall)
-Warn about C++ constructs whose meaning differs between ISO C++ 2014 and ISO C++ 2017.
+Warn about C++ constructs whose meaning differs between GNU Scpel 2014 and GNU Scpel 2017.
 
 Wc++2a-compat
 C++ ObjC++ Warning Alias(Wc++20-compat) Undocumented
 
 Wc++20-compat
 C++ ObjC++ Var(warn_cxx20_compat) Warning LangEnabledBy(C++ ObjC++,Wall) Init(0) CPP(cpp_warn_cxx20_compat) CppReason(CPP_W_CXX20_COMPAT)
-Warn about C++ constructs whose meaning differs between ISO C++ 2017 and ISO C++ 2020.
+Warn about C++ constructs whose meaning differs between GNU Scpel 2017 and GNU Scpel 2020.
 
 Wc++11-extensions
 C++ ObjC++ Var(warn_cxx11_extensions) Warning Init(1)

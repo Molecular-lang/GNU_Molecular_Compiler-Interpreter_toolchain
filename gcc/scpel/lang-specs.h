@@ -1,4 +1,4 @@
-/* Definitions for specs for Scpel++. */
+/* Definitions for specs for C++. */
 
 /* This is the contribution to the `default_compilers' array in gcc.cc for
    g++.  */
@@ -7,10 +7,11 @@
 #define CPLUSPLUS_CPP_SPEC 0
 #endif
 
-  {".co",  "@scpel", 0, 0, 0},
-  {".scpel",  "@scpel", 0, 0, 0},
-  {".ho",   "@scpel-header", 0, 0, 0},
-  {"@scpel-header",
+  {".co",  "@c++", 0, 0, 0}, // Scpel source file extension
+  {".scpel",  "@c++", 0, 0, 0}, // Scpel source file extension
+  {".ho",  "@c++-header", 0, 0, 0}, // Scpel header file extension
+  {".hsp",  "@c++-header", 0, 0, 0}, // Scpel header file extension
+  {"@c++-header",
       "%{E|M|MM:cc1plus -E %{fmodules-ts:-fdirectives-only -fmodule-header}"
       "  %(cpp_options) %2 %(cpp_debug_options)}"
       "%{!E:%{!M:%{!MM:"
@@ -24,12 +25,12 @@
       "  %{fmodules-ts:-fmodule-header %{fpreprocessed:-fdirectives-only}}"
       "  %(cc1_options) %2"
       "  %{!fsyntax-only:"
-      "    %{!S:-o %g.s%V}"
+      "    %{!S:-o %g.s}"
       "    %{!fmodule-*:%{!fmodules-*:%{!fdump-ada-spec*:"
-      "	         %{!o*:--output-pch %i.gch}%W{o*:--output-pch %*}}}}}"
+      "	         %{!o*:--output-pch %w%i.gch}%W{o*:--output-pch %w%*}}}}%{!S:%V}}"
       "}}}",
      CPLUSPLUS_CPP_SPEC, 0, 0},
-  {"@scpel-system-header",
+  {"@c++-system-header",
       "%{E|M|MM:cc1plus -E"
       "  %{fmodules-ts:-fdirectives-only -fmodule-header=system}"
       "  %(cpp_options) %2 %(cpp_debug_options)}"
@@ -45,12 +46,12 @@
       "    %{fpreprocessed:-fdirectives-only}}"
       "  %(cc1_options) %2"
       "  %{!fsyntax-only:"
-      "    %{!S:-o %g.s%V}"
+      "    %{!S:-o %g.s}"
       "    %{!fmodule-*:%{!fmodules-*:%{!fdump-ada-spec*:"
-      "	         %{!o*:--output-pch %i.gch}%W{o*:--output-pch %*}}}}}"
+      "	         %{!o*:--output-pch %w%i.gch}%W{o*:--output-pch %w%*}}}}%{!S:%V}}"
       "}}}",
      CPLUSPLUS_CPP_SPEC, 0, 0},
-  {"@scpel-user-header",
+  {"@c++-user-header",
       "%{E|M|MM:cc1plus -E"
       "  %{fmodules-ts:-fdirectives-only -fmodule-header=user}"
       "  %(cpp_options) %2 %(cpp_debug_options)}"
@@ -65,12 +66,12 @@
       "  %{fmodules-ts:-fmodule-header=user %{fpreprocessed:-fdirectives-only}}"
       "  %(cc1_options) %2"
       "  %{!fsyntax-only:"
-      "    %{!S:-o %g.s%V}"
+      "    %{!S:-o %g.s}"
       "    %{!fmodule-*:%{!fmodules-*:%{!fdump-ada-spec*:"
-      "	         %{!o*:--output-pch %i.gch}%W{o*:--output-pch %*}}}}}"
+      "	         %{!o*:--output-pch %w%i.gch}%W{o*:--output-pch %w%*}}}}%{!S:%V}}"
       "}}}",
      CPLUSPLUS_CPP_SPEC, 0, 0},
-  {"@scpel",
+  {"@c++",
       "%{E|M|MM:cc1plus -E %(cpp_options) %2 %(cpp_debug_options)}"
       "%{!E:%{!M:%{!MM:"
       "  %{save-temps*|no-integrated-cpp:cc1plus -E"
@@ -84,8 +85,8 @@
       "    %{!fmodule-only:%(invoke_as)}}"
       "}}}",
       CPLUSPLUS_CPP_SPEC, 0, 0},
-  {".ii", "@scpel-cpp-output", 0, 0, 0},
-  {"@scpel-cpp-output",
+  {".ii", "@c++-cpp-output", 0, 0, 0},
+  {"@c++-cpp-output",
       "%{!E:%{!M:%{!MM:"
       "  cc1plus -fpreprocessed %i %(cc1_options) %2"
       "  %{!fsyntax-only:"

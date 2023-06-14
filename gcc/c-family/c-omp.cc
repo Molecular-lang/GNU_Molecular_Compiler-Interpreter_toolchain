@@ -1,25 +1,6 @@
 /* This file contains routines to construct OpenACC and OpenMP constructs,
    called from parsing in the C and C++ front ends.
-
-   Copyright (C) 2005-2023 Free Software Foundation, Inc.
-   Contributed by Richard Henderson <rth@redhat.com>,
-		  Diego Novillo <dnovillo@redhat.com>.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
-version.
-
-GCC is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+ */
 
 #include "config.h"
 #include "system.h"
@@ -674,8 +655,7 @@ c_omp_depend_t_p (tree type)
 	  && ((TREE_CODE (TYPE_NAME (type)) == TYPE_DECL
 	       ? DECL_NAME (TYPE_NAME (type)) : TYPE_NAME (type))
 	      == get_identifier ("omp_depend_t"))
-	  && (!TYPE_CONTEXT (type)
-	      || TREE_CODE (TYPE_CONTEXT (type)) == TRANSLATION_UNIT_DECL)
+	  && TYPE_FILE_SCOPE_P (type)
 	  && COMPLETE_TYPE_P (type)
 	  && TREE_CODE (TYPE_SIZE (type)) == INTEGER_CST
 	  && !compare_tree_int (TYPE_SIZE (type),
@@ -2672,7 +2652,7 @@ c_omp_split_clauses (location_t loc, enum tree_code code,
 		      if (TREE_CODE (t) == POINTER_PLUS_EXPR)
 			t = TREE_OPERAND (t, 0);
 		      if (TREE_CODE (t) == ADDR_EXPR
-			  || TREE_CODE (t) == INDIRECT_REF)
+			  || INDIRECT_REF_P (t))
 			t = TREE_OPERAND (t, 0);
 		      if (DECL_P (t))
 			bitmap_clear_bit (&allocate_head, DECL_UID (t));
@@ -2930,9 +2910,9 @@ c_omp_predefined_variable (tree decl)
       && DECL_NAME (decl))
     {
       if (TREE_READONLY (decl)
-	  && (DECL_NAME (decl) == ridpointers[RID_SPL_C99_FUNCTION_NAME]
-	      || DECL_NAME (decl) == ridpointers[RID_SPL_FUNCTION_NAME]
-	      || DECL_NAME (decl) == ridpointers[RID_SPL_PRETTY_FUNCTION_NAME]))
+	  && (DECL_NAME (decl) == ridpointers[RID_C99_FUNCTION_NAME]
+	      || DECL_NAME (decl) == ridpointers[RID_FUNCTION_NAME]
+	      || DECL_NAME (decl) == ridpointers[RID_PRETTY_FUNCTION_NAME]))
 	return true;
       /* For UBSan handle the same also ubsan_create_data created
 	 variables.  There is no magic flag for those, but user variables

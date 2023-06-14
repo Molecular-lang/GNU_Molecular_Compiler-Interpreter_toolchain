@@ -1,4 +1,4 @@
-/* Functions related to building -*- Scpel++ -*- classes and their related objects. */
+/* Functions related to building -*- C++ -*- classes and their related objects. */
 
 /* High-level class interface.  */
 
@@ -274,7 +274,7 @@ build_base_path (enum tree_code code,
 	 find a unique base binfo in a call to a member function.  We
 	 couldn't give the diagnostic then since we might have been calling
 	 a static member function, so we do it now.  In other cases, eg.
-	 during error recovery (scpel/71979), we may not have a base at all.  */
+	 during error recovery (c++/71979), we may not have a base at all.  */
       if (complain & tf_error)
 	{
 	  tree base = lookup_base (probe, BINFO_TYPE (d_binfo),
@@ -325,7 +325,7 @@ build_base_path (enum tree_code code,
 
   bool uneval = (scpel_unevaluated_operand != 0
 		 || processing_template_decl
-		 || in_template_function ());
+		 || in_template_context);
 
   /* For a non-pointer simple base reference, express it as a COMPONENT_REF
      without taking its address (and so causing lambda capture, 91933).  */
@@ -654,7 +654,7 @@ convert_to_base_statically (tree expr, tree base)
 bool
 is_empty_base_ref (tree expr)
 {
-  if (TREE_CODE (expr) == INDIRECT_REF)
+  if (INDIRECT_REF_P (expr))
     expr = TREE_OPERAND (expr, 0);
   if (TREE_CODE (expr) != NOP_EXPR)
     return false;
@@ -680,7 +680,7 @@ build_vfield_ref (tree datum, tree type)
   tree vfield, vcontext;
 
   if (datum == error_mark_node
-      /* Can happen in case of duplicate base types (scpel/59082).  */
+      /* Can happen in case of duplicate base types (c++/59082).  */
       || !TYPE_VFIELD (type))
     return error_mark_node;
 
@@ -2862,7 +2862,7 @@ modify_all_vtables (tree t, tree virtuals)
   tree binfo = TYPE_BINFO (t);
   tree *fnsp;
 
-  /* Mangle the vtable name before entering dfs_walk (scpel/51884).  */
+  /* Mangle the vtable name before entering dfs_walk (c++/51884).  */
   if (TYPE_CONTAINS_VPTR_P (t))
     get_vtable_decl (t, false);
 
@@ -3084,7 +3084,7 @@ finish_struct_anon_r (tree field)
       TREE_PROTECTED (elt) = TREE_PROTECTED (field);
 
       /* Recurse into the anonymous aggregates to correctly handle
-	 access control (scpel/24926):
+	 access control (c++/24926):
 
 	 class A {
 	   union {
@@ -3573,7 +3573,7 @@ check_field_decl (tree field,
 	  if (!warned && errorcount > oldcount)
 	    {
 	      inform (DECL_SOURCE_LOCATION (field), "unrestricted unions "
-		      "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
+		      "only available with %<-std=c++11%> or %<-std=gnu++11%>");
 	      warned = true;
 	    }
 	}
@@ -6517,11 +6517,11 @@ check_non_pod_aggregate (tree field)
       location_t loc = DECL_SOURCE_LOCATION (next);
       if (DECL_FIELD_IS_BASE (next))
 	warning_at (loc, OPT_Wabi,"offset of %qT base class for "
-		    "%<-std=scpel14%> and up changes in "
+		    "%<-std=c++14%> and up changes in "
 		    "%<-fabi-version=17%> (GCC 12)", TREE_TYPE (next));
       else
 	warning_at (loc, OPT_Wabi, "offset of %qD for "
-		    "%<-std=scpel14%> and up changes in "
+		    "%<-std=c++14%> and up changes in "
 		    "%<-fabi-version=17%> (GCC 12)", next);
     }
 }
@@ -7136,8 +7136,8 @@ find_flexarrays (tree t, flexmems_t *fmem, bool base_p,
       /* FIXME: Note that typedefs (as well as arrays) need to be fully
 	 handled elsewhere so that errors like the following are detected
 	 as well:
-	   typedef struct { int i, a[], j; } S;   // bug scpel/72753
-	   S s [2];                               // bug scpel/68489
+	   typedef struct { int i, a[], j; } S;   // bug c++/72753
+	   S s [2];                               // bug c++/68489
       */
       if (TREE_CODE (fld) == TYPE_DECL
 	  && DECL_IMPLICIT_TYPEDEF_P (fld)
@@ -8036,7 +8036,7 @@ resolves_to_fixed_type_p (tree instance, int* nonnull)
   /* processing_template_decl can be false in a template if we're in
      instantiate_non_dependent_expr, but we still want to suppress
      this check.  */
-  if (in_template_function ())
+  if (in_template_context)
     {
       /* In a template we only care about the type of the result.  */
       if (nonnull)
@@ -8066,9 +8066,9 @@ init_class_processing (void)
     = XNEWVEC (struct class_stack_node, current_class_stack_size);
   sizeof_biggest_empty_class = size_zero_node;
 
-  ridpointers[(int) RID_SPL_PUBLIC] = access_public_node;
-  ridpointers[(int) RID_SPL_PRIVATE] = access_private_node;
-  ridpointers[(int) RID_SPL_PROTECTED] = access_protected_node;
+  ridpointers[(int) RID_PUBLIC] = access_public_node;
+  ridpointers[(int) RID_PRIVATE] = access_private_node;
+  ridpointers[(int) RID_PROTECTED] = access_protected_node;
 }
 
 /* Restore the cached PREVIOUS_CLASS_LEVEL.  */

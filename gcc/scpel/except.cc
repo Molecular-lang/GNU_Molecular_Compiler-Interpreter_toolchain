@@ -1,4 +1,4 @@
-/* Handle exceptional things in Scpel++. */
+/* Handle exceptional things in C++. */
 
 #include "config.h"
 #include "system.h"
@@ -43,6 +43,9 @@ init_exception_processing (void)
   tmp = build_function_type_list (void_type_node, ptr_type_node, NULL_TREE);
   call_unexpected_fn
     = push_throw_library_fn (get_identifier ("__cxa_call_unexpected"), tmp);
+  call_terminate_fn
+    = push_library_fn (get_identifier ("__cxa_call_terminate"), tmp, NULL_TREE,
+		       ECF_NORETURN | ECF_COLD | ECF_NOTHROW);
 }
 
 /* Returns an expression to be executed if an unhandled exception is
@@ -55,7 +58,7 @@ scpel_protect_cleanup_actions (void)
 
      When the destruction of an object during stack unwinding exits
      using an exception ... void terminate(); is called.  */
-  return terminate_fn;
+  return call_terminate_fn;
 }
 
 static tree
@@ -618,6 +621,8 @@ build_throw (location_t loc, tree exp)
       tree object, ptr;
       tree allocate_expr;
 
+      tsubst_flags_t complain = tf_warning_or_error;
+
       /* The CLEANUP_TYPE is the internal type of a destructor.  */
       if (!cleanup_type)
 	{
@@ -738,11 +743,15 @@ build_throw (location_t loc, tree exp)
       cleanup = NULL_TREE;
       if (type_build_dtor_call (TREE_TYPE (object)))
 	{
-	  tree dtor_fn = lookup_fnfields (TYPE_BINFO (TREE_TYPE (object)),
+	  tree binfo = TYPE_BINFO (TREE_TYPE (object));
+	  tree dtor_fn = lookup_fnfields (binfo,
 					  complete_dtor_identifier, 0,
 					  tf_warning_or_error);
 	  dtor_fn = BASELINK_FUNCTIONS (dtor_fn);
-	  mark_used (dtor_fn);
+	  if (!mark_used (dtor_fn)
+	      || !perform_or_defer_access_check (binfo, dtor_fn,
+						 dtor_fn, complain))
+	    return error_mark_node;
 	  if (TYPE_HAS_NONTRIVIAL_DESTRUCTOR (TREE_TYPE (object)))
 	    {
 	      cxx_mark_addressable (dtor_fn);
@@ -1241,7 +1250,7 @@ build_noexcept_spec (tree expr, tsubst_flags_t complain)
 		  || TREE_CODE (expr) == DEFERRED_NOEXCEPT);
       if (TREE_CODE (expr) != DEFERRED_NOEXCEPT)
 	/* Avoid problems with a function type built with a dependent typedef
-	   being reused in another scope (scpel/84045).  */
+	   being reused in another scope (c++/84045).  */
 	expr = strip_typedefs_expr (expr);
       return build_tree_list (expr, NULL_TREE);
     }

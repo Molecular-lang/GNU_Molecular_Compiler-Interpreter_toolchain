@@ -945,10 +945,10 @@ compare_type_sizes (tree type1, tree type2)
   /* Be conservative for arrays and vectors.  We want to support partial
      overlap on int[3] and int[3] as tested in gcc.dg/torture/alias-2.c.  */
   while (TREE_CODE (type1) == ARRAY_TYPE
-	 || TREE_CODE (type1) == VECTOR_TYPE)
+	 || VECTOR_TYPE_P (type1))
     type1 = TREE_TYPE (type1);
   while (TREE_CODE (type2) == ARRAY_TYPE
-	 || TREE_CODE (type2) == VECTOR_TYPE)
+	 || VECTOR_TYPE_P (type2))
     type2 = TREE_TYPE (type2);
   return compare_sizes (TYPE_SIZE (type1), TYPE_SIZE (type2));
 }
@@ -1330,7 +1330,7 @@ aliasing_component_refs_p (tree ref1,
   /* If we didn't find a common base, try the other way around.  */
   if (cmp_outer <= 0 
       || (end_struct_ref1
-	  && compare_type_sizes (TREE_TYPE (end_struct_ref1), type1) <= 0))
+	  && compare_type_sizes (TREE_TYPE (end_struct_ref1), type2) <= 0))
     {
       int res = aliasing_component_refs_walk (ref2, type2, base2,
 					      offset2, max_size2,
@@ -2726,9 +2726,21 @@ check_fnspec (gcall *call, ao_ref *ref, bool clobber)
 		      t = TREE_CHAIN (t);
 		    size = TYPE_SIZE_UNIT (TREE_TYPE (TREE_VALUE (t)));
 		  }
-		ao_ref_init_from_ptr_and_size (&dref,
-					       gimple_call_arg (call, i),
-					       size);
+		poly_int64 size_hwi;
+		if (size
+		    && poly_int_tree_p (size, &size_hwi)
+		    && coeffs_in_range_p (size_hwi, 0,
+					  HOST_WIDE_INT_MAX / BITS_PER_UNIT))
+		  {
+		    size_hwi = size_hwi * BITS_PER_UNIT;
+		    ao_ref_init_from_ptr_and_range (&dref,
+						    gimple_call_arg (call, i),
+						    true, 0, -1, size_hwi);
+		  }
+		else
+		  ao_ref_init_from_ptr_and_range (&dref,
+						  gimple_call_arg (call, i),
+						  false, 0, -1, -1);
 		if (refs_may_alias_p_1 (&dref, ref, false))
 		  return 1;
 	      }

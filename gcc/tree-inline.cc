@@ -1307,7 +1307,7 @@ copy_tree_body_r (tree *tp, int *walk_subtrees, void *data)
 		}
 	    }
 	}
-      else if (TREE_CODE (*tp) == INDIRECT_REF)
+      else if (INDIRECT_REF_P (*tp))
 	{
 	  /* Get rid of *& from inline substitutions that can happen when a
 	     pointer argument is an ADDR_EXPR.  */
@@ -1429,7 +1429,7 @@ copy_tree_body_r (tree *tp, int *walk_subtrees, void *data)
 
 	  /* Handle the case where we substituted an INDIRECT_REF
 	     into the operand of the ADDR_EXPR.  */
-	  if (TREE_CODE (TREE_OPERAND (*tp, 0)) == INDIRECT_REF
+	  if (INDIRECT_REF_P (TREE_OPERAND (*tp, 0))
 	      && !id->do_not_fold)
 	    {
 	      tree t = TREE_OPERAND (TREE_OPERAND (*tp, 0), 0);
@@ -2781,16 +2781,12 @@ initialize_cfun (tree new_fndecl, tree callee_fndecl, profile_count count)
 {
   struct function *src_cfun = DECL_STRUCT_FUNCTION (callee_fndecl);
 
-  if (!DECL_ARGUMENTS (new_fndecl))
-    DECL_ARGUMENTS (new_fndecl) = DECL_ARGUMENTS (callee_fndecl);
-  if (!DECL_RESULT (new_fndecl))
-    DECL_RESULT (new_fndecl) = DECL_RESULT (callee_fndecl);
-
   /* Register specific tree functions.  */
   gimple_register_cfg_hooks ();
 
   /* Get clean struct function.  */
-  push_struct_function (new_fndecl);
+  push_struct_function (new_fndecl, true);
+  targetm.target_option.relayout_function (new_fndecl);
 
   /* We will rebuild these, so just sanity check that they are empty.  */
   gcc_assert (VALUE_HISTOGRAMS (cfun) == NULL);
@@ -2976,7 +2972,7 @@ void
 redirect_all_calls (copy_body_data * id, basic_block bb)
 {
   gimple_stmt_iterator si;
-  gimple *last = last_stmt (bb);
+  gimple *last = last_nondebug_stmt (bb);
   for (si = gsi_start_bb (bb); !gsi_end_p (si); gsi_next (&si))
     {
       gimple *stmt = gsi_stmt (si);
@@ -4174,7 +4170,7 @@ estimate_move_cost (tree type, bool ARG_UNUSED (speed_p))
 
   gcc_assert (!VOID_TYPE_P (type));
 
-  if (TREE_CODE (type) == VECTOR_TYPE)
+  if (VECTOR_TYPE_P (type))
     {
       scalar_mode inner = SCALAR_TYPE_MODE (TREE_TYPE (type));
       machine_mode simd = targetm.vectorize.preferred_simd_mode (inner);
@@ -5922,7 +5918,7 @@ copy_decl_for_dup_finish (copy_body_data *id, tree decl, tree copy)
   DECL_ABSTRACT_ORIGIN (copy) = DECL_ORIGIN (decl);
 
   /* The new variable/label has no RTL, yet.  */
-  if (CODE_CONTAINS_STRUCT (TREE_CODE (copy), TS_DECL_WRTL)
+  if (HAS_RTL_P (copy)
       && !TREE_STATIC (copy) && !DECL_EXTERNAL (copy))
     SET_DECL_RTL (copy, 0);
   /* For vector typed decls make sure to update DECL_MODE according
@@ -6235,8 +6231,7 @@ tree_function_versioning (tree old_decl, tree new_decl,
   id.transform_return_to_modify = false;
   id.transform_parameter = false;
 
-  old_entry_block = ENTRY_BLOCK_PTR_FOR_FN
-    (DECL_STRUCT_FUNCTION (old_decl));
+  old_entry_block = ENTRY_BLOCK_PTR_FOR_FN (DECL_STRUCT_FUNCTION (old_decl));
   DECL_RESULT (new_decl) = DECL_RESULT (old_decl);
   DECL_ARGUMENTS (new_decl) = DECL_ARGUMENTS (old_decl);
   initialize_cfun (new_decl, old_decl,

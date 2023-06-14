@@ -1,22 +1,4 @@
-/* Classes for modeling the state of memory.
-   Copyright (C) 2019-2023 Free Software Foundation, Inc.
-   Contributed by David Malcolm <dmalcolm@redhat.com>.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* Classes for modeling the state of memory. */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -1952,7 +1934,7 @@ region_model::on_longjmp (const gcall *longjmp_call, const gcall *setjmp_call,
      setjmp was called.  */
   gcc_assert (get_stack_depth () >= setjmp_stack_depth);
   while (get_stack_depth () > setjmp_stack_depth)
-    pop_frame (NULL, NULL, ctxt);
+    pop_frame (NULL, NULL, ctxt, false);
 
   gcc_assert (get_stack_depth () == setjmp_stack_depth);
 
@@ -2092,7 +2074,7 @@ region_model::get_lvalue_1 (path_var pv, region_model_context *ctxt) const
       {
 	gcc_assert (TREE_CODE (expr) == SSA_NAME
 		    || TREE_CODE (expr) == PARM_DECL
-		    || TREE_CODE (expr) == VAR_DECL
+		    || VAR_P (expr)
 		    || TREE_CODE (expr) == RESULT_DECL);
 
 	int stack_index = pv.m_stack_depth;
@@ -4679,6 +4661,10 @@ region_model::get_current_function () const
    If OUT_RESULT is non-null, copy any return value from the frame
    into *OUT_RESULT.
 
+   If EVAL_RETURN_SVALUE is false, then don't evaluate the return value.
+   This is for use when unwinding frames e.g. due to longjmp, to suppress
+   erroneously reporting uninitialized return values.
+
    Purge the frame region and all its descendent regions.
    Convert any pointers that point into such regions into
    POISON_KIND_POPPED_STACK svalues.  */
@@ -4686,7 +4672,8 @@ region_model::get_current_function () const
 void
 region_model::pop_frame (tree result_lvalue,
 			 const svalue **out_result,
-			 region_model_context *ctxt)
+			 region_model_context *ctxt,
+			 bool eval_return_svalue)
 {
   gcc_assert (m_current_frame);
 
@@ -4700,7 +4687,9 @@ region_model::pop_frame (tree result_lvalue,
   tree fndecl = m_current_frame->get_function ()->decl;
   tree result = DECL_RESULT (fndecl);
   const svalue *retval = NULL;
-  if (result && TREE_TYPE (result) != void_type_node)
+  if (result
+      && TREE_TYPE (result) != void_type_node
+      && eval_return_svalue)
     {
       retval = get_rvalue (result, ctxt);
       if (out_result)
@@ -4712,6 +4701,8 @@ region_model::pop_frame (tree result_lvalue,
 
   if (result_lvalue && retval)
     {
+      gcc_assert (eval_return_svalue);
+
       /* Compute result_dst_reg using RESULT_LVALUE *after* popping
 	 the frame, but before poisoning pointers into the old frame.  */
       const region *result_dst_reg = get_lvalue (result_lvalue, ctxt);

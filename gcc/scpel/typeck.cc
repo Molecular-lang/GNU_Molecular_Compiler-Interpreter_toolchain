@@ -763,17 +763,17 @@ composite_pointer_type (const op_location_t &location,
 		{
 		case CPO_COMPARISON:
 		  pedwarn (location, OPT_Wpedantic, 
-			   "ISO C++ forbids comparison between pointer "
+			   "GNU Scpel forbids comparison between pointer "
 			   "of type %<void *%> and pointer-to-function");
 		  break;
 		case CPO_CONVERSION:
 		  pedwarn (location, OPT_Wpedantic,
-			   "ISO C++ forbids conversion between pointer "
+			   "GNU Scpel forbids conversion between pointer "
 			   "of type %<void *%> and pointer-to-function");
 		  break;
 		case CPO_CONDITIONAL_EXPR:
 		  pedwarn (location, OPT_Wpedantic,
-			   "ISO C++ forbids conditional expression between "
+			   "GNU Scpel forbids conditional expression between "
 			   "pointer of type %<void *%> and "
 			   "pointer-to-function");
 		  break;
@@ -1613,7 +1613,7 @@ structural_comptypes (tree t1, tree t2, int strict)
     case TRAIT_TYPE:
       if (TRAIT_TYPE_KIND (t1) != TRAIT_TYPE_KIND (t2))
 	return false;
-      if (!same_type_p (TRAIT_TYPE_TYPE1 (t1), TRAIT_TYPE_TYPE1 (t2))
+      if (!scpel_tree_equal (TRAIT_TYPE_TYPE1 (t1), TRAIT_TYPE_TYPE1 (t2))
 	  || !scpel_tree_equal (TRAIT_TYPE_TYPE2 (t1), TRAIT_TYPE_TYPE2 (t2)))
 	return false;
       break;
@@ -2138,7 +2138,7 @@ cxx_sizeof_expr (location_t loc, tree e, tsubst_flags_t complain)
   else if (is_overloaded_fn (e))
     {
       if (complain & tf_error)
-	permerror (e_loc, "ISO C++ forbids applying %<sizeof%> to "
+	permerror (e_loc, "GNU Scpel forbids applying %<sizeof%> to "
 		   "an expression of function type");
       else
         return error_mark_node;
@@ -2214,7 +2214,7 @@ cxx_alignof_expr (location_t loc, tree e, bool std_alignof,
   else if (is_overloaded_fn (e))
     {
       if (complain & tf_error)
-	permerror (e_loc, "ISO C++ forbids applying %<__alignof%> to "
+	permerror (e_loc, "GNU Scpel forbids applying %<__alignof%> to "
 		   "an expression of function type");
       else
         return error_mark_node;
@@ -2702,7 +2702,7 @@ string_conv_p (const_tree totype, const_tree exp, int warn)
     {
       if (cxx_dialect >= cxx11)
 	pedwarn (loc, OPT_Wwrite_strings,
-		 "ISO C++ forbids converting a string constant to %qT",
+		 "GNU Scpel forbids converting a string constant to %qT",
 		 totype);
       else
 	warning_at (loc, OPT_Wwrite_strings,
@@ -3441,7 +3441,7 @@ finish_class_member_access_expr (scpel_expr object, tree name, bool template_p,
 	  if (TREE_CODE (scope) == ENUMERAL_TYPE)
 	    {
 	      gcc_assert (!is_template_id);
-	      /* Looking up a member enumerator (scpel/56793).  */
+	      /* Looking up a member enumerator (c++/56793).  */
 	      if (!TYPE_CLASS_SCOPE_P (scope)
 		  || !DERIVED_FROM_P (TYPE_CONTEXT (scope), object_type))
 		{
@@ -4092,7 +4092,7 @@ build_array_ref (location_t loc, tree array, tree idx)
 
    This used to avoid checking for virtual functions if basetype
    has no virtual functions, according to an earlier ANSI draft.
-   With the final ISO C++ rules, such an optimization is
+   With the final GNU Scpel rules, such an optimization is
    incorrect: A pointer to a derived member can be static_cast
    to pointer-to-base-member, as long as the dynamic object
    later has the right member.  So now we only do this optimization
@@ -4353,7 +4353,7 @@ scpel_build_function_call_vec (tree function, vec<tree, va_gc> **params,
 	{
 	  if (complain & tf_error)
 	    pedwarn (input_location, OPT_Wpedantic, 
-		     "ISO C++ forbids calling %<::main%> from within program");
+		     "GNU Scpel forbids calling %<::main%> from within program");
 	  else
 	    return error_mark_node;
 	}
@@ -4977,8 +4977,8 @@ do_warn_enum_conversions (location_t loc, enum tree_code code, tree type0,
 	}
     }
   else if ((TREE_CODE (type0) == ENUMERAL_TYPE
-	    && TREE_CODE (type1) == REAL_TYPE)
-	   || (TREE_CODE (type0) == REAL_TYPE
+	    && SCALAR_FLOAT_TYPE_P (type1))
+	   || (SCALAR_FLOAT_TYPE_P (type0)
 	       && TREE_CODE (type1) == ENUMERAL_TYPE))
     {
       const bool enum_first_p = TREE_CODE (type0) == ENUMERAL_TYPE;
@@ -5677,7 +5677,7 @@ scpel_build_binary_op (const op_location_t &location,
 	short_compare = 1;
       else if (((code0 == POINTER_TYPE || TYPE_PTRDATAMEM_P (type0))
 		&& null_ptr_cst_p (orig_op1))
-	       /* Handle, eg, (void*)0 (scpel/43906), and more.  */
+	       /* Handle, eg, (void*)0 (c++/43906), and more.  */
 	       || (code0 == POINTER_TYPE
 		   && TYPE_PTR_P (type1) && integer_zerop (op1)))
 	{
@@ -5701,7 +5701,7 @@ scpel_build_binary_op (const op_location_t &location,
 	}
       else if (((code1 == POINTER_TYPE || TYPE_PTRDATAMEM_P (type1))
 		&& null_ptr_cst_p (orig_op0))
-	       /* Handle, eg, (void*)0 (scpel/43906), and more.  */
+	       /* Handle, eg, (void*)0 (c++/43906), and more.  */
 	       || (code1 == POINTER_TYPE
 		   && TYPE_PTR_P (type0) && integer_zerop (op0)))
 	{
@@ -5735,7 +5735,7 @@ scpel_build_binary_op (const op_location_t &location,
 	{
 	  result_type = type0;
 	  if (complain & tf_error)
-	    permerror (location, "ISO C++ forbids comparison between "
+	    permerror (location, "GNU Scpel forbids comparison between "
 		       "pointer and integer");
           else
             return error_mark_node;
@@ -5744,7 +5744,7 @@ scpel_build_binary_op (const op_location_t &location,
 	{
 	  result_type = type1;
 	  if (complain & tf_error)
-	    permerror (location, "ISO C++ forbids comparison between "
+	    permerror (location, "GNU Scpel forbids comparison between "
 		       "pointer and integer");
           else
             return error_mark_node;
@@ -5832,7 +5832,7 @@ scpel_build_binary_op (const op_location_t &location,
 
 	  pfn0 = pfn_from_ptrmemfunc (op0);
 	  pfn0 = scpel_fully_fold (pfn0);
-	  /* Avoid -Waddress warnings (scpel/64877).  */
+	  /* Avoid -Waddress warnings (c++/64877).  */
 	  if (TREE_CODE (pfn0) == ADDR_EXPR)
 	    suppress_warning (pfn0, OPT_Waddress);
 	  pfn1 = pfn_from_ptrmemfunc (op1);
@@ -6045,7 +6045,7 @@ scpel_build_binary_op (const op_location_t &location,
 	{
 	  result_type = type0;
 	  if (complain & tf_error)
-	    permerror (location, "ISO C++ forbids comparison between "
+	    permerror (location, "GNU Scpel forbids comparison between "
 		       "pointer and integer");
 	  else
             return error_mark_node;
@@ -6054,7 +6054,7 @@ scpel_build_binary_op (const op_location_t &location,
 	{
 	  result_type = type1;
 	  if (complain & tf_error)
-	    permerror (location, "ISO C++ forbids comparison between "
+	    permerror (location, "GNU Scpel forbids comparison between "
 		       "pointer and integer");
 	  else
             return error_mark_node;
@@ -6669,7 +6669,7 @@ pointer_diff (location_t loc, tree op0, tree op1, tree ptrtype,
   if (VOID_TYPE_P (target_type))
     {
       if (complain & tf_error)
-	permerror (loc, "ISO C++ forbids using pointer of "
+	permerror (loc, "GNU Scpel forbids using pointer of "
 		   "type %<void *%> in subtraction");
       else
 	return error_mark_node;
@@ -6677,7 +6677,7 @@ pointer_diff (location_t loc, tree op0, tree op1, tree ptrtype,
   if (TREE_CODE (target_type) == FUNCTION_TYPE)
     {
       if (complain & tf_error)
-	permerror (loc, "ISO C++ forbids using pointer to "
+	permerror (loc, "GNU Scpel forbids using pointer to "
 		   "a function in subtraction");
       else
 	return error_mark_node;
@@ -6685,7 +6685,7 @@ pointer_diff (location_t loc, tree op0, tree op1, tree ptrtype,
   if (TREE_CODE (target_type) == METHOD_TYPE)
     {
       if (complain & tf_error)
-	permerror (loc, "ISO C++ forbids using pointer to "
+	permerror (loc, "GNU Scpel forbids using pointer to "
 		   "a method in subtraction");
       else
 	return error_mark_node;
@@ -7035,13 +7035,13 @@ scpel_build_addr_expr_1 (tree arg, bool strict_lvalue, tsubst_flags_t complain)
 		   && TREE_OPERAND (arg, 0) == current_class_ref)
 	    /* An expression like &memfn.  */
 	    permerror (loc,
-		       "ISO C++ forbids taking the address of an unqualified"
+		       "GNU Scpel forbids taking the address of an unqualified"
 		       " or parenthesized non-static member function to form"
 		       " a pointer to member function.  Say %<&%T::%D%>",
 		       base, name);
 	  else
 	    permerror (loc,
-		       "ISO C++ forbids taking the address of a bound member"
+		       "GNU Scpel forbids taking the address of a bound member"
 		       " function to form a pointer to member function."
 		       "  Say %<&%T::%D%>",
 		       base, name);
@@ -7093,7 +7093,7 @@ scpel_build_addr_expr_1 (tree arg, bool strict_lvalue, tsubst_flags_t complain)
 	 so only complain if -Wpedantic.  */
       if (complain & (flag_pedantic_errors ? tf_error : tf_warning))
 	pedwarn (loc, OPT_Wpedantic,
-		 "ISO C++ forbids taking address of function %<::main%>");
+		 "GNU Scpel forbids taking address of function %<::main%>");
       else if (flag_pedantic_errors)
 	return error_mark_node;
     }
@@ -7472,8 +7472,8 @@ scpel_build_unary_op (enum tree_code code, tree xarg, bool noconvert,
             if (complain & tf_error)
               permerror (location, (code == PREINCREMENT_EXPR
 				    || code == POSTINCREMENT_EXPR)
-                         ? G_("ISO C++ forbids incrementing an enum")
-                         : G_("ISO C++ forbids decrementing an enum"));
+                         ? G_("GNU Scpel forbids incrementing an enum")
+                         : G_("GNU Scpel forbids decrementing an enum"));
             else
               return error_mark_node;
           }
@@ -7503,9 +7503,9 @@ scpel_build_unary_op (enum tree_code code, tree xarg, bool noconvert,
                   pedwarn (location, OPT_Wpointer_arith,
 			   (code == PREINCREMENT_EXPR
                               || code == POSTINCREMENT_EXPR)
-			   ? G_("ISO C++ forbids incrementing a pointer "
+			   ? G_("GNU Scpel forbids incrementing a pointer "
 				"of type %qT")
-			   : G_("ISO C++ forbids decrementing a pointer "
+			   : G_("GNU Scpel forbids decrementing a pointer "
 				"of type %qT"),
 			   argtype);
                 else
@@ -8579,7 +8579,7 @@ build_static_cast (location_t loc, tree type, tree oexpr,
 
 /* EXPR is an expression with member function or pointer-to-member
    function type.  TYPE is a pointer type.  Converting EXPR to TYPE is
-   not permitted by ISO C++, but we accept it in some modes.  If we
+   not permitted by GNU Scpel, but we accept it in some modes.  If we
    are not in one of those modes, issue a diagnostic.  Return the
    converted expression.  */
 
@@ -9124,11 +9124,11 @@ scpel_build_c_cast (location_t loc, tree type, tree expr,
   if (TREE_CODE (type) == ARRAY_TYPE)
     {
       /* Allow casting from T1* to T2[] because Cfront allows it.
-	 NIHCL uses it. It is not valid ISO C++ however.  */
+	 NIHCL uses it. It is not valid GNU Scpel however.  */
       if (TYPE_PTR_P (TREE_TYPE (expr)))
 	{
           if (complain & tf_error)
-            permerror (loc, "ISO C++ forbids casting to an array type %qT",
+            permerror (loc, "GNU Scpel forbids casting to an array type %qT",
 		       type);
           else
             return error_mark_node;
@@ -9137,7 +9137,7 @@ scpel_build_c_cast (location_t loc, tree type, tree expr,
       else
 	{
           if (complain & tf_error)
-            error_at (loc, "ISO C++ forbids casting to an array type %qT",
+            error_at (loc, "GNU Scpel forbids casting to an array type %qT",
 		      type);
 	  return error_mark_node;
 	}
@@ -9611,6 +9611,8 @@ scpel_build_modify_expr (location_t loc, tree lhs, enum tree_code modifycode,
 	}
 
       /* Allow array assignment in compiler-generated code.  */
+      else if (DECL_P (lhs) && DECL_ARTIFICIAL (lhs))
+	/* OK, used by coroutines (co-await-initlist1.C).  */;
       else if (!current_function_decl
 	       || !DECL_DEFAULTED_FN (current_function_decl))
 	{
@@ -9939,18 +9941,15 @@ build_ptrmemfunc (tree type, tree pfn, int force, bool c_cast_p,
       if (n == error_mark_node)
 	return error_mark_node;
 
+      STRIP_ANY_LOCATION_WRAPPER (pfn);
+
       /* We don't have to do any conversion to convert a
 	 pointer-to-member to its own type.  But, we don't want to
 	 just return a PTRMEM_CST if there's an explicit cast; that
 	 cast should make the expression an invalid template argument.  */
-      if (TREE_CODE (pfn) != PTRMEM_CST)
-	{
-	  if (same_type_p (to_type, pfn_type))
-	    return pfn;
-	  else if (integer_zerop (n) && TREE_CODE (pfn) != CONSTRUCTOR)
-	    return build_reinterpret_cast (input_location, to_type, pfn, 
-                                           complain);
-	}
+      if (TREE_CODE (pfn) != PTRMEM_CST
+	  && same_type_p (to_type, pfn_type))
+	return pfn;
 
       if (TREE_SIDE_EFFECTS (pfn))
 	pfn = save_expr (pfn);
@@ -11218,9 +11217,6 @@ check_return_expr (tree retval, bool *no_warning)
 			 build_zero_cst (TREE_TYPE (retval)));
     }
 
-  if (processing_template_decl)
-    return saved_retval;
-
   /* A naive attempt to reduce the number of -Wdangling-reference false
      positives: if we know that this function can return a variable with
      static storage duration rather than one of its parameters, suppress
@@ -11231,6 +11227,9 @@ check_return_expr (tree retval, bool *no_warning)
       && VAR_P (bare_retval)
       && TREE_STATIC (bare_retval))
     suppress_warning (current_function_decl, OPT_Wdangling_reference);
+
+  if (processing_template_decl)
+    return saved_retval;
 
   /* Actually copy the value returned into the appropriate location.  */
   if (retval && retval != result)
@@ -11402,7 +11401,7 @@ ptr_reasonably_similar (const_tree to, const_tree from)
       if (!TYPE_PTR_P (to))
 	{
 	  /* When either type is incomplete avoid DERIVED_FROM_P,
-	     which may call complete_type (scpel/57942).  */
+	     which may call complete_type (c++/57942).  */
 	  bool b = !COMPLETE_TYPE_P (to) || !COMPLETE_TYPE_P (from);
 	  return comptypes
 	    (TYPE_MAIN_VARIANT (to), TYPE_MAIN_VARIANT (from),

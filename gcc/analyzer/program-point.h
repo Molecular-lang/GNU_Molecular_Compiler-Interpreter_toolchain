@@ -1,22 +1,4 @@
-/* Classes for representing locations within the program.
-   Copyright (C) 2019-2023 Free Software Foundation, Inc.
-   Contributed by David Malcolm <dmalcolm@redhat.com>.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* Classes for representing locations within the program. */
 
 #ifndef GCC_ANALYZER_PROGRAM_POINT_H
 #define GCC_ANALYZER_PROGRAM_POINT_H
@@ -298,6 +280,9 @@ public:
   void next_stmt () { m_function_point.next_stmt (); }
 
   program_point get_next () const;
+
+  static bool effectively_intraprocedural_p (const program_point &point_a,
+					     const program_point &point_b);
 
  private:
   program_point (const function_point &fn_point)

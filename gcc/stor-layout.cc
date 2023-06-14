@@ -499,11 +499,13 @@ mode_for_vector (scalar_mode innermode, poly_uint64 nunits)
   else
     mode = MIN_MODE_VECTOR_INT;
 
-  /* Do not check vector_mode_supported_p here.  We'll do that
-     later in vector_type_mode.  */
+  /* Only check the broader vector_mode_supported_any_target_p here.
+     We'll filter through target-specific availability and
+     vector_mode_supported_p later in vector_type_mode.  */
   FOR_EACH_MODE_FROM (mode, mode)
     if (known_eq (GET_MODE_NUNITS (mode), nunits)
-	&& GET_MODE_INNER (mode) == innermode)
+	&& GET_MODE_INNER (mode) == innermode
+	&& targetm.vector_mode_supported_any_target_p (mode))
       return mode;
 
   /* For integers, try mapping it to a same-sized scalar mode.  */
@@ -1996,6 +1998,7 @@ finalize_type_size (tree type)
       unsigned int user_align = TYPE_USER_ALIGN (type);
       machine_mode mode = TYPE_MODE (type);
       bool empty_p = TYPE_EMPTY_P (type);
+      bool typeless = AGGREGATE_TYPE_P (type) && TYPE_TYPELESS_STORAGE (type);
 
       /* Copy it into all variants.  */
       for (variant = TYPE_MAIN_VARIANT (type);
@@ -2020,6 +2023,8 @@ finalize_type_size (tree type)
 	  TYPE_PRECISION (variant) = precision;
 	  SET_TYPE_MODE (variant, mode);
 	  TYPE_EMPTY_P (variant) = empty_p;
+	  if (AGGREGATE_TYPE_P (variant))
+	    TYPE_TYPELESS_STORAGE (variant) = typeless;
 	}
     }
 }

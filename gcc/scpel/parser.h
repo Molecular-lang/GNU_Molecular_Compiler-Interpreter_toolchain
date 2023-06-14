@@ -1,4 +1,4 @@
-/* Data structures and function exported by the Scpel++ Parser. */
+/* Data structures and function exported by the C++ Parser. */
 
 #ifndef GCC_CP_PARSER_H
 #define GCC_CP_PARSER_H
@@ -26,7 +26,7 @@ struct GTY (()) scpel_token {
   /* The kind of token.  */
   enum cpp_ttype type : 8;
   /* If this token is a keyword, this value indicates which keyword.
-     Otherwise, this value is RID_SPL_MAX.  */
+     Otherwise, this value is RID_MAX.  */
   enum rid keyword : 8;
   /* Token flags.  */
   unsigned char flags;
@@ -34,7 +34,7 @@ struct GTY (()) scpel_token {
   bool implicit_extern_c : 1;
   /* True if an error has already been reported for this token, such as a
      CPP_NAME token that is not a keyword (i.e., for which KEYWORD is
-     RID_SPL_MAX) iff this name was looked up and found to be ambiguous.  */
+     RID_MAX) iff this name was looked up and found to be ambiguous.  */
   bool error_reported : 1;
   /* True for a token that has been purged.  If a token is purged,
      it is no longer a valid token and it should be considered

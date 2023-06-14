@@ -1,21 +1,4 @@
-/* Diagnostic routines shared by all languages that are variants of C.
-   Copyright (C) 1992-2023 Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
-version.
-
-GCC is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* Diagnostic routines shared by all languages that are variants of C. */
 
 #define INCLUDE_STRING
 #include "config.h"
@@ -1227,7 +1210,7 @@ conversion_warning (location_t loc, tree type, tree expr, tree result)
 	  {
 	    bool cstresult
 	      = (result
-		 && TREE_CODE_CLASS (TREE_CODE (result)) == tcc_constant);
+		 && CONSTANT_CLASS_P (result));
 	    if (TYPE_UNSIGNED (type))
 	      {
 		if (cstresult)
@@ -1255,7 +1238,7 @@ conversion_warning (location_t loc, tree type, tree expr, tree result)
 			      expr_type, type, expr);
 	      }
 	  }
-	else if (TREE_CODE_CLASS (TREE_CODE (result)) == tcc_constant)
+	else if (CONSTANT_CLASS_P (result))
 	  warning_at (loc, warnopt,
 		      "conversion from %qT to %qT changes value from %qE to %qE",
 		      expr_type, type, expr, result);
@@ -1404,7 +1387,7 @@ warnings_for_convert_and_check (location_t loc, tree type, tree expr,
   while (TREE_CODE (result) == COMPOUND_EXPR)
     result = TREE_OPERAND (result, 1);
 
-  bool cst = TREE_CODE_CLASS (TREE_CODE (result)) == tcc_constant;
+  bool cst = CONSTANT_CLASS_P (result);
   tree exprtype = TREE_TYPE (expr);
   tree result_diag;
   /* We're interested in the actual numerical value here, not its ASCII
@@ -3835,14 +3818,15 @@ do_warn_array_compare (location_t location, tree_code code, tree op0, tree op1)
     }
 }
 
-/* Given LHS_VAL ^ RHS_VAL, where LHS_LOC is the location of the LHS and
-   OPERATOR_LOC is the location of the ^, complain with -Wxor-used-as-pow
-   if it looks like the user meant exponentiation rather than xor.  */
+/* Given LHS_VAL ^ RHS_VAL, where LHS_LOC is the location of the LHS,
+   OPERATOR_LOC is the location of the ^, and RHS_LOC the location of the
+   RHS, complain with -Wxor-used-as-pow if it looks like the user meant
+   exponentiation rather than xor.  */
 
 void
 check_for_xor_used_as_pow (location_t lhs_loc, tree lhs_val,
 			   location_t operator_loc,
-			   tree rhs_val)
+			   location_t rhs_loc, tree rhs_val)
 {
   /* Only complain if both args are non-negative integer constants that fit
      in uhwi.  */
@@ -3858,6 +3842,20 @@ check_for_xor_used_as_pow (location_t lhs_loc, tree lhs_val,
   unsigned HOST_WIDE_INT xor_result = lhs_uhwi ^ rhs_uhwi;
   binary_op_rich_location loc (operator_loc,
 			       lhs_val, rhs_val, false);
+
+  /* Reject cases where we don't have 3 distinct locations.
+     This can happen e.g. due to macro expansion with
+     -ftrack-macro-expansion=0 */
+  if (!(lhs_loc != operator_loc
+	&& lhs_loc != rhs_loc
+	&& operator_loc != rhs_loc))
+    return;
+
+  /* Reject cases in which any of the locations came from a macro.  */
+  if (from_macro_expansion_at (lhs_loc)
+      || from_macro_expansion_at (operator_loc)
+      || from_macro_expansion_at (rhs_loc))
+    return;
 
   /* If we issue fix-it hints with the warning then we will also issue a
      note suggesting how to suppress the warning with a different change.

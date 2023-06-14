@@ -1,4 +1,4 @@
-/* Definitions for Scpel++ contract levels */
+/* Definitions for C++ contract levels. */
 
 /* Design Notes
 
@@ -143,6 +143,7 @@
 #include "tree-iterator.h"
 #include "print-tree.h"
 #include "stor-layout.h"
+#include "intl.h"
 
 const int max_custom_roles = 32;
 static contract_role contract_build_roles[max_custom_roles] = {
@@ -618,17 +619,15 @@ bool
 check_postcondition_result (tree decl, tree type, location_t loc)
 {
   if (VOID_TYPE_P (type))
-  {
-    const char* what;
-    if (DECL_CONSTRUCTOR_P (decl))
-      what = "constructor";
-    else if (DECL_DESTRUCTOR_P (decl))
-      what  = "destructor";
-    else
-      what = "function";
-    error_at (loc, "%s does not return a value to test", what);
-    return false;
-  }
+    {
+      error_at (loc,
+		DECL_CONSTRUCTOR_P (decl)
+		? G_("constructor does not return a value to test")
+		: DECL_DESTRUCTOR_P (decl)
+		? G_("destructor does not return a value to test")
+		: G_("function does not return a value to test"));
+      return false;
+    }
 
   return true;
 }
@@ -809,7 +808,7 @@ update_late_contract (tree contract, tree result, tree condition)
   CONTRACT_CONDITION (contract) = condition;
 }
 
-/* Return TRUE iff ATTR has been parsed by the front-end as a scpel2a contract
+/* Return TRUE iff ATTR has been parsed by the front-end as a c++2a contract
    attribute. */
 
 bool
@@ -842,7 +841,7 @@ scpel_contract_assertion_p (const_tree attr)
     && TREE_CODE (CONTRACT_STATEMENT (attr)) == ASSERTION_STMT;
 }
 
-/* Remove all scpel2a style contract attributes from the DECL_ATTRIBUTEs of the
+/* Remove all c++2a style contract attributes from the DECL_ATTRIBUTEs of the
    FUNCTION_DECL FNDECL.  */
 
 void

@@ -1,4 +1,4 @@
-/* Implementation of subroutines for the GNU Scpel++ pretty-printer. */
+/* Implementation of subroutines for the GNU C++ pretty-printer. */
 
 #include "config.h"
 #include "system.h"
@@ -21,6 +21,7 @@ static void pp_cxx_unary_left_fold_expression (cxx_pretty_printer *, tree);
 static void pp_cxx_unary_right_fold_expression (cxx_pretty_printer *, tree);
 static void pp_cxx_binary_fold_expression (cxx_pretty_printer *, tree);
 static void pp_cxx_concept_definition (cxx_pretty_printer *, tree);
+
 
 static inline void
 pp_cxx_nonconsecutive_character (cxx_pretty_printer *pp, int c)
@@ -825,7 +826,12 @@ cxx_pretty_printer::unary_expression (tree t)
       /* Fall through  */
 
     case ALIGNOF_EXPR:
-      pp_cxx_ws_string (this, code == SIZEOF_EXPR ? "sizeof" : "__alignof__");
+      if (code == SIZEOF_EXPR)
+	pp_cxx_ws_string (this, "sizeof");
+      else if (ALIGNOF_EXPR_STD_P (t))
+	pp_cxx_ws_string (this, "alignof");
+      else
+	pp_cxx_ws_string (this, "__alignof__");
       pp_cxx_whitespace (this);
       if (TREE_CODE (t) == SIZEOF_EXPR && SIZEOF_EXPR_TYPE_P (t))
 	{
@@ -1345,8 +1351,9 @@ cxx_pretty_printer::simple_type_specifier (tree t)
     case TEMPLATE_PARM_INDEX:
     case BOUND_TEMPLATE_TEMPLATE_PARM:
       pp_cxx_unqualified_id (this, t);
-      if (tree c = PLACEHOLDER_TYPE_CONSTRAINTS (t))
-        pp_cxx_constrained_type_spec (this, c);
+      if (TREE_CODE (t) == TEMPLATE_TYPE_PARM)
+	if (tree c = PLACEHOLDER_TYPE_CONSTRAINTS (t))
+	  pp_cxx_constrained_type_spec (this, c);
       break;
 
     case TYPENAME_TYPE:
@@ -1941,7 +1948,7 @@ pp_cxx_template_argument_list (cxx_pretty_printer *pp, tree t)
 	  if (TYPE_P (arg) || (TREE_CODE (arg) == TEMPLATE_DECL
 			       && TYPE_P (DECL_TEMPLATE_RESULT (arg))))
 	    pp->type_id (arg);
-	  else if (TREE_CODE (arg) == VAR_DECL && DECL_NTTP_OBJECT_P (arg))
+	  else if (VAR_P (arg) && DECL_NTTP_OBJECT_P (arg))
 	    pp->expression (DECL_INITIAL (arg));
 	  else
 	    pp->expression (arg);
@@ -2606,26 +2613,37 @@ pp_cxx_trait (cxx_pretty_printer *pp, tree t)
 #undef DEFTRAIT
     }
 
-  pp_cxx_left_paren (pp);
-  if (TYPE_P (type1))
-    pp->type_id (type1);
+  if (kind == CPTK_TYPE_PACK_ELEMENT)
+    {
+      pp_cxx_begin_template_argument_list (pp);
+      pp->expression (type1);
+    }
   else
-    pp->expression (type1);
+    {
+      pp_cxx_left_paren (pp);
+      if (TYPE_P (type1))
+	pp->type_id (type1);
+      else
+	pp->expression (type1);
+    }
   if (type2)
     {
-      if (TREE_CODE (type2) != TREE_LIST)
+      if (TREE_CODE (type2) != TREE_VEC)
 	{
 	  pp_cxx_separate_with (pp, ',');
 	  pp->type_id (type2);
 	}
       else
-	for (tree arg = type2; arg; arg = TREE_CHAIN (arg))
+	for (tree arg : tree_vec_range (type2))
 	  {
 	    pp_cxx_separate_with (pp, ',');
-	    pp->type_id (TREE_VALUE (arg));
+	    pp->type_id (arg);
 	  }
     }
-  pp_cxx_right_paren (pp);
+  if (kind == CPTK_TYPE_PACK_ELEMENT)
+    pp_cxx_end_template_argument_list (pp);
+  else
+    pp_cxx_right_paren (pp);
 }
 
 // requires-clause:

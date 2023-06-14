@@ -1,22 +1,4 @@
-/* LTO symbol table.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
-   Contributed by CodeSourcery, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
-version.
-
-GCC is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* LTO symbol table. */
 
 #include "config.h"
 #include "system.h"
@@ -214,7 +196,7 @@ warn_type_compatibility_p (tree prevailing_type, tree type,
 
   /* Function types needs special care, because types_compatible_p never
      thinks prototype is compatible to non-prototype.  */
-  if (TREE_CODE (type) == FUNCTION_TYPE || TREE_CODE (type) == METHOD_TYPE)
+  if (FUNC_OR_METHOD_TYPE_P (type))
     {
       if (TREE_CODE (type) != TREE_CODE (prevailing_type))
 	lev |= 1;
@@ -401,7 +383,7 @@ lto_symtab_resolve_replaceable_p (symtab_node *e)
       || DECL_WEAK (e->decl))
     return true;
 
-  if (TREE_CODE (e->decl) == VAR_DECL)
+  if (VAR_P (e->decl))
     return (DECL_COMMON (e->decl)
 	    || (!flag_no_common && !DECL_INITIAL (e->decl)));
 
@@ -803,7 +785,7 @@ lto_symtab_merge_decls_1 (symtab_node *first)
 	 This is needed for C++ typeinfos, for example in
 	 lto/20081204-1 there are typeifos in both units, just
 	 one of them do have size.  */
-      if (TREE_CODE (prevailing->decl) == VAR_DECL)
+      if (VAR_P (prevailing->decl))
 	{
 	  for (e = prevailing->next_sharing_asm_name;
 	       e; e = e->next_sharing_asm_name)
@@ -848,7 +830,7 @@ lto_symtab_merge_decls_1 (symtab_node *first)
 	  break;
 
 	case FUNCTION_DECL:
-	  gcc_assert (TREE_CODE (e->decl) == VAR_DECL);
+	  gcc_assert (VAR_P (e->decl));
 	  error_at (DECL_SOURCE_LOCATION (e->decl),
 		    "function %qD redeclared as variable",
 		    prevailing->decl);

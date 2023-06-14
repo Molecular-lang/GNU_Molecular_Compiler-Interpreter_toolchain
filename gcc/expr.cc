@@ -8178,8 +8178,7 @@ force_operand (rtx value, rtx target)
       if (code == PLUS && CONST_INT_P (op2)
 	  && GET_CODE (XEXP (value, 0)) == PLUS
 	  && REG_P (XEXP (XEXP (value, 0), 0))
-	  && REGNO (XEXP (XEXP (value, 0), 0)) >= FIRST_VIRTUAL_REGISTER
-	  && REGNO (XEXP (XEXP (value, 0), 0)) <= LAST_VIRTUAL_REGISTER)
+	  && VIRTUAL_REGISTER_P (XEXP (XEXP (value, 0), 0)))
 	{
 	  rtx temp = expand_simple_binop (GET_MODE (value), code,
 					  XEXP (XEXP (value, 0), 0), op2,
@@ -12899,6 +12898,88 @@ maybe_optimize_sub_cmp_0 (enum tree_code code, tree *arg0, tree *arg1)
   *arg1 = treeop1;
 }
 
+
+/* Expand CODE with arguments INNER & (1<<BITNUM) and 0 that represents
+   a single bit equality/inequality test, returns where the result is located.  */
+
+static rtx
+expand_single_bit_test (location_t loc, enum tree_code code,
+			tree inner, int bitnum,
+			tree result_type, rtx target,
+			machine_mode mode)
+{
+  gcc_assert (code == NE_EXPR || code == EQ_EXPR);
+
+  tree type = TREE_TYPE (inner);
+  scalar_int_mode operand_mode = SCALAR_INT_TYPE_MODE (type);
+  int ops_unsigned;
+  tree signed_type, unsigned_type, intermediate_type;
+  gimple *inner_def;
+
+  /* First, see if we can fold the single bit test into a sign-bit
+     test.  */
+  if (bitnum == TYPE_PRECISION (type) - 1
+      && type_has_mode_precision_p (type))
+    {
+      tree stype = signed_type_for (type);
+      tree tmp = fold_build2_loc (loc, code == EQ_EXPR ? GE_EXPR : LT_EXPR,
+				  result_type,
+				  fold_convert_loc (loc, stype, inner),
+				  build_int_cst (stype, 0));
+      return expand_expr (tmp, target, VOIDmode, EXPAND_NORMAL);
+    }
+
+  /* Otherwise we have (A & C) != 0 where C is a single bit,
+     convert that into ((A >> C2) & 1).  Where C2 = log2(C).
+     Similarly for (A & C) == 0.  */
+
+  /* If INNER is a right shift of a constant and it plus BITNUM does
+     not overflow, adjust BITNUM and INNER.  */
+  if ((inner_def = get_def_for_expr (inner, RSHIFT_EXPR))
+       && TREE_CODE (gimple_assign_rhs2 (inner_def)) == INTEGER_CST
+       && bitnum < TYPE_PRECISION (type)
+       && wi::ltu_p (wi::to_wide (gimple_assign_rhs2 (inner_def)),
+		     TYPE_PRECISION (type) - bitnum))
+    {
+      bitnum += tree_to_uhwi (gimple_assign_rhs2 (inner_def));
+      inner = gimple_assign_rhs1 (inner_def);
+    }
+
+  /* If we are going to be able to omit the AND below, we must do our
+     operations as unsigned.  If we must use the AND, we have a choice.
+     Normally unsigned is faster, but for some machines signed is.  */
+  ops_unsigned = (load_extend_op (operand_mode) == SIGN_EXTEND
+		  && !flag_syntax_only) ? 0 : 1;
+
+  signed_type = lang_hooks.types.type_for_mode (operand_mode, 0);
+  unsigned_type = lang_hooks.types.type_for_mode (operand_mode, 1);
+  intermediate_type = ops_unsigned ? unsigned_type : signed_type;
+  inner = fold_convert_loc (loc, intermediate_type, inner);
+
+  rtx inner0 = expand_expr (inner, NULL_RTX, VOIDmode, EXPAND_NORMAL);
+
+  int bitpos = bitnum;
+
+  scalar_int_mode imode = as_a <scalar_int_mode>(GET_MODE (inner0));
+
+  if (BYTES_BIG_ENDIAN)
+    bitpos = GET_MODE_BITSIZE (imode) - 1 - bitpos;
+
+  inner0 = extract_bit_field (inner0, 1, bitpos, 1, target,
+			      operand_mode, mode, 0, NULL);
+
+  if (code == EQ_EXPR)
+    inner0 = expand_binop (GET_MODE (inner0), xor_optab, inner0, const1_rtx,
+			   NULL_RTX, 1, OPTAB_LIB_WIDEN);
+  if (GET_MODE (inner0) != mode)
+    {
+      rtx t = gen_reg_rtx (mode);
+      convert_move (t, inner0, 0);
+      return t;
+    }
+  return inner0;
+}
+
 /* Generate code to calculate OPS, and exploded expression
    using a store-flag instruction and return an rtx for the result.
    OPS reflects a comparison.
@@ -12957,7 +13038,7 @@ do_store_flag (sepops ops, rtx target, machine_mode mode)
 
   /* For vector typed comparisons emit code to generate the desired
      all-ones or all-zeros mask.  */
-  if (TREE_CODE (ops->type) == VECTOR_TYPE)
+  if (VECTOR_TYPE_P (ops->type))
     {
       tree ifexp = build2 (ops->code, ops->type, arg0, arg1);
       if (VECTOR_BOOLEAN_TYPE_P (ops->type)
@@ -13075,27 +13156,43 @@ do_store_flag (sepops ops, rtx target, machine_mode mode)
      do this by shifting the bit being tested to the low-order bit and
      masking the result with the constant 1.  If the condition was EQ,
      we xor it with 1.  This does not require an scc insn and is faster
-     than an scc insn even if we have it.
-
-     The code to make this transformation was moved into fold_single_bit_test,
-     so we just call into the folder and expand its result.  */
+     than an scc insn even if we have it.  */
 
   if ((code == NE || code == EQ)
-      && integer_zerop (arg1)
+      && (integer_zerop (arg1)
+	  || integer_pow2p (arg1))
       && (TYPE_PRECISION (ops->type) != 1 || TYPE_UNSIGNED (ops->type)))
     {
-      gimple *srcstmt = get_def_for_expr (arg0, BIT_AND_EXPR);
-      if (srcstmt
-	  && integer_pow2p (gimple_assign_rhs2 (srcstmt)))
+      wide_int nz = tree_nonzero_bits (arg0);
+
+      if (wi::popcount (nz) == 1
+	  && (integer_zerop (arg1)
+	      || wi::to_wide (arg1) == nz))
 	{
-	  enum tree_code tcode = code == NE ? NE_EXPR : EQ_EXPR;
+	  tree op0;
+	  int bitnum;
+	  gimple *srcstmt = get_def_for_expr (arg0, BIT_AND_EXPR);
+	  /* If the defining statement was (x & POW2), then remove the and
+	     as we are going to add it back. */
+	  if (srcstmt
+	      && integer_pow2p (gimple_assign_rhs2 (srcstmt)))
+	    {
+	      op0 = gimple_assign_rhs1 (srcstmt);
+	      bitnum = tree_log2 (gimple_assign_rhs2 (srcstmt));
+	    }
+	  else
+	    {
+	      op0 = arg0;
+	      bitnum = wi::exact_log2 (nz);
+	    }
+	  enum tree_code tcode = EQ_EXPR;
+	  if ((code == NE) ^ !integer_zerop (arg1))
+	    tcode = NE_EXPR;
+
 	  type = lang_hooks.types.type_for_mode (mode, unsignedp);
-	  tree temp = fold_build2_loc (loc, BIT_AND_EXPR, TREE_TYPE (arg1),
-				       gimple_assign_rhs1 (srcstmt),
-				       gimple_assign_rhs2 (srcstmt));
-	  temp = fold_single_bit_test (loc, tcode, temp, arg1, type);
-	  if (temp)
-	    return expand_expr (temp, target, VOIDmode, EXPAND_NORMAL);
+	  return expand_single_bit_test (loc, tcode,
+					 op0,
+					 bitnum, type, target, mode);
 	}
     }
 

@@ -101,7 +101,7 @@ do_mpfr_ckconv (real_value *result, mpfr_srcptr m, bool inexact,
   real_from_mpfr (&tmp, m, format, MPFR_RNDN);
 
   /* Proceed iff GCC's REAL_VALUE_TYPE can hold the MPFR values.
-     If the REAL_VALUE_TYPE is zero but the mpft_t is not, then we
+     If the REAL_VALUE_TYPE is zero but the mpfr_t is not, then we
      underflowed in the conversion.  */
   if (!real_isfinite (&tmp)
       || ((tmp.cl == rvc_zero) != (mpfr_zero_p (m) != 0)))
@@ -130,14 +130,12 @@ do_mpfr_arg1 (real_value *result,
 
   int prec = format->p;
   mpfr_rnd_t rnd = format->round_towards_zero ? MPFR_RNDZ : MPFR_RNDN;
-  mpfr_t m;
 
-  mpfr_init2 (m, prec);
+  auto_mpfr m (prec);
   mpfr_from_real (m, arg, MPFR_RNDN);
   mpfr_clear_flags ();
   bool inexact = func (m, m, rnd);
   bool ok = do_mpfr_ckconv (result, m, inexact, format);
-  mpfr_clear (m);
 
   return ok;
 }
@@ -224,14 +222,12 @@ do_mpfr_arg2 (real_value *result,
 
   int prec = format->p;
   mpfr_rnd_t rnd = format->round_towards_zero ? MPFR_RNDZ : MPFR_RNDN;
-  mpfr_t m;
 
-  mpfr_init2 (m, prec);
+  auto_mpfr m (prec);
   mpfr_from_real (m, arg1, MPFR_RNDN);
   mpfr_clear_flags ();
   bool inexact = func (m, arg0.to_shwi (), m, rnd);
   bool ok = do_mpfr_ckconv (result, m, inexact, format);
-  mpfr_clear (m);
 
   return ok;
 }
@@ -299,7 +295,7 @@ do_mpc_ckconv (real_value *result_real, real_value *result_imag,
   real_from_mpfr (&tmp_imag, mpc_imagref (m), format, MPFR_RNDN);
 
   /* Proceed iff GCC's REAL_VALUE_TYPE can hold the MPFR values.
-     If the REAL_VALUE_TYPE is zero but the mpft_t is not, then we
+     If the REAL_VALUE_TYPE is zero but the mpfr_t is not, then we
      underflowed in the conversion.  */
   if (!real_isfinite (&tmp_real)
       || !real_isfinite (&tmp_imag)
@@ -1064,7 +1060,8 @@ fold_const_call_ss (wide_int *result, combined_fn fn, const wide_int_ref &arg,
     case CFN_BUILT_IN_BSWAP32:
     case CFN_BUILT_IN_BSWAP64:
     case CFN_BUILT_IN_BSWAP128:
-      *result = wide_int::from (arg, precision, TYPE_SIGN (arg_type)).bswap ();
+      *result = wi::bswap (wide_int::from (arg, precision,
+					   TYPE_SIGN (arg_type)));
       return true;
 
     default:

@@ -1,22 +1,4 @@
-/* Regions of memory.
-   Copyright (C) 2019-2023 Free Software Foundation, Inc.
-   Contributed by David Malcolm <dmalcolm@redhat.com>.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* Regions of memory. */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -1162,7 +1144,7 @@ decl_region::get_stack_depth () const
 const svalue *
 decl_region::maybe_get_constant_value (region_model_manager *mgr) const
 {
-  if (TREE_CODE (m_decl) == VAR_DECL
+  if (VAR_P (m_decl)
       && DECL_IN_CONSTANT_POOL (m_decl)
       && DECL_INITIAL (m_decl)
       && TREE_CODE (DECL_INITIAL (m_decl)) == CONSTRUCTOR)

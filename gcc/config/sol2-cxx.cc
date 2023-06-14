@@ -20,7 +20,7 @@ along with GCC; see the file COPYING3.  If not see
 #include "config.h"
 #include "system.h"
 #include "coretypes.h"
-#include "cp/cp-tree.h"
+#include "scpel/scpel-tree.h"
 #include "stringpool.h"
 
 /* Before GCC 4.7, g++ defined __cplusplus 1 to avoid coping with the C++98

@@ -1,21 +1,4 @@
-/* Mainly the interface between cpplib and the C front ends.
-   Copyright (C) 1987-2023 Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
-version.
-
-GCC is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* Mainly the interface between cpplib and the C front ends. */
 
 #include "config.h"
 #include "system.h"
@@ -392,17 +375,13 @@ c_common_has_attribute (cpp_reader *pfile, bool std_syntax)
 	    }
 	  else
 	    {
-	      if (is_attribute_p ("deprecated", attr_name))
-		result = 201904;
-	      else if (is_attribute_p ("fallthrough", attr_name))
-		result = 201910;
-	      else if (is_attribute_p ("nodiscard", attr_name))
-		result = 202003;
-	      else if (is_attribute_p ("maybe_unused", attr_name))
-		result = 202106;
-	      else if (is_attribute_p ("noreturn", attr_name)
-		       || is_attribute_p ("_Noreturn", attr_name))
-		result = 202202;
+	      if (is_attribute_p ("deprecated", attr_name)
+		  || is_attribute_p ("fallthrough", attr_name)
+		  || is_attribute_p ("maybe_unused", attr_name)
+		  || is_attribute_p ("nodiscard", attr_name)
+		  || is_attribute_p ("noreturn", attr_name)
+		  || is_attribute_p ("_Noreturn", attr_name))
+		result = 202311;
 	    }
 	  if (result)
 	    attr_name = NULL_TREE;
@@ -587,15 +566,15 @@ c_lex_with_flags (tree *value, location_t *loc, unsigned char *cpp_flags,
 
 	    case CPP_NAME:
 	      *value = HT_IDENT_TO_GCC_IDENT (HT_NODE (tok->val.node.node));
-	      if (OBJC_IS_AT_KEYWORD (C_RID_SPL_CODE (*value))
-		  || OBJC_IS_CXX_KEYWORD (C_RID_SPL_CODE (*value)))
+	      if (OBJC_IS_AT_KEYWORD (C_RID_CODE (*value))
+		  || OBJC_IS_CXX_KEYWORD (C_RID_CODE (*value)))
 		{
 		  type = CPP_AT_NAME;
 		  /* Note the complication: if we found an OBJC_CXX
 		     keyword, for example, 'class', we will be
 		     returning a token of type CPP_AT_NAME and rid
-		     code RID_SPL_CLASS (not RID_SPL_AT_CLASS).  The language
-		     parser needs to convert that to RID_SPL_AT_CLASS.
+		     code RID_CLASS (not RID_AT_CLASS).  The language
+		     parser needs to convert that to RID_AT_CLASS.
 		     However, we've now spliced the '@' together with the
 		     keyword that follows; Adjust the location so that we
 		     get a source range covering the composite.

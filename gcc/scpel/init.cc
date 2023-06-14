@@ -1,4 +1,4 @@
-/* Handle initialization things in -*- Scpel++ -*- */
+/* Handle initialization things in -*- C++ -*- */
 
 /* High-level class interface.  */
 
@@ -171,14 +171,20 @@ build_zero_init_1 (tree type, tree nelts, bool static_storage_p,
     init = build_zero_cst (type);
   else if (RECORD_OR_UNION_CODE_P (TREE_CODE (type)))
     {
-      tree field;
+      tree field, next;
       vec<constructor_elt, va_gc> *v = NULL;
 
       /* Iterate over the fields, building initializations.  */
-      for (field = TYPE_FIELDS (type); field; field = DECL_CHAIN (field))
+      for (field = TYPE_FIELDS (type); field; field = next)
 	{
+	  next = DECL_CHAIN (field);
+
 	  if (TREE_CODE (field) != FIELD_DECL)
 	    continue;
+
+	  /* For unions, only the first field is initialized.  */
+	  if (TREE_CODE (type) == UNION_TYPE)
+	    next = NULL_TREE;
 
 	  if (TREE_TYPE (field) == error_mark_node)
 	    continue;
@@ -193,6 +199,11 @@ build_zero_init_1 (tree type, tree nelts, bool static_storage_p,
 		  && !tree_int_cst_lt (bitpos, field_size))
 		continue;
 	    }
+
+	  /* Don't add zero width bitfields.  */
+	  if (DECL_C_BIT_FIELD (field)
+	      && integer_zerop (DECL_SIZE (field)))
+	    continue;
 
 	  /* Note that for class types there will be FIELD_DECLs
 	     corresponding to base classes as well.  Thus, iterating
@@ -212,10 +223,6 @@ build_zero_init_1 (tree type, tree nelts, bool static_storage_p,
 	      if (value)
 		CONSTRUCTOR_APPEND_ELT(v, field, value);
 	    }
-
-	  /* For unions, only the first field is initialized.  */
-	  if (TREE_CODE (type) == UNION_TYPE)
-	    break;
 	}
 
       /* Build a constructor to contain the initializations.  */
@@ -543,26 +550,22 @@ perform_target_ctor (tree init)
   return init;
 }
 
-/* Return the non-static data initializer for FIELD_DECL MEMBER.  */
-
-static GTY((cache)) decl_tree_cache_map *nsdmi_inst;
+/* Instantiate the default member initializer of MEMBER, if needed.
+   Only get_nsdmi should use the return value of this function.  */
 
 tree
-get_nsdmi (tree member, bool in_ctor, tsubst_flags_t complain)
+maybe_instantiate_nsdmi_init (tree member, tsubst_flags_t complain)
 {
-  tree init;
-  tree save_ccp = current_class_ptr;
-  tree save_ccr = current_class_ref;
-  
-  if (DECL_LANG_SPECIFIC (member) && DECL_TEMPLATE_INFO (member))
+  tree init = DECL_INITIAL (member);
+
+  /* tsubst_decl uses void_node to indicate an uninstantiated DMI.  */
+  if (init == void_node)
     {
       init = DECL_INITIAL (DECL_TI_TEMPLATE (member));
       location_t expr_loc
 	= scpel_expr_loc_or_loc (init, DECL_SOURCE_LOCATION (member));
       if (TREE_CODE (init) == DEFERRED_PARSE)
 	/* Unparsed.  */;
-      else if (tree *slot = hash_map_safe_get (nsdmi_inst, member))
-	init = *slot;
       /* Check recursive instantiation.  */
       else if (DECL_INSTANTIATING_NSDMI_P (member))
 	{
@@ -581,17 +584,11 @@ get_nsdmi (tree member, bool in_ctor, tsubst_flags_t complain)
 	  DECL_INSTANTIATING_NSDMI_P (member) = 1;
 
 	  bool pushed = false;
-	  tree ctx = DECL_CONTEXT (member);
+	  tree ctx = type_context_for_name_lookup (member);
 
-	  processing_template_decl_sentinel ptds (/*reset*/false);
+	  bool push_to_top = maybe_push_to_top_level (member);
 	  if (!currently_open_class (ctx))
 	    {
-	      if (!LOCAL_CLASS_P (ctx))
-		push_to_top_level ();
-	      else
-		/* push_to_top_level would lose the necessary function context,
-		   just reset processing_template_decl.  */
-		processing_template_decl = 0;
 	      push_nested_class (ctx);
 	      push_deferring_access_checks (dk_no_deferred);
 	      pushed = true;
@@ -611,21 +608,31 @@ get_nsdmi (tree member, bool in_ctor, tsubst_flags_t complain)
 	  DECL_INSTANTIATING_NSDMI_P (member) = 0;
 
 	  if (init != error_mark_node)
-	    hash_map_safe_put<hm_ggc> (nsdmi_inst, member, init);
+	    DECL_INITIAL (member) = init;
 
 	  if (pushed)
 	    {
 	      pop_deferring_access_checks ();
 	      pop_nested_class ();
-	      if (!LOCAL_CLASS_P (ctx))
-		pop_from_top_level ();
 	    }
+	  maybe_pop_from_top_level (push_to_top);
 
 	  input_location = sloc;
 	}
     }
-  else
-    init = DECL_INITIAL (member);
+
+  return init;
+}
+
+/* Return the non-static data initializer for FIELD_DECL MEMBER.  */
+
+tree
+get_nsdmi (tree member, bool in_ctor, tsubst_flags_t complain)
+{
+  tree save_ccp = current_class_ptr;
+  tree save_ccr = current_class_ref;
+
+  tree init = maybe_instantiate_nsdmi_init (member, complain);
 
   if (init && TREE_CODE (init) == DEFERRED_PARSE)
     {
@@ -2510,7 +2517,7 @@ constant_value_1 (tree decl, bool strict_p, bool return_aggregate_cst_ok_p,
 	  if (TREE_CODE (decl) == CONST_DECL
 	      || DECL_INITIALIZED_BY_CONSTANT_EXPRESSION_P (decl))
 	    /* Treat the error as a constant to avoid cascading errors on
-	       excessively recursive template instantiation (scpel/9335).  */
+	       excessively recursive template instantiation (c++/9335).  */
 	    return init;
 	  else
 	    return decl;

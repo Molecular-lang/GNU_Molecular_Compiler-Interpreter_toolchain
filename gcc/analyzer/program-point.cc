@@ -1,22 +1,4 @@
-/* Classes for representing locations within the program.
-   Copyright (C) 2019-2023 Free Software Foundation, Inc.
-   Contributed by David Malcolm <dmalcolm@redhat.com>.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* Classes for representing locations within the program. */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -52,6 +34,7 @@ along with GCC; see the file COPYING3.  If not see
 #include "shortest-paths.h"
 #include "analyzer/exploded-graph.h"
 #include "analyzer/analysis-plan.h"
+#include "analyzer/inlining-iterator.h"
 
 #if ENABLE_ANALYZER
 
@@ -717,6 +700,47 @@ program_point::get_next () const
 	  return after_supernode (get_supernode (), get_call_string ());
       }
     }
+}
+
+/* Return true iff POINT_A and POINT_B share the same function and
+   call_string, both directly, and when attempting to undo inlining
+   information.  */
+
+bool
+program_point::effectively_intraprocedural_p (const program_point &point_a,
+					      const program_point &point_b)
+{
+  /* First, compare without considering inlining info.  */
+  if (point_a.get_function ()
+      != point_b.get_function ())
+    return false;
+  if (&point_a.get_call_string ()
+      != &point_b.get_call_string ())
+    return false;
+
+  /* Consider inlining info; they must have originally come from
+     the same function and have been inlined in the same way.  */
+  location_t loc_a = point_a.get_location ();
+  location_t loc_b = point_b.get_location ();
+  inlining_iterator iter_a (loc_a);
+  inlining_iterator iter_b (loc_b);
+  while (!(iter_a.done_p () || iter_b.done_p ()))
+    {
+      if (iter_a.done_p () || iter_b.done_p ())
+	return false;
+
+      if (iter_a.get_fndecl () != iter_b.get_fndecl ())
+	return false;
+      if (iter_a.get_callsite () != iter_b.get_callsite ())
+	return false;
+      if (iter_a.get_block () != iter_b.get_block ())
+	return false;
+
+      iter_a.next ();
+      iter_b.next ();
+    }
+
+  return true;
 }
 
 #if CHECKING_P

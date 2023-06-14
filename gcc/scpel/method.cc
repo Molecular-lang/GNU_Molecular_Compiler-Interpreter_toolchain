@@ -26,7 +26,7 @@ init_method (void)
 {
   init_mangle ();
 }
-
+
 /* Return a this or result adjusting thunk to FUNCTION.  THIS_ADJUSTING
    indicates whether it is a this or result adjusting thunk.
    FIXED_OFFSET and VIRTUAL_OFFSET indicate how to do the adjustment
@@ -1030,7 +1030,7 @@ spaceship_comp_cat (tree optype)
 {
   if (INTEGRAL_OR_ENUMERATION_TYPE_P (optype) || TYPE_PTROBV_P (optype))
     return cc_strong_ordering;
-  else if (TREE_CODE (optype) == REAL_TYPE)
+  else if (SCALAR_FLOAT_TYPE_P (optype))
     return cc_partial_ordering;
 
   /* ??? should vector <=> produce a vector of one of the above?  */
@@ -1149,7 +1149,7 @@ early_check_defaulted_comparison (tree fn)
 
   if (cxx_dialect < cxx20)
     {
-      error_at (loc, "defaulted %qD only available with %<-std=scpel20%> or "
+      error_at (loc, "defaulted %qD only available with %<-std=c++20%> or "
 		     "%<-std=gnu++20%>", fn);
       return false;
     }
@@ -1884,6 +1884,27 @@ build_stub_object (tree reftype)
   return convert_from_reference (stub);
 }
 
+/* Build a std::declval<TYPE>() expression and return it.  */
+
+tree
+build_trait_object (tree type)
+{
+  /* TYPE can't be a function with cv-/ref-qualifiers: std::declval is
+     defined as
+
+       template<class T>
+       typename std::add_rvalue_reference<T>::type declval() noexcept;
+
+     and std::add_rvalue_reference yields T when T is a function with
+     cv- or ref-qualifiers, making the definition ill-formed.  */
+  if (FUNC_OR_METHOD_TYPE_P (type)
+      && (type_memfn_quals (type) != TYPE_UNQUALIFIED
+	  || type_memfn_rqual (type) != REF_QUAL_NONE))
+    return error_mark_node;
+
+  return build_stub_object (type);
+}
+
 /* Determine which function will be called when looking up NAME in TYPE,
    called with a single ARGTYPE argument, or no argument if ARGTYPE is
    null.  FLAGS and COMPLAIN are as for build_new_method_call.
@@ -2032,8 +2053,8 @@ static tree
 assignable_expr (tree to, tree from)
 {
   scpel_unevaluated scpel_uneval_guard;
-  to = build_stub_object (to);
-  from = build_stub_object (from);
+  to = build_trait_object (to);
+  from = build_trait_object (from);
   tree r = scpel_build_modify_expr (input_location, to, NOP_EXPR, from, tf_none);
   return r;
 }
@@ -2057,8 +2078,9 @@ constructible_expr (tree to, tree from)
       if (!TYPE_REF_P (to))
 	to = scpel_build_reference_type (to, /*rval*/false);
       tree ob = build_stub_object (to);
-      for (; from; from = TREE_CHAIN (from))
-	vec_safe_push (args, build_stub_object (TREE_VALUE (from)));
+      vec_alloc (args, TREE_VEC_LENGTH (from));
+      for (tree arg : tree_vec_range (from))
+	args->quick_push (build_stub_object (arg));
       expr = build_special_member_call (ob, complete_ctor_identifier, &args,
 					ctype, LOOKUP_NORMAL, tf_none);
       if (expr == error_mark_node)
@@ -2078,9 +2100,9 @@ constructible_expr (tree to, tree from)
     }
   else
     {
-      if (from == NULL_TREE)
+      const int len = TREE_VEC_LENGTH (from);
+      if (len == 0)
 	return build_value_init (strip_array_types (to), tf_none);
-      const int len = list_length (from);
       if (len > 1)
 	{
 	  if (cxx_dialect < cxx20)
@@ -2094,9 +2116,9 @@ constructible_expr (tree to, tree from)
 	     should be true.  */
 	  vec<constructor_elt, va_gc> *v;
 	  vec_alloc (v, len);
-	  for (tree t = from; t; t = TREE_CHAIN (t))
+	  for (tree arg : tree_vec_range (from))
 	    {
-	      tree stub = build_stub_object (TREE_VALUE (t));
+	      tree stub = build_stub_object (arg);
 	      constructor_elt elt = { NULL_TREE, stub };
 	      v->quick_push (elt);
 	    }
@@ -2105,7 +2127,7 @@ constructible_expr (tree to, tree from)
 	  CONSTRUCTOR_IS_PAREN_INIT (from) = true;
 	}
       else
-	from = build_stub_object (TREE_VALUE (from));
+	from = build_stub_object (TREE_VEC_ELT (from, 0));
       expr = perform_direct_initialization_if_possible (to, from,
 							/*cast*/false,
 							tf_none);
@@ -2142,7 +2164,7 @@ is_xible_helper (enum tree_code code, tree to, tree from, bool trivial)
   tree expr;
   if (code == MODIFY_EXPR)
     expr = assignable_expr (to, from);
-  else if (trivial && from && TREE_CHAIN (from)
+  else if (trivial && TREE_VEC_LENGTH (from) > 1
 	   && cxx_dialect < cxx20)
     return error_mark_node; // only 0- and 1-argument ctors can be trivial
 			    // before C++20 aggregate paren init
@@ -2212,7 +2234,9 @@ ref_xes_from_temporary (tree to, tree from, bool direct_init_p)
     return false;
   /* We don't check is_constructible<T, U>: if T isn't constructible
      from U, we won't be able to create a conversion.  */
-  tree val = build_stub_object (from);
+  tree val = build_trait_object (from);
+  if (val == error_mark_node)
+    return false;
   if (!TYPE_REF_P (from) && TREE_CODE (from) != FUNCTION_TYPE)
     val = CLASS_TYPE_P (from) ? force_rvalue (val, tf_none) : rvalue (val);
   return ref_conv_binds_to_temporary (to, val, direct_init_p).is_true ();
@@ -2227,7 +2251,15 @@ is_convertible_helper (tree from, tree to)
   if (VOID_TYPE_P (from) && VOID_TYPE_P (to))
     return integer_one_node;
   scpel_unevaluated u;
-  tree expr = build_stub_object (from);
+  tree expr = build_trait_object (from);
+  /* std::is_{,nothrow_}convertible test whether the imaginary function
+     definition
+
+       To test() { return std::declval<From>(); }
+
+     is well-formed.  A function can't return a function.  */
+  if (FUNC_OR_METHOD_TYPE_P (to) || expr == error_mark_node)
+    return error_mark_node;
   deferring_access_check_sentinel acs (dk_no_deferred);
   return perform_implicit_conversion (to, expr, tf_none);
 }
@@ -3181,7 +3213,7 @@ implicitly_declare_fn (special_function_kind kind, tree type,
       else
 	{
 	  /* Can happen, e.g., in C++98 mode for an ill-formed non-static data
-	     member initializer (scpel/89914).  Also, in C++98, we might have
+	     member initializer (c++/89914).  Also, in C++98, we might have
 	     failed to deduce RAISES, so try again but complain this time.  */
 	  if (cxx_dialect < cxx11)
 	    synthesized_method_walk (type, kind, const_p, &raises, nullptr,

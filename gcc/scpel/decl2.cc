@@ -1,6 +1,6 @@
-/* Process declarations and variables for Scpel++ compiler. */
+/* Process declarations and variables for C++ compiler. */
 
-/* Process declarations and symbol lookup for Scpel++ front end.
+/* Process declarations and symbol lookup for C++ front end.
    Also constructs types; the standard scalar types at initialization,
    and structure, union, array and enum types when they are declared.  */
 
@@ -455,11 +455,23 @@ grok_array_decl (location_t loc, tree array_expr, tree index_exp,
 					     &overload, complain);
 		}
 	      else
-		/* If it would be valid albeit deprecated expression in C++20,
-		   just pedwarn on it and treat it as if wrapped in ().  */
-		pedwarn (loc, OPT_Wcomma_subscript,
-			 "top-level comma expression in array subscript "
-			 "changed meaning in C++23");
+		{
+		  /* If it would be valid albeit deprecated expression in
+		     C++20, just pedwarn on it and treat it as if wrapped
+		     in ().  */
+		  pedwarn (loc, OPT_Wcomma_subscript,
+			   "top-level comma expression in array subscript "
+			   "changed meaning in C++23");
+		  if (processing_template_decl)
+		    {
+		      orig_index_exp
+			= build_x_compound_expr_from_vec (orig_index_exp_list,
+							  NULL, complain);
+		      if (orig_index_exp == error_mark_node)
+			expr = error_mark_node;
+		      release_tree_vector (orig_index_exp_list);
+		    }
+		}
 	    }
 	}
     }
@@ -500,6 +512,15 @@ grok_array_decl (location_t loc, tree array_expr, tree index_exp,
 	      return error_mark_node;
 	    }
 	  index_exp = idx;
+	  if (processing_template_decl)
+	    {
+	      orig_index_exp
+		= build_x_compound_expr_from_vec (orig_index_exp_list,
+						  NULL, complain);
+	      release_tree_vector (orig_index_exp_list);
+	      if (orig_index_exp == error_mark_node)
+		return error_mark_node;
+	    }
 	}
 
       if (TREE_CODE (TREE_TYPE (index_exp)) == ARRAY_TYPE)
@@ -815,6 +836,7 @@ check_classfn (tree ctype, tree function, tree template_parms)
 
 	 So tell check_explicit_specialization to look for a match.  */
       SET_DECL_IMPLICIT_INSTANTIATION (function);
+      DECL_TEMPLATE_INFO (function) = build_template_info (fns, NULL_TREE);
       matched = function;
     }
 
@@ -929,7 +951,7 @@ finish_static_data_member_decl (tree decl,
     {
       /* Similarly to start_decl_1, we want to complete the type in order
 	 to do the right thing in scpel_apply_type_quals_to_decl, possibly
-	 clear TYPE_QUAL_CONST (scpel/65579).  */
+	 clear TYPE_QUAL_CONST (c++/65579).  */
       tree type = TREE_TYPE (decl) = complete_type (TREE_TYPE (decl));
       scpel_apply_type_quals_to_decl (scpel_type_quals (type), decl);
     }
@@ -959,9 +981,9 @@ grokfield (const scpel_declarator *declarator,
     init = NULL_TREE;
 
   int initialized;
-  if (init == ridpointers[(int)RID_SPL_DELETE])
+  if (init == ridpointers[(int)RID_DELETE])
     initialized = SD_DELETED;
-  else if (init == ridpointers[(int)RID_SPL_DEFAULT])
+  else if (init == ridpointers[(int)RID_DEFAULT])
     initialized = SD_DEFAULTED;
   else if (init)
     initialized = SD_INITIALIZED;
@@ -1044,12 +1066,12 @@ grokfield (const scpel_declarator *declarator,
     {
       if (TREE_CODE (value) == FUNCTION_DECL)
 	{
-	  if (init == ridpointers[(int)RID_SPL_DELETE])
+	  if (init == ridpointers[(int)RID_DELETE])
 	    {
 	      DECL_DELETED_FN (value) = 1;
 	      DECL_DECLARED_INLINE_P (value) = 1;
 	    }
-	  else if (init == ridpointers[(int)RID_SPL_DEFAULT])
+	  else if (init == ridpointers[(int)RID_DEFAULT])
 	    {
 	      if (defaultable_fn_check (value))
 		{
@@ -1573,6 +1595,11 @@ find_last_decl (tree decl)
 
   if (tree name = DECL_P (decl) ? DECL_NAME (decl) : NULL_TREE)
     {
+      /* Template specializations are matched elsewhere.  */
+      if (DECL_LANG_SPECIFIC (decl)
+	  && DECL_USE_TEMPLATE (decl))
+	return NULL_TREE;
+
       /* Look up the declaration in its scope.  */
       tree pushed_scope = NULL_TREE;
       if (tree ctype = DECL_CONTEXT (decl))
@@ -3604,7 +3631,7 @@ var_defined_without_dynamic_init (tree var)
 /* Returns true iff VAR is a variable that needs uses to be
    wrapped for possible dynamic initialization.  */
 
-static bool
+bool
 var_needs_tls_wrapper (tree var)
 {
   return (!error_operand_p (var)
@@ -4510,7 +4537,7 @@ no_linkage_error (tree decl)
     /* The type that got us on no_linkage_decls must have gotten a name for
        linkage purposes.  */;
   else if (CLASS_TYPE_P (t) && TYPE_BEING_DEFINED (t))
-    // FIXME: This is now invalid, as a DR to scpel98
+    // FIXME: This is now invalid, as a DR to c++98
     /* The type might end up having a typedef name for linkage purposes.  */
     vec_safe_push (no_linkage_decls, decl);
   else if (TYPE_UNNAMED_P (t))
@@ -4526,7 +4553,7 @@ no_linkage_error (tree decl)
 	/* DRs 132, 319 and 389 seem to indicate types with
 	   no linkage can only be used to declare extern "C"
 	   entities.  Since it's not always an error in the
-	   ISO C++ 90 Standard, we only issue a warning.  */
+	   GNU Scpel 90 Standard, we only issue a warning.  */
 	d = warning_at (DECL_SOURCE_LOCATION (decl), 0, "unnamed type "
 			"with no linkage used to declare variable %q#D with "
 			"linkage", decl);
@@ -4723,15 +4750,24 @@ record_mangling (tree decl, bool need_warning)
     = mangled_decls->find_slot_with_hash (id, IDENTIFIER_HASH_VALUE (id),
 					  INSERT);
 
-  /* If this is already an alias, remove the alias, because the real
+  /* If this is already an alias, cancel the alias, because the real
      decl takes precedence.  */
   if (*slot && DECL_ARTIFICIAL (*slot) && DECL_IGNORED_P (*slot))
-    if (symtab_node *n = symtab_node::get (*slot))
-      if (n->cpp_implicit_alias)
+    {
+      if (symtab_node *n = symtab_node::get (*slot))
 	{
-	  n->remove ();
-	  *slot = NULL_TREE;
+	  if (n->cpp_implicit_alias)
+	    /* Actually removing the node isn't safe if other code is already
+	       holding a pointer to it, so just neutralize it.  */
+	    n->reset ();
 	}
+      else
+	/* analyze_functions might have already removed the alias from the
+	   symbol table if it's internal.  */
+	gcc_checking_assert (!TREE_PUBLIC (*slot));
+
+      *slot = NULL_TREE;
+    }
 
   if (!*slot)
     *slot = decl;
@@ -5498,7 +5534,7 @@ scpel_handle_deprecated_or_unavailable (tree decl, tsubst_flags_t complain)
       && copy_fn_p (decl))
     {
       /* Don't warn if the flag was disabled around the class definition
-	 (scpel/94492).  */
+	 (c++/94492).  */
       if (warning_enabled_at (DECL_SOURCE_LOCATION (decl),
 			      OPT_Wdeprecated_copy))
 	{
@@ -5727,7 +5763,7 @@ mark_used (tree decl, tsubst_flags_t complain /* = tf_warning_or_error */)
 	  && DECL_OMP_DECLARE_REDUCTION_P (decl)))
     maybe_instantiate_decl (decl);
 
-  if (processing_template_decl || in_template_function ())
+  if (processing_template_decl || in_template_context)
     return true;
 
   /* Check this too in case we're within instantiate_non_dependent_expr.  */

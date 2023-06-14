@@ -110,6 +110,7 @@
 #include "system.h"
 #include "coretypes.h"
 #include "backend.h"
+#include "hooks.h"
 #include "target.h"
 #include "rtl.h"
 #include "tree.h"
@@ -1021,6 +1022,34 @@ match_reload (signed char out, signed char *ins, signed char *outs,
 	 are ordered.  */
       if (partial_subreg_p (outmode, inmode))
 	{
+	  bool asm_p = asm_noperands (PATTERN (curr_insn)) >= 0;
+	  int hr;
+	  HARD_REG_SET temp_hard_reg_set;
+	  
+	  if (asm_p && (hr = get_hard_regno (out_rtx)) >= 0
+	      && hard_regno_nregs (hr, inmode) > 1)
+	    {
+	      /* See gcc.c-torture/execute/20030222-1.c.
+		 Consider the code for 32-bit (e.g. BE) target:
+		   int i, v; long x; x = v; asm ("" : "=r" (i) : "0" (x));
+		 We generate the following RTL with reload insns:
+  		   1. subreg:si(x:di, 0) = 0;
+		   2. subreg:si(x:di, 4) = v:si;
+		   3. t:di = x:di, dead x;
+		   4. asm ("" : "=r" (subreg:si(t:di,4)) : "0" (t:di))
+		   5. i:si = subreg:si(t:di,4);
+		 If we assign hard reg of x to t, dead code elimination
+		 will remove insn #2 and we will use unitialized hard reg.
+		 So exclude the hard reg of x for t.  We could ignore this
+		 problem for non-empty asm using all x value but it is hard to
+		 check that the asm are expanded into insn realy using x
+		 and setting r.  */
+	      CLEAR_HARD_REG_SET (temp_hard_reg_set);
+	      if (exclude_start_hard_regs != NULL)
+		temp_hard_reg_set = *exclude_start_hard_regs;
+	      SET_HARD_REG_BIT (temp_hard_reg_set, hr);
+	      exclude_start_hard_regs = &temp_hard_reg_set;
+	    }
 	  reg = new_in_reg
 	    = lra_create_new_reg_with_unique_value (inmode, in_rtx, goal_class,
 						    exclude_start_hard_regs,
@@ -3449,6 +3478,41 @@ skip_constraint_modifiers (const char *str)
       }
 }
 
+/* Takes a string of 0 or more comma-separated constraints.  When more
+   than one constraint is present, evaluate whether they all correspond
+   to a single, repeated constraint (e.g. "r,r") or whether we have
+   more than one distinct constraints (e.g. "r,m").  */
+static bool
+constraint_unique (const char *cstr)
+{
+  enum constraint_num ca, cb;
+  ca = CONSTRAINT__UNKNOWN;
+  for (;;)
+    {
+      cstr = skip_constraint_modifiers (cstr);
+      if (*cstr == '\0' || *cstr == ',')
+	cb = CONSTRAINT_X;
+      else
+	{
+	  cb = lookup_constraint (cstr);
+	  if (cb == CONSTRAINT__UNKNOWN)
+	    return false;
+	  cstr += CONSTRAINT_LEN (cstr[0], cstr);
+	}
+      /* Handle the first iteration of the loop.  */
+      if (ca == CONSTRAINT__UNKNOWN)
+	ca = cb;
+      /* Handle the general case of comparing ca with subsequent
+	 constraints.  */
+      else if (ca != cb)
+	return false;
+      if (*cstr == '\0')
+	return true;
+      if (*cstr == ',')
+	cstr += 1;
+    }
+}
+
 /* Major function to make reloads for an address in operand NOP or
    check its correctness (If CHECK_ONLY_P is true). The supported
    cases are:
@@ -3508,9 +3572,7 @@ process_address_1 (int nop, bool check_only_p,
      operand has one address constraint, probably all others constraints are
      address ones.  */
   if (constraint[0] != '\0' && get_constraint_type (cn) != CT_ADDRESS
-      && *skip_constraint_modifiers (constraint
-				     + CONSTRAINT_LEN (constraint[0],
-						       constraint)) != '\0')
+      && !constraint_unique (constraint))
     cn = CONSTRAINT__UNKNOWN;
   if (insn_extra_address_constraint (cn)
       /* When we find an asm operand with an address constraint that
@@ -5001,6 +5063,117 @@ contains_reloaded_insn_p (int regno)
   return false;
 }
 
+/* Try combine secondary memory reload insn FROM for insn TO into TO insn.
+   FROM should be a load insn (usually a secondary memory reload insn).  Return
+   TRUE in case of success.  */
+static bool
+combine_reload_insn (rtx_insn *from, rtx_insn *to)
+{
+  bool ok_p;
+  rtx_insn *saved_insn;
+  rtx set, from_reg, to_reg, op;
+  enum reg_class to_class, from_class;
+  int n, nop;
+  signed char changed_nops[MAX_RECOG_OPERANDS + 1];
+  
+  /* Check conditions for second memory reload and original insn:  */
+  if ((targetm.secondary_memory_needed
+       == hook_bool_mode_reg_class_t_reg_class_t_false)
+      || NEXT_INSN (from) != to
+      || !NONDEBUG_INSN_P (to)
+      || CALL_P (to))
+    return false;
+
+  lra_insn_recog_data_t id = lra_get_insn_recog_data (to);
+  struct lra_static_insn_data *static_id = id->insn_static_data;
+  
+  if (id->used_insn_alternative == LRA_UNKNOWN_ALT
+      || (set = single_set (from)) == NULL_RTX)
+    return false;
+  from_reg = SET_DEST (set);
+  to_reg = SET_SRC (set);
+  /* Ignore optional reloads: */
+  if (! REG_P (from_reg) || ! REG_P (to_reg)
+      || bitmap_bit_p (&lra_optional_reload_pseudos, REGNO (from_reg)))
+    return false;
+  to_class = lra_get_allocno_class (REGNO (to_reg));
+  from_class = lra_get_allocno_class (REGNO (from_reg));
+  /* Check that reload insn is a load:  */
+  if (to_class != NO_REGS || from_class == NO_REGS)
+    return false;
+  for (n = nop = 0; nop < static_id->n_operands; nop++)
+    {
+      if (static_id->operand[nop].type != OP_IN)
+	continue;
+      op = *id->operand_loc[nop];
+      if (!REG_P (op) || REGNO (op) != REGNO (from_reg))
+	continue;
+      *id->operand_loc[nop] = to_reg;
+      changed_nops[n++] = nop;
+    }
+  changed_nops[n] = -1;
+  lra_update_dups (id, changed_nops);
+  lra_update_insn_regno_info (to);
+  ok_p = recog_memoized (to) >= 0;
+  if (ok_p)
+    {
+      /* Check that combined insn does not need any reloads: */
+      saved_insn = curr_insn;
+      curr_insn = to;
+      curr_id = lra_get_insn_recog_data (curr_insn);
+      curr_static_id = curr_id->insn_static_data;
+      for (bool swapped_p = false;;)
+	{
+	  ok_p = !curr_insn_transform (true);
+	  if (ok_p || curr_static_id->commutative < 0)
+	    break;
+	  swap_operands (curr_static_id->commutative);
+	  if (lra_dump_file != NULL)
+	    {
+	      fprintf (lra_dump_file,
+		       "    Swapping %scombined insn operands:\n",
+		       swapped_p ? "back " : "");
+	      dump_insn_slim (lra_dump_file, to);
+	    }
+	  if (swapped_p)
+	    break;
+	  swapped_p = true;
+	}
+      curr_insn = saved_insn;
+      curr_id = lra_get_insn_recog_data (curr_insn);
+      curr_static_id = curr_id->insn_static_data;
+    }
+  if (ok_p)
+    {
+      id->used_insn_alternative = -1;
+      lra_push_insn_and_update_insn_regno_info (to);
+      if (lra_dump_file != NULL)
+	{
+	  fprintf (lra_dump_file, "    Use combined insn:\n");
+	  dump_insn_slim (lra_dump_file, to);
+	}
+      return true;
+    }
+  if (lra_dump_file != NULL)
+    {
+      fprintf (lra_dump_file, "    Failed combined insn:\n");
+      dump_insn_slim (lra_dump_file, to);
+    }
+  for (int i = 0; i < n; i++)
+    {
+      nop = changed_nops[i];
+      *id->operand_loc[nop] = from_reg;
+    }
+  lra_update_dups (id, changed_nops);
+  lra_update_insn_regno_info (to);
+  if (lra_dump_file != NULL)
+    {
+      fprintf (lra_dump_file, "    Restoring insn after failed combining:\n");
+      dump_insn_slim (lra_dump_file, to);
+    }
+  return false;
+}
+
 /* Entry function of LRA constraint pass.  Return true if the
    constraint pass did change the code.	 */
 bool
@@ -5010,6 +5183,7 @@ lra_constraints (bool first_p)
   int i, hard_regno, new_insns_num;
   unsigned int min_len, new_min_len, uid;
   rtx set, x, reg, dest_reg;
+  rtx_insn *original_insn;
   basic_block last_bb;
   bitmap_iterator bi;
 
@@ -5119,6 +5293,7 @@ lra_constraints (bool first_p)
   new_insns_num = 0;
   last_bb = NULL;
   changed_p = false;
+  original_insn = NULL;
   while ((new_min_len = lra_insn_stack_length ()) != 0)
     {
       curr_insn = lra_pop_insn ();
@@ -5133,7 +5308,12 @@ lra_constraints (bool first_p)
 	{
 	  min_len = new_min_len;
 	  new_insns_num = 0;
+	  original_insn = curr_insn;
 	}
+      else if (combine_reload_insn (curr_insn, original_insn))
+	{
+	  continue;
+        }
       if (new_insns_num > MAX_RELOAD_INSNS_NUMBER)
 	internal_error
 	  ("maximum number of generated reload insns per insn achieved (%d)",

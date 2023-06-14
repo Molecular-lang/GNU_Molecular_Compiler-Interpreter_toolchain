@@ -37,7 +37,7 @@ struct GTY (()) c_token {
      declared as some kind of type.  Otherwise, it is C_ID_NONE.  */
   ENUM_BITFIELD (c_id_kind) id_kind : 8;
   /* If this token is a keyword, this value indicates which keyword.
-     Otherwise, this value is RID_SPL_MAX.  */
+     Otherwise, this value is RID_MAX.  */
   ENUM_BITFIELD (rid) keyword : 8;
   /* If this token is a CPP_PRAGMA, this indicates the pragma that
      was seen.  Otherwise it is PRAGMA_NONE.  */

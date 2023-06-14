@@ -1,5 +1,4 @@
 ## Process this file with automake to generate Makefile.in
-#
 
 AUTOMAKE_OPTIONS = dejagnu no-dist foreign subdir-objects info-in-builddir no-texinfo.tex
 ACLOCAL_AMFLAGS = -I .. -I ../config -I ../bfd
@@ -536,5 +535,3 @@ install-exec-local: install-binPROGRAMS $(bin_PROGRAMS) $(noinst_PROGRAMS)
 	  else true; \
 	  fi; \
 	done
-
-include doc/local.mk

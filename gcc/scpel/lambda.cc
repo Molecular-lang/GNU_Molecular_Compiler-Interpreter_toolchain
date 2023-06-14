@@ -1457,7 +1457,7 @@ void
 start_lambda_scope (tree decl)
 {
   gcc_checking_assert (decl);
-  if (current_function_decl && TREE_CODE (decl) == VAR_DECL)
+  if (current_function_decl && VAR_P (decl))
     // If we're inside a function, we ignore variable scope.  Don't push.
     lambda_scope.nesting++;
   else
@@ -1742,6 +1742,9 @@ prune_lambda_captures (tree body)
     return;
   if (LAMBDA_EXPR_DEFAULT_CAPTURE_MODE (lam) == CPLD_NONE)
     /* No default captures, and we don't prune explicit captures.  */
+    return;
+  /* Don't bother pruning in a template, we'll prune at instantiation time.  */
+  if (dependent_type_p (TREE_TYPE (lam)))
     return;
 
   hash_map<tree,tree*> const_vars;

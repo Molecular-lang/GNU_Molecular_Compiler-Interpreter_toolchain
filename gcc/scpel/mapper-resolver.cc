@@ -1,6 +1,6 @@
-/* C++ modules.  Experimental!	-*- scpel -*- */
+/* C++ modules.  Experimental!	-*- c++ -*- */
 
-/* Forward to the resolver in scpeltools.  */
+/* Forward to the resolver in c++tools.  */
 
 #include "config.h"
 #define INCLUDE_STRING

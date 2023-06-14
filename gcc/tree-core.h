@@ -33,7 +33,6 @@ struct function;
 struct real_value;
 struct fixed_value;
 struct ptr_info_def;
-struct irange_storage_slot;
 struct die_struct;
 
 
@@ -671,7 +670,7 @@ enum tree_index {
   /* The _FloatN and _FloatNx types must be consecutive, and in the
      same sequence as the corresponding complex types, which must also
      be consecutive; _FloatN must come before _FloatNx; the order must
-     also be the same as in the floatn_nx_types array and the RID_SPL_*
+     also be the same as in the floatn_nx_types array and the RID_*
      values in c-common.h.  This is so that iterations over these
      types work as intended.  */
   TI_FLOAT16_TYPE,
@@ -1605,17 +1604,12 @@ struct GTY(()) tree_ssa_name {
 
   /* Value range information.  */
   union ssa_name_info_type {
-    /* Ranges for integers.  */
-    struct GTY ((tag ("0"))) irange_storage_slot *irange_info;
-    /* Ranges for floating point numbers.  */
-    struct GTY ((tag ("1"))) frange_storage_slot *frange_info;
-    /* Pointer attributes used for alias analysis.  */
-    struct GTY ((tag ("2"))) ptr_info_def *ptr_info;
-    /* This holds any range info supported by ranger (except ptr_info
-       above) and is managed by vrange_storage.  */
-    void * GTY ((skip)) range_info;
+    /* Range and aliasing info for pointers.  */
+    struct GTY ((tag ("0"))) ptr_info_def *ptr_info;
+    /* Range info for everything else.  */
+    struct GTY ((tag ("1"))) vrange_storage * range_info;
   } GTY ((desc ("%1.typed.type ?" \
-		"(POINTER_TYPE_P (TREE_TYPE ((tree)&%1)) ? 2 : SCALAR_FLOAT_TYPE_P (TREE_TYPE ((tree)&%1))) : 3"))) info;
+		"!POINTER_TYPE_P (TREE_TYPE ((tree)&%1)) : 2"))) info;
   /* Immediate uses list for this SSA_NAME.  */
   struct ssa_use_operand_t imm_uses;
 };
@@ -1686,18 +1680,9 @@ struct GTY(()) tree_type_common {
   tree attributes;
   unsigned int uid;
 
-  unsigned int precision : 10;
-  unsigned no_force_blk_flag : 1;
-  unsigned needs_constructing_flag : 1;
-  unsigned transparent_aggr_flag : 1;
-  unsigned restrict_flag : 1;
-  unsigned contains_placeholder_bits : 2;
+  ENUM_BITFIELD(machine_mode) mode : MACHINE_MODE_BITSIZE;
 
-  ENUM_BITFIELD(machine_mode) mode : 8;
-
-  /* TYPE_STRING_FLAG for INTEGER_TYPE and ARRAY_TYPE.
-     TYPE_CXX_ODR_P for RECORD_TYPE and UNION_TYPE.  */
-  unsigned string_flag : 1;
+  unsigned int precision : 16;
   unsigned lang_flag_0 : 1;
   unsigned lang_flag_1 : 1;
   unsigned lang_flag_2 : 1;
@@ -1713,12 +1698,22 @@ struct GTY(()) tree_type_common {
      so we need to store the value 32 (not 31, as we need the zero
      as well), hence six bits.  */
   unsigned align : 6;
+  /* TYPE_STRING_FLAG for INTEGER_TYPE and ARRAY_TYPE.
+     TYPE_CXX_ODR_P for RECORD_TYPE and UNION_TYPE.  */
+  unsigned string_flag : 1;
+  unsigned no_force_blk_flag : 1;
+
   unsigned warn_if_not_align : 6;
+  unsigned needs_constructing_flag : 1;
+  unsigned transparent_aggr_flag : 1;
+
+  unsigned contains_placeholder_bits : 2;
+  unsigned restrict_flag : 1;
   unsigned typeless_storage : 1;
   unsigned empty_flag : 1;
   unsigned indivisible_p : 1;
   unsigned no_named_args_stdarg_p : 1;
-  unsigned spare : 15;
+  unsigned spare : 1;
 
   alias_set_type alias_set;
   tree pointer_to;
@@ -1776,7 +1771,7 @@ struct GTY(()) tree_decl_common {
   struct tree_decl_minimal common;
   tree size;
 
-  ENUM_BITFIELD(machine_mode) mode : 8;
+  ENUM_BITFIELD(machine_mode) mode : MACHINE_MODE_BITSIZE;
 
   unsigned nonlocal_flag : 1;
   unsigned virtual_flag : 1;
@@ -1808,7 +1803,8 @@ struct GTY(()) tree_decl_common {
      In VAR_DECL, PARM_DECL and RESULT_DECL, this is
      DECL_HAS_VALUE_EXPR_P.  */
   unsigned decl_flag_2 : 1;
-  /* In FIELD_DECL, this is DECL_PADDING_P.  */
+  /* In FIELD_DECL, this is DECL_PADDING_P.
+     In VAR_DECL, this is DECL_MERGEABLE.  */
   unsigned decl_flag_3 : 1;
   /* Logically, these two would go in a theoretical base shared by var and
      parm decl. */
@@ -1834,7 +1830,7 @@ struct GTY(()) tree_decl_common {
   /* In FIELD_DECL, this is DECL_NOT_FLEXARRAY.  */
   unsigned int decl_not_flexarray : 1;
 
-  /* 13 bits unused.  */
+  /* 5 bits unused.  */
 
   /* UID for points-to sets, stable over copying from inlining.  */
   unsigned int pt_uid;

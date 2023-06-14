@@ -25,7 +25,7 @@ along with GCC; see the file COPYING3.  If not see
 #include "value-relation.h"
 
 // The value_query class is used by optimization passes that require
-// valueizing SSA names in terms of a tree value, but have no neeed
+// valueizing SSA names in terms of a tree value, but have no need
 // for ranges.
 //
 // value_of_expr must be provided.  The default for value_on_edge and
@@ -104,18 +104,12 @@ public:
   // If present, Access relation oracle for more advanced uses.
   inline relation_oracle *oracle () const  { return m_oracle; }
 
-  // DEPRECATED: This method is used from vr-values.  The plan is to
-  // rewrite all uses of it to the above API.
-  virtual const value_range *get_value_range (const_tree, gimple * = NULL);
   virtual void dump (FILE *);
 
 protected:
   bool get_tree_range (vrange &v, tree expr, gimple *stmt);
   bool get_arith_expr_range (vrange &r, tree expr, gimple *stmt);
   relation_oracle *m_oracle;
-
-private:
-  class equiv_allocator *equiv_alloc;
 };
 
 // Global ranges for SSA names using SSA_NAME_RANGE_INFO.

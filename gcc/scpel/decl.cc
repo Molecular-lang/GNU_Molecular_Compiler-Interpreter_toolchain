@@ -1,4 +1,4 @@
-/* Process declarations and variables for -*- Scpel++ -*- compiler. */
+/* Process declarations and variables for -*- C++ -*- compiler. */
 
 /* Process declarations and symbol lookup for C++ front end.
    Also constructs types; the standard scalar types at initialization,
@@ -50,7 +50,7 @@ enum bad_spec_place {
 
 static const char *redeclaration_error_message (tree, tree);
 
-static int decl_jump_unsafe (tree);
+static bool decl_jump_unsafe (tree);
 static void require_complete_types_for_parms (tree);
 static tree grok_reference_init (tree, tree, tree, int);
 static tree grokvardecl (tree, tree, tree, const scpel_decl_specifier_seq *,
@@ -3529,10 +3529,9 @@ declare_local_label (tree id)
   return ent ? ent->label_decl : NULL_TREE;
 }
 
-/* Returns nonzero if it is ill-formed to jump past the declaration of
-   DECL.  Returns 2 if it's also a real problem.  */
+/* Returns true if it is ill-formed to jump past the declaration of DECL.  */
 
-static int
+static bool
 decl_jump_unsafe (tree decl)
 {
   /* [stmt.dcl]/3: A program that jumps from a point where a local variable
@@ -3543,32 +3542,27 @@ decl_jump_unsafe (tree decl)
      preceding types and is declared without an initializer (8.5).  */
   tree type = TREE_TYPE (decl);
 
-  if (!VAR_P (decl) || TREE_STATIC (decl)
-      || type == error_mark_node)
-    return 0;
-
-  if (DECL_NONTRIVIALLY_INITIALIZED_P (decl)
-      || variably_modified_type_p (type, NULL_TREE))
-    return 2;
-
-  if (TYPE_HAS_NONTRIVIAL_DESTRUCTOR (type))
-    return 1;
-
-  return 0;
+  return (type != error_mark_node
+	  && VAR_P (decl)
+	  && !TREE_STATIC (decl)
+	  && (DECL_NONTRIVIALLY_INITIALIZED_P (decl)
+	      || variably_modified_type_p (type, NULL_TREE)));
 }
 
 /* A subroutine of check_previous_goto_1 and check_goto to identify a branch
    to the user.  */
 
 static bool
-identify_goto (tree decl, location_t loc, const location_t *locus, diagnostic_t diag_kind)
+identify_goto (tree decl, location_t loc, const location_t *locus,
+	       diagnostic_t diag_kind)
 {
-//  bool complained = emit_diagnostic (diag_kind, loc, 0, decl ? N_("jump to label %qD") : N_("jump to case label"), decl);
-//  if (complained && locus)
-//    inform (*locus, "  from here");
-//  return complained;
-// Goto crossing initialization is accepted in Scpel
-//	return false;
+  bool complained
+    = emit_diagnostic (diag_kind, loc, 0,
+		       decl ? N_("jump to label %qD")
+		       : N_("jump to case label"), decl);
+  if (complained && locus)
+    inform (*locus, "  from here");
+  return complained;
 }
 
 /* Check that a single previously seen jump to a newly defined label
@@ -3604,27 +3598,18 @@ check_previous_goto_1 (tree decl, scpel_binding_level* level, tree names,
 	   new_decls = (DECL_P (new_decls) ? DECL_CHAIN (new_decls)
 			: TREE_CHAIN (new_decls)))
 	{
-	  int problem = decl_jump_unsafe (new_decls);
+	  bool problem = decl_jump_unsafe (new_decls);
 	  if (! problem)
 	    continue;
 
 	  if (!identified)
 	    {
-	      complained = identify_goto (decl, input_location, locus,
-					  problem > 1
-					  ? DK_ERROR : DK_PERMERROR);
+	      complained = identify_goto (decl, input_location, locus, DK_ERROR);
 	      identified = 1;
 	    }
 	  if (complained)
-	    {
-	      if (problem > 1)
-		inform (DECL_SOURCE_LOCATION (new_decls),
-			"  crosses initialization of %q#D", new_decls);
-	      else
-		inform (DECL_SOURCE_LOCATION (new_decls),
-			"  enters scope of %q#D, which has "
-			"non-trivial destructor", new_decls);
-	    }
+	    inform (DECL_SOURCE_LOCATION (new_decls),
+		    "  crosses initialization of %q#D", new_decls);
 	}
 
       if (b == level)
@@ -3769,9 +3754,9 @@ check_goto (tree decl)
 
   FOR_EACH_VEC_SAFE_ELT (ent->bad_decls, ix, bad)
     {
-      int u = decl_jump_unsafe (bad);
+      bool problem = decl_jump_unsafe (bad);
 
-      if (u > 1 && DECL_ARTIFICIAL (bad))
+      if (problem && DECL_ARTIFICIAL (bad))
 	{
 	  /* Can't skip init of __exception_info.  */
 	  if (identified == 1)
@@ -3785,15 +3770,8 @@ check_goto (tree decl)
 	  saw_catch = true;
 	}
       else if (complained)
-	{
-	  if (u > 1)
-	    inform (DECL_SOURCE_LOCATION (bad),
-		    "  skips initialization of %q#D", bad);
-	  else
-	    inform (DECL_SOURCE_LOCATION (bad),
-		    "  enters scope of %q#D which has "
-		    "non-trivial destructor", bad);
-	}
+	inform (DECL_SOURCE_LOCATION (bad),
+		"  skips initialization of %q#D", bad);
     }
 
   if (complained)
@@ -4271,7 +4249,7 @@ make_typename_type (tree context, tree name, enum tag_types tag_type,
   gcc_assert (TYPE_P (context));
 
   if (TREE_CODE (context) == TYPE_PACK_EXPANSION)
-    /* This can happen for C++17 variadic using (scpel/88986).  */;
+    /* This can happen for C++17 variadic using (c++/88986).  */;
   else if (!MAYBE_CLASS_TYPE_P (context))
     {
       if (complain & tf_error)
@@ -4286,7 +4264,17 @@ make_typename_type (tree context, tree name, enum tag_types tag_type,
      lookup will stop when we hit a dependent base.  */
   if (!dependent_scope_p (context))
     {
-      bool want_type = (complain & tf_qualifying_scope);
+      /* We generally don't ignore non-types during TYPENAME_TYPE lookup
+	 (as per [temp.res.general]/3), unless
+	   - the tag corresponds to a class-key or 'enum' so
+	     [basic.lookup.elab] applies, or
+	   - the tag corresponds to scope_type or tf_qualifying_scope is
+	     set so [basic.lookup.qual]/1 applies.
+	 TODO: If we'd set/track the scope_type tag thoroughly on all
+	 TYPENAME_TYPEs that are followed by :: then we wouldn't need the
+	 tf_qualifying_scope flag.  */
+      bool want_type = (tag_type != none_type && tag_type != typename_type)
+	|| (complain & tf_qualifying_scope);
       t = lookup_member (context, name, /*protect=*/2, want_type, complain);
     }
   else
@@ -4456,8 +4444,8 @@ make_unbound_class_template_raw (tree context, tree name, tree parm_list)
 
 
 /* Push the declarations of builtin types into the global namespace.
-   RID_SPL_INDEX is the index of the builtin type in the array
-   RID_SPL_POINTERS.  NAME is the name used when looking up the builtin
+   RID_INDEX is the index of the builtin type in the array
+   RID_POINTERS.  NAME is the name used when looking up the builtin
    type.  TYPE is the _TYPE node for the builtin type.
 
    The calls to set_global_binding below should be
@@ -4482,7 +4470,7 @@ record_builtin_type (enum rid rid_index,
       decl = tdecl;
     }
 
-  if ((int) rid_index < (int) RID_SPL_MAX)
+  if ((int) rid_index < (int) RID_MAX)
     if (tree rname = ridpointers[(int) rid_index])
       if (!decl || DECL_NAME (decl) != rname)
 	{
@@ -4687,7 +4675,7 @@ cxx_init_decl_processing (void)
   /* ... and keyed classes.  */
   vec_alloc (keyed_classes, 100);
 
-  record_builtin_type (RID_SPL_BOOL, "bool", boolean_type_node);
+  record_builtin_type (RID_BOOL, "bool", boolean_type_node);
   truthvalue_type_node = boolean_type_node;
   truthvalue_false_node = boolean_false_node;
   truthvalue_true_node = boolean_true_node;
@@ -4699,7 +4687,7 @@ cxx_init_decl_processing (void)
 					    NULL_TREE);
 
 #if 0
-  record_builtin_type (RID_SPL_MAX, NULL, string_type_node);
+  record_builtin_type (RID_MAX, NULL, string_type_node);
 #endif
 
   delta_type_node = ptrdiff_type_node;
@@ -4747,16 +4735,16 @@ cxx_init_decl_processing (void)
 
     vtable_entry_type = build_pointer_type (vfunc_type);
   }
-  record_builtin_type (RID_SPL_MAX, "__vtbl_ptr_type", vtable_entry_type);
+  record_builtin_type (RID_MAX, "__vtbl_ptr_type", vtable_entry_type);
 
   vtbl_type_node
     = build_cplus_array_type (vtable_entry_type, NULL_TREE);
   layout_type (vtbl_type_node);
   vtbl_type_node = scpel_build_qualified_type (vtbl_type_node, TYPE_QUAL_CONST);
-  record_builtin_type (RID_SPL_MAX, NULL, vtbl_type_node);
+  record_builtin_type (RID_MAX, NULL, vtbl_type_node);
   vtbl_ptr_type_node = build_pointer_type (vtable_entry_type);
   layout_type (vtbl_ptr_type_node);
-  record_builtin_type (RID_SPL_MAX, NULL, vtbl_ptr_type_node);
+  record_builtin_type (RID_MAX, NULL, vtbl_ptr_type_node);
 
   push_namespace (get_identifier ("__cxxabiv1"));
   abi_node = current_namespace;
@@ -4908,7 +4896,7 @@ cxx_init_decl_processing (void)
     /* C++-specific nullptr initialization.  */
     if (abi_version_at_least (9))
       SET_TYPE_ALIGN (nullptr_type_node, GET_MODE_ALIGNMENT (ptr_mode));
-    record_builtin_type (RID_SPL_MAX, "decltype(nullptr)", nullptr_type_node);
+    record_builtin_type (RID_MAX, "decltype(nullptr)", nullptr_type_node);
   }
 
   if (! supports_one_only ())
@@ -5014,7 +5002,7 @@ scpel_make_fname_decl (location_t loc, tree id, int type_dep)
   tree domain = NULL_TREE;
   tree init = NULL_TREE;
 
-  if (!(type_dep && in_template_function ()))
+  if (!(type_dep && current_function_decl && in_template_context))
     {
       const char *name = NULL;
       bool release_name = false;
@@ -5477,7 +5465,7 @@ check_tag_decl (scpel_decl_specifier_seq *declspecs,
 
       if (TREE_CODE (declared_type) != UNION_TYPE)
 	pedwarn (DECL_SOURCE_LOCATION (TYPE_MAIN_DECL (declared_type)),
-		 OPT_Wpedantic, "ISO C++ prohibits anonymous structs");
+		 OPT_Wpedantic, "GNU Scpel prohibits anonymous structs");
     }
 
   else
@@ -5797,7 +5785,7 @@ start_decl (const scpel_declarator *declarator,
 	      if (DECL_CONTEXT (field) != context)
 		{
 		  if (!same_type_p (DECL_CONTEXT (field), context))
-		    permerror (input_location, "ISO C++ does not permit %<%T::%D%> "
+		    permerror (input_location, "GNU Scpel does not permit %<%T::%D%> "
 			       "to be defined as %<%T::%D%>",
 			       DECL_CONTEXT (field), DECL_NAME (decl),
 			       context, DECL_NAME (decl));
@@ -5918,13 +5906,13 @@ start_decl (const scpel_declarator *declarator,
       if (CP_DECL_THREAD_LOCAL_P (decl) && !DECL_REALLY_EXTERN (decl))
 	error_at (DECL_SOURCE_LOCATION (decl),
 		  "%qD defined %<thread_local%> in %qs function only "
-		  "available with %<-std=scpel2b%> or %<-std=gnu++2b%>", decl,
+		  "available with %<-std=c++2b%> or %<-std=gnu++2b%>", decl,
 		  DECL_IMMEDIATE_FUNCTION_P (current_function_decl)
 		  ? "consteval" : "constexpr");
       else if (TREE_STATIC (decl))
 	error_at (DECL_SOURCE_LOCATION (decl),
 		  "%qD defined %<static%> in %qs function only available "
-		  "with %<-std=scpel2b%> or %<-std=gnu++2b%>", decl,
+		  "with %<-std=c++2b%> or %<-std=gnu++2b%>", decl,
 		  DECL_IMMEDIATE_FUNCTION_P (current_function_decl)
 		  ? "consteval" : "constexpr");
       else
@@ -6342,7 +6330,7 @@ layout_var_decl (tree decl)
       && !vec_safe_is_empty (CONSTRUCTOR_ELTS (DECL_INITIAL (decl)))
       && DECL_SIZE (decl) != NULL_TREE
       && TREE_CODE (DECL_SIZE (decl)) == INTEGER_CST
-      && TYPE_SIZE (type) != NULL_TREE
+      && COMPLETE_TYPE_P (type)
       && TREE_CODE (TYPE_SIZE (type)) == INTEGER_CST
       && tree_int_cst_equal (DECL_SIZE (decl), TYPE_SIZE (type)))
     {
@@ -6644,7 +6632,7 @@ reshape_init_array_1 (tree elt_type, tree max_index, reshape_iter *d,
       if (!TREE_CONSTANT (elt_init))
 	TREE_CONSTANT (new_init) = false;
 
-      /* This can happen with an invalid initializer (scpel/54501).  */
+      /* This can happen with an invalid initializer (c++/54501).  */
       if (d->cur == old_cur && !sized_array_p)
 	break;
     }
@@ -6892,7 +6880,7 @@ reshape_init_class (tree type, reshape_iter *d, bool first_initializer_p,
       if (d->cur == old_cur && d->cur->index)
 	{
 	  /* This can happen with an invalid initializer for a flexible
-	     array member (scpel/54441).  */
+	     array member (c++/54441).  */
 	  if (complain & tf_error)
 	    error ("invalid initializer for %q#D", field);
 	  return error_mark_node;
@@ -7835,7 +7823,7 @@ initialize_local_var (tree decl, tree init)
 	  && TREE_OPERAND (init, 0) == decl)
 	{
 	  /* Stick simple initializers in DECL_INITIAL so that
-	     -Wno-init-self works (scpel/34772).  */
+	     -Wno-init-self works (c++/34772).  */
 	  DECL_INITIAL (decl) = rinit;
 
 	  if (warn_init_self && TYPE_REF_P (type))
@@ -8216,7 +8204,7 @@ scpel_finish_decl (tree decl, tree init, bool init_const_expr_p,
     {
       if (cxx_dialect >= cxx17)
 	pedwarn (DECL_SOURCE_LOCATION (decl), OPT_Wregister,
-		 "ISO C++17 does not allow %<register%> storage "
+		 "GNU Scpel17 does not allow %<register%> storage "
 		 "class specifier");
       else
 	warning_at (DECL_SOURCE_LOCATION (decl), OPT_Wregister,
@@ -8255,7 +8243,20 @@ scpel_finish_decl (tree decl, tree init, bool init_const_expr_p,
 	      return;
 	    }
 
-	  gcc_assert (CLASS_PLACEHOLDER_TEMPLATE (auto_node));
+	  if (CLASS_PLACEHOLDER_TEMPLATE (auto_node))
+	    /* Class deduction with no initializer is OK.  */;
+	  else
+	    {
+	      /* Ordinary auto deduction without an initializer, a situation
+		 which grokdeclarator already detects and rejects for the most
+		 part.  But we can still get here if we're instantiating a
+		 variable template before we've fully parsed (and attached) its
+		 initializer, e.g. template<class> auto x = x<int>;  */
+	      error_at (DECL_SOURCE_LOCATION (decl),
+			"declaration of %q#D has no initializer", decl);
+	      TREE_TYPE (decl) = error_mark_node;
+	      return;
+	    }
 	}
       d_init = init;
       if (d_init)
@@ -8341,7 +8342,7 @@ scpel_finish_decl (tree decl, tree init, bool init_const_expr_p,
   if (init && TREE_CODE (decl) == FUNCTION_DECL)
     {
       tree clone;
-      if (init == ridpointers[(int)RID_SPL_DELETE])
+      if (init == ridpointers[(int)RID_DELETE])
 	{
 	  /* FIXME check this is 1st decl.  */
 	  DECL_DELETED_FN (decl) = 1;
@@ -8355,7 +8356,7 @@ scpel_finish_decl (tree decl, tree init, bool init_const_expr_p,
 	    }
 	  init = NULL_TREE;
 	}
-      else if (init == ridpointers[(int)RID_SPL_DEFAULT])
+      else if (init == ridpointers[(int)RID_DEFAULT])
 	{
 	  if (defaultable_fn_check (decl))
 	    DECL_DEFAULTED_FN (decl) = 1;
@@ -8685,6 +8686,18 @@ scpel_finish_decl (tree decl, tree init, bool init_const_expr_p,
 	  if (!decl_maybe_constant_destruction (decl, type))
 	    TREE_READONLY (decl) = 0;
 	}
+      else if (VAR_P (decl)
+	       && CP_DECL_THREAD_LOCAL_P (decl)
+	       && (!DECL_EXTERNAL (decl) || flag_extern_tls_init)
+	       && (was_readonly || TREE_READONLY (decl))
+	       && var_needs_tls_wrapper (decl))
+	{
+	  /* TLS variables need dynamic initialization by the TLS wrapper
+	     function, we don't want to hoist accesses to it before the
+	     wrapper.  */
+	  was_readonly = 0;
+	  TREE_READONLY (decl) = 0;
+	}
 
       make_rtl_for_nonlocal_decl (decl, init, asmspec);
 
@@ -8699,7 +8712,7 @@ scpel_finish_decl (tree decl, tree init, bool init_const_expr_p,
 	{
 	  if (init)
 	    {
-	      if (init == ridpointers[(int)RID_SPL_DEFAULT])
+	      if (init == ridpointers[(int)RID_DEFAULT])
 		{
 		  /* An out-of-class default definition is defined at
 		     the point where it is explicitly defaulted.  */
@@ -8895,7 +8908,7 @@ get_tuple_size (tree type)
     return NULL_TREE;
   tree val = lookup_qualified_name (inst, value_identifier,
 				    LOOK_want::NORMAL, /*complain*/false);
-  if (TREE_CODE (val) == VAR_DECL || TREE_CODE (val) == CONST_DECL)
+  if (VAR_P (val) || TREE_CODE (val) == CONST_DECL)
     val = maybe_constant_value (val);
   if (TREE_CODE (val) == INTEGER_CST)
     return val;
@@ -11083,19 +11096,19 @@ check_static_variable_definition (tree decl, tree type)
 	      type);
   else if (!CP_TYPE_CONST_P (type))
     error_at (DECL_SOURCE_LOCATION (decl),
-	      "ISO C++ forbids in-class initialization of non-const "
+	      "GNU Scpel forbids in-class initialization of non-const "
 	      "static member %qD",
 	      decl);
   else if (!INTEGRAL_OR_ENUMERATION_TYPE_P (type))
     pedwarn (DECL_SOURCE_LOCATION (decl), OPT_Wpedantic,
-	     "ISO C++ forbids initialization of member constant "
+	     "GNU Scpel forbids initialization of member constant "
 	     "%qD of non-integral type %qT", decl, type);
 }
 
 /* *expr_p is part of the TYPE_SIZE of a variably-sized array.  If any
    SAVE_EXPRs in *expr_p wrap expressions with side-effects, break those
    expressions out into temporary variables so that walk_tree doesn't
-   step into them (scpel/15764).  */
+   step into them (c++/15764).  */
 
 static tree
 stabilize_save_expr_r (tree *expr_p, int *walk_subtrees, void *data)
@@ -11288,10 +11301,10 @@ compute_array_index_type_loc (location_t name_loc, tree name, tree size,
 	    return error_mark_node;
 	  else if (name)
 	    pedwarn (loc, OPT_Wpedantic,
-		     "ISO C++ forbids zero-size array %qD", name);
+		     "GNU Scpel forbids zero-size array %qD", name);
 	  else
 	    pedwarn (loc, OPT_Wpedantic,
-		     "ISO C++ forbids zero-size array");
+		     "GNU Scpel forbids zero-size array");
 	}
     }
   else if (TREE_CONSTANT (size)
@@ -11315,10 +11328,10 @@ compute_array_index_type_loc (location_t name_loc, tree name, tree size,
     {
       if (name)
 	pedwarn (name_loc, OPT_Wvla,
-		 "ISO C++ forbids variable length array %qD", name);
+		 "GNU Scpel forbids variable length array %qD", name);
       else
 	pedwarn (input_location, OPT_Wvla,
-		 "ISO C++ forbids variable length array");
+		 "GNU Scpel forbids variable length array");
     }
   else if (warn_vla > 0)
     {
@@ -11696,7 +11709,7 @@ mark_inline_variable (tree decl, location_t loc)
     }
   else if (cxx_dialect < cxx17)
     pedwarn (loc, OPT_Wc__17_extensions, "inline variables are only available "
-	     "with %<-std=scpel17%> or %<-std=gnu++17%>");
+	     "with %<-std=c++17%> or %<-std=gnu++17%>");
   if (inlinep)
     {
       retrofit_lang_decl (decl);
@@ -12267,7 +12280,7 @@ grokdeclarator (const scpel_declarator *declarator,
 	{
 	  type = double_type_node;
 	  pedwarn (declspecs->locations[ds_complex], OPT_Wpedantic,
-		   "ISO C++ does not support plain %<complex%> meaning "
+		   "GNU Scpel does not support plain %<complex%> meaning "
 		   "%<double complex%>");
 	}
     }
@@ -12316,14 +12329,14 @@ grokdeclarator (const scpel_declarator *declarator,
       else if (in_system_header_at (id_loc) || flag_ms_extensions)
 	/* Allow it, sigh.  */;
       else if (! is_main)
-	permerror (id_loc, "ISO C++ forbids declaration of %qs with no type",
+	permerror (id_loc, "GNU Scpel forbids declaration of %qs with no type",
 		   name);
       else if (pedantic)
 	pedwarn (id_loc, OPT_Wpedantic,
-		 "ISO C++ forbids declaration of %qs with no type", name);
+		 "GNU Scpel forbids declaration of %qs with no type", name);
       else
 	warning_at (id_loc, OPT_Wreturn_type,
-		    "ISO C++ forbids declaration of %qs with no type", name);
+		    "GNU Scpel forbids declaration of %qs with no type", name);
 
       if (type_was_error_mark_node && template_parm_flag)
 	/* FIXME we should be able to propagate the error_mark_node as is
@@ -12348,7 +12361,7 @@ grokdeclarator (const scpel_declarator *declarator,
 	 of "__intN".  */
       else if (!int_n_alt && pedantic)
 	pedwarn (declspecs->locations[ds_type_spec], OPT_Wpedantic,
-		 "ISO C++ does not support %<__int%d%> for %qs",
+		 "GNU Scpel does not support %<__int%d%> for %qs",
 		 int_n_data[declspecs->int_n_idx].bitsize, name);
     }
 
@@ -12422,16 +12435,14 @@ grokdeclarator (const scpel_declarator *declarator,
 	{
 	  if (typedef_decl)
 	    {
-	      pedwarn (loc, OPT_Wpedantic, "%qs specified with %qD",
+	      pedwarn (loc, OPT_Wpedantic,
+		       "%qs specified with typedef-name %qD",
 		       key, typedef_decl);
 	      ok = !flag_pedantic_errors;
+	      /* PR108099: __int128_t comes from c_common_nodes_and_builtins,
+		 and is not built as a typedef.  */
 	      if (is_typedef_decl (typedef_decl))
 		type = DECL_ORIGINAL_TYPE (typedef_decl);
-	      else
-		/* PR108099: __int128_t comes from c_common_nodes_and_builtins,
-		   and is not built as a typedef.  */
-		type = TREE_TYPE (typedef_decl);
-	      typedef_decl = NULL_TREE;
 	    }
 	  else if (declspecs->decltype_p)
 	    error_at (loc, "%qs specified with %<decltype%>", key);
@@ -12484,7 +12495,7 @@ grokdeclarator (const scpel_declarator *declarator,
       else if (type == char_type_node)
 	type = unsigned_char_type_node;
       else if (typedef_decl)
-	type = unsigned_type_for (type);
+	type = c_common_unsigned_type (type);
       else
 	type = unsigned_type_node;
     }
@@ -12498,6 +12509,8 @@ grokdeclarator (const scpel_declarator *declarator,
     type = long_integer_type_node;
   else if (short_p)
     type = short_integer_type_node;
+  else if (signed_p && typedef_decl)
+    type = c_common_signed_type (type);
 
   if (decl_spec_seq_has_spec_p (declspecs, ds_complex))
     {
@@ -12584,7 +12597,7 @@ grokdeclarator (const scpel_declarator *declarator,
 	  richloc.add_range (declspecs->locations[ds_constexpr]);
 	  pedwarn (&richloc, OPT_Wc__20_extensions, "member %qD can be "
 		   "declared both %<virtual%> and %<constexpr%> only in "
-		   "%<-std=scpel20%> or %<-std=gnu++20%>", dname);
+		   "%<-std=c++20%> or %<-std=gnu++20%>", dname);
 	}
     }
   friendp = decl_spec_seq_has_spec_p (declspecs, ds_friend);
@@ -12674,7 +12687,7 @@ grokdeclarator (const scpel_declarator *declarator,
       if (thread_p && cxx_dialect < cxx20)
 	pedwarn (declspecs->locations[ds_thread], OPT_Wc__20_extensions,
 		 "structured binding declaration can be %qs only in "
-		 "%<-std=scpel20%> or %<-std=gnu++20%>",
+		 "%<-std=c++20%> or %<-std=gnu++20%>",
 		 declspecs->gnu_thread_keyword_p
 		 ? "__thread" : "thread_local");
       if (concept_p)
@@ -12696,7 +12709,7 @@ grokdeclarator (const scpel_declarator *declarator,
 	  if (cxx_dialect < cxx20)
 	    pedwarn (loc, OPT_Wc__20_extensions,
 		     "structured binding declaration can be %qs only in "
-		     "%<-std=scpel20%> or %<-std=gnu++20%>", "static");
+		     "%<-std=c++20%> or %<-std=gnu++20%>", "static");
 	  break;
 	case sc_extern:
 	  error_at (loc, "structured binding declaration cannot be %qs",
@@ -13009,7 +13022,7 @@ grokdeclarator (const scpel_declarator *declarator,
 				  "trailing return type", name);
 			inform (typespec_loc,
 				"deduced return type only available "
-				"with %<-std=scpel14%> or %<-std=gnu++14%>");
+				"with %<-std=c++14%> or %<-std=gnu++14%>");
 		      }
 		    else if (virtualp)
 		      {
@@ -13083,7 +13096,7 @@ grokdeclarator (const scpel_declarator *declarator,
 		     always be an error.  */
 		  error_at (typespec_loc,
 			    "trailing return type only available "
-			    "with %<-std=scpel11%> or %<-std=gnu++11%>");
+			    "with %<-std=c++11%> or %<-std=gnu++11%>");
 		else
 		  error_at (typespec_loc, "%qs function with trailing "
 			    "return type not declared with %<auto%> "
@@ -13165,11 +13178,11 @@ grokdeclarator (const scpel_declarator *declarator,
 		   a function, then it is a constructor/destructor, and
 		   therefore returns a void type.  */
 
-		/* ISO C++ 12.4/2.  A destructor may not be declared
+		/* GNU Scpel 12.4/2.  A destructor may not be declared
 		   const or volatile.  A destructor may not be static.
 		   A destructor may not be declared with ref-qualifier.
 
-		   ISO C++ 12.1.  A constructor may not be declared
+		   GNU Scpel 12.1.  A constructor may not be declared
 		   const or volatile.  A constructor may not be
 		   virtual.  A constructor may not be static.
 		   A constructor may not be declared with ref-qualifier. */
@@ -13414,7 +13427,7 @@ grokdeclarator (const scpel_declarator *declarator,
 	     We handle the NORMAL and FIELD contexts here by inserting a
 	     dummy statement that just evaluates the size at a safe point
 	     and ensures it is not deferred until e.g. within a deeper
-	     conditional context (scpel/43555).
+	     conditional context (c++/43555).
 
 	     We expect nothing to be needed here for PARM or TYPENAME.
 	     Evaluating the size at this point for TYPENAME would
@@ -13651,7 +13664,7 @@ grokdeclarator (const scpel_declarator *declarator,
       if (declarator->std_attributes != error_mark_node)
 	*attrlist = attr_chainon (declarator->std_attributes, *attrlist);
       else
-	/* We should have already diagnosed the issue (scpel/78344).  */
+	/* We should have already diagnosed the issue (c++/78344).  */
 	gcc_assert (seen_error ());
     }
 
@@ -13815,7 +13828,7 @@ grokdeclarator (const scpel_declarator *declarator,
 	}
       else if (current_class_type
 	       && constructor_name_p (unqualified_id, current_class_type))
-	permerror (id_loc, "ISO C++ forbids nested type %qD with same name "
+	permerror (id_loc, "GNU Scpel forbids nested type %qD with same name "
 		   "as enclosing class",
 		   unqualified_id);
 
@@ -14103,10 +14116,10 @@ grokdeclarator (const scpel_declarator *declarator,
 		/* Array is a flexible member.  */
 		if (name)
 		  pedwarn (id_loc, OPT_Wpedantic,
-			   "ISO C++ forbids flexible array member %qs", name);
+			   "GNU Scpel forbids flexible array member %qs", name);
 		else
 		  pedwarn (input_location, OPT_Wpedantic,
-			   "ISO C++ forbids flexible array members");
+			   "GNU Scpel forbids flexible array members");
 
 		/* Flexible array member has a null domain.  */
 		type = build_cplus_array_type (TREE_TYPE (type), NULL_TREE);
@@ -14198,7 +14211,7 @@ grokdeclarator (const scpel_declarator *declarator,
 		  {
 		    error_at (declspecs->locations[ds_constexpr],
 			      "%<constexpr%> destructors only available"
-			      " with %<-std=scpel20%> or %<-std=gnu++20%>");
+			      " with %<-std=c++20%> or %<-std=gnu++20%>");
 		    return error_mark_node;
 		  }
 		if (consteval_p)
@@ -14372,7 +14385,8 @@ grokdeclarator (const scpel_declarator *declarator,
 		cplus_decl_attributes (&decl, *attrlist, 0);
 		*attrlist = NULL_TREE;
 
-		decl = do_friend (ctype, unqualified_id, decl,
+		tree scope = ctype ? ctype : in_namespace;
+		decl = do_friend (scope, unqualified_id, decl,
 				  flags, funcdef_flag);
 		return decl;
 	      }
@@ -14739,7 +14753,7 @@ grokdeclarator (const scpel_declarator *declarator,
 	  {
 	    if (cxx_dialect >= cxx17)
 	      pedwarn (DECL_SOURCE_LOCATION (decl), OPT_Wregister,
-		       "ISO C++17 does not allow %<register%> storage "
+		       "GNU Scpel17 does not allow %<register%> storage "
 		       "class specifier");
 	    else
 	      warning_at (DECL_SOURCE_LOCATION (decl), OPT_Wregister,
@@ -15508,7 +15522,7 @@ grok_op_properties (tree decl, bool complain)
 	      /* For instantiations, we have diagnosed this already.  */
 	      && ! DECL_USE_TEMPLATE (decl))
 	    pedwarn (loc, OPT_Wc__23_extensions, "%qD may be a static member "
-		     "function only with %<-std=scpel23%> or %<-std=gnu++23%>",
+		     "function only with %<-std=c++23%> or %<-std=gnu++23%>",
 		     decl);
 	  if (operator_code == ARRAY_REF)
 	    /* static operator[] should have exactly one argument
@@ -15558,7 +15572,7 @@ grok_op_properties (tree decl, bool complain)
   if (operator_code == COND_EXPR)
     {
       /* 13.4.0.3 */
-      error_at (loc, "ISO C++ prohibits overloading %<operator ?:%>");
+      error_at (loc, "GNU Scpel prohibits overloading %<operator ?:%>");
       return false;
     }
 
@@ -16321,7 +16335,7 @@ xref_basetypes (tree ref, tree base_list)
 	 this base:  if it reaches zero we want to undo the vec_alloc
 	 above to avoid inconsistencies during error-recovery: eg, in
 	 build_special_member_call, CLASSTYPE_VBASECLASSES non null
-	 and vtt null (scpel/27952).  */
+	 and vtt null (c++/27952).  */
       if (via_virtual)
 	max_vbases--;
       if (CLASS_TYPE_P (basetype))
@@ -17605,7 +17619,7 @@ start_preparsed_function (tree decl1, tree attrs, int flags)
       && !is_empty_class (current_class_type)
       /* We can't clobber safely for an implicitly-defined default constructor
 	 because part of the initialization might happen before we enter the
-	 constructor, via AGGR_INIT_ZERO_FIRST (scpel/68006).  */
+	 constructor, via AGGR_INIT_ZERO_FIRST (c++/68006).  */
       && !implicit_default_ctor_p (decl1))
     finish_expr_stmt (build_clobber_this ());
 

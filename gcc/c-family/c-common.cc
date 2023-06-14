@@ -250,7 +250,7 @@ enum cxx_dialect cxx_dialect = cxx_unset;
 int max_tinst_depth = 900;
 
 /* The elements of `ridpointers' are identifier nodes for the reserved
-   type names and storage classes.  It is indexed by a RID_SPL_... value.  */
+   type names and storage classes.  It is indexed by a RID_... value.  */
 tree *ridpointers;
 
 tree (*make_fname_decl) (location_t, tree, int);
@@ -286,11 +286,11 @@ struct fname_var_t
 const struct fname_var_t fname_vars[] =
 {
   /* C99 compliant __func__, must be first.  */
-  {&c99_function_name_decl_node, RID_SPL_C99_FUNCTION_NAME, 0},
+  {&c99_function_name_decl_node, RID_C99_FUNCTION_NAME, 0},
   /* GCC __FUNCTION__ compliant.  */
-  {&function_name_decl_node, RID_SPL_FUNCTION_NAME, 0},
+  {&function_name_decl_node, RID_FUNCTION_NAME, 0},
   /* GCC __PRETTY_FUNCTION__ compliant.  */
-  {&pretty_function_name_decl_node, RID_SPL_PRETTY_FUNCTION_NAME, 1},
+  {&pretty_function_name_decl_node, RID_PRETTY_FUNCTION_NAME, 1},
   {NULL, 0, 0},
 };
 
@@ -329,197 +329,190 @@ static bool nonnull_check_p (tree, unsigned HOST_WIDE_INT);
 */
 const struct c_common_resword c_common_reswords[] =
 {
-  { "_Alignas",		RID_SPL_ALIGNAS,   D_CONLY },
-  { "_Alignof",		RID_SPL_ALIGNOF,   D_CONLY },
-  { "_Atomic",		RID_SPL_ATOMIC,    D_CONLY },
-  { "_Bool",		RID_SPL_BOOL,      D_CONLY },
-  { "_Complex",		RID_SPL_COMPLEX,	0 },
-  { "_Imaginary",	RID_SPL_IMAGINARY, D_CONLY },
-  { "_Float16",         RID_SPL_FLOAT16,    0 },
-  { "_Float32",         RID_SPL_FLOAT32,    0 },
-  { "_Float64",         RID_SPL_FLOAT64,    0 },
-  { "_Float128",        RID_SPL_FLOAT128,   0 },
-  { "_Float32x",        RID_SPL_FLOAT32X,   0 },
-  { "_Float64x",        RID_SPL_FLOAT64X,   0 },
-  { "_Float128x",       RID_SPL_FLOAT128X,  0 },
-  { "_Decimal32",       RID_SPL_DFLOAT32,  D_CONLY },
-  { "_Decimal64",       RID_SPL_DFLOAT64,  D_CONLY },
-  { "_Decimal128",      RID_SPL_DFLOAT128, D_CONLY },
-  { "_Fract",           RID_SPL_FRACT,     D_CONLY | D_EXT },
-  { "_Accum",           RID_SPL_ACCUM,     D_CONLY | D_EXT },
-  { "_Sat",             RID_SPL_SAT,       D_CONLY | D_EXT },
-  { "_Static_assert",   RID_SPL_STATIC_ASSERT, D_CONLY },
-  { "_Noreturn",        RID_SPL_NORETURN,  D_CONLY },
-  { "_Generic",         RID_SPL_GENERIC,   D_CONLY },
-  { "_Thread_local",    RID_SPL_THREAD,    D_CONLY },
-  { "__FUNCTION__",	RID_SPL_FUNCTION_NAME, 0 },
-  { "__PRETTY_FUNCTION__", RID_SPL_PRETTY_FUNCTION_NAME, 0 },
-  { "__alignof",	RID_SPL_ALIGNOF,	0 },
-  { "__alignof__",	RID_SPL_ALIGNOF,	0 },
-  { "__asm",		RID_SPL_ASM,	0 },
-  { "__asm__",		RID_SPL_ASM,	0 },
-  { "__attribute",	RID_SPL_ATTRIBUTE,	0 },
-  { "__attribute__",	RID_SPL_ATTRIBUTE,	0 },
-  { "__auto_type",	RID_SPL_AUTO_TYPE,	D_CONLY },
-  { "__builtin_addressof", RID_SPL_ADDRESSOF, D_CXXONLY },
-  { "__builtin_bit_cast", RID_SPL_BUILTIN_BIT_CAST, D_CXXONLY },
+  { "_Alignas",		RID_ALIGNAS,   D_CONLY },
+  { "_Alignof",		RID_ALIGNOF,   D_CONLY },
+  { "_Atomic",		RID_ATOMIC,    D_CONLY },
+  { "_Bool",		RID_BOOL,      D_CONLY },
+  { "_Complex",		RID_COMPLEX,	0 },
+  { "_Imaginary",	RID_IMAGINARY, D_CONLY },
+  { "_Float16",         RID_FLOAT16,    0 },
+  { "_Float32",         RID_FLOAT32,    0 },
+  { "_Float64",         RID_FLOAT64,    0 },
+  { "_Float128",        RID_FLOAT128,   0 },
+  { "_Float32x",        RID_FLOAT32X,   0 },
+  { "_Float64x",        RID_FLOAT64X,   0 },
+  { "_Float128x",       RID_FLOAT128X,  0 },
+  { "_Decimal32",       RID_DFLOAT32,  D_CONLY },
+  { "_Decimal64",       RID_DFLOAT64,  D_CONLY },
+  { "_Decimal128",      RID_DFLOAT128, D_CONLY },
+  { "_Fract",           RID_FRACT,     D_CONLY | D_EXT },
+  { "_Accum",           RID_ACCUM,     D_CONLY | D_EXT },
+  { "_Sat",             RID_SAT,       D_CONLY | D_EXT },
+  { "_Static_assert",   RID_STATIC_ASSERT, D_CONLY },
+  { "_Noreturn",        RID_NORETURN,  D_CONLY },
+  { "_Generic",         RID_GENERIC,   D_CONLY },
+  { "_Thread_local",    RID_THREAD,    D_CONLY },
+  { "__FUNCTION__",	RID_FUNCTION_NAME, 0 },
+  { "__PRETTY_FUNCTION__", RID_PRETTY_FUNCTION_NAME, 0 },
+  { "__alignof",	RID_ALIGNOF,	0 },
+  { "__alignof__",	RID_ALIGNOF,	0 },
+  { "__asm",		RID_ASM,	0 },
+  { "__asm__",		RID_ASM,	0 },
+  { "__attribute",	RID_ATTRIBUTE,	0 },
+  { "__attribute__",	RID_ATTRIBUTE,	0 },
+  { "__auto_type",	RID_AUTO_TYPE,	D_CONLY },
+  { "__builtin_addressof", RID_ADDRESSOF, D_CXXONLY },
+  { "__builtin_bit_cast", RID_BUILTIN_BIT_CAST, D_CXXONLY },
   { "__builtin_call_with_static_chain",
-    RID_SPL_BUILTIN_CALL_WITH_STATIC_CHAIN, D_CONLY },
-  { "__builtin_choose_expr", RID_SPL_CHOOSE_EXPR, D_CONLY },
-  { "__builtin_complex", RID_SPL_BUILTIN_COMPLEX, D_CONLY },
-  { "__builtin_convertvector", RID_SPL_BUILTIN_CONVERTVECTOR, 0 },
-  { "__builtin_has_attribute", RID_SPL_BUILTIN_HAS_ATTRIBUTE, 0 },
-  { "__builtin_launder", RID_SPL_BUILTIN_LAUNDER, D_CXXONLY },
-  { "__builtin_assoc_barrier", RID_SPL_BUILTIN_ASSOC_BARRIER, 0 },
-  { "__builtin_shuffle", RID_SPL_BUILTIN_SHUFFLE, 0 },
-  { "__builtin_shufflevector", RID_SPL_BUILTIN_SHUFFLEVECTOR, 0 },
-  { "__builtin_tgmath", RID_SPL_BUILTIN_TGMATH, D_CONLY },
-  { "__builtin_offsetof", RID_SPL_OFFSETOF, 0 },
-  { "__builtin_types_compatible_p", RID_SPL_TYPES_COMPATIBLE_P, D_CONLY },
-  { "__builtin_va_arg",	RID_SPL_VA_ARG,	0 },
-  { "__complex",	RID_SPL_COMPLEX,	0 },
-  { "__complex__",	RID_SPL_COMPLEX,	0 },
-  { "__const",		RID_SPL_CONST,	0 },
-  { "__const__",	RID_SPL_CONST,	0 },
-  { "__constinit",	RID_SPL_CONSTINIT,	D_CXXONLY },
-  { "__decltype",       RID_SPL_DECLTYPE,   D_CXXONLY },
-  { "__extension__",	RID_SPL_EXTENSION,	0 },
-  { "__func__",		RID_SPL_C99_FUNCTION_NAME, 0 },
-  { "__imag",		RID_SPL_IMAGPART,	0 },
-  { "__imag__",		RID_SPL_IMAGPART,	0 },
-  { "__inline",		RID_SPL_INLINE,	0 },
-  { "__inline__",	RID_SPL_INLINE,	0 },
-  { "__label__",	RID_SPL_LABEL,	0 },
-  { "__null",		RID_SPL_NULL,	0 },
-  { "__real",		RID_SPL_REALPART,	0 },
-  { "__real__",		RID_SPL_REALPART,	0 },
-  { "__restrict",	RID_SPL_RESTRICT,	0 },
-  { "__restrict__",	RID_SPL_RESTRICT,	0 },
-  { "__signed",		RID_SPL_SIGNED,	0 },
-  { "__signed__",	RID_SPL_SIGNED,	0 },
-  { "__thread",		RID_SPL_THREAD,	0 },
-  { "__transaction_atomic", RID_SPL_TRANSACTION_ATOMIC, 0 },
-  { "__transaction_relaxed", RID_SPL_TRANSACTION_RELAXED, 0 },
-  { "__transaction_cancel", RID_SPL_TRANSACTION_CANCEL, 0 },
-  { "__typeof",		RID_SPL_TYPEOF,	0 },
-  { "__typeof__",	RID_SPL_TYPEOF,	0 },
-  { "__volatile",	RID_SPL_VOLATILE,	0 },
-  { "__volatile__",	RID_SPL_VOLATILE,	0 },
-  { "__GIMPLE",		RID_SPL_GIMPLE,	D_CONLY },
-  { "__PHI",		RID_SPL_PHI,	D_CONLY },
-  { "__RTL",		RID_SPL_RTL,	D_CONLY },
-  { "alignas",		RID_SPL_ALIGNAS,	D_C2X | D_CXX11 | D_CXXWARN },
-  { "alignof",		RID_SPL_ALIGNOF,	D_C2X | D_CXX11 | D_CXXWARN },
-  { "asm",		RID_SPL_ASM,	D_ASM },
-  { "auto",		RID_SPL_AUTO,	0 },
-  { "bool",		RID_SPL_BOOL,	D_C2X | D_CXXWARN },
-  { "break",		RID_SPL_BREAK,	0 },
-  { "case",		RID_SPL_CASE,	0 },
-  { "catch",		RID_SPL_CATCH,	D_CXX_OBJC | D_CXXWARN },
-  { "char",		RID_SPL_CHAR,	0 },
-  { "char8_t",		RID_SPL_CHAR8,	D_CXX_CHAR8_T_FLAGS | D_CXXWARN },
-  { "char16_t",		RID_SPL_CHAR16,	D_CXXONLY | D_CXX11 | D_CXXWARN },
-  { "char32_t",		RID_SPL_CHAR32,	D_CXXONLY | D_CXX11 | D_CXXWARN },
-  { "class",		RID_SPL_CLASS,	D_CXX_OBJC | D_CXXWARN },
-  { "const",		RID_SPL_CONST,	0 },
-  { "consteval",	RID_SPL_CONSTEVAL,	D_CXXONLY | D_CXX20 | D_CXXWARN },
-  { "constexpr",	RID_SPL_CONSTEXPR,	D_C2X | D_CXX11 | D_CXXWARN },
-  { "constinit",	RID_SPL_CONSTINIT,	D_CXXONLY | D_CXX20 | D_CXXWARN },
-  { "const_cast",	RID_SPL_CONSTCAST,	D_CXXONLY | D_CXXWARN },
-  { "continue",		RID_SPL_CONTINUE,	0 },
-  { "decltype",         RID_SPL_DECLTYPE,   D_CXXONLY | D_CXX11 | D_CXXWARN },
-  { "default",		RID_SPL_DEFAULT,	0 },
-  { "delete",		RID_SPL_DELETE,	D_CXXONLY | D_CXXWARN },
-  { "do",		RID_SPL_DO,		0 },
-  { "double",		RID_SPL_DOUBLE,	0 },
-  { "dynamic_cast",	RID_SPL_DYNCAST,	D_CXXONLY | D_CXXWARN },
-  { "else",		RID_SPL_ELSE,	0 },
-  { "enum",		RID_SPL_ENUM,	0 },
-  { "explicit",		RID_SPL_EXPLICIT,	D_CXXONLY | D_CXXWARN },
-  { "export",		RID_SPL_EXPORT,	D_CXXONLY | D_CXXWARN },
-  { "extern",		RID_SPL_EXTERN,	0 },
-  { "false",		RID_SPL_FALSE,	D_C2X | D_CXXWARN },
-  { "float",		RID_SPL_FLOAT,	0 },
-  { "for",		RID_SPL_FOR,	0 },
-  { "friend",		RID_SPL_FRIEND,	D_CXXONLY | D_CXXWARN },
-  { "goto",		RID_SPL_GOTO,	0 },
-  { "if",		RID_SPL_IF,		0 },
-  { "inline",		RID_SPL_INLINE,	D_EXT89 },
-  { "int",		RID_SPL_INT,	0 },
-  { "long",		RID_SPL_LONG,	0 },
-  { "mutable",		RID_SPL_MUTABLE,	D_CXXONLY | D_CXXWARN },
-  { "namespace",	RID_SPL_NAMESPACE,	D_CXXONLY | D_CXXWARN },
-  { "new",		RID_SPL_NEW,	D_CXXONLY | D_CXXWARN },
-  { "noexcept",		RID_SPL_NOEXCEPT,	D_CXXONLY | D_CXX11 | D_CXXWARN },
-  { "nullptr",		RID_SPL_NULLPTR,	D_C2X | D_CXX11 | D_CXXWARN },
-  { "operator",		RID_SPL_OPERATOR,	D_CXXONLY | D_CXXWARN },
-  { "private",		RID_SPL_PRIVATE,	D_CXX_OBJC | D_CXXWARN },
-  { "protected",	RID_SPL_PROTECTED,	D_CXX_OBJC | D_CXXWARN },
-  { "public",		RID_SPL_PUBLIC,	D_CXX_OBJC | D_CXXWARN },
-  { "register",		RID_SPL_REGISTER,	0 },
-  { "reinterpret_cast",	RID_SPL_REINTCAST,	D_CXXONLY | D_CXXWARN },
-  { "restrict",		RID_SPL_RESTRICT,	D_CONLY | D_C99 },
-  { "return",		RID_SPL_RETURN,	0 },
-  { "short",		RID_SPL_SHORT,	0 },
-  { "signed",		RID_SPL_SIGNED,	0 },
-  { "sizeof",		RID_SPL_SIZEOF,	0 },
-  { "static",		RID_SPL_STATIC,	0 },
-  { "static_assert",    RID_SPL_STATIC_ASSERT, D_C2X | D_CXX11 | D_CXXWARN },
-  { "static_cast",	RID_SPL_STATCAST,	D_CXXONLY | D_CXXWARN },
-  { "struct",		RID_SPL_STRUCT,	0 },
-  { "switch",		RID_SPL_SWITCH,	0 },
-  { "template",		RID_SPL_TEMPLATE,	D_CXXONLY | D_CXXWARN },
-  { "this",		RID_SPL_THIS,	D_CXXONLY | D_CXXWARN },
-  { "thread_local",	RID_SPL_THREAD,	D_C2X | D_CXX11 | D_CXXWARN },
-  { "throw",		RID_SPL_THROW,	D_CXX_OBJC | D_CXXWARN },
-  { "true",		RID_SPL_TRUE,	D_C2X | D_CXXWARN },
-  { "try",		RID_SPL_TRY,	D_CXX_OBJC | D_CXXWARN },
-  { "typedef",		RID_SPL_TYPEDEF,	0 },
-  { "typename",		RID_SPL_TYPENAME,	D_CXXONLY | D_CXXWARN },
-  { "typeid",		RID_SPL_TYPEID,	D_CXXONLY | D_CXXWARN },
-  { "typeof",		RID_SPL_TYPEOF,	D_EXT11 },
-  { "typeof_unqual",	RID_SPL_TYPEOF_UNQUAL,	D_CONLY | D_C2X },
-  { "union",		RID_SPL_UNION,	0 },
-  { "unsigned",		RID_SPL_UNSIGNED,	0 },
-  { "using",		RID_SPL_USING,	D_CXXONLY | D_CXXWARN },
-  { "virtual",		RID_SPL_VIRTUAL,	D_CXXONLY | D_CXXWARN },
-  { "void",		RID_SPL_VOID,	0 },
-  { "volatile",		RID_SPL_VOLATILE,	0 },
-  { "wchar_t",		RID_SPL_WCHAR,	D_CXXONLY },
-  { "while",		RID_SPL_WHILE,	0 },
+    RID_BUILTIN_CALL_WITH_STATIC_CHAIN, D_CONLY },
+  { "__builtin_choose_expr", RID_CHOOSE_EXPR, D_CONLY },
+  { "__builtin_complex", RID_BUILTIN_COMPLEX, D_CONLY },
+  { "__builtin_convertvector", RID_BUILTIN_CONVERTVECTOR, 0 },
+  { "__builtin_has_attribute", RID_BUILTIN_HAS_ATTRIBUTE, 0 },
+  { "__builtin_launder", RID_BUILTIN_LAUNDER, D_CXXONLY },
+  { "__builtin_assoc_barrier", RID_BUILTIN_ASSOC_BARRIER, 0 },
+  { "__builtin_shuffle", RID_BUILTIN_SHUFFLE, 0 },
+  { "__builtin_shufflevector", RID_BUILTIN_SHUFFLEVECTOR, 0 },
+  { "__builtin_tgmath", RID_BUILTIN_TGMATH, D_CONLY },
+  { "__builtin_offsetof", RID_OFFSETOF, 0 },
+  { "__builtin_types_compatible_p", RID_TYPES_COMPATIBLE_P, D_CONLY },
+  { "__builtin_va_arg",	RID_VA_ARG,	0 },
+  { "__complex",	RID_COMPLEX,	0 },
+  { "__complex__",	RID_COMPLEX,	0 },
+  { "__const",		RID_CONST,	0 },
+  { "__const__",	RID_CONST,	0 },
+  { "__constinit",	RID_CONSTINIT,	D_CXXONLY },
+  { "__decltype",       RID_DECLTYPE,   D_CXXONLY },
+  { "__extension__",	RID_EXTENSION,	0 },
+  { "__func__",		RID_C99_FUNCTION_NAME, 0 },
+  { "__imag",		RID_IMAGPART,	0 },
+  { "__imag__",		RID_IMAGPART,	0 },
+  { "__inline",		RID_INLINE,	0 },
+  { "__inline__",	RID_INLINE,	0 },
+  { "__label__",	RID_LABEL,	0 },
+  { "__null",		RID_NULL,	0 },
+  { "__real",		RID_REALPART,	0 },
+  { "__real__",		RID_REALPART,	0 },
+  { "__restrict",	RID_RESTRICT,	0 },
+  { "__restrict__",	RID_RESTRICT,	0 },
+  { "__signed",		RID_SIGNED,	0 },
+  { "__signed__",	RID_SIGNED,	0 },
+  { "__thread",		RID_THREAD,	0 },
+  { "__typeof",		RID_TYPEOF,	0 },
+  { "__typeof__",	RID_TYPEOF,	0 },
+  { "__volatile",	RID_VOLATILE,	0 },
+  { "__volatile__",	RID_VOLATILE,	0 },
+  { "alignas",		RID_ALIGNAS,	D_C2X | D_CXX11 | D_CXXWARN },
+  { "alignof",		RID_ALIGNOF,	D_C2X | D_CXX11 | D_CXXWARN },
+  { "asm",		RID_ASM,	D_ASM },
+  { "auto",		RID_AUTO,	0 },
+  { "bool",		RID_BOOL,	D_C2X | D_CXXWARN },
+  { "break",		RID_BREAK,	0 },
+  { "case",		RID_CASE,	0 },
+  { "catch",		RID_CATCH,	D_CXX_OBJC | D_CXXWARN },
+  { "char",		RID_CHAR,	0 },
+  { "char8_t",		RID_CHAR8,	D_CXX_CHAR8_T_FLAGS | D_CXXWARN },
+  { "char16_t",		RID_CHAR16,	D_CXXONLY | D_CXX11 | D_CXXWARN },
+  { "char32_t",		RID_CHAR32,	D_CXXONLY | D_CXX11 | D_CXXWARN },
+  { "classifier",		RID_CLASS,	D_CXX_OBJC | D_CXXWARN },
+  { "const",		RID_CONST,	0 },
+  { "consteval",	RID_CONSTEVAL,	D_CXXONLY | D_CXX20 | D_CXXWARN },
+  { "constexpr",	RID_CONSTEXPR,	D_C2X | D_CXX11 | D_CXXWARN },
+  { "constinit",	RID_CONSTINIT,	D_CXXONLY | D_CXX20 | D_CXXWARN },
+  { "const_cast",	RID_CONSTCAST,	D_CXXONLY | D_CXXWARN },
+  { "continue",		RID_CONTINUE,	0 },
+  { "decltype",         RID_DECLTYPE,   D_CXXONLY | D_CXX11 | D_CXXWARN },
+  { "default",		RID_DEFAULT,	0 },
+  { "delete",		RID_DELETE,	D_CXXONLY | D_CXXWARN },
+  { "do",		RID_DO,		0 },
+  { "double",		RID_DOUBLE,	0 },
+  { "dynamic_cast",	RID_DYNCAST,	D_CXXONLY | D_CXXWARN },
+  { "else",		RID_ELSE,	0 },
+  { "enum",		RID_ENUM,	0 },
+  { "explicit",		RID_EXPLICIT,	D_CXXONLY | D_CXXWARN },
+  { "export",		RID_EXPORT,	D_CXXONLY | D_CXXWARN },
+  { "extern",		RID_EXTERN,	0 },
+  { "false",		RID_FALSE,	D_C2X | D_CXXWARN },
+  { "float",		RID_FLOAT,	0 },
+  { "for",		RID_FOR,	0 },
+  { "friend",		RID_FRIEND,	D_CXXONLY | D_CXXWARN },
+  { "goto",		RID_GOTO,	0 },
+  { "if",		RID_IF,		0 },
+  { "inline",		RID_INLINE,	D_EXT89 },
+  { "int",		RID_INT,	0 },
+  { "long",		RID_LONG,	0 },
+  { "mutable",		RID_MUTABLE,	D_CXXONLY | D_CXXWARN },
+  { "namespace",	RID_NAMESPACE,	D_CXXONLY | D_CXXWARN },
+  { "new",		RID_NEW,	D_CXXONLY | D_CXXWARN },
+  { "noexcept",		RID_NOEXCEPT,	D_CXXONLY | D_CXX11 | D_CXXWARN },
+  { "nullptr",		RID_NULLPTR,	D_C2X | D_CXX11 | D_CXXWARN },
+  { "operator",		RID_OPERATOR,	D_CXXONLY | D_CXXWARN },
+  { "private",		RID_PRIVATE,	D_CXX_OBJC | D_CXXWARN },
+  { "protected",	RID_PROTECTED,	D_CXX_OBJC | D_CXXWARN },
+  { "public",		RID_PUBLIC,	D_CXX_OBJC | D_CXXWARN },
+  { "register",		RID_REGISTER,	0 },
+  { "reinterpret_cast",	RID_REINTCAST,	D_CXXONLY | D_CXXWARN },
+  { "restrict",		RID_RESTRICT,	D_CONLY | D_C99 },
+  { "return",		RID_RETURN,	0 },
+  { "short",		RID_SHORT,	0 },
+  { "signed",		RID_SIGNED,	0 },
+  { "sizeof",		RID_SIZEOF,	0 },
+  { "static",		RID_STATIC,	0 },
+  { "static_assert",    RID_STATIC_ASSERT, D_C2X | D_CXX11 | D_CXXWARN },
+  { "static_cast",	RID_STATCAST,	D_CXXONLY | D_CXXWARN },
+  { "struct",		RID_STRUCT,	0 },
+  { "switch",		RID_SWITCH,	0 },
+  { "template",		RID_TEMPLATE,	D_CXXONLY | D_CXXWARN },
+  { "this",		RID_THIS,	D_CXXONLY | D_CXXWARN },
+  { "thread_local",	RID_THREAD,	D_C2X | D_CXX11 | D_CXXWARN },
+  { "throw",		RID_THROW,	D_CXX_OBJC | D_CXXWARN },
+  { "true",		RID_TRUE,	D_C2X | D_CXXWARN },
+  { "try",		RID_TRY,	D_CXX_OBJC | D_CXXWARN },
+  { "typedef",		RID_TYPEDEF,	0 },
+  { "typename",		RID_TYPENAME,	D_CXXONLY | D_CXXWARN },
+  { "typeid",		RID_TYPEID,	D_CXXONLY | D_CXXWARN },
+  { "typeof",		RID_TYPEOF,	D_EXT11 },
+  { "typeof_unqual",	RID_TYPEOF_UNQUAL,	D_CONLY | D_C2X },
+  { "union",		RID_UNION,	0 },
+  { "unsigned",		RID_UNSIGNED,	0 },
+  { "using",		RID_USING,	D_CXXONLY | D_CXXWARN },
+  { "virtual",		RID_VIRTUAL,	D_CXXONLY | D_CXXWARN },
+  { "void",		RID_VOID,	0 },
+  { "volatile",		RID_VOLATILE,	0 },
+  { "wchar_t",		RID_WCHAR,	D_CXXONLY },
+  { "while",		RID_WHILE,	0 },
 
 #define DEFTRAIT(TCC, CODE, NAME, ARITY) \
-  { NAME,		RID_SPL_##CODE,	D_CXXONLY },
+  { NAME,		RID_##CODE,	D_CXXONLY },
 #include "scpel/scpel-trait.def"
 #undef DEFTRAIT
   /* An alias for __is_same.  */
-  { "__is_same_as",	RID_SPL_IS_SAME,	D_CXXONLY },
-
-  /* C++ transactional memory.  */
-  { "synchronized",	RID_SPL_SYNCHRONIZED, D_CXX_OBJC | D_TRANSMEM },
-  { "atomic_noexcept",	RID_SPL_ATOMIC_NOEXCEPT, D_CXXONLY | D_TRANSMEM },
-  { "atomic_cancel",	RID_SPL_ATOMIC_CANCEL, D_CXXONLY | D_TRANSMEM },
-  { "atomic_commit",	RID_SPL_TRANSACTION_ATOMIC, D_CXXONLY | D_TRANSMEM },
+  { "__is_same_as",	RID_IS_SAME,	D_CXXONLY },
 
   /* Concepts-related keywords */
-  { "concept",		RID_SPL_CONCEPT,	D_CXX_CONCEPTS_FLAGS | D_CXXWARN },
-  { "requires", 	RID_SPL_REQUIRES,	D_CXX_CONCEPTS_FLAGS | D_CXXWARN },
+  { "concept",		RID_CONCEPT,	D_CXX_CONCEPTS_FLAGS | D_CXXWARN },
+  { "requires", 	RID_REQUIRES,	D_CXX_CONCEPTS_FLAGS | D_CXXWARN },
 
   /* Modules-related keywords, these are internal unspellable tokens,
      created by the preprocessor.  */
-  { "module ",		RID_SPL__MODULE,	D_CXX_MODULES_FLAGS | D_CXXWARN },
-  { "import ",		RID_SPL__IMPORT,	D_CXX_MODULES_FLAGS | D_CXXWARN },
-  { "export ",		RID_SPL__EXPORT,	D_CXX_MODULES_FLAGS | D_CXXWARN },
+  { "module ",		RID__MODULE,	D_CXX_MODULES_FLAGS | D_CXXWARN },
+  { "import ",		RID__IMPORT,	D_CXX_MODULES_FLAGS | D_CXXWARN },
+  { "export ",		RID__EXPORT,	D_CXX_MODULES_FLAGS | D_CXXWARN },
 
   /* Coroutines-related keywords */
-  { "co_await",		RID_SPL_CO_AWAIT,	D_CXX_COROUTINES_FLAGS | D_CXXWARN },
-  { "co_yield",		RID_SPL_CO_YIELD,	D_CXX_COROUTINES_FLAGS | D_CXXWARN },
-  { "co_return", 	RID_SPL_CO_RETURN,	D_CXX_COROUTINES_FLAGS | D_CXXWARN },
+  { "co_await",		RID_CO_AWAIT,	D_CXX_COROUTINES_FLAGS | D_CXXWARN },
+  { "co_yield",		RID_CO_YIELD,	D_CXX_COROUTINES_FLAGS | D_CXXWARN },
+  { "co_return", 	RID_CO_RETURN,	D_CXX_COROUTINES_FLAGS | D_CXXWARN },
   
-  /* Scpel 1.0.0  */
-  { "spl_random",	RID_SPL_RANDOM,		0 },	// random variables
-  { "neurode",		RID_SPL_NEURODE,	0 },	// neurodes for neural network
-  { "gliad",		RID_SPL_GLIAD,		0 },	// gliads
+  /* Scpel 1.0.0 */
+  { "neurode",		RID_NEURODE,		D_CXXONLY },
+  { "gliad",		RID_GLIAD,			D_CXXONLY },
+  { "spl_random",		RID_RANDOM,			D_CXXONLY },
+  { "algorithm",	RID_ALGORITHM,		D_CXXONLY },
+  { "hotplug",		RID_HOTPLUG,		D_CXXONLY },
+  { "runtime",		RID_RUNTIME,		D_CXXONLY },
+  { "function",		RID_FUNCTION,		D_CXXONLY },
+  { "classname",	RID_CLASSNAME,		D_CXXONLY },
 };
 
 const unsigned int num_c_common_reswords = ARRAY_SIZE (c_common_reswords);
@@ -529,7 +522,7 @@ const unsigned int num_c_common_reswords = ARRAY_SIZE (c_common_reswords);
 const char *
 c_addr_space_name (addr_space_t as)
 {
-  int rid = RID_SPL_FIRST_ADDR_SPACE + as;
+  int rid = RID_FIRST_ADDR_SPACE + as;
   gcc_assert (ridpointers [rid]);
   return IDENTIFIER_POINTER (ridpointers [rid]);
 }
@@ -755,7 +748,7 @@ fix_string_type (tree value)
 		 nchars - 1, nchars_max, relevant_std);
     }
 
-  /* Create the array type for the string constant.  The ISO C++
+  /* Create the array type for the string constant.  The GNU Scpel
      standard says that a string literal has type `const char[N]' or
      `const wchar_t[N]'.  We use the same logic when invoked as a C
      front-end with -Wwrite-strings.
@@ -1429,7 +1422,7 @@ unsafe_conversion_p (tree type, tree expr, tree result, bool check_sign)
 
       /* Warn for real constant that is not an exact integer converted
 	 to integer type.  */
-      if (TREE_CODE (expr_type) == REAL_TYPE
+      if (SCALAR_FLOAT_TYPE_P (expr_type)
 	  && TREE_CODE (type) == INTEGER_TYPE)
 	{
 	  if (!real_isinteger (TREE_REAL_CST_PTR (expr), TYPE_MODE (expr_type)))
@@ -1454,7 +1447,7 @@ unsafe_conversion_p (tree type, tree expr, tree result, bool check_sign)
 	  else
 	    give_warning = UNSAFE_OTHER;
 	}
-      else if (TREE_CODE (type) == REAL_TYPE)
+      else if (SCALAR_FLOAT_TYPE_P (type))
 	{
 	  /* Warn for an integer constant that does not fit into real type.  */
 	  if (TREE_CODE (expr_type) == INTEGER_TYPE)
@@ -1465,7 +1458,7 @@ unsafe_conversion_p (tree type, tree expr, tree result, bool check_sign)
 	    }
 	  /* Warn for a real constant that does not fit into a smaller
 	     real type.  */
-	  else if (TREE_CODE (expr_type) == REAL_TYPE
+	  else if (SCALAR_FLOAT_TYPE_P (expr_type)
 		   && TYPE_PRECISION (type) < TYPE_PRECISION (expr_type))
 	    {
 	      REAL_VALUE_TYPE a = TREE_REAL_CST (expr);
@@ -1525,7 +1518,7 @@ unsafe_conversion_p (tree type, tree expr, tree result, bool check_sign)
   else
     {
       /* Warn for real types converted to integer types.  */
-      if (TREE_CODE (expr_type) == REAL_TYPE
+      if (SCALAR_FLOAT_TYPE_P (expr_type)
 	  && TREE_CODE (type) == INTEGER_TYPE)
 	give_warning = UNSAFE_REAL;
 
@@ -1597,7 +1590,7 @@ unsafe_conversion_p (tree type, tree expr, tree result, bool check_sign)
 	 all the range of values of the integer type cannot be
 	 represented by the real type.  */
       else if (TREE_CODE (expr_type) == INTEGER_TYPE
-	       && TREE_CODE (type) == REAL_TYPE)
+	       && SCALAR_FLOAT_TYPE_P (type))
 	{
 	  /* Don't warn about char y = 0xff; float x = (int) y;  */
 	  expr = get_unwidened (expr, 0);
@@ -1608,8 +1601,8 @@ unsafe_conversion_p (tree type, tree expr, tree result, bool check_sign)
 	}
 
       /* Warn for real types converted to smaller real types.  */
-      else if (TREE_CODE (expr_type) == REAL_TYPE
-	       && TREE_CODE (type) == REAL_TYPE
+      else if (SCALAR_FLOAT_TYPE_P (expr_type)
+	       && SCALAR_FLOAT_TYPE_P (type)
 	       && TYPE_PRECISION (type) < TYPE_PRECISION (expr_type))
 	give_warning = UNSAFE_REAL;
 
@@ -1623,13 +1616,13 @@ unsafe_conversion_p (tree type, tree expr, tree result, bool check_sign)
 	  tree to_type = TREE_TYPE (type);
 
 	  /* Warn for real types converted to integer types.  */
-	  if (TREE_CODE (from_type) == REAL_TYPE
+	  if (SCALAR_FLOAT_TYPE_P (from_type)
 	      && TREE_CODE (to_type) == INTEGER_TYPE)
 	    give_warning = UNSAFE_REAL;
 
 	  /* Warn for real types converted to smaller real types.  */
-	  else if (TREE_CODE (from_type) == REAL_TYPE
-		   && TREE_CODE (to_type) == REAL_TYPE
+	  else if (SCALAR_FLOAT_TYPE_P (from_type)
+		   && SCALAR_FLOAT_TYPE_P (to_type)
 		   && TYPE_PRECISION (to_type) < TYPE_PRECISION (from_type))
 	    give_warning = UNSAFE_REAL;
 
@@ -1652,7 +1645,7 @@ unsafe_conversion_p (tree type, tree expr, tree result, bool check_sign)
 		give_warning = UNSAFE_SIGN;
 	    }
 	  else if (TREE_CODE (from_type) == INTEGER_TYPE
-		   && TREE_CODE (to_type) == REAL_TYPE
+		   && SCALAR_FLOAT_TYPE_P (to_type)
 		   && !int_safely_convertible_to_real_p (from_type, to_type))
 	    give_warning = UNSAFE_OTHER;
 	}
@@ -1872,7 +1865,7 @@ warning_candidate_p (tree x)
   if (TREE_CODE (x) == BLOCK)
     return false;
 
-  /* VOID_TYPE_P (TREE_TYPE (x)) is workaround for cp/tree.cc
+  /* VOID_TYPE_P (TREE_TYPE (x)) is workaround for scpel/tree.cc
      (lvalue_p) crash on TRY/CATCH. */
   if (TREE_TYPE (x) == NULL_TREE || VOID_TYPE_P (TREE_TYPE (x)))
     return false;
@@ -2100,11 +2093,16 @@ verify_tree (tree x, struct tlist **pbefore_sp, struct tlist **pno_sp,
 
     case LSHIFT_EXPR:
     case RSHIFT_EXPR:
-    case COMPONENT_REF:
     case ARRAY_REF:
       if (cxx_dialect >= cxx17)
 	goto sequenced_binary;
       goto do_default;
+
+    case COMPONENT_REF:
+      /* Treat as unary, the other operands aren't evaluated.  */
+      x = TREE_OPERAND (x, 0);
+      writer = 0;
+      goto restart;
 
     default:
     do_default:
@@ -2892,8 +2890,8 @@ shorten_compare (location_t loc, tree *op0_ptr, tree *op1_ptr,
     unsignedp1 = TYPE_UNSIGNED (TREE_TYPE (op1));
 
   /* If one of the operands must be floated, we cannot optimize.  */
-  real1 = TREE_CODE (TREE_TYPE (primop0)) == REAL_TYPE;
-  real2 = TREE_CODE (TREE_TYPE (primop1)) == REAL_TYPE;
+  real1 = SCALAR_FLOAT_TYPE_P (TREE_TYPE (primop0));
+  real2 = SCALAR_FLOAT_TYPE_P (TREE_TYPE (primop1));
 
   /* If first arg is constant, swap the args (changing operation
      so value is preserved), for canonicalization.  Don't do this if
@@ -3224,7 +3222,7 @@ pointer_int_sum (location_t loc, enum tree_code resultcode,
   /* The result is a pointer of the same type that is being added.  */
   tree result_type = TREE_TYPE (ptrop);
 
-  if (TREE_CODE (TREE_TYPE (result_type)) == VOID_TYPE)
+  if (VOID_TYPE_P (TREE_TYPE (result_type)))
     {
       if (complain && warn_pointer_arith)
 	pedwarn (loc, OPT_Wpointer_arith,
@@ -3671,7 +3669,7 @@ c_common_truthvalue_conversion (location_t location, tree expr)
       goto ret;
     }
 
-  if (TREE_CODE (TREE_TYPE (expr)) == FIXED_POINT_TYPE)
+  if (FIXED_POINT_TYPE_P (TREE_TYPE (expr)))
     {
       tree fixed_zero_node = build_fixed (TREE_TYPE (expr),
 					  FCONST0 (TYPE_MODE
@@ -3707,7 +3705,7 @@ c_apply_type_quals_to_decl (int type_quals, tree decl)
   if ((type_quals & TYPE_QUAL_CONST)
       || (type && TREE_CODE (type) == REFERENCE_TYPE))
     /* We used to check TYPE_NEEDS_CONSTRUCTING here, but now a constexpr
-       constructor can produce constant init, so rely on cp_finish_decl to
+       constructor can produce constant init, so rely on scpel_finish_decl to
        clear TREE_READONLY if the variable has non-constant init.  */
     TREE_READONLY (decl) = 1;
   if (type_quals & TYPE_QUAL_VOLATILE)
@@ -3808,7 +3806,7 @@ c_sizeof_or_alignof_type (location_t loc,
 	  if (complain)
 	    {
 	      if (c_dialect_cxx ())
-		pedwarn (loc, OPT_Wpedantic, "ISO C++ does not permit "
+		pedwarn (loc, OPT_Wpedantic, "GNU Scpel does not permit "
 			 "%<alignof%> applied to a function type");
 	      else
 		pedwarn (loc, OPT_Wpedantic, "ISO C does not permit "
@@ -4187,17 +4185,17 @@ c_common_nodes_and_builtins (void)
   build_common_tree_nodes (flag_signed_char);
 
   /* Define `int' and `char' first so that dbx will output them first.  */
-  record_builtin_type (RID_SPL_INT, NULL, integer_type_node);
-  record_builtin_type (RID_SPL_CHAR, "char", char_type_node);
+  record_builtin_type (RID_INT, NULL, integer_type_node);
+  record_builtin_type (RID_CHAR, "char", char_type_node);
 
   /* `signed' is the same as `int'.  FIXME: the declarations of "signed",
      "unsigned long", "long long unsigned" and "unsigned short" were in C++
      but not C.  Are the conditionals here needed?  */
   if (c_dialect_cxx ())
-    record_builtin_type (RID_SPL_SIGNED, NULL, integer_type_node);
-  record_builtin_type (RID_SPL_LONG, "long int", long_integer_type_node);
-  record_builtin_type (RID_SPL_UNSIGNED, "unsigned int", unsigned_type_node);
-  record_builtin_type (RID_SPL_MAX, "long unsigned int",
+    record_builtin_type (RID_SIGNED, NULL, integer_type_node);
+  record_builtin_type (RID_LONG, "long int", long_integer_type_node);
+  record_builtin_type (RID_UNSIGNED, "unsigned int", unsigned_type_node);
+  record_builtin_type (RID_MAX, "long unsigned int",
 		       long_unsigned_type_node);
 
   for (i = 0; i < NUM_INT_N_ENTS; i ++)
@@ -4205,39 +4203,39 @@ c_common_nodes_and_builtins (void)
       char name[25];
 
       sprintf (name, "__int%d", int_n_data[i].bitsize);
-      record_builtin_type ((enum rid)(RID_SPL_FIRST_INT_N + i), name,
+      record_builtin_type ((enum rid)(RID_FIRST_INT_N + i), name,
 			   int_n_trees[i].signed_type);
       sprintf (name, "__int%d__", int_n_data[i].bitsize);
-      record_builtin_type ((enum rid)(RID_SPL_FIRST_INT_N + i), name,
+      record_builtin_type ((enum rid)(RID_FIRST_INT_N + i), name,
 			   int_n_trees[i].signed_type);
-      ridpointers[RID_SPL_FIRST_INT_N + i]
+      ridpointers[RID_FIRST_INT_N + i]
 	= DECL_NAME (TYPE_NAME (int_n_trees[i].signed_type));
 
       sprintf (name, "__int%d unsigned", int_n_data[i].bitsize);
-      record_builtin_type (RID_SPL_MAX, name, int_n_trees[i].unsigned_type);
+      record_builtin_type (RID_MAX, name, int_n_trees[i].unsigned_type);
       sprintf (name, "__int%d__ unsigned", int_n_data[i].bitsize);
-      record_builtin_type (RID_SPL_MAX, name, int_n_trees[i].unsigned_type);
+      record_builtin_type (RID_MAX, name, int_n_trees[i].unsigned_type);
     }
 
   if (c_dialect_cxx ())
-    record_builtin_type (RID_SPL_MAX, "unsigned long", long_unsigned_type_node);
-  record_builtin_type (RID_SPL_MAX, "long long int",
+    record_builtin_type (RID_MAX, "unsigned long", long_unsigned_type_node);
+  record_builtin_type (RID_MAX, "long long int",
 		       long_long_integer_type_node);
-  record_builtin_type (RID_SPL_MAX, "long long unsigned int",
+  record_builtin_type (RID_MAX, "long long unsigned int",
 		       long_long_unsigned_type_node);
   if (c_dialect_cxx ())
-    record_builtin_type (RID_SPL_MAX, "long long unsigned",
+    record_builtin_type (RID_MAX, "long long unsigned",
 			 long_long_unsigned_type_node);
-  record_builtin_type (RID_SPL_SHORT, "short int", short_integer_type_node);
-  record_builtin_type (RID_SPL_MAX, "short unsigned int",
+  record_builtin_type (RID_SHORT, "short int", short_integer_type_node);
+  record_builtin_type (RID_MAX, "short unsigned int",
 		       short_unsigned_type_node);
   if (c_dialect_cxx ())
-    record_builtin_type (RID_SPL_MAX, "unsigned short",
+    record_builtin_type (RID_MAX, "unsigned short",
 			 short_unsigned_type_node);
 
   /* Define both `signed char' and `unsigned char'.  */
-  record_builtin_type (RID_SPL_MAX, "signed char", signed_char_type_node);
-  record_builtin_type (RID_SPL_MAX, "unsigned char", unsigned_char_type_node);
+  record_builtin_type (RID_MAX, "signed char", signed_char_type_node);
+  record_builtin_type (RID_MAX, "unsigned char", unsigned_char_type_node);
 
   /* These are types that c_common_type_for_size and
      c_common_type_for_mode use.  */
@@ -4299,14 +4297,14 @@ c_common_nodes_and_builtins (void)
   pid_type_node =
     TREE_TYPE (identifier_global_value (get_identifier (PID_TYPE)));
 
-  record_builtin_type (RID_SPL_FLOAT, NULL, float_type_node);
-  record_builtin_type (RID_SPL_DOUBLE, NULL, double_type_node);
-  record_builtin_type (RID_SPL_MAX, "long double", long_double_type_node);
+  record_builtin_type (RID_FLOAT, NULL, float_type_node);
+  record_builtin_type (RID_DOUBLE, NULL, double_type_node);
+  record_builtin_type (RID_MAX, "long double", long_double_type_node);
 
   for (i = 0; i < NUM_FLOATN_NX_TYPES; i++)
     {
       if (FLOATN_NX_TYPE_NODE (i) != NULL_TREE)
-	record_builtin_type ((enum rid) (RID_SPL_FLOATN_NX_FIRST + i), NULL,
+	record_builtin_type ((enum rid) (RID_FLOATN_NX_FIRST + i), NULL,
 			     FLOATN_NX_TYPE_NODE (i));
     }
 
@@ -4322,68 +4320,68 @@ c_common_nodes_and_builtins (void)
       && targetm.scalar_mode_supported_p (DDmode)
       && targetm.scalar_mode_supported_p (TDmode))
     {
-      record_builtin_type (RID_SPL_DFLOAT32, NULL, dfloat32_type_node);
-      record_builtin_type (RID_SPL_DFLOAT64, NULL, dfloat64_type_node);
-      record_builtin_type (RID_SPL_DFLOAT128, NULL, dfloat128_type_node);
+      record_builtin_type (RID_DFLOAT32, NULL, dfloat32_type_node);
+      record_builtin_type (RID_DFLOAT64, NULL, dfloat64_type_node);
+      record_builtin_type (RID_DFLOAT128, NULL, dfloat128_type_node);
     }
 
   if (targetm.fixed_point_supported_p ())
     {
-      record_builtin_type (RID_SPL_MAX, "short _Fract", short_fract_type_node);
-      record_builtin_type (RID_SPL_FRACT, NULL, fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "long _Fract", long_fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "long long _Fract",
+      record_builtin_type (RID_MAX, "short _Fract", short_fract_type_node);
+      record_builtin_type (RID_FRACT, NULL, fract_type_node);
+      record_builtin_type (RID_MAX, "long _Fract", long_fract_type_node);
+      record_builtin_type (RID_MAX, "long long _Fract",
 			   long_long_fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "unsigned short _Fract",
+      record_builtin_type (RID_MAX, "unsigned short _Fract",
 			   unsigned_short_fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "unsigned _Fract",
+      record_builtin_type (RID_MAX, "unsigned _Fract",
 			   unsigned_fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "unsigned long _Fract",
+      record_builtin_type (RID_MAX, "unsigned long _Fract",
 			   unsigned_long_fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "unsigned long long _Fract",
+      record_builtin_type (RID_MAX, "unsigned long long _Fract",
 			   unsigned_long_long_fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat short _Fract",
+      record_builtin_type (RID_MAX, "_Sat short _Fract",
 			   sat_short_fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat _Fract", sat_fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat long _Fract",
+      record_builtin_type (RID_MAX, "_Sat _Fract", sat_fract_type_node);
+      record_builtin_type (RID_MAX, "_Sat long _Fract",
 			   sat_long_fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat long long _Fract",
+      record_builtin_type (RID_MAX, "_Sat long long _Fract",
 			   sat_long_long_fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat unsigned short _Fract",
+      record_builtin_type (RID_MAX, "_Sat unsigned short _Fract",
 			   sat_unsigned_short_fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat unsigned _Fract",
+      record_builtin_type (RID_MAX, "_Sat unsigned _Fract",
 			   sat_unsigned_fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat unsigned long _Fract",
+      record_builtin_type (RID_MAX, "_Sat unsigned long _Fract",
 			   sat_unsigned_long_fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat unsigned long long _Fract",
+      record_builtin_type (RID_MAX, "_Sat unsigned long long _Fract",
 			   sat_unsigned_long_long_fract_type_node);
-      record_builtin_type (RID_SPL_MAX, "short _Accum", short_accum_type_node);
-      record_builtin_type (RID_SPL_ACCUM, NULL, accum_type_node);
-      record_builtin_type (RID_SPL_MAX, "long _Accum", long_accum_type_node);
-      record_builtin_type (RID_SPL_MAX, "long long _Accum",
+      record_builtin_type (RID_MAX, "short _Accum", short_accum_type_node);
+      record_builtin_type (RID_ACCUM, NULL, accum_type_node);
+      record_builtin_type (RID_MAX, "long _Accum", long_accum_type_node);
+      record_builtin_type (RID_MAX, "long long _Accum",
 			   long_long_accum_type_node);
-      record_builtin_type (RID_SPL_MAX, "unsigned short _Accum",
+      record_builtin_type (RID_MAX, "unsigned short _Accum",
 			   unsigned_short_accum_type_node);
-      record_builtin_type (RID_SPL_MAX, "unsigned _Accum",
+      record_builtin_type (RID_MAX, "unsigned _Accum",
 			   unsigned_accum_type_node);
-      record_builtin_type (RID_SPL_MAX, "unsigned long _Accum",
+      record_builtin_type (RID_MAX, "unsigned long _Accum",
 			   unsigned_long_accum_type_node);
-      record_builtin_type (RID_SPL_MAX, "unsigned long long _Accum",
+      record_builtin_type (RID_MAX, "unsigned long long _Accum",
 			   unsigned_long_long_accum_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat short _Accum",
+      record_builtin_type (RID_MAX, "_Sat short _Accum",
 			   sat_short_accum_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat _Accum", sat_accum_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat long _Accum",
+      record_builtin_type (RID_MAX, "_Sat _Accum", sat_accum_type_node);
+      record_builtin_type (RID_MAX, "_Sat long _Accum",
 			   sat_long_accum_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat long long _Accum",
+      record_builtin_type (RID_MAX, "_Sat long long _Accum",
 			  sat_long_long_accum_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat unsigned short _Accum",
+      record_builtin_type (RID_MAX, "_Sat unsigned short _Accum",
 			   sat_unsigned_short_accum_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat unsigned _Accum",
+      record_builtin_type (RID_MAX, "_Sat unsigned _Accum",
 			   sat_unsigned_accum_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat unsigned long _Accum",
+      record_builtin_type (RID_MAX, "_Sat unsigned long _Accum",
 			   sat_unsigned_long_accum_type_node);
-      record_builtin_type (RID_SPL_MAX, "_Sat unsigned long long _Accum",
+      record_builtin_type (RID_MAX, "_Sat unsigned long long _Accum",
 			   sat_unsigned_long_long_accum_type_node);
 
     }
@@ -4425,7 +4423,7 @@ c_common_nodes_and_builtins (void)
     builtin_structptr_types[i].node
       = build_variant_type_copy (builtin_structptr_types[i].base);
 
-  record_builtin_type (RID_SPL_VOID, NULL, void_type_node);
+  record_builtin_type (RID_VOID, NULL, void_type_node);
 
   /* Set the TYPE_NAME for any variants that were built before
      record_builtin_type gave names to the built-in types. */
@@ -4466,7 +4464,7 @@ c_common_nodes_and_builtins (void)
 	wchar_type_node = make_unsigned_type (wchar_type_size);
       else
 	wchar_type_node = make_signed_type (wchar_type_size);
-      record_builtin_type (RID_SPL_WCHAR, "wchar_t", wchar_type_node);
+      record_builtin_type (RID_WCHAR, "wchar_t", wchar_type_node);
     }
 
   /* This is for wide string constants.  */
@@ -4483,7 +4481,7 @@ c_common_nodes_and_builtins (void)
       TYPE_STRING_FLAG (char8_type_node) = true;
 
       if (flag_char8_t)
-        record_builtin_type (RID_SPL_CHAR8, "char8_t", char8_type_node);
+        record_builtin_type (RID_CHAR8, "char8_t", char8_type_node);
     }
 
   /* This is for UTF-8 string constants.  */
@@ -4499,7 +4497,7 @@ c_common_nodes_and_builtins (void)
       char16_type_node = make_unsigned_type (char16_type_size);
 
       if (cxx_dialect >= cxx11)
-	record_builtin_type (RID_SPL_CHAR16, "char16_t", char16_type_node);
+	record_builtin_type (RID_CHAR16, "char16_t", char16_type_node);
     }
 
   /* This is for UTF-16 string constants.  */
@@ -4515,7 +4513,7 @@ c_common_nodes_and_builtins (void)
       char32_type_node = make_unsigned_type (char32_type_size);
 
       if (cxx_dialect >= cxx11)
-	record_builtin_type (RID_SPL_CHAR32, "char32_t", char32_type_node);
+	record_builtin_type (RID_CHAR32, "char32_t", char32_type_node);
     }
 
   /* This is for UTF-32 string constants.  */
@@ -8321,39 +8319,39 @@ keyword_begins_type_specifier (enum rid keyword)
 {
   switch (keyword)
     {
-    case RID_SPL_AUTO_TYPE:
-    case RID_SPL_INT:
-    case RID_SPL_CHAR:
-    case RID_SPL_FLOAT:
-    case RID_SPL_DOUBLE:
-    case RID_SPL_VOID:
-    case RID_SPL_UNSIGNED:
-    case RID_SPL_LONG:
-    case RID_SPL_SHORT:
-    case RID_SPL_SIGNED:
-    CASE_RID_SPL_FLOATN_NX:
-    case RID_SPL_DFLOAT32:
-    case RID_SPL_DFLOAT64:
-    case RID_SPL_DFLOAT128:
-    case RID_SPL_FRACT:
-    case RID_SPL_ACCUM:
-    case RID_SPL_BOOL:
-    case RID_SPL_WCHAR:
-    case RID_SPL_CHAR8:
-    case RID_SPL_CHAR16:
-    case RID_SPL_CHAR32:
-    case RID_SPL_SAT:
-    case RID_SPL_COMPLEX:
-    case RID_SPL_TYPEOF:
-    case RID_SPL_STRUCT:
-    case RID_SPL_CLASS:
-    case RID_SPL_UNION:
-    case RID_SPL_ENUM:
+    case RID_AUTO_TYPE:
+    case RID_INT:
+    case RID_CHAR:
+    case RID_FLOAT:
+    case RID_DOUBLE:
+    case RID_VOID:
+    case RID_UNSIGNED:
+    case RID_LONG:
+    case RID_SHORT:
+    case RID_SIGNED:
+    CASE_RID_FLOATN_NX:
+    case RID_DFLOAT32:
+    case RID_DFLOAT64:
+    case RID_DFLOAT128:
+    case RID_FRACT:
+    case RID_ACCUM:
+    case RID_BOOL:
+    case RID_WCHAR:
+    case RID_CHAR8:
+    case RID_CHAR16:
+    case RID_CHAR32:
+    case RID_SAT:
+    case RID_COMPLEX:
+    case RID_TYPEOF:
+    case RID_STRUCT:
+    case RID_CLASS:
+    case RID_UNION:
+    case RID_ENUM:
       return true;
     default:
-      if (keyword >= RID_SPL_FIRST_INT_N
-	  && keyword < RID_SPL_FIRST_INT_N + NUM_INT_N_ENTS
-	  && int_n_enabled_p[keyword-RID_SPL_FIRST_INT_N])
+      if (keyword >= RID_FIRST_INT_N
+	  && keyword < RID_FIRST_INT_N + NUM_INT_N_ENTS
+	  && int_n_enabled_p[keyword-RID_FIRST_INT_N])
 	return true;
       return false;
     }
@@ -8366,10 +8364,10 @@ keyword_is_type_qualifier (enum rid keyword)
 {
   switch (keyword)
     {
-    case RID_SPL_CONST:
-    case RID_SPL_VOLATILE:
-    case RID_SPL_RESTRICT:
-    case RID_SPL_ATOMIC:
+    case RID_CONST:
+    case RID_VOLATILE:
+    case RID_RESTRICT:
+    case RID_ATOMIC:
       return true;
     default:
       return false;
@@ -8378,7 +8376,7 @@ keyword_is_type_qualifier (enum rid keyword)
 
 /* Return true if KEYWORD names a storage class specifier.
 
-   RID_SPL_TYPEDEF is not included in this list despite `typedef' being
+   RID_TYPEDEF is not included in this list despite `typedef' being
    listed in C99 6.7.1.1.  6.7.1.3 indicates that `typedef' is listed as
    such for syntactic convenience only.  */
 
@@ -8387,12 +8385,12 @@ keyword_is_storage_class_specifier (enum rid keyword)
 {
   switch (keyword)
     {
-    case RID_SPL_STATIC:
-    case RID_SPL_EXTERN:
-    case RID_SPL_REGISTER:
-    case RID_SPL_AUTO:
-    case RID_SPL_MUTABLE:
-    case RID_SPL_THREAD:
+    case RID_STATIC:
+    case RID_EXTERN:
+    case RID_REGISTER:
+    case RID_AUTO:
+    case RID_MUTABLE:
+    case RID_THREAD:
       return true;
     default:
       return false;
@@ -8406,10 +8404,10 @@ keyword_is_function_specifier (enum rid keyword)
 {
   switch (keyword)
     {
-    case RID_SPL_INLINE:
-    case RID_SPL_NORETURN:
-    case RID_SPL_VIRTUAL:
-    case RID_SPL_EXPLICIT:
+    case RID_INLINE:
+    case RID_NORETURN:
+    case RID_VIRTUAL:
+    case RID_EXPLICIT:
       return true;
     default:
       return false;
@@ -8429,10 +8427,10 @@ keyword_is_decl_specifier (enum rid keyword)
 
   switch (keyword)
     {
-    case RID_SPL_TYPEDEF:
-    case RID_SPL_FRIEND:
-    case RID_SPL_CONSTEXPR:
-    case RID_SPL_CONSTINIT:
+    case RID_TYPEDEF:
+    case RID_FRIEND:
+    case RID_CONSTEXPR:
+    case RID_CONSTINIT:
       return true;
     default:
       return false;
@@ -8590,7 +8588,7 @@ scalar_to_vector (location_t loc, enum tree_code code, tree op0, tree op1,
 	  }
 	else if (!integer_only_op
 		    /* Allow integer --> real conversion if safe.  */
-		 && (TREE_CODE (type0) == REAL_TYPE
+		 && (SCALAR_FLOAT_TYPE_P (type0)
 		     || TREE_CODE (type0) == INTEGER_TYPE)
 		 && SCALAR_FLOAT_TYPE_P (TREE_TYPE (type1)))
 	  {

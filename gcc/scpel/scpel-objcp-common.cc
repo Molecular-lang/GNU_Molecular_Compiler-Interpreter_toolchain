@@ -405,19 +405,19 @@ names_builtin_p (const char *name)
 
   /* Also detect common reserved C++ words that aren't strictly built-in
      functions.  */
-  switch (C_RID_SPL_CODE (id))
+  switch (C_RID_CODE (id))
     {
-    case RID_SPL_ADDRESSOF:
-    case RID_SPL_BUILTIN_CONVERTVECTOR:
-    case RID_SPL_BUILTIN_HAS_ATTRIBUTE:
-    case RID_SPL_BUILTIN_SHUFFLE:
-    case RID_SPL_BUILTIN_SHUFFLEVECTOR:
-    case RID_SPL_BUILTIN_LAUNDER:
-    case RID_SPL_BUILTIN_ASSOC_BARRIER:
-    case RID_SPL_BUILTIN_BIT_CAST:
-    case RID_SPL_OFFSETOF:
+    case RID_ADDRESSOF:
+    case RID_BUILTIN_CONVERTVECTOR:
+    case RID_BUILTIN_HAS_ATTRIBUTE:
+    case RID_BUILTIN_SHUFFLE:
+    case RID_BUILTIN_SHUFFLEVECTOR:
+    case RID_BUILTIN_LAUNDER:
+    case RID_BUILTIN_ASSOC_BARRIER:
+    case RID_BUILTIN_BIT_CAST:
+    case RID_OFFSETOF:
 #define DEFTRAIT(TCC, CODE, NAME, ARITY) \
-    case RID_SPL_##CODE:
+    case RID_##CODE:
 #include "scpel-trait.def"
 #undef DEFTRAIT
       return true;
@@ -428,7 +428,7 @@ names_builtin_p (const char *name)
   return false;
 }
 
-/* Register scpel-specific dumps.  */
+/* Register c++-specific dumps.  */
 
 void
 scpel_register_dumps (gcc::dump_manager *dumps)

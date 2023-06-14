@@ -115,6 +115,9 @@ struct GTY(()) ipa_pass_through_data
      ipa_agg_jump_function).  The flag is used only when the operation is
      NOP_EXPR.  */
   unsigned agg_preserved : 1;
+  /* Set when the edge has already been used to decrement an appropriate
+     reference description counter and should not be decremented again.  */
+  unsigned refdesc_decremented : 1;
 };
 
 /* Structure holding data required to describe a load-value-from-aggregate
@@ -306,12 +309,25 @@ public:
 class GTY(()) ipa_vr
 {
 public:
-  /* The data fields below are valid only if known is true.  */
-  bool known;
-  enum value_range_kind type;
-  wide_int min;
-  wide_int max;
-  bool nonzero_p (tree) const;
+  ipa_vr ();
+  ipa_vr (const vrange &);
+  void set_unknown ();
+  bool known_p () const { return m_storage != NULL; }
+  tree type () const { return m_type; }
+  void get_vrange (vrange &) const;
+  bool equal_p (const vrange &) const;
+  const vrange_storage *storage () const { return m_storage; }
+  void streamer_read (lto_input_block *, data_in *);
+  void streamer_write (output_block *) const;
+  void dump (FILE *) const;
+
+private:
+  friend void gt_pch_nx (struct ipa_vr &);
+  friend void gt_ggc_mx (struct ipa_vr &);
+  friend void gt_pch_nx (struct ipa_vr *, gt_pointer_operator, void *);
+
+  vrange_storage *m_storage;
+  tree m_type;
 };
 
 /* A jump function for a callsite represents the values passed as actual
@@ -362,6 +378,15 @@ ipa_get_jf_constant_rdesc (struct ipa_jump_func *jfunc)
   return jfunc->value.constant.rdesc;
 }
 
+/* Make JFUNC not participate in any further reference counting.  */
+
+inline void
+ipa_zap_jf_refdesc (ipa_jump_func *jfunc)
+{
+  gcc_checking_assert (jfunc->type == IPA_JF_CONST);
+  jfunc->value.constant.rdesc = NULL;
+}
+
 /* Return the operand of a pass through jmp function JFUNC.  */
 
 inline tree
@@ -397,6 +422,26 @@ ipa_get_jf_pass_through_agg_preserved (struct ipa_jump_func *jfunc)
 {
   gcc_checking_assert (jfunc->type == IPA_JF_PASS_THROUGH);
   return jfunc->value.pass_through.agg_preserved;
+}
+
+/* Return the refdesc_decremented flag of a pass through jump function
+   JFUNC.  */
+
+inline bool
+ipa_get_jf_pass_through_refdesc_decremented (struct ipa_jump_func *jfunc)
+{
+  gcc_checking_assert (jfunc->type == IPA_JF_PASS_THROUGH);
+  return jfunc->value.pass_through.refdesc_decremented;
+}
+
+/* Set the refdesc_decremented flag of a pass through jump function JFUNC to
+   VALUE.  */
+
+inline void
+ipa_set_jf_pass_through_refdesc_decremented (ipa_jump_func *jfunc, bool value)
+{
+  gcc_checking_assert (jfunc->type == IPA_JF_PASS_THROUGH);
+  jfunc->value.pass_through.refdesc_decremented = value;
 }
 
 /* Return true if pass through jump function JFUNC preserves type
@@ -1168,5 +1213,22 @@ tree build_ref_for_offset (location_t, tree, poly_int64, bool, tree,
 
 /* In ipa-cp.cc  */
 void ipa_cp_cc_finalize (void);
+
+/* Set R to the range of [VAL, VAL] while normalizing addresses to
+   non-zero.  */
+
+inline void
+ipa_range_set_and_normalize (irange &r, tree val)
+{
+  if (TREE_CODE (val) == INTEGER_CST)
+    {
+      wide_int w = wi::to_wide (val);
+      r.set (TREE_TYPE (val), w, w);
+    }
+  else if (TREE_CODE (val) == ADDR_EXPR)
+    r.set_nonzero (TREE_TYPE (val));
+  else
+    r.set_varying (TREE_TYPE (val));
+}
 
 #endif /* IPA_PROP_H */

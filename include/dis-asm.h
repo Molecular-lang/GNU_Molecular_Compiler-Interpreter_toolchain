@@ -1,4 +1,28 @@
-/* Interface between the opcode library and its callers. */
+/* Interface between the opcode library and its callers.
+
+   Copyright (C) 1999-2022 Free Software Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street - Fifth Floor,
+   Boston, MA 02110-1301, USA.
+
+   Written by Cygnus Support, 1993.
+
+   The opcode library (libopcodes.a) provides instruction decoders for
+   a large variety of instruction sets, callable with an identical
+   interface, for making instruction-processing programs more independent
+   of the instruction set being processed.  */
 
 #ifndef DIS_ASM_H
 #define DIS_ASM_H

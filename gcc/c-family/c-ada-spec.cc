@@ -1,23 +1,6 @@
 /* Print GENERIC declaration (functions, variables, types) trees coming from
    the C and C++ front-ends as well as macros in Ada syntax.
-   Copyright (C) 2010-2023 Free Software Foundation, Inc.
-   Adapted from tree-pretty-print.cc by Arnaud Charlet  <charlet@adacore.com>
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
-version.
-
-GCC is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+ */
 
 #include "config.h"
 #include "system.h"
@@ -1051,7 +1034,7 @@ has_static_fields (const_tree type)
     return false;
 
   for (tree fld = TYPE_FIELDS (type); fld; fld = TREE_CHAIN (fld))
-    if (TREE_CODE (fld) == VAR_DECL && DECL_NAME (fld))
+    if (VAR_P (fld) && DECL_NAME (fld))
       return true;
 
   return false;
@@ -3244,7 +3227,7 @@ dump_ada_declaration (pretty_printer *buffer, tree t, tree type, int spc)
       if (need_indent)
 	INDENT (spc);
 
-      if ((TREE_CODE (t) == FIELD_DECL || TREE_CODE (t) == VAR_DECL)
+      if ((TREE_CODE (t) == FIELD_DECL || VAR_P (t))
 	  && DECL_NAME (t))
 	check_type_name_conflict (buffer, t);
 
@@ -3462,7 +3445,7 @@ dump_ada_structure (pretty_printer *buffer, tree node, tree type, bool nested,
   /* Print the static fields of the structure, if any.  */
   for (tree tmp = TYPE_FIELDS (node); tmp; tmp = TREE_CHAIN (tmp))
     {
-      if (TREE_CODE (tmp) == VAR_DECL && DECL_NAME (tmp))
+      if (VAR_P (tmp) && DECL_NAME (tmp))
 	{
 	  if (need_semicolon)
 	    {

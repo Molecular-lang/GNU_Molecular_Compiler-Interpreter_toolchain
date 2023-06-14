@@ -1,4 +1,4 @@
-/* Definitions for Scpel++ contract levels.  Implements functionality described in
+/* Definitions for C++ contract levels.  Implements functionality described in
    the N4820 working draft version of contracts, P1290, P1332, and P1429.
  */
 

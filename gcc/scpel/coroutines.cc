@@ -1004,9 +1004,13 @@ build_co_await (location_t loc, tree a, suspend_point_kind suspend_kind)
     }
   else
     {
-      e_proxy = get_awaitable_var (suspend_kind, o_type);
+      tree p_type = o_type;
+      if (glvalue_p (o))
+	p_type = scpel_build_reference_type (p_type, !lvalue_p (o));
+      e_proxy = get_awaitable_var (suspend_kind, p_type);
       o = scpel_build_modify_expr (loc, e_proxy, INIT_EXPR, o,
 				tf_warning_or_error);
+      e_proxy = convert_from_reference (e_proxy);
     }
 
   /* I suppose we could check that this is contextually convertible to bool.  */
@@ -1099,6 +1103,9 @@ build_co_await (location_t loc, tree a, suspend_point_kind suspend_kind)
       awrs_call = TREE_OPERAND (awrs_call, 1);
     }
   TREE_VEC_ELT (awaiter_calls, 2) = awrs_call; /* await_resume().  */
+
+  if (REFERENCE_REF_P (e_proxy))
+    e_proxy = TREE_OPERAND (e_proxy, 0);
 
   tree await_expr = build5_loc (loc, CO_AWAIT_EXPR,
 				TREE_TYPE (TREE_TYPE (awrs_func)),
@@ -2862,7 +2869,7 @@ flatten_await_stmt (var_nest_node *n, hash_set<tree> *promoted,
 	  tree init = t;
 	  temps_used->add (init);
 	  tree var_type = TREE_TYPE (init);
-	  char *buf = xasprintf ("D.%d", DECL_UID (TREE_OPERAND (init, 0)));
+	  char *buf = xasprintf ("T%03u", (unsigned) temps_used->elements ());
 	  tree var = build_lang_decl (VAR_DECL, get_identifier (buf), var_type);
 	  DECL_ARTIFICIAL (var) = true;
 	  free (buf);
@@ -3753,7 +3760,7 @@ rewrite_param_uses (tree *stmt, int *do_subtree ATTRIBUTE_UNUSED, void *d)
   param_frame_data *data = (param_frame_data *) d;
 
   /* For lambda closure content, we have to look specifically.  */
-  if (TREE_CODE (*stmt) == VAR_DECL && DECL_HAS_VALUE_EXPR_P (*stmt))
+  if (VAR_P (*stmt) && DECL_HAS_VALUE_EXPR_P (*stmt))
     {
       tree t = DECL_VALUE_EXPR (*stmt);
       return scpel_walk_tree (&t, rewrite_param_uses, d, NULL);
@@ -4086,6 +4093,10 @@ coro_rewrite_function_body (location_t fn_start, tree fnbody, tree orig,
       tree bind_wrap = build3_loc (fn_start, BIND_EXPR, void_type_node,
 				   NULL, NULL, NULL);
       BIND_EXPR_BODY (bind_wrap) = fnbody;
+      /* Ensure we have a block to connect up the scopes.  */
+      tree new_blk = make_node (BLOCK);
+      BIND_EXPR_BLOCK (bind_wrap) = new_blk;
+      BLOCK_SUBBLOCKS (top_block) = new_blk;
       fnbody = bind_wrap;
     }
 
@@ -5078,7 +5089,7 @@ morph_fn_to_coro (tree orig, tree *resumer, tree *destroyer)
   else if (CLASS_TYPE_P (fn_return_type))
     {
       /* For class type return objects, we can attempt to construct,
-	 even if the gro is void. ??? Citation ??? scpel/100476  */
+	 even if the gro is void. ??? Citation ??? c++/100476  */
       r = build_special_member_call (NULL_TREE,
 				     complete_ctor_identifier, NULL,
 				     fn_return_type, LOOKUP_NORMAL,

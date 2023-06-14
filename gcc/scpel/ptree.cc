@@ -244,7 +244,8 @@ cxx_print_lambda_node (FILE *file, tree node, int indent)
   if (LAMBDA_EXPR_MUTABLE_P (node))
     fprintf (file, " /mutable");
   fprintf (file, " default_capture_mode=[");
-  switch (LAMBDA_EXPR_DEFAULT_CAPTURE_MODE (node)) {
+  switch (LAMBDA_EXPR_DEFAULT_CAPTURE_MODE (node))
+    {
     case CPLD_NONE:
       fprintf (file, "NONE");
       break;
@@ -264,8 +265,10 @@ cxx_print_lambda_node (FILE *file, tree node, int indent)
 }
 
 void
-cxx_print_xnode (FILE *file, tree node, int indent) {
-  switch (TREE_CODE (node)) {
+cxx_print_xnode (FILE *file, tree node, int indent)
+{
+  switch (TREE_CODE (node))
+    {
     case BASELINK:
       print_node (file, "functions", BASELINK_FUNCTIONS (node), indent + 4);
       print_node (file, "binfo", BASELINK_BINFO (node), indent + 4);
@@ -283,11 +286,13 @@ cxx_print_xnode (FILE *file, tree node, int indent) {
 	print_node (file, "name", BINDING_VECTOR_NAME (node), indent + 4);
 	fprintf (file, " clusters %u, alloc %u", len,
 		 BINDING_VECTOR_ALLOC_CLUSTERS (node));
-	for (unsigned ix = 0; ix != len; ix++) {
+	for (unsigned ix = 0; ix != len; ix++)
+	  {
 	    binding_cluster *cluster = &BINDING_VECTOR_CLUSTER (node, ix);
 	    char pfx[32];
 	    for (unsigned jx = 0; jx != BINDING_VECTOR_SLOTS_PER_CLUSTER; jx++)
-	      if (cluster->indices[jx].span) {
+	      if (cluster->indices[jx].span)
+		{
 		  int len = sprintf (pfx, "module:%u",
 				     cluster->indices[jx].base);
 		  if (cluster->indices[jx].span > 1)
@@ -295,14 +300,16 @@ cxx_print_xnode (FILE *file, tree node, int indent) {
 				    cluster->indices[jx].span);
 		  len += sprintf (&pfx[len], " cluster:%u/%u", ix, jx);
 		  binding_slot &slot = cluster->slots[jx];
-		  if (slot.is_lazy ()) {
+		  if (slot.is_lazy ())
+		    {
 		      indent_to (file, indent + 4);
 		      unsigned lazy = slot.get_lazy ();
 		      fprintf (file, "%s snum:%u", pfx, lazy);
 		    }
 		  else if (slot)
 		    print_node (file, pfx, slot, indent + 4);
-		  else {
+		  else
+		    {
 		      indent_to (file, indent + 4);
 		      fprintf (file, "%s NULL", pfx);
 		    }
@@ -320,7 +327,8 @@ cxx_print_xnode (FILE *file, tree node, int indent) {
     case TEMPLATE_INFO:
       print_node (file, "template", TI_TEMPLATE (node), indent+4);
       print_node (file, "args", TI_ARGS (node), indent+4);
-      if (TI_PENDING_TEMPLATE_FLAG (node)) {
+      if (TI_PENDING_TEMPLATE_FLAG (node))
+	{
 	  indent_to (file, indent + 3);
 	  fprintf (file, "pending_template");
 	}
@@ -358,7 +366,8 @@ cxx_print_xnode (FILE *file, tree node, int indent) {
       cxx_print_lambda_node (file, node, indent);
       break;
     case STATIC_ASSERT:
-      if (location_t loc = STATIC_ASSERT_SOURCE_LOCATION (node)) {
+      if (location_t loc = STATIC_ASSERT_SOURCE_LOCATION (node))
+	{
 	  expanded_location xloc = expand_location (loc);
 	  indent_to (file, indent+4);
 	  fprintf (file, "%s:%d:%d", xloc.file, xloc.line, xloc.column);
@@ -378,15 +387,18 @@ cxx_print_xnode (FILE *file, tree node, int indent) {
 /* Print the node NODE on standard error, for debugging.  */
 
 DEBUG_FUNCTION void
-debug_tree (scpel_expr node) {
+debug_tree (scpel_expr node)
+{
   debug_tree (node.get_value());
 }
 
 DEBUG_FUNCTION void
-debug_overload (tree node) {
+debug_overload (tree node)
+{
   FILE *file = stdout;
 
-  for (lkp_iterator iter (node); iter; ++iter) {
+  for (lkp_iterator iter (node); iter; ++iter)
+    {
       tree decl = *iter;
       auto xloc = expand_location (DECL_SOURCE_LOCATION (decl));
       auto fullname = decl_as_string (decl, 0);

@@ -14,7 +14,7 @@
    diagnostic framework extensions, you must include this file before
    diagnostic-core.h, not after.  The C front end formats are a subset of those
    for C++, so they are the appropriate set to use in common code;
-   cp-tree.h overrides this for C++.  */
+   scpel-tree.h overrides this for C++.  */
 #if defined(GCC_DIAGNOSTIC_CORE_H)
 #error \
 In order for the format checking to accept the C front end diagnostic \
@@ -47,226 +47,212 @@ enum rid
 {
   /* Modifiers: */
   /* C, in empirical order of frequency.  */
-  RID_SPL_STATIC = 0,
-  RID_SPL_UNSIGNED, RID_SPL_LONG,    RID_SPL_CONST, RID_SPL_EXTERN,
-  RID_SPL_REGISTER, RID_SPL_TYPEDEF, RID_SPL_SHORT, RID_SPL_INLINE,
-  RID_SPL_VOLATILE, RID_SPL_SIGNED,  RID_SPL_AUTO,  RID_SPL_RESTRICT,
-  RID_SPL_NORETURN, RID_SPL_ATOMIC,
+  RID_STATIC = 0,
+  RID_UNSIGNED, RID_LONG,    RID_CONST, RID_EXTERN,
+  RID_REGISTER, RID_TYPEDEF, RID_SHORT, RID_INLINE,
+  RID_VOLATILE, RID_SIGNED,  RID_AUTO,  RID_RESTRICT,
+  RID_NORETURN, RID_ATOMIC,
 
   /* C extensions */
-  RID_SPL_COMPLEX, RID_SPL_THREAD, RID_SPL_SAT,
+  RID_COMPLEX, RID_THREAD, RID_SAT,
 
   /* C++ */
-  RID_SPL_FRIEND, RID_SPL_VIRTUAL, RID_SPL_EXPLICIT, RID_SPL_EXPORT, RID_SPL_MUTABLE,
+  RID_FRIEND, RID_VIRTUAL, RID_EXPLICIT, RID_EXPORT, RID_MUTABLE,
 
   /* ObjC ("PQ" reserved words - they do not appear after a '@' and
      are keywords only in specific contexts)  */
-  RID_SPL_IN, RID_SPL_OUT, RID_SPL_INOUT, RID_SPL_BYCOPY, RID_SPL_BYREF, RID_SPL_ONEWAY,
+  RID_IN, RID_OUT, RID_INOUT, RID_BYCOPY, RID_BYREF, RID_ONEWAY,
 
   /* ObjC ("PATTR" reserved words - they do not appear after a '@' 
      and are keywords only as property attributes)  */
-  RID_SPL_GETTER, RID_SPL_SETTER,
-  RID_SPL_READONLY, RID_SPL_READWRITE,
-  RID_SPL_ASSIGN, RID_SPL_RETAIN, RID_SPL_COPY,
-  RID_SPL_PROPATOMIC, RID_SPL_NONATOMIC,
+  RID_GETTER, RID_SETTER,
+  RID_READONLY, RID_READWRITE,
+  RID_ASSIGN, RID_RETAIN, RID_COPY,
+  RID_PROPATOMIC, RID_NONATOMIC,
 
   /* ObjC nullability support keywords that also can appear in the
      property attribute context.  These values should remain contiguous
      with the other property attributes.  */
-  RID_SPL_NULL_UNSPECIFIED, RID_SPL_NULLABLE, RID_SPL_NONNULL, RID_SPL_NULL_RESETTABLE,
+  RID_NULL_UNSPECIFIED, RID_NULLABLE, RID_NONNULL, RID_NULL_RESETTABLE,
 
   /* C (reserved and imaginary types not implemented, so any use is a
      syntax error) */
-  RID_SPL_IMAGINARY,
+  RID_IMAGINARY,
 
   /* C */
-  RID_SPL_INT,     RID_SPL_CHAR,   RID_SPL_FLOAT,    RID_SPL_DOUBLE, RID_SPL_VOID,
-  RID_SPL_ENUM,    RID_SPL_STRUCT, RID_SPL_UNION,    RID_SPL_IF,     RID_SPL_ELSE,
-  RID_SPL_WHILE,   RID_SPL_DO,     RID_SPL_FOR,      RID_SPL_SWITCH, RID_SPL_CASE,
-  RID_SPL_DEFAULT, RID_SPL_BREAK,  RID_SPL_CONTINUE, RID_SPL_RETURN, RID_SPL_GOTO,
-  RID_SPL_SIZEOF,
+  RID_INT,     RID_CHAR,   RID_FLOAT,    RID_DOUBLE, RID_VOID,
+  RID_ENUM,    RID_STRUCT, RID_UNION,    RID_IF,     RID_ELSE,
+  RID_WHILE,   RID_DO,     RID_FOR,      RID_SWITCH, RID_CASE,
+  RID_DEFAULT, RID_BREAK,  RID_CONTINUE, RID_RETURN, RID_GOTO,
+  RID_SIZEOF,
 
   /* C extensions */
-  RID_SPL_ASM,       RID_SPL_TYPEOF,   RID_SPL_TYPEOF_UNQUAL, RID_SPL_ALIGNOF,  RID_SPL_ATTRIBUTE,
-  RID_SPL_VA_ARG,
-  RID_SPL_EXTENSION, RID_SPL_IMAGPART, RID_SPL_REALPART, RID_SPL_LABEL,      RID_SPL_CHOOSE_EXPR,
-  RID_SPL_TYPES_COMPATIBLE_P,      RID_SPL_BUILTIN_COMPLEX,	     RID_SPL_BUILTIN_SHUFFLE,
-  RID_SPL_BUILTIN_SHUFFLEVECTOR,   RID_SPL_BUILTIN_CONVERTVECTOR,   RID_SPL_BUILTIN_TGMATH,
-  RID_SPL_BUILTIN_HAS_ATTRIBUTE,   RID_SPL_BUILTIN_ASSOC_BARRIER,
-  RID_SPL_DFLOAT32, RID_SPL_DFLOAT64, RID_SPL_DFLOAT128,
+  RID_ASM,       RID_TYPEOF,   RID_TYPEOF_UNQUAL, RID_ALIGNOF,  RID_ATTRIBUTE,
+  RID_VA_ARG,
+  RID_EXTENSION, RID_IMAGPART, RID_REALPART, RID_LABEL,      RID_CHOOSE_EXPR,
+  RID_TYPES_COMPATIBLE_P,      RID_BUILTIN_COMPLEX,	     RID_BUILTIN_SHUFFLE,
+  RID_BUILTIN_SHUFFLEVECTOR,   RID_BUILTIN_CONVERTVECTOR,   RID_BUILTIN_TGMATH,
+  RID_BUILTIN_HAS_ATTRIBUTE,   RID_BUILTIN_ASSOC_BARRIER,
+  RID_DFLOAT32, RID_DFLOAT64, RID_DFLOAT128,
 
   /* TS 18661-3 keywords, in the same sequence as the TI_* values.  */
-  RID_SPL_FLOAT16,
-  RID_SPL_FLOATN_NX_FIRST = RID_SPL_FLOAT16,
-  RID_SPL_FLOAT32,
-  RID_SPL_FLOAT64,
-  RID_SPL_FLOAT128,
-  RID_SPL_FLOAT32X,
-  RID_SPL_FLOAT64X,
-  RID_SPL_FLOAT128X,
-#define CASE_RID_SPL_FLOATN_NX						\
-  case RID_SPL_FLOAT16: case RID_SPL_FLOAT32: case RID_SPL_FLOAT64: case RID_SPL_FLOAT128: \
-  case RID_SPL_FLOAT32X: case RID_SPL_FLOAT64X: case RID_SPL_FLOAT128X
+  RID_FLOAT16,
+  RID_FLOATN_NX_FIRST = RID_FLOAT16,
+  RID_FLOAT32,
+  RID_FLOAT64,
+  RID_FLOAT128,
+  RID_FLOAT32X,
+  RID_FLOAT64X,
+  RID_FLOAT128X,
+#define CASE_RID_FLOATN_NX						\
+  case RID_FLOAT16: case RID_FLOAT32: case RID_FLOAT64: case RID_FLOAT128: \
+  case RID_FLOAT32X: case RID_FLOAT64X: case RID_FLOAT128X
 
-  RID_SPL_FRACT, RID_SPL_ACCUM, RID_SPL_AUTO_TYPE, RID_SPL_BUILTIN_CALL_WITH_STATIC_CHAIN,
-
-  /* "__GIMPLE", for the GIMPLE-parsing extension to the C frontend. */
-  RID_SPL_GIMPLE,
-
-  /* "__PHI", for parsing PHI function in GIMPLE FE.  */
-  RID_SPL_PHI,
-
-  /* "__RTL", for the RTL-parsing extension to the C frontend.  */
-  RID_SPL_RTL,
+  RID_FRACT, RID_ACCUM, RID_AUTO_TYPE, RID_BUILTIN_CALL_WITH_STATIC_CHAIN,
 
   /* C11 */
-  RID_SPL_ALIGNAS, RID_SPL_GENERIC,
+  RID_ALIGNAS, RID_GENERIC,
 
   /* This means to warn that this is a C++ keyword, and then treat it
      as a normal identifier.  */
-  RID_SPL_CXX_COMPAT_WARN,
-
-  /* GNU transactional memory extension */
-  RID_SPL_TRANSACTION_ATOMIC, RID_SPL_TRANSACTION_RELAXED, RID_SPL_TRANSACTION_CANCEL,
+  RID_CXX_COMPAT_WARN,
 
   /* Too many ways of getting the name of a function as a string */
-  RID_SPL_FUNCTION_NAME, RID_SPL_PRETTY_FUNCTION_NAME, RID_SPL_C99_FUNCTION_NAME,
+  RID_FUNCTION_NAME, RID_PRETTY_FUNCTION_NAME, RID_C99_FUNCTION_NAME,
 
   /* C++ (some of these are keywords in Objective-C as well, but only
      if they appear after a '@') */
-  RID_SPL_BOOL,     RID_SPL_WCHAR,    RID_SPL_CLASS,
-  RID_SPL_PUBLIC,   RID_SPL_PRIVATE,  RID_SPL_PROTECTED,
-  RID_SPL_TEMPLATE, RID_SPL_NULL,     RID_SPL_CATCH,
-  RID_SPL_DELETE,   RID_SPL_FALSE,    RID_SPL_NAMESPACE,
-  RID_SPL_NEW,      RID_SPL_OFFSETOF, RID_SPL_OPERATOR,
-  RID_SPL_THIS,     RID_SPL_THROW,    RID_SPL_TRUE,
-  RID_SPL_TRY,      RID_SPL_TYPENAME, RID_SPL_TYPEID,
-  RID_SPL_USING,    RID_SPL_CHAR16,   RID_SPL_CHAR32,
+  RID_BOOL,     RID_WCHAR,    RID_CLASS,
+  RID_PUBLIC,   RID_PRIVATE,  RID_PROTECTED,
+  RID_TEMPLATE, RID_NULL,     RID_CATCH,
+  RID_DELETE,   RID_FALSE,    RID_NAMESPACE,
+  RID_NEW,      RID_OFFSETOF, RID_OPERATOR,
+  RID_THIS,     RID_THROW,    RID_TRUE,
+  RID_TRY,      RID_TYPENAME, RID_TYPEID,
+  RID_USING,    RID_CHAR16,   RID_CHAR32,
 
   /* casts */
-  RID_SPL_CONSTCAST, RID_SPL_DYNCAST, RID_SPL_REINTCAST, RID_SPL_STATCAST,
+  RID_CONSTCAST, RID_DYNCAST, RID_REINTCAST, RID_STATCAST,
 
   /* C++ extensions */
-  RID_SPL_ADDRESSOF,
-  RID_SPL_BUILTIN_LAUNDER,
-  RID_SPL_BUILTIN_BIT_CAST,
+  RID_ADDRESSOF,
+  RID_BUILTIN_LAUNDER,
+  RID_BUILTIN_BIT_CAST,
 
 #define DEFTRAIT(TCC, CODE, NAME, ARITY) \
-  RID_SPL_##CODE,
+  RID_##CODE,
 #include "scpel/scpel-trait.def"
 #undef DEFTRAIT
 
   /* C++11 */
-  RID_SPL_CONSTEXPR, RID_SPL_DECLTYPE, RID_SPL_NOEXCEPT, RID_SPL_NULLPTR, RID_SPL_STATIC_ASSERT,
+  RID_CONSTEXPR, RID_DECLTYPE, RID_NOEXCEPT, RID_NULLPTR, RID_STATIC_ASSERT,
 
   /* C++20 */
-  RID_SPL_CONSTINIT, RID_SPL_CONSTEVAL,
+  RID_CONSTINIT, RID_CONSTEVAL,
 
   /* char8_t */
-  RID_SPL_CHAR8,
+  RID_CHAR8,
 
   /* C++ concepts */
-  RID_SPL_CONCEPT, RID_SPL_REQUIRES,
+  RID_CONCEPT, RID_REQUIRES,
 
   /* C++ modules.  */
-  RID_SPL__MODULE, RID_SPL__IMPORT, RID_SPL__EXPORT, /* Internal tokens.  */
+  RID__MODULE, RID__IMPORT, RID__EXPORT, /* Internal tokens.  */
 
   /* C++ coroutines */
-  RID_SPL_CO_AWAIT, RID_SPL_CO_YIELD, RID_SPL_CO_RETURN,
-
-	/* Scpel 1.0.0 */
-	RID_SPL_RANDOM, RID_SPL_NEURODE, RID_SPL_GLIAD,
-	
-  /* C++ transactional memory.  */
-  RID_SPL_ATOMIC_NOEXCEPT, RID_SPL_ATOMIC_CANCEL, RID_SPL_SYNCHRONIZED,
+  RID_CO_AWAIT, RID_CO_YIELD, RID_CO_RETURN,
+  
+  /* Scpel 1.0.0 */
+  RID_NEURODE, RID_GLIAD, RID_RANDOM, RID_ALGORITHM, RID_HOTPLUG, RID_RUNTIME,
+  RID_FUNCTION, RID_CLASSNAME,
 
   /* Objective-C ("AT" reserved words - they are only keywords when
      they follow '@')  */
-  RID_SPL_AT_ENCODE,   RID_SPL_AT_END,
-  RID_SPL_AT_CLASS,    RID_SPL_AT_ALIAS,     RID_SPL_AT_DEFS,
-  RID_SPL_AT_PRIVATE,  RID_SPL_AT_PROTECTED, RID_SPL_AT_PUBLIC,  RID_SPL_AT_PACKAGE,
-  RID_SPL_AT_PROTOCOL, RID_SPL_AT_SELECTOR,
-  RID_SPL_AT_THROW,	   RID_SPL_AT_TRY,       RID_SPL_AT_CATCH,
-  RID_SPL_AT_FINALLY,  RID_SPL_AT_SYNCHRONIZED, 
-  RID_SPL_AT_OPTIONAL, RID_SPL_AT_REQUIRED, RID_SPL_AT_PROPERTY,
-  RID_SPL_AT_SYNTHESIZE, RID_SPL_AT_DYNAMIC,
-  RID_SPL_AT_INTERFACE,
-  RID_SPL_AT_IMPLEMENTATION,
+  RID_AT_ENCODE,   RID_AT_END,
+  RID_AT_CLASS,    RID_AT_ALIAS,     RID_AT_DEFS,
+  RID_AT_PRIVATE,  RID_AT_PROTECTED, RID_AT_PUBLIC,  RID_AT_PACKAGE,
+  RID_AT_PROTOCOL, RID_AT_SELECTOR,
+  RID_AT_THROW,	   RID_AT_TRY,       RID_AT_CATCH,
+  RID_AT_FINALLY,  RID_AT_SYNCHRONIZED, 
+  RID_AT_OPTIONAL, RID_AT_REQUIRED, RID_AT_PROPERTY,
+  RID_AT_SYNTHESIZE, RID_AT_DYNAMIC,
+  RID_AT_INTERFACE,
+  RID_AT_IMPLEMENTATION,
 
   /* OpenMP */
-  RID_SPL_OMP_ALL_MEMORY,
+  RID_OMP_ALL_MEMORY,
 
   /* Named address support, mapping the keyword to a particular named address
      number.  Named address space 0 is reserved for the generic address.  If
      there are more than 254 named addresses, the addr_space_t type will need
      to be grown from an unsigned char to unsigned short.  */
-  RID_SPL_ADDR_SPACE_0,		/* generic address */
-  RID_SPL_ADDR_SPACE_1,
-  RID_SPL_ADDR_SPACE_2,
-  RID_SPL_ADDR_SPACE_3,
-  RID_SPL_ADDR_SPACE_4,
-  RID_SPL_ADDR_SPACE_5,
-  RID_SPL_ADDR_SPACE_6,
-  RID_SPL_ADDR_SPACE_7,
-  RID_SPL_ADDR_SPACE_8,
-  RID_SPL_ADDR_SPACE_9,
-  RID_SPL_ADDR_SPACE_10,
-  RID_SPL_ADDR_SPACE_11,
-  RID_SPL_ADDR_SPACE_12,
-  RID_SPL_ADDR_SPACE_13,
-  RID_SPL_ADDR_SPACE_14,
-  RID_SPL_ADDR_SPACE_15,
+  RID_ADDR_SPACE_0,		/* generic address */
+  RID_ADDR_SPACE_1,
+  RID_ADDR_SPACE_2,
+  RID_ADDR_SPACE_3,
+  RID_ADDR_SPACE_4,
+  RID_ADDR_SPACE_5,
+  RID_ADDR_SPACE_6,
+  RID_ADDR_SPACE_7,
+  RID_ADDR_SPACE_8,
+  RID_ADDR_SPACE_9,
+  RID_ADDR_SPACE_10,
+  RID_ADDR_SPACE_11,
+  RID_ADDR_SPACE_12,
+  RID_ADDR_SPACE_13,
+  RID_ADDR_SPACE_14,
+  RID_ADDR_SPACE_15,
 
-  RID_SPL_FIRST_ADDR_SPACE = RID_SPL_ADDR_SPACE_0,
-  RID_SPL_LAST_ADDR_SPACE = RID_SPL_ADDR_SPACE_15,
+  RID_FIRST_ADDR_SPACE = RID_ADDR_SPACE_0,
+  RID_LAST_ADDR_SPACE = RID_ADDR_SPACE_15,
 
   /* __intN keywords.  The _N_M here doesn't correspond to the intN
      in the keyword; use the bitsize in int_n_t_data_t[M] for that.
-     For example, if int_n_t_data_t[0].bitsize is 13, then RID_SPL_INT_N_0
+     For example, if int_n_t_data_t[0].bitsize is 13, then RID_INT_N_0
      is for __int13.  */
 
-  /* Note that the range to use is RID_SPL_FIRST_INT_N through
-     RID_SPL_FIRST_INT_N + NUM_INT_N_ENTS - 1 and c-parser.cc has a list of
-     all RID_SPL_INT_N_* in a case statement.  */
+  /* Note that the range to use is RID_FIRST_INT_N through
+     RID_FIRST_INT_N + NUM_INT_N_ENTS - 1 and c-parser.cc has a list of
+     all RID_INT_N_* in a case statement.  */
 
-  RID_SPL_INT_N_0,
-  RID_SPL_INT_N_1,
-  RID_SPL_INT_N_2,
-  RID_SPL_INT_N_3,
+  RID_INT_N_0,
+  RID_INT_N_1,
+  RID_INT_N_2,
+  RID_INT_N_3,
 
-  RID_SPL_FIRST_INT_N = RID_SPL_INT_N_0,
-  RID_SPL_LAST_INT_N = RID_SPL_INT_N_3,
+  RID_FIRST_INT_N = RID_INT_N_0,
+  RID_LAST_INT_N = RID_INT_N_3,
 
-  RID_SPL_MAX,
+  RID_MAX,
 
-  RID_SPL_FIRST_MODIFIER = RID_SPL_STATIC,
-  RID_SPL_LAST_MODIFIER = RID_SPL_ONEWAY,
+  RID_FIRST_MODIFIER = RID_STATIC,
+  RID_LAST_MODIFIER = RID_ONEWAY,
 
-  RID_SPL_FIRST_CXX11 = RID_SPL_CONSTEXPR,
-  RID_SPL_LAST_CXX11 = RID_SPL_STATIC_ASSERT,
-  RID_SPL_FIRST_CXX20 = RID_SPL_CONSTINIT,
-  RID_SPL_LAST_CXX20 = RID_SPL_CO_RETURN,
-  RID_SPL_FIRST_AT = RID_SPL_AT_ENCODE,
-  RID_SPL_LAST_AT = RID_SPL_AT_IMPLEMENTATION,
-  RID_SPL_FIRST_PQ = RID_SPL_IN,
-  RID_SPL_LAST_PQ = RID_SPL_ONEWAY,
-  RID_SPL_FIRST_PATTR = RID_SPL_GETTER,
-  RID_SPL_LAST_PATTR = RID_SPL_NULL_RESETTABLE
+  RID_FIRST_CXX11 = RID_CONSTEXPR,
+  RID_LAST_CXX11 = RID_STATIC_ASSERT,
+  RID_FIRST_CXX20 = RID_CONSTINIT,
+  RID_LAST_CXX20 = RID_CO_RETURN,
+  RID_FIRST_AT = RID_AT_ENCODE,
+  RID_LAST_AT = RID_AT_IMPLEMENTATION,
+  RID_FIRST_PQ = RID_IN,
+  RID_LAST_PQ = RID_ONEWAY,
+  RID_FIRST_PATTR = RID_GETTER,
+  RID_LAST_PATTR = RID_NULL_RESETTABLE
 };
 
 #define OBJC_IS_AT_KEYWORD(rid) \
-  ((unsigned int) (rid) >= (unsigned int) RID_SPL_FIRST_AT && \
-   (unsigned int) (rid) <= (unsigned int) RID_SPL_LAST_AT)
+  ((unsigned int) (rid) >= (unsigned int) RID_FIRST_AT && \
+   (unsigned int) (rid) <= (unsigned int) RID_LAST_AT)
 
 #define OBJC_IS_PQ_KEYWORD(rid) \
-  ((unsigned int) (rid) >= (unsigned int) RID_SPL_FIRST_PQ && \
-   (unsigned int) (rid) <= (unsigned int) RID_SPL_LAST_PQ)
+  ((unsigned int) (rid) >= (unsigned int) RID_FIRST_PQ && \
+   (unsigned int) (rid) <= (unsigned int) RID_LAST_PQ)
 
 /* Keywords permitted in an @property attribute context.  */
 #define OBJC_IS_PATTR_KEYWORD(rid) \
-  ((((unsigned int) (rid) >= (unsigned int) RID_SPL_FIRST_PATTR && \
-     (unsigned int) (rid) <= (unsigned int) RID_SPL_LAST_PATTR)) \
-   || rid == RID_SPL_CLASS)
+  ((((unsigned int) (rid) >= (unsigned int) RID_FIRST_PATTR && \
+     (unsigned int) (rid) <= (unsigned int) RID_LAST_PATTR)) \
+   || rid == RID_CLASS)
 
 /* OBJC_IS_CXX_KEYWORD recognizes the 'CXX_OBJC' keywords (such as
    'class') which are shared in a subtle way between Objective-C and
@@ -276,13 +262,13 @@ enum rid
    is found elsewhere, it follows the rules of the C/C++ language.
  */
 #define OBJC_IS_CXX_KEYWORD(rid) \
-  (rid == RID_SPL_CLASS || rid == RID_SPL_SYNCHRONIZED			\
-   || rid == RID_SPL_PUBLIC || rid == RID_SPL_PROTECTED || rid == RID_SPL_PRIVATE	\
-   || rid == RID_SPL_TRY || rid == RID_SPL_THROW || rid == RID_SPL_CATCH)
+  (rid == RID_CLASS 	\
+   || rid == RID_PUBLIC || rid == RID_PROTECTED || rid == RID_PRIVATE	\
+   || rid == RID_TRY || rid == RID_THROW || rid == RID_CATCH)
 
 /* The elements of `ridpointers' are identifier nodes for the reserved
-   type names and storage classes.  It is indexed by a RID_SPL_... value.  */
-extern GTY ((length ("(int) RID_SPL_MAX"))) tree *ridpointers;
+   type names and storage classes.  It is indexed by a RID_... value.  */
+extern GTY ((length ("(int) RID_MAX"))) tree *ridpointers;
 
 /* Standard named or nameless data types of the C compiler.  */
 
@@ -365,9 +351,9 @@ enum c_tree_index
 
 #define C_CPP_HASHNODE(id) \
   (&(((struct c_common_identifier *) (id))->node))
-#define C_RID_SPL_CODE(id) \
+#define C_RID_CODE(id) \
   ((enum rid) (((struct c_common_identifier *) (id))->node.rid_code))
-#define C_SET_RID_SPL_CODE(id, code) \
+#define C_SET_RID_CODE(id, code) \
   (((struct c_common_identifier *) (id))->node.rid_code = (unsigned char) code)
 
 /* Identifier part common to the C front ends.  Inherits from
@@ -524,7 +510,7 @@ enum c_language_kind
 {
   clk_c		= 0,		/* C90, C94, C99, C11 or C2X */
   clk_objc	= 1,		/* clk_c with ObjC features.  */
-  clk_cxx	= 2,		/* ANSI/ISO C++ */
+  clk_cxx	= 2,		/* ANSI/GNU Scpel */
   clk_objcxx	= 3		/* clk_cxx with ObjC features.  */
 };
 
@@ -776,7 +762,7 @@ extern bool override_libcpp_locations;
 inline bool
 gnu_vector_type_p (const_tree type)
 {
-  return TREE_CODE (type) == VECTOR_TYPE && !TYPE_INDIVISIBLE_P (type);
+  return VECTOR_TYPE_P (type) && !TYPE_INDIVISIBLE_P (type);
 }
 
 struct visibility_flags
@@ -815,7 +801,7 @@ extern const struct attribute_spec c_common_format_attribute_table[];
 
 extern tree (*make_fname_decl) (location_t, tree, int);
 
-/* In c-decl.cc and cp/tree.cc.  FIXME.  */
+/* In c-decl.cc and scpel/tree.cc.  FIXME.  */
 extern void c_register_addr_space (const char *str, addr_space_t as);
 
 /* In c-common.cc.  */
@@ -1510,7 +1496,7 @@ extern void warn_for_multistatement_macros (location_t, location_t,
 
 extern void check_for_xor_used_as_pow (location_t lhs_loc, tree lhs_val,
 				       location_t operator_loc,
-				       tree rhs_val);
+				       location_t rhs_loc, tree rhs_val);
 
 /* In c-attribs.cc.  */
 extern bool attribute_takes_identifier_p (const_tree);

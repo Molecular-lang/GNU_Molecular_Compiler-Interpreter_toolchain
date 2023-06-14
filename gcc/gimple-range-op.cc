@@ -43,6 +43,8 @@ along with GCC; see the file COPYING3.  If not see
 #include "range.h"
 #include "value-query.h"
 #include "gimple-range.h"
+#include "attr-fnspec.h"
+#include "realmpfr.h"
 
 // Given stmt S, fill VEC, up to VEC_SIZE elements, with relevant ssa-names
 // on the statement.  For efficiency, it is an error to not pass in enough
@@ -275,7 +277,8 @@ public:
   {
     if (lh.singleton_p ())
       {
-	r.set (build_one_cst (type), build_one_cst (type));
+	wide_int one = wi::one (TYPE_PRECISION (type));
+	r.set (type, one, one);
 	return true;
       }
     if (cfun->after_inlining)
@@ -297,7 +300,8 @@ public:
   {
     if (lh.singleton_p ())
       {
-	r.set (build_one_cst (type), build_one_cst (type));
+	wide_int one = wi::one (TYPE_PRECISION (type));
+	r.set (type, one, one);
 	return true;
       }
     if (cfun->after_inlining)
@@ -308,6 +312,26 @@ public:
     return false;
   }
 } op_cfn_constant_p;
+
+// Implement range operator for integral/pointer functions returning
+// the first argument.
+class cfn_pass_through_arg1 : public range_operator
+{
+public:
+  using range_operator::fold_range;
+  virtual bool fold_range (irange &r, tree, const irange &lh,
+			   const irange &, relation_trio) const
+  {
+    r = lh;
+    return true;
+  }
+  virtual bool op1_range (irange &r, tree, const irange &lhs,
+			  const irange &, relation_trio) const
+  {
+    r = lhs;
+    return true;
+  }
+} op_cfn_pass_through_arg1;
 
 // Implement range operator for CFN_BUILT_IN_SIGNBIT.
 class cfn_signbit : public range_operator_float
@@ -338,10 +362,8 @@ public:
 	r.update_nan (false);
 	return true;
       }
-    if (!lhs.contains_p (build_zero_cst (lhs.type ())))
+    if (!lhs.contains_p (wi::zero (TYPE_PRECISION (lhs.type ()))))
       {
-	REAL_VALUE_TYPE dconstm0 = dconst0;
-	dconstm0.sign = 1;
 	r.set (type, frange_val_min (type), dconstm0);
 	r.update_nan (true);
 	return true;
@@ -382,6 +404,387 @@ public:
   }
 } op_cfn_copysign;
 
+/* Compute FUNC (ARG) where FUNC is a mpfr function.  If RES_LOW is non-NULL,
+   set it to low bound of possible range if the function is expected to have
+   ULPS precision and similarly if RES_HIGH is non-NULL, set it to high bound.
+   If the function returns false, the results weren't set.  */
+
+static bool
+frange_mpfr_arg1 (REAL_VALUE_TYPE *res_low, REAL_VALUE_TYPE *res_high,
+		  int (*func) (mpfr_ptr, mpfr_srcptr, mpfr_rnd_t),
+		  const REAL_VALUE_TYPE &arg, tree type, unsigned ulps)
+{
+  if (ulps == ~0U || !real_isfinite (&arg))
+    return false;
+  machine_mode mode = TYPE_MODE (type);
+  const real_format *format = REAL_MODE_FORMAT (mode);
+  auto_mpfr m (format->p);
+  mpfr_from_real (m, &arg, MPFR_RNDN);
+  mpfr_clear_flags ();
+  bool inexact = func (m, m, MPFR_RNDN);
+  if (!mpfr_number_p (m) || mpfr_overflow_p () || mpfr_underflow_p ())
+    return false;
+
+  REAL_VALUE_TYPE value, result;
+  real_from_mpfr (&value, m, format, MPFR_RNDN);
+  if (!real_isfinite (&value))
+    return false;
+  if ((value.cl == rvc_zero) != (mpfr_zero_p (m) != 0))
+    inexact = true;
+
+  real_convert (&result, format, &value);
+  if (!real_isfinite (&result))
+    return false;
+  bool round_low = false;
+  bool round_high = false;
+  if (!ulps && flag_rounding_math)
+    ++ulps;
+  if (inexact || !real_identical (&result, &value))
+    {
+      if (MODE_COMPOSITE_P (mode))
+	round_low = round_high = true;
+      else
+	{
+	  round_low = !real_less (&result, &value);
+	  round_high = !real_less (&value, &result);
+	}
+    }
+  if (res_low)
+    {
+      *res_low = result;
+      for (unsigned int i = 0; i < ulps + round_low; ++i)
+	frange_nextafter (mode, *res_low, dconstninf);
+    }
+  if (res_high)
+    {
+      *res_high = result;
+      for (unsigned int i = 0; i < ulps + round_high; ++i)
+	frange_nextafter (mode, *res_high, dconstinf);
+    }
+  return true;
+}
+
+class cfn_sqrt : public range_operator_float
+{
+public:
+  using range_operator_float::fold_range;
+  using range_operator_float::op1_range;
+  virtual bool fold_range (frange &r, tree type,
+			   const frange &lh, const frange &,
+			   relation_trio) const final override
+  {
+    if (lh.undefined_p ())
+      return false;
+    if (lh.known_isnan () || real_less (&lh.upper_bound (), &dconstm0))
+      {
+	r.set_nan (type);
+	return true;
+      }
+    unsigned bulps
+      = targetm.libm_function_max_error (CFN_SQRT, TYPE_MODE (type), true);
+    if (bulps == ~0U)
+      r.set_varying (type);
+    else if (bulps == 0)
+      r.set (type, dconstm0, dconstinf);
+    else
+      {
+	REAL_VALUE_TYPE boundmin = dconstm0;
+	while (bulps--)
+	  frange_nextafter (TYPE_MODE (type), boundmin, dconstninf);
+	r.set (type, boundmin, dconstinf);
+      }
+    if (!lh.maybe_isnan () && !real_less (&lh.lower_bound (), &dconst0))
+      r.clear_nan ();
+
+    unsigned ulps
+      = targetm.libm_function_max_error (CFN_SQRT, TYPE_MODE (type), false);
+    if (ulps == ~0U)
+      return true;
+    REAL_VALUE_TYPE lb = lh.lower_bound ();
+    REAL_VALUE_TYPE ub = lh.upper_bound ();
+    if (!frange_mpfr_arg1 (&lb, NULL, mpfr_sqrt, lb, type, ulps))
+      lb = dconstninf;
+    if (!frange_mpfr_arg1 (NULL, &ub, mpfr_sqrt, ub, type, ulps))
+      ub = dconstinf;
+    frange r2;
+    r2.set (type, lb, ub);
+    r2.flush_denormals_to_zero ();
+    r.intersect (r2);
+    return true;
+  }
+  virtual bool op1_range (frange &r, tree type,
+			  const frange &lhs, const frange &,
+			  relation_trio) const final override
+  {
+    if (lhs.undefined_p ())
+      return false;
+
+    // A known NAN means the input is [-INF,-0.) U +-NAN.
+    if (lhs.known_isnan ())
+      {
+      known_nan:
+	REAL_VALUE_TYPE ub = dconstm0;
+	frange_nextafter (TYPE_MODE (type), ub, dconstninf);
+	r.set (type, dconstninf, ub);
+	// No r.flush_denormals_to_zero (); here - it is a reverse op.
+	return true;
+      }
+
+    // Results outside of [-0.0, +Inf] are impossible.
+    unsigned bulps
+      = targetm.libm_function_max_error (CFN_SQRT, TYPE_MODE (type), true);
+    if (bulps != ~0U)
+      {
+	const REAL_VALUE_TYPE &ub = lhs.upper_bound ();
+	REAL_VALUE_TYPE m0 = dconstm0;
+	while (bulps--)
+	  frange_nextafter (TYPE_MODE (type), m0, dconstninf);
+	if (real_less (&ub, &m0))
+	  {
+	    if (!lhs.maybe_isnan ())
+	      r.set_undefined ();
+	    else
+	      // If lhs could be NAN and finite result is impossible,
+	      // the range is like lhs.known_isnan () above.
+	      goto known_nan;
+	    return true;
+	  }
+      }
+
+    if (!lhs.maybe_isnan ())
+      // If NAN is not valid result, the input cannot include either
+      // a NAN nor values smaller than -0.
+      r.set (type, dconstm0, dconstinf, nan_state (false, false));
+    else
+      r.set_varying (type);
+
+    unsigned ulps
+      = targetm.libm_function_max_error (CFN_SQRT, TYPE_MODE (type), false);
+    if (ulps == ~0U)
+      return true;
+    REAL_VALUE_TYPE lb = lhs.lower_bound ();
+    REAL_VALUE_TYPE ub = lhs.upper_bound ();
+    if (!lhs.maybe_isnan () && real_less (&dconst0, &lb))
+      {
+	for (unsigned i = 0; i < ulps; ++i)
+	  frange_nextafter (TYPE_MODE (type), lb, dconstninf);
+	if (real_less (&dconst0, &lb))
+	  {
+	    REAL_VALUE_TYPE op = lb;
+	    frange_arithmetic (MULT_EXPR, type, lb, op, op, dconstninf);
+	  }
+	else
+	  lb = dconstninf;
+      }
+    else
+      lb = dconstninf;
+    if (real_isfinite (&ub) && real_less (&dconst0, &ub))
+      {
+	for (unsigned i = 0; i < ulps; ++i)
+	  frange_nextafter (TYPE_MODE (type), ub, dconstinf);
+	if (real_isfinite (&ub))
+	  {
+	    REAL_VALUE_TYPE op = ub;
+	    frange_arithmetic (MULT_EXPR, type, ub, op, op, dconstinf);
+	  }
+	else
+	  ub = dconstinf;
+      }
+    else
+      ub = dconstinf;
+    frange r2;
+    r2.set (type, lb, ub);
+    r.intersect (r2);
+    return true;
+  }
+} op_cfn_sqrt;
+
+class cfn_sincos : public range_operator_float
+{
+public:
+  using range_operator_float::fold_range;
+  using range_operator_float::op1_range;
+  cfn_sincos (combined_fn cfn) { m_cfn = cfn; }
+  virtual bool fold_range (frange &r, tree type,
+			   const frange &lh, const frange &,
+			   relation_trio) const final override
+  {
+    if (lh.undefined_p ())
+      return false;
+    if (lh.known_isnan () || lh.known_isinf ())
+      {
+	r.set_nan (type);
+	return true;
+      }
+    unsigned bulps = targetm.libm_function_max_error (m_cfn, TYPE_MODE (type),
+						      true);
+    if (bulps == ~0U)
+      r.set_varying (type);
+    else if (bulps == 0)
+      r.set (type, dconstm1, dconst1);
+    else
+      {
+	REAL_VALUE_TYPE boundmin, boundmax;
+	boundmax = dconst1;
+	while (bulps--)
+	  frange_nextafter (TYPE_MODE (type), boundmax, dconstinf);
+	real_arithmetic (&boundmin, NEGATE_EXPR, &boundmax, NULL);
+	r.set (type, boundmin, boundmax);
+      }
+    if (!lh.maybe_isnan () && !lh.maybe_isinf ())
+      r.clear_nan ();
+
+    unsigned ulps
+      = targetm.libm_function_max_error (m_cfn, TYPE_MODE (type), false);
+    if (ulps == ~0U)
+      return true;
+    REAL_VALUE_TYPE lb = lh.lower_bound ();
+    REAL_VALUE_TYPE ub = lh.upper_bound ();
+    REAL_VALUE_TYPE diff;
+    real_arithmetic (&diff, MINUS_EXPR, &ub, &lb);
+    if (!real_isfinite (&diff))
+      return true;
+    REAL_VALUE_TYPE pi = dconst_pi ();
+    REAL_VALUE_TYPE pix2;
+    real_arithmetic (&pix2, PLUS_EXPR, &pi, &pi);
+    // We can only try to narrow the range further if ub-lb < 2*pi.
+    if (!real_less (&diff, &pix2))
+      return true;
+    REAL_VALUE_TYPE lb_lo, lb_hi, ub_lo, ub_hi;
+    REAL_VALUE_TYPE lb_deriv_lo, lb_deriv_hi, ub_deriv_lo, ub_deriv_hi;
+    if (!frange_mpfr_arg1 (&lb_lo, &lb_hi,
+			   m_cfn == CFN_SIN ? mpfr_sin : mpfr_cos, lb,
+			   type, ulps)
+	|| !frange_mpfr_arg1 (&ub_lo, &ub_hi,
+			      m_cfn == CFN_SIN ? mpfr_sin : mpfr_cos, ub,
+			      type, ulps)
+	|| !frange_mpfr_arg1 (&lb_deriv_lo, &lb_deriv_hi,
+			      m_cfn == CFN_SIN ? mpfr_cos : mpfr_sin, lb,
+			      type, 0)
+	|| !frange_mpfr_arg1 (&ub_deriv_lo, &ub_deriv_hi,
+			      m_cfn == CFN_SIN ? mpfr_cos : mpfr_sin, ub,
+			      type, 0))
+      return true;
+    if (m_cfn == CFN_COS)
+      {
+	// Derivative of cos is -sin, so negate.
+	lb_deriv_lo.sign ^= 1;
+	lb_deriv_hi.sign ^= 1;
+	ub_deriv_lo.sign ^= 1;
+	ub_deriv_hi.sign ^= 1;
+      }
+
+    if (real_less (&lb_lo, &ub_lo))
+      lb = lb_lo;
+    else
+      lb = ub_lo;
+    if (real_less (&lb_hi, &ub_hi))
+      ub = ub_hi;
+    else
+      ub = lb_hi;
+
+    // The range between the function result on the boundaries may need
+    // to be extended to +1 (+Inf) or -1 (-Inf) or both depending on the
+    // derivative or length of the argument range (diff).
+
+    // First handle special case, where the derivative has different signs,
+    // so the bound must be roughly -1 or +1.
+    if (real_isneg (&lb_deriv_lo) != real_isneg (&lb_deriv_hi))
+      {
+	if (real_isneg (&lb_lo))
+	  lb = dconstninf;
+	else
+	  ub = dconstinf;
+      }
+    if (real_isneg (&ub_deriv_lo) != real_isneg (&ub_deriv_hi))
+      {
+	if (real_isneg (&ub_lo))
+	  lb = dconstninf;
+	else
+	  ub = dconstinf;
+      }
+
+    // If derivative at lower_bound and upper_bound have the same sign,
+    // the function grows or declines on the whole range if diff < pi, so
+    // [lb, ub] is correct, and if diff >= pi the result range must include
+    // both the minimum and maximum.
+    if (real_isneg (&lb_deriv_lo) == real_isneg (&ub_deriv_lo))
+      {
+	if (!real_less (&diff, &pi))
+	  return true;
+      }
+    // If function declines at lower_bound and grows at upper_bound,
+    // the result range must include the minimum, so set lb to -Inf.
+    else if (real_isneg (&lb_deriv_lo))
+      lb = dconstninf;
+    // If function grows at lower_bound and declines at upper_bound,
+    // the result range must include the maximum, so set ub to +Inf.
+    else
+      ub = dconstinf;
+    frange r2;
+    r2.set (type, lb, ub);
+    r2.flush_denormals_to_zero ();
+    r.intersect (r2);
+    return true;
+  }
+  virtual bool op1_range (frange &r, tree type,
+			  const frange &lhs, const frange &,
+			  relation_trio) const final override
+  {
+    if (lhs.undefined_p ())
+      return false;
+
+    // A known NAN means the input is [-INF,-INF][+INF,+INF] U +-NAN,
+    // which we can't currently represent.
+    if (lhs.known_isnan ())
+      {
+	r.set_varying (type);
+	return true;
+      }
+
+    // Results outside of [-1.0, +1.0] are impossible.
+    unsigned bulps
+      = targetm.libm_function_max_error (m_cfn, TYPE_MODE (type), true);
+    if (bulps != ~0U)
+      {
+	const REAL_VALUE_TYPE &lb = lhs.lower_bound ();
+	const REAL_VALUE_TYPE &ub = lhs.upper_bound ();
+	REAL_VALUE_TYPE m1 = dconstm1;
+	REAL_VALUE_TYPE p1 = dconst1;
+	while (bulps--)
+	  {
+	    frange_nextafter (TYPE_MODE (type), m1, dconstninf);
+	    frange_nextafter (TYPE_MODE (type), p1, dconstinf);
+	  }
+	if (real_less (&ub, &m1) || real_less (&p1, &lb))
+	  {
+	    if (!lhs.maybe_isnan ())
+	      r.set_undefined ();
+	    else
+	      /* If lhs could be NAN and finite result is impossible,
+		 the range is like lhs.known_isnan () above,
+		 [-INF,-INF][+INF,+INF] U +-NAN.  */
+	      r.set_varying (type);
+	    return true;
+	  }
+      }
+
+    if (!lhs.maybe_isnan ())
+      {
+	// If NAN is not valid result, the input cannot include either
+	// a NAN nor a +-INF.
+	REAL_VALUE_TYPE lb = real_min_representable (type);
+	REAL_VALUE_TYPE ub = real_max_representable (type);
+	r.set (type, lb, ub, nan_state (false, false));
+      }
+    else
+      r.set_varying (type);
+    return true;
+  }
+private:
+  combined_fn m_cfn;
+} op_cfn_sin (CFN_SIN), op_cfn_cos (CFN_COS);
+
 // Implement range operator for CFN_BUILT_IN_TOUPPER and CFN_BUILT_IN_TOLOWER.
 class cfn_toupper_tolower : public range_operator
 {
@@ -410,8 +813,12 @@ cfn_toupper_tolower::get_letter_range (tree type, irange &lowers,
 
   if ((z - a == 25) && (Z - A == 25))
     {
-      lowers = int_range<2> (build_int_cst (type, a), build_int_cst (type, z));
-      uppers = int_range<2> (build_int_cst (type, A), build_int_cst (type, Z));
+      lowers = int_range<2> (type,
+			     wi::shwi (a, TYPE_PRECISION (type)),
+			     wi::shwi (z, TYPE_PRECISION (type)));
+      uppers = int_range<2> (type,
+			     wi::shwi (A, TYPE_PRECISION (type)),
+			     wi::shwi (Z, TYPE_PRECISION (type)));
       return true;
     }
   // Unknown character set.
@@ -469,7 +876,9 @@ public:
       range_cast (tmp, unsigned_type_for (tmp.type ()));
     wide_int max = tmp.upper_bound ();
     maxi = wi::floor_log2 (max) + 1;
-    r.set (build_int_cst (type, mini), build_int_cst (type, maxi));
+    r.set (type,
+	   wi::shwi (mini, TYPE_PRECISION (type)),
+	   wi::shwi (maxi, TYPE_PRECISION (type)));
     return true;
   }
 } op_cfn_ffs;
@@ -523,7 +932,7 @@ cfn_clz::fold_range (irange &r, tree type, const irange &lh,
   // argument is 0, but that is undefined behavior.
   //
   // For __builtin_c[lt]z* consider argument of 0 always undefined
-  // behavior, for internal fns depending on C?Z_DEFINED_ALUE_AT_ZERO.
+  // behavior, for internal fns depending on C?Z_DEFINED_VALUE_AT_ZERO.
   if (lh.undefined_p ())
     return false;
   int prec = TYPE_PRECISION (lh.type ());
@@ -574,7 +983,9 @@ cfn_clz::fold_range (irange &r, tree type, const irange &lh,
 
   if (mini == -2)
     return false;
-  r.set (build_int_cst (type, mini), build_int_cst (type, maxi));
+  r.set (type,
+	 wi::shwi (mini, TYPE_PRECISION (type)),
+	 wi::shwi (maxi, TYPE_PRECISION (type)));
   return true;
 }
 
@@ -644,7 +1055,9 @@ cfn_ctz::fold_range (irange &r, tree type, const irange &lh,
 
   if (mini == -2)
     return false;
-  r.set (build_int_cst (type, mini), build_int_cst (type, maxi));
+  r.set (type,
+	 wi::shwi (mini, TYPE_PRECISION (type)),
+	 wi::shwi (maxi, TYPE_PRECISION (type)));
   return true;
 }
 
@@ -660,7 +1073,9 @@ public:
     if (lh.undefined_p ())
       return false;
     int prec = TYPE_PRECISION (lh.type ());
-    r.set (build_int_cst (type, 0), build_int_cst (type, prec - 1));
+    r.set (type,
+	   wi::zero (TYPE_PRECISION (type)),
+	   wi::shwi (prec - 1, TYPE_PRECISION (type)));
     return true;
   }
 } op_cfn_clrsb;
@@ -709,17 +1124,13 @@ public:
   virtual bool fold_range (irange &r, tree type, const irange &,
 			   const irange &, relation_trio) const
   {
-    tree max = vrp_val_max (ptrdiff_type_node);
-    wide_int wmax
-      = wi::to_wide (max, TYPE_PRECISION (TREE_TYPE (max)));
-    tree range_min = build_zero_cst (type);
+    wide_int max = irange_val_max (ptrdiff_type_node);
     // To account for the terminating NULL, the maximum length
     // is one less than the maximum array size, which in turn
     // is one less than PTRDIFF_MAX (or SIZE_MAX where it's
     // smaller than the former type).
     // FIXME: Use max_object_size() - 1 here.
-    tree range_max = wide_int_to_tree (type, wmax - 2);
-    r.set (range_min, range_max);
+    r.set (type, wi::zero (TYPE_PRECISION (type)), max - 2);
     return true;
   }
 } op_cfn_strlen;
@@ -743,9 +1154,11 @@ public:
       // If it's dynamic, the backend might know a hardware limitation.
       size = targetm.goacc.dim_limit (axis);
 
-    r.set (build_int_cst (type, m_is_pos ? 0 : 1),
+    r.set (type,
+	   wi::shwi (m_is_pos ? 0 : 1, TYPE_PRECISION (type)),
 	   size
-	   ? build_int_cst (type, size - m_is_pos) : vrp_val_max (type));
+	   ? wi::shwi (size - m_is_pos, TYPE_PRECISION (type))
+	   : irange_val_max (type));
     return true;
   }
 private:
@@ -761,7 +1174,7 @@ public:
   virtual bool fold_range (irange &r, tree type, const irange &,
 			   const irange &, relation_trio) const
   {
-    r.set (build_zero_cst (type), build_one_cst (type));
+    r = range_true_and_false (type);
     return true;
   }
 } op_cfn_parity;
@@ -857,6 +1270,27 @@ gimple_range_op_handler::maybe_builtin_call ()
       m_op1 = gimple_call_arg (call, 0);
       m_op2 = gimple_call_arg (call, 1);
       m_float = &op_cfn_copysign;
+      m_valid = true;
+      break;
+
+    CASE_CFN_SQRT:
+    CASE_CFN_SQRT_FN:
+      m_op1 = gimple_call_arg (call, 0);
+      m_float = &op_cfn_sqrt;
+      m_valid = true;
+      break;
+
+    CASE_CFN_SIN:
+    CASE_CFN_SIN_FN:
+      m_op1 = gimple_call_arg (call, 0);
+      m_float = &op_cfn_sin;
+      m_valid = true;
+      break;
+
+    CASE_CFN_COS:
+    CASE_CFN_COS_FN:
+      m_op1 = gimple_call_arg (call, 0);
+      m_float = &op_cfn_cos;
       m_valid = true;
       break;
 
@@ -967,6 +1401,15 @@ gimple_range_op_handler::maybe_builtin_call ()
       break;
 
     default:
-      break;
+      {
+	unsigned arg;
+	if (gimple_call_fnspec (call).returns_arg (&arg) && arg == 0)
+	  {
+	    m_valid = true;
+	    m_op1 = gimple_call_arg (call, 0);
+	    m_int = &op_cfn_pass_through_arg1;
+	  }
+	break;
+      }
     }
 }

@@ -1581,23 +1581,7 @@ static outf_p
 create_file (const char *name, const char *oname)
 {
   static const char *const hdr[] = {
-    "   Copyright (C) 2004-2023 Free Software Foundation, Inc.\n",
-    "\n",
-    "This file is part of GCC.\n",
-    "\n",
-    "GCC is free software; you can redistribute it and/or modify it under\n",
-    "the terms of the GNU General Public License as published by the Free\n",
-    "Software Foundation; either version 3, or (at your option) any later\n",
-    "version.\n",
-    "\n",
-    "GCC is distributed in the hope that it will be useful, but WITHOUT ANY\n",
-    "WARRANTY; without even the implied warranty of MERCHANTABILITY or\n",
-    "FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License\n",
-    "for more details.\n",
-    "\n",
-    "You should have received a copy of the GNU General Public License\n",
-    "along with GCC; see the file COPYING3.  If not see\n",
-    "<http://www.gnu.org/licenses/>.  */\n",
+    "*/\n",
     "\n",
     "/* This file is machine generated.  Do not edit.  */\n"
   };
@@ -1936,22 +1920,22 @@ struct file_rule_st files_rules[] = {
   { DIR_PREFIX_REGEX "c/c-tree\\.h$",
     REG_EXTENDED, NULL_REGEX, "gt-c-c-decl.h", "c/c-decl.cc", NULL_FRULACT},
 
-  /* cp/cp-tree.h gives gt-cp-tree.h for cp/tree.cc !  */
+  /* scpel/scpel-tree.h gives gt-scpel-tree.h for scpel/tree.cc !  */
   { DIR_PREFIX_REGEX "scpel/scpel-tree\\.h$",
     REG_EXTENDED, NULL_REGEX,
     "gt-scpel-tree.h", "scpel/tree.cc", NULL_FRULACT },
 
-  /* cp/decl.h & cp/decl.cc gives gt-cp-decl.h for cp/decl.cc !  */
+  /* scpel/decl.h & scpel/decl.cc gives gt-cp-decl.h for scpel/decl.cc !  */
   { DIR_PREFIX_REGEX "scpel/decl\\.[ch]$",
     REG_EXTENDED, NULL_REGEX,
     "gt-scpel-decl.h", "scpel/decl.cc", NULL_FRULACT },
 
-  /* cp/name-lookup.h gives gt-cp-name-lookup.h for cp/name-lookup.cc !  */
+  /* scpel/name-lookup.h gives gt-cp-name-lookup.h for scpel/name-lookup.cc !  */
   { DIR_PREFIX_REGEX "scpel/name-lookup\\.h$",
     REG_EXTENDED, NULL_REGEX,
     "gt-scpel-name-lookup.h", "scpel/name-lookup.cc", NULL_FRULACT },
 
-  /* cp/parser.h gives gt-cp-parser.h for cp/parser.cc !  */
+  /* scpel/parser.h gives gt-cp-parser.h for scpel/parser.cc !  */
   { DIR_PREFIX_REGEX "scpel/parser\\.h$",
     REG_EXTENDED, NULL_REGEX,
     "gt-scpel-parser.h", "scpel/parser.cc", NULL_FRULACT },

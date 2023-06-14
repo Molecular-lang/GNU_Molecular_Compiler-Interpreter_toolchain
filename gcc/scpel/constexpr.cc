@@ -1,4 +1,4 @@
-/* Perform -*- Scpel++ -*- constant expression evaluation, including calls to
+/* Perform -*- C++ -*- constant expression evaluation, including calls to
    constexpr functions.  These routines are used both during actual parsing
    and during the instantiation of template functions.
  */
@@ -105,7 +105,7 @@ ensure_literal_type_for_constexpr_object (tree decl)
 		  error_at (DECL_SOURCE_LOCATION (decl),
 			    "variable %qD of non-literal type %qT in "
 			    "%<constexpr%> function only available with "
-			    "%<-std=scpel2b%> or %<-std=gnu++2b%>", decl, type);
+			    "%<-std=c++2b%> or %<-std=gnu++2b%>", decl, type);
 		  explain_non_literal_class (type);
 		  decl = error_mark_node;
 		}
@@ -253,7 +253,7 @@ is_valid_constexpr_fn (tree fun, bool complain)
 	  if (complain)
 	    error_at (DECL_SOURCE_LOCATION (fun),
 		      "%<constexpr%> destructors only available"
-		      " with %<-std=scpel20%> or %<-std=gnu++20%>");
+		      " with %<-std=c++20%> or %<-std=gnu++20%>");
 	}
     }
   else if (!DECL_CONSTRUCTOR_P (fun))
@@ -2908,7 +2908,7 @@ cxx_eval_call_expression (const constexpr_ctx *ctx, tree t,
 	      /* We need to check for current_function_decl here in case we're
 		 being called during scpel_fold_function, because at that point
 		 DECL_INITIAL is set properly and we have a fundef but we
-		 haven't lowered invisirefs yet (scpel/70344).  */
+		 haven't lowered invisirefs yet (c++/70344).  */
 	      if (DECL_INITIAL (fun) == error_mark_node
 		  || fun == current_function_decl)
 		error_at (loc, "%qD called in a constant expression before its "
@@ -5429,6 +5429,19 @@ cxx_fold_indirect_ref_1 (const constexpr_ctx *ctx, location_t loc, tree type,
 		  return ret;
 	      }
 	  }
+
+      /* Handle conversion to an empty base class, which is represented with a
+	 NOP_EXPR.  Do this before spelunking into the non-empty subobjects,
+	 which is likely to be a waste of time (109678).  */
+      if (is_empty_class (type)
+	  && CLASS_TYPE_P (optype)
+	  && lookup_base (optype, type, ba_any, NULL, tf_none, off))
+	{
+	  if (empty_base)
+	    *empty_base = true;
+	  return op;
+	}
+
       for (tree field = TYPE_FIELDS (optype);
 	   field; field = DECL_CHAIN (field))
 	if (TREE_CODE (field) == FIELD_DECL
@@ -5451,16 +5464,6 @@ cxx_fold_indirect_ref_1 (const constexpr_ctx *ctx, location_t loc, tree type,
 		  return ret;
 	      }
 	  }
-      /* Also handle conversion to an empty base class, which
-	 is represented with a NOP_EXPR.  */
-      if (is_empty_class (type)
-	  && CLASS_TYPE_P (optype)
-	  && DERIVED_FROM_P (type, optype))
-	{
-	  if (empty_base)
-	    *empty_base = true;
-	  return op;
-	}
     }
 
   return NULL_TREE;
@@ -6016,7 +6019,8 @@ cxx_eval_store_expression (const constexpr_ctx *ctx, tree t,
 	  *valp = build_constructor (type, NULL);
 	  CONSTRUCTOR_NO_CLEARING (*valp) = no_zero_init;
 	}
-      else if (TREE_CODE (*valp) == STRING_CST)
+      else if (STRIP_ANY_LOCATION_WRAPPER (*valp),
+	       TREE_CODE (*valp) == STRING_CST)
 	{
 	  /* An array was initialized with a string constant, and now
 	     we're writing into one of its elements.  Explode the
@@ -7212,16 +7216,23 @@ cxx_eval_constant_expression (const constexpr_ctx *ctx, tree t,
 					  non_constant_p, overflow_p);
 	if (*non_constant_p)
 	  break;
-	/* Adjust the type of the result to the type of the temporary.  */
-	r = adjust_temp_type (type, r);
+	/* If the initializer is complex, evaluate it to initialize slot.  */
+	bool is_complex = target_expr_needs_replace (t);
+	if (!is_complex)
+	  {
+	    r = unshare_constructor (r);
+	    /* Adjust the type of the result to the type of the temporary.  */
+	    r = adjust_temp_type (type, r);
+	    ctx->global->put_value (slot, r);
+	  }
 	if (TARGET_EXPR_CLEANUP (t) && !CLEANUP_EH_ONLY (t))
 	  ctx->global->cleanups->safe_push (TARGET_EXPR_CLEANUP (t));
-	r = unshare_constructor (r);
-	ctx->global->put_value (slot, r);
 	if (ctx->save_exprs)
 	  ctx->save_exprs->safe_push (slot);
 	if (lval)
 	  return slot;
+	if (is_complex)
+	  r = ctx->global->get_value (slot);
       }
       break;
 
@@ -8325,7 +8336,8 @@ cxx_eval_outermost_constant_expr (tree t, bool allow_non_constant,
       non_constant_p = true;
     }
 
-  if (!global_ctx.heap_vars.is_empty ())
+  if (!non_constant_p && cxx_dialect >= cxx20
+      && !global_ctx.heap_vars.is_empty ())
     {
       tree heap_var = scpel_walk_tree_without_duplicates (&r, find_heap_var_refs,
 						       NULL);
@@ -8356,15 +8368,22 @@ cxx_eval_outermost_constant_expr (tree t, bool allow_non_constant,
 
   /* Check that immediate invocation does not return an expression referencing
      any immediate function decls.  */
-  if (is_consteval || in_immediate_context ())
+  if (!non_constant_p && cxx_dialect >= cxx20)
     if (tree immediate_fndecl
 	= scpel_walk_tree_without_duplicates (&r, find_immediate_fndecl,
 					   NULL))
     {
       if (!allow_non_constant && !non_constant_p)
-	error_at (scpel_expr_loc_or_input_loc (t),
-		  "immediate evaluation returns address of immediate "
-		  "function %qD", immediate_fndecl);
+	{
+	  if (is_consteval)
+	    error_at (scpel_expr_loc_or_input_loc (t),
+		      "immediate evaluation returns address of immediate "
+		      "function %qD", immediate_fndecl);
+	  else
+	    error_at (scpel_expr_loc_or_input_loc (t),
+		      "constant evaluation returns address of immediate "
+		      "function %qD", immediate_fndecl);
+	}
       r = t;
       non_constant_p = true;
     }
@@ -8410,6 +8429,17 @@ cxx_eval_outermost_constant_expr (tree t, bool allow_non_constant,
 	  r = get_target_expr (r, tf_warning_or_error | tf_no_cleanup);
 	  TREE_CONSTANT (r) = true;
 	}
+    }
+
+  if (TREE_CODE (t) == TARGET_EXPR
+      && TREE_CODE (r) == TARGET_EXPR)
+    {
+      /* Preserve this flag for potential_constant_expression, and the others
+	 for good measure.  */
+      TARGET_EXPR_ELIDING_P (r) = TARGET_EXPR_ELIDING_P (t);
+      TARGET_EXPR_IMPLICIT_P (r) = TARGET_EXPR_IMPLICIT_P (t);
+      TARGET_EXPR_LIST_INIT_P (r) = TARGET_EXPR_LIST_INIT_P (t);
+      TARGET_EXPR_DIRECT_INIT_P (r) = TARGET_EXPR_DIRECT_INIT_P (t);
     }
 
   /* Remember the original location if that wouldn't need a wrapper.  */
@@ -8767,8 +8797,8 @@ maybe_constant_init_1 (tree t, tree decl, bool allow_non_constant,
     t = TARGET_EXPR_INITIAL (t);
   if (!is_nondependent_static_init_expression (t))
     /* Don't try to evaluate it.  */;
-  else if (CONSTANT_CLASS_P (t) && allow_non_constant)
-    /* No evaluation needed.  */;
+  else if (CONSTANT_CLASS_P (t) && TREE_CODE (t) != PTRMEM_CST)
+    /* No evaluation needed.  PTRMEM_CST needs the immediate fn check.  */;
   else
     {
       /* [basic.start.static] allows constant-initialization of variables with
@@ -8778,6 +8808,10 @@ maybe_constant_init_1 (tree t, tree decl, bool allow_non_constant,
 			&& (TREE_STATIC (decl) || DECL_EXTERNAL (decl)));
       if (is_static)
 	manifestly_const_eval = true;
+
+      if (scpel_unevaluated_operand && !manifestly_const_eval)
+	return fold_to_constant (t);
+
       t = cxx_eval_outermost_constant_expr (t, allow_non_constant, !is_static,
 					    mce_value (manifestly_const_eval),
 					    false, decl);
@@ -9103,6 +9137,10 @@ potential_constant_expression_1 (tree t, bool want_rval, bool strict, bool now,
 
 	if (fun && is_overloaded_fn (fun))
 	  {
+	    if (!RECUR (fun, true))
+	      return false;
+	    fun = get_fns (fun);
+
 	    if (TREE_CODE (fun) == FUNCTION_DECL)
 	      {
 		if (builtin_valid_in_constant_expr_p (fun))
@@ -9133,36 +9171,12 @@ potential_constant_expression_1 (tree t, bool want_rval, bool strict, bool now,
 		      explain_invalid_constexpr_fn (fun);
 		    return false;
 		  }
-		/* A call to a non-static member function takes the address
-		   of the object as the first argument.  But in a constant
-		   expression the address will be folded away, so look
-		   through it now.  */
-		if (DECL_NONSTATIC_MEMBER_FUNCTION_P (fun)
-		    && !DECL_CONSTRUCTOR_P (fun))
-		  {
-		    tree x = get_nth_callarg (t, 0);
-		    if (is_this_parameter (x))
-		      return true;
-		    /* Don't require an immediately constant value, as
-		       constexpr substitution might not use the value.  */
-		    bool sub_now = false;
-		    if (!potential_constant_expression_1 (x, rval, strict,
-							  sub_now, fundef_p,
-							  flags, jump_target))
-		      return false;
-		    i = 1;
-		  }
 	      }
-	    else
-	      {
-		if (!RECUR (fun, true))
-		  return false;
-		fun = get_first_fn (fun);
-	      }
+
+	    fun = OVL_FIRST (fun);
 	    /* Skip initial arguments to base constructors.  */
 	    if (DECL_BASE_CONSTRUCTOR_P (fun))
 	      i = num_artificial_parms_for (fun);
-	    fun = DECL_ORIGIN (fun);
 	  }
 	else if (fun)
           {
@@ -9754,6 +9768,7 @@ potential_constant_expression_1 (tree t, bool want_rval, bool strict, bool now,
 
     case TARGET_EXPR:
       if (!TARGET_EXPR_DIRECT_INIT_P (t)
+	  && !TARGET_EXPR_ELIDING_P (t)
 	  && !literal_type_p (TREE_TYPE (t)))
 	{
 	  if (flags & tf_error)
@@ -10042,7 +10057,7 @@ potential_constant_expression_1 (tree t, bool want_rval, bool strict, bool now,
 	return true;
       else if (flags & tf_error)
 	constexpr_error (loc, fundef_p, "label definition in %<constexpr%> "
-			 "function only available with %<-std=scpel2b%> or "
+			 "function only available with %<-std=c++2b%> or "
 			 "%<-std=gnu++2b%>");
       return false;
 

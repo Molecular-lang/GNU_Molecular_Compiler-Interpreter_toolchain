@@ -1,4 +1,4 @@
-/* Support for fully folding sub-trees of an expression for C compiler.  */
+/* Support for fully folding sub-trees of an expression for C compiler. */
 
 #include "config.h"
 #include "system.h"

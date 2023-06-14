@@ -1,4 +1,24 @@
-/* plugin-api.h -- External linker plugin API. */
+/* plugin-api.h -- External linker plugin API.  */
+
+/* Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Written by Cary Coutant <ccoutant@google.com>.
+
+   This file is part of binutils.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,
+   MA 02110-1301, USA.  */
 
 /* This file defines the interface for writing a linker plugin, which is
    described at < http://gcc.gnu.org/wiki/whopr/driver >.  */
@@ -240,6 +260,13 @@ enum ld_plugin_status
 (*ld_plugin_claim_file_handler) (
   const struct ld_plugin_input_file *file, int *claimed);
 
+/* The plugin library's "claim file" handler, version 2.  */
+
+typedef
+enum ld_plugin_status
+(*ld_plugin_claim_file_handler_v2) (
+  const struct ld_plugin_input_file *file, int *claimed, int known_used);
+
 /* The plugin library's "all symbols read" handler.  */
 
 typedef
@@ -257,6 +284,13 @@ enum ld_plugin_status
 typedef
 enum ld_plugin_status
 (*ld_plugin_register_claim_file) (ld_plugin_claim_file_handler handler);
+
+/* The linker's interface for registering the "claim file" handler,
+   version 2.  */
+
+typedef
+enum ld_plugin_status
+(*ld_plugin_register_claim_file_v2) (ld_plugin_claim_file_handler_v2 handler);
 
 /* The linker's interface for registering the "all symbols read" handler.  */
 
@@ -533,6 +567,7 @@ enum ld_plugin_tag
   LDPT_GET_WRAP_SYMBOLS,
   LDPT_ADD_SYMBOLS_V2,
   LDPT_GET_API_VERSION,
+  LDPT_REGISTER_CLAIM_FILE_HOOK_V2
 };
 
 /* The plugin transfer vector.  */
@@ -545,6 +580,7 @@ struct ld_plugin_tv
     int tv_val;
     const char *tv_string;
     ld_plugin_register_claim_file tv_register_claim_file;
+    ld_plugin_register_claim_file_v2 tv_register_claim_file_v2;
     ld_plugin_register_all_symbols_read tv_register_all_symbols_read;
     ld_plugin_register_cleanup tv_register_cleanup;
     ld_plugin_add_symbols tv_add_symbols;

@@ -1,4 +1,4 @@
-/* RunTime Type Identification */
+/* RunTime Type Identification. */
 
 #include "config.h"
 #include "system.h"

@@ -1,5 +1,26 @@
-/* readelf.c -- display contents of an ELF format file */
+/* readelf.c -- display contents of an ELF format file
+   Copyright (C) 1998-2022 Free Software Foundation, Inc.
 
+   Originally developed by Eric Youngdale <eric@andante.jic.com>
+   Modifications by Nick Clifton <nickc@redhat.com>
+
+   This file is part of GNU Binutils.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA
+   02110-1301, USA.  */
+
 /* The difference between readelf and objdump:
 
   Both programs are capable of displaying the contents of ELF format files,
@@ -18,7 +39,7 @@
   There is also the case that readelf can provide more information about an
   ELF file than is provided by objdump.  In particular it can display DWARF
   debugging information which (at the moment) objdump cannot.  */
-
+
 #include "sysdep.h"
 #include <assert.h>
 #include <time.h>

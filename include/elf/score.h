@@ -1,4 +1,26 @@
-/* Score ELF support for BFD. */
+/* Score ELF support for BFD.
+   Copyright (C) 2006-2022 Free Software Foundation, Inc.
+   Contributed by 
+   Brain.lin (brain.lin@sunplusct.com)
+   Mei Ligang (ligang@sunnorth.com.cn)
+   Pei-Lin Tsai (pltsai@sunplus.com)
+
+   This file is part of BFD, the Binary File Descriptor library.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation Inc., 51 Franklin Street - Fifth Floor, Boston,
+   MA 02110-1301, USA.  */
 
 #ifndef _ELF_SCORE_H
 #define _ELF_SCORE_H
@@ -7,7 +29,7 @@
 
 #define SCORE_SIMULATOR_ACTIVE  1
 #define OPC_PTMASK              0xc0000000      /* Parity-bit Mask.  */
-#define OPC16_PTMASK			0x00008000
+#define OPC16_PTMASK		0x00008000
 /* The parity-bit denotes.  */
 #define OPC_32                  0xc0000000      /* Denotes 32b instruction, (default).  */
 #define OPC_16                  0x00000000      /* Denotes 16b instruction.  */

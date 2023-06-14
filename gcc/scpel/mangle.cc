@@ -1,6 +1,6 @@
-/* Name mangling for the 3.0 -*- Scpel++ -*- ABI. */
+/* Name mangling for the 3.0 -*- C++ -*- ABI. */
 
-/* This file implements mangling of Scpel++ names according to the IA64
+/* This file implements mangling of C++ names according to the IA64
    C++ ABI specification.  A mangled name encodes a function or
    variable's name, scope, type, and/or template arguments into a text
    identifier.  This identifier is used as the function's or
@@ -3384,6 +3384,11 @@ write_expression (tree expr)
       else
 	write_string ("tr");
     }
+  else if (code == NOEXCEPT_EXPR)
+    {
+      write_string ("nx");
+      write_expression (TREE_OPERAND (expr, 0));
+    }
   else if (code == CONSTRUCTOR)
     {
       bool braced_init = BRACE_ENCLOSED_INITIALIZER_P (expr);
@@ -3775,7 +3780,7 @@ write_template_arg (tree node)
 	}
     }
 
-  if (TREE_CODE (node) == VAR_DECL && DECL_NTTP_OBJECT_P (node))
+  if (VAR_P (node) && DECL_NTTP_OBJECT_P (node))
     /* We want to mangle the argument, not the var we stored it in.  */
     node = tparm_object_argument (node);
 

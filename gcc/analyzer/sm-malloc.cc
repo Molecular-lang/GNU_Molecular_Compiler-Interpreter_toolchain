@@ -1,22 +1,4 @@
-/* A state machine for detecting misuses of the malloc/free API.
-   Copyright (C) 2019-2023 Free Software Foundation, Inc.
-   Contributed by David Malcolm <dmalcolm@redhat.com>.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* A state machine for detecting misuses of the malloc/free API. */
 
 #include "config.h"
 #define INCLUDE_MEMORY
@@ -1040,7 +1022,7 @@ method_p (tree fndecl)
 }
 
 /* Return a 1-based description of ARG_IDX (0-based) of FNDECL.
-   Compare with %P in the C++ FE  (implemented in cp/error.cc: parm_to_string
+   Compare with %P in the C++ FE  (implemented in scpel/error.cc: parm_to_string
    as called from cp_printer).  */
 
 static label_text
@@ -1520,10 +1502,11 @@ public:
     if (!m_check_enode)
       return false;
     /* Only emit the warning for intraprocedural cases.  */
-    if (m_deref_enode->get_function () != m_check_enode->get_function ())
-      return false;
-    if (&m_deref_enode->get_point ().get_call_string ()
-	!= &m_check_enode->get_point ().get_call_string ())
+    const program_point &deref_point = m_deref_enode->get_point ();
+    const program_point &check_point = m_check_enode->get_point ();
+
+    if (!program_point::effectively_intraprocedural_p (deref_point,
+						       check_point))
       return false;
 
     /* Reject the warning if the check occurs within a macro defintion.

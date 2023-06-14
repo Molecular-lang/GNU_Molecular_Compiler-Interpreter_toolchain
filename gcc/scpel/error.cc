@@ -1,4 +1,4 @@
-/* Call-backs for Scpel++ error reporting.
+/* Call-backs for C++ error reporting.
    This code is non-reentrant.
  */
 
@@ -624,8 +624,8 @@ dump_type (cxx_pretty_printer *pp, tree t, int flags)
       pp_cxx_cv_qualifier_seq (pp, t);
       if (template_placeholder_p (t))
 	{
-	  t = TREE_TYPE (CLASS_PLACEHOLDER_TEMPLATE (t));
-	  pp_cxx_tree_identifier (pp, TYPE_IDENTIFIER (t));
+	  tree tmpl = TREE_TYPE (CLASS_PLACEHOLDER_TEMPLATE (t));
+	  pp_cxx_tree_identifier (pp, TYPE_IDENTIFIER (tmpl));
 	  pp_string (pp, "<...auto...>");
 	}
       else if (TYPE_IDENTIFIER (t))
@@ -1043,7 +1043,7 @@ dump_type_suffix (cxx_pretty_printer *pp, tree t, int flags)
 	  /* Zero-length arrays have a null upper bound in C and SIZE_MAX
 	     in C++.  Handle both since the type might be constructed by
 	     the middle end and end up here as a result of a warning (see
-	     PR scpel/97201).  */
+	     PR c++/97201).  */
 	  if (!max || integer_all_onesp (max))
 	    pp_character (pp, '0');
 	  else if (tree_fits_shwi_p (max))
@@ -1125,7 +1125,7 @@ dump_global_iord (cxx_pretty_printer *pp, tree t)
 static void
 dump_simple_decl (cxx_pretty_printer *pp, tree t, tree type, int flags)
 {
-  if (TREE_CODE (t) == VAR_DECL && DECL_NTTP_OBJECT_P (t))
+  if (VAR_P (t) && DECL_NTTP_OBJECT_P (t))
     return dump_expr (pp, DECL_INITIAL (t), flags);
 
   if (flags & TFF_DECL_SPECIFIERS)
@@ -2825,11 +2825,10 @@ dump_expr (cxx_pretty_printer *pp, tree t, int flags)
     case ALIGNOF_EXPR:
       if (TREE_CODE (t) == SIZEOF_EXPR)
 	pp_cxx_ws_string (pp, "sizeof");
+      else if (ALIGNOF_EXPR_STD_P (t))
+	pp_cxx_ws_string (pp, "alignof");
       else
-	{
-	  gcc_assert (TREE_CODE (t) == ALIGNOF_EXPR);
-	  pp_cxx_ws_string (pp, "__alignof__");
-	}
+	pp_cxx_ws_string (pp, "__alignof__");
       op = TREE_OPERAND (t, 0);
       if (PACK_EXPANSION_P (op))
 	{
@@ -4514,78 +4513,78 @@ maybe_warn_cpp0x (cpp0x_warn_str str, location_t loc/*=input_location*/)
       case CPP0X_INITIALIZER_LISTS:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "extended initializer lists "
-		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_EXPLICIT_CONVERSION:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "explicit conversion operators "
-		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_VARIADIC_TEMPLATES:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "variadic templates "
-		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_LAMBDA_EXPR:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "lambda expressions "
-		  "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
+		  "only available with %<-std=c++11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_AUTO:
 	pedwarn (loc, OPT_Wc__11_extensions,
-		 "C++11 auto only available with %<-std=scpel11%> or "
+		 "C++11 auto only available with %<-std=c++11%> or "
 		 "%<-std=gnu++11%>");
 	break;
       case CPP0X_SCOPED_ENUMS:
 	pedwarn (loc, OPT_Wc__11_extensions,
-		 "scoped enums only available with %<-std=scpel11%> or "
+		 "scoped enums only available with %<-std=c++11%> or "
 		 "%<-std=gnu++11%>");
 	break;
       case CPP0X_DEFAULTED_DELETED:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "defaulted and deleted functions "
-		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_INLINE_NAMESPACES:
 	if (pedantic)
 	  pedwarn (loc, OPT_Wc__11_extensions,
 		   "inline namespaces "
-		   "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
+		   "only available with %<-std=c++11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_OVERRIDE_CONTROLS:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "override controls (override/final) "
-		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
         break;
       case CPP0X_NSDMI:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "non-static data member initializers "
-		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
         break;
       case CPP0X_USER_DEFINED_LITERALS:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "user-defined literals "
-		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_DELEGATING_CTORS:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "delegating constructors "
-		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
         break;
       case CPP0X_INHERITING_CTORS:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "inheriting constructors "
-		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
         break;
       case CPP0X_ATTRIBUTES:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "C++11 attributes "
-		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_REF_QUALIFIER:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "ref-qualifiers "
-		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
 	break;
       default:
 	gcc_unreachable ();
@@ -4600,7 +4599,7 @@ maybe_warn_variadic_templates (void)
 }
 
 
-/* Issue an ISO C++98 pedantic warning at LOCATION, conditional on
+/* Issue an GNU Scpel98 pedantic warning at LOCATION, conditional on
    option OPT with text GMSGID.  Use this function to report
    diagnostics for constructs that are invalid C++98, but valid
    C++0x.  */

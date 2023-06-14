@@ -1,22 +1,4 @@
-/* UndefinedBehaviorSanitizer, undefined behavior detector.
-   Copyright (C) 2013-2023 Free Software Foundation, Inc.
-   Contributed by Marek Polacek <polacek@redhat.com>
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
-version.
-
-GCC is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* UndefinedBehaviorSanitizer, undefined behavior detector. */
 
 #include "config.h"
 #include "system.h"
@@ -53,11 +35,11 @@ ubsan_instrument_division (location_t loc, tree op0, tree op1)
   op0 = unshare_expr (op0);
   op1 = unshare_expr (op1);
 
-  if (TREE_CODE (type) == INTEGER_TYPE
+  if (INTEGRAL_TYPE_P (type)
       && sanitize_flags_p (SANITIZE_DIVIDE))
     t = fold_build2 (EQ_EXPR, boolean_type_node,
 		     op1, build_int_cst (type, 0));
-  else if (TREE_CODE (type) == REAL_TYPE
+  else if (SCALAR_FLOAT_TYPE_P (type)
 	   && sanitize_flags_p (SANITIZE_FLOAT_DIVIDE))
     {
       t = fold_build2 (EQ_EXPR, boolean_type_node,
@@ -68,7 +50,7 @@ ubsan_instrument_division (location_t loc, tree op0, tree op1)
     t = NULL_TREE;
 
   /* We check INT_MIN / -1 only for signed types.  */
-  if (TREE_CODE (type) == INTEGER_TYPE
+  if (INTEGRAL_TYPE_P (type)
       && sanitize_flags_p (SANITIZE_SI_OVERFLOW)
       && !TYPE_UNSIGNED (type))
     {
@@ -505,12 +487,8 @@ ubsan_maybe_instrument_array_ref (tree *expr_p, bool ignore_off_by_one)
       tree e = ubsan_instrument_bounds (EXPR_LOCATION (*expr_p), op0, &op1,
 					ignore_off_by_one);
       if (e != NULL_TREE)
-	{
-	  tree t = copy_node (*expr_p);
-	  TREE_OPERAND (t, 1) = build2 (COMPOUND_EXPR, TREE_TYPE (op1),
-					e, op1);
-	  *expr_p = t;
-	}
+	TREE_OPERAND (*expr_p, 1) = build2 (COMPOUND_EXPR, TREE_TYPE (op1),
+					    e, op1);
     }
 }
 
