@@ -187,7 +187,7 @@ lang_specific_driver (struct cl_decoded_option **in_decoded_options,
 	    args[i] |= WITHLIBC;
 	  else
 	    /* Unrecognized libraries (e.g. -lfoo) may require libstdc++.  */
-	    library = (library == 0) ? 1 : library;
+	    library = -1;
 	  break;
 
 	case OPT_pg:
@@ -201,7 +201,7 @@ lang_specific_driver (struct cl_decoded_option **in_decoded_options,
 		  || strcmp (arg, "c++-cpp-output") == 0
 		  || strcmp (arg, "objective-c++") == 0
 		  || strcmp (arg, "objective-c++-cpp-output") == 0))
-	    library = 1;
+	    library = -1;
 		
 	  saw_speclang = 1;
 	  break;
@@ -211,7 +211,7 @@ lang_specific_driver (struct cl_decoded_option **in_decoded_options,
 	  /* Arguments that go directly to the linker might be .o files,
 	     or something, and so might cause libstdc++ to be needed.  */
 	  if (library == 0)
-	    library = 1;
+	    library = -1;
 	  break;
 
 	case OPT_c:
@@ -235,7 +235,7 @@ lang_specific_driver (struct cl_decoded_option **in_decoded_options,
 	  break;
 
 	case OPT_static_libstdc__:
-	  library = library >= 0 ? 2 : library;
+	  library = -1;
 #ifdef HAVE_LD_STATIC_DYNAMIC
 	  /* Remove -static-libstdc++ from the command only if target supports
 	     LD_STATIC_DYNAMIC.  When not supported, it is left in so that a
@@ -280,16 +280,9 @@ lang_specific_driver (struct cl_decoded_option **in_decoded_options,
 	       need to be linking in the libraries.  */
 	    if (library == 0)
 	      {
-		if ((len <= 2 || strcmp (arg + (len - 2), ".H") != 0)
-		    && (len <= 2 || strcmp (arg + (len - 2), ".h") != 0)
-		    && (len <= 4 || strcmp (arg + (len - 4), ".hpp") != 0)
-		    && (len <= 3 || strcmp (arg + (len - 3), ".hp") != 0)
-		    && (len <= 4 || strcmp (arg + (len - 4), ".hxx") != 0)
-		    && (len <= 4 || strcmp (arg + (len - 4), ".h++") != 0)
-		    && (len <= 4 || strcmp (arg + (len - 4), ".HPP") != 0)
-		    && (len <= 4 || strcmp (arg + (len - 4), ".tcc") != 0)
-		    && (len <= 3 || strcmp (arg + (len - 3), ".hh") != 0))
-		  library = 1;
+		if ((len <= 2 || strcmp (arg + (len - 2), ".ho") != 0)
+		    && (len <= 2 || strcmp (arg + (len - 2), ".hsp") != 0))
+		  library = -1;
 	      }
 	  }
 	  break;
@@ -374,61 +367,6 @@ lang_specific_driver (struct cl_decoded_option **in_decoded_options,
       j++;
     }
 
-  /* Add `-lstdc++' if we haven't already done so.  */
-  if (library > 0)
-    {
-      if (need_experimental && which_library == USE_LIBSTDCXX)
-	{
-	  generate_option (OPT_l, "stdc++exp", 1, CL_DRIVER,
-			   &new_decoded_options[j++]);
-	  ++added_libraries;
-	}
-#ifdef HAVE_LD_STATIC_DYNAMIC
-      if (library > 1 && !static_link)
-	{
-	  generate_option (OPT_Wl_, LD_STATIC_OPTION, 1, CL_DRIVER,
-			   &new_decoded_options[j]);
-	  j++;
-	}
-#endif
-      if (which_library == USE_LIBCXX)
-	{
-	  generate_option (OPT_l,
-			 saw_profile_flag ? LIBCXX_PROFILE : LIBCXX, 1,
-			 CL_DRIVER, &new_decoded_options[j]);
-	  if (LIBCXXABI != NULL)
-	    {
-	      j++;
-	      added_libraries++;
-	      generate_option (OPT_l,
-			       saw_profile_flag ? LIBCXXABI_PROFILE
-						: LIBCXXABI, 1,
-			       CL_DRIVER, &new_decoded_options[j]);
-	    }
-	}
-      else
-	generate_option (OPT_l,
-			 saw_profile_flag ? LIBSTDCXX_PROFILE : LIBSTDCXX, 1,
-			 CL_DRIVER, &new_decoded_options[j]);
-      added_libraries++;
-      j++;
-      /* Add target-dependent static library, if necessary.  */
-      if ((static_link || library > 1) && LIBSTDCXX_STATIC != NULL)
-	{
-	  generate_option (OPT_l, LIBSTDCXX_STATIC, 1,
-			   CL_DRIVER, &new_decoded_options[j]);
-	  added_libraries++;
-	  j++;
-	}
-#ifdef HAVE_LD_STATIC_DYNAMIC
-      if (library > 1 && !static_link)
-	{
-	  generate_option (OPT_Wl_, LD_DYNAMIC_OPTION, 1, CL_DRIVER,
-			   &new_decoded_options[j]);
-	  j++;
-	}
-#endif
-    }
   if (saw_math)
     new_decoded_options[j++] = *saw_math;
   else if (library > 0 && need_math)
