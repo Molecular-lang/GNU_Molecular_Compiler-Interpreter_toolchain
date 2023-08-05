@@ -1,7 +1,7 @@
 # Subconscious Electronic Programming Language
 
 <div align="center">
-	<img src="https://scpel.org/scpel_logo.png"  width="300" height="250">
+	<img src="https://scpel.org/scpel_logo.png"  width="300" height="200">
 </div>
 
 This is the main source code repository for [Scpel] on GNU GCC 14.0.0 implementation. 
