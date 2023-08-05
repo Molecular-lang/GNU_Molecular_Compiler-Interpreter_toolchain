@@ -1,1 +1,0 @@
-SHLIB_MAPFILES += $(srcdir)/config/i386/libgcc-mingw.ver
