@@ -1,6 +1,6 @@
 # Subconscious Electronic Programming Language
 
-[![Scpel Community](https://scpel.org/scpel_logo.png)](https://www.scpel.org/community)
+<img src="https://mma.prnewswire.com/media/1513369/Educative_Logo.jpg"  width="300" height="300">
 
 This is the main source code repository for [Scpel] on GNU GCC 14.0.0 implementation. 
 It contains the compiler, [Scpel Standard AI Library (Ssail)], and documentation.
@@ -45,14 +45,14 @@ Make sure you have installed the dependencies:
 
    ```sh
    git clone https://github.com/Scpel-lang/GNU_Scpel_Compiler-Interpreter_toolchain.git
-   cd rust
+   cd GNU_Scpel_Compiler-Interpreter_toolchain
    ```
 
 [source]: https://github.com/Scpel-lang/GNU_Scpel_Compiler-Interpreter_toolchain
 
 2. Build and install:
    ```sh
-   ./configure
+   ./configure --disable-bootstrap --disable-multilib
    make && sudo make install
    ```
 
