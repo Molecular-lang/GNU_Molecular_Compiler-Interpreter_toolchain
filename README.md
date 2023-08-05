@@ -1,6 +1,8 @@
 # Subconscious Electronic Programming Language
 
-<img src="https://mma.prnewswire.com/media/1513369/Educative_Logo.jpg"  width="300" height="300">
+<div align="center">
+	<img src="https://scpel.org/scpel_logo.png"  width="300" height="300">
+</div>
 
 This is the main source code repository for [Scpel] on GNU GCC 14.0.0 implementation. 
 It contains the compiler, [Scpel Standard AI Library (Ssail)], and documentation.
