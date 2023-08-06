@@ -58,6 +58,28 @@ Make sure you have installed the dependencies:
    make && sudo make install
    ```
 
+## Notes
+
+Since the Scpel compiler is written in Scpel (at least we try), it must be built by a precompiled
+"developer snapshot" version of itself (made in an earlier stage of development).
+The snapshot can either be downloaded from the release or [Here](https://www.scpel.org/binaries/scpel_1.0.0-dev_amd64).
+
+You will get a debian package file installable using:
+   ```sh
+   sudo dpkg -i /path/to/downloads/scpel_1.0.0-dev_amd64
+   ```
+Run a [sample Scpel program](https://www.scpel.org/getting-started.html) from your terminal with:
+   ```sh
+   $ scpel -o output_file input_file.scpel
+   ```
+then run the program with:
+   ```sh
+   $./output_file
+   ```
+   
+If the program runs fine please proceed with the build.
+Good luck!
+
 ## Getting Help
 
 See https://www.scpel.org/community for a list of chat platforms, forums and
