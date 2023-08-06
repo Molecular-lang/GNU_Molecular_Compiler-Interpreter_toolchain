@@ -1,0 +1,11 @@
+This directory is for Scpel Runtime langauge Interpreter. Most of
+the language reflective techniques and routines go through here,
+notably;
+	1) Runtime variables
+	2) Runtime classifiers
+	3) Runtime functions
+	4) Runtime templates
+	5) Runtime template variables
+	6) Runtime template classifiers
+	7) Runtime template functions
+	8) Function hotplugs and Algorithms
