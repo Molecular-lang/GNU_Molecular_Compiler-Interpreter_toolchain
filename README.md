@@ -1,5 +1,5 @@
 <div align="center">
-	<h1>Subconscious Electronic Programming Language</h1>
+	<h1 style="color:#660991;">Subconscious Electronic Programming Language</h1>
 	<img src="https://scpel.org/scpel_logo.png"  width="300" height="200">
 </div>
 
@@ -13,18 +13,18 @@ It contains the compiler, [Scpel Standard AI Library (Ssail)], and documentation
 If you wish to _contribute_ to the compiler, you should read
 [CONTRIBUTING.md](CONTRIBUTING.md) instead.
 
-## Quick Start
+<h2 style="color:#660991;">Quick Start</h2>
 
 Read ["Installation"] from [The Book].
 
 ["Installation"]: https://docs.scpel.org/user/
 [The Book]: https://docs.scpel.org/user/
 
-## Installing from Source
+<h2 style="color:#660991;">Installing from Source</h2>
 
 Follow the instructions bellow.
 
-### Dependencies
+<h2 style="color:#660991;">Dependencies</h2>
 
 Make sure you have installed the dependencies:
 
@@ -38,9 +38,8 @@ Make sure you have installed the dependencies:
 * A C/C++ compiler (when building for the host, `gcc` is enough; cross-compiling may
   need additional compilers) and `make`
 
-### Building on Linux
-
-#### Build steps
+<h2 style="color:#660991;">Building on Linux</h2>
+<h3 style="color:#660991;">Build steps</h3>
 
 1. Clone the [source] with `git`:
 
@@ -56,8 +55,7 @@ Make sure you have installed the dependencies:
    ./configure --disable-bootstrap --disable-multilib
    make && sudo make install
    ```
-
-## Notes
+<h2 style="color:#660991;">Notes</h2>
 
 Since the Scpel compiler is written in Scpel (at least we try), it must be built by a precompiled
 "developer snapshot" version of itself (made in an earlier stage of development).
@@ -79,23 +77,23 @@ then run the program with:
 If the program runs fine please proceed with the build.
 Good luck!
 
-## Getting Help
+<h2 style="color:#660991;">Getting Help</h2>
 
 See https://www.scpel.org/community for a list of chat platforms, forums and
 mailing lists.
 
-## Contributing
+<h2 style="color:#660991;">Contributing</h2>
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## License
+<h2 style="color:#660991;">Licence</h2>
 
 Scpel is primarily distributed under the terms an conditions of the GNU General
 Public Licence.
 
 See [COPYING](COPYING) for more details.
 
-## Trademark
+<h2 style="color:#660991;">Trademark</h2>
 
 [Scpel Software Foundation][ss-foundation] owns and protects the Scpel and its toolchain
 trademarks and logos (the "Scpel Trademarks").
