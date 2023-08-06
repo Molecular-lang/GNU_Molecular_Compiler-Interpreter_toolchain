@@ -1,6 +1,5 @@
-# Subconscious Electronic Programming Language
-
 <div align="center">
+	<h2>Subconscious Electronic Programming Language</h2>
 	<img src="https://scpel.org/scpel_logo.png"  width="300" height="200">
 </div>
 
