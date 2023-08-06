@@ -1,5 +1,9 @@
 # Contributing to Scpel
 
+<div align="center">
+	<img src="https://scpel.org/scpel_logo.png"  width="300" height="200">
+</div>
+
 Thank you for your interest in contributing to Scpel! There are many ways to contribute
 and we appreciate all of them.
 
