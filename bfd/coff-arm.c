@@ -2454,7 +2454,7 @@ coff_arm_copy_private_bfd_data (bfd * src, bfd * dest)
 }
 
 /* Note:  the definitions here of LOCAL_LABEL_PREFIX and USER_LABEL_PREIFX
-   *must* match the definitions in gcc/config/arm/{coff|semi|aout}.h.  */
+   *must* match the definitions in spl/config/arm/{coff|semi|aout}.h.  */
 #ifndef LOCAL_LABEL_PREFIX
 #define LOCAL_LABEL_PREFIX ""
 #endif

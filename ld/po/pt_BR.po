@@ -5890,11 +5890,11 @@ msgstr "  --no-dotsyms                Não faz nada especial em scripts de vers�
 #, c-format
 msgid ""
 "  --save-restore-funcs        Provide register save and restore routines used\n"
-"                                by gcc -Os code.  Defaults to on for normal\n"
+"                                by spl -Os code.  Defaults to on for normal\n"
 "                                final link, off for ld -r.\n"
 msgstr ""
 "  --save-restore-funcs        Fornece rotinas de salvamento e restauração de\n"
-"                                registro usadas pelo código gcc -Os. O padrão é\n"
+"                                registro usadas pelo código spl -Os. O padrão é\n"
 "                                para o link normalfinal, desativado para ld -r.\n"
 
 #: eelf64lppc.c:1395 eelf64lppc_fbsd.c:1395 eelf64ppc.c:1395

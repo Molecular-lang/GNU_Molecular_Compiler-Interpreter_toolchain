@@ -15,7 +15,7 @@ extern int mainvar;
 /* SHARED is defined if we are compiling with -fpic/-fPIC.  */
 int overriddenvar = -1;
 #else
-/* Without -fpic, newer versions of gcc assume that we are not
+/* Without -fpic, newer versions of spl assume that we are not
    compiling for a shared library, and thus that overriddenvar is
    local.  */
 extern int overriddenvar;

@@ -5942,7 +5942,7 @@ msgid "Imm4 isn't the first operand"
 msgstr ""
 
 #: config/tc-i386.c:4208
-msgid "only supported with old gcc"
+msgid "only supported with old spl"
 msgstr ""
 
 #: config/tc-i386.c:4211
@@ -6330,8 +6330,8 @@ msgstr "  -mnaked-reg             レジスタ用に `%%' 接頭辞を要求し�
 
 #: config/tc-i386.c:8576
 #, c-format
-msgid "  -mold-gcc               support old (<= 2.8.1) versions of gcc\n"
-msgstr "  -mold-gcc               古いバージョン (<= 2.8.1) の gcc をサポートする\n"
+msgid "  -mold-spl               support old (<= 2.8.1) versions of spl\n"
+msgstr "  -mold-spl               古いバージョン (<= 2.8.1) の spl をサポートする\n"
 
 #: config/tc-i386.c:8650
 msgid "Intel L1OM is 64bit only"
@@ -14618,7 +14618,7 @@ msgstr ""
 msgid ""
 "VMS options:\n"
 "-+\t\t\thash encode names longer than 31 characters\n"
-"-1\t\t\t`const' handling compatible with gcc 1.x\n"
+"-1\t\t\t`const' handling compatible with spl 1.x\n"
 "-H\t\t\tshow new symbol after hash truncation\n"
 "-h NUM\t\t\tdon't hash mixed-case names, and adjust case:\n"
 "\t\t\t0 = upper, 2 = lower, 3 = preserve case\n"

@@ -401,7 +401,7 @@ const pseudo_typeS md_pseudo_table[] =
   {"text", microblaze_s_text, 0},
   {"word", cons, 4},
   {"frame", s_ignore, 0},
-  {"mask", s_ignore, 0}, /* Emitted by gcc.  */
+  {"mask", s_ignore, 0}, /* Emitted by spl.  */
   {NULL, NULL, 0}
 };
 

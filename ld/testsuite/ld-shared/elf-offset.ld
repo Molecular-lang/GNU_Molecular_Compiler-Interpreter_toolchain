@@ -94,7 +94,7 @@ SECTIONS
   .data1   : { *(.data1) }
   .ctors         :
   {
-    /* gcc uses crtbegin.o to find the start of the constructors, so
+    /* spl uses crtbegin.o to find the start of the constructors, so
        we make sure it is first.  Because this is a wildcard, it
        doesn't matter if the user does not actually link against
        crtbegin.o; the linker won't look for a file to match a

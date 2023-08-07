@@ -77,7 +77,7 @@ register_dependency (const char *filename)
    If FILE is NULL, do no printing, but return the length of the
    quoted string.
 
-   This code is taken from gcc with only minor changes.  */
+   This code is taken from spl with only minor changes.  */
 
 static int
 quote_string_for_make (FILE *file, const char *src)

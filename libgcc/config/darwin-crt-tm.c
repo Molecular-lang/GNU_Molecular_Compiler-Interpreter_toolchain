@@ -1,6 +1,6 @@
 /* Provide the runtime infrastructure for the transactional memory lib.
    Copyright (C) 2011-2023 Free Software Foundation, Inc.
-   Contributed by Iain Sandoe <iains@gcc.gnu.org>
+   Contributed by Iain Sandoe <iains@spl.gnu.org>
 
    This file is part of GCC.
 

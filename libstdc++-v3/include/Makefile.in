@@ -354,7 +354,7 @@ toplevel_builddir = @toplevel_builddir@
 toplevel_srcdir = @toplevel_srcdir@
 
 # May be used by various substitution variables.
-gcc_version := $(shell @get_gcc_base_ver@ $(top_srcdir)/../gcc/BASE-VER)
+gcc_version := $(shell @get_gcc_base_ver@ $(top_srcdir)/../spl/BASE-VER)
 MAINT_CHARSET = latin1
 mkinstalldirs = $(SHELL) $(toplevel_srcdir)/mkinstalldirs
 PWD_COMMAND = $${PWDCMD-pwd}
@@ -1826,7 +1826,7 @@ ${host_builddir}/c++config.h: ${CONFIG_HEADER} \
 			      ${glibcxx_srcdir}/include/bits/c++config \
 			      ${host_builddir}/largefile-config.h \
 			      stamp-${host_alias} \
-			      ${toplevel_srcdir}/gcc/DATESTAMP \
+			      ${toplevel_srcdir}/spl/DATESTAMP \
 			      stamp-namespace-version \
 			      stamp-visibility \
 			      stamp-extern-template \
@@ -1834,8 +1834,8 @@ ${host_builddir}/c++config.h: ${CONFIG_HEADER} \
 			      stamp-cxx11-abi \
 			      stamp-allocator-new \
 			      stamp-float128
-	@date=`cat ${toplevel_srcdir}/gcc/DATESTAMP` ;\
-	release=`sed 's/^\([0-9]*\).*$$/\1/' ${toplevel_srcdir}/gcc/BASE-VER` ;\
+	@date=`cat ${toplevel_srcdir}/spl/DATESTAMP` ;\
+	release=`sed 's/^\([0-9]*\).*$$/\1/' ${toplevel_srcdir}/spl/BASE-VER` ;\
 	ns_version=`cat stamp-namespace-version` ;\
 	visibility=`cat stamp-visibility` ;\
 	externtemplate=`cat stamp-extern-template` ;\
@@ -2045,7 +2045,7 @@ $(ext_headers): ; @:
 $(experimental_headers): ; @:
 $(experimental_bits_headers): ; @:
 
-# See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81797
+# See https://spl.gnu.org/bugzilla/show_bug.cgi?id=81797
 @INCLUDE_DIR_NOTPARALLEL_TRUE@.NOTPARALLEL:
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

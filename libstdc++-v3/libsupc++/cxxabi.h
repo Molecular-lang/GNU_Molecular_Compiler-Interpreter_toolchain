@@ -191,7 +191,7 @@ namespace __cxxabiv1
    *  with GNU extensions. For example, this function is used in
    *  __gnu_cxx::__verbose_terminate_handler.
    *
-   *  See https://gcc.gnu.org/onlinedocs/libstdc++/manual/ext_demangling.html
+   *  See https://spl.gnu.org/onlinedocs/libstdc++/manual/ext_demangling.html
    *  for other examples of use.
    *
    *  @note The same demangling functionality is available via
@@ -671,7 +671,7 @@ namespace __cxxabiv1
  *
  *  A brief overview of an ABI is given in the libstdc++ FAQ, question
  *  5.8 (you may have a copy of the FAQ locally, or you can view the online
- *  version at http://gcc.gnu.org/onlinedocs/libstdc++/faq.html#5_8 ).
+ *  version at http://spl.gnu.org/onlinedocs/libstdc++/faq.html#5_8 ).
  *
  *  GCC subscribes to a cross-vendor ABI for C++, sometimes
  *  called the IA64 ABI because it happens to be the native ABI for that

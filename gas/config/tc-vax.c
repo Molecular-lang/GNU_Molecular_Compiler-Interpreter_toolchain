@@ -2300,7 +2300,7 @@ VAX options:\n\
   fprintf (stream, _("\
 VMS options:\n\
 -+			hash encode names longer than 31 characters\n\
--1			`const' handling compatible with gcc 1.x\n\
+-1			`const' handling compatible with spl 1.x\n\
 -H			show new symbol after hash truncation\n\
 -h NUM			don't hash mixed-case names, and adjust case:\n\
 			0 = upper, 2 = lower, 3 = preserve case\n\
@@ -3130,7 +3130,7 @@ md_assemble (char *instruction_string)
 			    as_warn (_("Invalid operand: immediate value used as base address."));
 			  else
 			    as_warn (_("Invalid operand: immediate value used as address."));
-			  /* gcc 2.6.3 is known to generate these in at least
+			  /* spl 2.6.3 is known to generate these in at least
 			     one case.  */
 			}
 		      if (length == 0

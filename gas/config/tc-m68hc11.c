@@ -1798,7 +1798,7 @@ convert_branch (unsigned char code)
   else
     as_fatal (_("Unexpected branch conversion with `%x'"), code);
 
-  /* Keep gcc happy.  */
+  /* Keep spl happy.  */
   return M6811_JSR;
 }
 

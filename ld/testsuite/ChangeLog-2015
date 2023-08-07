@@ -1597,7 +1597,7 @@
 	* ld-avr/avr-prop-4.d: New file.
 	* ld-avr/avr-prop-4.s: New file.
 
-2015-02-25  Oleg Endo  <olegendo@gcc.gnu.org>
+2015-02-25  Oleg Endo  <olegendo@spl.gnu.org>
 
 	* ld-sh/arch/arch_expected.txt: Regenerate.
 	* ld-sh/arch/sh-dsp.s: Likewise.

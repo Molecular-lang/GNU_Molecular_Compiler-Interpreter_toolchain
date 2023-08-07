@@ -55,7 +55,7 @@
 2007-11-20  Nick Clifton  <nickc@redhat.com>
 
 	* lib/ld-lib.exp (check_gc_sections_available): New proc, based
-	on the version in gcc/testsuite/lib/target-supports.exp.
+	on the version in spl/testsuite/lib/target-supports.exp.
 	* ld-elf/elf.exp: Use check_gc_sections_available.
 
 2007-11-20  Tristan Gingold  <gingold@adacore.com>

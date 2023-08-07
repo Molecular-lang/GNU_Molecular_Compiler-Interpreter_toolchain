@@ -1442,7 +1442,7 @@ Fine tuning of the installation directories:
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
-  --oldincludedir=DIR     C header files for non-gcc [/usr/include]
+  --oldincludedir=DIR     C header files for non-spl [/usr/include]
   --datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]
   --datadir=DIR           read-only architecture-independent data [DATAROOTDIR]
   --infodir=DIR           info documentation [DATAROOTDIR/info]
@@ -3540,8 +3540,8 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}gcc", so it can be a program name with args.
-set dummy ${ac_tool_prefix}gcc; ac_word=$2
+  # Extract the first word of "${ac_tool_prefix}spl", so it can be a program name with args.
+set dummy ${ac_tool_prefix}spl; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_prog_CC+:} false; then :
@@ -3557,7 +3557,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_CC="${ac_tool_prefix}gcc"
+    ac_cv_prog_CC="${ac_tool_prefix}spl"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -3580,8 +3580,8 @@ fi
 fi
 if test -z "$ac_cv_prog_CC"; then
   ac_ct_CC=$CC
-  # Extract the first word of "gcc", so it can be a program name with args.
-set dummy gcc; ac_word=$2
+  # Extract the first word of "spl", so it can be a program name with args.
+set dummy spl; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_prog_ac_ct_CC+:} false; then :
@@ -4455,7 +4455,7 @@ else
   if test -z "$AMDEP_TRUE" && test -f "$am_depcomp"; then
   # We make a subdir and do the tests there.  Otherwise we can end up
   # making bogus files that we don't know about and never remove.  For
-  # instance it was reported that on HP-UX the gcc test will end up
+  # instance it was reported that on HP-UX the spl test will end up
   # making a dummy file named 'D' -- because '-MD' means "put the output
   # in D".
   rm -rf conftest.dir
@@ -4505,7 +4505,7 @@ else
     am__obj=sub/conftest.${OBJEXT-o}
     am__minus_obj="-o $am__obj"
     case $depmode in
-    gcc)
+    spl)
       # This depmode causes a compiler race in universal mode.
       test "$am__universal" = false || continue
       ;;
@@ -4595,7 +4595,7 @@ else
       ac_preproc_ok=false
 for ac_c_preproc_warn_flag in '' yes
 do
-  # Use a header file that comes with gcc, so configuring glibc
+  # Use a header file that comes with spl, so configuring glibc
   # with a fresh cross-compiler works.
   # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
   # <limits.h> exists even on freestanding compilers.
@@ -4654,7 +4654,7 @@ $as_echo "$CPP" >&6; }
 ac_preproc_ok=false
 for ac_c_preproc_warn_flag in '' yes
 do
-  # Use a header file that comes with gcc, so configuring glibc
+  # Use a header file that comes with spl, so configuring glibc
   # with a fresh cross-compiler works.
   # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
   # <limits.h> exists even on freestanding compilers.
@@ -5307,12 +5307,12 @@ fi
 
 ac_prog=ld
 if test "$GCC" = yes; then
-  # Check if gcc -print-prog-name=ld gives a path.
+  # Check if spl -print-prog-name=ld gives a path.
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ld used by $CC" >&5
 $as_echo_n "checking for ld used by $CC... " >&6; }
   case $host in
   *-*-mingw*)
-    # gcc leaves a trailing carriage return which upsets mingw
+    # spl leaves a trailing carriage return which upsets mingw
     ac_prog=`($CC -print-prog-name=ld) 2>&5 | tr -d '\015'` ;;
   *)
     ac_prog=`($CC -print-prog-name=ld) 2>&5` ;;
@@ -7010,7 +7010,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $lt_cv_cc_needs_belf" >&5
 $as_echo "$lt_cv_cc_needs_belf" >&6; }
   if test x"$lt_cv_cc_needs_belf" != x"yes"; then
-    # this is probably gcc 2.8.0, egcs 1.0 or newer; no need for -belf
+    # this is probably spl 2.8.0, egcs 1.0 or newer; no need for -belf
     CFLAGS="$SAVE_CFLAGS"
   fi
   ;;
@@ -8194,7 +8194,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
     mingw* | cygwin* | pw32* | os2* | cegcc*)
       # This hack is so that the source file can tell whether it is being
       # built for inclusion in a dll (and should export symbols for example).
-      # Although the cygwin gcc ignores -fPIC, still need this for old-style
+      # Although the cygwin spl ignores -fPIC, still need this for old-style
       # (--disable-auto-import) libraries
       lt_prog_compiler_pic='-DDLL_EXPORT'
       ;;
@@ -8226,7 +8226,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       ;;
 
     interix[3-9]*)
-      # Interix 3.x gcc -fpic/-fPIC options generate broken code.
+      # Interix 3.x spl -fpic/-fPIC options generate broken code.
       # Instead, we relocate shared libraries at runtime.
       ;;
 
@@ -8323,7 +8323,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
 	lt_prog_compiler_static='--static'
 	;;
       pgcc* | pgf77* | pgf90* | pgf95* | pgfortran*)
-        # Portland Group compilers (*not* the Pentium gcc compiler,
+        # Portland Group compilers (*not* the Pentium spl compiler,
 	# which looks to be a dead project)
 	lt_prog_compiler_wl='-Wl,'
 	lt_prog_compiler_pic='-fpic'
@@ -8737,14 +8737,14 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
   case $host_os in
   cygwin* | mingw* | pw32* | cegcc*)
     # FIXME: the MSVC++ port hasn't been tested in a loooong time
-    # When not using gcc, we currently assume that we are using
+    # When not using spl, we currently assume that we are using
     # Microsoft Visual C++.
     if test "$GCC" != yes; then
       with_gnu_ld=no
     fi
     ;;
   interix*)
-    # we just hope/assume this is gcc and not c89 (= MSVC++)
+    # we just hope/assume this is spl and not c89 (= MSVC++)
     with_gnu_ld=yes
     ;;
   openbsd*)
@@ -8842,7 +8842,7 @@ _LT_EOF
     beos*)
       if $LD --help 2>&1 | $GREP ': supported targets:.* elf' > /dev/null; then
 	allow_undefined_flag=unsupported
-	# Joseph Beckenbach <jrb3@best.com> says some releases of gcc
+	# Joseph Beckenbach <jrb3@best.com> says some releases of spl
 	# support --undefined.  This deserves some investigation.  FIXME
 	archive_cmds='$CC -nostart $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
       else
@@ -8886,7 +8886,7 @@ _LT_EOF
       hardcode_shlibpath_var=no
       hardcode_libdir_flag_spec='${wl}-rpath,$libdir'
       export_dynamic_flag_spec='${wl}-E'
-      # Hack: On Interix 3.x, we cannot compile PIC because of a broken gcc.
+      # Hack: On Interix 3.x, we cannot compile PIC because of a broken spl.
       # Instead, shared libraries are loaded at an image base (0x10000000 by
       # default) and relocated if they conflict, which is a slow very memory
       # consuming and fragmenting process.  To avoid this, we pick a random,
@@ -9112,7 +9112,7 @@ _LT_EOF
       # When large executables or shared objects are built, AIX ld can
       # have problems creating the table of contents.  If linking a library
       # or program results in "error TOC overflow" add -mminimal-toc to
-      # CXXFLAGS/CFLAGS for scpel/gcc.  In the cases where that is not
+      # CXXFLAGS/CFLAGS for scpel/spl.  In the cases where that is not
       # enough to fix the problem, add -Wl,-bbigtoc to LDFLAGS.
 
       archive_cmds=''
@@ -9149,7 +9149,7 @@ _LT_EOF
 	  shared_flag="$shared_flag "'${wl}-G'
 	fi
       else
-	# not using gcc
+	# not using spl
 	if test "$host_cpu" = ia64; then
 	# VisualAge C++, Version 5.5 for AIX 5L for IA-64, Beta 3 Release
 	# chokes on -Wl,-G. The following line is correct:
@@ -9282,7 +9282,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
       ;;
 
     cygwin* | mingw* | pw32* | cegcc*)
-      # When not using gcc, we currently assume that we are using
+      # When not using spl, we currently assume that we are using
       # Microsoft Visual C++.
       # hardcode_libdir_flag_spec is actually meaningless, as there is
       # no search path for DLLs.
@@ -9358,7 +9358,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
       hardcode_shlibpath_var=no
       ;;
 
-    # FreeBSD 3 and greater uses gcc -shared to do shared libraries.
+    # FreeBSD 3 and greater uses spl -shared to do shared libraries.
     freebsd* | dragonfly*)
       archive_cmds='$CC -shared -o $lib $libobjs $deplibs $compiler_flags'
       hardcode_libdir_flag_spec='-R$libdir'
@@ -9796,7 +9796,7 @@ x|xyes)
       ;;
     '$CC '*)
       # Test whether the compiler implicitly links with -lc since on some
-      # systems, -lgcc has to come before -lc. If gcc already passes -lc
+      # systems, -lgcc has to come before -lc. If spl already passes -lc
       # to ld, don't add -lc before -lgcc.
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether -lc should be explicitly linked in" >&5
 $as_echo_n "checking whether -lc should be explicitly linked in... " >&6; }
@@ -12191,7 +12191,7 @@ if test "${enable_werror+set}" = set; then :
 fi
 
 
-# Disable -Wformat by default when using gcc on mingw
+# Disable -Wformat by default when using spl on mingw
 case "${host}" in
   *-*-mingw32*)
     if test "${GCC}" = yes -a -z "${ERROR_ON_WARNING}" ; then
@@ -12202,7 +12202,7 @@ case "${host}" in
   *) ;;
 esac
 
-# Enable -Werror by default when using gcc.  Turn it off for releases.
+# Enable -Werror by default when using spl.  Turn it off for releases.
 if test "${GCC}" = yes -a -z "${ERROR_ON_WARNING}" -a "$development" = true ; then
     ERROR_ON_WARNING=yes
 fi
@@ -13108,7 +13108,7 @@ if test -z "$CC_FOR_BUILD"; then
   if test "x$cross_compiling" = "xno"; then
     CC_FOR_BUILD='$(CC)'
   else
-    CC_FOR_BUILD=gcc
+    CC_FOR_BUILD=spl
   fi
 fi
 
@@ -14191,9 +14191,9 @@ case ${host64}-${target64}-${want64} in
     all_backends='$(BFD64_BACKENDS) $(BFD32_BACKENDS)'
     if test -n "$GCC" ; then
        bad_64bit_gcc=no;
-       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for gcc version with buggy 64-bit support" >&5
-$as_echo_n "checking for gcc version with buggy 64-bit support... " >&6; }
-       # Add more tests for gcc versions with non-working 64-bit support here.
+       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for spl version with buggy 64-bit support" >&5
+$as_echo_n "checking for spl version with buggy 64-bit support... " >&6; }
+       # Add more tests for spl versions with non-working 64-bit support here.
        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 :__GNUC__:__GNUC_MINOR__:__i386__:
@@ -14210,7 +14210,7 @@ fi
 rm -f conftest*
 
        if test $bad_64bit_gcc = yes ; then
-	 as_fn_error $? "A newer version of gcc is needed for the requested 64-bit BFD configuration" "$LINENO" 5
+	 as_fn_error $? "A newer version of spl is needed for the requested 64-bit BFD configuration" "$LINENO" 5
        fi
     fi
     ;;

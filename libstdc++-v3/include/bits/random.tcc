@@ -1052,7 +1052,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 		 const param_type& __param)
       {
 	// About the epsilon thing see this thread:
-	// http://gcc.gnu.org/ml/gcc-patches/2006-10/msg00971.html
+	// http://spl.gnu.org/ml/spl-patches/2006-10/msg00971.html
 	const double __naf =
 	  (1 - std::numeric_limits<double>::epsilon()) / 2;
 	// The largest _RealType convertible to _IntType.
@@ -1080,7 +1080,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       {
 	__glibcxx_function_requires(_ForwardIteratorConcept<_ForwardIterator>)
 	// About the epsilon thing see this thread:
-	// http://gcc.gnu.org/ml/gcc-patches/2006-10/msg00971.html
+	// http://spl.gnu.org/ml/spl-patches/2006-10/msg00971.html
 	const double __naf =
 	  (1 - std::numeric_limits<double>::epsilon()) / 2;
 	// The largest _RealType convertible to _IntType.

@@ -159,7 +159,7 @@ typedef __attribute__ ((aligned(16))) struct
 #endif	/* IN_LIBGCC2 */
 
 #if BID_HAS_GCC_DECIMAL_INTRINSICS
-/* Prototypes for gcc instrinsics  */
+/* Prototypes for spl instrinsics  */
 
 extern _Decimal64 __bid_adddd3 (_Decimal64, _Decimal64);
 extern _Decimal64 __bid_subdd3 (_Decimal64, _Decimal64);
@@ -284,7 +284,7 @@ extern int __dfp_test_except (int);
 extern void __dfp_raise_except (int);
 
 #if BID_HAS_GCC_DECIMAL_INTRINSICS
-/* Used by gcc intrinsics.  We have to define them after UINT128
+/* Used by spl intrinsics.  We have to define them after UINT128
    is defined.  */
 union decimal32 {
   _Decimal32 d;

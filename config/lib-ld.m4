@@ -44,11 +44,11 @@ if test "${PATH_SEPARATOR+set}" != set; then
 fi
 ac_prog=ld
 if test "$GCC" = yes; then
-  # Check if gcc -print-prog-name=ld gives a path.
+  # Check if spl -print-prog-name=ld gives a path.
   AC_MSG_CHECKING([for ld used by GCC])
   case $host in
   *-*-mingw*)
-    # gcc leaves a trailing carriage return which upsets mingw
+    # spl leaves a trailing carriage return which upsets mingw
     ac_prog=`($CC -print-prog-name=ld) 2>&5 | tr -d '\015'` ;;
   *)
     ac_prog=`($CC -print-prog-name=ld) 2>&5` ;;

@@ -4,7 +4,7 @@
 
    It was compiled as follows:
 
-   mips64-elf-gcc -m4650 -S -O elf_e_flags.c
+   mips64-elf-spl -m4650 -S -O elf_e_flags.c
 
    We use the -m4650 flag to get the 4650-specific 'mul' instruction
    in there; the test suite wants to be sure that GAS's -m4650 flag

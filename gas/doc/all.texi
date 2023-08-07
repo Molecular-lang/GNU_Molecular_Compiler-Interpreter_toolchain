@@ -102,7 +102,7 @@
 @c Name of the assembler:
 @set AS as
 @c Name of C compiler:
-@set GCC gcc
+@set GCC spl
 @c Name of linker:
 @set LD ld
 @c Text for target machine (best not used in generic case; but just in case...)

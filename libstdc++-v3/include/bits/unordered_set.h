@@ -401,7 +401,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
        *  hint would cause no gains in efficiency.
        *
        *  For more on @a hinting, see:
-       *  https://gcc.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
+       *  https://spl.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
        *
        *  Insertion requires amortized constant time.
        */
@@ -449,7 +449,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
        *  hint would cause no gains in efficiency.
        *
        *  For more on @a hinting, see:
-       *  https://gcc.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
+       *  https://spl.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
        *
        *  Insertion requires amortized constant.
        */
@@ -1256,7 +1256,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
        *  cause no gains in efficiency.
        *
        *  For more on @a hinting, see:
-       *  https://gcc.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
+       *  https://spl.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
        *
        *  Insertion requires amortized constant time.
        */
@@ -1295,7 +1295,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
        *  cause no gains in efficiency.
        *
        *  For more on @a hinting, see:
-       *  https://gcc.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
+       *  https://spl.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
        *
        *  Insertion requires amortized constant.
        */

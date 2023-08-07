@@ -310,7 +310,7 @@
 
 2022-09-22  Jonathan Wakely  <jwakely@redhat.com>
 
-	* README: Replace gcc-bugs email address with Bugzilla URL.
+	* README: Replace spl-bugs email address with Bugzilla URL.
 
 2022-08-25  Martin Liska  <mliska@suse.cz>
 
@@ -504,7 +504,7 @@
 
 	* Makefile.in (AR): Add @AR_PLUGIN_OPTION@
 	(RANLIB): Add @RANLIB_PLUGIN_OPTION@.
-	(configure_deps): Depend on ../config/gcc-plugin.m4.
+	(configure_deps): Depend on ../config/spl-plugin.m4.
 	* configure.ac: AC_SUBST AR_PLUGIN_OPTION and
 	RANLIB_PLUGIN_OPTION.
 	* aclocal.m4: Regenerated.
@@ -514,13 +514,13 @@
 
 	* Makefile.in (AR): Add @AR_PLUGIN_OPTION@
 	(RANLIB): Add @RANLIB_PLUGIN_OPTION@.
-	(configure_deps): Depend on ../config/gcc-plugin.m4.
+	(configure_deps): Depend on ../config/spl-plugin.m4.
 	* configure.ac: AC_SUBST AR_PLUGIN_OPTION and
 	RANLIB_PLUGIN_OPTION.
 	* aclocal.m4: Regenerated.
 	* configure: Likewise.
 
-2021-11-29  Eric Gallager  <egallager@gcc.gnu.org>
+2021-11-29  Eric Gallager  <egallager@spl.gnu.org>
 
 	PR other/103021
 	* Makefile.in: Use ETAGS variable in TAGS target.
@@ -532,7 +532,7 @@
 	* make-temp-file.c (try_dir): Check to see if the dir
 	is actually a directory.
 
-2021-10-22  Eric Gallager  <egallager@gcc.gnu.org>
+2021-10-22  Eric Gallager  <egallager@spl.gnu.org>
 
 	PR other/102663
 	* Makefile.in: Allow dvi-formatted documentation
@@ -628,7 +628,7 @@
 	* simple-object.c (handle_lto_debug_sections): Copy over .ctf
 	sections.
 
-2021-06-05  John David Anglin  <danglin@gcc.gnu.org>
+2021-06-05  John David Anglin  <danglin@spl.gnu.org>
 
 	PR target/100734
 	* configure.ac: Use libiberty snprintf and vsnprintf on
@@ -1490,7 +1490,7 @@
 
 2017-06-07  Tony Reix  <tony.reix@atos.net>
 	    Matthieu Sarter  <matthieu.sarter.external@atos.net>
-	    David Edelsohn  <dje.gcc@gmail.com>
+	    David Edelsohn  <dje.spl@gmail.com>
 
 	* simple-object-xcoff.c (simple_object_xcoff_find_sections):
 	Search symbol table for .go_export symbol and apply pfn if found.
@@ -1862,7 +1862,7 @@
 	(d_unnamed_type): Likewise.
 	* testsuite/demangle-expected: Add regression test cases.
 
-2016-04-30  Oleg Endo  <olegendo@gcc.gnu.org>
+2016-04-30  Oleg Endo  <olegendo@spl.gnu.org>
 
 	* configure: Remove SH5 support.
 
@@ -1919,7 +1919,7 @@
 
 	* argv.c (dupargv): Replace strlen/xmalloc/strcpy with xstrdup.
 
-2015-12-28  Patrick Palka  <ppalka@gcc.gnu.org>
+2015-12-28  Patrick Palka  <ppalka@spl.gnu.org>
 
 	* crc32.c: In the documentation, don't refer to GDB's
 	now-nonexistent crc32 implementation.  In the table-generation
@@ -2159,7 +2159,7 @@
 
 2014-12-24  Uros Bizjak  <ubizjak@gmail.com>
 	    Ben Elliston  <bje@au.ibm.com>
-	    Manuel Lopez-Ibanez  <manu@gcc.gnu.org>
+	    Manuel Lopez-Ibanez  <manu@spl.gnu.org>
 
 	* xasprintf.c: New file.
 	* Makefile.in (CFILES): Add xasprintf.c.
@@ -2169,7 +2169,7 @@
 
 2014-12-11  Uros Bizjak  <ubizjak@gmail.com>
 	    Ben Elliston  <bje@au.ibm.com>
-	    Manuel Lopez-Ibanez  <manu@gcc.gnu.org>
+	    Manuel Lopez-Ibanez  <manu@spl.gnu.org>
 
 	* xvasprintf.c: New file.
 	* vprintf-support.h: Likewise.
@@ -2181,7 +2181,7 @@
 	* functions.texi: Regenerate.
 	* vasprintf.c (int_vasprintf): Use libiberty_vprintf_buffer_size.
 
-2014-11-22  John David Anglin  <danglin@gcc.gnu.org>
+2014-11-22  John David Anglin  <danglin@spl.gnu.org>
 
 	PR other/63694
 	* configure.ac: Check for strtol, strtoul, strtoll and strtoull
@@ -2194,7 +2194,7 @@
 	unsigned long.
 
 2014-11-11  Anthony Brandon  <anthony.brandon@gmail.com>
-	    Manuel López-Ibáñez  <manu@gcc.gnu.org>
+	    Manuel López-Ibáñez  <manu@spl.gnu.org>
 
 	PR driver/36312
 	* filename_cmp.c (canonical_filename_eq): New function to check if
@@ -2532,7 +2532,7 @@
 	used for the headers to prevent it being installed unless
 	requested via --enable-install-libiberty.
 
-2013-05-06  David Edelsohn  <dje.gcc@gmail.com>
+2013-05-06  David Edelsohn  <dje.spl@gmail.com>
 	    Peter Bergner  <bergner@vnet.ibm.com>
 	    Segher Boessenkool  <segher@kernel.crashing.org>
 	    Jakub Jelinek  <jakub@redhat.com>
@@ -2609,7 +2609,7 @@
 	* simple-object-mach-o.c (simple_object_mach_o_segment): Don't
 	bother to zero out a buffer we are about to set anyhow.
 
-2013-01-01  David Edelsohn  <dje.gcc@gmail.com>
+2013-01-01  David Edelsohn  <dje.spl@gmail.com>
 
 	* simple-object-xcoff.c: New file.
 	* Makefile.in: Add it to build machinery.
@@ -2824,7 +2824,7 @@
 
 	* setproctitle.c (setproctitle): Use "GNU/Linux" in comment.
 
-2011-10-26  Iain Sandoe  <iains@gcc.gnu.org>
+2011-10-26  Iain Sandoe  <iains@spl.gnu.org>
 
 	PR target/48108
 	* simple-object-mach-o.c  (GNU_WRAPPER_SECTS, GNU_WRAPPER_INDEX,
@@ -3086,7 +3086,7 @@
 
 2010-11-02  Ian Lance Taylor  <iant@google.com>
 	    Dave Korn  <dave.korn.cygwin@gmail.com>
-	    Iain Sandoe  <iains@gcc.gnu.org>
+	    Iain Sandoe  <iains@spl.gnu.org>
 
 	* simple-object.c: New file.
 	* simple-object-common.h: New file.
@@ -3300,7 +3300,7 @@
 
 	* functions.texi: Rebuild.
 
-2009-11-25  Manuel Lopez-Ibanez  <manu@gcc.gnu.org>
+2009-11-25  Manuel Lopez-Ibanez  <manu@spl.gnu.org>
 	    Ben Elliston  <bje@au.ibm.com>
 
 	* README: Mention changes to Makefile.in and functions.texi.
@@ -3766,7 +3766,7 @@
 	(iterate_demangle_function): Use demangle_function_name return
 	value.
 
-2008-01-19  Manuel Lopez-Ibanez  <manu@gcc.gnu.org>
+2008-01-19  Manuel Lopez-Ibanez  <manu@spl.gnu.org>
 
 	PR other/33768
 	* splay-tree.c (rotate_left): Fix minor typo in comment.
@@ -4327,7 +4327,7 @@
 	void *'.
 	(ieee_test): Remove redundant casts.
 
-2005-08-17  Kelley Cook  <kcook@gcc.gnu.org>
+2005-08-17  Kelley Cook  <kcook@spl.gnu.org>
 
 	* strverscmp.c: Update FSF address.
 	* testsuite/Makefile.in: Likewise.
@@ -4374,14 +4374,14 @@
 	* pexecute.c (pexecute): Cast string litrals to char *.
 	* regex.c (re_comp): Cast a call to gettext() to char *.
 
-2005-07-07  Kelley Cook  <kcook@gcc.gnu.org>
+2005-07-07  Kelley Cook  <kcook@spl.gnu.org>
 
 	* config.table: Delete file.  Move former contents into ...
 	* configure.ac: ... here and escape any brackets for m4.
 	* Makefile.in (config.status): Remove dependency on config.table.
 	* configure: Regenerate.
 
-2005-07-07  Kelley Cook  <kcook@gcc.gnu.org>
+2005-07-07  Kelley Cook  <kcook@spl.gnu.org>
 
 	* config.in: Regenerate for 6/20 change.
 
@@ -4556,13 +4556,13 @@
 	strtod.c, ternary.c, unlink-if-ordinary.c, vasprintf.c,
 	vsnprintf.c, vsprintf.c, xexit.c, xmalloc.c, xstrndup.c
 
-2005-05-06  Kelley Cook  <kcook@gcc.gnu.org>
+2005-05-06  Kelley Cook  <kcook@spl.gnu.org>
 
 	* aclocal.m4 (AC_DEFINE_NOAUTOHEADER): Remove.
 	* configure.ac: Replace any AC_DEFINE_NOAUTOHEADER with AC_DEFINE.
 	* configure: Regenerate.
 
-2005-05-06  Kelley Cook  <kcook@gcc.gnu.org>
+2005-05-06  Kelley Cook  <kcook@spl.gnu.org>
 
 	* configure.ac: Use AC_C_BIGENDIAN instead of AC_C_BIGENDIAN_CROSS.
 	Use AC_CHECK_SIZEOF instead of AC_COMPILE_CHECK_SIZEOF.
@@ -5206,7 +5206,7 @@
 	* Makefile.in: Clean up REQUIRED_OFILES and CONFIGURED_OFILES for
 	an 80 column screen.  Run maint-deps.
 
-2004-03-09  Kelley Cook  <kcook@gcc.gnu.org>
+2004-03-09  Kelley Cook  <kcook@spl.gnu.org>
 
 	* configure.ac: Bump version to 2.59.  Apply suggested autoupdates.
 	* acconfig.h: Delete redundant file.
@@ -5350,7 +5350,7 @@
 	(CFILES): Add cp-demint.c.
 	(REQUIRED_OFILES): Add cp-demint.o.
 
-2004-01-09  Kelley Cook  <kcook@gcc.gnu.org>
+2004-01-09  Kelley Cook  <kcook@spl.gnu.org>
 
 	* configure.in:  Rename file to ...
 	* configure.ac:  ... this.
@@ -5528,13 +5528,13 @@
 	(is_ctor_or_dtor): Look for new _THIS qualifiers.
 	* testsuite/demangle-expected: Add test case.
 
-	Fix for PR gcc/13304:
+	Fix for PR spl/13304:
 	* cp-demangle.c (d_print_comp) [D_COMP_TEMPLATE]: If the character
 	before the '<' is itself a '<', insert a space.
 	(d_print_cast): Likewise.
 	* testsuite/demangle-expected: Add test case.
 
-	Fix for PR gcc/13244:
+	Fix for PR spl/13244:
 	* cp-demangle.c (d_print_comp) [D_COMP_BINARY]: Wrap an expression
 	which uses the '>' operator in an extra layer of parens.
 	* testsuite/demangle-expected: Add test case.
@@ -5740,7 +5740,7 @@
 	performing link tests.
 	* configure: Regenerated.
 
-2003-08-12  Nathanael Nerode  <neroden@gcc.gnu.org>
+2003-08-12  Nathanael Nerode  <neroden@spl.gnu.org>
 
 	* cp-demangle.c: Clarify what package(s) this is part of.
 
@@ -6202,7 +6202,7 @@
 
 2002-09-11  Zack Weinberg  <zack@codesourcery.com>
 
-	* cplus-dem.c: Code under #ifdef MAIN moved to gcc/scpel/cxxfilt.c.
+	* cplus-dem.c: Code under #ifdef MAIN moved to spl/scpel/cxxfilt.c.
 	* testsuite/Makefile.in: Adjust for test-demangle.
 	* testsuite/regress-demangle: Deleted.
 	* testsuite/test-demangle.c: New file.
@@ -6211,7 +6211,7 @@
 
 2002-09-05  Roger Sayle  <roger@eyesopen.com>
 
-	* regex.c: Only use "#pragma alloca" on AIX when not using gcc.
+	* regex.c: Only use "#pragma alloca" on AIX when not using spl.
 
 2002-08-07  DJ Delorie  <dj@redhat.com>
 
@@ -6298,7 +6298,7 @@
 	(find_empty_slot_for_expand): Don't compute hash2 unless needed.
 	(htab_find_slot_with_hash): Likewise.
 
-2002-04-01  Phil Edwards  <pme@gcc.gnu.org>
+2002-04-01  Phil Edwards  <pme@spl.gnu.org>
 
 	* cp-demangle.c (__cxa_demangle):  Also protect with IN_GLIBCPP_V3.
 	(is_gnu_v3_mangled_ctor, is_gnu_v3_mangled_ctor):  Conditionally
@@ -6351,7 +6351,7 @@
 
 	* floatformat.c (floatformat_arm_ext_big): Delete definition.
 
-2002-03-04  Phil Edwards  <pme@gcc.gnu.org>
+2002-03-04  Phil Edwards  <pme@spl.gnu.org>
 
 	* configure.in:  Add --enable-install-libiberty option.
 	* Makefile.in (INSTALLED_HEADERS):  New variable.
@@ -6428,7 +6428,7 @@
 	* cp-demangle.c (cp_demangle_type): Call demangling_new with
 	DMGL_GNU_V3.
 
-2002-01-31  Phil Edwards  <pme@gcc.gnu.org>
+2002-01-31  Phil Edwards  <pme@spl.gnu.org>
 
 	* cp-demangle.c:  Revert yesterday's change.
 
@@ -6437,7 +6437,7 @@
 	* configure.in: Treat mingw the same as cywin
 	wrt HAVE_SYS_ERRLIST.
 
-2002-01-30  Phil Edwards  <pme@gcc.gnu.org>
+2002-01-30  Phil Edwards  <pme@spl.gnu.org>
 
 	* cp-demangle.c (cp_demangle_type):  Do not protect with IN_LIBGCC2.
 	(cplus_demangle_v3):  Mimic __cxa_demangle and fall back on
@@ -6491,7 +6491,7 @@
 	* configure.in (uintptr_t): Use AC_CHECK_TYPE.
 	* configure: Regenerated.
 
-2001-12-12  Craig Rodrigues  <rodrigc@gcc.gnu.org>
+2001-12-12  Craig Rodrigues  <rodrigc@spl.gnu.org>
 
 	PR other/2719
 	* cplus-dem.c (consume_count): Treat negative count as an error.
@@ -6509,7 +6509,7 @@ Tue Dec 11 07:08:57 2001  Douglas B. Rupp  <rupp@gnat.com>
 
 2001-11-27  Zack Weinberg  <zack@codesourcery.com>
 
-	* _doprnt.c: Moved here from gcc/doprint.c.  Adjust to build
+	* _doprnt.c: Moved here from spl/doprint.c.  Adjust to build
 	in libiberty context.  Fix typo in leading comment.
 	* configure.in: Fix various AC_DEFINEs so autoheader works.
 	If any of vprintf, vsprintf, vfprintf is missing from libc,
@@ -7585,7 +7585,7 @@ Thu Jun  8 09:25:54 2000  Philippe De Muyter  <phdm@macqel.be>
 	(cp-demangle.o): New dependency.
 	(dyn-string.o): Likewise.
 
-	* dyn-string.c: Move here from gcc/dyn-string.c.  Add new functions.
+	* dyn-string.c: Move here from spl/dyn-string.c.  Add new functions.
 
 	* cplus-dem.c (libiberty_demanglers): Add initializer for new-ABI
 	demangler.
@@ -7809,7 +7809,7 @@ Thu Mar 16 01:33:58 2000  Jeffrey A Law  (law@cygnus.com)
 2000-01-04  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
 
 	* configure.in (ac_libiberty_warn_cflags): Turn on warnings if
-	we're using gcc.
+	we're using spl.
 
 	* Makefile.in (COMPILE.c): Add @ac_libiberty_warn_cflags@
 
@@ -7932,7 +7932,7 @@ Sun Oct 10 01:23:50 1999  Marc Espie <espie@cvs.openbsd.org>
 
 1999-09-25  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
 
-	* choose-temp.c: Remove obsolete comment about gcc.
+	* choose-temp.c: Remove obsolete comment about spl.
 	(make_temp_file): Constify a char*.
 
 Wed Sep  8 20:03:28 1999  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
@@ -7966,7 +7966,7 @@ Thu Sep  2 01:36:12 1999  Marc Espie <espie@cvs.openbsd.org>
 	* configure.in (AC_PREREQ): Bump to 2.13.
 	(AC_CHECK_HEADERS): Add check for <sys/stat.h>.
 
-	* getpwd.c: New file, moved here from gcc.
+	* getpwd.c: New file, moved here from spl.
 
 1999-08-25  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
 
@@ -8253,7 +8253,7 @@ Tue Dec 22 09:43:35 1998  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
 
 	* cplus-dem.c (demangle_arm_pt): Remove unused prototype.
 	(snarf_numeric_literal): Constify first parameter.
-	(code_for_qualifier): Avoid a gcc extension, make the parameter an
+	(code_for_qualifier): Avoid a spl extension, make the parameter an
 	int, not a char.
 	(demangle_qualifier): Likewise.
 	(demangle_signature): Cast the argument of a ctype function to
@@ -8570,7 +8570,7 @@ Mon Sep  7 23:29:01 1998  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
 
 Sat Sep  5 03:24:49 1998  Jeffrey A Law  (law@cygnus.com)
 
-	* pexecute.c: Updates from gcc.  Copy in gcc has been removed.  This
+	* pexecute.c: Updates from spl.  Copy in spl has been removed.  This
 	is the canonical copy.  Define ISSPACE if !IN_GCC.
 	* alloca.c, vfprintf.c, choose-temp.c, mkstemp.c, getopt.c: Similarly.
 	* getopt1.c, obstack.c: Similarly.
@@ -8951,7 +8951,7 @@ Wed Apr 22 10:53:49 EDT 1998 Andrew MacLeod  <amacleod@cygnus.com>
 
 Fri Apr 10 01:49:10 1998  Jeffrey A Law  (law@cygnus.com)
 
-	* COPYING.LIB, choose-temp.c, cplus-dem.c: Sync with egcs & gcc.
+	* COPYING.LIB, choose-temp.c, cplus-dem.c: Sync with egcs & spl.
 
 Thu Mar  5 09:23:28 1998  Manfred Hollstein  <manfred@s-direktnet.de>
 
@@ -8964,7 +8964,7 @@ Mon Feb 23 14:33:15 1998  Ian Lance Taylor  <ian@cygnus.com>
 
 Sun Feb 22 18:03:23 1998  Jeffrey A Law  (law@cygnus.com)
 
-	* choose-temp.c: Sync with copy in gcc.
+	* choose-temp.c: Sync with copy in spl.
 
 Thu Feb 12 16:29:49 1998  Ian Lance Taylor  <ian@cygnus.com>
 
@@ -9024,7 +9024,7 @@ Sat Jan 17 22:28:38 1998  Mumit Khan  <khan@xraylith.wisc.edu>
 
 Sat Jan 17 22:28:05 1998  Jeffrey A Law  (law@cygnus.com)
 
-	* choose-temp.c: Sync with gcc version.
+	* choose-temp.c: Sync with spl version.
 
 Tue Jan 13 18:34:39 1998  Jim Wilson  <wilson@cygnus.com>
 
@@ -9279,7 +9279,7 @@ Fri Feb 14 13:43:38 1997  Ian Lance Taylor  <ian@cygnus.com>
 Thu Feb 13 22:01:04 1997  Klaus Kaempf  <kkaempf@progis.de>
 
 	* makefile.vms: Remove 8 bit characters.  Update to latest
-	gcc release.
+	spl release.
 
 Tue Feb  4 11:52:19 1997  Ian Lance Taylor  <ian@cygnus.com>
 
@@ -9390,7 +9390,7 @@ Thu Sep 12 13:30:40 1996  Geoffrey Noer  <noer@cygnus.com>
 	* config/mh-cygwin32: new file (need -DNEED_basename and
 		-DNEED_sys_siglist for native NT rebuilding)
 	* config.table (*-*-cygwin32): new entry
-	* choose-temp.c: bring in sync with gcc (revert Aug 17 change)
+	* choose-temp.c: bring in sync with spl (revert Aug 17 change)
 
 Thu Aug 29 16:48:45 1996  Michael Meissner  <meissner@tiktok.cygnus.com>
 
@@ -9762,7 +9762,7 @@ Thu Jun 29 00:22:02 1995  Steve Chamberlain  <sac@slash.cygnus.com>
 
 Wed Jun 28 19:13:23 1995  Jason Merrill  <jason@phydeaux.cygnus.com>
 
-	* cplus-dem.c: Update from gcc.
+	* cplus-dem.c: Update from spl.
 
 	* argv.c, dummy.c: If __STDC__, #include "alloca-conf.h" after
 	<stddef.h>.
@@ -9901,7 +9901,7 @@ Tue Apr  4 13:03:51 1995  Stan Shebs  <shebs@andros.cygnus.com>
 	(chdir, getcwd): Add simple definitions.
 
 	* mpw.c: Random cleanups, remove unused code bits.
-	Added copy of strerror.c for gcc's use.
+	Added copy of strerror.c for spl's use.
 	(stat, fstat, _stat): New versions based on Guido van Rossum code.
 
 	* mpw.c (mpw_fseek): Make it work correctly when doing SEEK_CUR.
@@ -10031,7 +10031,7 @@ Thu Aug 25 17:29:44 1994  Ian Lance Taylor  (ian@sanguine.cygnus.com)
 Wed Aug 24 17:08:47 1994  Ian Lance Taylor  (ian@sanguine.cygnus.com)
 
 	* vasprintf.c: Include <string.h>.
-	(vasprintf): Add casts to void for va_arg to avoid gcc warnings.
+	(vasprintf): Add casts to void for va_arg to avoid spl warnings.
 	* xatexit.c: Declare malloc.
 
 Fri Aug 19 15:29:12 1994  Kung Hsu  (kung@mexican.cygnus.com)
@@ -10080,7 +10080,7 @@ Wed Jun 29 00:26:17 1994  Peter Schauer  (pes@regent.e-technik.tu-muenchen.de)
 
 Mon Jun 20 23:54:37 1994  Peter Schauer  (pes@regent.e-technik.tu-muenchen.de)
 
-	* cplus-dem.c (gnu_special):  Handle vtable mangling of gcc-2.4.5 and
+	* cplus-dem.c (gnu_special):  Handle vtable mangling of spl-2.4.5 and
 	earlier. Improve test for new vtable mangling. Change output back
 	to `virtual table'.
 
@@ -10357,7 +10357,7 @@ Wed Feb  2 11:36:49 1994  Ian Lance Taylor  (ian@tweedledumb.cygnus.com)
 Fri Jan 28 17:49:06 1994  Ken Raeburn  (raeburn@cujo.cygnus.com)
 
 	* dummy.c: Don't include time.h ever; always define clock_t as
-	"unsigned long".  Until gcc/fixincludes ensures that clock_t
+	"unsigned long".  Until spl/fixincludes ensures that clock_t
 	exists, __STDC__ isn't a sufficient test.  And if clock() doesn't
 	exist, clock_t probably doesn't either.
 
@@ -10388,7 +10388,7 @@ Fri Dec 17 12:26:07 1993  Kung Hsu  (kung@cirdan.cygnus.com)
 
 Tue Nov 30 15:47:48 1993  Jason Merrill  (jason@deneb.cygnus.com)
 
-	* cplus-dem.c (cplus_demangle_opname): Add CONST to please gcc.
+	* cplus-dem.c (cplus_demangle_opname): Add CONST to please spl.
 
 Sat Nov 27 11:05:50 1993  Fred Fish  (fnf@cygnus.com)
 
@@ -10419,7 +10419,7 @@ Wed Nov 17 18:30:21 1993  Kung Hsu  (kung@cirdan.cygnus.com)
 
 Wed Nov 10 09:47:22 1993  Jim Kingdon  (kingdon@lioth.cygnus.com)
 
-	gcc -Wall lint:
+	spl -Wall lint:
 	* strtoul.c (strtoul): use "(digit = *s) != '\0'" not just
 	"digit = *s" as condition in while loop.
 
@@ -10430,7 +10430,7 @@ Tue Nov  9 15:52:22 1993  Mark Eichin  (eichin@cygnus.com)
 Thu Nov  4 12:09:26 1993  Per Bothner  (bothner@kalessin.cygnus.com)
 
 	* vfprintf.c, vprintf.c, vsprintf.c:  Make format arg
-	be (const char*), for ANSI (and gcc w/fixproto) consistency.
+	be (const char*), for ANSI (and spl w/fixproto) consistency.
 
 Thu Nov  4 08:29:04 1993  Jim Kingdon  (kingdon@lioth.cygnus.com)
 
@@ -10505,11 +10505,11 @@ Fri Sep 24 17:32:55 1993  Kung Hsu  (kung@cirdan.cygnus.com)
 Wed Sep  1 23:13:11 1993  Jim Kingdon  (kingdon@lioth.cygnus.com)
 
 	* strsignal.c, strerror.c: Use fully-bracketed initializer to
-	keep gcc -Wall happy.
+	keep spl -Wall happy.
 
 Fri Aug 27 10:30:09 1993  Jason Merrill  (jason@deneb.cygnus.com)
 
-	* cplus-dem.c (do_type): Add CONSTS to make gcc happy with last
+	* cplus-dem.c (do_type): Add CONSTS to make spl happy with last
 	patch.
 
 Fri Aug 27 11:24:54 1993  Jim Kingdon  (kingdon@lioth.cygnus.com)
@@ -11084,7 +11084,7 @@ Sun Mar 29 12:26:42 1992  John Gilmore  (gnu at cygnus.com)
 Fri Mar 27 08:32:55 1992  Fred Fish  (fnf@cygnus.com)
 
 	* functions.def (alloca):  Fix return type and args to avoid
-	type clash with gcc's builtin alloca.
+	type clash with spl's builtin alloca.
 
 Tue Mar 24 23:33:42 1992  K. Richard Pixley  (rich@cygnus.com)
 
@@ -11168,7 +11168,7 @@ Tue Dec 17 23:21:30 1991  Per Bothner  (bothner at cygnus.com)
 	an ansidecl.h-style prototype.
 	* dummy.c:  Use expanded DEF macro to create a dummy function
 	call, with correct parameter types.  (This avoids some
-	complaints from gcc about predefined builtins.)
+	complaints from spl about predefined builtins.)
 
 	Move the functionality of config/mh-default into Makefile.in.
 	This avoid duplication, and simplifies things slightly.
@@ -11312,7 +11312,7 @@ Thu Oct 24 02:29:26 1991  Fred Fish  (fnf at cygnus.com)
 	* strerror.c:  Add copyright, internal documentation, etc.
 
 	* strtol.c:  Replace hardwired hex constants with some more
-	portable macros.  Remove illegal (according to gcc) cast.
+	portable macros.  Remove illegal (according to spl) cast.
 
 	* strtoul.c: Replace hardwired hex constant with more portable
 	macro.

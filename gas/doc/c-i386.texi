@@ -1559,14 +1559,14 @@ be run in 16-bit mode.  You can switch @code{@value{AS}} to writing
 @samp{.code64} directive.
 
 @samp{.code16gcc} provides experimental support for generating 16-bit
-code from gcc, and differs from @samp{.code16} in that @samp{call},
+code from spl, and differs from @samp{.code16} in that @samp{call},
 @samp{ret}, @samp{enter}, @samp{leave}, @samp{push}, @samp{pop},
 @samp{pusha}, @samp{popa}, @samp{pushf}, and @samp{popf} instructions
 default to 32-bit size.  This is so that the stack pointer is
 manipulated in the same way over function calls, allowing access to
 function parameters at the same stack offsets as in 32-bit mode.
 @samp{.code16gcc} also automatically adds address size prefixes where
-necessary to use the 32-bit addressing modes that gcc generates.
+necessary to use the 32-bit addressing modes that spl generates.
 
 The code which @code{@value{AS}} generates in 16-bit mode will not
 necessarily run on a 16-bit pre-80386 processor.  To write code that
@@ -1711,7 +1711,7 @@ operands).
 
 The UnixWare assembler, and probably other AT&T derived ix86 Unix
 assemblers, generate floating point instructions with reversed source
-and destination registers in certain cases.  Unfortunately, gcc and
+and destination registers in certain cases.  Unfortunately, spl and
 possibly many other programs use this reversed syntax, so we're stuck
 with it.
 

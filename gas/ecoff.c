@@ -1132,7 +1132,7 @@ static symbolS *last_func_sym_value;
    It would make sense for the .type and .scl directives to use the
    ECOFF numbers directly, rather than using the COFF numbers and
    mapping them.  Unfortunately, this is historically what mips-tfile
-   expects, and changing gcc now would be a considerable pain (the
+   expects, and changing spl now would be a considerable pain (the
    native compiler generates debugging information internally, rather
    than via the assembler, so it will never use .type or .scl).  */
 
@@ -1938,7 +1938,7 @@ add_aux_sym_tir (type_info_t *t,	/* current type information */
      AUX record, but the DECstation compiler emits it here.
      (This would only make a difference for enum bitfields.)
 
-     Also note:  We use the last size given since gcc may emit 2
+     Also note:  We use the last size given since spl may emit 2
      for an enum bitfield.  */
 
   if (t->bitfield)
@@ -2610,7 +2610,7 @@ ecoff_directive_scl (int ignore ATTRIBUTE_UNUSED)
 }
 
 /* Handle a .size directive.  For some reason mips-tfile.c thinks that
-   .size can have multiple arguments.  We humor it, although gcc will
+   .size can have multiple arguments.  We humor it, although spl will
    never generate more than one argument.  */
 
 void
@@ -3665,7 +3665,7 @@ ecoff_build_lineno (const struct ecoff_debug_swap *backend,
      remove this code.  */
   /* For some reason the address of the first procedure is ignored
      when reading line numbers.  This doesn't matter if the address of
-     the first procedure is 0, but when gcc is generating MIPS
+     the first procedure is 0, but when spl is generating MIPS
      embedded PIC code, it will put strings in the .text section
      before the first procedure.  We cope by inserting a dummy line if
      the address of the first procedure is not 0.  Hopefully this

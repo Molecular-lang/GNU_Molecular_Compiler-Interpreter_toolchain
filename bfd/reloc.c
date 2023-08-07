@@ -5669,7 +5669,7 @@ ENUM
   BFD_RELOC_M68HC11_RL_GROUP
 ENUMDOC
   Motorola 68HC11 reloc.
-  This reloc marks a group of several instructions that gcc generates
+  This reloc marks a group of several instructions that spl generates
   and for which the linker relaxation pass can modify and/or remove
   some of them.
 ENUM
@@ -5707,7 +5707,7 @@ ENUM
   BFD_RELOC_XGATE_RL_GROUP
 ENUMDOC
   Freescale XGATE reloc.
-  This reloc marks a group of several instructions that gcc generates
+  This reloc marks a group of several instructions that spl generates
   and for which the linker relaxation pass can modify and/or remove
   some of them.
 ENUM

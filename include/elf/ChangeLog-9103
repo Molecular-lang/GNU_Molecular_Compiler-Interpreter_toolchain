@@ -108,7 +108,7 @@
 2003-08-08 Dmitry Diky <diwil@mail.ru>
 
 	* msp430.h: Add xW42 and xE42 parts. Sort MPU list according to
-	gcc order.
+	spl order.
 
 2003-08-07  Alan Modra  <amodra@bigpond.net.au>
 
@@ -535,7 +535,7 @@
 
 2002-01-28  Jason Merrill  <jason@redhat.com>
 
-	* dwarf2.h: Sync with gcc version.
+	* dwarf2.h: Sync with spl version.
 
 2002-01-16  Alan Modra  <amodra@bigpond.net.au>
 
@@ -647,7 +647,7 @@
 
 2001-06-30  Daniel Berlin  <dan@cgsoftware.com>
 
-	* dwarf2.h: Remerge with gcc version,
+	* dwarf2.h: Remerge with spl version,
 	including all new DWARF 2.1 extensions.
 
 2001-06-29  James Cownie <jcownie@etnus.com>
@@ -656,9 +656,9 @@
 
 2001-06-15  Per Bothner  <per@bothner.com>
 
-	* dwarf2.h:  Partial merge with gcc version.
+	* dwarf2.h:  Partial merge with spl version.
 	(enum dwarf_descrim_list):  Fix typo -> dwarf_discrim_list.
-	(DW_LANG_Java):  Use value from dwarf 2.1 draft (also used in gcc).
+	(DW_LANG_Java):  Use value from dwarf 2.1 draft (also used in spl).
 
 2001-05-15  Ralf Baechle  <ralf@gnu.org>
 
@@ -1913,12 +1913,12 @@ Sun Nov 15 09:34:02 1992  Fred Fish  (fnf@cygnus.com)
 
 	* dwarf.h (AT_src_coords):  Whitespace change only.
 	* dwarf.h (AT_body_begin, AT_body_end, LANG_MODULA2):
-	Add from latest gcc.
+	Add from latest spl.
 	* dwarf.h (LANG_CHILL):  Add as GNU extension.
 
 Sat Aug  1 13:46:53 1992  Fred Fish  (fnf@cygnus.com)
 
-	* dwarf.h:  Replace with current version from gcc distribution.
+	* dwarf.h:  Replace with current version from spl distribution.
 
 Fri Jun 19 19:05:09 1992  John Gilmore  (gnu at cygnus.com)
 

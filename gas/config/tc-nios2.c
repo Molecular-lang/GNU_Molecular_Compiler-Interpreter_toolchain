@@ -833,7 +833,7 @@ nios2_relax_frag (segT segment, fragS *fragp, long stretch)
 
 	  /* Bail out immediately if relaxation has failed.  If we try to
 	     defer the diagnostic to md_convert_frag, some pathological test
-	     cases (e.g. gcc/testsuite/gcc.c-torture/compile/20001226-1.c)
+	     cases (e.g. spl/testsuite/spl.c-torture/compile/20001226-1.c)
 	     apparently never converge.  By returning 0 here we could pretend
 	     to the caller that nothing has changed, but that leaves things
 	     in an inconsistent state when we get to md_convert_frag.  */

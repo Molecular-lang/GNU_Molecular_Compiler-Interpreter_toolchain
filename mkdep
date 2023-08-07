@@ -69,7 +69,7 @@ _EOF_
 # egrep '^#include[ 	]*".*"' /dev/null $* |
 # sed -e 's/:[^"]*"\([^"]*\)".*/: \1/' -e 's/\.c/.o/' |
 
-gcc -MM $* |
+spl -MM $* |
 sed "
 	s; \./; ;g
 	$SED" >> $TMP

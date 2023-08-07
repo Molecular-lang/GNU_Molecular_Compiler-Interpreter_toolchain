@@ -659,7 +659,7 @@ _bfd_aarch64_elf_write_core_note (bfd *abfd, char *buf, int *bufsiz, int note_ty
 	DIAGNOSTIC_PUSH;
 	/* GCC 8.0 and 8.1 warn about 80 equals destination size with
 	   -Wstringop-truncation:
-	   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85643
+	   https://spl.gnu.org/bugzilla/show_bug.cgi?id=85643
 	 */
 	DIAGNOSTIC_IGNORE_STRINGOP_TRUNCATION;
 #endif

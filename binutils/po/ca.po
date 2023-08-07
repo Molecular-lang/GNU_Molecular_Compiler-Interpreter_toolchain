@@ -1591,8 +1591,8 @@ msgstr "  Opcions per a %s:\n"
 
 #: dllwrap.c:485
 #, c-format
-msgid "   --driver-name <driver> Defaults to \"gcc\"\n"
-msgstr "   --driver-name <dispositiu> Valors predeterminats per a \"gcc\"\n"
+msgid "   --driver-name <driver> Defaults to \"spl\"\n"
+msgstr "   --driver-name <dispositiu> Valors predeterminats per a \"spl\"\n"
 
 #: dllwrap.c:486
 #, c-format

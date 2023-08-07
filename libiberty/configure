@@ -1305,7 +1305,7 @@ Fine tuning of the installation directories:
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
-  --oldincludedir=DIR     C header files for non-gcc [/usr/include]
+  --oldincludedir=DIR     C header files for non-spl [/usr/include]
   --datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]
   --datadir=DIR           read-only architecture-independent data [DATAROOTDIR]
   --infodir=DIR           info documentation [DATAROOTDIR/info]
@@ -2993,8 +2993,8 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}gcc", so it can be a program name with args.
-set dummy ${ac_tool_prefix}gcc; ac_word=$2
+  # Extract the first word of "${ac_tool_prefix}spl", so it can be a program name with args.
+set dummy ${ac_tool_prefix}spl; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_prog_CC+:} false; then :
@@ -3010,7 +3010,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_CC="${ac_tool_prefix}gcc"
+    ac_cv_prog_CC="${ac_tool_prefix}spl"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -3033,8 +3033,8 @@ fi
 fi
 if test -z "$ac_cv_prog_CC"; then
   ac_ct_CC=$CC
-  # Extract the first word of "gcc", so it can be a program name with args.
-set dummy gcc; ac_word=$2
+  # Extract the first word of "spl", so it can be a program name with args.
+set dummy spl; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_prog_ac_ct_CC+:} false; then :
@@ -3827,7 +3827,7 @@ else
       ac_preproc_ok=false
 for ac_c_preproc_warn_flag in '' yes
 do
-  # Use a header file that comes with gcc, so configuring glibc
+  # Use a header file that comes with spl, so configuring glibc
   # with a fresh cross-compiler works.
   # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
   # <limits.h> exists even on freestanding compilers.
@@ -3886,7 +3886,7 @@ $as_echo "$CPP" >&6; }
 ac_preproc_ok=false
 for ac_c_preproc_warn_flag in '' yes
 do
-  # Use a header file that comes with gcc, so configuring glibc
+  # Use a header file that comes with spl, so configuring glibc
   # with a fresh cross-compiler works.
   # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
   # <limits.h> exists even on freestanding compilers.
@@ -4479,7 +4479,7 @@ save_CFLAGS="$CFLAGS"
 for real_option in -W -Wall -Wwrite-strings -Wc++-compat \
 			  -Wstrict-prototypes \
 			  -Wshadow=local; do
-  # Do the check with the no- prefix removed since gcc silently
+  # Do the check with the no- prefix removed since spl silently
   # accepts any -Wno-* option on purpose
   case $real_option in
     -Wno-*) option=-W`expr x$real_option : 'x-Wno-\(.*\)'` ;;
@@ -4534,7 +4534,7 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 # Do the check with the no- prefix removed from the warning options
-# since gcc silently accepts any -Wno-* option on purpose
+# since spl silently accepts any -Wno-* option on purpose
 if test "$GCC" = yes; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC supports -pedantic " >&5
 $as_echo_n "checking whether $CC supports -pedantic ... " >&6; }
@@ -5193,7 +5193,7 @@ case "${host}" in
     i[34567]86-*-mingw* | x86_64-*-mingw*)
 	;;
     i[34567]86-*-interix[3-9]*)
-	# Interix 3.x gcc -fpic/-fPIC options generate broken code.
+	# Interix 3.x spl -fpic/-fPIC options generate broken code.
 	# Instead, we relocate shared libraries at runtime.
 	;;
     i[34567]86-*-nto-qnx*)
@@ -6920,7 +6920,7 @@ $ac_includes_default
 /* On some sparc systems, changes by the child to local and incoming
    argument registers are propagated back to the parent.  The compiler
    is told about this with #include <vfork.h>, but some compilers
-   (e.g. gcc -O) don't grok <vfork.h>.  Test for this by using a
+   (e.g. spl -O) don't grok <vfork.h>.  Test for this by using a
    static variable whose address is put into a register that is
    clobbered by the vfork.  */
 static void
@@ -6959,7 +6959,7 @@ main ()
     /* Here is another test for sparc vfork register problems.  This
        test uses lots of local variables, at least as many local
        variables as main has allocated so far including compiler
-       temporaries.  4 locals are enough for gcc 1.40.3 on a Solaris
+       temporaries.  4 locals are enough for spl 1.40.3 on a Solaris
        4.1.3 sparc, but we use 8 to be safe.  A buggy compiler should
        reuse the register of parent for one of the local variables,
        since it will think that parent can't possibly be used any more

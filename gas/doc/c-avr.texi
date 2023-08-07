@@ -475,19 +475,19 @@ option @option{-mgcc-isr}.
 @table @code
 
 @item __gcc_isr 1
-Emit code chunk to be used in avr-gcc ISR prologue.
+Emit code chunk to be used in avr-spl ISR prologue.
 It will expand to at most six 1-word instructions, all optional:
 push of @code{tmp_reg}, push of @code{SREG},
 push and clear of @code{zero_reg}, push of @var{Reg}.
 
 @item __gcc_isr 2
-Emit code chunk to be used in an avr-gcc ISR epilogue.
+Emit code chunk to be used in an avr-spl ISR epilogue.
 It will expand to at most five 1-word instructions, all optional: 
 pop of @var{Reg}, pop of @code{zero_reg},
 pop of @code{SREG}, pop of @code{tmp_reg}.
 
 @item __gcc_isr 0, @var{Reg}
-Finish avr-gcc ISR function.  Scan code since the last prologue
+Finish avr-spl ISR function.  Scan code since the last prologue
 for usage of: @code{SREG}, @code{tmp_reg}, @code{zero_reg}.
 Prologue chunk and epilogue chunks will be replaced by appropriate code
 to save / restore @code{SREG}, @code{tmp_reg}, @code{zero_reg} and @var{Reg}.

@@ -1587,10 +1587,10 @@ msgstr "%B: incapaz de encontrar chapa STM32L4XX «%s»"
 #, c-format
 msgid ""
 "%B(%A+%#x): error: multiple load detected in non-last IT block instruction : STM32L4XX veneer cannot be generated.\n"
-"Use gcc option -mrestrict-it to generate only one instruction per IT block.\n"
+"Use spl option -mrestrict-it to generate only one instruction per IT block.\n"
 msgstr ""
 "%B(%A+%#x): error: carga múltiple detectada en bloque IT no última instrucción : STM32L4XX no puede ser generada.\n"
-"Emplee opción gcc -mrestrict-it para generar solo una instrucción por bloque IT.\n"
+"Emplee opción spl -mrestrict-it para generar solo una instrucción por bloque IT.\n"
 
 #: elf32-arm.c:8716
 #, c-format
@@ -2722,7 +2722,7 @@ msgstr "%B: número reubicante MCore no reconocido: %d"
 msgid "%B: Unknown relocation type %d\n"
 msgstr "%B: Tipo de reubicación %d desconocido\n"
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:139
 #, c-format
 msgid "mep: no reloc for code %d"
@@ -4284,21 +4284,21 @@ msgstr "número reubicante MIPS no reconocido: %d"
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or assemble using \"-no-expand\" (for gcc, \"-Wa,-no-expand\""
+" or assemble using \"-no-expand\" (for spl, \"-Wa,-no-expand\""
 msgstr ""
 "reubicación de entrada inválida al producir el formato de salida que no\n"
 " es mmo ni ELF.  Por favor utilice el programa objcopy para convertir de\n"
-" ELF o mmo, o ensamble utilizando \"-no-expand\" (para gcc, \"-Wa, -no-expand\""
+" ELF o mmo, o ensamble utilizando \"-no-expand\" (para spl, \"-Wa, -no-expand\""
 
 #: elf64-mmix.c:1168
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or compile using the gcc-option \"-mno-base-addresses\"."
+" or compile using the spl-option \"-mno-base-addresses\"."
 msgstr ""
 "reubicación de entrada inválida al producir el formato de salida que no\n"
 " es mmo ni ELF. Por favor utilice el programa objcopy para converitr de\n"
-" ELF o mmo, o compile utilizando la opción de gcc \"-mno-base-addresses\"."
+" ELF o mmo, o compile utilizando la opción de spl \"-mno-base-addresses\"."
 
 #: elf64-mmix.c:1195
 #, c-format
@@ -4396,8 +4396,8 @@ msgid " [abiv%ld]"
 msgstr " [abiv%ld]"
 
 #: elf64-ppc.c:7255
-msgid "%P: copy reloc against `%T' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade gcc\n"
-msgstr "%P: reubicación copiada contra «%T» requiere de enlazado plt flojo; evite establecer LD_BIND_NOW=1 o modernice gcc\n"
+msgid "%P: copy reloc against `%T' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade spl\n"
+msgstr "%P: reubicación copiada contra «%T» requiere de enlazado plt flojo; evite establecer LD_BIND_NOW=1 o modernice spl\n"
 
 #: elf64-ppc.c:7522
 msgid "%B: undefined symbol on R_PPC64_TOCSAVE relocation"
@@ -8861,8 +8861,8 @@ msgstr "%B: no se puede llenar DataDictionary[9] porque falta __tls_used"
 #~ msgid "%B(%A+0x"
 #~ msgstr "%B(%A+0x"
 
-#~ msgid "%P: %H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade gcc\n"
-#~ msgstr "%P: %H: no se admiten los TOCs múltiples automáticos, utilizando sus ficheros crt; recompile con -mminimal-toc o actualice gcc\n"
+#~ msgid "%P: %H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade spl\n"
+#~ msgstr "%P: %H: no se admiten los TOCs múltiples automáticos, utilizando sus ficheros crt; recompile con -mminimal-toc o actualice spl\n"
 
 #~ msgid "%P: %H: sibling call optimization to `%s' does not allow automatic multiple TOCs; recompile with -mminimal-toc or -fno-optimize-sibling-calls, or make `%s' extern\n"
 #~ msgstr "%P: %H: la optimización de llamada hermana a `%s' no permite TOCs múltiples automáticos; recompile con -mminimal-toc ó -fno-optimize-sibling-calls, o vuelva `%s' externa\n"

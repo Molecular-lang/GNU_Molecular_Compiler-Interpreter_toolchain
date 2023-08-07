@@ -143,7 +143,7 @@
 	* z80.h: Likewise.
 	* z8k.h: Likewise.
 
-2009-12-02  Jerker Bäck  <jerker.back@gmail.com>
+2009-12-02  Jerker Bï¿½ck  <jerker.back@gmail.com>
 
 	PR binutils/11017
 	* i386lh (COFF_PAGE_SIZE): Define.
@@ -265,7 +265,7 @@
 2008-06-17  Nick Clifton  <nickc@redhat.com>
 
 	* ti.h (GET_SCNHDR_NLNNO): Provide an alternative version of this
-	macro which does not trigger an array bounds warning in gcc.
+	macro which does not trigger an array bounds warning in spl.
 	(PUT_SCNHDR_NLNNO): Likewise.
 	(GET_SCNHDR_FLAGS): Likewise.
 	(PUT_SCNHDR_FLAGS): Likewise.

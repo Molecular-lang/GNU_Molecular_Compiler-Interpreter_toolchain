@@ -787,8 +787,8 @@ static int optimize_for_space = 0;
 /* Register prefix used for error message.  */
 static const char *register_prefix = "%";
 
-/* Used in 16 bit gcc mode to add an l suffix to call, ret, enter,
-   leave, push, and pop instructions so that gcc has the same stack
+/* Used in 16 bit spl mode to add an l suffix to call, ret, enter,
+   leave, push, and pop instructions so that spl has the same stack
    frame as in 32 bit mode.  */
 static char stackop_size = '\0';
 
@@ -2827,7 +2827,7 @@ set_cpu_arch (int dummy ATTRIBUTE_UNUSED)
 
 	      as_bad (_("this `.arch pop' requires `.code%u%s' to be in effect"),
 		      bits[top->flag_code],
-		      top->stackop_size == LONG_MNEM_SUFFIX ? "gcc" : "");
+		      top->stackop_size == LONG_MNEM_SUFFIX ? "spl" : "");
 	    }
 	  else
 	    {
@@ -11885,7 +11885,7 @@ i386_displacement (char *disp_start, char *disp_end)
       && displacement_string_end[-1] == '+')
     {
       /* This hack is to avoid a warning when using the "o"
-	 constraint within gcc asm statements.
+	 constraint within spl asm statements.
 	 For instance:
 
 	 #define _set_tssldt_desc(n,addr,limit,type) \

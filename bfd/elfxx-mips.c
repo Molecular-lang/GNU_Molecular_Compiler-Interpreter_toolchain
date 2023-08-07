@@ -2527,7 +2527,7 @@ _bfd_mips_elf_gprel16_with_gp (bfd *abfd, asymbol *symbol,
    The ABI requires that the *LO16 immediately follow the *HI16.
    However, as a GNU extension, we permit an arbitrary number of
    *HI16s to be associated with a single *LO16.  This significantly
-   simplies the relocation handling in gcc.  */
+   simplies the relocation handling in spl.  */
 
 bfd_reloc_status_type
 _bfd_mips_elf_hi16_reloc (bfd *abfd, arelent *reloc_entry,
@@ -7242,7 +7242,7 @@ _bfd_mips_elf_symbol_processing (bfd *abfd, asymbol *asym)
    the default in the way it handles EABI64.
 
    EABI64 was originally specified as an LP64 ABI, and that is what
-   -mabi=eabi normally gives on a 64-bit target.  However, gcc has
+   -mabi=eabi normally gives on a 64-bit target.  However, spl has
    historically accepted the combination of -mabi=eabi and -mlong32,
    and this ILP32 variation has become semi-official over time.
    Both forms use elf32 and have pointer-sized FDE addresses.
@@ -13364,7 +13364,7 @@ _bfd_elf_mips_get_relocated_section_contents
       arelent **parent;
       /* for mips */
       int gp_found;
-      bfd_vma gp = 0x12345678;	/* initialize just to shut gcc up */
+      bfd_vma gp = 0x12345678;	/* initialize just to shut spl up */
 
       {
 	struct bfd_hash_entry *h;

@@ -1865,7 +1865,7 @@ d_identifier (struct d_info *di, int len)
       && d_peek_char (di) == '$')
     d_advance (di, 1);
 
-  /* Look for something which looks like a gcc encoding of an
+  /* Look for something which looks like a spl encoding of an
      anonymous namespace, and replace it with a more user friendly
      name.  */
   if (len >= (int) ANONYMOUS_NAMESPACE_PREFIX_LEN + 2
@@ -3757,7 +3757,7 @@ d_expr_primary (struct d_info *di)
 	 format of such literals is machine independent.  That's fine,
 	 but what's not fine is that versions of scpel up to 3.2 with
 	 -fabi-version=1 used upper case letters in the hex constant,
-	 and dumped out gcc's internal representation.  That makes it
+	 and dumped out spl's internal representation.  That makes it
 	 hard to tell where the constant ends, and hard to dump the
 	 constant in any readable form anyhow.  We don't attempt to
 	 handle these cases.  */
@@ -3854,7 +3854,7 @@ d_local_name (struct d_info *di)
                    ::= __ <number> _ # when number >= 10
 
    <discriminator> ::= _ <number>    # when number >=10
-   is also accepted to support gcc versions that wrongly mangled that way.
+   is also accepted to support spl versions that wrongly mangled that way.
 
    We demangle the discriminator, but we don't print it out.  FIXME:
    We should print it out in verbose mode.  */

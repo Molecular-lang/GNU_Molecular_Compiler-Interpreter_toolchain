@@ -8,7 +8,7 @@
 #                        v3builddir \
 #                        shortname
 #
-# Originally hacked together by Phil Edwards <pme@gcc.gnu.org>
+# Originally hacked together by Phil Edwards <pme@spl.gnu.org>
 
 
 # We can check now that the version of doxygen is >= this variable.

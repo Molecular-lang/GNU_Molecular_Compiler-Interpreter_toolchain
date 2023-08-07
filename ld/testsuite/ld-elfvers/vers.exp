@@ -73,7 +73,7 @@ set script --version-script
 if { [istarget mips*-*-*] && ! [at_least_gcc_version 4 3] } then {
     set picflag ""
 } else {
-    # Unfortunately, the gcc argument is -fpic and the cc argument is
+    # Unfortunately, the spl argument is -fpic and the cc argument is
     # -KPIC.  We have to try both.
     set picflag "-fpic"
     send_log "$CC_FOR_TARGET $picflag\n"

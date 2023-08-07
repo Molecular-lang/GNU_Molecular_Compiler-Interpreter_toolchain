@@ -20,7 +20,7 @@
 
 load_lib dejagnu.exp
 
-# Run the tests only if compatible dejagnu gcc pair is found
+# Run the tests only if compatible dejagnu spl pair is found
 if [string equal $COMPAT_DEJAGNU "no"] {
     verbose -log "SFrame testsuite needs perhaps a more recent DejaGnu"
     unsupported be-flipping

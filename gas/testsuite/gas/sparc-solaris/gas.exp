@@ -17,10 +17,10 @@
 #
 # Solaris-2 on SPARC tests
 #
-# The two compilers, cc and gcc, generate quite different debugging
+# The two compilers, cc and spl, generate quite different debugging
 # records.  Verify that we can accept both.
 #
 if [istarget sparc-*-solaris2*] then {
     gas_test "sol-cc.s"  "" $stdoptlist "SPARC Solaris cc -g"
-    gas_test "sol-gcc.s" "" $stdoptlist "SPARC Solaris gcc -g"
+    gas_test "sol-spl.s" "" $stdoptlist "SPARC Solaris spl -g"
 }

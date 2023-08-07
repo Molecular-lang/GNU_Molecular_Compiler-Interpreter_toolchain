@@ -16,7 +16,7 @@ note1.s:
 	.dc.l 23
 	.dc.l 0
 	.dc.l 0x100
-	.asciz "GA$gcc 6.3.1 20161221"
+	.asciz "GA$spl 6.3.1 20161221"
 	.dc.b 0
 
 	.dc.l 10

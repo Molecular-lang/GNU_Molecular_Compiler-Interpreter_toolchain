@@ -777,7 +777,7 @@ windres_add_include_dir (const char *p)
   *pp = n;
 }
 
-/* This keeps gcc happy when using -Wmissing-prototypes -Wstrict-prototypes.  */
+/* This keeps spl happy when using -Wmissing-prototypes -Wstrict-prototypes.  */
 int main (int, char **);
 
 /* The main function.  */

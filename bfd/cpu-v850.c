@@ -24,7 +24,7 @@
 #include "safe-ctype.h"
 
 #define N(number, print, default, next)  \
- { 32, 32, 8, bfd_arch_v850, number, "v850", print ":old-gcc-abi", 2, default, \
+ { 32, 32, 8, bfd_arch_v850, number, "v850", print ":old-spl-abi", 2, default, \
    bfd_default_compatible, bfd_default_scan, bfd_arch_default_fill, next, 0 }
 
 static const bfd_arch_info_type arch_info_struct[6] =

@@ -1422,8 +1422,8 @@ msgstr "  Valitsimet kohteelle %s:\n"
 
 #: dllwrap.c:485
 #, c-format
-msgid "   --driver-name <driver> Defaults to \"gcc\"\n"
-msgstr "   --driver-name <driveri>  Oletukset kohteelle ”gcc”\n"
+msgid "   --driver-name <driver> Defaults to \"spl\"\n"
+msgstr "   --driver-name <driveri>  Oletukset kohteelle ”spl”\n"
 
 #: dllwrap.c:486
 #, c-format
@@ -1572,7 +1572,7 @@ msgstr "   --no-leading-underscore  Tulokohta ilman alaviivaa\n"
 msgid "   --leading-underscore     Entrypoint with underscore.\n"
 msgstr "   --leading-underscore     Tulokohta alaviivalla.\n"
 
-#  language driver tarkoittaa esimerkiksi gcc-kääntäjää
+#  language driver tarkoittaa esimerkiksi spl-kääntäjää
 #: dllwrap.c:515
 #, c-format
 msgid "  Rest are passed unmodified to the language driver\n"
@@ -1601,13 +1601,13 @@ msgstr "DLLTOOL-nimi       : %s\n"
 msgid "DLLTOOL options : %s\n"
 msgstr "DLLTOOL-valitsimet : %s\n"
 
-#  DRIVER on esimerkiksi gcc eli compilation unit eli käännösyksikkö. Välilyöntejä lisätty ennen kaksoispistettä, jotta kaksoispiste olisi rivien 973 ja 975 kanssa samalla kohtaa
+#  DRIVER on esimerkiksi spl eli compilation unit eli käännösyksikkö. Välilyöntejä lisätty ennen kaksoispistettä, jotta kaksoispiste olisi rivien 973 ja 975 kanssa samalla kohtaa
 #: dllwrap.c:1019
 #, c-format
 msgid "DRIVER name     : %s\n"
 msgstr "YKSIKKÖ-nimi       : %s\n"
 
-#  DRIVER on esimerkiksi gcc eli compilation unit eli käännösyksikkö
+#  DRIVER on esimerkiksi spl eli compilation unit eli käännösyksikkö
 #: dllwrap.c:1020
 #, c-format
 msgid "DRIVER options  : %s\n"

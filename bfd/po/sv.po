@@ -1913,7 +1913,7 @@ msgstr "%B: omlokalisering %s (%d) saknar för närvarande stöd.\n"
 msgid "%B: Unknown relocation type %d\n"
 msgstr "%B: Okänd omlokaliseringstyp %d\n"
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:157
 #, c-format
 msgid "mep: no reloc for code %d"
@@ -3026,21 +3026,21 @@ msgstr "Varning: storleken för symbol ”%s” ändrades från %lu i %B till %l
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or assemble using \"-no-expand\" (for gcc, \"-Wa,-no-expand\""
+" or assemble using \"-no-expand\" (for spl, \"-Wa,-no-expand\""
 msgstr ""
 "ogiltig inmatningsomlokalisering vid skapande av icke-ELF, icke-mmoformatutmatning.\n"
 " Använd objcopy-programmet för att konvertera från ELF till mmo,\n"
-" eller assemblera med ”-no-expand” (för gcc, ”-Wa,-no-expand”"
+" eller assemblera med ”-no-expand” (för spl, ”-Wa,-no-expand”"
 
 #: elf64-mmix.c:1170
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or compile using the gcc-option \"-mno-base-addresses\"."
+" or compile using the spl-option \"-mno-base-addresses\"."
 msgstr ""
 "ogiltig inmatningsomlokalisering vid skapandet av icke-ELF, icke-mmoformatutmatning.\n"
 " Använd programmet objcopy till att konvertera från ELF eller mmo,\n"
-" eller kompilera genom flaggan gcc ”-mno-base-addresses”."
+" eller kompilera genom flaggan spl ”-mno-base-addresses”."
 
 #: elf64-mmix.c:1196
 #, c-format
@@ -3125,8 +3125,8 @@ msgid " [abiv%ld]"
 msgstr " [abiv%ld]"
 
 #: elf64-ppc.c:7007
-msgid "%P: copy reloc against `%T' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade gcc\n"
-msgstr "%P: kopiera omlokalisering mot ”%T” kräver lazy plt-länkning; undvik att sätta LD_BIND_NOW=1 eller uppgradera gcc\n"
+msgid "%P: copy reloc against `%T' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade spl\n"
+msgstr "%P: kopiera omlokalisering mot ”%T” kräver lazy plt-länkning; undvik att sätta LD_BIND_NOW=1 eller uppgradera spl\n"
 
 #: elf64-ppc.c:7270
 msgid "%B: undefined symbol on R_PPC64_TOCSAVE relocation"

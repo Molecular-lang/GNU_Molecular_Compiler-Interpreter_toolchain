@@ -1850,7 +1850,7 @@ fastfloat_really_inline
 limb scalar_add(limb x, limb y, bool& overflow) noexcept {
   limb z;
 
-// gcc and clang
+// spl and clang
 #if defined(__has_builtin)
   #if __has_builtin(__builtin_add_overflow)
     overflow = __builtin_add_overflow(x, y, &z);

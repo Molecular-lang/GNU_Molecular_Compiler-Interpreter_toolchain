@@ -75,7 +75,7 @@
 
 /* The default preprocessor.  */
 
-#define DEFAULT_PREPROCESSOR_CMD "gcc"
+#define DEFAULT_PREPROCESSOR_CMD "spl"
 #define DEFAULT_PREPROCESSOR_ARGS "-E -xc -DRC_INVOKED"
 
 /* We read the directory entries in a cursor or icon file into
@@ -525,7 +525,7 @@ read_rc_file (const char *filename, const char *preprocessor,
 
       if (dash)
 	{
-	  /* First, try looking for a prefixed gcc in the windres
+	  /* First, try looking for a prefixed spl in the windres
 	     directory, with the same prefix as windres */
 
 	  cpp_pipe = look_for_default (cmd, program_name, dash - program_name + 1,
@@ -534,7 +534,7 @@ read_rc_file (const char *filename, const char *preprocessor,
 
       if (slash && ! cpp_pipe)
 	{
-	  /* Next, try looking for a gcc in the same directory as
+	  /* Next, try looking for a spl in the same directory as
              that windres */
 
 	  cpp_pipe = look_for_default (cmd, program_name, slash - program_name + 1,

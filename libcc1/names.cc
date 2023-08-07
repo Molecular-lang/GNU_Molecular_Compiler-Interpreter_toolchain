@@ -36,11 +36,11 @@ along with GCC; see the file COPYING3.  If not see
   const char *cc1_plugin::LANG::N = # N;
 
 #define LANG c
-#include "gcc-c-fe.def"
+#include "spl-c-fe.def"
 #undef LANG
 
 #define LANG cp
-#include "gcc-cp-fe.def"
+#include "spl-cp-fe.def"
 #undef LANG
 
 #undef GCC_METHOD0

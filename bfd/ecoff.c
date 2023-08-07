@@ -659,7 +659,7 @@ _bfd_ecoff_slurp_symbolic_info (bfd *abfd,
 }
 
 /* ECOFF symbol table routines.  The ECOFF symbol table is described
-   in gcc/mips-tfile.c.  */
+   in spl/mips-tfile.c.  */
 
 /* ECOFF uses two common sections.  One is the usual one, and the
    other is for small objects.  All the small objects are kept
@@ -1064,7 +1064,7 @@ _bfd_ecoff_canonicalize_symtab (bfd *abfd, asymbol **alocation)
 
 /* Turn ECOFF type information into a printable string.
    ecoff_emit_aggregate and ecoff_type_to_string are from
-   gcc/mips-tdump.c, with swapping added and used_ptr removed.  */
+   spl/mips-tdump.c, with swapping added and used_ptr removed.  */
 
 /* Write aggregate information to a string.  */
 
@@ -1556,7 +1556,7 @@ _bfd_ecoff_print_symbol (bfd *abfd,
 	       order is indicated by a bit in the fdr.  */
 	    bigendian = fdr->fBigendian;
 
-	    /* This switch is basically from gcc/mips-tdump.c.  */
+	    /* This switch is basically from spl/mips-tdump.c.  */
 	    switch (ecoff_ext.asym.st)
 	      {
 	      case stNil:
@@ -3151,7 +3151,7 @@ _bfd_ecoff_write_armap (bfd *abfd,
      armap.  */
   hdr.ar_uid[0] = '0';
   hdr.ar_gid[0] = '0';
-  /* Building gcc ends up extracting the armap as a file - twice.  */
+  /* Building spl ends up extracting the armap as a file - twice.  */
   hdr.ar_mode[0] = '6';
   hdr.ar_mode[1] = '4';
   hdr.ar_mode[2] = '4';

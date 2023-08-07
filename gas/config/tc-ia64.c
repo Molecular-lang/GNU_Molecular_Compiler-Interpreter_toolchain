@@ -7116,7 +7116,7 @@ md_parse_option (int c, const char *arg)
       /* nops		Print nops statistics.  */
       break;
 
-    /* GNU specific switches for gcc.  */
+    /* GNU specific switches for spl.  */
     case OPTION_MCONSTANT_GP:
       md.flags |= EF_IA_64_CONS_GP;
       break;

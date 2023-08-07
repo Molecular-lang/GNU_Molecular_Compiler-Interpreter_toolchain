@@ -35,11 +35,11 @@ function gentest {
 }
 
 # Now come all the testcases.
-cat > gcc.s <<EOF
+cat > spl.s <<EOF
 	mov.w r0,#-1
 	mov.w r0,#0xFFFF
 	add r0,#some_external_symbol
 EOF
 
 # Finally, generate the .d file.
-gentest gcc
+gentest spl

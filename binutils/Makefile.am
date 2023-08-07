@@ -189,17 +189,17 @@ EXPECT = expect
 RUNTEST = runtest
 
 CC_FOR_TARGET = ` \
-  if [ -f $$r/../gcc/xspl ] ; then \
+  if [ -f $$r/../spl/xspl ] ; then \
     if [ -f $$r/../newlib/Makefile ] ; then \
-      echo $$r/../gcc/xspl -B$$r/../gcc/ -idirafter $$r/../newlib/targ-include -idirafter $${srcroot}/../newlib/libc/include -nostdinc; \
+      echo $$r/../spl/xspl -B$$r/../spl/ -idirafter $$r/../newlib/targ-include -idirafter $${srcroot}/../newlib/libc/include -nostdinc; \
     else \
-      echo $$r/../gcc/xspl -B$$r/../gcc/; \
+      echo $$r/../spl/xspl -B$$r/../spl/; \
     fi; \
   else \
     if [ "@host@" = "@target@" ] ; then \
       echo $(CC); \
     else \
-      echo gcc | sed '$(transform)'; \
+      echo spl | sed '$(transform)'; \
     fi; \
   fi`
 

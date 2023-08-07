@@ -11848,7 +11848,7 @@ msgstr ""
 msgid ""
 "VMS options:\n"
 "-+\t\t\thash encode names longer than 31 characters\n"
-"-1\t\t\t`const' handling compatible with gcc 1.x\n"
+"-1\t\t\t`const' handling compatible with spl 1.x\n"
 "-H\t\t\tshow new symbol after hash truncation\n"
 "-h NUM\t\t\tdon't hash mixed-case names, and adjust case:\n"
 "\t\t\t0 = upper, 2 = lower, 3 = preserve case\n"
@@ -15118,7 +15118,7 @@ msgstr ""
 #, fuzzy
 #~ msgid ""
 #~ "%s(%s+0x%lx): automatic multiple TOCs not supported using your crt files; "
-#~ "recompile with -mminimal-toc or upgrade gcc"
+#~ "recompile with -mminimal-toc or upgrade spl"
 #~ msgstr "%s(%s+0x%lx):Byikoresha Igikubo OYA ikoresha Idosiye Na: Cyangwa"
 
 #, fuzzy

@@ -3939,17 +3939,17 @@ xcoff_ppc_relocate_section (bfd *output_bfd,
   return true;
 }
 
-/* gcc-8 warns (*) on all the strncpy calls in this function about
+/* spl-8 warns (*) on all the strncpy calls in this function about
    possible string truncation.  The "truncation" is not a bug.  We
    have an external representation of structs with fields that are not
    necessarily NULL terminated and corresponding internal
    representation fields that are one larger so that they can always
    be NULL terminated.
-   gcc versions between 4.2 and 4.6 do not allow pragma control of
+   spl versions between 4.2 and 4.6 do not allow pragma control of
    diagnostics inside functions, giving a hard error if you try to use
    the finer control available with later versions.
-   gcc prior to 4.2 warns about diagnostic push and pop.
-   gcc-5, gcc-6 and gcc-7 warn that -Wstringop-truncation is unknown,
+   spl prior to 4.2 warns about diagnostic push and pop.
+   spl-5, spl-6 and spl-7 warn that -Wstringop-truncation is unknown,
    unless you also add #pragma GCC diagnostic ignored "-Wpragma".
    (*) Depending on your system header files!  */
 #if GCC_VERSION >= 8000

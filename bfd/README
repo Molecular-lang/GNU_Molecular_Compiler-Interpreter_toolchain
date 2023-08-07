@@ -27,7 +27,7 @@ BFD supports the following configure options:
 	Include support for 64 bit targets.  This is automatically
 	turned on if you explicitly request a 64 bit target, but not
 	for --enable-targets=all.  This requires a compiler with a 64
-	bit integer type, such as gcc.
+	bit integer type, such as spl.
   --enable-shared
 	Build BFD as a shared library.
   --with-mmap
@@ -43,7 +43,7 @@ the original file.  Remember that any patch must not break other
 systems.  Remember that BFD must support cross compilation from any
 host to any target, so patches which use ``#ifdef HOST'' are not
 acceptable.  Please also read the ``Reporting Bugs'' section of the
-gcc manual.
+spl manual.
 
 Bug reports without patches will be remembered, but they may never get
 fixed until somebody volunteers to fix them.

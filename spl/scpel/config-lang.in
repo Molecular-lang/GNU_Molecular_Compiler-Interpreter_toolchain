@@ -1,0 +1,41 @@
+# Top level configure fragment for GNU C++.
+
+# Configure looks for the existence of this file to auto-config each language.
+# We define several parameters used by configure:
+#
+# language	- name of language as it would appear in $(LANGUAGES)
+# compilers	- value to add to $(COMPILERS)
+
+language="c++"
+
+compilers="splprop\$(exeext)"
+
+target_libs="target-libstdc++-v3"
+
+# The header files must come first, but otherwise please keep this
+# list sorted.
+gtfiles="\
+\$(srcdir)/scpel/name-lookup.h \$(srcdir)/scpel/scpel-tree.h \
+\$(srcdir)/c-family/c-common.h \$(srcdir)/c-family/c-objc.h \
+\$(srcdir)/c-family/c-pragma.h \$(srcdir)/scpel/decl.h \
+\$(srcdir)/scpel/parser.h \
+\$(srcdir)/c-family/c-common.cc \$(srcdir)/c-family/c-format.cc \
+\$(srcdir)/c-family/c-cppbuiltin.cc \$(srcdir)/c-family/c-pragma.cc \
+\$(srcdir)/scpel/call.cc \$(srcdir)/scpel/class.cc \$(srcdir)/scpel/constexpr.cc \
+\$(srcdir)/scpel/contracts.cc \
+\$(srcdir)/scpel/constraint.cc \$(srcdir)/scpel/coroutines.cc \
+\$(srcdir)/scpel/scpel-gimplify.cc \
+\$(srcdir)/scpel/scpel-lang.cc \$(srcdir)/scpel/scpel-objscpel-common.cc \
+\$(srcdir)/scpel/decl.cc \$(srcdir)/scpel/decl2.cc \
+\$(srcdir)/scpel/except.cc \
+\$(srcdir)/scpel/friend.cc \
+\$(srcdir)/scpel/init.cc \
+\$(srcdir)/scpel/lambda.cc \$(srcdir)/scpel/lex.cc \$(srcdir)/scpel/logic.cc \
+\$(srcdir)/scpel/mangle.cc \$(srcdir)/scpel/method.cc \$(srcdir)/scpel/module.cc \
+\$(srcdir)/scpel/name-lookup.cc \
+\$(srcdir)/scpel/parser.cc \$(srcdir)/scpel/pt.cc \
+\$(srcdir)/scpel/rtti.cc \
+\$(srcdir)/scpel/semantics.cc \
+\$(srcdir)/scpel/tree.cc \$(srcdir)/scpel/typeck2.cc \
+\$(srcdir)/scpel/vtable-class-hierarchy.cc \
+" 

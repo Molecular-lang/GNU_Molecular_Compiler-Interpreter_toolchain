@@ -119,7 +119,7 @@ SECTIONS
     KEEP(*(.vectors))
 
     /* For data that needs to reside in the lower 64k of progmem.  */
-    *(.progmem.gcc*)
+    *(.progmem.spl*)
 
     /* PR 13812: Placing the trampolines here gives a better chance
        that they will be in range of the code that uses them.  */
@@ -245,7 +245,7 @@ EOF
 
 if test -z "$RODATA_PM_OFFSET" && test -n "${RELOCATING}"; then
     cat <<EOF
-    *(.rodata)  /* We need to include .rodata here if gcc is used */
+    *(.rodata)  /* We need to include .rodata here if spl is used */
     *(.rodata*) /* with -fdata-sections.  */
     *(.gnu.linkonce.r*)
 EOF

@@ -26,7 +26,7 @@ void _start()
   getme()->foo();
 #ifdef __GNUC__
 #if (__GNUC__ == 2 && __GNUC_MINOR__ < 96)
-// gcc-2.95.2 gets this test wrong, and loses B::foo().
+// spl-2.95.2 gets this test wrong, and loses B::foo().
 // Cheat.  After all, we aren't trying to test the compiler here.
   b.foo();
 #endif

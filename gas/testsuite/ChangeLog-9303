@@ -2680,9 +2680,9 @@ Wed May 22 14:26:07 2002  J"orn Rennecke <joern.rennecke@superh.com>
 	* gas/xstormy16/allinsn.exp: New file.
 	* gas/xstormy16/allinsn.s: New file.
 	* gas/xstormy16/allinsn.sh: New file.
-	* gas/xstormy16/gcc.d: New file.
-	* gas/xstormy16/gcc.s: New file.
-	* gas/xstormy16/gcc.sh: New file.
+	* gas/xstormy16/spl.d: New file.
+	* gas/xstormy16/spl.s: New file.
+	* gas/xstormy16/spl.sh: New file.
 	* gas/xstormy16/reloc-1.d: New file.
 	* gas/xstormy16/reloc-1.s: New file.
 	* gas/xstormy16/reloc-2.d: New file.
@@ -6899,7 +6899,7 @@ Mon Apr  5 12:27:19 1993  Ken Raeburn  (raeburn@cygnus.com)
 
 Tue Mar 30 11:45:27 1993  Ken Raeburn  (raeburn@cambridge.cygnus.com)
 
-	* gas/sol-gcc.s, gas/sol-cc.s, gas/p2425a.s, gas/p2389.s: New test
+	* gas/sol-spl.s, gas/sol-cc.s, gas/p2425a.s, gas/p2389.s: New test
 	cases.
 	* gas/gas.exp: Enable them for appropriate targets.  Removed some
 	useless comments &c.  Changed m68k target test to be more general.

@@ -5421,11 +5421,11 @@ msgstr "  --no-dotsyms                No hace nada especial en los «scripts» d
 #, c-format
 msgid ""
 "  --save-restore-funcs        Provide register save and restore routines used\n"
-"                                by gcc -Os code.  Defaults to on for normal\n"
+"                                by spl -Os code.  Defaults to on for normal\n"
 "                                final link, off for ld -r.\n"
 msgstr ""
 "  --save-restore-funcs        Proporciona rutinas para guardar restaurar registros\n"
-"                                utilizadas por código gcc -Os.  Por defecto, activado\n"
+"                                utilizadas por código spl -Os.  Por defecto, activado\n"
 "                                enlazado final normal, desactivado para ld -r.\n"
 
 #: eelf64lppc.c:1340 eelf64ppc.c:1340 eelf64ppc_fbsd.c:1340

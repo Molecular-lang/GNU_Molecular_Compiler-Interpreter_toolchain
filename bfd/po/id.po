@@ -1837,7 +1837,7 @@ msgstr "%B: Relokasi %s (%d) saat ini tidak didukung.\n"
 msgid "%B: Unknown relocation type %d\n"
 msgstr "%B: Tipe relokasi %d tidak dikenal\n"
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:157
 #, c-format
 msgid "mep: no reloc for code %d"
@@ -2659,21 +2659,21 @@ msgstr "%B(%A+0x"
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or assemble using \"-no-expand\" (for gcc, \"-Wa,-no-expand\""
+" or assemble using \"-no-expand\" (for spl, \"-Wa,-no-expand\""
 msgstr ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or assemble using \"-no-expand\" (for gcc, \"-Wa,-no-expand\""
+" or assemble using \"-no-expand\" (for spl, \"-Wa,-no-expand\""
 
 #: elf64-mmix.c:1218
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or compile using the gcc-option \"-mno-base-addresses\"."
+" or compile using the spl-option \"-mno-base-addresses\"."
 msgstr ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or compile using the gcc-option \"-mno-base-addresses\"."
+" or compile using the spl-option \"-mno-base-addresses\"."
 
 #: elf64-mmix.c:1244
 #, c-format
@@ -2737,8 +2737,8 @@ msgid "%P: %B: cannot create stub entry %s\n"
 msgstr "%P: %B: tidak dapat membuat masukan stub %s\n"
 
 #: elf64-ppc.c:6518
-msgid "%P: copy reloc against `%s' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade gcc\n"
-msgstr "%P: salin relokasi terhadap `%s' membutuhkan lazy plt linking; hindari konfigurasi LD_BIND_NOW=1 atau upgrade gcc\n"
+msgid "%P: copy reloc against `%s' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade spl\n"
+msgstr "%P: salin relokasi terhadap `%s' membutuhkan lazy plt linking; hindari konfigurasi LD_BIND_NOW=1 atau upgrade spl\n"
 
 #: elf64-ppc.c:6788
 msgid "%B: undefined symbol on R_PPC64_TOCSAVE relocation"
@@ -2831,8 +2831,8 @@ msgid "%P: %H: %s used with non-TLS symbol %s\n"
 msgstr "%P: %H: %s digunakan dengan simbol bukan-TLS %s\n"
 
 #: elf64-ppc.c:12556
-msgid "%P: %H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade gcc\n"
-msgstr "%P: %H: otomatis multiple TOC tidak didukung menggunakan berkas crt anda; rekompile dengan -mminimal-toc atau upgrade gcc\n"
+msgid "%P: %H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade spl\n"
+msgstr "%P: %H: otomatis multiple TOC tidak didukung menggunakan berkas crt anda; rekompile dengan -mminimal-toc atau upgrade spl\n"
 
 #: elf64-ppc.c:12562
 msgid "%P: %H: sibling call optimization to `%s' does not allow automatic multiple TOCs; recompile with -mminimal-toc or -fno-optimize-sibling-calls, or make `%s' extern\n"

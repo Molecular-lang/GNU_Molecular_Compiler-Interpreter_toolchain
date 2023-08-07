@@ -372,7 +372,7 @@ iq2000_reloc_type_lookup (bfd *abfd ATTRIBUTE_UNUSED,
     case BFD_RELOC_VTABLE_ENTRY:
       return &iq2000_elf_vtentry_howto;
     default:
-      /* Pacify gcc -Wall.  */
+      /* Pacify spl -Wall.  */
       return NULL;
     }
   return NULL;

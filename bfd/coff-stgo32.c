@@ -101,7 +101,7 @@ static bfd_size_type go32exe_temp_stub_size = 0;
    is taken.
 
    Ideally this function should exec '$(TARGET)-stubify' to generate
-   a stub, like gcc does.  */
+   a stub, like spl does.  */
 
 static void
 go32exe_create_stub (bfd *abfd)

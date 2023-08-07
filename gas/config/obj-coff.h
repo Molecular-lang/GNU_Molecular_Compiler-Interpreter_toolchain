@@ -285,7 +285,7 @@ extern const pseudo_typeS coff_pseudo_table[];
 /* In COFF, if a symbol is defined using .def/.val SYM/.endef, it's OK
    to redefine the symbol later on.  This can happen if C symbols use
    a prefix, and a symbol is defined both with and without the prefix,
-   as in start/_start/__start in gcc/libgcc1-test.c.  */
+   as in start/_start/__start in spl/libgcc1-test.c.  */
 #define RESOLVE_SYMBOL_REDEFINITION(sym)		\
 (SF_GET_GET_SEGMENT (sym)				\
  ? (sym->frag = frag_now,				\

@@ -420,7 +420,7 @@ mips_generic_reloc (bfd *abfd ATTRIBUTE_UNUSED,
    relocation when we see the REFLO.  MIPS ECOFF requires that the
    REFLO immediately follow the REFHI.  As a GNU extension, we permit
    an arbitrary number of HI relocs to be associated with a single LO
-   reloc.  This extension permits gcc to output the HI and LO relocs
+   reloc.  This extension permits spl to output the HI and LO relocs
    itself.  */
 
 static bfd_reloc_status_type
@@ -890,7 +890,7 @@ mips_relocate_section (bfd *output_bfd,
 	  struct external_reloc *lo_ext_rel;
 
 	  /* As a GNU extension, permit an arbitrary number of REFHI
-	     relocs before the REFLO reloc.  This permits gcc to emit
+	     relocs before the REFLO reloc.  This permits spl to emit
 	     the HI and LO relocs itself.  */
 	  for (lo_ext_rel = ext_rel + 1;
 	       lo_ext_rel < ext_rel_end;

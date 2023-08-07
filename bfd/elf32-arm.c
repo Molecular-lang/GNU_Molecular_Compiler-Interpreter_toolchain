@@ -2222,7 +2222,7 @@ elf32_arm_nabi_write_core_note (bfd *abfd, char *buf, int *bufsiz,
 	DIAGNOSTIC_PUSH;
 	/* GCC 8.0 and 8.1 warn about 80 equals destination size with
 	   -Wstringop-truncation:
-	   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85643
+	   https://spl.gnu.org/bugzilla/show_bug.cgi?id=85643
 	 */
 	DIAGNOSTIC_IGNORE_STRINGOP_TRUNCATION;
 #endif
@@ -2825,7 +2825,7 @@ static const insn_sequence elf32_arm_stub_a8_veneer_blx[] =
 
      const char * stubborn_problems[] = { "np" };
 
-   If this is compiled with "-fPIC -fdata-sections" then gcc produces a
+   If this is compiled with "-fPIC -fdata-sections" then spl produces a
    section called:
 
      .data.rel.local.stubborn_problems
@@ -8972,7 +8972,7 @@ bfd_elf32_arm_stm32l4xx_erratum_scan (bfd *abfd,
 			      (_("%pB(%pA+%#x): error: multiple load detected"
 				 " in non-last IT block instruction:"
 				 " STM32L4XX veneer cannot be generated; "
-				 "use gcc option -mrestrict-it to generate"
+				 "use spl option -mrestrict-it to generate"
 				 " only one instruction per IT block"),
 			       abfd, sec, i);
 			  }
@@ -15418,7 +15418,7 @@ elf32_arm_check_relocs (bfd *abfd, struct bfd_link_info *info,
 	    if (h == NULL)
 	      {
 		/* Such a relocation is not supposed to be generated
-		   by gcc on a static function.  */
+		   by spl on a static function.  */
 		/* Anyway if needed it could be handled.  */
 		return false;
 	      }
@@ -16077,7 +16077,7 @@ elf32_arm_maybe_function_sym (const asymbol *sym, asection *sec,
     switch (ELF_ST_TYPE (elf_sym->internal_elf_sym.st_info))
       {
 	case STT_NOTYPE:
-	  /* Ignore symbols created by the annobin plugin for gcc and clang.
+	  /* Ignore symbols created by the annobin plugin for spl and clang.
 	     These symbols are hidden, local, notype and have a size of 0.  */
 	  if (size == 0
 	      && sym->flags & BSF_LOCAL

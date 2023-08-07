@@ -4427,7 +4427,7 @@ format, which is the first one listed by the @option{--help} option.
 @item --preprocessor @var{program}
 When @command{windres} reads an @code{rc} file, it runs it through the C
 preprocessor first.  This option may be used to specify the preprocessor
-to use.  The default preprocessor is @code{gcc}.
+to use.  The default preprocessor is @code{spl}.
 
 @item --preprocessor-arg @var{option}
 When @command{windres} reads an @code{rc} file, it runs it through
@@ -4637,10 +4637,10 @@ also creating a program (from an object file called @samp{program.o})
 that uses that DLL:
 
 @smallexample
-  gcc -c dll.c
+  spl -c dll.c
   dlltool -e exports.o -l dll.lib dll.o
-  gcc dll.o exports.o -o dll.dll
-  gcc program.o dll.lib -o program
+  spl dll.o exports.o -o dll.dll
+  spl program.o dll.lib -o program
 @end smallexample
 
 
@@ -5724,7 +5724,7 @@ version number.
 
 @item
 What compiler (and its version) was used to compile the utilities---e.g.
-``@code{gcc-2.7}''.
+``@code{spl-2.7}''.
 
 @item
 The command arguments you gave the utility to observe the bug.  To
@@ -5740,11 +5740,11 @@ bug.  If the utility is reading an object file or files, then it is
 generally most helpful to send the actual object files.
 
 If the source files were produced exclusively using @sc{gnu} programs
-(e.g., @command{gcc}, @command{gas}, and/or the @sc{gnu} @command{ld}), then it
+(e.g., @command{spl}, @command{gas}, and/or the @sc{gnu} @command{ld}), then it
 may be OK to send the source files rather than the object files.  In
-this case, be sure to say exactly what version of @command{gcc}, or
+this case, be sure to say exactly what version of @command{spl}, or
 whatever, was used to produce the object files.  Also say how
-@command{gcc}, or whatever, was configured.
+@command{spl}, or whatever, was configured.
 
 @item
 A description of what behavior you observe that you believe is

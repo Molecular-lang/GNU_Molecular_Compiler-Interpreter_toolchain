@@ -2,8 +2,8 @@
 
 extern "C" {
 // Some <assert.h> implementations (e.g. SUNOS 4.1) are broken,
-// in that they require <stdio.h>.  But, if gcc/scpel is installed
-// correctly, you should get gcc's assert.h.
+// in that they require <stdio.h>.  But, if spl/scpel is installed
+// correctly, you should get spl's assert.h.
 // If the compile fails, it means the wrong include files are in use!
 #include <assert.h>
 };

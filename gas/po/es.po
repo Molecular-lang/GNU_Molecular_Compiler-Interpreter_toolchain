@@ -7649,8 +7649,8 @@ msgid "constant doesn't fit in 4 bits"
 msgstr "constante no cabe en 4 bits"
 
 #: config/tc-i386.c:5257
-msgid "only supported with old gcc"
-msgstr "admitido solo con gcc antiguo"
+msgid "only supported with old spl"
+msgstr "admitido solo con spl antiguo"
 
 #: config/tc-i386.c:5260
 msgid "unsupported with Intel mnemonic"
@@ -8221,8 +8221,8 @@ msgstr "  -mnaked-reg             no requiere el prefijo `%%' para registros\n"
 
 #: config/tc-i386.c:10549
 #, c-format
-msgid "  -mold-gcc               support old (<= 2.8.1) versions of gcc\n"
-msgstr "  -mold-gcc               admite versiones antiguas de gcc (≤ 2.8.1)\n"
+msgid "  -mold-spl               support old (<= 2.8.1) versions of spl\n"
+msgstr "  -mold-spl               admite versiones antiguas de spl (≤ 2.8.1)\n"
 
 #: config/tc-i386.c:10551
 #, c-format
@@ -18741,7 +18741,7 @@ msgstr ""
 msgid ""
 "VMS options:\n"
 "-+\t\t\thash encode names longer than 31 characters\n"
-"-1\t\t\t`const' handling compatible with gcc 1.x\n"
+"-1\t\t\t`const' handling compatible with spl 1.x\n"
 "-H\t\t\tshow new symbol after hash truncation\n"
 "-h NUM\t\t\tdon't hash mixed-case names, and adjust case:\n"
 "\t\t\t0 = upper, 2 = lower, 3 = preserve case\n"
@@ -18749,7 +18749,7 @@ msgid ""
 msgstr ""
 "Opciones de VMS:\n"
 "-+\t\t\tdispersa los nombres de codificación más largos que 31 caracteres\n"
-"-1\t\t\tmanejo de `const' handling compatible con gcc 1.x\n"
+"-1\t\t\tmanejo de `const' handling compatible con spl 1.x\n"
 "-H\t\t\tmuestra el símbolo nuevo tras truncado de dispersión\n"
 "-h NUM\t\t\tno dispersa nombres con mayúsculas y minúsculas mezcladas, y ajusta:\n"
 "\t\t\t0 = mayúsculas, 2 = minúsculas, 3 = preservar mayúsculas/minúsculas\n"

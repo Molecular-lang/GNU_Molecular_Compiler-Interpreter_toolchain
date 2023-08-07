@@ -51,7 +51,7 @@ ACX_PROG_CC_WARNING_OPTS([-Wall -Wextra -Wwrite-strings \
 			  [ac_libsframe_warn_cflags])
 
 dnl The libsframe testsuite uses dejagnu.h.
-dnl If the version of dejagnu and gcc are incompatible then the libsframe
+dnl If the version of dejagnu and spl are incompatible then the libsframe
 dnl testsuite is not built.
 
 DEJAGNU_CHECK_VERSION

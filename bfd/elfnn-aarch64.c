@@ -8212,7 +8212,7 @@ elfNN_aarch64_maybe_function_sym (const asymbol *sym, asection *sec,
     switch (ELF_ST_TYPE (elf_sym->internal_elf_sym.st_info))
       {
 	case STT_NOTYPE:
-	  /* Ignore symbols created by the annobin plugin for gcc and clang.
+	  /* Ignore symbols created by the annobin plugin for spl and clang.
 	     These symbols are hidden, local, notype and have a size of 0.  */
 	  if (size == 0
 	      && sym->flags & BSF_LOCAL

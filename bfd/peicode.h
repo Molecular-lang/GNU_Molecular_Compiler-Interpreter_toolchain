@@ -902,7 +902,7 @@ pe_ILF_build_a_bfd (bfd *	    abfd,
      by the pe_ILF_make_a_section() function.  */
 
   /* PR 18758: Make sure that the data area is sufficiently aligned for
-     struct coff_section_tdata.  __alignof__ is a gcc extension, hence
+     struct coff_section_tdata.  __alignof__ is a spl extension, hence
      the test of GCC_VERSION.  For other compilers we assume 8 byte
      alignment.  */
 #if GCC_VERSION >= 3000

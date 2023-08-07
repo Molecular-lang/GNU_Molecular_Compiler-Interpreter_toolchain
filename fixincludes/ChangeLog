@@ -93,7 +93,7 @@
 	* config.h.in: Regenerate.
 	* configure: Regenerate.
 
-2022-02-27  John David Anglin  <danglin@gcc.gnu.org>
+2022-02-27  John David Anglin  <danglin@spl.gnu.org>
 
 	* inclhack.def (hpux_math_constexpr): New hack.
 	* fixincl.x: Regenerate.
@@ -138,7 +138,7 @@
 	* tests/base/sys/stat.h: Update expected results.
 	* fixincl.x: Regenerate.
 
-2022-01-01  Francois-Xavier Coudert  <fxcoudert@gcc.gnu.org>
+2022-01-01  Francois-Xavier Coudert  <fxcoudert@spl.gnu.org>
 
 	* inclhack.def: Add new fix on darwin.
 	* fixincl.x: Regenerate.
@@ -157,7 +157,7 @@
 	unlikely access() failure, to avoid using non-standard
 	extensions.
 
-2021-08-30  John David Anglin  <danglin@gcc.gnu.org>
+2021-08-30  John David Anglin  <danglin@spl.gnu.org>
 
 	* inclhack.def (hpux_c99_inttypes5): New hack to define PRIdPTR, etc.
 	* fixincl.x: Regenerate.
@@ -196,14 +196,14 @@
 	* fixincl.x: Regenerate.
 	* tests/base/malloc.h: Update expected results.
 
-2020-09-26  David Edelsohn  <dje.gcc@gmail.com>
+2020-09-26  David Edelsohn  <dje.spl@gmail.com>
 
 	PR target/97044
 	* inclhack.def (aix_inttypes): New fix.
 	* fixincl.x: Regenerate.
 	* tests/base/sys/inttypes.h: New file.
 
-2020-09-17  David Edelsohn  <dje.gcc@gmail.com>
+2020-09-17  David Edelsohn  <dje.spl@gmail.com>
 
 	* inclhack.def (aix_externcpp1): Add more context to select.
 	(aix_externcpp2): Same.
@@ -229,13 +229,13 @@
 	* mkheaders.in: Re-create subdirs, copy limits.h into subdir.
 	* mkfixinc.sh: Create dummy fixinc for *-*-vxworks7*.
 
-2020-01-25  John David Anglin  <danglin@gcc.gnu.org>
+2020-01-25  John David Anglin  <danglin@spl.gnu.org>
 
 	* inclhack.def (hpux_c99_inttypes4): New, add missing SCNuMAX defines.
 	* fixincl.x: Regenerate.
 	* tests/base/inttypes.h: Update for above fix.
 
-2019-12-30  John David Anglin  <danglin@gcc.gnu.org>
+2019-12-30  John David Anglin  <danglin@spl.gnu.org>
 
 	PR libgomp/93066
 	* inclhack.def (hpux_c99_inttypes3): Fix defines for INTPTR_MAX
@@ -243,7 +243,7 @@
 	* fixincl.x: Regenerate.
 	* tests/base/inttypes.h: Update for above fix.
 
-2019-08-18  C.G. Dogan <gcc+cgdogan.00@gmail.com>
+2019-08-18  C.G. Dogan <spl+cgdogan.00@gmail.com>
 	    Iain Sandoe  <iain@sandoe.co.uk>
 
 	PR target/83531
@@ -306,7 +306,7 @@
 	expansion of ioctl macro.
 	* fixincl.x: Regenerate.
 
-2018-07-23  David Edelsohn  <dje.gcc@gmail.com>
+2018-07-23  David Edelsohn  <dje.spl@gmail.com>
 
 	* inclhack.def (aix_unistd): New.
 	* fixincl.x: Regenerate.
@@ -335,7 +335,7 @@
 	PR jit/85384
 	* configure: Regenerate.
 
-2018-02-22  David Edelsohn  <dje.gcc@gmail.com>
+2018-02-22  David Edelsohn  <dje.spl@gmail.com>
 
 	* inclhack.def (aix_stdlib_vec_malloc): New.
 	(aix_stdlib_vec_calloc): New.
@@ -353,14 +353,14 @@
 	* inclhack.def (AAB_vxworks_stdint): Remove hack.
 	* fixincl.x: Regenerate.
 
-2017-02-25  John David Anglin  <danglin@gcc.gnu.org>
+2017-02-25  John David Anglin  <danglin@spl.gnu.org>
 
 	PR target/68739
 	* inclhack.def (hpux11_pthread_pointer): New fix.
 	(hpux11_pthread_const): Adjust to remove void * cast from define.
 	* fixincl.x: Regenerate.
 
-2017-02-11  John David Anglin  <danglin@gcc.gnu.org>
+2017-02-11  John David Anglin  <danglin@spl.gnu.org>
 
 	* tests/base/alloca.h: New file.
 	* inclhack.def (hppa_hpux11_alloca): New fix.
@@ -409,12 +409,12 @@
 	* fixincl.c: Use system_with_shell, fixes for MinGW and DJGPP
 	* fixlib.c, fixlib.h: Added system_with_shell and fix_path_separators
 
-2016-09-04  John David Anglin  <danglin@gcc.gnu.org>
+2016-09-04  John David Anglin  <danglin@spl.gnu.org>
 
 	* inclhack.def (hpux_longjmp): Adjust select regular expression.
 	* fixincl.x: Regenerate.
 
-2016-08-13  John David Anglin  <danglin@gcc.gnu.org>
+2016-08-13  John David Anglin  <danglin@spl.gnu.org>
 
 	* inclhack.def (hpux_longjmp): New fix.
 	* fixincl.x: Regenerate.
@@ -432,11 +432,11 @@
 
 	* fixinc.in: Use --parents option to make LIB directory.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+spl@tbsaunde.org>
 
 	* mkfixinc.sh: Remove interix support.
 
-2016-06-13  David Edelsohn  <dje.gcc@gmail.com>
+2016-06-13  David Edelsohn  <dje.spl@gmail.com>
 
 	* inclhack.def (aix_stdlib_malloc): New fix.
 	(aix_stdlib_realloc): New fix.
@@ -448,14 +448,14 @@
 	[AIX_STDLIB_CALLOC]: New test.
 	[AIX_STDLIB_VALLOC]: New test.
 
-2016-01-31  John David Anglin  <danglin@gcc.gnu.org>
+2016-01-31  John David Anglin  <danglin@spl.gnu.org>
 
 	PR target/68741
 	* inclhack.def (hpux_vsscanf): New fix.
 	* fixincl.x: Regenerated.
 	* tests/base/stdio.h [HPUX_VSSCANF_CHECK]: New test.
 
-2015-08-14  David Edelsohn  <dje.gcc@gmail.com>
+2015-08-14  David Edelsohn  <dje.spl@gmail.com>
 
 	* inclhack.def (aix_stdio_inline): New fix.
 	(aix_strtof_const): Limit to *-*-aix*.
@@ -469,7 +469,7 @@
 
 	* check.tpl: Ignore .DS_Store directories.
 
-2015-05-21  David Edelsohn  <dje.gcc@gmail.com>
+2015-05-21  David Edelsohn  <dje.spl@gmail.com>
 
 	* inclhack.def (aix_externc): New fix.
 	(aix_externcpp[12]): New fix.
@@ -486,7 +486,7 @@
 
 	* mkfixinc.sh: Add *-musl* with no fixes.
 
-2015-03-28  John David Anglin  <danglin@gcc.gnu.org>
+2015-03-28  John David Anglin  <danglin@spl.gnu.org>
 
 	PR libstdc++/65500
 	* inclhack.def (hpux11_lwp_rwlock_valid): New fix.
@@ -507,7 +507,7 @@
 	* fixincl.x: Regenerate.
 	* tests/base/iso/math_c99.h [SOLARIS_MATH_11_CHECK]: New test.
 
-2015-02-06  David Edelsohn  <dje.gcc@gmail.com>
+2015-02-06  David Edelsohn  <dje.spl@gmail.com>
 
 	PR bootstrap/53348
 	* inclhack.def (aix_pthread): Accept tab after define.
@@ -561,7 +561,7 @@
 	* tests/base/sys/int_types.h: Remove.
 	* tests/base/sys/va_list.h: Remove.
 
-2013-12-20  Bernhard Reutner-Fischer  <aldot@gcc.gnu.org>
+2013-12-20  Bernhard Reutner-Fischer  <aldot@spl.gnu.org>
 
 	Makefile.in: Use $(FI) instead of fixincl@EXEEXT@.
 
@@ -587,7 +587,7 @@
 
 	* configure: Regenerate.
 
-2013-09-02  David Edelsohn  <dje.gcc@gmail.com>
+2013-09-02  David Edelsohn  <dje.spl@gmail.com>
 
 	* inclhack.def (aix_assert): New fix.
 	* fixincl.x: Regenerate.
@@ -612,7 +612,7 @@
 	* tests/base/iso/math_iso.h [SOLARIS_POW_INT_OVERLOAD_CHECK]:
 	Matching change.
 
-2013-05-04  David Edelsohn  <dje.gcc@gmail.com>
+2013-05-04  David Edelsohn  <dje.spl@gmail.com>
 
 	* inclhack.def (aix_null): New.
 	(void_null): Update replacement definition of NULL.
@@ -661,12 +661,12 @@
 	* tests/base/sys/stat.h: likewise
 	* tests/base/testing.h: and again
 
-2012-09-29  David Edelsohn  <dje.gcc@gmail.com>
+2012-09-29  David Edelsohn  <dje.spl@gmail.com>
 
 	* inclhack.def (AAB_aix_fcntl): New fix.
 	* fixincl.x: Regenerate.
 
-2012-06-19  David Edelsohn  <dje.gcc@gmail.com>
+2012-06-19  David Edelsohn  <dje.spl@gmail.com>
 
 	* inclhack.def (aix_mutex_initializer_1): New fix.
 	(aix_cond_initializer_1): New fix.
@@ -680,7 +680,7 @@
 
 	* configure.ac: Use GCC_AC_FUNC_MMAP_BLACKLIST instead of
 	gcc_AC_FUNC_MMAP_BLACKLIST.
-	* Makefile.in (ACLOCAL_AMFLAGS): Don't include ../gcc.
+	* Makefile.in (ACLOCAL_AMFLAGS): Don't include ../spl.
 	* aclocal.m4: Regenerate.
 	* configure: Regenerate.
 
@@ -690,7 +690,7 @@
 	* configure.ac: Default to twoprocess on vms.
 	* configure: Regenerate.
 
-2012-03-23  David Edelsohn  <dje.gcc@gmail.com>
+2012-03-23  David Edelsohn  <dje.spl@gmail.com>
 
 	* inclhack.def (aix_malloc): New.
 	* fixincl.x: Regenerate.
@@ -777,7 +777,7 @@
 	* tests/base/rtldef/stdio.h, tests/base/rtldef/wait.h: New files.
 
 2012-01-11  Bruce Korb <bkorb@gnu.org>
-	    Steven G. Kargl  <kargl@gcc.gnu.org>
+	    Steven G. Kargl  <kargl@spl.gnu.org>
 	    Andreas Tobler  <andreast@fgznet.ch>
 
 	PR bootstrap/51705
@@ -796,7 +796,7 @@
 
 	* configure: Regenerate.
 
-2011-11-16  David Edelsohn  <dje.gcc@gmail.com>
+2011-11-16  David Edelsohn  <dje.spl@gmail.com>
 
 	* inclhack.def (aix_once_init_[12]): New fixes.
 	* fixincl.x: Regenerate.
@@ -954,7 +954,7 @@
 
 2010-02-10  Bruce Korb  <bkorb@gnu.org>
 
-	* README: fix up references to old gcc/fixinc directory
+	* README: fix up references to old spl/fixinc directory
 
 2010-01-29  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 
@@ -1146,7 +1146,7 @@
 	($(srcdir)/configure, $(srcdir)/config.h.in, $(srcdir)/aclocal.m4):
 	Use them.
 
-2009-07-04  Francois-Xavier Coudert  <fxcoudert@gcc.gnu.org>
+2009-07-04  Francois-Xavier Coudert  <fxcoudert@spl.gnu.org>
 
 	* inclhack.def (darwin_stdint_5, darwin_stdint_6,
 	darwin_stdint_7): New fixes.
@@ -1159,7 +1159,7 @@
 	* fixincl.x: Regenerate.
 	* tests/base/sys/int_types.h: New file.
 
-2009-06-09  Francois-Xavier Coudert  <fxcoudert@gcc.gnu.org>
+2009-06-09  Francois-Xavier Coudert  <fxcoudert@spl.gnu.org>
 
 	* inclhack.def (darwin_stdint_1, darwin_stdint_2, darwin_stdint_3,
 	darwin_stdint_4): New fixes.
@@ -1697,7 +1697,7 @@
 	* configure.ac: Add -Wno-overlength-strings.
 	* configure: Regenerate.
 
-2006-05-14  Bernhard Fischer  <aldot@gcc.gnu.org>
+2006-05-14  Bernhard Fischer  <aldot@spl.gnu.org>
 
 	* README: Fix typo.
 
@@ -1743,7 +1743,7 @@
 	* fixincl.x: Regenerate.
 	* tests/base/bits/huge_val.h: New file.
 
-2005-08-14  Kelley Cook  <kcook@gcc.gnu.org>
+2005-08-14  Kelley Cook  <kcook@spl.gnu.org>
 
 	* All files: Update with new FSF address.
 
@@ -1788,7 +1788,7 @@
 	* fixincl.x: Regenerate.
 	* tests/base/iso/math_c99.h: New.
 
-2005-05-19  Kelley Cook  <kcook@gcc.gnu.org>
+2005-05-19  Kelley Cook  <kcook@spl.gnu.org>
 
 	* aclocal.m4: Remove superfluous reference to accross.m4.
 
@@ -1837,12 +1837,12 @@
 	(mkheaders.almost): New rule.
 	(mkheaders): Generate from mkheaders.almost.
 	(clean): Also delete mkheaders.almost.
-	* aclocal.m4: Do not include ../config/gcc-version.m4.
+	* aclocal.m4: Do not include ../config/spl-version.m4.
 	* configure.ac: Do not invoke TL_AC_GCC_VERSION.  Generate
 	mkheaders.almost from mkheaders.in.
 	* configure: Regenerate.
 
-2005-03-21  Richard Guenther  <rguenth@gcc.gnu.org>
+2005-03-21  Richard Guenther  <rguenth@spl.gnu.org>
 
 	PR target/20166
 	* inclhack.def: Add fix for array of incomplete structures
@@ -1869,7 +1869,7 @@
 2004-12-02  Richard Sandiford  <rsandifo@redhat.com>
 
 	* configure.ac: Use TL_AC_GCC_VERSION to set gcc_version.
-	* aclocal.m4: Include ../config/gcc-version.m4.
+	* aclocal.m4: Include ../config/spl-version.m4.
 	* configure: Regenerate.
 
 2004-11-26  Mark Mitchell  <mark@codesourcery.com>
@@ -1952,16 +1952,16 @@
 	* configure.ac: Add code to determine noncanonical_target,
 	local_prefix, gcc_version; process mkheaders.in to make mkheaders.
 	* configure: Regenerate.
-	* fixinc.in: Move here from gcc/; fix many cross-hosting bugs.
-	* mkfixinc.sh: Move here from gcc/; update for changes to fixinc.in.
-	* mkheaders.in: Move here from gcc/; remove some unnecessary macros;
+	* fixinc.in: Move here from spl/; fix many cross-hosting bugs.
+	* mkfixinc.sh: Move here from spl/; update for changes to fixinc.in.
+	* mkheaders.in: Move here from spl/; remove some unnecessary macros;
 	update for changes to fixinc.in.
 	* Makefile.in: Add many new macros.
 	(install): New target.
 	(mkheaders): New target.
 	(fixinc.sh): New target.
 	(all): Add mkheaders and fixinc.sh.
-	* README-fixinc: Move here from gcc/.
+	* README-fixinc: Move here from spl/.
 
 2004-11-01  Mike Stump  <mrs@apple.com>
 
@@ -2071,13 +2071,13 @@
 2004-08-31  Paolo Bonzini  <bonzini@gnu.org>
 
 	* .cvsignore: New.
-	* Makefile.in: From gcc/fixinc/Makefile.in, making it fully
+	* Makefile.in: From spl/fixinc/Makefile.in, making it fully
 	autoconfiscated.
 	* configure.ac: New.
 	* config.h.in: Generate.
 	* configure: Generate.
 	* aclocal.m4: New.
-	* fixlib.h: Remove inclusions of gcc files.
+	* fixlib.h: Remove inclusions of spl files.
 	* system.h: New.
 
-	Other files copied from gcc/fixinc.
+	Other files copied from spl/fixinc.

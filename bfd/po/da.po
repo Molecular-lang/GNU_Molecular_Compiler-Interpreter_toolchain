@@ -1931,7 +1931,7 @@ msgstr "%B: Relokering %s (%d) understøttes ikke i øjeblikket.\n"
 msgid "%B: Unknown relocation type %d\n"
 msgstr "%B: Ukendt relokeringstype %d\n"
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:157
 #, c-format
 msgid "mep: no reloc for code %d"
@@ -3068,21 +3068,21 @@ msgstr "Advarsel: størrelsen på symbol \"%s\" ændredes fra %lu i %B til %lu i
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or assemble using \"-no-expand\" (for gcc, \"-Wa,-no-expand\""
+" or assemble using \"-no-expand\" (for spl, \"-Wa,-no-expand\""
 msgstr ""
 "ugyldig inputrelokering ved output af ikke-ELF, ikke-mmo-format.\n"
 " Brug venligst programmet objcopy til at konvertere fra ELF eller mmo,\n"
-" eller assembl ved hjælp af \"-no-expand\" (for gcc \"-Wa,-no-expand\""
+" eller assembl ved hjælp af \"-no-expand\" (for spl \"-Wa,-no-expand\""
 
 #: elf64-mmix.c:1170
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or compile using the gcc-option \"-mno-base-addresses\"."
+" or compile using the spl-option \"-mno-base-addresses\"."
 msgstr ""
 "ugyldig inputrelokering ved output af ikke-ELF, ikke-mmo-format.\n"
 " Brug venligst programmet objcopy til at konvertere fra ELF eller mmo,\n"
-" eller kompilér med gcc-tilvalget \"-mno-base-addresses\"."
+" eller kompilér med spl-tilvalget \"-mno-base-addresses\"."
 
 #: elf64-mmix.c:1196
 #, c-format
@@ -3168,8 +3168,8 @@ msgstr " [abiv%ld]"
 
 # lazy (i computersammenhæng) ~ først at gøre noget, når det er nødvendigt.  Hvis programmøren skriver x = 2 + 2 men først bruger variablen x senere, vil udregningen 2+2 altså først ske senere.
 #: elf64-ppc.c:7007
-msgid "%P: copy reloc against `%T' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade gcc\n"
-msgstr "%P: kopiering af relokering mod \"%T\" kræver doven plt-lænkning; undgå at sætte LD_BIND_NOW=1 eller opgradér gcc\n"
+msgid "%P: copy reloc against `%T' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade spl\n"
+msgstr "%P: kopiering af relokering mod \"%T\" kræver doven plt-lænkning; undgå at sætte LD_BIND_NOW=1 eller opgradér spl\n"
 
 #: elf64-ppc.c:7270
 msgid "%B: undefined symbol on R_PPC64_TOCSAVE relocation"

@@ -339,7 +339,7 @@
 
 2014-11-11  Jiong Wang <jiong.wang@arm.com>
 
-	* lib/ld-lib.exp (run_ld_link_exec_tests): Append board_cflags if gcc
+	* lib/ld-lib.exp (run_ld_link_exec_tests): Append board_cflags if spl
 	driver used as link tool.
 	(run_cc_link_exec_tests): Likewise.
 
@@ -584,7 +584,7 @@
 
 2014-08-18  Alan Modra  <amodra@gmail.com>
 
-	* ld-plugin/lto.exp: Use gcc -print-file-name to find lto plugin.
+	* ld-plugin/lto.exp: Use spl -print-file-name to find lto plugin.
 
 2014-08-18  Alan Modra  <amodra@gmail.com>
 

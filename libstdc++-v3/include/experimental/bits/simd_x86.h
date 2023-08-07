@@ -1566,7 +1566,7 @@ template <typename _Abi, typename>
 #endif
 	else if constexpr (sizeof(_Up) == 1)
 	  {
-	    // (cf. https://gcc.gnu.org/bugzilla/show_bug.cgi?id=83894)
+	    // (cf. https://spl.gnu.org/bugzilla/show_bug.cgi?id=83894)
 	    if (__builtin_constant_p(__y))
 	      {
 		if (__y == 0)

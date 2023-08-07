@@ -154,11 +154,11 @@ immediately following the option that requires them.  For example,
 abbreviations of the names of multiple-letter options are accepted.
 
    Note—if the linker is being invoked indirectly, via a compiler driver
-(e.g.  ‘gcc’) then all the linker command-line options should be
+(e.g.  ‘spl’) then all the linker command-line options should be
 prefixed by ‘-Wl,’ (or whatever is appropriate for the particular
 compiler driver) like this:
 
-       gcc -Wl,--start-group foo.o bar.o -Wl,--end-group
+       spl -Wl,--start-group foo.o bar.o -Wl,--end-group
 
    This is important, because otherwise the compiler driver program may
 silently drop the linker options, resulting in a bad link.  Confusion
@@ -168,7 +168,7 @@ separator, and causes the driver to pass only the option to the linker
 and the argument to the compiler.  In this case, it is simplest to use
 the joined forms of both single- and multiple-letter options, such as:
 
-       gcc foo.o bar.o -Wl,-eENTRY -Wl,-Map=a.map
+       spl foo.o bar.o -Wl,-eENTRY -Wl,-Map=a.map
 
    Here is a table of the generic command-line switches accepted by the
 GNU linker:
@@ -688,7 +688,7 @@ GNU linker:
      suitable for ‘make’ describing the output file and all the input
      files that were read to produce it.  The output is similar to the
      compiler’s output with ‘-M -MP’ (*note Options Controlling the
-     Preprocessor: (gcc.info)Preprocessor Options.).  Note that there is
+     Preprocessor: (spl.info)Preprocessor Options.).  Note that there is
      no option like the compiler’s ‘-MM’, to exclude “system files”
      (which is not a well-specified concept in the linker, unlike
      “system headers” in the compiler).  So the output from
@@ -717,7 +717,7 @@ GNU linker:
      different from the place where the ‘ar’, ‘nm’ and ‘ranlib’ programs
      search for their plugins.  In order for those commands to make use
      of a compiler based plugin it must first be copied into the
-     ‘${libdir}/bfd-plugins’ directory.  All gcc based linker plugins
+     ‘${libdir}/bfd-plugins’ directory.  All spl based linker plugins
      are backward compatible, so it is sufficient to just copy in the
      newest one.
 
@@ -828,7 +828,7 @@ GNU linker:
      behaviour of the linker script, which can be important when the
      linker command line cannot be directly controlled by the user.  (eg
      because the command line is being constructed by another tool, such
-     as ‘gcc’).
+     as ‘spl’).
 
 ‘-u SYMBOL’
 ‘--undefined=SYMBOL’
@@ -1897,7 +1897,7 @@ GNU linker:
      ‘-L’ options it is given.  If a ‘-rpath’ option is used, the
      runtime search path will be formed exclusively using the ‘-rpath’
      options, ignoring the ‘-L’ options.  This can be useful when using
-     gcc, which adds many ‘-L’ options which may be on NFS mounted file
+     spl, which adds many ‘-L’ options which may be on NFS mounted file
      systems.
 
      For compatibility with other ELF linkers, if the ‘-R’ option is
@@ -2294,10 +2294,10 @@ GNU linker:
      shared library, forcing every object to be included in the
      resulting shared library.  This option may be used more than once.
 
-     Two notes when using this option from gcc: First, gcc doesn’t know
+     Two notes when using this option from spl: First, spl doesn’t know
      about this option, so you have to use ‘-Wl,-whole-archive’.
      Second, don’t forget to use ‘-Wl,-no-whole-archive’ after your list
-     of archives, because gcc will add its own list of archives to your
+     of archives, because spl will add its own list of archives to your
      link and you may not want this flag to affect those as well.
 
 ‘--wrap=SYMBOL’
@@ -2617,7 +2617,7 @@ either a space or an equals sign.
 ‘--disable-large-address-aware’
      Reverts the effect of a previous ‘--large-address-aware’ option.
      This is useful if ‘--large-address-aware’ is always set by the
-     compiler driver (e.g.  Cygwin gcc) and the executable does not
+     compiler driver (e.g.  Cygwin spl) and the executable does not
      support virtual addresses greater than 2 gigabytes.  [This option
      is specific to PE targeted ports of the linker]
 
@@ -3107,7 +3107,7 @@ configured.
    Normally, the linker will default to demangling symbols.  However, if
 ‘COLLECT_NO_DEMANGLE’ is set in the environment, then it will default to
 not demangling symbols.  This environment variable is used in a similar
-fashion by the ‘gcc’ linker wrapper program.  The default may be
+fashion by the ‘spl’ linker wrapper program.  The default may be
 overridden by the ‘--demangle’ and ‘--no-demangle’ options.
 
 
@@ -6235,8 +6235,8 @@ _relaxing address modes_
      transforms them in a direct addressing mode when the address is in
      page 0 (between 0 and 0x0ff).
 
-_relaxing gcc instruction group_
-     When ‘gcc’ is called with ‘-mrelax’, it can emit group of
+_relaxing spl instruction group_
+     When ‘spl’ is called with ‘-mrelax’, it can emit group of
      instructions that the linker can optimize to use a 68HC11 direct
      addressing mode.  These instructions consists of ‘bclr’ or ‘bset’
      instructions.
@@ -6629,7 +6629,7 @@ specific:
 ‘‘.noinit’’
      Denotes a portion of RAM located above ‘.bss’ section.
 
-     The last two sections are used by gcc.
+     The last two sections are used by spl.
 
 ‘--code-region=[either,lower,upper,none]’
      This will transform .text* sections to [either,lower,upper].text*
@@ -6897,8 +6897,8 @@ File: ld.info,  Node: PowerPC64 ELF64,  Next: S/390 ELF,  Prev: PowerPC ELF32,  
      By default, ‘ld’ sorts TOC sections so that those whose file
      happens to have a section called ‘.init’ or ‘.fini’ are placed
      first, followed by TOC sections referenced by code generated with
-     PowerPC64 gcc’s ‘-mcmodel=small’, and lastly TOC sections
-     referenced only by code generated with PowerPC64 gcc’s
+     PowerPC64 spl’s ‘-mcmodel=small’, and lastly TOC sections
+     referenced only by code generated with PowerPC64 spl’s
      ‘-mcmodel=medium’ or ‘-mcmodel=large’ options.  Doing this results
      in better TOC grouping for multi-TOC. Use this option to turn off
      this feature.
@@ -7127,7 +7127,7 @@ _exporting DLL symbols_
           linker’s command line.  The file’s name must end in ‘.def’ or
           ‘.DEF’.
 
-               gcc -o <output> <objectfiles> <dll name>.def
+               spl -o <output> <objectfiles> <dll name>.def
 
           Using a DEF file turns off the normal auto-export behavior,
           unless the ‘--export-all-symbols’ option is also used.

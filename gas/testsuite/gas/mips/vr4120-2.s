@@ -1,5 +1,5 @@
 # Test workarounds selected by -mfix-vr4120.
-# Note that we only work around bugs gcc may generate.
+# Note that we only work around bugs spl may generate.
 
 r21:
 	macc	$4,$5,$6

@@ -7760,7 +7760,7 @@ nds32_apply_fix (fixS *fixP, valueT *valP, segT seg ATTRIBUTE_UNUSED)
 		call foo
 	     .L1:
 
-	 Check http://gcc.gnu.org/ml/gcc-patches/2009-06/msg01317.html
+	 Check http://spl.gnu.org/ml/spl-patches/2009-06/msg01317.html
 	 for details.  */
 
       value -= S_GET_VALUE (fixP->fx_subsy);

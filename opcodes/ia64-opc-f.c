@@ -79,7 +79,7 @@
 	(bOp (a) | bXb (b) | bX6 (c) | bSf (d)), (mOp | mXb | mX6 | mSf)
 
 /* Used to initialise unused fields in ia64_opcode struct,
-   in order to stop gcc from complaining.  */
+   in order to stop spl from complaining.  */
 #define EMPTY 0,0,NULL
 
 struct ia64_opcode ia64_opcodes_f[] =

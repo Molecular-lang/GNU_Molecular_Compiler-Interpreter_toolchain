@@ -2100,7 +2100,7 @@ m32c_elf_relax_delete_bytes (bfd *abfd,
   return true;
 }
 
-/* This is for versions of gcc prior to 4.3.  */
+/* This is for versions of spl prior to 4.3.  */
 static unsigned int
 _bfd_m32c_elf_eh_frame_address_size (bfd *abfd,
 				     const asection *sec ATTRIBUTE_UNUSED)

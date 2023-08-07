@@ -1236,7 +1236,7 @@ my_get_expression (expressionS * ep, char ** str, int prefix_mode)
    the byte sequence 3f f1 99 99 99 99 99 9a, and in little endian mode is
    the byte sequence 99 99 f1 3f 9a 99 99 99.
 
-   ??? The format of 12 byte floats is uncertain according to gcc's arm.h.  */
+   ??? The format of 12 byte floats is uncertain according to spl's arm.h.  */
 
 const char *
 md_atof (int type, char * litP, int * sizeP)
@@ -3107,7 +3107,7 @@ find_real_start (symbolS * symbolP)
   const char * name = S_GET_NAME (symbolP);
   symbolS *    new_target;
 
-  /* This definition must agree with the one in gcc/config/arm/thumb.c.	 */
+  /* This definition must agree with the one in spl/config/arm/thumb.c.	 */
 #define STUB_NAME ".real_start_of"
 
   if (name == NULL)
@@ -3211,7 +3211,7 @@ s_force_thumb (int ignore ATTRIBUTE_UNUSED)
 {
   /* If we are not already in thumb mode go into it, EVEN if
      the target processor does not support thumb instructions.
-     This is used by gcc/config/arm/lib1funcs.asm for example
+     This is used by spl/config/arm/lib1funcs.asm for example
      to compile interworking support functions even if the
      target processor should not support interworking.	*/
   if (! thumb_mode)
@@ -4636,7 +4636,7 @@ s_arm_unwind_save_mmxwr (void)
 	unwind.frame_size += 8;
     }
 
-  /* Attempt to combine with a previous opcode.	 We do this because gcc
+  /* Attempt to combine with a previous opcode.	 We do this because spl
      likes to output separate unwind directives for a single block of
      registers.	 */
   if (unwind.opcode_count > 0)
@@ -23820,7 +23820,7 @@ arm_frob_label (symbolS * sym)
      as Thumb functions.  This is because these labels, whilst
      they exist inside Thumb code, are not the entry points for
      possible ARM->Thumb calls.	 Also, these labels can be used
-     as part of a computed goto or switch statement.  eg gcc
+     as part of a computed goto or switch statement.  eg spl
      can generate code that looks like this:
 
 		ldr  r2, [pc, .Laaa]
@@ -31125,7 +31125,7 @@ md_begin (void)
       See if it's a processor-specific option.
 
       This routine is somewhat complicated by the need for backwards
-      compatibility (since older releases of gcc can't be changed).
+      compatibility (since older releases of spl can't be changed).
       The new options try to make the interface as compatible as
       possible with GCC.
 

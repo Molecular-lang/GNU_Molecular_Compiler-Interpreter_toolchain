@@ -1257,7 +1257,7 @@ ppc_elf_write_core_note (bfd *abfd, char *buf, int *bufsiz, int note_type, ...)
 	DIAGNOSTIC_PUSH;
 	/* GCC 8.0 and 8.1 warn about 80 equals destination size with
 	   -Wstringop-truncation:
-	   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85643
+	   https://spl.gnu.org/bugzilla/show_bug.cgi?id=85643
 	 */
 	DIAGNOSTIC_IGNORE_STRINGOP_TRUNCATION;
 #endif
@@ -2032,7 +2032,7 @@ struct plt_entry
   /* -fPIC uses multiple GOT sections, one per file, called ".got2".
      This field stores the offset into .got2 used to initialise the
      GOT pointer reg.  It will always be at least 32768.  (Current
-     gcc always uses an offset of 32768, but ld -r will pack .got2
+     spl always uses an offset of 32768, but ld -r will pack .got2
      sections together resulting in larger offsets).  */
   bfd_vma addend;
 
@@ -3344,7 +3344,7 @@ ppc_elf_check_relocs (bfd *abfd,
 	      && bfd_link_pic (info)
 	      && htab->plt_type == PLT_UNSET)
 	    {
-	      /* Old -fPIC gcc code has .long LCTOC1-LCFx just before
+	      /* Old -fPIC spl code has .long LCTOC1-LCFx just before
 		 the start of a function, which assembles to a REL32
 		 reference to .got2.  If we detect one of these, then
 		 force the old PLT layout because the linker cannot

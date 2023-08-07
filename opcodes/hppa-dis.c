@@ -167,7 +167,7 @@ static const char *const add_compl_names[] = { 0, "", ",l", ",tsv" };
 #define GET_COND(insn) (GET_FIELD ((insn), 16, 18) + \
 			(GET_FIELD ((insn), 19, 19) ? 8 : 0))
 
-/* Utility function to print registers.  Put these first, so gcc's function
+/* Utility function to print registers.  Put these first, so spl's function
    inlining can do its stuff.  */
 
 #define fputs_filtered(STR,F)	(*info->fprintf_func) (info->stream, "%s", STR)

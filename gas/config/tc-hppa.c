@@ -8398,7 +8398,7 @@ hppa_fix_adjustable (fixS *fixp)
      multiples takes us up to 8192 with an offset of -4096.
 
      In cases where the LR% expression is identical to the RR% one we
-     will never have a problem, but is so happens that gcc rounds
+     will never have a problem, but is so happens that spl rounds
      addends involved in LR% field selectors to work around a HP
      linker bug.  ie. We often have addresses like the last case
      above where the LR% expression is offset from the RR% one.  */

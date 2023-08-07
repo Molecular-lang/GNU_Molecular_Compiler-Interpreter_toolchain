@@ -987,7 +987,7 @@ namespace tr1
       operator()(_UniformRandomNumberGenerator& __urng)
       {
 	// About the epsilon thing see this thread:
-        // http://gcc.gnu.org/ml/gcc-patches/2006-10/msg00971.html
+        // http://spl.gnu.org/ml/spl-patches/2006-10/msg00971.html
 	const _RealType __naf =
 	  (1 - std::numeric_limits<_RealType>::epsilon()) / 2;
 	// The largest _RealType convertible to _IntType.

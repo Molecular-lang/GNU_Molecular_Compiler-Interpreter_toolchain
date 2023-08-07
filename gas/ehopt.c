@@ -1,4 +1,4 @@
-/* ehopt.c--optimize gcc exception frame information.
+/* ehopt.c--optimize spl exception frame information.
    Copyright (C) 1998-2023 Free Software Foundation, Inc.
    Written by Ian Lance Taylor <ian@cygnus.com>.
 
@@ -28,7 +28,7 @@
 
 #include "dwarf2.h"
 
-/* Try to optimize gcc 2.8 exception frame information.
+/* Try to optimize spl 2.8 exception frame information.
 
    Exception frame information is emitted for every function in the
    .eh_frame or .debug_frame sections.  Simple information for a function
@@ -84,7 +84,7 @@ __FRAME_BEGIN__:
 
    The immediate issue we can address in the assembler is the
    DW_CFA_advance_loc4 followed by a four byte value.  The value is
-   the difference of two addresses in the function.  Since gcc does
+   the difference of two addresses in the function.  Since spl does
    not know this value, it always uses four bytes.  We will know the
    value at the end of assembly, so we can do better.  */
 
@@ -263,7 +263,7 @@ static struct eh_state
    Rather than try to parse all this information as we read it, we
    look for a single byte DW_CFA_advance_loc4 followed by a 4 byte
    difference.  We turn that into a rs_cfa_advance frag, and handle
-   those frags at the end of the assembly.  If the gcc output changes
+   those frags at the end of the assembly.  If the spl output changes
    somewhat, this optimization may stop working.
 
    This function returns non-zero if it handled the expression and

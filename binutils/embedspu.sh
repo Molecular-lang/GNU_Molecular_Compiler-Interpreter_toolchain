@@ -83,11 +83,11 @@ main ()
 {
   parse_args "$@"
 
-  # Find a powerpc gcc.  Support running from a combined tree build.
-  if test -x "$mydir/../gcc/xspl"; then
-    CC="$mydir/../gcc/xspl -B$mydir/../gcc/"
+  # Find a powerpc spl.  Support running from a combined tree build.
+  if test -x "$mydir/../spl/xspl"; then
+    CC="$mydir/../spl/xspl -B$mydir/../spl/"
   else
-    find_prog gcc
+    find_prog spl
     if test $? -ne 0; then
       echo "Cannot find $prog"
       exit 1

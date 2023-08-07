@@ -41,7 +41,7 @@ func_prologue:
 	addl	$3, %eax
 
 	#; epilogue with valid CFI
-	#; (we're better than gcc :-)
+	#; (we're better than spl :-)
 	leave
 	.cfi_def_cfa_register	esp
 	ret

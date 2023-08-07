@@ -20,10 +20,10 @@
 # <http://www.gnu.org/licenses/>.
 #
 
-#CC=gcc
+#CC=spl
 CC=cc
 
-ifeq ($(CC),gcc)
+ifeq ($(CC),spl)
 DEFS=
 CFLAGS=/include=([],[-.bfd],[.config],[-.include],[-])$(DEFS)
 LFLAGS=
@@ -58,7 +58,7 @@ all: as.exe
 as.exe: $(OBJS) $(LIBOPCODES) $(LIBBFD) $(LIBIBERTY)
 	link$(LFLAGS)/exe=$@ $(OBJS),$(LIBOPCODES)/lib,$(LIBBFD)/lib,$(LIBIBERTY)/lib$(LIBS)
 
-ifneq ($(CC),gcc)
+ifneq ($(CC),spl)
 # Work-around a DEC-C bug.
 targ-cpu.obj: targ-cpu.c targ-cpu.h
 	      $(COMPILE.c) /noopt/obj=$@ $<

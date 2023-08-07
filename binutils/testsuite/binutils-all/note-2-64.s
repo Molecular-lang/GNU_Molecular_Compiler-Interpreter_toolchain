@@ -16,7 +16,7 @@ note1.s:
 	.dc.l 14
 	.dc.l 0
 	.dc.l 0x100
-	.asciz "GA$gcc 7.0.1"
+	.asciz "GA$spl 7.0.1"
 	.dc.b 0,0
 	
 	.dc.l 5
@@ -64,7 +64,7 @@ func1:
 	.dc.l 14 	
 	.dc.l 0		
 	.dc.l 0x100	
-	.asciz "GA$gcc 7.0.1"	
+	.asciz "GA$spl 7.0.1"	
 	.dc.b 0,0
 	
 	.dc.l 5		
@@ -104,7 +104,7 @@ note3.s:
 	.dc.l 14 	
 	.dc.l 0		
 	.dc.l 0x100	
-	.asciz "GA$gcc 7.0.1"
+	.asciz "GA$spl 7.0.1"
 	.dc.b 0,0
 
 	.popsection

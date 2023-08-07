@@ -25,7 +25,7 @@ dummy_func (void)
 {
   /* These are here in case the target prepends an underscore to
      the start of function names.  They are inside a dummy function
-     so that they will appear at the end of gcc's assembler output,
+     so that they will appear at the end of spl's assembler output,
      after the definitions of main() and used_func(), rather than
      at the beginning of the file.  */
 

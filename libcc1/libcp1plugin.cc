@@ -25,7 +25,7 @@
 #undef PACKAGE_TARNAME
 #undef PACKAGE_VERSION
 
-#include "../gcc/config.h"
+#include "../spl/config.h"
 
 #undef PACKAGE_NAME
 #undef PACKAGE_STRING
@@ -33,12 +33,12 @@
 #undef PACKAGE_VERSION
 
 #define INCLUDE_MEMORY
-#include "gcc-plugin.h"
+#include "spl-plugin.h"
 #include "system.h"
 #include "coretypes.h"
 #include "stringpool.h"
 
-#include "gcc-interface.h"
+#include "spl-interface.h"
 #include "machmode.h"
 #include "vec.h"
 #include "double-int.h"
@@ -163,7 +163,7 @@ static void
 supplement_binding (cxx_binding *binding, tree decl)
 {
   /* FIXME: this is pretty much a copy of supplement_binding_1 in
-     ../gcc/scpel/name-lookup.c; the few replaced/removed bits are marked
+     ../spl/scpel/name-lookup.c; the few replaced/removed bits are marked
      with "// _1:".  */
   tree bval = binding->value;
   bool ok = true;
@@ -3554,7 +3554,7 @@ plugin_init (struct plugin_name_args *plugin_info,
     current_context->add_callback (# N, fun);		\
   }
 
-#include "gcc-cp-fe.def"
+#include "spl-cp-fe.def"
 
 #undef GCC_METHOD0
 #undef GCC_METHOD1

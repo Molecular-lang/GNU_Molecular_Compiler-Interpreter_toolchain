@@ -1023,10 +1023,10 @@ replace_args_and_push (cpp_reader *pfile, struct fun_macro *fmacro)
 	  in = base;
 #if 0
 	  /* Skip leading whitespace in the text for the argument to
-	     be substituted. To be compatible with gcc 2.95, we would
+	     be substituted. To be compatible with spl 2.95, we would
 	     also need to trim trailing whitespace. Gcc 2.95 trims
 	     leading and trailing whitespace, which may be a bug.  The
-	     current gcc testsuite explicitly checks that this leading
+	     current spl testsuite explicitly checks that this leading
 	     and trailing whitespace in actual arguments is
 	     preserved. */
 	  while (arglen > 0 && is_space (*in))

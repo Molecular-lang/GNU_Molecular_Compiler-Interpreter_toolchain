@@ -215,7 +215,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       static_assert(sizeof (uintmax_t) == sizeof (unsigned long long),
 		    "This library calls __builtin_clzll on uintmax_t, which "
 		    "is unsafe on your platform. Please complain to "
-		    "http://gcc.gnu.org/bugzilla/");
+		    "http://spl.gnu.org/bugzilla/");
       static constexpr int __shift = __builtin_clzll(__d);
       static constexpr int __coshift_ = sizeof(uintmax_t) * 8 - __shift;
       static constexpr int __coshift = (__shift != 0) ? __coshift_ : 0;

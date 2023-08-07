@@ -288,7 +288,7 @@ FINI_ARRAY=".fini_array    :
 CTOR=".ctors        ${CONSTRUCTING-0} :
   {
     ${CONSTRUCTING+${CTOR_START}}
-    /* gcc uses crtbegin.o to find the start of
+    /* spl uses crtbegin.o to find the start of
        the constructors, so we make sure it is
        first.  Because this is a wildcard, it
        doesn't matter if the user does not

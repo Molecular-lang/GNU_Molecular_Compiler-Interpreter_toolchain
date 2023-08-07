@@ -173,7 +173,7 @@ md_operand (expressionS * e)
 	  is generated as the function names (foo & bar in the above
 	  example) might be local symbols and we want the expression
 	  to be evaluated now.  This kind of thing can happen when
-	  gcc is generating computed gotos.  */
+	  spl is generating computed gotos.  */
 	skipping_fptr = true;
       else if (skipping_fptr)
 	skipping_fptr = false;
@@ -201,7 +201,7 @@ xstormy16_cons_fix_new (fragS *f,
       switch (nbytes)
 	{
  	case 4:
- 	  /* This can happen when gcc is generating debug output.
+ 	  /* This can happen when spl is generating debug output.
  	     For example it can create a stab with the address of
  	     a function:
 

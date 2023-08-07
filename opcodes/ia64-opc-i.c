@@ -103,7 +103,7 @@
 #define FULL17 ((ia64_insn)0x10ff001fc0LL)
 
 /* Used to initialise unused fields in ia64_opcode struct,
-   in order to stop gcc from complaining.  */
+   in order to stop spl from complaining.  */
 #define EMPTY 0,0,NULL
 
 struct ia64_opcode ia64_opcodes_i[] =

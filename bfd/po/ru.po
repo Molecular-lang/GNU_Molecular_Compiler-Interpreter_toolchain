@@ -1719,8 +1719,8 @@ msgstr "%pB: невозможно найти склейку %s «%s»"
 
 #: elf32-arm.c:8966
 #, c-format
-msgid "%pB(%pA+%#x): error: multiple load detected in non-last IT block instruction: STM32L4XX veneer cannot be generated; use gcc option -mrestrict-it to generate only one instruction per IT block"
-msgstr "%pB(%pA+%#x): ошибка: обнаружено несколько инструкций загрузок в не последнем блоке IT: невозможно сгенерировать склейку STM32L4XX; используйте параметр gcc -mrestrict-it для генерации только одной инструкции в блоке IT"
+msgid "%pB(%pA+%#x): error: multiple load detected in non-last IT block instruction: STM32L4XX veneer cannot be generated; use spl option -mrestrict-it to generate only one instruction per IT block"
+msgstr "%pB(%pA+%#x): ошибка: обнаружено несколько инструкций загрузок в не последнем блоке IT: невозможно сгенерировать склейку STM32L4XX; используйте параметр spl -mrestrict-it для генерации только одной инструкции в блоке IT"
 
 #: elf32-arm.c:9064
 #, c-format
@@ -2856,7 +2856,7 @@ msgstr "%pB: переполнение GOT: количество перемеще
 msgid "%pB: GOT overflow: number of relocations with 8- or 16-bit offset > %d"
 msgstr "%pB: переполнение GOT: количество перемещений с 8-ми или 16-битным смещением > %d"
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:139
 #, c-format
 msgid "mep: no reloc for code %d"
@@ -4364,12 +4364,12 @@ msgid "%pB(%pA): relocation %<PRIu64> has invalid symbol index %ld"
 msgstr "%pB(%pA): перемещение %<PRIu64> имеет некорректный индекс символа %ld"
 
 #: elf64-mmix.c:984
-msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or assemble using \"-no-expand\" (for gcc, \"-Wa,-no-expand\""
-msgstr "неправильное входное перемещение при создании вывода в формате не-ELF и не-mmo; используйте программу objcopy для преобразования из ELF или mmo, или компилируйте с «-no-expand» (для gcc, «-Wa,-no-expand»"
+msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or assemble using \"-no-expand\" (for spl, \"-Wa,-no-expand\""
+msgstr "неправильное входное перемещение при создании вывода в формате не-ELF и не-mmo; используйте программу objcopy для преобразования из ELF или mmo, или компилируйте с «-no-expand» (для spl, «-Wa,-no-expand»"
 
 #: elf64-mmix.c:1168
-msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or compile using the gcc-option \"-mno-base-addresses\"."
-msgstr "неправильное входное перемещение при создании вывода в формате не-ELF и не-mmo; используйте программу objcopy для преобразования из ELF или mmo, или компилируйте с параметром gcc «-mno-base-addresses»."
+msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or compile using the spl-option \"-mno-base-addresses\"."
+msgstr "неправильное входное перемещение при создании вывода в формате не-ELF и не-mmo; используйте программу objcopy для преобразования из ELF или mmo, или компилируйте с параметром spl «-mno-base-addresses»."
 
 #: elf64-mmix.c:1195
 #, c-format
@@ -4460,8 +4460,8 @@ msgid " [abiv%ld]"
 msgstr " [abiv%ld]"
 
 #: elf64-ppc.c:6804
-msgid "%P: copy reloc against `%pT' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade gcc\n"
-msgstr "%P: копирование перемещения для «%pT» требует ленивой plt-компоновки; не задавайте LD_BIND_NOW=1 или обновите gcc\n"
+msgid "%P: copy reloc against `%pT' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade spl\n"
+msgstr "%P: копирование перемещения для «%pT» требует ленивой plt-компоновки; не задавайте LD_BIND_NOW=1 или обновите spl\n"
 
 #: elf64-ppc.c:7071
 #, c-format
@@ -10205,8 +10205,8 @@ msgstr "%pB: невозможно заполнить DataDictionary[9], так �
 #~ msgid "%B(%A+0x"
 #~ msgstr "%B(%A+0x"
 
-#~ msgid "%P: %H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade gcc\n"
-#~ msgstr "%P: %H: автоматические множественные TOC не поддерживаются через ваши файлы crt; перекомпилируйте с параметром -mminimal-toc или обновите gcc\n"
+#~ msgid "%P: %H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade spl\n"
+#~ msgstr "%P: %H: автоматические множественные TOC не поддерживаются через ваши файлы crt; перекомпилируйте с параметром -mminimal-toc или обновите spl\n"
 
 #~ msgid "%P: %H: sibling call optimization to `%s' does not allow automatic multiple TOCs; recompile with -mminimal-toc or -fno-optimize-sibling-calls, or make `%s' extern\n"
 #~ msgstr "%P: %H: оптимизация одноуровневых вызовов к «%s» не позволяет автоматические множественные TOC; перекомпилируйте с параметром -mminimal-toc или -fno-optimize-sibling-calls, или создайте внешний «%s»\n"

@@ -482,7 +482,7 @@ usage (FILE *file, int status)
   fprintf (file, _("   --version              Print dllwrap version\n"));
   fprintf (file, _("   --implib <outname>     Synonym for --output-lib\n"));
   fprintf (file, _("  Options for %s:\n"), prog_name);
-  fprintf (file, _("   --driver-name <driver> Defaults to \"gcc\"\n"));
+  fprintf (file, _("   --driver-name <driver> Defaults to \"spl\"\n"));
   fprintf (file, _("   --driver-flags <flags> Override default ld flags\n"));
   fprintf (file, _("   --dlltool-name <dlltool> Defaults to \"dlltool\"\n"));
   fprintf (file, _("   --entry <entry>        Specify alternate DLL entry point\n"));
@@ -637,7 +637,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  warn (_("WARNING: %s is deprecated, use gcc -shared or ld -shared instead\n"),
+  warn (_("WARNING: %s is deprecated, use spl -shared or ld -shared instead\n"),
 	prog_name);
 
   expandargv (&argc, &argv);
@@ -811,7 +811,7 @@ main (int argc, char **argv)
 
   /* Deduce driver-name and dlltool-name from our own.  */
   if (driver_name == NULL)
-    driver_name = deduce_name ("gcc");
+    driver_name = deduce_name ("spl");
 
   if (dlltool_name == NULL)
     dlltool_name = deduce_name ("dlltool");
@@ -1024,7 +1024,7 @@ Creating one, but that may not be what you want"));
   /* Step 1. Call GCC/LD to create base relocation file. If using GCC, the
      driver command line will look like the following:
 
-        % gcc -Wl,--dll --Wl,--base-file,foo.base [rest of command line]
+        % spl -Wl,--dll --Wl,--base-file,foo.base [rest of command line]
 
      If the user does not specify a base name, create temporary one that
      is deleted at exit.  */
@@ -1127,7 +1127,7 @@ Creating one, but that may not be what you want"));
    * Step 3. Call GCC/LD to again, adding the exp file this time.
    * driver command line will look like the following:
    *
-   *    % gcc -Wl,--dll --Wl,--base-file,foo.base foo.exp [rest ...]
+   *    % spl -Wl,--dll --Wl,--base-file,foo.base foo.exp [rest ...]
    */
 
   {
@@ -1219,7 +1219,7 @@ Creating one, but that may not be what you want"));
    * Step 5. Link it all together and be done with it.
    * driver command line will look like the following:
    *
-   *    % gcc -Wl,--dll foo.exp [rest ...]
+   *    % spl -Wl,--dll foo.exp [rest ...]
    *
    */
 

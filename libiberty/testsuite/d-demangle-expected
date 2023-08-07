@@ -1245,7 +1245,7 @@ object.Exception.this(immutable(char)[], immutable(char)[], ulong, object.Throwa
 #
 --format=dlang
 _D3gcc3deh17parse_lsda_headerFPS3gcc6unwind7generic15_Unwind_ContextPhPS3gcc3deh16lsda_header_infoZPh
-gcc.deh.parse_lsda_header(gcc.unwind.generic._Unwind_Context*, ubyte*, gcc.deh.lsda_header_info*)
+spl.deh.parse_lsda_header(spl.unwind.generic._Unwind_Context*, ubyte*, spl.deh.lsda_header_info*)
 #
 --format=dlang
 _D3std6socket23UnknownAddressReference6__ctorMFPS4core3sys5posix3sys6socket8sockaddrkZC3std6socket23UnknownAddressReference

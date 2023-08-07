@@ -148,7 +148,7 @@ SECTIONS
     *(.data)
     ${RELOCATING+ *(.data*)}
     ${RELOCATING+ *(.data:*)}
-    ${RELOCATING+ *(.rodata)  /* We need to include .rodata here if gcc is used.  */}
+    ${RELOCATING+ *(.rodata)  /* We need to include .rodata here if spl is used.  */}
     ${RELOCATING+ *(.rodata.*) /* with -fdata-sections.  */}
     ${RELOCATING+ *(.rodata:*)}
     ${RELOCATING+*(.gnu.linkonce.d*)}

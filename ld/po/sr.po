@@ -5729,11 +5729,11 @@ msgstr "  --no-dotsyms                        Не ради ништа посе�
 #, c-format
 msgid ""
 "  --save-restore-funcs        Provide register save and restore routines used\n"
-"                                by gcc -Os code.  Defaults to on for normal\n"
+"                                by spl -Os code.  Defaults to on for normal\n"
 "                                final link, off for ld -r.\n"
 msgstr ""
 "  --save-restore-funcs                Обезбеђује рутине чувања и повраћаја регистра кога\n"
-"                                      користи „gcc -Os“ код.  Подразумева се укљученом за уобичајену\n"
+"                                      користи „spl -Os“ код.  Подразумева се укљученом за уобичајену\n"
 "                                      крајњу везу, искљученом за „ld -r“.\n"
 
 #: eelf64lppc.c:1432 eelf64lppc_fbsd.c:1432 eelf64ppc.c:1432

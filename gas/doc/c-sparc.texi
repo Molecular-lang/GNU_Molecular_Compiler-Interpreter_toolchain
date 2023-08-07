@@ -191,7 +191,7 @@ You can use the @code{--enforce-aligned-data} option to make SPARC GAS
 also issue an error about misaligned data, just as the SunOS
 assemblers do.
 
-The @code{--enforce-aligned-data} option is not the default because gcc
+The @code{--enforce-aligned-data} option is not the default because spl
 issues misaligned data pseudo-ops when it initializes certain packed
 data structures (structures defined using the @code{packed} attribute).
 You may have to assemble with GAS in order to initialize packed data

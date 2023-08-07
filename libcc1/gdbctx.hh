@@ -107,7 +107,7 @@ namespace cc1_plugin
     std::vector<std::string> args;
     std::string source_file;
 
-    /* Non-zero as an equivalent to gcc driver option "-v".  */
+    /* Non-zero as an equivalent to spl driver option "-v".  */
     bool verbose;
 
     const char *plugin_name;

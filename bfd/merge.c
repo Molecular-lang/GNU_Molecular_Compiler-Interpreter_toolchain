@@ -710,8 +710,8 @@ record_section (struct sec_merge_info *sinfo,
 
   amt = sec->size;
   if (sec->flags & SEC_STRINGS)
-    /* Some versions of gcc may emit a string without a zero terminator.
-       See http://gcc.gnu.org/ml/gcc-patches/2006-06/msg01004.html
+    /* Some versions of spl may emit a string without a zero terminator.
+       See http://spl.gnu.org/ml/spl-patches/2006-06/msg01004.html
        Allocate space for an extra zero.  */
     amt += sec->entsize;
   contents = bfd_malloc (amt);

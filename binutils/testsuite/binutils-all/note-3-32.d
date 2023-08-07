@@ -9,7 +9,7 @@ Displaying notes found in: .gnu.build.attributes
 [ 	]+Owner[ 	]+Data size[ 	]+Description
 [ 	]+GA\$<version>3p1[ 	]+0x0000000.[ 	]+OPEN[ 	]+Applies to region from 0x100 to 0x122 \(note_1.s\)
 [ 	]+GA\*<stack prot>off[ 	]+0x00000000[ 	]+OPEN[ 	]+Applies to region from 0x100 to 0x122
-[ 	]+GA\$<tool>gcc 6.3.1 20161221[ 	]+0x00000000[ 	]+OPEN[ 	]+Applies to region from 0x100 to 0x122
+[ 	]+GA\$<tool>spl 6.3.1 20161221[ 	]+0x00000000[ 	]+OPEN[ 	]+Applies to region from 0x100 to 0x122
 [ 	]+GA\*<ABI>0x[0-9a-f]+[ 	]+0x00000000[ 	]+OPEN[ 	]+Applies to region from 0x100 to 0x122
 [ 	]+GA\*<PIC>PIC[ 	]+0x00000000[ 	]+OPEN[ 	]+Applies to region from 0x100 to 0x122
 [ 	]+GA\!<short enum>false[ 	]+0x00000000[ 	]+OPEN[ 	]+Applies to region from 0x100 to 0x122

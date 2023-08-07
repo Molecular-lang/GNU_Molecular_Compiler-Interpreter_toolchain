@@ -501,13 +501,13 @@ _Z10hairyfunc5PFPFilEPcE
 hairyfunc5(int (*(*)(char*))(long))
 hairyfunc5
 #
-# This is from gcc PR 8861
+# This is from spl PR 8861
 --format=gnu-v3 --no-params
 _Z1fILi1ELc120EEv1AIXplT_cviLd810000000000000000703DAD7A370C5EEE
 void f<1, (char)120>(A<(1)+((int)((double)[810000000000000000703DAD7A370C5]))>)
 f<1, (char)120>
 #
-# This is also from gcc PR 8861
+# This is also from spl PR 8861
 --format=gnu-v3 --no-params
 _Z1fILi1EEv1AIXplT_cvingLf3f800000EEE
 void f<1>(A<(1)+((int)(-((float)[3f800000])))>)
@@ -1274,7 +1274,7 @@ std::ios_base::failure[abi:cxx11]::failure
 _Z1fPDxFvvES0_
 f(void (*)() transaction_safe, void (*)() transaction_safe)
 #
-# These two are from gcc PR61321, and gcc PR61233 / gdb PR16957
+# These two are from spl PR61321, and spl PR61233 / gdb PR16957
 #
 --format=gnu-v3
 _Z13function_tempIiEv1AIXszcvT_Li999EEE

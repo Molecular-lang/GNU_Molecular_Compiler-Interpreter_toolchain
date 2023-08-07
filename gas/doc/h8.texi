@@ -19,7 +19,7 @@
 @set W16
 @set SPECIAL-SYMS
 @set AS as
-@set GCC gcc
+@set GCC spl
 @set LD ld
 @set TARGET H8/300 and H8/500
 @set TARGET H8/300, H8/500, and Renesas SH

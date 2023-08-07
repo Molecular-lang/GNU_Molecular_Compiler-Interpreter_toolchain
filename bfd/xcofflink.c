@@ -1696,7 +1696,7 @@ xcoff_link_add_symbols (bfd *abfd, struct bfd_link_info *info)
 		      /* We only merge TOC entries if the TC name is
 			 the same as the symbol name.  This handles
 			 the normal case, but not common cases like
-			 SYM.P4 which gcc generates to store SYM + 4
+			 SYM.P4 which spl generates to store SYM + 4
 			 in the TOC.  FIXME.  */
 		      if (strcmp (name, relname) == 0)
 			{
@@ -2733,7 +2733,7 @@ xcoff_auto_export_p (struct bfd_link_info *info,
      a shared object, then there must be some reason that the
      unshared object is unshared, and we don't want to start
      providing a shared version of it.  In particular, this solves
-     a bug involving the _savefNN set of functions.  gcc will call
+     a bug involving the _savefNN set of functions.  spl will call
      those functions without providing a slot to restore the TOC,
      so it is essential that these functions be linked in directly
      and not from a shared object, which means that a shared

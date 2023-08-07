@@ -61,12 +61,12 @@
 .byte 0xf2 /* padding */
 .byte 0xf1 /* padding */
 
-/* Type 1005, string "gcc" (compiler) */
+/* Type 1005, string "spl" (compiler) */
 .string5:
 .short .string6 - .string5 - 2
 .short LF_STRING_ID
 .long 0 /* sub-string */
-.asciz "gcc"
+.asciz "spl"
 
 /* Type 1006, string "tmp.c" (source file) */
 .string6:

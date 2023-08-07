@@ -1006,7 +1006,7 @@ discarded_section (const asection *sec)
 
 /* We use a macro to initialize the static asymbol structures because
    traditional C does not permit us to initialize a union member while
-   gcc warns if we don't initialize it.
+   spl warns if we don't initialize it.
    the_bfd, name, value, attr, section [, udata]  */
 #ifdef __STDC__
 #define GLOBAL_SYM_INIT(NAME, SECTION) \
@@ -5775,7 +5775,7 @@ addressing mode.  */
   BFD_RELOC_M68HC11_RL_JUMP,
 
 /* Motorola 68HC11 reloc.
-This reloc marks a group of several instructions that gcc generates
+This reloc marks a group of several instructions that spl generates
 and for which the linker relaxation pass can modify and/or remove
 some of them.  */
   BFD_RELOC_M68HC11_RL_GROUP,
@@ -5807,7 +5807,7 @@ This reloc marks the beginning of a bra/jal instruction.  */
   BFD_RELOC_XGATE_RL_JUMP,
 
 /* Freescale XGATE reloc.
-This reloc marks a group of several instructions that gcc generates
+This reloc marks a group of several instructions that spl generates
 and for which the linker relaxation pass can modify and/or remove
 some of them.  */
   BFD_RELOC_XGATE_RL_GROUP,

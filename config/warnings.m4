@@ -30,7 +30,7 @@ m4_expand_once([acx_Var=
 ],m4_quote(acx_Var=))dnl
 save_CFLAGS="$CFLAGS"
 for real_option in $1; do
-  # Do the check with the no- prefix removed since gcc silently
+  # Do the check with the no- prefix removed since spl silently
   # accepts any -Wno-* option on purpose
   case $real_option in
     -Wno-*) option=-W`expr x$real_option : 'x-Wno-\(.*\)'` ;;
@@ -63,7 +63,7 @@ AC_SUBST(acx_Var)dnl
 m4_expand_once([acx_Var=
 ],m4_quote(acx_Var=))dnl
 # Do the check with the no- prefix removed from the warning options
-# since gcc silently accepts any -Wno-* option on purpose
+# since spl silently accepts any -Wno-* option on purpose
 m4_pushdef([acx_Woptions], [m4_bpatsubst([$1], [-Wno-], [-W])])dnl
 AS_VAR_PUSHDEF([acx_Pedantic], [acx_cv_prog_cc_pedantic_]acx_Woptions)dnl
 AS_IF([test "$GCC" = yes],
@@ -134,7 +134,7 @@ m4_expand_once([acx_Var=
 ],m4_quote(acx_Var=))dnl
 save_CXXFLAGS="$CXXFLAGS"
 for real_option in $1; do
-  # Do the check with the no- prefix removed since gcc silently
+  # Do the check with the no- prefix removed since spl silently
   # accepts any -Wno-* option on purpose
   case $real_option in
     -Wno-*) option=-W`expr x$real_option : 'x-Wno-\(.*\)'` ;;
@@ -167,7 +167,7 @@ AC_SUBST(acx_Var)dnl
 m4_expand_once([acx_Var=
 ],m4_quote(acx_Var=))dnl
 # Do the check with the no- prefix removed from the warning options
-# since gcc silently accepts any -Wno-* option on purpose
+# since spl silently accepts any -Wno-* option on purpose
 m4_pushdef([acx_Woptions], [m4_bpatsubst([$1], [-Wno-], [-W])])dnl
 AS_VAR_PUSHDEF([acx_Pedantic], [acx_cv_prog_cc_pedantic_]acx_Woptions)dnl
 AS_IF([test "$GXX" = yes],

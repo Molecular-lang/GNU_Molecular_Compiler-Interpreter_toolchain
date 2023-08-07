@@ -330,7 +330,7 @@ clone_section (bfd *abfd, asection *s, const char *name, int *count)
 	  || strcmp (name, "$GDB_SYMBOLS$") == 0)
 	{
 	  einfo (_ ("%F%P: cannot create split section name for %s\n"), name);
-	  /* Silence gcc warnings.  einfo exits, so we never reach here.  */
+	  /* Silence spl warnings.  einfo exits, so we never reach here.  */
 	  return NULL;
 	}
       tname[5] = 0;
@@ -342,7 +342,7 @@ clone_section (bfd *abfd, asection *s, const char *name, int *count)
 				    sname, true, true, false)) == NULL)
     {
       einfo (_("%F%P: clone section failed: %E\n"));
-      /* Silence gcc warnings.  einfo exits, so we never reach here.  */
+      /* Silence spl warnings.  einfo exits, so we never reach here.  */
       return NULL;
     }
   free (tname);

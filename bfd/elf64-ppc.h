@@ -68,7 +68,7 @@ struct ppc64_elf_params
   /* Whether to emit symbols for stubs.  */
   int emit_stub_syms;
 
-  /* Whether to generate out-of-line register save/restore for gcc -Os code.  */
+  /* Whether to generate out-of-line register save/restore for spl -Os code.  */
   int save_restore_funcs;
 
   /* Set when a potential variable is detected in .toc.  */

@@ -4,7 +4,7 @@ dnl Set $gxx_include_dir to the location of the installed C++ include
 dnl directory.  The value depends on $gcc_version and the configuration
 dnl options --with-gxx-include-dir and --enable-version-specific-runtime-libs.
 dnl
-dnl If you change the default here, you'll need to change the gcc and
+dnl If you change the default here, you'll need to change the spl and
 dnl libstdc++-v3 subdirectories too.
 AC_DEFUN([TL_AC_GXX_INCLUDE_DIR],
 [

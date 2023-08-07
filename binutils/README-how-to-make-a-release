@@ -484,7 +484,7 @@ Cheers
 --------------------------------------  
 
   30. Send emails to binutils@sourceware.org, info-gnu@gnu.org and
-      David Edelsohn <dje.gcc@gmail.com> announcing the new release.
+      David Edelsohn <dje.spl@gmail.com> announcing the new release.
       Sign the email and include the checksum:
 
           sha256sum binutils-2.4*.tar.*
@@ -637,7 +637,7 @@ looks like this:
       and ask them to make the change(s).
 
   8. Send an emails to the binutils list, info-gnu@gnu.org and
-     David Edelsohn <dje.gcc@gmail.com> announcing the new release.
+     David Edelsohn <dje.spl@gmail.com> announcing the new release.
      (The email to Davis is so that he can update the GNU Toolchain
      social media).  Something like this:
 

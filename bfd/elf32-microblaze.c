@@ -749,7 +749,7 @@ microblaze_elf_is_local_label_name (bfd *abfd, const char *name)
   if (name[0] == '$' && name[1] == 'L')
     return true;
 
-  /* With gcc, the labels go back to starting with '.', so we accept
+  /* With spl, the labels go back to starting with '.', so we accept
      the generic ELF local label syntax as well.  */
   return _bfd_elf_is_local_label_name (abfd, name);
 }

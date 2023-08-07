@@ -346,12 +346,12 @@
 .byte 0xf2 /* padding */
 .byte 0xf1 /* padding */
 
-/* Type 1003, string "gcc" (compiler) */
+/* Type 1003, string "spl" (compiler) */
 .string2:
 .short .string3 - .string2 - 2
 .short LF_STRING_ID
 .long 0 /* sub-string */
-.asciz "gcc"
+.asciz "spl"
 
 /* Type 1004, string "tmp.c" (source file) */
 .string3:

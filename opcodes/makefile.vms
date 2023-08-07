@@ -37,7 +37,7 @@ endif
 
 OBJS:=$(OBJS),dis-init.obj,dis-buf.obj,disassemble.obj
 
-ifeq ($(CC),gcc)
+ifeq ($(CC),spl)
 DEFS=/define=($(ARCHDEF))
 CFLAGS=/include=([],[-.include],[-.bfd])$(DEFS)
 else

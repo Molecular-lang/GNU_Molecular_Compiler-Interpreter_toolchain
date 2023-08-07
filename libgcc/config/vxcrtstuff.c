@@ -157,7 +157,7 @@ void __attribute__ ((__section__  (".fini"))) _fini()
 #else /* !USE_INITFINI_ARRAY  */
 
 /* Note: Even in case of .ctors/.dtors sections, we can't use the attribute
-   (constructor (15)) here as gcc may have been configured with constructors
+   (constructor (15)) here as spl may have been configured with constructors
    priority disabled.  We will instead craft an explicit section name for this
    purpose.  */
 #define EH_CTOR_ATTRIBUTE

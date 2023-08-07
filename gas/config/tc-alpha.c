@@ -171,7 +171,7 @@ struct alpha_macro
 
 /* Predicates for 16- and 32-bit ranges */
 /* XXX: The non-shift version appears to trigger a compiler bug when
-   cross-assembling from x86 w/ gcc 2.7.2.  */
+   cross-assembling from x86 w/ spl 2.7.2.  */
 
 #if 1
 #define range_signed_16(x) \
@@ -3503,7 +3503,7 @@ s_alpha_comm (int ignore ATTRIBUTE_UNUSED)
 
   SKIP_WHITESPACE_AFTER_NAME ();
 
-  /* Alpha OSF/1 compiler doesn't provide the comma, gcc does.  */
+  /* Alpha OSF/1 compiler doesn't provide the comma, spl does.  */
   if (*input_line_pointer == ',')
     {
       input_line_pointer++;
@@ -3891,7 +3891,7 @@ s_alpha_frame (int dummy ATTRIBUTE_UNUSED)
 
       cur_frame_data->ra_regno = tc_get_register (0);
 
-      /* Next comes the "offset of saved $a0 from $sp".  In gcc terms
+      /* Next comes the "offset of saved $a0 from $sp".  In spl terms
 	 this is current_function_pretend_args_size.  There's no place
 	 to put this value, so ignore it.  */
       s_ignore (42);
@@ -5431,7 +5431,7 @@ md_begin (void)
 
       /* Some opcodes include modifiers of various sorts with a "/mod"
 	 syntax, like the architecture manual suggests.  However, for
-	 use with gcc at least, we also need access to those same opcodes
+	 use with spl at least, we also need access to those same opcodes
 	 without the "/".  */
 
       if ((slash = strchr (name, '/')) != NULL)
@@ -6347,10 +6347,10 @@ tc_get_register (int frame ATTRIBUTE_UNUSED)
 }
 
 /* This is called before the symbol table is processed.  In order to
-   work with gcc when using mips-tfile, we must keep all local labels.
+   work with spl when using mips-tfile, we must keep all local labels.
    However, in other cases, we want to discard them.  If we were
    called with -g, but we didn't see any debugging information, it may
-   mean that gcc is smuggling debugging information through to
+   mean that spl is smuggling debugging information through to
    mips-tfile, in which case we must generate all local labels.  */
 
 #ifdef OBJ_ECOFF

@@ -1369,7 +1369,7 @@ hash_entry_bfd (struct bfd_link_hash_entry *h)
      which case it is the warning string.
    COPY is TRUE if NAME or STRING must be copied into locally
      allocated memory if they need to be saved.
-   COLLECT is TRUE if we should automatically collect gcc constructor
+   COLLECT is TRUE if we should automatically collect spl constructor
      or destructor names as collect2 does.
    HASHP, if not NULL, is a place to store the created hash table
      entry; if *HASHP is not NULL, the caller has already looked up

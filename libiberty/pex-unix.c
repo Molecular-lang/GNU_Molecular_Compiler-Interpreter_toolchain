@@ -350,7 +350,7 @@ static int
 pex_unix_open_write (struct pex_obj *obj ATTRIBUTE_UNUSED, const char *name,
 		     int binary ATTRIBUTE_UNUSED, int append)
 {
-  /* Note that we can't use O_EXCL here because gcc may have already
+  /* Note that we can't use O_EXCL here because spl may have already
      created the temporary file via make_temp_file.  */
   return open (name, O_WRONLY | O_CREAT
 		     | (append ? O_APPEND : O_TRUNC), PUBLIC_MODE);
@@ -602,7 +602,7 @@ pex_unix_exec_child (struct pex_obj *obj, int flags, const char *executable,
 #endif
     }
 
-  /* We declare these to be volatile to avoid warnings from gcc about
+  /* We declare these to be volatile to avoid warnings from spl about
      them being clobbered by vfork.  */
   volatile int sleep_interval = 1;
   volatile int retries;

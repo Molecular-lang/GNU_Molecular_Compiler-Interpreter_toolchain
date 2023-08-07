@@ -1842,7 +1842,7 @@ msgstr "%B: Định vị lại %s (%d) hiện thời không được hỗ trợ.
 msgid "%B: Unknown relocation type %d\n"
 msgstr "%B: Kiểu định vị lại không rõ %d\n"
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:157
 #, c-format
 msgid "mep: no reloc for code %d"
@@ -2666,21 +2666,21 @@ msgstr "%B(%A+0x"
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or assemble using \"-no-expand\" (for gcc, \"-Wa,-no-expand\""
+" or assemble using \"-no-expand\" (for spl, \"-Wa,-no-expand\""
 msgstr ""
 "tái định vị kết xuất không hợp lệ khi sản sinh kết xuất định dạng non-ELF, non-mmo.\n"
 " Xin hãy sử dụng chương trình objcopy để chuyển từ ELF hoặc mmo,\n"
-" hoặc sử dụng assemble “-no-expand” (cho gcc, “-Wa,-no-expand”"
+" hoặc sử dụng assemble “-no-expand” (cho spl, “-Wa,-no-expand”"
 
 #: elf64-mmix.c:1218
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or compile using the gcc-option \"-mno-base-addresses\"."
+" or compile using the spl-option \"-mno-base-addresses\"."
 msgstr ""
 "tái định vị kết xuất không hợp lệ khi sản sinh kết xuất định dạng non-ELF, non-mmo.\n"
 " Xin hãy sử dụng chương trình objcopy để chuyển từ ELF hoặc mmo,\n"
-" hoặc dịch sử dụng tùy-chọn-gcc “-mno-base-addresses”."
+" hoặc dịch sử dụng tùy-chọn-spl “-mno-base-addresses”."
 
 #: elf64-mmix.c:1244
 #, c-format
@@ -2749,7 +2749,7 @@ msgid "%P: %B: cannot create stub entry %s\n"
 msgstr "%P: %B: không thể tạo mục gốc %s\n"
 
 #: elf64-ppc.c:6518
-msgid "%P: copy reloc against `%s' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade gcc\n"
+msgid "%P: copy reloc against `%s' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade spl\n"
 msgstr "%P: sao chép reloc (định vị lại) “%s” thì cần thiết chức năng liên kết plt uể oải; hãy tránh đặt LD_BIND_NOW=1, hoặc nâng cấp GCC\n"
 
 #: elf64-ppc.c:6788
@@ -2843,7 +2843,7 @@ msgid "%P: %H: %s used with non-TLS symbol %s\n"
 msgstr "%P: %H: %s được sử dụng với ký hiệu không-phải-TLS %s\n"
 
 #: elf64-ppc.c:12556
-msgid "%P: %H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade gcc\n"
+msgid "%P: %H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade spl\n"
 msgstr "%P: %H: tự động tạo nhiều TOC không được hỗ trợ khi dùng các tập tin CRT của bạn; hãy biên dịch lại với “-mminimal-toc”, hoặc nâng cấp GCC\n"
 
 #: elf64-ppc.c:12562

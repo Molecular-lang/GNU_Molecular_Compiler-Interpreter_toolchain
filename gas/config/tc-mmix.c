@@ -4330,7 +4330,7 @@ mmix_cons (int nbytes)
 }
 
 /* The md_do_align worker.  At present, we just record an alignment to
-   nullify the automatic alignment we do for WYDE, TETRA and OCTA, as gcc
+   nullify the automatic alignment we do for WYDE, TETRA and OCTA, as spl
    does not use the unaligned macros when attribute packed is used.
    Arguably this is a GCC bug.  */
 

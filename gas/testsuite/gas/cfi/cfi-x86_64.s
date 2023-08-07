@@ -40,7 +40,7 @@ func_prologue:
 	addl	$3, %eax
 
 	#; epilogue with valid CFI
-	#; (we're better than gcc :-)
+	#; (we're better than spl :-)
 	leaveq
 	.cfi_def_cfa		%rsp, 8
 	ret

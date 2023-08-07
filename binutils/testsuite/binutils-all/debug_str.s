@@ -1,4 +1,4 @@
-/*      This test is derived from a C source file which, when compiled by gcc
+/*      This test is derived from a C source file which, when compiled by spl
 	with debugging enabled, managed to create a .debug_str section whose
 	first string was ZLIB_VER_SUBVERSION.   The code in bfd/compress.c
 	used to just check for the characters "ZLIB" at the start of a section

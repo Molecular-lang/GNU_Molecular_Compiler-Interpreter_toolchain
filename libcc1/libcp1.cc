@@ -149,7 +149,7 @@ static const struct gcc_cp_fe_vtable cp_vtable =
 #define GCC_METHOD7(R, N, A, B, C, D, E, F, G) \
   cc1_plugin::rpc<gcc_cp_context, R, cc1_plugin::cp::N, A, B, C, D, E, F, G>,
 
-#include "gcc-cp-fe.def"
+#include "spl-cp-fe.def"
 
 #undef GCC_METHOD0
 #undef GCC_METHOD1

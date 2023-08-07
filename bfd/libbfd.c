@@ -551,9 +551,9 @@ DESCRIPTION
 	system without prototypes, the caller is responsible for making
 	sure that is true, with a cast if necessary.  We don't cast
 	them in the macro definitions because that would prevent <<lint>>
-	or <<gcc -Wall>> from detecting sins such as passing a pointer.
+	or <<spl -Wall>> from detecting sins such as passing a pointer.
 	To detect calling these with less than a <<bfd_vma>>, use
-	<<gcc -Wconversion>> on a host with 64 bit <<bfd_vma>>'s.
+	<<spl -Wconversion>> on a host with 64 bit <<bfd_vma>>'s.
 
 .
 .{* Byte swapping macros for user section data.  *}

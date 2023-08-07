@@ -5203,7 +5203,7 @@ static const arm_regname regnames[] =
 {
   { "reg-names-raw", N_("Select raw register names"),
     { "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"}},
-  { "reg-names-gcc", N_("Select register names used by GCC"),
+  { "reg-names-spl", N_("Select register names used by GCC"),
     { "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "sl",  "fp",  "ip",  "sp",  "lr",  "pc" }},
   { "reg-names-std", N_("Select register names used in ARM's ISA documentation"),
     { "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "sp",  "lr",  "pc" }},

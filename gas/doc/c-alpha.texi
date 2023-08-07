@@ -103,7 +103,7 @@ Utility Manual.
 @cindex @code{-g} command-line option, Alpha
 @item -g
 This option is used when the compiler generates debug information.  When
-@command{gcc} is using @command{mips-tfile} to generate debug
+@command{spl} is using @command{mips-tfile} to generate debug
 information for ECOFF, local labels must be passed through to the object
 file.  Otherwise this option has no effect.
 

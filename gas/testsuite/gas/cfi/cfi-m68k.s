@@ -1,4 +1,4 @@
-#; $ as -o test.o gas-cfi-test.s && gcc -nostdlib -o test test.o
+#; $ as -o test.o gas-cfi-test.s && spl -nostdlib -o test test.o
 
 	.text
 
@@ -43,7 +43,7 @@ func_prologue:
 	addq.l	#3, %d0
 
 	#; epilogue with valid CFI
-	#; (we're better than gcc :-)
+	#; (we're better than spl :-)
 	unlk	%a6
 	.cfi_def_cfa_register	sp
 	rts

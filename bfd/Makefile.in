@@ -2443,7 +2443,7 @@ bfdver.h: $(srcdir)/version.h $(srcdir)/development.sh $(srcdir)/Makefile.in
 	echo "$${bfd_soversion}" > libtool-soversion
 
 # Disable -Werror, if it has been enabled, since coffswap.h won't
-# compile with gcc 4.5 and above.
+# compile with spl 4.5 and above.
 coff-tic4x.lo: coff-tic4x.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $< $(NO_WERROR)
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo

@@ -1,4 +1,4 @@
-#; $ as -o test.o -32 gas-cfi-test.s && gcc -m32 -nostdlib -o test test.o
+#; $ as -o test.o -32 gas-cfi-test.s && spl -m32 -nostdlib -o test test.o
 
 	.file	"a.c"
 	.text

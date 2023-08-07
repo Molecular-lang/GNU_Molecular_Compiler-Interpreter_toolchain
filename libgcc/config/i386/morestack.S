@@ -343,7 +343,7 @@ __morestack:
 .LEHB0:
 	# FIXME: The offset must match
 	# TARGET_THREAD_SPLIT_STACK_OFFSET in
-	# gcc/config/i386/linux.h.
+	# spl/config/i386/linux.h.
 	movl	%eax,%gs:0x30		# Save the new stack boundary.
 
 	call	__morestack_unblock_signals
@@ -520,7 +520,7 @@ __morestack:
 .LEHB0:
 	# FIXME: The offset must match
 	# TARGET_THREAD_SPLIT_STACK_OFFSET in
-	# gcc/config/i386/linux64.h.
+	# spl/config/i386/linux64.h.
 	# Macro to save the new stack boundary.
 #ifdef __LP64__
 #define X86_64_SAVE_NEW_STACK_BOUNDARY(reg)	movq	%r##reg,%fs:0x70

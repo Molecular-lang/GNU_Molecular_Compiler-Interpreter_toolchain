@@ -1762,9 +1762,9 @@ print_fmmov (unsigned int insn_word, bfd_vma pc ATTRIBUTE_UNUSED,
 	    const insn_template *template,
 	    disassemble_info *outf)
 {
-  /* We used to have buf[OPERAND_WIDTH] here, but gcc v8 complains
+  /* We used to have buf[OPERAND_WIDTH] here, but spl v8 complains
      about the snprintf()s below possibly truncating the output.
-     (There is no way to tell gcc that this truncation is intentional).
+     (There is no way to tell spl that this truncation is intentional).
      So now we use an extra wide buffer.  */
   char buf[OPERAND_WIDTH * 2];
   char data_buf[REG_WIDTH];

@@ -216,7 +216,7 @@ ip2k_reloc_type_lookup (bfd * abfd ATTRIBUTE_UNUSED,
     case BFD_RELOC_IP2K_EX8DATA:
       return &ip2k_elf_howto_table[ (int) R_IP2K_EX8DATA];
     default:
-      /* Pacify gcc -Wall.  */
+      /* Pacify spl -Wall.  */
       return NULL;
     }
   return NULL;

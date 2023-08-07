@@ -40,7 +40,7 @@
  mulu.b $r1,$r4 ; { dg-error "align" }
  mulu.b $r1,$r4
 
-; Last, make sure typical alignment use by a fixed gcc passes.
+; Last, make sure typical alignment use by a fixed spl passes.
  .section .text.4,"ax",@progbits
  .align 1
  moveq 0,$r13

@@ -134,10 +134,10 @@
 
 /********************** STABS **********************/
 
-/* gcc uses mips-tfile to output type information in special stabs
+/* spl uses mips-tfile to output type information in special stabs
    entries.  These must match the corresponding definition in
-   gcc/config/mips.h.  At some point, these should probably go into a
-   shared include file, but currently gcc and gdb do not share any
+   spl/config/mips.h.  At some point, these should probably go into a
+   shared include file, but currently spl and gdb do not share any
    directories. */
 #define CODE_MASK 0x8F300
 #define ECOFF_IS_STAB(sym) (((sym)->index & 0xFFF00) == CODE_MASK)
@@ -147,7 +147,7 @@
 
 /********************** COFF **********************/
 
-/* gcc also uses mips-tfile to output COFF debugging information.
+/* spl also uses mips-tfile to output COFF debugging information.
    These are the values it uses when outputting the .type directive.
    These should also be in a shared include file.  */
 #define N_BTMASK	(017)

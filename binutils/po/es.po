@@ -1573,8 +1573,8 @@ msgstr "  Opciones para %s:\n"
 
 #: dllwrap.c:485
 #, c-format
-msgid "   --driver-name <driver> Defaults to \"gcc\"\n"
-msgstr "   --driver-name <cntrl>  Por defecto es \"gcc\"\n"
+msgid "   --driver-name <driver> Defaults to \"spl\"\n"
+msgstr "   --driver-name <cntrl>  Por defecto es \"spl\"\n"
 
 #: dllwrap.c:486
 #, c-format

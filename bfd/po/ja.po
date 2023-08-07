@@ -1837,7 +1837,7 @@ msgstr "%B: 再配置 %s (%d) は現在のところサポートされていま�
 msgid "%B: Unknown relocation type %d\n"
 msgstr "%B: 不明な再配置型 %d です\n"
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:157
 #, c-format
 msgid "mep: no reloc for code %d"
@@ -2711,7 +2711,7 @@ msgstr "%B: スタブエントリ %s を作成できません\n"
 
 #: elf64-ppc.c:6484
 #, c-format
-msgid "copy reloc against `%s' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade gcc\n"
+msgid "copy reloc against `%s' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade spl\n"
 msgstr ""
 
 #: elf64-ppc.c:6912
@@ -2798,8 +2798,8 @@ msgid "%H: %s used with non-TLS symbol %s\n"
 msgstr "%H: %s が非-TLS シンボル %s と併せて使用されました\n"
 
 #: elf64-ppc.c:12318
-msgid "%H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade gcc\n"
-msgstr "%H: 自動的な複数 TOC は使用している crt ファイルではサポートされていません。 -mminimal-toc を付けて再コンパイルするか、 gcc をアップグレードしてください\n"
+msgid "%H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade spl\n"
+msgstr "%H: 自動的な複数 TOC は使用している crt ファイルではサポートされていません。 -mminimal-toc を付けて再コンパイルするか、 spl をアップグレードしてください\n"
 
 #: elf64-ppc.c:12324
 msgid "%H: sibling call optimization to `%s' does not allow automatic multiple TOCs; recompile with -mminimal-toc or -fno-optimize-sibling-calls, or make `%s' extern\n"

@@ -41,7 +41,7 @@
 
    In general, test generators should be compiled/run as follows:
   
-   % gcc test.c -o test
+   % spl test.c -o test
    % ./test > test.s 2 > test.d
 
    Please note that this file contains a couple of GCC-isms, such as

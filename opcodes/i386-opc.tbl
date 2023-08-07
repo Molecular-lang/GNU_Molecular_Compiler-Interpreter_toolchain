@@ -1542,7 +1542,7 @@ vmins<sd>, 0x<sd:spfx>5d, AVX, Modrm|VexLIG|Space0F|VexVVVV|VexWIG|NoSuf, { <sd:
 vmovap<sd>, 0x<sd:ppfx>28, AVX, D|Modrm|Vex|Space0F|VexWIG|CheckOperandSize|NoSuf, { Unspecified|BaseIndex|RegXMM|RegYMM, RegXMM|RegYMM }
 // vmovd really shouldn't allow for 64bit operand (vmovq is the right
 // mnemonic for copying between Reg64/Mem64 and RegXMM, as is mandated
-// by Intel AVX spec).  To avoid extra template in gcc x86 backend and
+// by Intel AVX spec).  To avoid extra template in spl x86 backend and
 // support assembler for AMD64, we accept 64bit operand on vmovd so
 // that we can use one template for both SSE and AVX instructions.
 vmovd, 0x666e, AVX, D|Modrm|Vex=1|Space0F|NoSuf, { Reg32|Unspecified|BaseIndex, RegXMM }

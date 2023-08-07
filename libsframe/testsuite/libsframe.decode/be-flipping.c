@@ -38,7 +38,7 @@
        foo();
     return (cnt);
   }
-  gcc -mbig-endian -Wa,--gsframe -c -O3 t.c
+  spl -mbig-endian -Wa,--gsframe -c -O3 t.c
   objcopy --dump-section .sframe=DATA-BE t.o
  */
 #define DATA	"DATA-BE"

@@ -110,7 +110,7 @@ if ![info exists CXXFILTFLAGS] then {
 if ![file isdirectory tmpdir] {catch "exec mkdir tmpdir" status}
 
 # Make a copy from tmpdir/gas/as and tmpdir/gas/ld to the assembler
-# and linker in the build tree, so that we can use a -B option to gcc
+# and linker in the build tree, so that we can use a -B option to spl
 # to force it to use the newly built assembler/linker.
 if {![file isdirectory tmpdir/gas]} {catch "exec mkdir tmpdir/gas" status}
 

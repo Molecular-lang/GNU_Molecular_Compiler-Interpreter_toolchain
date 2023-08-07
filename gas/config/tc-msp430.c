@@ -305,7 +305,7 @@ target_is_430xv2 (void)
    ? BFD_RELOC_MSP430_16_PCREL_BYTE : BFD_RELOC_MSP430_16_PCREL)
 
 /* Profiling capability:
-   It is a performance hit to use gcc's profiling approach for this tiny target.
+   It is a performance hit to use spl's profiling approach for this tiny target.
    Even more -- jtag hardware facility does not perform any profiling functions.
    However we've got gdb's built-in simulator where we can do anything.
    Therefore my suggestion is:
@@ -722,7 +722,7 @@ msp430_set_arch (int option)
 		     target_is_430x () ? bfd_mach_msp430x : bfd_mach_msp11);
 }
 
-/* This is a copy of the same data structure found in gcc/config/msp430/msp430.c
+/* This is a copy of the same data structure found in spl/config/msp430/msp430.c
    Keep these two structures in sync.
    The data in this structure has been extracted from version 1.194 of the
    devices.csv file released by TI in September 2016.  */

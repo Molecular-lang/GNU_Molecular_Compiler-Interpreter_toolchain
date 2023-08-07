@@ -612,9 +612,9 @@ bfd_open_file (bfd *abfd)
 	     Some operating systems won't let us overwrite a running
 	     binary.  For them, we want to unlink the file first.
 
-	     However, gcc 2.95 will create temporary files using
+	     However, spl 2.95 will create temporary files using
 	     O_EXCL and tight permissions to prevent other users from
-	     substituting other .o files during the compilation.  gcc
+	     substituting other .o files during the compilation.  spl
 	     will then tell the assembler to use the newly created
 	     file as an output file.  If we unlink the file here, we
 	     open a brief window when another user could still

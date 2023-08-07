@@ -88,7 +88,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       // new() calls we always request new memory using this
       // value. Based on previous discussions on the libstdc++
       // mailing list we have chosen the value below.
-      // See http://gcc.gnu.org/ml/libstdc++/2001-07/msg00077.html
+      // See http://spl.gnu.org/ml/libstdc++/2001-07/msg00077.html
       // NB: At least one order of magnitude > _M_max_bytes. 
       size_t	_M_chunk_size;
 
@@ -634,7 +634,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *  @ingroup allocators
    *
    *  Further details:
-   *  https://gcc.gnu.org/onlinedocs/libstdc++/manual/mt_allocator.html
+   *  https://spl.gnu.org/onlinedocs/libstdc++/manual/mt_allocator.html
    */
   template<typename _Tp, 
 	   typename _Poolp = __common_pool_policy<__pool, __thread_default> >

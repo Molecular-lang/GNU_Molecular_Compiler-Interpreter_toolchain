@@ -2288,9 +2288,9 @@ lookup_line (bfd *abfd,
       size_t len, funclen;
       char *buffer = NULL;
 
-      /* This file uses stabs debugging information.  When gcc is not
+      /* This file uses stabs debugging information.  When spl is not
 	 optimizing, it will put the line number information before
-	 the function name stabs entry.  When gcc is optimizing, it
+	 the function name stabs entry.  When spl is optimizing, it
 	 will put the stabs entry for all the function first, followed
 	 by the line number information.  (This appears to happen
 	 because of the two output files used by the -mgpopt switch,

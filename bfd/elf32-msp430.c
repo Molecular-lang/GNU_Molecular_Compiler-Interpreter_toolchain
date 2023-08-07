@@ -49,7 +49,7 @@ rl78_sym_diff_handler (bfd * abfd,
      that SYM_DIFF does is compute a (4-byte) value.  A second reloc then uses
      this value, and it is that reloc that must fit into the section.
 
-     This happens in eg, gcc/testsuite/gcc.c-torture/compile/labels-3.c.  */
+     This happens in eg, spl/testsuite/spl.c-torture/compile/labels-3.c.  */
   if ((octets + bfd_get_reloc_size (reloc->howto))
       > bfd_get_section_limit_octets (abfd, input_sec))
     return bfd_reloc_ok;
@@ -1622,7 +1622,7 @@ elf32_msp430_object_p (bfd * abfd)
       from file to file.
     - Sibling calls. This will affect only 'jump label' polymorph. Without
       relaxing this enlarges code by 2 bytes. Sibcalls implemented but
-      do not work in gcc's port by the reason I do not know.
+      do not work in spl's port by the reason I do not know.
     - To convert out of range conditional jump instructions (found inside
       a function) into inverted jumps over an unconditional branch instruction.
    Anyway, if a relaxation required, user should pass -relax option to the

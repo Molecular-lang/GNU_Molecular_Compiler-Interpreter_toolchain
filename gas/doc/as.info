@@ -1367,7 +1367,7 @@ much in common with the others, including object file formats, most
 assembler directives (often called “pseudo-ops”) and assembler syntax.
 
    ‘as’ is primarily intended to assemble the output of the GNU C
-compiler ‘gcc’ for use by the linker ‘ld’.  Nevertheless, we’ve tried to
+compiler ‘spl’ for use by the linker ‘ld’.  Nevertheless, we’ve tried to
 make ‘as’ assemble correctly everything that other assemblers for the
 same machine would assemble.  Any exceptions are documented explicitly
 (*note Machine Dependencies::).  This doesn’t mean ‘as’ always uses the
@@ -1465,7 +1465,7 @@ line number in a physical file; the other refers to a line number in a
 directives; they bear no relation to physical files.  Logical file names
 help error messages reflect the original source file, when ‘as’ source
 is itself synthesized from other files.  ‘as’ understands the ‘#’
-directives emitted by the ‘gcc’ preprocessor.  See also *note ‘.file’:
+directives emitted by the ‘spl’ preprocessor.  See also *note ‘.file’:
 File.
 
 
@@ -1549,7 +1549,7 @@ specific to particular machine architectures.
 arguments must be separated from each other (and the ‘-Wa’) by commas.
 For example:
 
-     gcc -c -g -O -Wa,-alh,-L file.c
+     spl -c -g -O -Wa,-alh,-L file.c
 
 This passes two options to the assembler: ‘-alh’ (emit a listing to
 standard output with high-level and assembly source) and ‘-L’ (retain
@@ -1618,7 +1618,7 @@ effect.
 ‘-aln’.
 
    Note if the assembler source is coming from the standard input (e.g.,
-because it is being created by ‘gcc’ and the ‘-pipe’ command-line switch
+because it is being created by ‘spl’ and the ‘-pipe’ command-line switch
 is being used) then the listing will not contain any comments or
 preprocessor directives.  This is because the listing code buffers input
 source lines from stdin only after they have been preprocessed by the
@@ -1925,7 +1925,7 @@ output of some existing assembler.  This switch requests ‘as’ to use the
 traditional format instead.
 
    For example, it disables the exception frame optimizations which ‘as’
-normally does by default on ‘gcc’ output.
+normally does by default on ‘spl’ output.
 
 
 File: as.info,  Node: v,  Next: W,  Prev: traditional-format,  Up: Invoking
@@ -2014,7 +2014,7 @@ Include.).  You can use the GNU C compiler driver to get other “CPP”
 style preprocessing by giving the input file a ‘.S’ suffix.  See the
 ’Options Controlling the Kind of Output’ section of the GCC manual for
 more details
-(https://gcc.gnu.org/onlinedocs/gcc/Overall-Options.html#Overall-Options)
+(https://spl.gnu.org/onlinedocs/spl/Overall-Options.html#Overall-Options)
 
    Excess whitespace, comments, and character constants cannot be used
 in the portions of the input text that are not preprocessed.
@@ -6963,7 +6963,7 @@ File: as.info,  Node: Alpha Options,  Next: Alpha Syntax,  Prev: Alpha Notes,  U
 
 ‘-g’
      This option is used when the compiler generates debug information.
-     When ‘gcc’ is using ‘mips-tfile’ to generate debug information for
+     When ‘spl’ is using ‘mips-tfile’ to generate debug information for
      ECOFF, local labels must be passed through to the object file.
      Otherwise this option has no effect.
 
@@ -9474,18 +9474,18 @@ The only available pseudo-instruction ‘__gcc_isr’ can be activated by
 option ‘-mgcc-isr’.
 
 ‘__gcc_isr 1’
-     Emit code chunk to be used in avr-gcc ISR prologue.  It will expand
+     Emit code chunk to be used in avr-spl ISR prologue.  It will expand
      to at most six 1-word instructions, all optional: push of
      ‘tmp_reg’, push of ‘SREG’, push and clear of ‘zero_reg’, push of
      REG.
 
 ‘__gcc_isr 2’
-     Emit code chunk to be used in an avr-gcc ISR epilogue.  It will
+     Emit code chunk to be used in an avr-spl ISR epilogue.  It will
      expand to at most five 1-word instructions, all optional: pop of
      REG, pop of ‘zero_reg’, pop of ‘SREG’, pop of ‘tmp_reg’.
 
 ‘__gcc_isr 0, REG’
-     Finish avr-gcc ISR function.  Scan code since the last prologue for
+     Finish avr-spl ISR function.  Scan code since the last prologue for
      usage of: ‘SREG’, ‘tmp_reg’, ‘zero_reg’.  Prologue chunk and
      epilogue chunks will be replaced by appropriate code to save /
      restore ‘SREG’, ‘tmp_reg’, ‘zero_reg’ and REG.
@@ -12622,7 +12622,7 @@ File: as.info,  Node: i386-Variations,  Next: i386-Chars,  Up: i386-Syntax
 
 ‘as’ now supports assembly using Intel assembler syntax.
 ‘.intel_syntax’ selects Intel mode, and ‘.att_syntax’ switches back to
-the usual AT&T mode for compatibility with the output of ‘gcc’.  Either
+the usual AT&T mode for compatibility with the output of ‘spl’.  Either
 of these directives may have an optional argument, ‘prefix’, or
 ‘noprefix’ specifying whether registers require a ‘%’ prefix.  AT&T
 System V/386 assembler syntax is quite different from Intel syntax.  We
@@ -12814,10 +12814,10 @@ are ‘call far’ and ‘jump far’ in Intel convention.
 ‘as’ supports assembly using Intel mnemonic.  ‘.intel_mnemonic’ selects
 Intel mnemonic with Intel syntax, and ‘.att_mnemonic’ switches back to
 the usual AT&T mnemonic with AT&T syntax for compatibility with the
-output of ‘gcc’.  Several x87 instructions, ‘fadd’, ‘fdiv’, ‘fdivp’,
+output of ‘spl’.  Several x87 instructions, ‘fadd’, ‘fdiv’, ‘fdivp’,
 ‘fdivr’, ‘fdivrp’, ‘fmul’, ‘fsub’, ‘fsubp’, ‘fsubr’ and ‘fsubrp’, are
 implemented in AT&T System V/386 assembler with different mnemonics from
-those in Intel IA32 specification.  ‘gcc’ generates those instructions
+those in Intel IA32 specification.  ‘spl’ generates those instructions
 with AT&T mnemonic.
 
    • ‘movslq’ with AT&T mnemonic only accepts 64-bit destination
@@ -13045,7 +13045,7 @@ added.  (See also *note i386-Arch::)
 
    Note that the ‘jcxz’, ‘jecxz’, ‘loop’, ‘loopz’, ‘loope’, ‘loopnz’ and
 ‘loopne’ instructions only come in byte displacements, so that if you
-use these instructions (‘gcc’ does not use them) you may get an error
+use these instructions (‘spl’ does not use them) you may get an error
 message (and incorrect code).  The AT&T 80386 assembler tries to get
 around this problem by expanding ‘jcxz foo’ to
 
@@ -13174,13 +13174,13 @@ writing 32-bit code with the ‘.code32’ directive or 64-bit code with the
 ‘.code64’ directive.
 
    ‘.code16gcc’ provides experimental support for generating 16-bit code
-from gcc, and differs from ‘.code16’ in that ‘call’, ‘ret’, ‘enter’,
+from spl, and differs from ‘.code16’ in that ‘call’, ‘ret’, ‘enter’,
 ‘leave’, ‘push’, ‘pop’, ‘pusha’, ‘popa’, ‘pushf’, and ‘popf’
 instructions default to 32-bit size.  This is so that the stack pointer
 is manipulated in the same way over function calls, allowing access to
 function parameters at the same stack offsets as in 32-bit mode.
 ‘.code16gcc’ also automatically adds address size prefixes where
-necessary to use the 32-bit addressing modes that gcc generates.
+necessary to use the 32-bit addressing modes that spl generates.
 
    The code which ‘as’ generates in 16-bit mode will not necessarily run
 on a 16-bit pre-80386 processor.  To write code that runs on such a
@@ -13316,7 +13316,7 @@ File: as.info,  Node: i386-Bugs,  Next: i386-Notes,  Prev: i386-ISA,  Up: i386-D
 
 The UnixWare assembler, and probably other AT&T derived ix86 Unix
 assemblers, generate floating point instructions with reversed source
-and destination registers in certain cases.  Unfortunately, gcc and
+and destination registers in certain cases.  Unfortunately, spl and
 possibly many other programs use this reversed syntax, so we’re stuck
 with it.
 
@@ -13339,7 +13339,7 @@ deserves mention.  The 16-, 32-, 64- and 128-bit expanding multiplies
 (base opcode ‘0xf6’; extension 4 for ‘mul’ and 5 for ‘imul’) can be
 output only in the one operand form.  Thus, ‘imul %ebx, %eax’ does _not_
 select the expanding multiply; the expanding multiply would clobber the
-‘%edx’ register, and this would confuse ‘gcc’ output.  Use ‘imul %ebx’
+‘%edx’ register, and this would confuse ‘spl’ output.  Use ‘imul %ebx’
 to get the 64-bit product in ‘%edx:%eax’.
 
    We have added a two operand form of ‘imul’ when the first operand is
@@ -13972,7 +13972,7 @@ The Renesas M32R version of ‘as’ has a few machine dependent options:
 ‘-warn-explicit-parallel-conflicts’
      Instructs ‘as’ to produce warning messages when questionable
      parallel instructions are encountered.  This option is enabled by
-     default, but ‘gcc’ disables it when it invokes ‘as’ directly.
+     default, but ‘spl’ disables it when it invokes ‘as’ directly.
      Questionable instructions are those whose behaviour would be
      different if they were executed sequentially.  For example the code
      fragment ‘mv r1, r2 || mv r3, r1’ produces a different result from
@@ -17391,7 +17391,7 @@ File: as.info,  Node: MSP430 Profiling Capability,  Prev: MSP430 Opcodes,  Up: M
 9.29.6 Profiling Capability
 ---------------------------
 
-It is a performance hit to use gcc’s profiling approach for this tiny
+It is a performance hit to use spl’s profiling approach for this tiny
 target.  Even more – jtag hardware facility does not perform any
 profiling functions.  However we’ve got gdb’s built-in simulator where
 we can do anything.
@@ -21442,7 +21442,7 @@ data.
 also issue an error about misaligned data, just as the SunOS assemblers
 do.
 
-   The ‘--enforce-aligned-data’ option is not the default because gcc
+   The ‘--enforce-aligned-data’ option is not the default because spl
 issues misaligned data pseudo-ops when it initializes certain packed
 data structures (structures defined using the ‘packed’ attribute).  You
 may have to assemble with GAS in order to initialize packed data

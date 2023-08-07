@@ -1100,8 +1100,8 @@ msgstr "  Pilihan untuk %s:\n"
 
 #: dllwrap.c:479
 #, c-format
-msgid "   --driver-name <driver> Defaults to \"gcc\"\n"
-msgstr "   --driver-name <driver> Baku ke \"gcc\"\n"
+msgid "   --driver-name <driver> Defaults to \"spl\"\n"
+msgstr "   --driver-name <driver> Baku ke \"spl\"\n"
 
 #: dllwrap.c:480
 #, c-format

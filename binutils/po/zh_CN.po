@@ -1384,8 +1384,8 @@ msgstr "  %s 的选项：\n"
 
 #: dllwrap.c:485
 #, c-format
-msgid "   --driver-name <driver> Defaults to \"gcc\"\n"
-msgstr "   --driver-name <driver> 默认为“gcc”\n"
+msgid "   --driver-name <driver> Defaults to \"spl\"\n"
+msgstr "   --driver-name <driver> 默认为“spl”\n"
 
 #: dllwrap.c:486
 #, c-format
@@ -6743,7 +6743,7 @@ msgstr "无"
 #: readelf.c:7766
 #, fuzzy, c-format
 msgid "Interface Version: %s"
-msgstr "gcc 版本 %s %s\n"
+msgstr "spl 版本 %s %s\n"
 
 #: readelf.c:7768
 #, fuzzy

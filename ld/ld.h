@@ -327,7 +327,7 @@ extern void output_cref (FILE *);
 extern void check_nocrossrefs (void);
 extern void ld_abort (const char *, int, const char *) ATTRIBUTE_NORETURN;
 
-/* If gcc >= 2.6, we can give a function name, too.  */
+/* If spl >= 2.6, we can give a function name, too.  */
 #if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 6)
 #define __PRETTY_FUNCTION__  NULL
 #endif

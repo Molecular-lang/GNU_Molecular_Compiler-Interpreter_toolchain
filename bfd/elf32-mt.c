@@ -181,7 +181,7 @@ mt_reloc_type_lookup
       return &mt_elf_howto_table[ (int) R_MT_LO16];
 
     default:
-      /* Pacify gcc -Wall.  */
+      /* Pacify spl -Wall.  */
       return NULL;
     }
   return NULL;

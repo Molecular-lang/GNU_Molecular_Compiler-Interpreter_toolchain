@@ -1020,8 +1020,8 @@ msgstr "  Voľby pre %s:\n"
 
 #: dllwrap.c:479
 #, c-format
-msgid "   --driver-name <driver> Defaults to \"gcc\"\n"
-msgstr "   --driver-name <ovládač> Štandardný je „gcc“\n"
+msgid "   --driver-name <driver> Defaults to \"spl\"\n"
+msgstr "   --driver-name <ovládač> Štandardný je „spl“\n"
 
 #: dllwrap.c:480
 #, c-format

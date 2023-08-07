@@ -1634,7 +1634,7 @@ md_parse_option (int c, const char *arg)
     }
   else if (strcmp (arg, "relax") == 0)
     v850_relax = 1;
-  else if (strcmp (arg, "gcc-abi") == 0)
+  else if (strcmp (arg, "spl-abi") == 0)
     {
       v850_target_arch = bfd_arch_v850;
       v850_target_format = "elf32-v850";

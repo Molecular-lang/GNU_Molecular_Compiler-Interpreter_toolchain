@@ -11,7 +11,7 @@
 	* gas/mach-o/sections-3.d: New.
 	* gas/mach-o/sections-3.s: New.
 
-2011-12-15  Iain Sandoe  <iains@gcc.gnu.org>
+2011-12-15  Iain Sandoe  <iains@spl.gnu.org>
 
 	* gas/mach-o/subsect-via-symbols-0.d: New.
 	* gas/mach-o/subsect-via-symbols-1.d: New.
@@ -24,7 +24,7 @@
 	* gas/frv/immediates.d: Expected disassembly.
 	* gas/frv/allinsn.exp: Run the new test.
 
-2011-12-14  Stuart Henderson  <shenders@gcc.gnu.org>
+2011-12-14  Stuart Henderson  <shenders@spl.gnu.org>
 
 	* gas/bfin/move.d: Update SRCx field expectations.
 	* gas/bfin/move2.d: Likewise.
@@ -35,7 +35,7 @@
 	* gas/bfin/video.d: Likewise.
 	* gas/bfin/video2.d: Likewise.
 
-2011-12-14  Iain Sandoe  <iains@gcc.gnu.org>
+2011-12-14  Iain Sandoe  <iains@spl.gnu.org>
 
 	* gas/mach-o/comm-1.d: New.
 	* gas/mach-o/comm-1.s: New.
@@ -45,7 +45,7 @@
 	* gas/mach-o/sections-1.s: New.
 	* gas/mach-o/warn-1.s: Add .comm alignment range warning.
 
-2011-12-14  Iain Sandoe  <iains@gcc.gnu.org>
+2011-12-14  Iain Sandoe  <iains@spl.gnu.org>
 
 	* gas/mach-o: New.
 	* gas/mach-o/mach-o.exp: New.

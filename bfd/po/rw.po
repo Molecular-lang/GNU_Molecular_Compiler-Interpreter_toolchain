@@ -1684,7 +1684,7 @@ msgstr "in"
 
 #: elf64-ppc.c:7723
 #, fuzzy, c-format
-msgid "%s(%s+0x%lx): automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade gcc"
+msgid "%s(%s+0x%lx): automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade spl"
 msgstr "%s(%s+0x%lx):Byikoresha Igikubo OYA ikoresha Idosiye Na: Cyangwa"
 
 #: elf64-ppc.c:7731

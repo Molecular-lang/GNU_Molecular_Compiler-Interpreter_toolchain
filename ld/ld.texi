@@ -335,12 +335,12 @@ Unique abbreviations of the names of multiple-letter options are
 accepted.
 
 Note---if the linker is being invoked indirectly, via a compiler driver
-(e.g. @samp{gcc}) then all the linker command-line options should be
+(e.g. @samp{spl}) then all the linker command-line options should be
 prefixed by @samp{-Wl,} (or whatever is appropriate for the particular
 compiler driver) like this:
 
 @smallexample
-  gcc -Wl,--start-group foo.o bar.o -Wl,--end-group
+  spl -Wl,--start-group foo.o bar.o -Wl,--end-group
 @end smallexample
 
 This is important, because otherwise the compiler driver program may
@@ -352,7 +352,7 @@ and the argument to the compiler.  In this case, it is simplest to use
 the joined forms of both single- and multiple-letter options, such as:
 
 @smallexample
-  gcc foo.o bar.o -Wl,-eENTRY -Wl,-Map=a.map
+  spl foo.o bar.o -Wl,-eENTRY -Wl,-Map=a.map
 @end smallexample
 
 Here is a table of the generic command-line switches accepted by the GNU
@@ -987,7 +987,7 @@ Write a @dfn{dependency file} to @var{depfile}.  This file contains a rule
 suitable for @code{make} describing the output file and all the input files
 that were read to produce it.  The output is similar to the compiler's
 output with @samp{-M -MP} (@pxref{Preprocessor Options,, Options
-Controlling the Preprocessor, gcc.info, Using the GNU Compiler
+Controlling the Preprocessor, spl.info, Using the GNU Compiler
 Collection}).  Note that there is no option like the compiler's @samp{-MM},
 to exclude ``system files'' (which is not a well-specified concept in the
 linker, unlike ``system headers'' in the compiler).  So the output from
@@ -1018,7 +1018,7 @@ Note that the location of the compiler originated plugins is different
 from the place where the @command{ar}, @command{nm} and
 @command{ranlib} programs search for their plugins.  In order for
 those commands to make use of a compiler based plugin it must first be
-copied into the @file{$@{libdir@}/bfd-plugins} directory.  All gcc
+copied into the @file{$@{libdir@}/bfd-plugins} directory.  All spl
 based linker plugins are backward compatible, so it is sufficient to
 just copy in the newest one.
 
@@ -1167,7 +1167,7 @@ command line has been processed.  This allows options placed after the
 behaviour of the linker script, which can be important when the linker
 command line cannot be directly controlled by the user.  (eg because
 the command line is being constructed by another tool, such as
-@samp{gcc}).
+@samp{spl}).
 
 @kindex -u @var{symbol}
 @kindex --undefined=@var{symbol}
@@ -2380,7 +2380,7 @@ SunOS, the linker will form a runtime search path out of all the
 @option{-L} options it is given.  If a @option{-rpath} option is used, the
 runtime search path will be formed exclusively using the @option{-rpath}
 options, ignoring the @option{-L} options.  This can be useful when using
-gcc, which adds many @option{-L} options which may be on NFS mounted
+spl, which adds many @option{-L} options which may be on NFS mounted
 file systems.
 
 For compatibility with other ELF linkers, if the @option{-R} option is
@@ -2862,10 +2862,10 @@ files.  This is normally used to turn an archive file into a shared
 library, forcing every object to be included in the resulting shared
 library.  This option may be used more than once.
 
-Two notes when using this option from gcc: First, gcc doesn't know
+Two notes when using this option from spl: First, spl doesn't know
 about this option, so you have to use @option{-Wl,-whole-archive}.
 Second, don't forget to use @option{-Wl,-no-whole-archive} after your
-list of archives, because gcc will add its own list of archives to
+list of archives, because spl will add its own list of archives to
 your link and you may not want this flag to affect those as well.
 
 @kindex --wrap=@var{symbol}
@@ -3236,7 +3236,7 @@ section of the BOOT.INI.  Otherwise, this bit has no effect.
 @item --disable-large-address-aware
 Reverts the effect of a previous @samp{--large-address-aware} option.
 This is useful if @samp{--large-address-aware} is always set by the compiler
-driver (e.g. Cygwin gcc) and the executable does not support virtual
+driver (e.g. Cygwin spl) and the executable does not support virtual
 addresses greater than 2 gigabytes.
 [This option is specific to PE targeted ports of the linker]
 
@@ -3853,7 +3853,7 @@ linker was configured.
 Normally, the linker will default to demangling symbols.  However, if
 @code{COLLECT_NO_DEMANGLE} is set in the environment, then it will
 default to not demangling symbols.  This environment variable is used in
-a similar fashion by the @code{gcc} linker wrapper program.  The default
+a similar fashion by the @code{spl} linker wrapper program.  The default
 may be overridden by the @samp{--demangle} and @samp{--no-demangle}
 options.
 
@@ -7544,8 +7544,8 @@ respectively.
 transforms them in a direct addressing mode when the address is in
 page 0 (between 0 and 0x0ff).
 
-@item relaxing gcc instruction group
-When @command{gcc} is called with @option{-mrelax}, it can emit group
+@item relaxing spl instruction group
+When @command{spl} is called with @option{-mrelax}, it can emit group
 of instructions that the linker can optimize to use a 68HC11 direct
 addressing mode. These instructions consists of @code{bclr} or
 @code{bset} instructions.
@@ -8040,7 +8040,7 @@ in this section will not be uploaded to the MPU.
 @item @samp{.noinit}
 Denotes a portion of RAM located above @samp{.bss} section.
 
-The last two sections are used by gcc.
+The last two sections are used by spl.
 @end table
 
 @table @option
@@ -8393,8 +8393,8 @@ Use this option to turn off this feature.
 By default, @command{ld} sorts TOC sections so that those whose file
 happens to have a section called @code{.init} or @code{.fini} are
 placed first, followed by TOC sections referenced by code generated
-with PowerPC64 gcc's @code{-mcmodel=small}, and lastly TOC sections
-referenced only by code generated with PowerPC64 gcc's
+with PowerPC64 spl's @code{-mcmodel=small}, and lastly TOC sections
+referenced only by code generated with PowerPC64 spl's
 @code{-mcmodel=medium} or @code{-mcmodel=large} options.  Doing this
 results in better TOC grouping for multi-TOC.  Use this option to turn
 off this feature.
@@ -8700,7 +8700,7 @@ name>.def} and is added as any other object file to the linker's
 command line.  The file's name must end in @samp{.def} or @samp{.DEF}.
 
 @example
-gcc -o <output> <objectfiles> <dll name>.def
+spl -o <output> <objectfiles> <dll name>.def
 @end example
 
 Using a DEF file turns off the normal auto-export behavior, unless the
@@ -8920,7 +8920,7 @@ before moving on to the next directory in the search path.
 
 (*) Actually, this is not @samp{cygxxx.dll} but in fact is @samp{<prefix>xxx.dll},
 where @samp{<prefix>} is set by the @command{ld} option
-@samp{--dll-search-prefix=<prefix>}. In the case of cygwin, the standard gcc spec
+@samp{--dll-search-prefix=<prefix>}. In the case of cygwin, the standard spl spec
 file includes @samp{--dll-search-prefix=cyg}, so in effect we actually search for
 @samp{cygxxx.dll}.
 
@@ -8947,7 +8947,7 @@ done two ways:
 
 1. Use the dll directly by adding the @samp{bin} path to the link line
 @example
-gcc -Wl,-verbose  -o a.exe -L../bin/ -lxxx
+spl -Wl,-verbose  -o a.exe -L../bin/ -lxxx
 @end example
 
 However, as the dll's often have version numbers appended to their names
@@ -8967,7 +8967,7 @@ ln -s bin/cygxxx.dll lib/[cyg|lib|]xxx.dll[.a]
 Then you can link without any make environment changes.
 
 @example
-gcc -Wl,-verbose  -o a.exe -L../lib/ -lxxx
+spl -Wl,-verbose  -o a.exe -L../lib/ -lxxx
 @end example
 
 This technique also avoids the version number problems, because the following is
@@ -9036,7 +9036,7 @@ void foo () @{ /* Do something.  */; @}
 void _foo () __attribute__ ((weak, alias ("foo")));
 @end example
 
-See the gcc manual for more information about attributes and weak
+See the spl manual for more information about attributes and weak
 symbols.
 
 @item renaming symbols
@@ -9350,7 +9350,7 @@ version number.
 
 @item
 What compiler (and its version) was used to compile @command{ld}---e.g.
-``@code{gcc-2.7}''.
+``@code{spl-2.7}''.
 
 @item
 The command arguments you gave the linker to link your example and
@@ -9372,10 +9372,10 @@ we do not want to clog it up with large attachments).  But small
 attachments are best.
 
 If the source files were assembled using @code{gas} or compiled using
-@code{gcc}, then it may be OK to send the source files rather than the
+@code{spl}, then it may be OK to send the source files rather than the
 object files.  In this case, be sure to say exactly what version of
-@code{gas} or @code{gcc} was used to produce the object files.  Also say
-how @code{gas} or @code{gcc} were configured.
+@code{gas} or @code{spl} was used to produce the object files.  Also say
+how @code{gas} or @code{spl} were configured.
 
 @item
 A description of what behavior you observe that you believe is

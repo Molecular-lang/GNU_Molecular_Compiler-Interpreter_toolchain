@@ -30,7 +30,7 @@
    for x86_64 this is read-only, matching GCC behavior.
 
    See the definition of EH_TABLES_CAN_BE_READ_ONLY in
-   gcc/config/i386/sol2.h in the GCC sources and the thread starting at
+   spl/config/i386/sol2.h in the GCC sources and the thread starting at
    http://sourceware.org/ml/binutils/2010-01/msg00401.html.  */
 #ifdef TC_SPARC
 #define DWARF2_EH_FRAME_READ_ONLY SEC_NO_FLAGS

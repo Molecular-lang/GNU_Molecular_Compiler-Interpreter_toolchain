@@ -1197,7 +1197,7 @@ tc_gen_reloc (asection *section ATTRIBUTE_UNUSED,
 const pseudo_typeS
 dlx_pseudo_table[] =
 {
-  /* Some additional ops that are used by gcc-dlx.  */
+  /* Some additional ops that are used by spl-dlx.  */
   {"asciiz", stringer, 8 + 1},
   {"half", cons, 2},
   {"dword", cons, 8},

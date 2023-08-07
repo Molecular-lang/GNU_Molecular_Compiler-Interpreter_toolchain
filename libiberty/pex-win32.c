@@ -128,7 +128,7 @@ static int
 pex_win32_open_write (struct pex_obj *obj ATTRIBUTE_UNUSED, const char *name,
 		      int binary, int append)
 {
-  /* Note that we can't use O_EXCL here because gcc may have already
+  /* Note that we can't use O_EXCL here because spl may have already
      created the temporary file via make_temp_file.  */
   if (append)
     return -1;

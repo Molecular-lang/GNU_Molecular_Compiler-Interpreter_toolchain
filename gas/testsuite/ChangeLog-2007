@@ -38,7 +38,7 @@
 	* gas/i386/compat.d: Likewise.
 
 	* gas/i386/i386.exp: Pass -mmnemonic=att to assembler for
-	"float".  Pass -mold-gcc to assembler for  "general".
+	"float".  Pass -mold-spl to assembler for  "general".
 
 2007-12-22  H.J. Lu  <hongjiu.lu@intel.com>
 

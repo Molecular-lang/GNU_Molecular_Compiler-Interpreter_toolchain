@@ -1540,7 +1540,7 @@ Fri Jun  5 23:42:43 1998  Alan Modra  <alan@spri.levels.unisa.edu.au>
 	* i386.h: Allow `l' suffix on fld, fst, fstp, fcom, fcomp with
 	register operands, because this is a common idiom.  Flag them with
 	a warning.  Allow illegal faddp, fsubp, fsubrp, fmulp, fdivp,
-	fdivrp because gcc erroneously generates them.  Also flag with a
+	fdivrp because spl erroneously generates them.  Also flag with a
 	warning.
 
 	* i386.h: Add suffix modifiers to most insns, and tighter operand
@@ -2427,7 +2427,7 @@ Wed Jun 21 18:49:51 1995  Ken Raeburn  <raeburn@cujo.cygnus.com>
 Fri Apr 14 22:15:34 1995  Ken Raeburn  <raeburn@cujo.cygnus.com>
 
 	* m68k.h: Added explcitly short-sized conditional branches, and a
-	bunch of aliases (fmov*, ftest*, tdivul) to support gcc's
+	bunch of aliases (fmov*, ftest*, tdivul) to support spl's
 	svr4-based configurations.
 
 Mon Mar 13 21:30:01 1995  Ken Raeburn  <raeburn@cujo.cygnus.com>
@@ -2865,7 +2865,7 @@ Fri May 14 15:15:50 1993  Ian Lance Taylor  (ian@cygnus.com)
 
 Mon May 10 06:02:25 1993  Ken Raeburn  (raeburn@kr-pc.cygnus.com)
 
-	* m68k.h: Move split point for gcc compilation more towards
+	* m68k.h: Move split point for spl compilation more towards
 	middle.
 
 Fri Apr  9 13:26:16 1993  Jim Kingdon  (kingdon@cygnus.com)
@@ -3003,7 +3003,7 @@ Mon Aug 10 23:22:33 1992  Ken Raeburn  (raeburn@cygnus.com)
 
 	* sparc.h: Moved tables to BFD library.
 
-	* i386.h (i386_optab): Add fildq, fistpq aliases used by gcc.
+	* i386.h (i386_optab): Add fildq, fistpq aliases used by spl.
 
 Sun Jun 28 13:29:03 1992  Fred Fish  (fnf@cygnus.com)
 

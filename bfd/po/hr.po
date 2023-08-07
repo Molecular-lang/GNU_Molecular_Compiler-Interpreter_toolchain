@@ -1796,7 +1796,7 @@ msgstr ""
 msgid "%B: Unknown relocation type %d\n"
 msgstr ""
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:157
 #, c-format
 msgid "mep: no reloc for code %d"
@@ -2616,14 +2616,14 @@ msgstr "%B(%A+0x"
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or assemble using \"-no-expand\" (for gcc, \"-Wa,-no-expand\""
+" or assemble using \"-no-expand\" (for spl, \"-Wa,-no-expand\""
 msgstr ""
 
 #: elf64-mmix.c:1218
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or compile using the gcc-option \"-mno-base-addresses\"."
+" or compile using the spl-option \"-mno-base-addresses\"."
 msgstr ""
 
 #: elf64-mmix.c:1244
@@ -2684,7 +2684,7 @@ msgid "%P: %B: cannot create stub entry %s\n"
 msgstr ""
 
 #: elf64-ppc.c:6518
-msgid "%P: copy reloc against `%s' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade gcc\n"
+msgid "%P: copy reloc against `%s' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade spl\n"
 msgstr ""
 
 #: elf64-ppc.c:6788
@@ -2772,7 +2772,7 @@ msgid "%P: %H: %s used with non-TLS symbol %s\n"
 msgstr ""
 
 #: elf64-ppc.c:12556
-msgid "%P: %H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade gcc\n"
+msgid "%P: %H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade spl\n"
 msgstr ""
 
 #: elf64-ppc.c:12562

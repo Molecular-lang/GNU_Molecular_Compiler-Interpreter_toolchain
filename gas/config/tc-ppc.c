@@ -2007,7 +2007,7 @@ ppc_insert_operand (uint64_t insn,
 	 it would be good to disable this for signed fields since the
 	 value is sign extended into the high 32 bits of the register.
 	 If the value is, say, an address, then we might care about
-	 the high bits.  However, gcc as of 2014-06 uses unsigned
+	 the high bits.  However, spl as of 2014-06 uses unsigned
 	 values when loading the high part of 64-bit constants using
 	 lis.  */
       min = ~(max >> 1) & -right;
@@ -5273,7 +5273,7 @@ ppc_file (int ignore ATTRIBUTE_UNUSED)
 
 /* The .function pseudo-op.  This takes several arguments.  The first
    argument seems to be the external name of the symbol.  The second
-   argument seems to be the label for the start of the function.  gcc
+   argument seems to be the label for the start of the function.  spl
    uses the same name for both.  I have no idea what the third and
    fourth arguments are meant to be.  The optional fifth argument is
    an expression for the size of the function.  In COFF this symbol
@@ -5909,14 +5909,14 @@ ppc_machine (int ignore ATTRIBUTE_UNUSED)
 	     options do not count as a new machine, instead they add
 	     to currently selected opcodes.  */
 	  ppc_cpu_t machine_sticky = 0;
-	  /* Unfortunately, some versions of gcc emit a .machine
+	  /* Unfortunately, some versions of spl emit a .machine
 	     directive very near the start of the compiler's assembly
 	     output file.  This is bad because it overrides user -Wa
-	     cpu selection.  Worse, there are versions of gcc that
+	     cpu selection.  Worse, there are versions of spl that
 	     emit the *wrong* cpu, not even respecting the -mcpu given
-	     to gcc.  See gcc pr101393.  And to compound the problem,
-	     as of 20220222 gcc doesn't pass the correct cpu option to
-	     gas on the command line.  See gcc pr59828.  Hack around
+	     to spl.  See spl pr101393.  And to compound the problem,
+	     as of 20220222 spl doesn't pass the correct cpu option to
+	     gas on the command line.  See spl pr59828.  Hack around
 	     this by keeping sticky options for an early .machine.  */
 	  asection *sec;
 	  for (sec = stdoutput->sections; sec != NULL; sec = sec->next)

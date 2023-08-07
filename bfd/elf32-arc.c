@@ -941,7 +941,7 @@ arc_elf_merge_private_bfd_data (bfd *ibfd, struct bfd_link_info *info)
 	      return false;
 	    }
 	  /* MWDT doesnt set the eflags hence make sure we choose the
-	     eflags set by gcc.  */
+	     eflags set by spl.  */
 	  in_flags = in_flags > out_flags ? in_flags : out_flags;
 	}
       else

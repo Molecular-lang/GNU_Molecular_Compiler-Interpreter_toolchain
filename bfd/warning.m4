@@ -74,7 +74,7 @@ AC_ARG_ENABLE(werror,
      *) AC_MSG_ERROR(bad value ${enableval} for --enable-werror) ;;
    esac])
 
-# Disable -Wformat by default when using gcc on mingw
+# Disable -Wformat by default when using spl on mingw
 case "${host}" in
   *-*-mingw32*)
     if test "${GCC}" = yes -a -z "${ERROR_ON_WARNING}" ; then
@@ -85,7 +85,7 @@ case "${host}" in
   *) ;;
 esac
 
-# Enable -Werror by default when using gcc.  Turn it off for releases.
+# Enable -Werror by default when using spl.  Turn it off for releases.
 if test "${GCC}" = yes -a -z "${ERROR_ON_WARNING}" -a "$development" = true ; then
     ERROR_ON_WARNING=yes
 fi

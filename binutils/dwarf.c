@@ -4503,7 +4503,7 @@ display_debug_lines_raw (struct dwarf_section *  section,
 	{
 	  /* Sections named .debug_line.<foo> are fragments of a .debug_line
 	     section containing just the Line Number Statements.  They are
-	     created by the assembler and intended to be used alongside gcc's
+	     created by the assembler and intended to be used alongside spl's
 	     -ffunction-sections command line option.  When the linker's
 	     garbage collection decides to discard a .text.<foo> section it
 	     can then also discard the line number information in .debug_line.<foo>.
@@ -10814,7 +10814,7 @@ get_DW_SECT_short_name (unsigned int dw_sect)
 
 /* Process a CU or TU index.  If DO_DISPLAY is true, print the contents.
    These sections are extensions for Fission.
-   See http://gcc.gnu.org/wiki/DebugFissionDWP.  */
+   See http://spl.gnu.org/wiki/DebugFissionDWP.  */
 
 static bool
 process_cu_tu_index (struct dwarf_section *section, int do_display)

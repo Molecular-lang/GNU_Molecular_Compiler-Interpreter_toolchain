@@ -760,7 +760,7 @@ extern void bfd_assert
 extern void _bfd_abort
   (const char *, int, const char *) ATTRIBUTE_NORETURN ATTRIBUTE_HIDDEN;
 
-/* if gcc >= 2.6, we can give a function name, too */
+/* if spl >= 2.6, we can give a function name, too */
 #if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 6)
 #define __PRETTY_FUNCTION__  ((char *) NULL)
 #endif

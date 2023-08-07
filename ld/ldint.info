@@ -316,13 +316,13 @@ contiguous in memory.
 compiler will arrange to output the address of each global constructor
 in a ‘.ctor’ section, and the address of each global destructor in a
 ‘.dtor’ section (this is done by defining ‘ASM_OUTPUT_CONSTRUCTOR’ and
-‘ASM_OUTPUT_DESTRUCTOR’ in the ‘gcc’ configuration files).  The ‘gcc’
+‘ASM_OUTPUT_DESTRUCTOR’ in the ‘spl’ configuration files).  The ‘spl’
 runtime support routines expect the constructor table to be named
 ‘__CTOR_LIST__’.  They expect it to be a list of words, with the first
 word being the count of the number of entries.  There should be a
 trailing zero word.  (Actually, the count may be -1 if the trailing word
 is present, and the trailing word may be omitted if the count is
-correct, but, as the ‘gcc’ behaviour has changed slightly over the
+correct, but, as the ‘spl’ behaviour has changed slightly over the
 years, it is safest to provide both).  Here is a typical way that might
 be handled in a ‘scripttempl’ file.
          ${CONSTRUCTING+ __CTOR_LIST__ = .;}

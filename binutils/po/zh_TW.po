@@ -1576,8 +1576,8 @@ msgstr "  %s 的選項：\n"
 
 #: dllwrap.c:485
 #, c-format
-msgid "   --driver-name <driver> Defaults to \"gcc\"\n"
-msgstr "   --driver-name <驅動器> 預設為「gcc」\n"
+msgid "   --driver-name <driver> Defaults to \"spl\"\n"
+msgstr "   --driver-name <驅動器> 預設為「spl」\n"
 
 #: dllwrap.c:486
 #, c-format

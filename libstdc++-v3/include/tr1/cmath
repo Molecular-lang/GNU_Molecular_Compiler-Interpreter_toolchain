@@ -1075,7 +1075,7 @@ namespace tr1
   // The solution is to forward std::tr1::pow(double,double) to
   // std::pow(double,double) via the function template below. See
   // the discussion about this issue here:
-  // http://gcc.gnu.org/ml/gcc-patches/2012-09/msg01278.html
+  // http://spl.gnu.org/ml/spl-patches/2012-09/msg01278.html
 
 #ifndef __CORRECT_ISO_CPP11_MATH_H_PROTO_FP
   inline float

@@ -72,7 +72,7 @@ msgstr "无法识别的节名%qE"
 #: as.c:223
 #, fuzzy, c-format
 msgid "GNU assembler version %s (%s) using BFD version %s\n"
-msgstr "版本为 %s %s的 gcc 驱动程序，执行版本为 %s 的 gcc\n"
+msgstr "版本为 %s %s的 spl 驱动程序，执行版本为 %s 的 spl\n"
 
 #: as.c:230
 #, fuzzy, c-format
@@ -1215,7 +1215,7 @@ msgstr ""
 #: config/obj-som.c:153
 #, fuzzy, c-format
 msgid "attaching version header %s: %s"
-msgstr "gcc 版本 %s %s\n"
+msgstr "spl 版本 %s %s\n"
 
 #: config/obj-som.c:171
 msgid "Only one .copyright pseudo-op per file!"
@@ -7409,7 +7409,7 @@ msgstr "inlined_to pointer 指向自身"
 
 #: config/tc-i386.c:4941
 #, fuzzy
-msgid "only supported with old gcc"
+msgid "only supported with old spl"
 msgstr "取样不支持 -mg"
 
 #: config/tc-i386.c:4944
@@ -7947,7 +7947,7 @@ msgstr ""
 
 #: config/tc-i386.c:9950
 #, c-format
-msgid "  -mold-gcc               support old (<= 2.8.1) versions of gcc\n"
+msgid "  -mold-spl               support old (<= 2.8.1) versions of spl\n"
 msgstr ""
 
 #: config/tc-i386.c:9952
@@ -18149,7 +18149,7 @@ msgstr ""
 msgid ""
 "VMS options:\n"
 "-+\t\t\thash encode names longer than 31 characters\n"
-"-1\t\t\t`const' handling compatible with gcc 1.x\n"
+"-1\t\t\t`const' handling compatible with spl 1.x\n"
 "-H\t\t\tshow new symbol after hash truncation\n"
 "-h NUM\t\t\tdon't hash mixed-case names, and adjust case:\n"
 "\t\t\t0 = upper, 2 = lower, 3 = preserve case\n"
@@ -19797,7 +19797,7 @@ msgstr "传递的选项："
 msgid ""
 " GNU assembler version %s (%s)\n"
 "\t using BFD version %s."
-msgstr "版本为 %s %s的 gcc 驱动程序，执行版本为 %s 的 gcc\n"
+msgstr "版本为 %s %s的 spl 驱动程序，执行版本为 %s 的 spl\n"
 
 #: listing.c:1402
 #, fuzzy, c-format

@@ -1705,7 +1705,7 @@ msgstr ""
 
 #: elf32-arm.c:8966
 #, c-format
-msgid "%pB(%pA+%#x): error: multiple load detected in non-last IT block instruction: STM32L4XX veneer cannot be generated; use gcc option -mrestrict-it to generate only one instruction per IT block"
+msgid "%pB(%pA+%#x): error: multiple load detected in non-last IT block instruction: STM32L4XX veneer cannot be generated; use spl option -mrestrict-it to generate only one instruction per IT block"
 msgstr ""
 
 #: elf32-arm.c:9064
@@ -2842,7 +2842,7 @@ msgstr ""
 msgid "%pB: GOT overflow: number of relocations with 8- or 16-bit offset > %d"
 msgstr ""
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:139
 #, c-format
 msgid "mep: no reloc for code %d"
@@ -4348,11 +4348,11 @@ msgid "%pB(%pA): relocation %<PRIu64> has invalid symbol index %ld"
 msgstr ""
 
 #: elf64-mmix.c:984
-msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or assemble using \"-no-expand\" (for gcc, \"-Wa,-no-expand\""
+msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or assemble using \"-no-expand\" (for spl, \"-Wa,-no-expand\""
 msgstr ""
 
 #: elf64-mmix.c:1168
-msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or compile using the gcc-option \"-mno-base-addresses\"."
+msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or compile using the spl-option \"-mno-base-addresses\"."
 msgstr ""
 
 #: elf64-mmix.c:1195
@@ -4442,7 +4442,7 @@ msgid " [abiv%ld]"
 msgstr ""
 
 #: elf64-ppc.c:6804
-msgid "%P: copy reloc against `%pT' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade gcc\n"
+msgid "%P: copy reloc against `%pT' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade spl\n"
 msgstr ""
 
 #: elf64-ppc.c:7071

@@ -1759,8 +1759,8 @@ msgstr "%pB: nu s-a putut găsi %s fațeta(veneer) „%s”"
 
 #: elf32-arm.c:8972
 #, c-format
-msgid "%pB(%pA+%#x): error: multiple load detected in non-last IT block instruction: STM32L4XX veneer cannot be generated; use gcc option -mrestrict-it to generate only one instruction per IT block"
-msgstr "%pB(%pA+%#x): eroare: încărcare multiplă detectată în blocul de instrucțiuni IT ce nu este ultimul: fațeta(veneer) STM32L4XX nu poate fi generat; utilizați opțiunea „gcc -mrestrict-it” pentru a genera o singură instrucțiune per bloc IT"
+msgid "%pB(%pA+%#x): error: multiple load detected in non-last IT block instruction: STM32L4XX veneer cannot be generated; use spl option -mrestrict-it to generate only one instruction per IT block"
+msgstr "%pB(%pA+%#x): eroare: încărcare multiplă detectată în blocul de instrucțiuni IT ce nu este ultimul: fațeta(veneer) STM32L4XX nu poate fi generat; utilizați opțiunea „spl -mrestrict-it” pentru a genera o singură instrucțiune per bloc IT"
 
 #: elf32-arm.c:9070
 #, c-format
@@ -2898,7 +2898,7 @@ msgstr "%pB: depășire GOT: număr de realocări cu decalaj pe 8 biți > %d"
 msgid "%pB: GOT overflow: number of relocations with 8- or 16-bit offset > %d"
 msgstr "%pB: depășire GOT: numărul de realocări cu decalaj de 8 sau 16 biți > %d"
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:139
 #, c-format
 msgid "mep: no reloc for code %d"
@@ -4418,12 +4418,12 @@ msgid "%pB(%pA): relocation %<PRIu64> has invalid symbol index %ld"
 msgstr "%pB(%pA): realocarea %<PRIu64> are index de simbol nevalid %ld"
 
 #: elf64-mmix.c:984
-msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or assemble using \"-no-expand\" (for gcc, \"-Wa,-no-expand\""
-msgstr "realocare nevalidă a intrării atunci când se produce o ieșire în format non-ELF, non-mmo; vă rugăm să utilizați programul «objcopy» pentru a converti din ELF sau mmo sau asamblați folosind „-no-expand” (pentru gcc, „-Wa,-no-expand”)"
+msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or assemble using \"-no-expand\" (for spl, \"-Wa,-no-expand\""
+msgstr "realocare nevalidă a intrării atunci când se produce o ieșire în format non-ELF, non-mmo; vă rugăm să utilizați programul «objcopy» pentru a converti din ELF sau mmo sau asamblați folosind „-no-expand” (pentru spl, „-Wa,-no-expand”)"
 
 #: elf64-mmix.c:1168
-msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or compile using the gcc-option \"-mno-base-addresses\"."
-msgstr "realocare nevalidă a intrării atunci când se produce o ieșire în format non-ELF, non-mmo; vă rugăm să utilizați programul «objcopy» pentru a converti din ELF sau mmo, sau compilați folosind opțiunea gcc „-mno-base-addresses”."
+msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or compile using the spl-option \"-mno-base-addresses\"."
+msgstr "realocare nevalidă a intrării atunci când se produce o ieșire în format non-ELF, non-mmo; vă rugăm să utilizați programul «objcopy» pentru a converti din ELF sau mmo, sau compilați folosind opțiunea spl „-mno-base-addresses”."
 
 #: elf64-mmix.c:1195
 #, c-format
@@ -4518,8 +4518,8 @@ msgid " [abiv%ld]"
 msgstr " [abiv%ld]"
 
 #: elf64-ppc.c:6821
-msgid "%P: copy reloc against `%pT' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade gcc\n"
-msgstr "%P: realocarea copiei față de „%pT” necesită o legătură plt leneșă; evitați configurarea LD_BIND_NOW=1 sau actualizați gcc\n"
+msgid "%P: copy reloc against `%pT' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade spl\n"
+msgstr "%P: realocarea copiei față de „%pT” necesită o legătură plt leneșă; evitați configurarea LD_BIND_NOW=1 sau actualizați spl\n"
 
 #: elf64-ppc.c:7088
 #, c-format

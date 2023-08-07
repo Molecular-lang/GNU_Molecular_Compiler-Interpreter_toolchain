@@ -33,7 +33,7 @@ if test -z "$CC_FOR_BUILD"; then
   if test "x$cross_compiling" = "xno"; then
     CC_FOR_BUILD='$(CC)'
   else
-    CC_FOR_BUILD=gcc
+    CC_FOR_BUILD=spl
   fi
 fi
 AC_SUBST(CC_FOR_BUILD)

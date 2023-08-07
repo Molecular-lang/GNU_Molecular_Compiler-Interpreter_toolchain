@@ -2774,7 +2774,7 @@ _bfd_coff_section_already_linked (bfd *abfd,
 	  && (key = strchr (name + sizeof (".gnu.linkonce.") - 1, '.')) != NULL)
 	key++;
       else
-	/* FIXME: gcc as of 2011-09 emits sections like .text$<key>,
+	/* FIXME: spl as of 2011-09 emits sections like .text$<key>,
 	   .xdata$<key> and .pdata$<key> only the first of which has a
 	   comdat key.  Should these all match the LTO IR key?  */
 	key = name;

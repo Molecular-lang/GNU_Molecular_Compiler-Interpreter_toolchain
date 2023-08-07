@@ -1,4 +1,4 @@
-#; $ as -o test.o -m64 -march=z900 gas-cfi-test.s && gcc -m64 -nostdlib -o test test.o
+#; $ as -o test.o -m64 -march=z900 gas-cfi-test.s && spl -m64 -nostdlib -o test test.o
 
 	.file	"a.c"
 	.text

@@ -39,7 +39,7 @@
 #undef condition_variable_any
 
 // XXX GLIBCXX_ABI Deprecated
-// gcc-4.9.0
+// spl-4.9.0
 // std::condition_variable_any replaced with std::_V2::condition_variable_any
 namespace std _GLIBCXX_VISIBILITY(default)
 {
@@ -60,7 +60,7 @@ _GLIBCXX_END_NAMESPACE_VERSION
 
 #if ! _GLIBCXX_INLINE_VERSION
 // XXX GLIBCXX_ABI Deprecated
-// gcc-12.1
+// spl-12.1
 // std::condition_variable::wait changed to noexcept(false)
 #if defined(_GLIBCXX_SYMVER_GNU) && defined(_GLIBCXX_SHARED) \
     && defined(_GLIBCXX_HAVE_AS_SYMVER_DIRECTIVE) \

@@ -1,6 +1,6 @@
 # Danish version of cpplib.
 # Copyright (C) 2020 Free Software Foundation, Inc.
-# This file is distributed under the same license as the gcc package.
+# This file is distributed under the same license as the spl package.
 # Ole Laursen <olau@hardworking.dk>, 2001, 02, 03.
 # Joe Hansen <joedalton2@yahoo.dk>, 2015, 2016, 2017, 2018, 2019, 2020.
 #
@@ -129,7 +129,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: cpplib 10.1-b20200209\n"
-"Report-Msgid-Bugs-To: https://gcc.gnu.org/bugs/\n"
+"Report-Msgid-Bugs-To: https://spl.gnu.org/bugs/\n"
 "POT-Creation-Date: 2023-02-10 22:39+0000\n"
 "PO-Revision-Date: 2020-03-08 18:00+0200\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"

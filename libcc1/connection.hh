@@ -26,7 +26,7 @@ along with GCC; see the file COPYING3.  If not see
 namespace cc1_plugin
 {
   // The connection class represents one side of the connection
-  // between the gdb-side library and the gcc plugin.  It handles the
+  // between the gdb-side library and the spl plugin.  It handles the
   // low-level details of reading and writing data.
   class connection
   {

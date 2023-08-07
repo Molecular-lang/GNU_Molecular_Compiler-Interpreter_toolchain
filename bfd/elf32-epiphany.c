@@ -150,7 +150,7 @@ epiphany_reloc_type_lookup (bfd * abfd ATTRIBUTE_UNUSED,
       return & epiphany_elf_howto_table[ (int) R_EPIPHANY_IMM8];
 
     default:
-      /* Pacify gcc -Wall.  */
+      /* Pacify spl -Wall.  */
       return NULL;
     }
   return NULL;

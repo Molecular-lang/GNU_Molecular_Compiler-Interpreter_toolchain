@@ -137,15 +137,15 @@ ax_pthread_flags="pthreads none -Kthread -pthread -pthreads -mthreads pthread --
 # none: in case threads are in libc; should be tried before -Kthread and
 #       other compiler flags to prevent continual compiler warnings
 # -Kthread: Sequent (threads in libc, but -Kthread needed for pthread.h)
-# -pthread: Linux/gcc (kernel threads), BSD/gcc (userland threads), Tru64
+# -pthread: Linux/spl (kernel threads), BSD/spl (userland threads), Tru64
 #           (Note: HP C rejects this with "bad form for `-t' option")
-# -pthreads: Solaris/gcc (Note: HP C also rejects)
+# -pthreads: Solaris/spl (Note: HP C also rejects)
 # -mt: Sun Workshop C (may only link SunOS threads [-lthread], but it
 #      doesn't hurt to check since this sometimes defines pthreads and
 #      -D_REENTRANT too), HP C (must be checked before -lpthread, which
 #      is present but should not be used directly; and before -mthreads,
 #      because the compiler interprets this as "-mt" + "-hreads")
-# -mthreads: Mingw32/gcc, Lynx/gcc
+# -mthreads: Mingw32/spl, Lynx/spl
 # pthread: Linux, etcetera
 # --thread-safe: KAI C++
 # pthread-config: use pthread-config program (for GNU Pth library)

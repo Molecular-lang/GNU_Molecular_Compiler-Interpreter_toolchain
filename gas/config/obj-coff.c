@@ -1031,7 +1031,7 @@ obj_coff_val (int ignore ATTRIBUTE_UNUSED)
 	     symbol.  */
 	  SF_SET_GET_SEGMENT (def_symbol_in_progress);
 
-	  /* FIXME: gcc can generate address expressions here in
+	  /* FIXME: spl can generate address expressions here in
 	     unusual cases (search for "obscure" in sdbout.c).  We
 	     just ignore the offset here, thus generating incorrect
 	     debugging information.  We ignore the rest of the line

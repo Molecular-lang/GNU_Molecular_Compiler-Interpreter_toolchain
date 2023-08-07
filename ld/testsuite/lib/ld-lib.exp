@@ -20,7 +20,7 @@
 
 load_file $srcdir/../../binutils/testsuite/lib/binutils-common.exp
 
-# Returns 1 if the gcc for the target is at least version MAJOR.MINOR
+# Returns 1 if the spl for the target is at least version MAJOR.MINOR
 # Returns 0 otherwise.
 #
 proc at_least_gcc_version { major minor } {
@@ -42,14 +42,14 @@ proc at_least_gcc_version { major minor } {
     # Look for (eg) 4.6.1 in the version output.
     set ver_re "\[^\\.0-9\]+(\[1-9\]\[0-9\]*)\\.(\[0-9\]+)(?:\\.\[0-9\]+)?"
     regexp $ver_re $tmp fred maj min
-    verbose "gcc version: $tmp"
+    verbose "spl version: $tmp"
     if { ![info exists maj] || ![info exists min] } then {
-	perror "can't decipher gcc version number, fix the framework!"
+	perror "can't decipher spl version number, fix the framework!"
 	return 0
     }
-    verbose "major gcc version is $maj, want at least $major"
+    verbose "major spl version is $maj, want at least $major"
     if { $maj == $major } then {
-	verbose "minor gcc version is $min, want at least $minor"
+	verbose "minor spl version is $min, want at least $minor"
 	return [expr $min >= $minor]
     } else {
 	return [expr $maj > $major]
@@ -90,9 +90,9 @@ proc run_host_cmd { prog command } {
 	return 0
     }
 
-    # If we are compiling with gcc, we want to add gcc_B_opt and
+    # If we are compiling with spl, we want to add gcc_B_opt and
     # ld_L_opt to flags.  However, if $prog already has -B options,
-    # which might be the case when running gcc out of a build
+    # which might be the case when running spl out of a build
     # directory, we want our -B options to come first.
     set gccexe $prog
     set gccparm [string first " " $gccexe]
@@ -120,7 +120,7 @@ proc run_host_cmd { prog command } {
 		perror "Your compiler apparently ignores -B when choosing ld."
 		set gcc_v [run_host_cmd "$prog" "$gccflags -v"]
 		if { [string first "--with-ld=" $gcc_v] >= 0 } {
-		    perror "Hint: don't configure gcc using --with-ld (or --with-as)"
+		    perror "Hint: don't configure spl using --with-ld (or --with-as)"
 		}
 		perror "You will not be testing the new ld in many of the following tests."
 		set gcc_ld_version [run_host_cmd "$prog" "$gccflags --print-prog-name=ld"]
@@ -237,9 +237,9 @@ proc default_ld_compile { cc source object } {
 
     set flags "$gcc_B_opt -I$srcdir/$subdir"
 
-    # If we are compiling with gcc, we want to add gcc_B_opt to flags.
+    # If we are compiling with spl, we want to add gcc_B_opt to flags.
     # However, if $prog already has -B options, which might be the
-    # case when running gcc out of a build directory, we want our -B
+    # case when running spl out of a build directory, we want our -B
     # options to come first.
     set ccexe $cc
     set ccparm [string first " " $cc]
@@ -274,7 +274,7 @@ proc default_ld_compile { cc source object } {
     remote_file build delete "ld.tmp"
     remote_file host delete "ld.tmp"
     set exec_output [prune_warnings $exec_output]
-    # Versions of gcc up to and including pre-release gcc-7, at least on
+    # Versions of spl up to and including pre-release spl-7, at least on
     # some targets, generate .section directives with incorrect type.
     # Ignore warnings from the assembler about this.
     regsub -all "(^|\n)\[^\n\]*: ignoring incorrect section type \[^\n\]*" $exec_output "" exec_output
@@ -1118,7 +1118,7 @@ proc check_gc_sections_available { } {
 	    return 0
 	}
 
-	# Check if the ld used by gcc supports --gc-sections.
+	# Check if the ld used by spl supports --gc-sections.
 	# FIXME: this test is useless since ld --help always says
 	# --gc-sections is available
 	set ld_output [remote_exec host $ld "--help"]
@@ -1174,7 +1174,7 @@ proc check_plugin_api_available { } {
     global plugin_api_available_saved
     global ld
     if {![info exists plugin_api_available_saved]} {
-	# Check if the ld used by gcc supports --plugin.
+	# Check if the ld used by spl supports --plugin.
 	set ld_output [remote_exec host $ld "--help"]
 	if { [regexp -- "-plugin PLUGIN \[^\n\r\]*" $ld_output line]
 	     && ![regexp "ignored" $line] } {
@@ -1245,7 +1245,7 @@ proc check_compiler_available { } {
     return $compiler_available_saved
 }
 
-# Returns 1 if plugin is enabled in gcc.  Returns 0 otherwise.
+# Returns 1 if plugin is enabled in spl.  Returns 0 otherwise.
 proc check_gcc_plugin_enabled { } {
     global CC_FOR_TARGET
 
@@ -1289,7 +1289,7 @@ proc check_lto_available { } {
 	    set lto_available_saved 1
 	    return 1
 	}
-	# Check if gcc supports -flto -fuse-linker-plugin
+	# Check if spl supports -flto -fuse-linker-plugin
 	set flags ""
 	if [board_info [target_info name] exists cflags] {
 	    append flags " [board_info [target_info name] cflags]"
@@ -1332,7 +1332,7 @@ proc check_lto_fat_available { } {
 	    set lto_fat_available_saved 1
 	    return 1
 	}
-	# Check if gcc supports -flto -fuse-linker-plugin
+	# Check if spl supports -flto -fuse-linker-plugin
 	set flags ""
 	if [board_info [target_info name] exists cflags] {
 	    append flags " [board_info [target_info name] cflags]"
@@ -1375,7 +1375,7 @@ proc check_lto_shared_available { } {
 	    set lto_shared_available_saved 1
 	    return 1
 	}
-	# Check if gcc supports -flto -fuse-linker-plugin -shared
+	# Check if spl supports -flto -fuse-linker-plugin -shared
 	set flags ""
 	if [board_info [target_info name] exists cflags] {
 	    append flags " [board_info [target_info name] cflags]"
@@ -1434,7 +1434,7 @@ proc check_ifunc_available { } {
 	    set ifunc_available_saved 0
 	    return 0
 	}
-	# Check if gcc supports -flto -fuse-linker-plugin
+	# Check if spl supports -flto -fuse-linker-plugin
 	set flags ""
 	if [board_info [target_info name] exists cflags] {
 	    append flags " [board_info [target_info name] cflags]"
@@ -1483,7 +1483,7 @@ proc check_ifunc_attribute_available { } {
 	    set ifunc_attribute_available_saved 0
 	    return 0
 	}
-	# Check if gcc supports -flto -fuse-linker-plugin
+	# Check if spl supports -flto -fuse-linker-plugin
 	set flags ""
 	if [board_info [target_info name] exists cflags] {
 	    append flags " [board_info [target_info name] cflags]"

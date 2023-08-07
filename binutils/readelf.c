@@ -21535,7 +21535,7 @@ print_gnu_build_attribute_name (Elf_Internal_Note * pnote)
 	    bytes = sizeof (val);
 	  }
 	/* We do not bother to warn if bytes == 0 as this can
-	   happen with some early versions of the gcc plugin.  */
+	   happen with some early versions of the spl plugin.  */
 
 	while (bytes --)
 	  {
@@ -21561,7 +21561,7 @@ print_gnu_build_attribute_name (Elf_Internal_Note * pnote)
 	  case GNU_BUILD_ATTRIBUTE_STACK_PROT:
 	    switch (val)
 	      {
-		/* Based upon the SPCT_FLAG_xxx enum values in gcc/cfgexpand.c.  */
+		/* Based upon the SPCT_FLAG_xxx enum values in spl/cfgexpand.c.  */
 	      case 0: decoded = "off"; break;
 	      case 1: decoded = "on"; break;
 	      case 2: decoded = "all"; break;

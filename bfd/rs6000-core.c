@@ -33,7 +33,7 @@
 #define RS6000COFF_C 1
 
 /* The AIX 4.1 kernel is obviously compiled with -D_LONG_LONG, so
-   we have to define _LONG_LONG for older versions of gcc to get the
+   we have to define _LONG_LONG for older versions of spl to get the
    proper alignments in the user structure.  */
 #if defined(_AIX41) && !defined(_LONG_LONG)
 #define _LONG_LONG

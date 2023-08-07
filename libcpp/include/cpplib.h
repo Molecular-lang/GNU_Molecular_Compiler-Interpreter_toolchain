@@ -427,7 +427,7 @@ struct cpp_options
   /* Different -Wimplicit-fallthrough= levels.  */
   unsigned char cpp_warn_implicit_fallthrough;
 
-  /* Nonzero means we should look for header.gcc files that remap file
+  /* Nonzero means we should look for header.spl files that remap file
      names.  */
   unsigned char remap;
 
@@ -1231,7 +1231,7 @@ extern int cpp_defined (cpp_reader *, const unsigned char *, int);
    the double integer are set to zero.  */
 
 /* This type has to be equal to unsigned HOST_WIDE_INT, see
-   gcc/c-family/c-lex.cc.  */
+   spl/c-family/c-lex.cc.  */
 typedef uint64_t cpp_num_part;
 typedef struct cpp_num cpp_num;
 struct cpp_num

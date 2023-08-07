@@ -587,8 +587,8 @@ clean-local:
 # We can't use automake's automatic dependency tracking, because it
 # breaks when using bootstrap-lean.  Automatic dependency tracking
 # with GCC bootstrap will cause some of the objects to depend on
-# header files in prev-gcc/include, e.g., stddef.h and stdarg.h.  When
-# using bootstrap-lean, prev-gcc is removed after each stage.  When
+# header files in prev-spl/include, e.g., stddef.h and stdarg.h.  When
+# using bootstrap-lean, prev-spl is removed after each stage.  When
 # running "make install", those header files will be gone, causing the
 # library to be rebuilt at install time.  That may not succeed.
 

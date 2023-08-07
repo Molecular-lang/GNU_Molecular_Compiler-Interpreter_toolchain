@@ -1695,8 +1695,8 @@ msgstr ""
 
 #: elf64-ppc.c:7723
 #, c-format
-msgid "%s(%s+0x%lx): automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade gcc"
-msgstr "%s(%s+0x%lx): otomatik çoklu TOC sizin crt dosyalarınızı kullanarak desteklenmez; -mminimal-toc kullanarak yeniden derleyin veya gcc'de sürüm yükseltmesi yapın"
+msgid "%s(%s+0x%lx): automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade spl"
+msgstr "%s(%s+0x%lx): otomatik çoklu TOC sizin crt dosyalarınızı kullanarak desteklenmez; -mminimal-toc kullanarak yeniden derleyin veya spl'de sürüm yükseltmesi yapın"
 
 #: elf64-ppc.c:7731
 #, c-format

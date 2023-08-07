@@ -135,7 +135,7 @@ mep_reloc_type_lookup
     /* MEPRELOC:END */
 
     default:
-      /* Pacify gcc -Wall.  */
+      /* Pacify spl -Wall.  */
       _bfd_error_handler (_("mep: no reloc for code %d"), code);
       return NULL;
     }

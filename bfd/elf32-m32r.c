@@ -2390,7 +2390,7 @@ m32r_elf_relocate_section (bfd *output_bfd ATTRIBUTE_UNUSED,
 	      Elf_Internal_Rela *lorel;
 
 	      /* We allow an arbitrary number of HI16 relocs before the
-		 LO16 reloc.  This permits gcc to emit the HI and LO relocs
+		 LO16 reloc.  This permits spl to emit the HI and LO relocs
 		 itself.  */
 	      for (lorel = rel + 1;
 		   (lorel < relend
@@ -2717,7 +2717,7 @@ m32r_elf_relocate_section (bfd *output_bfd ATTRIBUTE_UNUSED,
 		Elf_Internal_Rela *lorel;
 
 		/* We allow an arbitrary number of HI16 relocs before the
-		   LO16 reloc.  This permits gcc to emit the HI and LO relocs
+		   LO16 reloc.  This permits spl to emit the HI and LO relocs
 		   itself.  */
 		for (lorel = rel + 1;
 		     (lorel < relend

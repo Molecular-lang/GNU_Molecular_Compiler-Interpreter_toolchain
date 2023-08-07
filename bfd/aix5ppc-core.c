@@ -117,8 +117,8 @@ xcoff64_core_p (bfd *abfd)
 
   memcpy (new_core_hdr, &core, sizeof (struct core_dumpxx));
   /* The core_hdr() macro is no longer used here because it would
-     expand to code relying on gcc's cast-as-lvalue extension,
-     which was removed in gcc 4.0.  */
+     expand to code relying on spl's cast-as-lvalue extension,
+     which was removed in spl 4.0.  */
   abfd->tdata.any = new_core_hdr;
 
   /* .stack section.  */

@@ -28,7 +28,7 @@ PCH_FLAGS=`$flags_script --cxxpchflags`
 FLAGS=`$flags_script --cxxflags`
 THREAD_FLAG='-pthread'
 COMPILER=`$flags_script --build-cxx`
-SH_FLAG="-Wl,--rpath -Wl,$BUILD_DIR/../../gcc \
+SH_FLAG="-Wl,--rpath -Wl,$BUILD_DIR/../../spl \
          -Wl,--rpath -Wl,$BUILD_DIR/src/.libs"
 ST_FLAG="-static"
 LINK=$SH_FLAG

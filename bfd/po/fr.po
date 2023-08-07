@@ -1745,8 +1745,8 @@ msgstr "%pB: incapable de trouver le trampoline (veneer) « %s » pour %s"
 
 #: elf32-arm.c:8972
 #, c-format
-msgid "%pB(%pA+%#x): error: multiple load detected in non-last IT block instruction: STM32L4XX veneer cannot be generated; use gcc option -mrestrict-it to generate only one instruction per IT block"
-msgstr "%pB(%pA+%#x): erreur: chargements multiples détectés dans un bloc d'instruction IT qui n'est pas le dernier: le trampoline (veneer) du STM32L4XX ne peut pas être généré; utilisez l'option -mrestrict-it de gcc pour générer seulement une instruction par bloc IT"
+msgid "%pB(%pA+%#x): error: multiple load detected in non-last IT block instruction: STM32L4XX veneer cannot be generated; use spl option -mrestrict-it to generate only one instruction per IT block"
+msgstr "%pB(%pA+%#x): erreur: chargements multiples détectés dans un bloc d'instruction IT qui n'est pas le dernier: le trampoline (veneer) du STM32L4XX ne peut pas être généré; utilisez l'option -mrestrict-it de spl pour générer seulement une instruction par bloc IT"
 
 #: elf32-arm.c:9070
 #, c-format
@@ -2886,7 +2886,7 @@ msgstr "%pB: débordement GOT: nombre de réadressages avec des offsets de 8 bit
 msgid "%pB: GOT overflow: number of relocations with 8- or 16-bit offset > %d"
 msgstr "%pB: débordement GOT: nombre de réadressages avec des offsets de 8 ou 16 bits > %d"
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:139
 #, c-format
 msgid "mep: no reloc for code %d"
@@ -4394,12 +4394,12 @@ msgid "%pB(%pA): relocation %<PRIu64> has invalid symbol index %ld"
 msgstr "%pB(%pA): réadressage %<PRIu64> a un index de symbole %ld invalide"
 
 #: elf64-mmix.c:984
-msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or assemble using \"-no-expand\" (for gcc, \"-Wa,-no-expand\""
-msgstr "réadressage d'entrée invalide en produisant un format de sortie non ELF et non mmo; veuillez utiliser le programme objcopy pour convertir de ELF ou mmo, ou assembler en utilisant « -no-expand » (pour gcc, « -Wa,-no-expand »"
+msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or assemble using \"-no-expand\" (for spl, \"-Wa,-no-expand\""
+msgstr "réadressage d'entrée invalide en produisant un format de sortie non ELF et non mmo; veuillez utiliser le programme objcopy pour convertir de ELF ou mmo, ou assembler en utilisant « -no-expand » (pour spl, « -Wa,-no-expand »"
 
 #: elf64-mmix.c:1168
-msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or compile using the gcc-option \"-mno-base-addresses\"."
-msgstr "réadressage d'entrée invalide en produisant un format de sortie non ELF et non mmo; veuillez utiliser le programme objcopy pour convertir de ELF ou mmo, ou compiler en utilisant l'option gcc « -mno-base-addresses »."
+msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or compile using the spl-option \"-mno-base-addresses\"."
+msgstr "réadressage d'entrée invalide en produisant un format de sortie non ELF et non mmo; veuillez utiliser le programme objcopy pour convertir de ELF ou mmo, ou compiler en utilisant l'option spl « -mno-base-addresses »."
 
 #: elf64-mmix.c:1195
 #, c-format
@@ -4494,8 +4494,8 @@ msgid " [abiv%ld]"
 msgstr " [abiv%ld]"
 
 #: elf64-ppc.c:6821
-msgid "%P: copy reloc against `%pT' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade gcc\n"
-msgstr "%P: le réadressage par copie sur « %pT » nécessite un lien plt paresseux; évitez de mettre LD_BIND_NOW=1 ou mettez à jour gcc\n"
+msgid "%P: copy reloc against `%pT' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade spl\n"
+msgstr "%P: le réadressage par copie sur « %pT » nécessite un lien plt paresseux; évitez de mettre LD_BIND_NOW=1 ou mettez à jour spl\n"
 
 #: elf64-ppc.c:7088
 #, c-format
@@ -10410,8 +10410,8 @@ msgstr "%pB: impossible de remplir DataDictionary[9] car __tls_used est manquant
 #~ msgid " [dsp]"
 #~ msgstr " [dsp]"
 
-#~ msgid "%P: %H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade gcc\n"
-#~ msgstr "%P: %H: TOC multiples et automatiques non supportées utilisant votre fichier crt; recompilez avec -mminimal-toc ou mettez à jour gcc\n"
+#~ msgid "%P: %H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade spl\n"
+#~ msgstr "%P: %H: TOC multiples et automatiques non supportées utilisant votre fichier crt; recompilez avec -mminimal-toc ou mettez à jour spl\n"
 
 #~ msgid "%P: %H: sibling call optimization to `%s' does not allow automatic multiple TOCs; recompile with -mminimal-toc or -fno-optimize-sibling-calls, or make `%s' extern\n"
 #~ msgstr "%P: %H: l'optimisation sœurs des appels vers « %s » n'autorise pas de TOC multiples et automatiques; recompilez avec -mminimal-toc ou -fno-optimize-sibling-calls, ou rendez « %s » externe\n"

@@ -3068,7 +3068,7 @@ md_convert_frag (bfd *headers ATTRIBUTE_UNUSED, segT seg, fragS *fragP)
     case C (COND_JUMP, COND12):
     case C (COND_JUMP_DELAY, COND12):
       /* A bcond won't fit, so turn it into a b!cond; bra disp; nop.  */
-      /* I found that a relax failure for gcc.c-torture/execute/930628-1.c
+      /* I found that a relax failure for spl.c-torture/execute/930628-1.c
 	 was due to gas incorrectly relaxing an out-of-range conditional
 	 branch with delay slot.  It turned:
                      bf.s    L6              (slot mov.l   r12,@(44,r0))

@@ -716,7 +716,7 @@ parse_args (unsigned argc, char **argv)
      the first form takes an argument, while the second does not.
 
      We need to permit the --shared form because on some platforms,
-     such as Solaris, gcc -shared will pass -G to the linker.
+     such as Solaris, spl -shared will pass -G to the linker.
 
      To permit either usage, we look through the argument list.  If we
      find -G not followed by a number, we change it into --shared.

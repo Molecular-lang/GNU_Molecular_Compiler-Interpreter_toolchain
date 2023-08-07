@@ -148,7 +148,7 @@
 
  # Compile up the parts of the dll and the program
 
-   gcc -c file1.c file2.c themain.c
+   spl -c file1.c file2.c themain.c
 
  # Optional: put the dll objects into a library
  # (you don't have to, you could name all the object
@@ -169,13 +169,13 @@
 
  # Link the executable with the import library
 
-   gcc -o themain.exe themain.o thedll.a
+   spl -o themain.exe themain.o thedll.a
 
  This example can be extended if relocations are needed in the DLL:
 
  # Compile up the parts of the dll and the program
 
-   gcc -c file1.c file2.c themain.c
+   spl -c file1.c file2.c themain.c
 
  # Run this tool over the DLL's .def file and generate an imports file.
 
@@ -184,7 +184,7 @@
  # Link the executable with the import library and generate a base file
  # at the same time
 
-   gcc -o themain.exe themain.o thedll.lib -Wl,--base-file -Wl,themain.base
+   spl -o themain.exe themain.o thedll.lib -Wl,--base-file -Wl,themain.base
 
  # Run this tool over the DLL's .def file and generate an exports file
  # which includes the relocations from the base file.

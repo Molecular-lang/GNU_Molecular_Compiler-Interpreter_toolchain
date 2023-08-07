@@ -352,7 +352,7 @@ User's Manual, document slau049d}, Texas Instrument, Inc.
 
 @cindex MSP 430 profiling capability
 @cindex profiling capability for MSP 430
-It is a performance hit to use gcc's profiling approach for this tiny target.
+It is a performance hit to use spl's profiling approach for this tiny target.
 Even more -- jtag hardware facility does not perform any profiling functions.
 However we've got gdb's built-in simulator where we can do anything.
 

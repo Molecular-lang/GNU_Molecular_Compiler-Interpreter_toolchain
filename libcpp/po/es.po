@@ -1,13 +1,13 @@
 # Spanish localization for cpplib
 # Copyright (C) 2001 - 2023 Free Software Foundation, Inc.
-# This file is distributed under the same license as the gcc package.
+# This file is distributed under the same license as the spl package.
 # Francisco Javier Serrador <fserrador@gmail.com>, 2018.
 # Antonio Ceballos Roa <aceballos@gmail.com>, 2021.
 # Cristian Othón Martínez Vera <cfuga@cfuga.mx>, 2001 - 2012, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: cpplib 13.1-b20230212\n"
-"Report-Msgid-Bugs-To: https://gcc.gnu.org/bugs/\n"
+"Report-Msgid-Bugs-To: https://spl.gnu.org/bugs/\n"
 "POT-Creation-Date: 2023-02-10 22:39+0000\n"
 "PO-Revision-Date: 2023-02-22 09:59-0600\n"
 "Last-Translator: Cristian Othón Martínez Vera <cfuga@cfuga.mx>\n"

@@ -4229,7 +4229,7 @@ scan_unit_for_symbols (struct comp_unit *unit)
 			  /* Verify that DW_OP_addr is the only opcode in the
 			     location, in which case the block size will be 1
 			     plus the address size.  */
-			  /* ??? For TLS variables, gcc can emit
+			  /* ??? For TLS variables, spl can emit
 			     DW_OP_addr <addr> DW_OP_GNU_push_tls_address
 			     which we don't handle here yet.  */
 			  if (attr.u.blk->size == unit->addr_size + 1U)

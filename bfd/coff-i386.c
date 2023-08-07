@@ -685,7 +685,7 @@ coff_i386_reloc_name_lookup (bfd *abfd ATTRIBUTE_UNUSED,
 
 #ifdef TARGET_UNDERSCORE
 
-/* If i386 gcc uses underscores for symbol names, then it does not use
+/* If i386 spl uses underscores for symbol names, then it does not use
    a leading dot for local labels, so if TARGET_UNDERSCORE is defined
    we treat all symbols starting with L as local.  */
 

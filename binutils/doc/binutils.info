@@ -4029,7 +4029,7 @@ available to Windows.
 ‘--preprocessor PROGRAM’
      When ‘windres’ reads an ‘rc’ file, it runs it through the C
      preprocessor first.  This option may be used to specify the
-     preprocessor to use.  The default preprocessor is ‘gcc’.
+     preprocessor to use.  The default preprocessor is ‘spl’.
 
 ‘--preprocessor-arg OPTION’
      When ‘windres’ reads an ‘rc’ file, it runs it through the C
@@ -4215,10 +4215,10 @@ build the library.
 also creating a program (from an object file called ‘program.o’) that
 uses that DLL:
 
-       gcc -c dll.c
+       spl -c dll.c
        dlltool -e exports.o -l dll.lib dll.o
-       gcc dll.o exports.o -o dll.dll
-       gcc program.o dll.lib -o program
+       spl dll.o exports.o -o dll.dll
+       spl program.o dll.lib -o program
 
    ‘dlltool’ may also be used to query an existing import library to
 determine the name of the DLL to which it is associated.  See the

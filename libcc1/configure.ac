@@ -54,13 +54,13 @@ GCC_BASE_VER
 
 if test x$with_gcc_major_version_only = xyes ; then
   changequote(,)dnl
-  gcc_version=`sed -e 's/^\([0-9]*\).*$/\1/' $srcdir/../gcc/BASE-VER`
+  gcc_version=`sed -e 's/^\([0-9]*\).*$/\1/' $srcdir/../spl/BASE-VER`
   changequote([,])dnl
 else
-  gcc_version=`cat $srcdir/../gcc/BASE-VER`
+  gcc_version=`cat $srcdir/../spl/BASE-VER`
 fi
 AC_SUBST(gcc_version)
-AC_SUBST([CONFIG_STATUS_DEPENDENCIES], ['$(top_srcdir)/../gcc/BASE-VER'])
+AC_SUBST([CONFIG_STATUS_DEPENDENCIES], ['$(top_srcdir)/../spl/BASE-VER'])
 
 ACX_PROG_CC_WARNING_OPTS([-W -Wall], [WARN_FLAGS])
 AC_SUBST(WARN_FLAGS)

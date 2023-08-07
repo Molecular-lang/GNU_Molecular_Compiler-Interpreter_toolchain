@@ -505,9 +505,9 @@ static const pseudo_typeS potable[] = {
 /* tag  */
   {"text", s_text, 0},
 
-  /* This is for gcc to use.  It's only just been added (2/94), so gcc
+  /* This is for spl to use.  It's only just been added (2/94), so spl
      won't be able to use it for a while -- probably a year or more.
-     But once this has been released, check with gcc maintainers
+     But once this has been released, check with spl maintainers
      before deleting it or even changing the spelling.  */
   {"this_GCC_requires_the_GNU_assembler", s_ignore, 0},
   /* If we're folding case -- done for some targets, not necessarily
@@ -4364,7 +4364,7 @@ emit_expr_with_reloc (expressionS *exp,
 
 #ifndef NO_LISTING
 #ifdef OBJ_ELF
-  /* When gcc emits DWARF 1 debugging pseudo-ops, a line number will
+  /* When spl emits DWARF 1 debugging pseudo-ops, a line number will
      appear as a four byte positive constant in the .line section,
      followed by a 2 byte 0xffff.  Look for that case here.  */
   if (strcmp (segment_name (now_seg), ".line") != 0)
@@ -4381,7 +4381,7 @@ emit_expr_with_reloc (expressionS *exp,
   else
     dwarf_line = -1;
 
-  /* When gcc emits DWARF 1 debugging pseudo-ops, a file name will
+  /* When spl emits DWARF 1 debugging pseudo-ops, a file name will
      appear as a 2 byte TAG_compile_unit (0x11) followed by a 2 byte
      AT_sibling (0x12) followed by a four byte address of the sibling
      followed by a 2 byte AT_name (0x38) followed by the name of the
@@ -5449,7 +5449,7 @@ stringer (int bits_appendzero)
 	    stringer_append_char (0, bitsize);
 
 #if !defined(NO_LISTING) && defined (OBJ_ELF)
-	  /* In ELF, when gcc is emitting DWARF 1 debugging output, it
+	  /* In ELF, when spl is emitting DWARF 1 debugging output, it
 	     will emit .string with a filename in the .debug section
 	     after a sequence of constants.  See the comment in
 	     emit_expr for the sequence.  emit_expr will set

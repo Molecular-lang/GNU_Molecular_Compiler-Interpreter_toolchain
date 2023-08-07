@@ -1894,7 +1894,7 @@ gen_dis_table (struct bittree *ent)
   int totbits = bitsused;
   int needed_bytes;
   int zero_count = 0;
-  int zero_dest = 0;	/* Initialize this with 0 to keep gcc quiet...  */
+  int zero_dest = 0;	/* Initialize this with 0 to keep spl quiet...  */
 
   /* If this is a terminal entry, there's no point in skipping any
      bits.  */

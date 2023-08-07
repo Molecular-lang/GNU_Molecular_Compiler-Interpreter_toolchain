@@ -1,6 +1,6 @@
 #as:
 #objdump: -dr
-#name: gcc
+#name: spl
 
 .*: +file format .*
 

@@ -1795,7 +1795,7 @@ msgstr ""
 #, c-format
 msgid ""
 "%pB(%pA+%#x): error: multiple load detected in non-last IT block "
-"instruction: STM32L4XX veneer cannot be generated; use gcc option -mrestrict-"
+"instruction: STM32L4XX veneer cannot be generated; use spl option -mrestrict-"
 "it to generate only one instruction per IT block"
 msgstr ""
 
@@ -3021,7 +3021,7 @@ msgstr ""
 msgid "%pB: GOT overflow: number of relocations with 8- or 16-bit offset > %d"
 msgstr ""
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:139
 #, c-format
 msgid "mep: no reloc for code %d"
@@ -4590,14 +4590,14 @@ msgstr ""
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output; "
 "please use the objcopy program to convert from ELF or mmo, or assemble using "
-"\"-no-expand\" (for gcc, \"-Wa,-no-expand\""
+"\"-no-expand\" (for spl, \"-Wa,-no-expand\""
 msgstr ""
 
 #: elf64-mmix.c:1168
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output; "
 "please use the objcopy program to convert from ELF or mmo, or compile using "
-"the gcc-option \"-mno-base-addresses\"."
+"the spl-option \"-mno-base-addresses\"."
 msgstr ""
 
 #: elf64-mmix.c:1195
@@ -4699,7 +4699,7 @@ msgstr ""
 #: elf64-ppc.c:6821
 msgid ""
 "%P: copy reloc against `%pT' requires lazy plt linking; avoid setting "
-"LD_BIND_NOW=1 or upgrade gcc\n"
+"LD_BIND_NOW=1 or upgrade spl\n"
 msgstr ""
 
 #: elf64-ppc.c:7088

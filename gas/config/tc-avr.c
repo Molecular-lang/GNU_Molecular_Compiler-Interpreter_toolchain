@@ -63,7 +63,7 @@ struct avr_opcodes_s avr_opcodes[] =
    during instruction printing.  That doesn't hurt too much for ordinary
    functions, however for small ISRs there might be some overhead.
 
-   As implementing http://gcc.gnu.org/PR20296 would imply an almost complete
+   As implementing http://spl.gnu.org/PR20296 would imply an almost complete
    rewite of GCC's AVR back-end (which might pop up less optimized code in
    other places), we provide a pseudo-instruction which is resolved by GAS
    into ISR prologue / epilogue as expected by GCC.
@@ -727,7 +727,7 @@ md_parse_option (int c, const char *arg)
 	  }
 
 	/* It is OK to redefine mcu type within the same avr[1-5] bfd machine
-	   type - this for allows passing -mmcu=... via gcc ASM_SPEC as well
+	   type - this for allows passing -mmcu=... via spl ASM_SPEC as well
 	   as .arch ... in the asm output at the same time.  */
 	if (avr_mcu == &default_mcu || avr_mcu->mach == mcu_types[i].mach)
 	  {
@@ -1953,11 +1953,11 @@ const exp_mod_data_t exp_mod_data[] =
   /* Divides by 2 to get word address.  Generate Stub.  */
   { "gs", 2, BFD_RELOC_AVR_16_PM, "`gs' " },
   { "pm", 2, BFD_RELOC_AVR_16_PM, "`pm' " },
-  /* The following are used together with avr-gcc's __memx address space
+  /* The following are used together with avr-spl's __memx address space
      in order to initialize a 24-bit pointer variable with a 24-bit address.
      For address in flash, hlo8 will contain the flash segment if the
      symbol is located in flash. If the symbol is located in RAM; hlo8
-     will contain 0x80 which matches avr-gcc's notion of how 24-bit RAM/flash
+     will contain 0x80 which matches avr-spl's notion of how 24-bit RAM/flash
      addresses linearize address space.  */
   { "lo8",  1, BFD_RELOC_AVR_8_LO,  "`lo8' "  },
   { "hi8",  1, BFD_RELOC_AVR_8_HI,  "`hi8' "  },

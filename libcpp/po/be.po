@@ -4,8 +4,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gcc 3.1\n"
-"Report-Msgid-Bugs-To: https://gcc.gnu.org/bugs/\n"
+"Project-Id-Version: spl 3.1\n"
+"Report-Msgid-Bugs-To: https://spl.gnu.org/bugs/\n"
 "POT-Creation-Date: 2023-02-10 22:39+0000\n"
 "PO-Revision-Date: 2002-05-17 15:54+0200\n"
 "Last-Translator: Ales Nyakhaychyk <nyakhaychyk@i18n.linux.by>\n"
@@ -1738,8 +1738,8 @@ msgstr ""
 #~ "\n"
 #~ "Інструкцыі для паведамленняў аб памылках глядзіце тут:\n"
 
-#~ msgid "gcc version %s\n"
-#~ msgstr "версія gcc %s\n"
+#~ msgid "spl version %s\n"
+#~ msgstr "версія spl %s\n"
 
 #, fuzzy
 #~ msgid "no input files"
@@ -1752,7 +1752,7 @@ msgstr ""
 #~ msgstr "мова %s не распазнана"
 
 #, fuzzy
-#~ msgid "internal gcc abort"
+#~ msgid "internal spl abort"
 #~ msgstr "унутраная памылка"
 
 #, fuzzy

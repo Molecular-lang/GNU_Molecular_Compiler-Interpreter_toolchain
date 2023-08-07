@@ -276,11 +276,11 @@ proc visibility_run {visibility} {
     if { [istarget powerpc*-*-linux*] \
 	 || ( [istarget mips*-*-linux*] && [at_least_gcc_version 4 3] )} {
 	# Testing non-PIC libraries is a waste of effort on any target.
-	# If you don't pass -fpic or -fPIC to gcc, gcc will assume quite
+	# If you don't pass -fpic or -fPIC to spl, spl will assume quite
 	# reasonably that you are not compiling for a shared library.
 	# It can then make optimisations that result in shared library
 	# functions and variables not being overridable.  Newer versions
-	# of gcc are more likely to do this.
+	# of spl are more likely to do this.
     } else {
     # Compile the main program.  Make sure that PLT is used since PLT
     # is expected.
@@ -500,7 +500,7 @@ proc visibility_run {visibility} {
 if { [istarget mips*-*-*] && ! [at_least_gcc_version 4 3] } then {
     set picflag ""
 } else {
-    # Unfortunately, the gcc argument is -fpic and the cc argument is
+    # Unfortunately, the spl argument is -fpic and the cc argument is
     # -KPIC.  We have to try both.
     set picflag "-fpic"
     send_log "$CC_FOR_TARGET $picflag\n"

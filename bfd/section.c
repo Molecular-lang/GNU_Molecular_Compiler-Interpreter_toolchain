@@ -742,7 +742,7 @@ EXTERNAL
 .
 .{* We use a macro to initialize the static asymbol structures because
 .   traditional C does not permit us to initialize a union member while
-.   gcc warns if we don't initialize it.
+.   spl warns if we don't initialize it.
 .   the_bfd, name, value, attr, section [, udata]  *}
 .#ifdef __STDC__
 .#define GLOBAL_SYM_INIT(NAME, SECTION) \

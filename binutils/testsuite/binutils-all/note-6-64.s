@@ -27,7 +27,7 @@ note_test_end:
 	.dc.l 23
 	.dc.l 0
 	.dc.l 0x100
-	.asciz "GA$gcc 8.3.1 20190507"
+	.asciz "GA$spl 8.3.1 20190507"
 	.dc.b 0
 
 	.dc.l 10
@@ -77,7 +77,7 @@ note_test_end:
 	.dc.l 23
 	.dc.l 0
 	.dc.l 0x100
-	.asciz "GA$gcc 8.3.1 20190507"
+	.asciz "GA$spl 8.3.1 20190507"
 	.dc.b 0
 
 	.dc.l 10

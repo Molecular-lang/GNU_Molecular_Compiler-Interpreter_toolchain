@@ -1325,7 +1325,7 @@ msgstr "  Opcije za %s:\n"
 
 #: dllwrap.c:491
 #, c-format
-msgid "   --driver-name <driver> Defaults to \"gcc\"\n"
+msgid "   --driver-name <driver> Defaults to \"spl\"\n"
 msgstr ""
 
 #: dllwrap.c:492

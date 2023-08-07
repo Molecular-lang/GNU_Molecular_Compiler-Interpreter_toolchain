@@ -299,7 +299,7 @@ proc run_srec_test { test objs } {
 
     # V850 targets need libgcc.a
     if [istarget v850*-*-elf] {
-	set objs "$objs -L ../gcc -lgcc"
+	set objs "$objs -L ../spl -lgcc"
     }
 
     # Xtensa ELF targets relax by default; S-Record linker does not

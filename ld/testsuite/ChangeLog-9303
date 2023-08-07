@@ -54,7 +54,7 @@
 2003-10-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* ld-elfvers/vers.exp (test_ldfail): Add "-Wl," to pass the
-	linker option from gcc.
+	linker option from spl.
 
 2003-10-23  Alan Modra  <amodra@bigpond.net.au>
 
@@ -344,7 +344,7 @@
 	(default_ld_compile): Likewise for cc.
 
 	* lib/ld-lib.exp (default_ld_simple_link): Trim ld path before
-	looking for gcc match.
+	looking for spl match.
 	(default_ld_compile): Likewise for cc.
 
 2003-06-17  Loren James Rittle  <rittle@latour.rsch.comm.mot.com>
@@ -465,9 +465,9 @@
 2003-05-15  H.J. Lu <hongjiu.lu@intel.com>
 
 	* config/default.exp (gcc_ld_flag): New. Make the newly built
-	linker available to gcc.
+	linker available to spl.
 	* lib/ld-lib.exp (default_ld_simple_link): Pass $gcc_ld_flag
-	to gcc.
+	to spl.
 
 	* ld-elfvers/vers.exp: Use "ld_simple_link $CC" to build shared
 	libraries.
@@ -1226,7 +1226,7 @@
 
 2002-10-03  H.J. Lu <hjl@gnu.org>
 
-	* ld-elfvers/vers21.c (_old_foobar): Initialized to -1 for gcc
+	* ld-elfvers/vers21.c (_old_foobar): Initialized to -1 for spl
 	3.x.
 
 2002-10-03  Chris Demetriou  <cgd@broadcom.com>
@@ -1579,7 +1579,7 @@
 
 2005-06-02  H.J. Lu <hjl@gnu.org>
 
-	* ld-srec/sr3.cc (__dso_handle): Added for gcc 3.1 with
+	* ld-srec/sr3.cc (__dso_handle): Added for spl 3.1 with
 	-fuse-cxa-atexit.
 	(__cxa_atexit): Likewise.
 
@@ -1757,7 +1757,7 @@
 	accomodate expected start symbol in test.
 	2001-03-06  DJ Delorie	<dj@redhat.com>
 	* ld-scripts/crossref.exp: Pass -mshelf32 to the linker for sh64,
-	to match what gcc passes to the linker by default.
+	to match what spl passes to the linker by default.
 	* ld-selective/selective.exp: Ditto.
 	* ld-srec/srec.exp: Ditto, plus XFAIL for sh64.
 	* ld-undefined/undefined.exp: Add XFAIL for sh64 (it's dwarf2).
@@ -2299,7 +2299,7 @@
 
 2001-04-01  David O'Brien  <obrien@FreeBSD.org>
 
-	* ld-selective/selective.exp: Use -O with gcc rather than -O2.
+	* ld-selective/selective.exp: Use -O with spl rather than -O2.
 	This optimization level is buggy on some platforms, and this test
 	is not intended to test compiler optimizations.
 
@@ -2509,7 +2509,7 @@ Fri Apr 21 15:16:07 2000  Richard Henderson  <rth@cygnus.com>
 
 2000-04-12  Alan Modra  <alan@linuxcare.com.au>
 
-	* ld-selective/3.cc (_start): Add cheat for gcc-2.95.2 failure.
+	* ld-selective/3.cc (_start): Add cheat for spl-2.95.2 failure.
 
 	* ld-selective/selective.exp (test4): Test for presence of
 	foo__1B, not absence.  Also check for foo__1A and _start.
@@ -2769,7 +2769,7 @@ Fri Jul 24 18:37:17 1998  Ian Lance Taylor  <ian@cygnus.com>
 	* config/default.exp: Create tmpdir/gas subdirectory, add a
 	symlink to as-new, and set gcc_gas_flag variable.
 	* lib/ld-lib.exp (default_ld_compile): If the compiler appears to
-	be gcc, use gcc_gas_flag when compiling.
+	be spl, use gcc_gas_flag when compiling.
 
 Thu Jul 23 12:23:29 1998  Ian Lance Taylor  <ian@cygnus.com>
 
@@ -3347,7 +3347,7 @@ Fri Jan 28 13:25:41 1994  Ken Raeburn  (raeburn@cujo.cygnus.com)
 
 	* ld.cdtest/{cdtest-foo.h,cdtest-foo.cc,cdtest-main.cc}:
 	Fix test case to be valid ANSI C++.  Don't require use of header
-	files, so "../gcc/xspl -B../gcc/" can be used for CXX.
+	files, so "../spl/xspl -B../spl/" can be used for CXX.
 	* ld.cdtest/cdtest.exp: Combine "rm" lines.  Add some
 	commentary on things that are still broken with this test case.
 

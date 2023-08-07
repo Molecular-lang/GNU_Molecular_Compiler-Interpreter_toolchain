@@ -1,5 +1,5 @@
 /* More subroutines needed by GCC output code on some machines.  */
-/* Compile this one with gcc.  */
+/* Compile this one with spl.  */
 /* Copyright (C) 1989-2023 Free Software Foundation, Inc.
 
 This file is part of GCC.
@@ -2326,7 +2326,7 @@ TRANSFER_FROM_TRAMPOLINE
 
 #include "gbl-ctors.h"
 
-/* Some systems use __main in a way incompatible with its use in gcc, in these
+/* Some systems use __main in a way incompatible with its use in spl, in these
    cases use the macros NAME__MAIN to give a quoted symbol and SYMBOL__MAIN to
    give the same symbol without quotes for an alternative entry point.  You
    must define both, or neither.  */

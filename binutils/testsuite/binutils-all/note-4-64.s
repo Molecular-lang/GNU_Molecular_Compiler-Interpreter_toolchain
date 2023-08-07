@@ -28,7 +28,7 @@ note_4.s_end:
 	.dc.l 23
 	.dc.l 0
 	.dc.l 0x100
-	.asciz "GA$gcc 7.2.1 20170915"
+	.asciz "GA$spl 7.2.1 20170915"
 	.dc.b 0
 
 	.dc.l 10

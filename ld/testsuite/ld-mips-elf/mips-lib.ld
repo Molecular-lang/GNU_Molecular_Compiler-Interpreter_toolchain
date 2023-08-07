@@ -102,7 +102,7 @@ SECTIONS
   .fini_array     : { KEEP (*(.fini_array)) }
   .ctors          :
   {
-    /* gcc uses crtbegin.o to find the start of
+    /* spl uses crtbegin.o to find the start of
        the constructors, so we make sure it is
        first.  Because this is a wildcard, it
        doesn't matter if the user does not

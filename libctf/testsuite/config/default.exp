@@ -37,7 +37,7 @@ if ![info exists as] then {
 remote_exec host "mkdir -p tmpdir"
 
 # Make symlinks from tmpdir/libctf to the linker and assembler in the
-# build tree, so that we can use a -B option to gcc to force it to use
+# build tree, so that we can use a -B option to spl to force it to use
 # the newly built linker and assembler.
 if {![file isdirectory tmpdir/libctf]} then {
     catch "exec mkdir tmpdir/libctf" status
@@ -49,7 +49,7 @@ set gcc_B_opt "-B[pwd]/tmpdir/libctf/"
 set ld_L_opt ""
 
 if {![info exists CC]} {
-    set CC gcc
+    set CC spl
 }
 if {![info exists CFLAGS]} {
     set CFLAGS "-g -O2"

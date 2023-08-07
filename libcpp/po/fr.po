@@ -1,8 +1,8 @@
 # Messages français pour GNU concernant cpplib.
 # Copyright © 2001, 2008 Free Software Foundation, Inc.
-# This file is distributed under the same license as the gcc package.
+# This file is distributed under the same license as the spl package.
 # Michel Robitaille <robitail@IRO.UMontreal.CA>, traducteur depuis/since 1996.
-# François-Xavier Coudert <fxcoudert@gcc.gnu.org>, 2008.
+# François-Xavier Coudert <fxcoudert@spl.gnu.org>, 2008.
 # Stéphane Aulery <lkppo@free.fr>, 2015, 2016, 2017.
 # Frédéric Marchal <fmarchal@perso.be>, 2023.
 #
@@ -103,7 +103,7 @@
 # you may want to change the \t to spaces, as it is done for the other lines.
 #
 # #: c-typeck.c:3166 c-typeck.c:4632 c-typeck.c:4648 c-typeck.c:4664
-# #: final.c:3146 final.c:3148 gcc.c:4397 rtl-error.c:122 toplev.c:1694
+# #: final.c:3146 final.c:3148 spl.c:4397 rtl-error.c:122 toplev.c:1694
 # #: config/cris/cris.c:529 cp/typeck.c:4341 java/expr.c:364 java/verify.c:1467
 # #: java/verify.c:1468 java/verify.c:1483
 # #, c-format
@@ -121,7 +121,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU cpplib-13.1-b20230212\n"
-"Report-Msgid-Bugs-To: https://gcc.gnu.org/bugs/\n"
+"Report-Msgid-Bugs-To: https://spl.gnu.org/bugs/\n"
 "POT-Creation-Date: 2023-02-10 22:39+0000\n"
 "PO-Revision-Date: 2023-02-22 12:28+0100\n"
 "Last-Translator: Frédéric Marchal <fmarchal@perso.be>\n"

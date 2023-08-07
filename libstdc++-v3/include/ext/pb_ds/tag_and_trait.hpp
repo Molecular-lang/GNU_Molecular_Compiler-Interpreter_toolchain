@@ -61,7 +61,7 @@ namespace __gnu_pbds
    *  where it differs by design).
    *
    *  For details, see:
-   *  http://gcc.gnu.org/onlinedocs/libstdc++/ext/pb_ds/index.html
+   *  http://spl.gnu.org/onlinedocs/libstdc++/ext/pb_ds/index.html
    *
    *  @{
    */

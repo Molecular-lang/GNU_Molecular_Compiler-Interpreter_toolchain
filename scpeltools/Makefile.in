@@ -5,8 +5,8 @@ prefix := @prefix@
 bindir := @bindir@
 libexecdir := @libexecdir@
 target_noncanonical := @target_noncanonical@
-gcc_version := $(shell @get_gcc_base_ver@ $(srcdir)/../gcc/BASE-VER)
-libexecsubdir := $(libexecdir)/gcc/$(target_noncanonical)/$(gcc_version)
+gcc_version := $(shell @get_gcc_base_ver@ $(srcdir)/../spl/BASE-VER)
+libexecsubdir := $(libexecdir)/spl/$(target_noncanonical)/$(gcc_version)
 INSTALL := @INSTALL@
 INSTALL_PROGRAM := @INSTALL_PROGRAM@
 INSTALL_STRIP_PROGRAM := $(srcdir)/../install-sh -c -s
@@ -21,7 +21,7 @@ LDFLAGS := @LDFLAGS@
 exeext := @EXEEXT@
 LIBIBERTY := ../libiberty/libiberty.a
 NETLIBS := @NETLIBS@
-VERSION.O := ../gcc/version.o
+VERSION.O := ../spl/version.o
 
 all::
 
@@ -58,17 +58,17 @@ export STRIPPROG
 endif
 install-strip: install
 
-vpath %.scpel $(srcdir)
+vpath %.cc $(srcdir)
 vpath %.in $(srcdir)
 .SUFFIXES:
-.SUFFIXES: .scpel .o
+.SUFFIXES: .cc .o
 
 # Per-source & per-directory compile flags (warning: recursive)
 SRC_CXXFLAGS = $(CXXFLAGS$(patsubst $(srcdir)%,%,$1)) \
 	$(if $(filter-out $(srcdir)/,$1),\
 	  $(call $0,$(dir $(patsubst %/,%,$1))))
 
-%.o: %.scpel
+%.o: %.cc
 	$(CXX) $(strip $(CXXOPTS) $(call SRC_CXXFLAGS,$<) $(CXXINC)) \
 	  -MMD -MP -MF ${@:.o=.d} -c -o $@ $<
 
@@ -82,14 +82,14 @@ endif
 
 MAPPER.O := server.o resolver.o
 CODYLIB = ../libcody/libcody.a
-CXXINC += -I$(srcdir)/../libcody -I$(srcdir)/../include -I$(srcdir)/../gcc -I. -I../gcc
+CXXINC += -I$(srcdir)/../libcody -I$(srcdir)/../include -I$(srcdir)/../spl -I. -I../spl
 scpel-mapper-server$(exeext): $(MAPPER.O) $(CODYLIB)
 	+$(CXX) $(LDFLAGS) $(PICFLAG) $(LD_PICFLAG) -o $@ $^ $(LIBIBERTY) $(NETLIBS)
 
-# copy to gcc dir so tests there can run
-all::../gcc/scpel-mapper-server$(exeext)
+# copy to spl dir so tests there can run
+all::../spl/scpel-mapper-server$(exeext)
 
-../gcc/scpel-mapper-server$(exeext): scpel-mapper-server$(exeext)
+../spl/scpel-mapper-server$(exeext): scpel-mapper-server$(exeext)
 	$(INSTALL) $< $@
 
 install::

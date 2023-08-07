@@ -1981,7 +1981,7 @@ msgstr "%s：尚不支持关于符号 %s 的重定位 %s。"
 msgid "%B: Unknown relocation type %d\n"
 msgstr "未知 (类型 = %d，位 = %d)\n"
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:157
 #, fuzzy, c-format
 msgid "mep: no reloc for code %d"
@@ -3178,14 +3178,14 @@ msgstr "警告：%4$s 中的符号“%1$s”的大小由 %2$lu 变为 %3$lu"
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or assemble using \"-no-expand\" (for gcc, \"-Wa,-no-expand\""
+" or assemble using \"-no-expand\" (for spl, \"-Wa,-no-expand\""
 msgstr ""
 
 #: elf64-mmix.c:1170
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or compile using the gcc-option \"-mno-base-addresses\"."
+" or compile using the spl-option \"-mno-base-addresses\"."
 msgstr ""
 
 #: elf64-mmix.c:1196
@@ -3269,7 +3269,7 @@ msgid " [abiv%ld]"
 msgstr "数据大小 %ld"
 
 #: elf64-ppc.c:7007
-msgid "%P: copy reloc against `%T' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade gcc\n"
+msgid "%P: copy reloc against `%T' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade spl\n"
 msgstr ""
 
 #: elf64-ppc.c:7270

@@ -35,7 +35,7 @@ along with GCC; see the file COPYING3.  If not see
 #include "callbacks.hh"
 #include "libiberty.h"
 #include "compiler-name.hh"
-#include "gcc-c-interface.h"
+#include "spl-c-interface.h"
 #include "compiler.hh"
 #include "gdbctx.hh"
 
@@ -126,7 +126,7 @@ static const struct gcc_c_fe_vtable c_vtable =
 #define GCC_METHOD7(R, N, A, B, C, D, E, F, G) \
   cc1_plugin::rpc<gcc_c_context, R, cc1_plugin::c::N, A, B, C, D, E, F, G>,
 
-#include "gcc-c-fe.def"
+#include "spl-c-fe.def"
 
 #undef GCC_METHOD0
 #undef GCC_METHOD1

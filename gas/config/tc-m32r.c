@@ -82,7 +82,7 @@ static int m32r_relax;
    properly calculate the addend in a relocatable link (since there is a
    potential carry from the low to the high/shigh).
    This option is off by default though for user-written assembler code it
-   might make sense to make the default be on (i.e. have gcc pass a flag
+   might make sense to make the default be on (i.e. have spl pass a flag
    to turn it off).  This warning must not be on for GCC created code as
    optimization may delete the low but not the high/shigh (at least we
    shouldn't assume or require it to).  */

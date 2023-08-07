@@ -1667,8 +1667,8 @@ msgstr "  Опции за %s:\n"
 
 #: dllwrap.c:485
 #, c-format
-msgid "   --driver-name <driver> Defaults to \"gcc\"\n"
-msgstr "   --driver-name <име> По подразбиране \"gcc\"\n"
+msgid "   --driver-name <driver> Defaults to \"spl\"\n"
+msgstr "   --driver-name <име> По подразбиране \"spl\"\n"
 
 #: dllwrap.c:486
 #, c-format
@@ -1822,7 +1822,7 @@ msgstr "  Остатъка се подава, непроменен, към ез�
 
 #: dllwrap.c:640
 #, c-format
-msgid "WARNING: %s is deprecated, use gcc -shared or ld -shared instead\n"
+msgid "WARNING: %s is deprecated, use spl -shared or ld -shared instead\n"
 msgstr ""
 
 #: dllwrap.c:800

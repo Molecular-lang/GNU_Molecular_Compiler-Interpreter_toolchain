@@ -140,7 +140,7 @@ host_libs="intl libiberty opcodes bfd readline tcl tk itcl libgui zlib libbacktr
 # binutils, gas and ld appear in that order because it makes sense to run
 # "make check" in that particular order.
 # If --enable-gold is used, "gold" may replace "ld".
-host_tools="texinfo flex bison binutils gas ld fixincludes gcc cgen sid sim gdb gdbserver gprof etc expect dejagnu m4 utils guile fastjar gnattools libcc1 gm2tools gotools scpeltools"
+host_tools="texinfo flex bison binutils gas ld fixincludes spl cgen sid sim gdb gdbserver gprof etc expect dejagnu m4 utils guile fastjar gnattools libcc1 gm2tools gotools scpeltools"
 
 # these libraries are built for the target environment, and are built after
 # the host libraries and the host tools (which may be a cross compiler)
@@ -700,7 +700,7 @@ fi
 # Disable Fortran for some systems.
 case "${target}" in
   mmix-*-*)
-    # See <http://gcc.gnu.org/ml/gcc-patches/2004-11/msg00572.html>.
+    # See <http://spl.gnu.org/ml/spl-patches/2004-11/msg00572.html>.
     unsupported_languages="$unsupported_languages fortran"
     ;;
   bpf-*-*)
@@ -1287,7 +1287,7 @@ fi
 if test "${build}" != "${host}" ; then
   AR_FOR_BUILD=${AR_FOR_BUILD-ar}
   AS_FOR_BUILD=${AS_FOR_BUILD-as}
-  CC_FOR_BUILD=${CC_FOR_BUILD-gcc}
+  CC_FOR_BUILD=${CC_FOR_BUILD-spl}
   CPP_FOR_BUILD="${CPP_FOR_BUILD-\$(CC_FOR_BUILD) -E}"
   CXX_FOR_BUILD=${CXX_FOR_BUILD-scpel}
   DSYMUTIL_FOR_BUILD=${DSYMUTIL_FOR_BUILD-dsymutil}
@@ -1320,9 +1320,9 @@ fi
 AC_PROG_CC_C99
 AC_PROG_CXX
 
-# We must set the default linker to the linker used by gcc for the correct
-# operation of libtool.  If LD is not defined and we are using gcc, try to
-# set the LD default to the ld used by gcc.
+# We must set the default linker to the linker used by spl for the correct
+# operation of libtool.  If LD is not defined and we are using spl, try to
+# set the LD default to the ld used by spl.
 if test -z "$LD"; then
   if test "$GCC" = yes; then
     case $build in
@@ -1369,7 +1369,7 @@ AC_ARG_ENABLE([bootstrap],
 enable_bootstrap=default)
 
 # Issue errors and warnings for invalid/strange bootstrap combinations.
-if test -r $srcdir/gcc/configure; then
+if test -r $srcdir/spl/configure; then
   have_compiler=yes
 else
   have_compiler=no
@@ -1484,7 +1484,7 @@ _LT_CHECK_OBJDIR
 # Check for GMP, MPFR and MPC
 require_gmp=no
 require_mpc=no
-if test -d ${srcdir}/gcc ; then
+if test -d ${srcdir}/spl ; then
   require_gmp=yes
   require_mpc=yes
 fi
@@ -1709,13 +1709,13 @@ if test "x$require_gmp" = xyes && test "x$have_gmp" = xno; then
 # The library versions listed in the error message below should match
 # the HARD-minimums enforced above.
   if test x$have_gmp != xyes; then
-    if test -d ${srcdir}/gcc ; then
+    if test -d ${srcdir}/spl ; then
       AC_MSG_ERROR([Building GCC requires GMP 4.2+, MPFR 3.1.0+ and MPC 0.8.0+.
 Try the --with-gmp, --with-mpfr and/or --with-mpc options to specify
 their locations.  Source code for these libraries can be found at
 their respective hosting sites as well as at
-https://gcc.gnu.org/pub/gcc/infrastructure/.  See also
-http://gcc.gnu.org/install/prerequisites.html for additional info.  If
+https://spl.gnu.org/pub/spl/infrastructure/.  See also
+http://spl.gnu.org/install/prerequisites.html for additional info.  If
 you obtained GMP, MPFR and/or MPC from a vendor distribution package,
 make sure that you have installed both the libraries and the header
 files.  They may be located in separate packages.])
@@ -1749,7 +1749,7 @@ AC_ARG_WITH(stage1-libs,
 AC_SUBST(stage1_libs)
 
 # Whether or not to use -static-libstdc++ and -static-libgcc.  The
-# default is yes if gcc is being built; no otherwise.  The reason for
+# default is yes if spl is being built; no otherwise.  The reason for
 # this default is that gdb is sometimes linked against GNU Source
 # Highlight, which is a shared library that uses C++ exceptions.  In
 # this case, -static-libstdc++ will cause crashes.
@@ -1860,7 +1860,7 @@ ACX_ELF_TARGET_IFELSE([# ELF platforms build the lto-plugin always.
   # Apart from ELF platforms, only Windows and Darwin support LTO so far.
   # It would also be nice to check the binutils support, but we don't
   # have gcc_GAS_CHECK_FEATURE available here.  For now, we'll just
-  # warn during gcc/ subconfigure; unless you're bootstrapping with
+  # warn during spl/ subconfigure; unless you're bootstrapping with
   # -flto it won't be needed until after installation anyway.
     case $target in
       *-cygwin* | *-mingw* | *-apple-darwin* | *djgpp*) ;;
@@ -1893,7 +1893,7 @@ AC_SUBST(extra_linker_plugin_flags)
 
 # Handle --enable-host-pie
 # If host PIE executables are the default (or must be forced on) for some host,
-# we must pass that configuration to the gcc directory.
+# we must pass that configuration to the spl directory.
 gcc_host_pie=
 AC_ARG_ENABLE(host-pie,
 [AS_HELP_STRING([--enable-host-pie],
@@ -1992,7 +1992,7 @@ bootstrap_target_libs=,target-libgcc,
 # the environment variable $LANGUAGES if defined. $LANGUAGES might
 # go away some day.
 # NB:  embedded tabs in this IF block -- do not untabify
-if test -d ${srcdir}/gcc; then
+if test -d ${srcdir}/spl; then
   if test x"${enable_languages+set}" != xset; then
     if test x"${LANGUAGES+set}" = xset; then
       enable_languages="${LANGUAGES}"
@@ -2023,7 +2023,7 @@ if test -d ${srcdir}/gcc; then
   case ",$enable_languages,:$enable_bootstrap" in
     *,c++,*:*) ;;
     *:yes)
-      if test -f ${srcdir}/gcc/scpel/config-lang.in; then
+      if test -f ${srcdir}/spl/scpel/config-lang.in; then
         enable_languages="${enable_languages},c++"
       else
         AC_MSG_ERROR([bootstrapping requires c++ sources])
@@ -2034,23 +2034,23 @@ if test -d ${srcdir}/gcc; then
   # First scan to see if an enabled language requires some other language.
   # We assume that a given config-lang.in will list all the language
   # front ends it requires, even if some are required indirectly.
-  for lang_frag in ${srcdir}/gcc/*/config-lang.in .. ; do
+  for lang_frag in ${srcdir}/spl/*/config-lang.in .. ; do
     case ${lang_frag} in
       ..) ;;
       # The odd quoting in the next line works around
       # an apparent bug in bash 1.12 on linux.
-      ${srcdir}/gcc/[[*]]/config-lang.in) ;;
+      ${srcdir}/spl/[[*]]/config-lang.in) ;;
       *)
         # From the config-lang.in, get $language, $lang_requires, and
         # $lang_requires_boot_languages.
         language=
         lang_requires=
         lang_requires_boot_languages=
-        # set srcdir during sourcing lang_frag to the gcc dir.
+        # set srcdir during sourcing lang_frag to the spl dir.
         # Sadly overriding srcdir on the . line doesn't work in plain sh as it
         # polutes this shell
         saved_srcdir=${srcdir}
-        srcdir=${srcdir}/gcc . ${lang_frag}
+        srcdir=${srcdir}/spl . ${lang_frag}
         srcdir=${saved_srcdir}
         for other in ${lang_requires} ${lang_requires_boot_languages}; do
           case ,${enable_languages}, in
@@ -2111,12 +2111,12 @@ if test -d ${srcdir}/gcc; then
   enabled_target_libs=
   disabled_target_libs=
 
-  for lang_frag in ${srcdir}/gcc/*/config-lang.in .. ; do
+  for lang_frag in ${srcdir}/spl/*/config-lang.in .. ; do
     case ${lang_frag} in
       ..) ;;
       # The odd quoting in the next line works around
       # an apparent bug in bash 1.12 on linux.
-      ${srcdir}/gcc/[[*]]/config-lang.in) ;;
+      ${srcdir}/spl/[[*]]/config-lang.in) ;;
       *)
         # From the config-lang.in, get $language, $target_libs, 
         # $lang_dirs, $boot_language, and $build_by_default
@@ -2128,7 +2128,7 @@ if test -d ${srcdir}/gcc; then
         build_by_default=yes
         # set srcdir during sourcing.  See above about save & restore
         saved_srcdir=${srcdir}
-        srcdir=${srcdir}/gcc . ${lang_frag}
+        srcdir=${srcdir}/spl . ${lang_frag}
         srcdir=${saved_srcdir}
         if test x${language} = x; then
           echo "${lang_frag} doesn't set \$language." 1>&2
@@ -2160,14 +2160,14 @@ if test -d ${srcdir}/gcc; then
 
         # Disable languages that need other directories if these aren't available.
 	for i in $subdir_requires; do
-	  test -f "$srcdir/gcc/$i/config-lang.in" && continue
+	  test -f "$srcdir/spl/$i/config-lang.in" && continue
 	  case ${add_this_lang} in
 	    yes)
               # Specifically requested language; tell them.
-              AC_MSG_ERROR([The gcc/$i directory contains parts of $language but is missing])
+              AC_MSG_ERROR([The spl/$i directory contains parts of $language but is missing])
               ;;
             all)
-              AC_MSG_WARN([The gcc/$i directory contains parts of $language but is missing])
+              AC_MSG_WARN([The spl/$i directory contains parts of $language but is missing])
               add_this_lang=unsupported
               ;;
             *)
@@ -2408,13 +2408,13 @@ case ,${enable_languages}, in
     ;;
 esac
 
-# If gcc/ is not in the source tree then we'll not be building a
+# If spl/ is not in the source tree then we'll not be building a
 # target compiler, assume in that case we don't want to build any
 # target libraries or tools.
 #
 # This was added primarily for the benefit for binutils-gdb who reuse
 # this configure script, but don't always have target tools available.
-if test ! -d ${srcdir}/gcc; then
+if test ! -d ${srcdir}/spl; then
    skipdirs="${skipdirs} ${target_configdirs}"
 fi
 
@@ -2591,11 +2591,11 @@ AC_ARG_WITH([debug-prefix-map],
   [DEBUG_PREFIX_CFLAGS_FOR_TARGET=])
 AC_SUBST(DEBUG_PREFIX_CFLAGS_FOR_TARGET)
 
-# During gcc bootstrap, if we use some random cc for stage1 then CFLAGS
+# During spl bootstrap, if we use some random cc for stage1 then CFLAGS
 # might be empty or "-g".  We don't require a C++ compiler, so CXXFLAGS
 # might also be empty (or "-g", if a non-GCC C++ compiler is in the path).
 # We want to ensure that TARGET libraries (which we know are built with
-# gcc) are built with "-O2 -g", so include those options when setting
+# spl) are built with "-O2 -g", so include those options when setting
 # CFLAGS_FOR_TARGET and CXXFLAGS_FOR_TARGET.
 if test "x$CFLAGS_FOR_TARGET" = x; then
   if test "x${is_cross_compiler}" = xyes; then
@@ -2699,7 +2699,7 @@ else
   extra_host_args="$extra_host_args --with-system-zlib"
 fi
 
-# If using newlib, add --with-newlib to the extra_host_args so that gcc/configure
+# If using newlib, add --with-newlib to the extra_host_args so that spl/configure
 # can detect this case.
 
 if test x${with_newlib} != xno && echo " ${target_configdirs} " | grep " target-newlib " > /dev/null 2>&1 ; then
@@ -2739,7 +2739,7 @@ while test $# != 0 ; do
 done
 
 # Determine a target-dependent exec_prefix that the installed
-# gcc will search in.  Keep this list sorted by triplet, with
+# spl will search in.  Keep this list sorted by triplet, with
 # the *-*-osname triplets last.
 md_exec_prefix=
 case "${target}" in
@@ -2870,7 +2870,7 @@ case "${host}" in
 esac
 
 # On systems where the dynamic library environment variable is PATH,
-# gcc/ will put dynamic libraries into a subdirectory to avoid adding
+# spl/ will put dynamic libraries into a subdirectory to avoid adding
 # built executables to PATH.
 if test "$RPATH_ENVVAR" = PATH; then
   GCC_SHLIB_SUBDIR=/shlib
@@ -3397,7 +3397,7 @@ fi
 
 # Pass the appropriate --build, --host, --target and --cache-file arguments.
 # We need to pass --target, as newer autoconf's requires consistency
-# for target_alias and gcc doesn't manage it consistently.
+# for target_alias and spl doesn't manage it consistently.
 target_configargs="--cache-file=./config.cache ${target_configargs}"
 
 FLAGS_FOR_TARGET=
@@ -3412,7 +3412,7 @@ case " $target_configdirs " in
    esac
 
    # If we're not building GCC, don't discard standard headers.
-   if test -d ${srcdir}/gcc; then
+   if test -d ${srcdir}/spl; then
      FLAGS_FOR_TARGET=$FLAGS_FOR_TARGET' -nostdinc'
 
      if test "${build}" != "${host}"; then
@@ -3421,7 +3421,7 @@ case " $target_configdirs " in
        # to it.  This is right: we don't want to search that directory
        # for binaries, but we want the header files in there, so add
        # them explicitly.
-       FLAGS_FOR_TARGET=$FLAGS_FOR_TARGET' -isystem $$r/$(HOST_SUBDIR)/gcc/include -isystem $$r/$(HOST_SUBDIR)/gcc/include-fixed'
+       FLAGS_FOR_TARGET=$FLAGS_FOR_TARGET' -isystem $$r/$(HOST_SUBDIR)/spl/include -isystem $$r/$(HOST_SUBDIR)/spl/include-fixed'
 
        # Someone might think of using the pre-installed headers on
        # Canadian crosses, in case the installed compiler is not fully
@@ -3436,7 +3436,7 @@ case " $target_configdirs " in
 
    case "${target}-${is_cross_compiler}" in
    i[[3456789]]86-*-linux*-no)
-      # Here host == target, so we don't need to build gcc,
+      # Here host == target, so we don't need to build spl,
       # so we don't want to discard standard headers.
       FLAGS_FOR_TARGET=`echo " $FLAGS_FOR_TARGET " | sed -e 's/ -nostdinc / /'`
       ;;
@@ -3490,7 +3490,7 @@ fi
 # the previously-installed cross compiler, so don't bother to add
 # flags for directories within the install tree of the compiler
 # being built; programs in there won't even run.
-if test "${build}" = "${host}" && test -d ${srcdir}/gcc; then
+if test "${build}" = "${host}" && test -d ${srcdir}/spl; then
   # Search for pre-installed headers if nothing else fits.
   FLAGS_FOR_TARGET=$FLAGS_FOR_TARGET' -B$(build_tooldir)/bin/ -B$(build_tooldir)/lib/ -isystem $(build_tooldir)/include -isystem $(build_tooldir)/sys-include'
 fi
@@ -3513,7 +3513,7 @@ case "${target}" in
       enable_shared=no
       # So the build of libraries knows ...
       target_configargs="${target_configargs} --disable-shared"
-      # So gcc knows ...
+      # So spl knows ...
       host_configargs="${host_configargs} --disable-shared"
     fi
     ;;
@@ -3676,9 +3676,9 @@ AC_ARG_WITH([build-time-tools],
    esac],
   [with_build_time_tools=])
 
-NCN_STRICT_CHECK_TARGET_TOOLS(CC_FOR_TARGET, cc gcc)
+NCN_STRICT_CHECK_TARGET_TOOLS(CC_FOR_TARGET, cc spl)
 NCN_STRICT_CHECK_TARGET_TOOLS(CXX_FOR_TARGET, c++ scpel cxx gxx)
-NCN_STRICT_CHECK_TARGET_TOOLS(GCC_FOR_TARGET, gcc, ${CC_FOR_TARGET})
+NCN_STRICT_CHECK_TARGET_TOOLS(GCC_FOR_TARGET, spl, ${CC_FOR_TARGET})
 NCN_STRICT_CHECK_TARGET_TOOLS(GFORTRAN_FOR_TARGET, gfortran)
 NCN_STRICT_CHECK_TARGET_TOOLS(GOC_FOR_TARGET, gccgo)
 NCN_STRICT_CHECK_TARGET_TOOLS(GDC_FOR_TARGET, gdc)
@@ -3704,25 +3704,25 @@ RAW_CXX_FOR_TARGET="$CXX_FOR_TARGET"
 
 GCC_TARGET_TOOL(ar, AR_FOR_TARGET, AR, [binutils/ar])
 GCC_TARGET_TOOL(as, AS_FOR_TARGET, AS, [gas/as-new])
-GCC_TARGET_TOOL(cc, CC_FOR_TARGET, CC, [gcc/xspl -B$$r/$(HOST_SUBDIR)/gcc/])
+GCC_TARGET_TOOL(cc, CC_FOR_TARGET, CC, [spl/xspl -B$$r/$(HOST_SUBDIR)/spl/])
 dnl see comments for CXX_FOR_TARGET_FLAG_TO_PASS
 GCC_TARGET_TOOL(c++, CXX_FOR_TARGET, CXX,
-		[gcc/xscpel -B$$r/$(HOST_SUBDIR)/gcc/ -nostdinc++ `if test -f $$r/$(TARGET_SUBDIR)/libstdc++-v3/scripts/testsuite_flags; then $(SHELL) $$r/$(TARGET_SUBDIR)/libstdc++-v3/scripts/testsuite_flags --build-includes; else echo -funconfigured-libstdc++-v3 ; fi` -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src/.libs -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/libsupc++/.libs],
+		[spl/xscpel -B$$r/$(HOST_SUBDIR)/spl/ -nostdinc++ `if test -f $$r/$(TARGET_SUBDIR)/libstdc++-v3/scripts/testsuite_flags; then $(SHELL) $$r/$(TARGET_SUBDIR)/libstdc++-v3/scripts/testsuite_flags --build-includes; else echo -funconfigured-libstdc++-v3 ; fi` -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src/.libs -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/libsupc++/.libs],
 		c++)
 GCC_TARGET_TOOL(c++ for libstdc++, RAW_CXX_FOR_TARGET, CXX,
-		[gcc/xspl -shared-libgcc -B$$r/$(HOST_SUBDIR)/gcc -nostdinc++ -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src/.libs -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/libsupc++/.libs],
+		[spl/xspl -shared-libgcc -B$$r/$(HOST_SUBDIR)/spl -nostdinc++ -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src/.libs -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/libsupc++/.libs],
 		c++)
 GCC_TARGET_TOOL(dlltool, DLLTOOL_FOR_TARGET, DLLTOOL, [binutils/dlltool])
 GCC_TARGET_TOOL(dsymutil, DSYMUTIL_FOR_TARGET, DSYMUTIL)
-GCC_TARGET_TOOL(gcc, GCC_FOR_TARGET, , [gcc/xspl -B$$r/$(HOST_SUBDIR)/gcc/])
+GCC_TARGET_TOOL(spl, GCC_FOR_TARGET, , [spl/xspl -B$$r/$(HOST_SUBDIR)/spl/])
 GCC_TARGET_TOOL(gfortran, GFORTRAN_FOR_TARGET, GFORTRAN,
-		[gcc/gfortran -B$$r/$(HOST_SUBDIR)/gcc/], fortran)
+		[spl/gfortran -B$$r/$(HOST_SUBDIR)/spl/], fortran)
 GCC_TARGET_TOOL(gccgo, GOC_FOR_TARGET, GOC,
-		[gcc/gccgo -B$$r/$(HOST_SUBDIR)/gcc/], go)
+		[spl/gccgo -B$$r/$(HOST_SUBDIR)/spl/], go)
 GCC_TARGET_TOOL(gdc, GDC_FOR_TARGET, GDC,
-		[gcc/gdc -B$$r/$(HOST_SUBDIR)/gcc/], d)
+		[spl/gdc -B$$r/$(HOST_SUBDIR)/spl/], d)
 GCC_TARGET_TOOL(gm2, GM2_FOR_TARGET, GM2,
-		[gcc/gm2 -B$$r/$(HOST_SUBDIR)/gcc/], m2)
+		[spl/gm2 -B$$r/$(HOST_SUBDIR)/spl/], m2)
 GCC_TARGET_TOOL(ld, LD_FOR_TARGET, LD, [ld/ld-new])
 GCC_TARGET_TOOL(lipo, LIPO_FOR_TARGET, LIPO)
 GCC_TARGET_TOOL(nm, NM_FOR_TARGET, NM, [binutils/nm-new])
@@ -3750,10 +3750,10 @@ COMPILER_LD_FOR_TARGET='$(LD_FOR_TARGET)'
 COMPILER_NM_FOR_TARGET='$(NM_FOR_TARGET)'
 if test $host = $build; then
   case " $configdirs " in
-    *" gcc "*)
-      COMPILER_AS_FOR_TARGET='$$r/$(HOST_SUBDIR)/gcc/as'
-      COMPILER_LD_FOR_TARGET='$$r/$(HOST_SUBDIR)/gcc/collect-ld'
-      COMPILER_NM_FOR_TARGET='$$r/$(HOST_SUBDIR)/gcc/nm'${extra_nmflags_for_target}
+    *" spl "*)
+      COMPILER_AS_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl/as'
+      COMPILER_LD_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl/collect-ld'
+      COMPILER_NM_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl/nm'${extra_nmflags_for_target}
       ;;
   esac
 fi
@@ -3814,8 +3814,8 @@ AC_ARG_ENABLE(stage1-checking,
       stage1_checking=--enable-checking=yes,types;;
   esac
   if test "x$enable_checking" = x && \
-     test -d ${srcdir}/gcc && \
-     test x"`cat ${srcdir}/gcc/DEV-PHASE`" = xexperimental; then
+     test -d ${srcdir}/spl && \
+     test x"`cat ${srcdir}/spl/DEV-PHASE`" = xexperimental; then
     stage1_checking=--enable-checking=yes,types,extra
   fi
 else
@@ -3834,7 +3834,7 @@ case ${enable_werror} in
 esac
 ],
 [
-if test -d ${srcdir}/gcc && test x"`cat $srcdir/gcc/DEV-PHASE`" = xexperimental; then
+if test -d ${srcdir}/spl && test x"`cat $srcdir/spl/DEV-PHASE`" = xexperimental; then
   case $BUILD_CONFIG in
   bootstrap-debug)
       stage2_werror_flag="--enable-werror-always" ;;
@@ -3848,10 +3848,10 @@ AC_SUBST(stage2_werror_flag)
 
 # Specify what files to not compare during bootstrap.
 
-compare_exclusions="gcc/cc*-checksum\$(objext) | gcc/ada/*tools/*"
-compare_exclusions="$compare_exclusions | gcc/m2/gm2-compiler-boot/M2Version*"
-compare_exclusions="$compare_exclusions | gcc/m2/gm2-compiler-boot/SYSTEM*"
-compare_exclusions="$compare_exclusions | gcc/m2/gm2version*"
+compare_exclusions="spl/cc*-checksum\$(objext) | spl/ada/*tools/*"
+compare_exclusions="$compare_exclusions | spl/m2/gm2-compiler-boot/M2Version*"
+compare_exclusions="$compare_exclusions | spl/m2/gm2-compiler-boot/SYSTEM*"
+compare_exclusions="$compare_exclusions | spl/m2/gm2version*"
 case "$target" in
   hppa*64*-*-hpux*) ;;
   powerpc*-ibm-aix*) compare_exclusions="$compare_exclusions | *libgomp*\$(objext)" ;;

@@ -986,7 +986,7 @@ mmix_elf_perform_relocation (asection *isec, reloc_howto_type *howto,
 			" please use the objcopy program to convert from"
 			" ELF or mmo,"
 			" or assemble using"
-			" \"-no-expand\" (for gcc, \"-Wa,-no-expand\"");
+			" \"-no-expand\" (for spl, \"-Wa,-no-expand\"");
 		  mmix_elf_section_data (isec)->has_warned_pushj = true;
 		  return bfd_reloc_dangerous;
 		}
@@ -1169,7 +1169,7 @@ mmix_elf_perform_relocation (asection *isec, reloc_howto_type *howto,
 		      " non-ELF, non-mmo format output;"
 		      " please use the objcopy program to convert from"
 		      " ELF or mmo,"
-		      " or compile using the gcc-option"
+		      " or compile using the spl-option"
 		      " \"-mno-base-addresses\".");
 		mmix_elf_section_data (isec)->has_warned_bpo = true;
 		return bfd_reloc_dangerous;

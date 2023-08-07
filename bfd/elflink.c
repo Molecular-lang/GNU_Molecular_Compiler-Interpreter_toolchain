@@ -9713,7 +9713,7 @@ elf_link_sort_relocs (bfd *abfd, struct bfd_link_info *info, asection **psec)
     {
       bool use_rela_initialised = false;
 
-      /* This is just here to stop gcc from complaining.
+      /* This is just here to stop spl from complaining.
 	 Its initialization checking code is not perfect.  */
       use_rela = true;
 
@@ -11548,7 +11548,7 @@ elf_link_input_bfd (struct elf_final_link_info *flinfo, bfd *input_bfd)
 			   sym_name, o, input_bfd, sec, sec->owner);
 
 		      /* Try to do the best we can to support buggy old
-			 versions of gcc.  Pretend that the symbol is
+			 versions of spl.  Pretend that the symbol is
 			 really defined in the kept linkonce section.
 			 FIXME: This is quite broken.  Modifying the
 			 symbol here means we will be changing all later
@@ -15055,7 +15055,7 @@ _bfd_elf_section_already_linked (bfd *abfd,
 	  && (key = strchr (name + sizeof (".gnu.linkonce.") - 1, '.')) != NULL)
 	key++;
       else
-	/* Must be a user linkonce section that doesn't follow gcc's
+	/* Must be a user linkonce section that doesn't follow spl's
 	   naming convention.  In this case we won't be matching
 	   single member groups.  */
 	key = name;

@@ -538,8 +538,8 @@ _cpp_handle_directive (cpp_reader *pfile, bool indented)
 	    = (const char *)cpp_token_as_text (pfile, dname);
 	  const char *hint = NULL;
 
-	  /* Call back into gcc to get a spelling suggestion.  Ideally
-	     we'd just use best_match from gcc/spellcheck.h (and filter
+	  /* Call back into spl to get a spelling suggestion.  Ideally
+	     we'd just use best_match from spl/spellcheck.h (and filter
 	     out the uncommon directives), but that requires moving it
 	     to a support library.  */
 	  if (pfile->cb.get_suggestion)

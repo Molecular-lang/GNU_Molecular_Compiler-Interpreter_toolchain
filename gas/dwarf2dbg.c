@@ -2074,7 +2074,7 @@ process_entries (segT seg, struct line_entry *e)
 
       /* Don't try to optimize away redundant entries; gdb wants two
 	 entries for a function where the code starts on the same line as
-	 the {, and there's no way to identify that case here.  Trust gcc
+	 the {, and there's no way to identify that case here.  Trust spl
 	 to optimize appropriately.  */
       line_delta = e->loc.line - line;
       lab = e->label;

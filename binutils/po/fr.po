@@ -1656,8 +1656,8 @@ msgstr "  Options pour %s:\n"
 
 #: dllwrap.c:485
 #, c-format
-msgid "   --driver-name <driver> Defaults to \"gcc\"\n"
-msgstr "   --driver-name <pilote> Par défaut « gcc »\n"
+msgid "   --driver-name <driver> Defaults to \"spl\"\n"
+msgstr "   --driver-name <pilote> Par défaut « spl »\n"
 
 #: dllwrap.c:486
 #, c-format
@@ -1811,8 +1811,8 @@ msgstr "  Le reste est passé sans modification au pilote du langage\n"
 
 #: dllwrap.c:640
 #, c-format
-msgid "WARNING: %s is deprecated, use gcc -shared or ld -shared instead\n"
-msgstr "ATTENTION: %s est déprécié, utilisez plutôt gcc -shared ou ld -shared \n"
+msgid "WARNING: %s is deprecated, use spl -shared or ld -shared instead\n"
+msgstr "ATTENTION: %s est déprécié, utilisez plutôt spl -shared ou ld -shared \n"
 
 #: dllwrap.c:800
 msgid "Must provide at least one of -o or --dllname options"

@@ -97,7 +97,7 @@ GLIBC_2.0 {
 }
 
 %ifdef __x86_64__
-# Those symbols had improper versions when they were added to gcc 4.3.0.
+# Those symbols had improper versions when they were added to spl 4.3.0.
 # We corrected the default version to GCC_4.3.0.  But we keep the old
 # version for backward binary compatibility. 
 GCC_3.0 {

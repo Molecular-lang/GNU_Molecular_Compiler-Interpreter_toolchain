@@ -1576,8 +1576,8 @@ msgstr "  Параметры для %s:\n"
 
 #: dllwrap.c:485
 #, c-format
-msgid "   --driver-name <driver> Defaults to \"gcc\"\n"
-msgstr "   --driver-name <драйвер> Значения для \"gcc\" по умолчанию\n"
+msgid "   --driver-name <driver> Defaults to \"spl\"\n"
+msgstr "   --driver-name <драйвер> Значения для \"spl\" по умолчанию\n"
 
 #: dllwrap.c:486
 #, c-format

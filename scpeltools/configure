@@ -583,7 +583,7 @@ PACKAGE_BUGREPORT=
 PACKAGE_URL=
 
 ac_unique_file="scpeltools"
-ac_unique_file="server.scpel"
+ac_unique_file="server.cc"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
@@ -1298,7 +1298,7 @@ Fine tuning of the installation directories:
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
-  --oldincludedir=DIR     C header files for non-gcc [/usr/include]
+  --oldincludedir=DIR     C header files for non-spl [/usr/include]
   --datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]
   --datadir=DIR           read-only architecture-independent data [DATAROOTDIR]
   --infodir=DIR           info documentation [DATAROOTDIR/info]
@@ -1343,7 +1343,7 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-gcc-major-version-only
+  --with-spl-major-version-only
                           use only GCC major number in filesystem paths
 
 Some influential environment variables:
@@ -3072,7 +3072,7 @@ else
       ac_preproc_ok=false
 for ac_cxx_preproc_warn_flag in '' yes
 do
-  # Use a header file that comes with gcc, so configuring glibc
+  # Use a header file that comes with spl, so configuring glibc
   # with a fresh cross-compiler works.
   # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
   # <limits.h> exists even on freestanding compilers.
@@ -3131,7 +3131,7 @@ $as_echo "$CXXCPP" >&6; }
 ac_preproc_ok=false
 for ac_cxx_preproc_warn_flag in '' yes
 do
-  # Use a header file that comes with gcc, so configuring glibc
+  # Use a header file that comes with spl, so configuring glibc
   # with a fresh cross-compiler works.
   # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
   # <limits.h> exists even on freestanding compilers.
@@ -3755,7 +3755,7 @@ fi
 
   get_gcc_base_ver="cat"
 
-# Check whether --with-gcc-major-version-only was given.
+# Check whether --with-spl-major-version-only was given.
 if test "${with_gcc_major_version_only+set}" = set; then :
   withval=$with_gcc_major_version_only; if test x$with_gcc_major_version_only = xyes ; then
         get_gcc_base_ver="sed -e 's/^\([0-9]*\).*/\1/'"

@@ -1031,7 +1031,7 @@ Thu Mar  4 14:12:06 1993  Ian Lance Taylor  (ian@cygnus.com)
 	(ecoff_swap_tir_out): Added prototype.
 
 	* mips.h (N_BTMASK, N_TMASK, N_BTSHFT, N_TSHIFT): Define; these
-	are needed to interpret gcc debugging output.
+	are needed to interpret spl debugging output.
 
 Tue Feb  9 07:43:27 1993  Ian Lance Taylor  (ian@cygnus.com)
 

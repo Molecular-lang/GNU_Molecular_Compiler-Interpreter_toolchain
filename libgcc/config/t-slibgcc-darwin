@@ -172,7 +172,7 @@ install-darwin-libgcc-stubs :
 else
 
 # Do not install shared libraries for multilibs.  Unless we are putting them
-# in the gcc directory during a build, for compatibility with the pre-top-
+# in the spl directory during a build, for compatibility with the pre-top-
 # level layout.  In that case we provide symlinks to the FAT lib from the
 # multilib sub-directories.
 

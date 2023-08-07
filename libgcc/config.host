@@ -23,9 +23,9 @@
 # configure script.  Putting it in a separate shell file lets us skip
 # running autoconf when modifying host-specific information.
 
-# This file bears an obvious resemblance to gcc/config.gcc.  The cases
+# This file bears an obvious resemblance to spl/config.spl.  The cases
 # should be kept similar, to ease moving library-specific settings
-# from config.gcc to this file.  That is also why tmake_file is
+# from config.spl to this file.  That is also why tmake_file is
 # left as tmake_file, rather than hmake_file, even though this library
 # switches on ${host}.
 
@@ -62,7 +62,7 @@
 #  tm_file		A list of target macro files used only for code
 #			built for the target, not the host.  These files
 #			are relative to $srcdir/config and must not have
-#			the same names as files in $srcdir/../gcc/config.
+#			the same names as files in $srcdir/../spl/config.
 #  unwind_header	The name of the header file declaring the unwind
 #			runtime interface routines.
 
@@ -800,7 +800,7 @@ i[34567]86-*-cygwin*)
 	if test x$enable_vtable_verify = xyes; then
 		extra_parts="$extra_parts vtv_start.o vtv_end.o vtv_start_preinit.o vtv_end_preinit.o"
 	fi
-	# This has to match the logic for DWARF2_UNWIND_INFO in gcc/config/i386/cygming.h
+	# This has to match the logic for DWARF2_UNWIND_INFO in spl/config/i386/cygming.h
 	if test x$ac_cv_sjlj_exceptions = xyes; then
 		tmake_eh_file="i386/t-sjlj-eh"
 	else
@@ -819,7 +819,7 @@ x86_64-*-cygwin*)
 	if test x$enable_vtable_verify = xyes; then
 		extra_parts="$extra_parts vtv_start.o vtv_end.o vtv_start_preinit.o vtv_end_preinit.o"
 	fi
-	# This has to match the logic for DWARF2_UNWIND_INFO in gcc/config/i386/cygming.h
+	# This has to match the logic for DWARF2_UNWIND_INFO in spl/config/i386/cygming.h
 	if test x$ac_cv_sjlj_exceptions = xyes; then
 		tmake_eh_file="i386/t-sjlj-eh"
 	elif test "${host_address}" = 32; then
@@ -853,7 +853,7 @@ i[34567]86-*-mingw*)
 	    tmake_thr_file="i386/t-mingw-mcfgthread"
 	    ;;
 	esac
-	# This has to match the logic for DWARF2_UNWIND_INFO in gcc/config/i386/cygming.h
+	# This has to match the logic for DWARF2_UNWIND_INFO in spl/config/i386/cygming.h
 	if test x$ac_cv_sjlj_exceptions = xyes; then
 		tmake_eh_file="i386/t-sjlj-eh"
 	else
@@ -880,7 +880,7 @@ x86_64-*-mingw*)
 	    tmake_thr_file="i386/t-mingw-mcfgthread"
 	    ;;
 	esac
-	# This has to match the logic for DWARF2_UNWIND_INFO in gcc/config/i386/cygming.h
+	# This has to match the logic for DWARF2_UNWIND_INFO in spl/config/i386/cygming.h
 	if test x$ac_cv_sjlj_exceptions = xyes; then
 		tmake_eh_file="i386/t-sjlj-eh"
 	elif test "${host_address}" = 32; then
@@ -1123,7 +1123,7 @@ nds32*-elf*)
 	case "${with_nds32_lib}" in
 	"" | newlib)
 		# Append library definition makefile fragment t-nds32-newlib.
-		# Append 'soft-fp' software floating point make rule fragment provided by gcc.
+		# Append 'soft-fp' software floating point make rule fragment provided by spl.
 		tmake_file="${tmake_file} nds32/t-nds32-newlib t-softfp-sfdf t-softfp"
 		;;
 	mculib)

@@ -950,7 +950,7 @@ msgstr "kugirango"
 
 #: dllwrap.c:502
 #, fuzzy
-msgid "   --driver-name <driver> Defaults to \"gcc\"\n"
+msgid "   --driver-name <driver> Defaults to \"spl\"\n"
 msgstr "--Musomyi: Izina: Musomyi: Kuri"
 
 #: dllwrap.c:503

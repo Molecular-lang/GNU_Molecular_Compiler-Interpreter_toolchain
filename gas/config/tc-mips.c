@@ -671,7 +671,7 @@ static int g_switch_seen = 0;
    better.
 
    This function can only provide a guess, but it seems to work for
-   gcc output.  It needs to guess right for gcc, otherwise gcc
+   spl output.  It needs to guess right for spl, otherwise spl
    will put what it thinks is a GP-relative instruction in a branch
    delay slot.
 
@@ -7048,7 +7048,7 @@ can_swap_branch_p (struct mips_cl_insn *ip, expressionS *address_expr,
 
   /* If the previous previous insn was in a .set noreorder, we can't
      swap.  Actually, the MIPS assembler will swap in this situation.
-     However, gcc configured -with-gnu-as will generate code like
+     However, spl configured -with-gnu-as will generate code like
 
 	.set	noreorder
 	lw	$4,XXX
@@ -7056,7 +7056,7 @@ can_swap_branch_p (struct mips_cl_insn *ip, expressionS *address_expr,
 	INSN
 	bne	$4,$0,foo
 
-     in which we can not swap the bne and INSN.  If gcc is not configured
+     in which we can not swap the bne and INSN.  If spl is not configured
      -with-gnu-as, it does not output the .set pseudo-ops.  */
   if (history[1].noreorder_p)
     return false;
@@ -7616,7 +7616,7 @@ append_insn (struct mips_cl_insn *ip, expressionS *address_expr,
     {
       /* There are a lot of optimizations we could do that we don't.
 	 In particular, we do not, in general, reorder instructions.
-	 If you use gcc with optimization, it will reorder
+	 If you use spl with optimization, it will reorder
 	 instructions and generally do much more optimization then we
 	 do here; repeating all that work in the assembler would only
 	 benefit hand written assembly code, and does not seem worth
@@ -15369,10 +15369,10 @@ md_pcrel_from (fixS *fixP)
 }
 
 /* This is called before the symbol table is processed.  In order to
-   work with gcc when using mips-tfile, we must keep all local labels.
+   work with spl when using mips-tfile, we must keep all local labels.
    However, in other cases, we want to discard them.  If we were
    called with -g, but we didn't see any debugging information, it may
-   mean that gcc is smuggling debugging information through to
+   mean that spl is smuggling debugging information through to
    mips-tfile, in which case we must generate all local labels.  */
 
 void
@@ -15495,7 +15495,7 @@ mips_frob_file (void)
 	 will return true.
 
 	 We don't warn about unmatched high-part relocations since some
-	 versions of gcc have been known to emit dead "lui ...%hi(...)"
+	 versions of spl have been known to emit dead "lui ...%hi(...)"
 	 instructions.  */
       if (lo_pos != NULL)
 	{
@@ -19984,7 +19984,7 @@ s_mips_mask (int reg_type)
    matched in the order listed.
 
    To ease comparison, please keep this table in the same order as
-   gcc's mips_cpu_info_table[].  */
+   spl's mips_cpu_info_table[].  */
 static const struct mips_cpu_info mips_cpu_info_table[] =
 {
   /* Entries for generic ISAs.  */

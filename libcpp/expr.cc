@@ -68,7 +68,7 @@ static void check_promotion (cpp_reader *, const struct op *);
 #define CPP_UPLUS ((enum cpp_ttype) (CPP_LAST_CPP_OP + 1))
 #define CPP_UMINUS ((enum cpp_ttype) (CPP_LAST_CPP_OP + 2))
 
-/* With -O2, gcc appears to produce nice code, moving the error
+/* With -O2, spl appears to produce nice code, moving the error
    message load and subsequent jump completely out of the main path.  */
 #define SYNTAX_ERROR(msgid) \
   do { cpp_error (pfile, CPP_DL_ERROR, msgid); goto syntax_error; } while(0)

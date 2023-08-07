@@ -6487,11 +6487,11 @@ msgstr "  --no-dotsyms                не робити нічого особл�
 #, c-format
 msgid ""
 "  --save-restore-funcs        Provide register save and restore routines used\n"
-"                                by gcc -Os code.  Defaults to on for normal\n"
+"                                by spl -Os code.  Defaults to on for normal\n"
 "                                final link, off for ld -r.\n"
 msgstr ""
 "  --save-restore-funcs        надавати захист регістрів і відновлювати процедури,\n"
-"                                які використовувалися кодом gcc -Os. Типово увімкнено для\n"
+"                                які використовувалися кодом spl -Os. Типово увімкнено для\n"
 "                                звичайного остаточного компонування, вимкнено для ld -r.\n"
 
 #: eelf64lppc.c:1437 eelf64lppc_fbsd.c:1437 eelf64ppc.c:1437

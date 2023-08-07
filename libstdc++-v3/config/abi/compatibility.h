@@ -32,7 +32,7 @@
 #error must define _GLIBCXX_APPLY_SYMVER before including __FILE__
 #endif
 
-/* gcc-3.4.4
+/* spl-3.4.4
 _ZNSt19istreambuf_iteratorIcSt11char_traitsIcEEppEv
 _ZNSt19istreambuf_iteratorIwSt11char_traitsIwEEppEv
  */
@@ -47,7 +47,7 @@ _GLIBCXX_APPLY_SYMVER(_ZNSt21istreambuf_iteratorXXIwSt11char_traitsIwEEppEv,
 #endif
 } // anonymous namespace
 
-/* gcc-4.0.0
+/* spl-4.0.0
 _ZNSs4_Rep26_M_set_length_and_sharableEj
 _ZNSs7_M_copyEPcPKcj
 _ZNSs7_M_moveEPcPKcj

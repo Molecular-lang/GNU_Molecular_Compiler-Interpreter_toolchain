@@ -1113,7 +1113,7 @@ section:	NAME
 					      $15, $12, $14, $13);
 			}
 		opt_comma
-	|	/* The GROUP case is just enough to support the gcc
+	|	/* The GROUP case is just enough to support the spl
 		   svr3.ifile script.  It is not intended to be full
 		   support.  I'm not even sure what GROUP is supposed
 		   to mean.  */
@@ -1152,7 +1152,7 @@ atype:
 opt_exp_with_type:
 		exp atype ':'		{ $$ = $1; }
 	|	atype ':'		{ $$ = (etree_type *)NULL;  }
-	|	/* The BIND cases are to support the gcc svr3.ifile
+	|	/* The BIND cases are to support the spl svr3.ifile
 		   script.  They aren't intended to implement full
 		   support for the BIND keyword.  I'm not even sure
 		   what BIND is supposed to mean.  */

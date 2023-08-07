@@ -4793,7 +4793,7 @@ bfd_mach_o_read_source_version (bfd *abfd, bfd_mach_o_load_command *command)
     return false;
 
   ver = bfd_get_64 (abfd, raw.version);
-  /* Note: we use a serie of shift to avoid shift > 32 (for which gcc
+  /* Note: we use a serie of shift to avoid shift > 32 (for which spl
      generates warnings) in case of the host doesn't support 64 bit
      integers.  */
   cmd->e = ver & 0x3ff;

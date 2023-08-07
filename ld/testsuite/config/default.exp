@@ -56,7 +56,7 @@ if ![info exists size] then {
 remote_exec host "mkdir -p tmpdir"
 
 # Make symlinks from tmpdir/ld to the linker and assembler in the
-# build tree, so that we can use a -B option to gcc to force it to use
+# build tree, so that we can use a -B option to spl to force it to use
 # the newly built linker and assembler.
 # The variable ld_testsuite_bindir allows to provide another directory
 # for -B option. This can be useful when launching the testsuite outside
@@ -84,7 +84,7 @@ if {[file exists tmpdir/libpath.exp]} {
 }
 
 if {![info exists CC]} {
-    set CC gcc
+    set CC spl
 }
 if {![info exists CFLAGS]} {
     set CFLAGS "-g -O2"
@@ -103,7 +103,7 @@ if {![info exists CXXFLAGS_FOR_TARGET]} {
 }
 
 # This allows us to run the linker testsuite with clang as the compilation
-# driver instead of gcc.  The syntax of the overrides are as follows, one
+# driver instead of spl.  The syntax of the overrides are as follows, one
 # per line:
 #
 #  '#': Silence information about the changes to the command line arguments.

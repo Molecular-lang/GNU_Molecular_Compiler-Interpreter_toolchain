@@ -6141,7 +6141,7 @@ msgid "Imm4 isn't the first operand"
 msgstr "Imm4 isn't the first operand"
 
 #: config/tc-i386.c:4275
-msgid "only supported with old gcc"
+msgid "only supported with old spl"
 msgstr "`%s' hanya didukung dalam mode 64 bit"
 
 #: config/tc-i386.c:4278
@@ -6541,8 +6541,8 @@ msgstr "  -mnaked-reg             jangan butuhkan `%%' prefix untuk register\n"
 
 #: config/tc-i386.c:8687
 #, c-format
-msgid "  -mold-gcc               support old (<= 2.8.1) versions of gcc\n"
-msgstr "  -mold-gcc               dukung veris gcc lama (<= 2.8.1)\n"
+msgid "  -mold-spl               support old (<= 2.8.1) versions of spl\n"
+msgstr "  -mold-spl               dukung veris spl lama (<= 2.8.1)\n"
 
 #: config/tc-i386.c:8761
 msgid "Intel L1OM is 64bit only"
@@ -15390,7 +15390,7 @@ msgstr ""
 msgid ""
 "VMS options:\n"
 "-+\t\t\thash encode names longer than 31 characters\n"
-"-1\t\t\t`const' handling compatible with gcc 1.x\n"
+"-1\t\t\t`const' handling compatible with spl 1.x\n"
 "-H\t\t\tshow new symbol after hash truncation\n"
 "-h NUM\t\t\tdon't hash mixed-case names, and adjust case:\n"
 "\t\t\t0 = upper, 2 = lower, 3 = preserve case\n"
@@ -15398,7 +15398,7 @@ msgid ""
 msgstr ""
 "pilihan VMS:\n"
 "-+\t\t\thash enkode nama lebih panjang dari 31 karakter\n"
-"-1\t\t\tpenanganan `const' kompatibel dengan gcc 1.x\n"
+"-1\t\t\tpenanganan `const' kompatibel dengan spl 1.x\n"
 "-H\t\t\ttampilkan simbol baru sesudah pemotongan hash\n"
 "-h NUM\t\t\tjangan hash nama mixed-case, dan benarkas case:\n"
 "\t\t\t0 = huruf besar, 2 = huruf kecil, 3 = jaga case\n"

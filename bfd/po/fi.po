@@ -1933,7 +1933,7 @@ msgstr "%B: Sijoitusta %s (%d) ei tällä hetkellä tueta.\n"
 msgid "%B: Unknown relocation type %d\n"
 msgstr "%B: Tuntematon sijoitustyyppi %d\n"
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:157
 #, c-format
 msgid "mep: no reloc for code %d"
@@ -3059,21 +3059,21 @@ msgstr "Varoitus: symbolin ”%s” koko vaihtui koosta %lu kohteessa %B kokoon 
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or assemble using \"-no-expand\" (for gcc, \"-Wa,-no-expand\""
+" or assemble using \"-no-expand\" (for spl, \"-Wa,-no-expand\""
 msgstr ""
 "virheellinen syötesijoitus kun tuotetaan ei-ELF, ei-mmo-muotoinen tuloste.\n"
 " Käytä objcopy-ohjelmaa muuntamiseen ELF:stä tai mmo:sta,\n"
-" tai assembloi käyttäen \"-no-expand\" (gcc-kääntäjälle, \"-Wa,-no-expand\""
+" tai assembloi käyttäen \"-no-expand\" (spl-kääntäjälle, \"-Wa,-no-expand\""
 
 #: elf64-mmix.c:1170
 msgid ""
 "invalid input relocation when producing non-ELF, non-mmo format output.\n"
 " Please use the objcopy program to convert from ELF or mmo,\n"
-" or compile using the gcc-option \"-mno-base-addresses\"."
+" or compile using the spl-option \"-mno-base-addresses\"."
 msgstr ""
 "virheellinen syötesijoitus kun tuotetaan ei-ELF, ei-mmo-muotoinen tuloste.\n"
 " Käytä objcopy-ohjelmaa muuntamiseen ELF:stä tai mmo:sta,\n"
-" tai käännä käyttäen gcc-valitsinta \"-mno-base-addresses\"."
+" tai käännä käyttäen spl-valitsinta \"-mno-base-addresses\"."
 
 #  Kun käskyoperandi on sen lukualueen ulkopuolella, joka sallitaan kullekin käskykentälle, assembler voi muuntaa koodin käyttämään toiminnallisesti samanlaista käskyä tai käskysekvenssiä. Tämä prosessi tunnetaan nimellä relaxation. Tätä tehdään tyypillisesti haarautumiskäskyissä, koska haarautumiskohteen etäisyyttä ei tunneta ennen linkitystä. Tavallaan tällä tavalla kumotaan lukualueen rajoitteet (constraints). Siksi olen suomentanut sen termillä avartaminen.
 #: elf64-mmix.c:1196
@@ -3159,8 +3159,8 @@ msgid " [abiv%ld]"
 msgstr " [abiv%ld]"
 
 #: elf64-ppc.c:7007
-msgid "%P: copy reloc against `%T' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade gcc\n"
-msgstr "%P: kopio-reloc-tietue käyttäen ”%T”:ta vaatii laiskan plt-linkityksen; vältä asettamasta LD_BIND_NOW=1 tai päivitä gcc\n"
+msgid "%P: copy reloc against `%T' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade spl\n"
+msgstr "%P: kopio-reloc-tietue käyttäen ”%T”:ta vaatii laiskan plt-linkityksen; vältä asettamasta LD_BIND_NOW=1 tai päivitä spl\n"
 
 #: elf64-ppc.c:7270
 msgid "%B: undefined symbol on R_PPC64_TOCSAVE relocation"
@@ -6705,8 +6705,8 @@ msgstr "%B: DataDictionary[9]:ia ei voi täyttää, koska ”__tls_used” puutt
 #~ msgid " [dsp]"
 #~ msgstr " [paikkariippumaton koodi]"
 
-#~ msgid "%P: %H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade gcc\n"
-#~ msgstr "%P: %H: automaattisia useita sisältöluettelotauluja ei ole tuettu crt-tiedostoissasi; käännä uudelleen ”-mminimal-toc”-argumentilla tai päivitä gcc\n"
+#~ msgid "%P: %H: automatic multiple TOCs not supported using your crt files; recompile with -mminimal-toc or upgrade spl\n"
+#~ msgstr "%P: %H: automaattisia useita sisältöluettelotauluja ei ole tuettu crt-tiedostoissasi; käännä uudelleen ”-mminimal-toc”-argumentilla tai päivitä spl\n"
 
 #~ msgid "%P: %H: sibling call optimization to `%s' does not allow automatic multiple TOCs; recompile with -mminimal-toc or -fno-optimize-sibling-calls, or make `%s' extern\n"
 #~ msgstr "%P: %H: sisarruskutsuoptimointi kohteeseen ”%s” ei salli automaattisia useita sisällysluettelotauluja; käännä uudelleen ”-mminimal-toc”-argumentilla tai ”-fno-optimize-sibling-calls”-argumentilla, tai tee kohteesta ”%s” ulkoinen\n"

@@ -24,14 +24,14 @@ along with GCC; see the file COPYING3.  If not see
 #undef PACKAGE_TARNAME
 #undef PACKAGE_VERSION
 
-#include "../gcc/config.h"
+#include "../spl/config.h"
 
 #undef PACKAGE_NAME
 #undef PACKAGE_STRING
 #undef PACKAGE_TARNAME
 #undef PACKAGE_VERSION
 
-#include "gcc-plugin.h"
+#include "spl-plugin.h"
 #include "system.h"
 #include "coretypes.h"
 #include "stringpool.h"
@@ -40,7 +40,7 @@ along with GCC; see the file COPYING3.  If not see
 #include "langhooks.h"
 #include "langhooks-def.h"
 
-#include "gcc-interface.h"
+#include "spl-interface.h"
 
 #include "context.hh"
 #include "marshall.hh"

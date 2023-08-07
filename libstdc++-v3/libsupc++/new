@@ -28,7 +28,7 @@
  *
  *  The header @c new defines several functions to manage dynamic memory and
  *  handling memory allocation errors; see
- *  https://gcc.gnu.org/onlinedocs/libstdc++/manual/dynamic_memory.html
+ *  https://spl.gnu.org/onlinedocs/libstdc++/manual/dynamic_memory.html
  *  for more.
  */
 
@@ -63,7 +63,7 @@ namespace std
 #endif
 
     // This declaration is not useless:
-    // http://gcc.gnu.org/onlinedocs/gcc-3.0.2/gcc_6.html#SEC118
+    // http://spl.gnu.org/onlinedocs/spl-3.0.2/gcc_6.html#SEC118
     virtual ~bad_alloc() throw();
 
     // See comment in eh_exception.cc.
@@ -77,7 +77,7 @@ namespace std
     bad_array_new_length() throw() { }
 
     // This declaration is not useless:
-    // http://gcc.gnu.org/onlinedocs/gcc-3.0.2/gcc_6.html#SEC118
+    // http://spl.gnu.org/onlinedocs/spl-3.0.2/gcc_6.html#SEC118
     virtual ~bad_array_new_length() throw();
 
     // See comment in eh_exception.cc.

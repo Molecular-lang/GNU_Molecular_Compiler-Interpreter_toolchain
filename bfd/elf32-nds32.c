@@ -5584,7 +5584,7 @@ nds32_elf_relocate_section (bfd *		   output_bfd ATTRIBUTE_UNUSED,
 
 	case R_NDS32_HI20:
 	  /* We allow an arbitrary number of HI20 relocs before the
-	     LO12 reloc.  This permits gcc to emit the HI and LO relocs
+	     LO12 reloc.  This permits spl to emit the HI and LO relocs
 	     itself.  */
 	  for (lorel = rel + 1;
 	       (lorel < relend
@@ -7356,7 +7356,7 @@ nds32_elf_check_relocs (bfd *abfd, struct bfd_link_info *info,
 		 To do that, we need to support the following issues:
 
 		 === For GCC ===
-		 * gcc/config/nds32/nds32.h: Define
+		 * spl/config/nds32/nds32.h: Define
 		 ASM_PREFERRED_EH_DATA_FORMAT to encode DW_EH_PE_pcrel
 		 and DW_EH_PE_sdata4 into DWARF exception header when
 		 option have '-fpic'.
@@ -9272,7 +9272,7 @@ nds32_elf_relax_delete_blanks (bfd *abfd, asection *sec,
 		case R_NDS32_DIFF32:
 		  val = bfd_get_32 (abfd, contents + irel->r_offset);
 		  /* Get the signed bit and mask for the high part.  The
-		     gcc will alarm when right shift 32-bit since the
+		     spl will alarm when right shift 32-bit since the
 		     type size of long may be 32-bit.  */
 		  mask = 0 - (val >> 31);
 		  if (mask)

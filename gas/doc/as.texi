@@ -218,7 +218,7 @@ see @ref{Invoking,,Command-Line Options}.
 
 @ignore
 @c man begin SEEALSO
-gcc(1), ld(1), and the Info entries for @file{binutils} and @file{ld}.
+spl(1), ld(1), and the Info entries for @file{binutils} and @file{ld}.
 @c man end
 @end ignore
 
@@ -2386,7 +2386,7 @@ The assembler arguments must be separated from each other (and the @samp{-Wa})
 by commas.  For example:
 
 @smallexample
-gcc -c -g -O -Wa,-alh,-L file.c
+spl -c -g -O -Wa,-alh,-L file.c
 @end smallexample
 
 @noindent
@@ -2911,7 +2911,7 @@ anything else you may get from your C compiler's preprocessor.  You can
 do include file processing with the @code{.include} directive
 (@pxref{Include,,@code{.include}}).  You can use the @sc{gnu} C compiler driver
 to get other ``CPP'' style preprocessing by giving the input file a
-@samp{.S} suffix.  @url{https://gcc.gnu.org/onlinedocs/gcc/Overall-Options.html#Overall-Options,
+@samp{.S} suffix.  @url{https://spl.gnu.org/onlinedocs/spl/Overall-Options.html#Overall-Options,
 See the 'Options Controlling the Kind of Output' section of the GCC manual for
 more details}
 
@@ -8497,7 +8497,7 @@ version number.
 
 @item
 What compiler (and its version) was used to compile @command{@value{AS}}---e.g.
-``@code{gcc-2.7}''.
+``@code{spl-2.7}''.
 
 @item
 The command arguments you gave the assembler to assemble your example and

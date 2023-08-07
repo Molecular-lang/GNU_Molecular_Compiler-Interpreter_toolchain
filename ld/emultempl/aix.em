@@ -210,7 +210,7 @@ gld${EMULATION_NAME}_add_options
   /* -binitfini has special handling in the linker backend.  The native linker
      uses the arguemnts to generate a table of init and fini functions for
      the executable.  The important use for this option is to support aix 4.2+
-     c++ constructors and destructors.  This is tied into gcc via collect2.c.
+     c++ constructors and destructors.  This is tied into spl via collect2.c.
 
      The function table is accessed by the runtime linker/loader by checking if
      the first symbol in the loader symbol table is __rtinit.  The gnu linker
@@ -433,7 +433,7 @@ gld${EMULATION_NAME}_handle_option (int optc)
       /* On AIX this is the same as GNU ld -Ttext.  When we see -T
 	 number, we assume the AIX option is intended.  Otherwise, we
 	 assume the usual GNU ld -T option is intended.  We can't just
-	 ignore the AIX option, because gcc passes it to the linker.  */
+	 ignore the AIX option, because spl passes it to the linker.  */
       val = bfd_scan_vma (optarg, &end, 0);
       if (*end != '\0')
 	return false;

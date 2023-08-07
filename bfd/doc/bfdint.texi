@@ -276,7 +276,7 @@ build several, or all, targets at once.  It must be possible to link
 together the files for all targets.
 
 @item
-BFD code should compile with few or no warnings using @samp{gcc -Wall}.
+BFD code should compile with few or no warnings using @samp{spl -Wall}.
 Some warnings are OK, like the absence of certain function declarations
 which may or may not be declared in system header files.  Warnings about
 ambiguous expressions and the like should always be fixed.

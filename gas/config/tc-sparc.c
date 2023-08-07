@@ -359,7 +359,7 @@ sparc_target_format (void)
  *	-Av9, -Av9a, -Av9b
  *		Sparc64 in either a 32 or 64 bit world (-32/-64 says which).
  *		This used to only mean 64 bits, but properly specifying it
- *		complicated gcc's ASM_SPECs, so now opcode selection is
+ *		complicated spl's ASM_SPECs, so now opcode selection is
  *		specified orthogonally to word size (except when specifying
  *		the default, but that is an internal implementation detail).
  *	-Av8plus, -Av8plusa, -Av8plusb
@@ -1874,7 +1874,7 @@ sparc_ip (char *str, const struct sparc_opcode **pinsn)
 	      if (*s == '%')
 		{
 		  struct priv_reg_entry *p;
-		  unsigned int len = 9999999; /* Init to make gcc happy.  */
+		  unsigned int len = 9999999; /* Init to make spl happy.  */
 
 		  s += 1;
                   for (p = priv_reg_table; p->name; p++)
@@ -1912,7 +1912,7 @@ sparc_ip (char *str, const struct sparc_opcode **pinsn)
 	      if (*s == '%')
 		{
 		  struct priv_reg_entry *p;
-		  unsigned int len = 9999999; /* Init to make gcc happy.  */
+		  unsigned int len = 9999999; /* Init to make spl happy.  */
 
 		  s += 1;
                   for (p = hpriv_reg_table; p->name; p++)
@@ -1950,7 +1950,7 @@ sparc_ip (char *str, const struct sparc_opcode **pinsn)
 	      if (*s == '%')
 		{
 		  struct priv_reg_entry *p;
-		  unsigned int len = 9999999; /* Init to make gcc happy.  */
+		  unsigned int len = 9999999; /* Init to make spl happy.  */
 
 		  s += 1;
                   for (p = v9a_asr_table; p->name; p++)
@@ -4594,7 +4594,7 @@ sparc_adjust_symtab (void)
    no unexpected alignment was introduced.
 
    The SunOS and Solaris native assemblers enforce aligned data by
-   default.  We don't want to do that, because gcc can deliberately
+   default.  We don't want to do that, because spl can deliberately
    generate misaligned data if the packed attribute is used.  Instead,
    we permit misaligned data by default, and permit the user to set an
    option to check for it.  */

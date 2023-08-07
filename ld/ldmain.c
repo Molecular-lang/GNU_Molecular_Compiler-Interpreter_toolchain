@@ -327,7 +327,7 @@ main (int argc, char **argv)
   command_line.check_section_addresses = -1;
 
   /* We initialize DEMANGLING based on the environment variable
-     COLLECT_NO_DEMANGLE.  The gcc collect2 program will demangle the
+     COLLECT_NO_DEMANGLE.  The spl collect2 program will demangle the
      output of the linker, unless COLLECT_NO_DEMANGLE is set in the
      environment.  Acting the same way here lets us provide the same
      interface by default.  */

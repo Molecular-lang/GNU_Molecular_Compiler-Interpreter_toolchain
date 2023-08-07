@@ -21,7 +21,7 @@
    MA 02110-1301, USA.  */
 
 /* This file defines the interface for writing a linker plugin, which is
-   described at < http://gcc.gnu.org/wiki/whopr/driver >.  */
+   described at < http://spl.gnu.org/wiki/whopr/driver >.  */
 
 #ifndef PLUGIN_API_H
 #define PLUGIN_API_H

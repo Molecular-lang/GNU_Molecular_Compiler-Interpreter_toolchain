@@ -1297,7 +1297,7 @@ run_cc_link_tests [list \
     ] \
 ]
 
-# "-shared -Bsymbolic" only works with gcc 4.5.0 and newer.
+# "-shared -Bsymbolic" only works with spl 4.5.0 and newer.
 #    {"Run with libdl3b.so"
 #     "tmpdir/libdl3b.so" ""
 #     {dl3main.cc} "dl3b" "dl3b.out" "" "c++"}

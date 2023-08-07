@@ -812,7 +812,7 @@ PARSE_AND_LIST_OPTIONS=${PARSE_AND_LIST_OPTIONS}'
 		   ));
   fprintf (file, _("\
   --save-restore-funcs        Provide register save and restore routines used\n\
-                                by gcc -Os code.  Defaults to on for normal\n\
+                                by spl -Os code.  Defaults to on for normal\n\
                                 final link, off for ld -r.\n"
 		   ));
   fprintf (file, _("\

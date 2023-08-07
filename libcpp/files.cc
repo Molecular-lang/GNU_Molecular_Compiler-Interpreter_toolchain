@@ -1759,7 +1759,7 @@ read_filename_string (int ch, FILE *f)
 static void
 read_name_map (cpp_dir *dir)
 {
-  static const char FILE_NAME_MAP_FILE[] = "header.gcc";
+  static const char FILE_NAME_MAP_FILE[] = "header.spl";
   char *name;
   FILE *f;
   size_t len, count = 0, room = 9;

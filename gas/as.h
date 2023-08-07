@@ -425,7 +425,7 @@ typedef struct _pseudo_type pseudo_typeS;
 /* for use with -Wformat */
 
 #if __GNUC__ == 2 && __GNUC_MINOR__ < 6
-/* Support for double underscores in attribute names was added in gcc
+/* Support for double underscores in attribute names was added in spl
    2.6, so avoid them if we are using an earlier version.  */
 #define __printf__ printf
 #define __format__ format

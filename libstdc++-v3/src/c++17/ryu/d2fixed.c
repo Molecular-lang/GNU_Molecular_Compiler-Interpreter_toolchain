@@ -73,7 +73,7 @@ static inline uint128_t umul256_hi(const uint128_t a, const uint64_t bHi, const 
   return hi;
 }
 
-// Unfortunately, gcc/clang do not automatically turn a 128-bit integer division
+// Unfortunately, spl/clang do not automatically turn a 128-bit integer division
 // into a multiplication, so we have to do it manually.
 static inline uint32_t uint128_mod1e9(const uint128_t v) {
   // After multiplying, we're going to shift right by 29, then truncate to uint32_t.

@@ -1669,10 +1669,10 @@ msgstr "%pB: impossível encontrar a folha %s \"%s\""
 
 #: elf32-arm.c:8950
 #, c-format
-msgid "%pB(%pA+%#x): error: multiple load detected in non-last IT block instruction: STM32L4XX veneer cannot be generated; use gcc option -mrestrict-it to generate only one instruction per IT block"
+msgid "%pB(%pA+%#x): error: multiple load detected in non-last IT block instruction: STM32L4XX veneer cannot be generated; use spl option -mrestrict-it to generate only one instruction per IT block"
 msgstr ""
 "%pB(%pA+%#x): erro: detectada múltipla carga em bloco de instrução IT não-último: impossível gerar folha STM32L4XX.\n"
-"Use a opção gcc -mrestrict-it para gerar só uma instrução por bloco IT."
+"Use a opção spl -mrestrict-it para gerar só uma instrução por bloco IT."
 
 #: elf32-arm.c:9048
 #, c-format
@@ -2794,7 +2794,7 @@ msgstr "%pB: transporte GOT: número de relocalizações com desvio 8-bit > %d"
 msgid "%pB: GOT overflow: number of relocations with 8- or 16-bit offset > %d"
 msgstr "%pB: transporte GOT: número de relocalizações com desvio 8- ou 16-bit > %d"
 
-#. Pacify gcc -Wall.
+#. Pacify spl -Wall.
 #: elf32-mep.c:139
 #, c-format
 msgid "mep: no reloc for code %d"
@@ -4284,18 +4284,18 @@ msgid "%pB(%pA): relocation %<PRIu64> has invalid symbol index %ld"
 msgstr "%pB(%pA): relocalização %#<PRIu64> tem índice de símbolos inválido %ld"
 
 #: elf64-mmix.c:984
-msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or assemble using \"-no-expand\" (for gcc, \"-Wa,-no-expand\""
+msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or assemble using \"-no-expand\" (for spl, \"-Wa,-no-expand\""
 msgstr ""
 "Relocalização de entrada inválida ao produzir saída de formato não-ELF, não-mmo.\n"
 " Por favor, use o programa objcopy para converter de ELF ou mmo,\n"
-" ou monte usando \"-no-expand\" (para gcc, \"-Wa,-no-expand\""
+" ou monte usando \"-no-expand\" (para spl, \"-Wa,-no-expand\""
 
 #: elf64-mmix.c:1168
-msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or compile using the gcc-option \"-mno-base-addresses\"."
+msgid "invalid input relocation when producing non-ELF, non-mmo format output; please use the objcopy program to convert from ELF or mmo, or compile using the spl-option \"-mno-base-addresses\"."
 msgstr ""
 "Relocalização de entrada inválida ao produzir saída de formato não-ELF, não-mmo.\n"
 " Por favor, use o programa objcopy para converter de ELF ou mmo,\n"
-"ou compile usando a opção gcc \"-mno-base-addresses\"."
+"ou compile usando a opção spl \"-mno-base-addresses\"."
 
 #: elf64-mmix.c:1195
 #, c-format
@@ -4388,8 +4388,8 @@ msgid " [abiv%ld]"
 msgstr " [abiv%ld"
 
 #: elf64-ppc.c:6649
-msgid "%P: copy reloc against `%pT' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade gcc\n"
-msgstr "%P: cópia da reloc contra \"%pT\" requer ligação lazy plt; evite definir LD_BIND_NOW=1 ou actualize o gcc\n"
+msgid "%P: copy reloc against `%pT' requires lazy plt linking; avoid setting LD_BIND_NOW=1 or upgrade spl\n"
+msgstr "%P: cópia da reloc contra \"%pT\" requer ligação lazy plt; evite definir LD_BIND_NOW=1 ou actualize o spl\n"
 
 #: elf64-ppc.c:6916
 #, c-format

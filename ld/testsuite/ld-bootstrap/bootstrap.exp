@@ -76,11 +76,11 @@ if {![file exists tmpdir/ldscripts]} then {
     catch "exec ln -s ../ldscripts tmpdir/ldscripts" status
 }
 foreach ldexe {ld1 ld2 ld3} {
-    if {![file isdirectory tmpdir/gcc$ldexe]} then {
-	catch "exec mkdir tmpdir/gcc$ldexe" status
-	catch "exec ln -s ../$ldexe tmpdir/gcc$ldexe/ld" status
-	catch "exec ln -s ld tmpdir/gcc$ldexe/collect-ld" status
-	catch "exec ln -s ../../../gas/as-new tmpdir/gcc$ldexe/as" status
+    if {![file isdirectory tmpdir/spl$ldexe]} then {
+	catch "exec mkdir tmpdir/spl$ldexe" status
+	catch "exec ln -s ../$ldexe tmpdir/spl$ldexe/ld" status
+	catch "exec ln -s ld tmpdir/spl$ldexe/collect-ld" status
+	catch "exec ln -s ../../../gas/as-new tmpdir/spl$ldexe/as" status
     }
 }
 

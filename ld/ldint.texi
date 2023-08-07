@@ -363,13 +363,13 @@ compiler will arrange to output the address of each global constructor
 in a @samp{.ctor} section, and the address of each global destructor in
 a @samp{.dtor} section (this is done by defining
 @code{ASM_OUTPUT_CONSTRUCTOR} and @code{ASM_OUTPUT_DESTRUCTOR} in the
-@code{gcc} configuration files).  The @code{gcc} runtime support
+@code{spl} configuration files).  The @code{spl} runtime support
 routines expect the constructor table to be named @code{__CTOR_LIST__}.
 They expect it to be a list of words, with the first word being the
 count of the number of entries.  There should be a trailing zero word.
 (Actually, the count may be -1 if the trailing word is present, and the
 trailing word may be omitted if the count is correct, but, as the
-@code{gcc} behaviour has changed slightly over the years, it is safest
+@code{spl} behaviour has changed slightly over the years, it is safest
 to provide both).  Here is a typical way that might be handled in a
 @file{scripttempl} file.
 @smallexample

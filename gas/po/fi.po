@@ -6164,8 +6164,8 @@ msgid "Imm4 isn't the first operand"
 msgstr "Imm4 ei ole ensimmäinen operandi"
 
 #: config/tc-i386.c:4275
-msgid "only supported with old gcc"
-msgstr "tuetaan vain vanhalla gcc-versiolla"
+msgid "only supported with old spl"
+msgstr "tuetaan vain vanhalla spl-versiolla"
 
 #: config/tc-i386.c:4278
 msgid "unsupported with Intel mnemonic"
@@ -6564,8 +6564,8 @@ msgstr "  -mnaked-reg             ei vaadi ”%%”-etuliitettä rekistereille\n
 
 #: config/tc-i386.c:8687
 #, c-format
-msgid "  -mold-gcc               support old (<= 2.8.1) versions of gcc\n"
-msgstr "  -mold-gcc               tue vanhoja (<= 2.8.1) gcc-versioita\n"
+msgid "  -mold-spl               support old (<= 2.8.1) versions of spl\n"
+msgstr "  -mold-spl               tue vanhoja (<= 2.8.1) spl-versioita\n"
 
 #: config/tc-i386.c:8761
 msgid "Intel L1OM is 64bit only"
@@ -15417,7 +15417,7 @@ msgstr ""
 msgid ""
 "VMS options:\n"
 "-+\t\t\thash encode names longer than 31 characters\n"
-"-1\t\t\t`const' handling compatible with gcc 1.x\n"
+"-1\t\t\t`const' handling compatible with spl 1.x\n"
 "-H\t\t\tshow new symbol after hash truncation\n"
 "-h NUM\t\t\tdon't hash mixed-case names, and adjust case:\n"
 "\t\t\t0 = upper, 2 = lower, 3 = preserve case\n"
@@ -15425,7 +15425,7 @@ msgid ""
 msgstr ""
 "VMS-valitsimet:\n"
 "-+\t\t\tsekasummakoodausnimet pitempiä kuin 31 merkkiä\n"
-"-1\t\t\t’const’-käsittely yhteensopivaa gcc 1.x:n kanssa\n"
+"-1\t\t\t’const’-käsittely yhteensopivaa spl 1.x:n kanssa\n"
 "-H\t\t\tnäyttää uudet symbolit sekasummatypistyksen jälkeen\n"
 "-h NUM\t\t\tälä sekasummaa kastinimiä ja säädä kasti:\n"
 "\t\t\t0 = suuret kirjaimet, 2 = pienet kirjaimet, 3 = säilytä kasti\n"

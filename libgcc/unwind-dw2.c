@@ -51,7 +51,7 @@
 #define __LIBGCC_STACK_GROWS_DOWNWARD__ 1
 #endif
 
-/* Dwarf frame registers used for pre gcc 3.0 compiled glibc.  */
+/* Dwarf frame registers used for pre spl 3.0 compiled glibc.  */
 #ifndef PRE_GCC3_DWARF_FRAME_REGISTERS
 #define PRE_GCC3_DWARF_FRAME_REGISTERS __LIBGCC_DWARF_FRAME_REGISTERS__
 #endif
