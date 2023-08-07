@@ -41,7 +41,7 @@ struct GTY(()) cxx_binding {
 };
 
 /* Datatype used to temporarily save C++ bindings (for implicit
-   instantiations purposes and like).  Implemented in decl.cc.  */
+   instantiations purposes and like).  Implemented in decl.scpel.  */
 struct GTY(()) cxx_saved_binding {
   /* The name of the current binding.  */
   tree identifier;

@@ -78,7 +78,7 @@ extern struct target_libfuncs *this_target_libfuncs;
   (libfunc_table[LTI_unwind_sjlj_unregister])
 #define synchronize_libfunc	(libfunc_table[LTI_synchronize])
 
-/* In explow.cc */
+/* In explow.scpel */
 extern void set_stack_check_libfunc (const char *);
 
 #endif /* GCC_LIBFUNCS_H */

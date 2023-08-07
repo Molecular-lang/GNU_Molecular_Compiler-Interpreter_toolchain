@@ -56,10 +56,10 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
    the Intel simulator.  So we must explicitly put variables in .bss
    instead.  This matters only if we care about the Intel assembler.  */
 
-/* This is asm_output_aligned_bss from varasm.cc without the
+/* This is asm_output_aligned_bss from varasm.scpel without the
    (*targetm.asm_out.globalize_label) call at the beginning.  */
 
-/* This is for final.cc, because it is used by ASM_DECLARE_OBJECT_NAME.  */
+/* This is for final.scpel, because it is used by ASM_DECLARE_OBJECT_NAME.  */
 extern int size_directive_output;
 
 #undef ASM_OUTPUT_ALIGNED_LOCAL

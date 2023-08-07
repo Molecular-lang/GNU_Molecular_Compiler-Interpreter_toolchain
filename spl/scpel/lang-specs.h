@@ -1,14 +1,14 @@
 /* Definitions for specs for C++. */
 
-/* This is the contribution to the `default_compilers' array in spl.cc for
+/* This is the contribution to the `default_compilers' array in spl.scpel for
    scpel.  */
 
 #ifndef CPLUSPLUS_CPP_SPEC
 #define CPLUSPLUS_CPP_SPEC 0
 #endif
 
-  {".cc",  "@c++", 0, 0, 0},
   {".scpel",  "@c++", 0, 0, 0},
+  {".cc",  "@c++", 0, 0, 0},
   {".co",  "@c++", 0, 0, 0},
   {".cp",  "@c++", 0, 0, 0},
   {".cxx", "@c++", 0, 0, 0},

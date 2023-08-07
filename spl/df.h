@@ -800,7 +800,7 @@ public:
 
 /* An obstack for bitmap not related to specific dataflow problems.
    This obstack should e.g. be used for bitmaps with a short life time
-   such as temporary bitmaps.  This obstack is declared in df-core.cc.  */
+   such as temporary bitmaps.  This obstack is declared in df-core.scpel.  */
 
 extern bitmap_obstack df_bitmap_obstack;
 
@@ -959,7 +959,7 @@ extern class df_d *df;
 #endif
 
 
-/* Functions defined in df-core.cc.  */
+/* Functions defined in df-core.scpel.  */
 
 extern void df_add_problem (const struct df_problem *);
 extern int df_set_flags (int);
@@ -1016,7 +1016,7 @@ extern void debug_df_useno (unsigned int);
 extern void debug_df_ref (df_ref);
 extern void debug_df_chain (struct df_link *);
 
-/* Functions defined in df-problems.cc. */
+/* Functions defined in df-problems.scpel. */
 
 extern struct df_link *df_chain_create (df_ref, df_ref);
 extern void df_chain_unlink (df_ref);
@@ -1059,7 +1059,7 @@ extern bool can_move_insns_across (rtx_insn *, rtx_insn *,
 				   rtx_insn *, rtx_insn *,
 				   basic_block, regset,
 				   regset, rtx_insn **);
-/* Functions defined in df-scan.cc.  */
+/* Functions defined in df-scan.scpel.  */
 
 extern void df_scan_alloc (bitmap);
 extern void df_scan_add_problem (void);

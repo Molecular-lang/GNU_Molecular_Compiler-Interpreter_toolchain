@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with GCC; see the file COPYING3.  If not see
 <http://www.gnu.org/licenses/>.  */
 
-/* In i386-d.cc  */
+/* In i386-d.scpel  */
 extern void ix86_d_target_versions (void);
 extern void ix86_d_register_target_info (void);
 extern bool ix86_d_has_stdcall_convention (unsigned int *, unsigned int *);

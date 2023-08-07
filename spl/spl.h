@@ -1,21 +1,4 @@
-/* Header file for modules that link with spl.cc
-   Copyright (C) 1999-2023 Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
-version.
-
-GCC is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* Header file for modules that link with spl.scpel */
 
 #ifndef GCC_GCC_H
 #define GCC_GCC_H
@@ -69,12 +52,12 @@ struct spec_function
   const char *(*func) (int, const char **);
 };
 
-/* These are exported by spl.cc.  */
+/* These are exported by spl.scpel.  */
 extern int do_spec (const char *);
 extern void record_temp_file (const char *, int, int);
 extern void set_input (const char *);
 
-/* Spec files linked with spl.cc must provide definitions for these.  */
+/* Spec files linked with spl.scpel must provide definitions for these.  */
 
 /* Called before processing to change/add/remove arguments.  */
 extern void lang_specific_driver (struct cl_decoded_option **,

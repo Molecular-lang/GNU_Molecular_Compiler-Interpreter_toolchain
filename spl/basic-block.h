@@ -146,7 +146,7 @@ struct GTY((chain_next ("%h.next_bb"), chain_prev ("%h.prev_bb"))) basic_block_d
   /* The index of this block.  */
   int index;
 
-  /* Expected number of executions: calculated in profile.cc.  */
+  /* Expected number of executions: calculated in profile.scpel.  */
   profile_count count;
 };
 

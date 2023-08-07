@@ -16,10 +16,10 @@
 # along with GCC; see the file COPYING3.  If not see
 # <http://www.gnu.org/licenses/>.
 
-netbsd.o: $(srcdir)/config/netbsd.cc
+netbsd.o: $(srcdir)/config/netbsd.scpel
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-netbsd-d.o: $(srcdir)/config/netbsd-d.cc
+netbsd-d.o: $(srcdir)/config/netbsd-d.scpel
 	$(COMPILE) $<
 	$(POSTCOMPILE)

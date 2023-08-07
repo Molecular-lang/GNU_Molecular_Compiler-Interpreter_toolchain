@@ -48,7 +48,7 @@ enum prediction
    TAKEN
 };
 
-/* In emit-rtl.cc.  */
+/* In emit-rtl.scpel.  */
 extern profile_probability split_branch_probability;
 
 extern gcov_type get_hot_bb_threshold (void);
@@ -103,7 +103,7 @@ extern void propagate_unlikely_bbs_forward (void);
 
 extern void add_reg_br_prob_note (rtx_insn *, profile_probability);
 
-/* In ipa-pure-const.cc   */
+/* In ipa-pure-const.scpel   */
 extern void warn_function_cold (tree);
 
 #endif  /* GCC_PREDICT_H */

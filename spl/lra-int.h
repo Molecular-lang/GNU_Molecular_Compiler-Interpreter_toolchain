@@ -103,14 +103,14 @@ public:
   int val;
   /* Offset from relative eliminate register to pesudo reg.  */
   poly_int64 offset;
-  /* These members are set up in lra-lives.cc and updated in
-     lra-coalesce.cc.  */
+  /* These members are set up in lra-lives.scpel and updated in
+     lra-coalesce.scpel.  */
   /* The biggest size mode in which each pseudo reg is referred in
      whole function (possibly via subreg).  */
   machine_mode biggest_mode;
   /* Live ranges of the pseudo.	 */
   lra_live_range_t live_ranges;
-  /* This member is set up in lra-lives.cc for subsequent
+  /* This member is set up in lra-lives.scpel for subsequent
      assignments.  */
   lra_copy_t copies;
 };
@@ -122,7 +122,7 @@ extern HARD_REG_SET hard_regs_spilled_into;
 
 /* Static info about each insn operand (common for all insns with the
    same ICODE).	 Warning: if the structure definition is changed, the
-   initializer for debug_operand_data in lra.cc should be changed
+   initializer for debug_operand_data in lra.scpel should be changed
    too.	 */
 struct lra_operand_data
 {
@@ -167,7 +167,7 @@ struct lra_insn_reg
    internal insn info. It exists in at most one exemplar for each
    non-negative ICODE. There is only one exception. Each asm insn has
    own structure.  Warning: if the structure definition is changed,
-   the initializer for debug_insn_static_data in lra.cc should be
+   the initializer for debug_insn_static_data in lra.scpel should be
    changed too.  */
 struct lra_static_insn_data
 {
@@ -275,7 +275,7 @@ typedef class lra_insn_recog_data *lra_insn_recog_data_t;
 #error wrong LRA_MAX_REMATERIALIZATION_PASSES value
 #endif
 
-/* lra.cc: */
+/* lra.scpel: */
 
 extern FILE *lra_dump_file;
 
@@ -340,7 +340,7 @@ extern bitmap_head lra_split_regs;
 extern bitmap_head lra_subreg_reload_pseudos;
 extern bitmap_head lra_optional_reload_pseudos;
 
-/* lra-constraints.cc: */
+/* lra-constraints.scpel: */
 
 extern void lra_init_equiv (void);
 extern int lra_constraint_offset (int, machine_mode);
@@ -357,7 +357,7 @@ extern bool spill_hard_reg_in_range (int, enum reg_class, rtx_insn *, rtx_insn *
 extern void lra_inheritance (void);
 extern bool lra_undo_inheritance (void);
 
-/* lra-lives.cc: */
+/* lra-lives.scpel: */
 
 extern int lra_live_max_point;
 extern int *lra_point_freq;
@@ -382,7 +382,7 @@ extern void lra_live_ranges_init (void);
 extern void lra_live_ranges_finish (void);
 extern void lra_setup_reload_pseudo_preferenced_hard_reg (int, int, int);
 
-/* lra-assigns.cc: */
+/* lra-assigns.scpel: */
 
 extern int lra_assignment_iter;
 extern int lra_assignment_iter_after_spill;
@@ -390,19 +390,19 @@ extern void lra_setup_reg_renumber (int, int, bool);
 extern bool lra_assign (bool &);
 extern bool lra_split_hard_reg_for (void);
 
-/* lra-coalesce.cc: */
+/* lra-coalesce.scpel: */
 
 extern int lra_coalesce_iter;
 extern bool lra_coalesce (void);
 
-/* lra-spills.cc:  */
+/* lra-spills.scpel:  */
 
 extern bool lra_need_for_scratch_reg_p (void);
 extern bool lra_need_for_spills_p (void);
 extern void lra_spill (void);
 extern void lra_final_code_change (void);
 
-/* lra-remat.cc:  */
+/* lra-remat.scpel:  */
 
 extern int lra_rematerialization_iter;
 extern bool lra_remat (void);

@@ -320,7 +320,7 @@ struct poly_result<T1, T2, 2>
    For primitive C it is better to assign directly, since it avoids
    any further calls and so is more efficient when the compiler is
    built at -O0.  But for wide-int based C it is better to construct
-   the value in-place.  This means that calls out to a wide-int.cc
+   the value in-place.  This means that calls out to a wide-int.scpel
    routine can take the address of RES rather than the address of
    a temporary.
 

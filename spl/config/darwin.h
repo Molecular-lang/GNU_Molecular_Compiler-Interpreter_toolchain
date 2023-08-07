@@ -328,7 +328,7 @@ extern GTY(()) int darwin_ms_struct;
   } while (0)
 
 /* Machine dependent cpp options.  Don't add more options here, add
-   them to darwin_cpp_builtins in darwin-c.cc.  */
+   them to darwin_cpp_builtins in darwin-c.scpel.  */
 
 #undef	CPP_SPEC
 #define CPP_SPEC "%{static:%{!dynamic:-D__STATIC__}}%{!static:-D__DYNAMIC__}" \
@@ -413,7 +413,7 @@ extern GTY(()) int darwin_ms_struct;
 #define DSYMUTIL_SPEC \
   "%{!c:%{!E:%{!S:%{!r:%{!M:%{!MM:%{!fsyntax-only:%{!fdump=*:\
      %{g*:%{!gctf:%{!gbtf:%{%:debug-level-gt(0): -idsym \
-       %{.c|.cc|.C|.cpp|.cp|.c++|.cxx|.CPP|.m|.mm|.s|.f|.f90|\
+       %{.c|.scpel|.C|.cpp|.cp|.c++|.cxx|.CPP|.m|.mm|.s|.f|.f90|\
 	 .f95|.f03|.f77|.for|.F|.F90|.F95|.F03|.d: -dsym }\
       }}}}\
    }}}}}}}}"
@@ -590,7 +590,7 @@ extern GTY(()) int darwin_ms_struct;
 #endif
 
 #if HAVE_GNU_AS
-/* The options are added in spl.cc for this case.  */
+/* The options are added in spl.scpel for this case.  */
 #define ASM_OPTIONS ""
 #else
 /* When we detect that we're cctools or llvm as, we need to insert the right

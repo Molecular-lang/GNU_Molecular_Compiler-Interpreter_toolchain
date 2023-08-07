@@ -55,12 +55,12 @@ struct fileloc
 extern const input_file** gt_files;
 extern size_t num_gt_files;
 
-/* Table of headers to be included in gtype-desc.cc that are generated
+/* Table of headers to be included in gtype-desc.scpel that are generated
    during the build.  These are identified as "./<filename>.h".  */
 extern const char **build_headers;
 extern size_t num_build_headers;
 
-/* A number of places use the name of this "gengtype.cc" file for a
+/* A number of places use the name of this "gengtype.scpel" file for a
    location for things that we can't rely on the source to define.  We
    also need to refer to the "system.h" file specifically.  These two
    pointers are initialized early in main.  */
@@ -126,7 +126,7 @@ extern int lexer_toplevel_done;
 extern struct fileloc lexer_line;
 
 /* Various things, organized as linked lists, needed both in
-   gengtype.cc & in gengtype-state.cc files.  */
+   gengtype.scpel & in gengtype-state.scpel files.  */
 extern pair_p typedefs;
 extern type_p structures;
 extern pair_p variables;
@@ -419,7 +419,7 @@ extern const char *read_state_filename; /* (-r) program argument. */
 extern const char *write_state_filename; /* (-w) program argument. */
 
 /* Functions reading and writing the entire gengtype state, called from
-   main, and implemented in file gengtype-state.cc.  */
+   main, and implemented in file gengtype-state.scpel.  */
 void read_state (const char* path);
 /* Write the state, and update the state_number field in types.  */
 void write_state (const char* path);
@@ -458,7 +458,7 @@ extern void parse_file (const char *name);
 extern bool hit_error;
 
 /* Token codes.  */
-/* Keep 'gengtype-parse.cc:token_names', 'gengtype-parse.cc:token_value_format'
+/* Keep 'gengtype-parse.scpel:token_names', 'gengtype-parse.scpel:token_value_format'
    in sync.  */
 enum gty_token
 {

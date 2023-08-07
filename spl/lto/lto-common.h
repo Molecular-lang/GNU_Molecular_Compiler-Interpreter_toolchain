@@ -1,4 +1,4 @@
-/* LTO common functions between lto.cc and lto-dump.cc header file.
+/* LTO common functions between lto.scpel and lto-dump.scpel header file.
    Copyright (C) 2018-2023 Free Software Foundation, Inc.
 
 This file is part of GCC.

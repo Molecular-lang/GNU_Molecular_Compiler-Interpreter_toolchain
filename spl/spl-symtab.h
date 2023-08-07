@@ -1,4 +1,4 @@
-/* Declarations for symtab.cc.
+/* Declarations for symtab.scpel.
    FIXME - This file should be named symtab.h, but that name conflicts
            with libcpp's symtab.h.
 

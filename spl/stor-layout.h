@@ -1,4 +1,4 @@
-/* Definitions and declarations for stor-layout.cc.
+/* Definitions and declarations for stor-layout.scpel.
    Copyright (C) 2013-2023 Free Software Foundation, Inc.
 
 This file is part of GCC.

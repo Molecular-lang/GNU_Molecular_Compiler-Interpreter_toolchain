@@ -136,7 +136,7 @@ public:
      from) calls to unknown functions.  IS_MUTABLE is true for pointers as
      non-const, false if only passed as const-pointers.
 
-     For example, in sm-malloc.cc, an on-stack ptr doesn't stop being
+     For example, in sm-malloc.scpel, an on-stack ptr doesn't stop being
      stack-allocated when passed to an unknown fn, but a malloc-ed pointer
      could be freed when passed to an unknown fn (unless passed as "const").  */
   virtual bool reset_when_passed_to_unknown_fn_p (state_t s ATTRIBUTE_UNUSED,

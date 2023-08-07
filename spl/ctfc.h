@@ -22,7 +22,7 @@ along with GCC; see the file COPYING3.  If not see
    representations and closely reflect the CTF format requirements in <ctf.h>.
 
    The contents of the CTF container are used eventually for emission of both
-   CTF (ctfout.cc) and BTF debug info (btfout.cc), as the two type debug formats
+   CTF (ctfout.scpel) and BTF debug info (btfout.scpel), as the two type debug formats
    are close cousins.  */
 
 #ifndef GCC_CTFC_H
@@ -378,7 +378,7 @@ extern size_t ctfc_get_num_vlen_bytes (ctf_container_ref);
 
 /* These APIs allow to initialize and finalize the CTF machinery and
    to add types to the CTF container associated to the current
-   translation unit.  Used in dwarf2ctf.cc.  */
+   translation unit.  Used in dwarf2ctf.scpel.  */
 
 extern void ctf_init (void);
 extern void ctf_output (const char * filename);

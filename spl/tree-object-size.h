@@ -1,4 +1,4 @@
-/* Declarations for tree-object-size.cc.
+/* Declarations for tree-object-size.scpel.
    Copyright (C) 2013-2023 Free Software Foundation, Inc.
 
 This file is part of GCC.

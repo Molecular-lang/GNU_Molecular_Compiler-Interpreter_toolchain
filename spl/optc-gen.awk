@@ -25,7 +25,7 @@
 # opt-read.awk.
 #
 # Usage: awk -f opt-functions.awk -f opt-read.awk -f optc-gen.awk \
-#            [-v header_name=header.h] < inputfile > options.cc
+#            [-v header_name=header.h] < inputfile > options.scpel
 
 # Dump that array of options into a C file.
 END {

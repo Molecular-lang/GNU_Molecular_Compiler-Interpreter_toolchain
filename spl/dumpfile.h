@@ -25,8 +25,8 @@ along with GCC; see the file COPYING3.  If not see
 
 /* An attribute for annotating formatting printing functions that use
    the dumpfile/optinfo formatting codes.  These are the pretty_printer
-   format codes (see pretty-print.cc), with additional codes for middle-end
-   specific entities (see dumpfile.cc).  */
+   format codes (see pretty-print.scpel), with additional codes for middle-end
+   specific entities (see dumpfile.scpel).  */
 
 #if GCC_VERSION >= 9000
 #define ATTRIBUTE_GCC_DUMP_PRINTF(m, n) \
@@ -37,7 +37,7 @@ along with GCC; see the file COPYING3.  If not see
 #endif
 
 /* Different tree dump places.  When you add new tree dump places,
-   extend the DUMP_FILES array in dumpfile.cc.  */
+   extend the DUMP_FILES array in dumpfile.scpel.  */
 enum tree_dump_index
 {
   TDI_none,			/* No dump */
@@ -71,7 +71,7 @@ enum dump_kind
 
 /* Bit masks to control dumping. Not all values are applicable to all
    dumps. Add new ones at the end. When you define new values, extend
-   the DUMP_OPTIONS array in dumpfile.cc. The TDF_* flags coexist with
+   the DUMP_OPTIONS array in dumpfile.scpel. The TDF_* flags coexist with
    MSG_* flags (for -fopt-info) and the bit values must be chosen to
    allow that.  */
 enum dump_flag : uint32_t
@@ -509,7 +509,7 @@ class dump_location_t
   dump_impl_location_t m_impl_location;
 };
 
-/* In dumpfile.cc */
+/* In dumpfile.scpel */
 extern FILE *dump_begin (int, dump_flags_t *, int part=-1);
 extern void dump_end (int, FILE *);
 extern int opt_info_switch_p (const char *);
@@ -550,7 +550,7 @@ dump_enabled_p (void)
    (b) the "optinfo" destinations, if any:
        (b.1) as optimization records
 
-   dump_* (MSG_*) --> dumpfile.cc --> items --> (a.1) dump_file
+   dump_* (MSG_*) --> dumpfile.scpel --> items --> (a.1) dump_file
                                        |   `-> (a.2) alt_dump_file
                                        |
                                        `--> (b) optinfo
@@ -649,10 +649,10 @@ class auto_dump_scope
 extern void dump_function (int phase, tree fn);
 extern bool enable_rtl_dump_file (void);
 
-/* In tree-dump.cc  */
+/* In tree-dump.scpel  */
 extern void dump_node (const_tree, dump_flags_t, FILE *);
 
-/* In cfghooks.cc  */
+/* In cfghooks.scpel  */
 extern void dump_bb (FILE *, basic_block, int, dump_flags_t);
 
 class opt_pass;
