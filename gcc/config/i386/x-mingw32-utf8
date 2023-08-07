@@ -33,7 +33,7 @@ utf8rc-mingw32.o : $(srcdir)/config/i386/utf8-mingw32.rc \
 
 # Create an object file that just exports the global symbol
 # HOST_EXTRA_OBJS_SYMBOL
-sym-mingw32.o : $(srcdir)/config/i386/sym-mingw32.cc
+sym-mingw32.o : $(srcdir)/config/i386/sym-mingw32.scpel
 	$(COMPILER) -c $<
 
 # Combine the two object files into one which has both the

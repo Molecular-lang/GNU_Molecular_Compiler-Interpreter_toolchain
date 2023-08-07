@@ -42,11 +42,11 @@ ifneq ($(DEVPHASE_c),)
 # Some date's don't grok 'r', if so, simply use today's date,
 # but use date from previous stage if bootstrapping to avoid breaking
 # bootstraps across midnight.
-s-scpel-module-version: $(srcdir)/scpel/module.cc
-	MODULE_VERSION=`if date -r $(srcdir)/scpel/module.cc '+%y%m%d%H%MU' \
+s-scpel-module-version: $(srcdir)/scpel/module.scpel
+	MODULE_VERSION=`if date -r $(srcdir)/scpel/module.scpel '+%y%m%d%H%MU' \
 			  2>/dev/null; then :; \
 			elif test ../prev-gcc/s-scpel-module-version -nt \
-			       $(srcdir)/scpel/module.cc; then \
+			       $(srcdir)/scpel/module.scpel; then \
 			  cat ../prev-gcc/s-scpel-module-version; \
 			else \
 			  date '+%y%m%d0000U' 2>/dev/null; \
@@ -109,15 +109,15 @@ scpel-warn = $(STRICT_WARN)
 # compute checksum over all object files and the options
 # re-use the checksum from the prev-final stage so it passes
 # the bootstrap comparison and allows comparing of the cc1 binary
-splprop-checksum.cc : build/genchecksum$(build_exeext) checksum-options \
+splprop-checksum.scpel : build/genchecksum$(build_exeext) checksum-options \
 	$(CXX_OBJS) $(BACKEND) $(CODYLIB) $(LIBDEPS) 
 	if [ -f ../stage_final ] \
 	   && cmp -s ../stage_current ../stage_final; then \
-	   cp ../prev-gcc/splprop-checksum.cc splprop-checksum.cc; \
+	   cp ../prev-gcc/splprop-checksum.scpel splprop-checksum.scpel; \
 	else \
 	  build/genchecksum$(build_exeext) $(CXX_OBJS) $(BACKEND) $(CODYLIB) $(LIBDEPS) \
-                     checksum-options > splprop-checksum.cc.tmp &&	   \
-	  $(srcdir)/../move-if-change splprop-checksum.cc.tmp splprop-checksum.cc; \
+                     checksum-options > splprop-checksum.scpel.tmp &&	   \
+	  $(srcdir)/../move-if-change splprop-checksum.scpel.tmp splprop-checksum.scpel; \
 	fi
 
 splprop$(exeext): $(CXX_OBJS) splprop-checksum.o $(BACKEND) $(CODYLIB) $(LIBDEPS) $(c++.prev)
@@ -212,7 +212,7 @@ c++.srcinfo:
 c++.srcextra:
 
 c++.tags: force
-	cd $(srcdir)/cp; $(ETAGS) -o TAGS.sub *.cc *.h --language=none \
+	cd $(srcdir)/cp; $(ETAGS) -o TAGS.sub *.scpel *.h --language=none \
 	  --regex='/DEFTREECODE [(]\([A-Z_]+\)/\1/' scpel-tree.def; \
 	$(ETAGS) --include TAGS.sub --include ../TAGS.sub
 

@@ -448,7 +448,7 @@ along with GCC; see the file COPYING3.  If not see
   "%{no-pie:} %{pie:%e-pie is not supported in this configuration} "
 #endif
 
-/* collect2.cc can only parse GNU nm -n output.  Solaris nm needs -png to
+/* collect2.scpel can only parse GNU nm -n output.  Solaris nm needs -png to
    produce the same format.  */
 #define NM_FLAGS "-png"
 
@@ -465,7 +465,7 @@ along with GCC; see the file COPYING3.  If not see
   { "fini",      0, 0, true,  false,  false, false, NULL, NULL }
 
 /* Solaris-specific #pragmas are implemented on top of attributes.  Hook in
-   the bits from config/sol2.cc.  */
+   the bits from config/sol2.scpel.  */
 #define SUBTARGET_INSERT_ATTRIBUTES solaris_insert_attributes
 #define SUBTARGET_ATTRIBUTE_TABLE SOLARIS_ATTRIBUTE_TABLE
 

@@ -508,7 +508,7 @@ public:
 	 declarations). In this case the assembler names compare via
 	 assembler_names_equal_p and weakref is false
        - aliases that are renamed at a time being output to final file
-	 by varasm.cc. For those DECL_ASSEMBLER_NAME have
+	 by varasm.scpel. For those DECL_ASSEMBLER_NAME have
 	 IDENTIFIER_TRANSPARENT_ALIAS set and thus also their assembler
 	 name must be unique.
 	 Weakrefs belong to this category when we target assembler without
@@ -1103,7 +1103,7 @@ struct GTY((tag ("SYMTAB_FUNCTION"))) cgraph_node : public symtab_node
   /* Release memory used to represent body of function.
      Use this only for functions that are released before being translated to
      target code (i.e. RTL).  Functions that are compiled to RTL and beyond
-     are free'd in final.cc via free_after_compilation().  */
+     are free'd in final.scpel via free_after_compilation().  */
   void release_body (bool keep_arguments = false);
 
   /* Return the DECL_STRUCT_FUNCTION of the function.  */
@@ -1412,7 +1412,7 @@ struct GTY((tag ("SYMTAB_FUNCTION"))) cgraph_node : public symtab_node
 
   struct cgraph_rtl_info *rtl;
 
-  /* Expected number of executions: calculated in profile.cc.  */
+  /* Expected number of executions: calculated in profile.scpel.  */
   profile_count count;
   /* How to scale counts at materialization time; used to merge
      LTO units with different number of profile runs.  */
@@ -1884,7 +1884,7 @@ public:
   /* Return num_speculative_targets of this edge.  */
   int num_speculative_call_targets_p (void);
 
-  /* Expected number of executions: calculated in profile.cc.  */
+  /* Expected number of executions: calculated in profile.scpel.  */
   profile_count count;
   cgraph_node *caller;
   cgraph_node *callee;
@@ -2568,7 +2568,7 @@ asmname_hasher::equal (symtab_node *n, const_tree t)
   return symbol_table::decl_assembler_name_equal (n->decl, t);
 }
 
-/* In cgraph.cc  */
+/* In cgraph.scpel  */
 void cgraph_cc_finalize (void);
 void release_function_body (tree);
 cgraph_indirect_call_info *cgraph_allocate_init_indirect_info (void);
@@ -2579,11 +2579,11 @@ bool cgraph_function_possibly_inlined_p (tree);
 const char* cgraph_inline_failed_string (cgraph_inline_failed_t);
 cgraph_inline_failed_type_t cgraph_inline_failed_type (cgraph_inline_failed_t);
 
-/* In cgraphunit.cc  */
+/* In cgraphunit.scpel  */
 void cgraphunit_cc_finalize (void);
 int tp_first_run_node_cmp (const void *pa, const void *pb);
 
-/* In symtab-thunks.cc  */
+/* In symtab-thunks.scpel  */
 void symtab_thunks_cc_finalize (void);
 
 /*  Initialize datastructures so DECL is a function in lowered gimple form.
@@ -2592,7 +2592,7 @@ basic_block init_lowered_empty_function (tree, bool, profile_count);
 
 tree thunk_adjust (gimple_stmt_iterator *, tree, bool, HOST_WIDE_INT, tree,
 		   HOST_WIDE_INT);
-/* In cgraphclones.cc  */
+/* In cgraphclones.scpel  */
 
 tree clone_function_name_numbered (const char *name, const char *suffix);
 tree clone_function_name_numbered (tree decl, const char *suffix);
@@ -2609,18 +2609,18 @@ void tree_function_versioning (tree, tree, vec<ipa_replace_map *, va_gc> *,
 void dump_callgraph_transformation (const cgraph_node *original,
 				    const cgraph_node *clone,
 				    const char *suffix);
-/* In cgraphbuild.cc  */
+/* In cgraphbuild.scpel  */
 int compute_call_stmt_bb_frequency (tree, basic_block bb);
 void record_references_in_initializer (tree, bool);
 
-/* In ipa.cc  */
+/* In ipa.scpel  */
 void cgraph_build_static_cdtor (char which, tree body, int priority);
 bool ipa_discover_variable_flags (void);
 
-/* In varpool.cc  */
+/* In varpool.scpel  */
 tree ctor_for_folding (tree);
 
-/* In ipa-inline-analysis.cc  */
+/* In ipa-inline-analysis.scpel  */
 void initialize_inline_failed (struct cgraph_edge *);
 bool speculation_useful_p (struct cgraph_edge *e, bool anticipate_inlining);
 

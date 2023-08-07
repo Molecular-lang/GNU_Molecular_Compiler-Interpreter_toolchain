@@ -31,10 +31,10 @@ struct lto_file
   off_t offset;
 };
 
-/* In lto-lang.cc  */
+/* In lto-lang.scpel  */
 extern const char *resolution_file_name;
 
-/* In lto.cc  */
+/* In lto.scpel  */
 extern tree lto_eh_personality (void);
 extern void lto_main (void);
 extern void lto_read_all_file_options (void);

@@ -10,7 +10,7 @@ sinclude(../config/ax_lib_socket_nsl.m4)
 
 AC_INIT(scpeltools)
 
-AC_CONFIG_SRCDIR([server.cc])
+AC_CONFIG_SRCDIR([server.scpel])
 
 # Determine the noncanonical names used for directories.
 ACX_NONCANONICAL_TARGET

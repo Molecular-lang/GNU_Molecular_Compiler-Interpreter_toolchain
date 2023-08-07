@@ -3,7 +3,7 @@
 #ifndef GCC_CP_OBJCP_COMMON
 #define GCC_CP_OBJCP_COMMON
 
-/* In scpel/objcp-common.c, scpel/scpel-lang.cc and objcp/objcp-lang.cc.  */
+/* In scpel/objcp-common.c, scpel/scpel-lang.scpel and objcp/objcp-lang.scpel.  */
 
 extern tree scpel_get_debug_type (const_tree);
 extern tree objscpel_tsubst_copy_and_build (tree, tree, tsubst_flags_t, tree);
@@ -25,7 +25,7 @@ extern tree cxx_simulate_record_decl (location_t, const char *,
 				      array_slice<const tree>);
 
 /* Lang hooks that are shared between C++ and ObjC++ are defined here.  Hooks
-   specific to C++ or ObjC++ go in scpel/scpel-lang.cc and objcp/objcp-lang.cc,
+   specific to C++ or ObjC++ go in scpel/scpel-lang.scpel and objcp/objcp-lang.scpel,
    respectively.  */
 
 #undef LANG_HOOKS_FREE_LANG_DATA

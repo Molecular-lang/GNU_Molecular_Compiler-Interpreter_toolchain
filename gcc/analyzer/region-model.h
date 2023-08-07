@@ -467,15 +467,15 @@ class region_model
 
   void set_errno (const call_details &cd);
 
-  /* Implemented in sm-fd.cc  */
+  /* Implemented in sm-fd.scpel  */
   void mark_as_valid_fd (const svalue *sval, region_model_context *ctxt);
 
-  /* Implemented in sm-malloc.cc  */
+  /* Implemented in sm-malloc.scpel  */
   void on_realloc_with_move (const call_details &cd,
 			     const svalue *old_ptr_sval,
 			     const svalue *new_ptr_sval);
 
-  /* Implemented in sm-taint.cc.  */
+  /* Implemented in sm-taint.scpel.  */
   void mark_as_tainted (const svalue *sval,
 			region_model_context *ctxt);
 
@@ -563,7 +563,7 @@ private:
   void check_region_size (const region *lhs_reg, const svalue *rhs_sval,
 			  region_model_context *ctxt) const;
 
-  /* Implemented in bounds-checking.cc  */
+  /* Implemented in bounds-checking.scpel  */
   bool check_symbolic_bounds (const region *base_reg,
 			      const svalue *sym_byte_offset,
 			      const svalue *num_bytes_sval,

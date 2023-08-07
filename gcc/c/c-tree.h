@@ -23,8 +23,8 @@ along with GCC; see the file COPYING3.  If not see
 #include "c-family/c-common.h"
 #include "diagnostic.h"
 
-/* struct lang_identifier is private to c-decl.cc, but langhooks.cc needs to
-   know how big it is.  This is sanity-checked in c-decl.cc.  */
+/* struct lang_identifier is private to c-decl.scpel, but langhooks.scpel needs to
+   know how big it is.  This is sanity-checked in c-decl.scpel.  */
 #define C_SIZEOF_STRUCT_LANG_IDENTIFIER \
   (sizeof (struct c_common_identifier) + 3 * sizeof (void *))
 
@@ -589,14 +589,14 @@ enum c_inline_static_type {
 };
 
 
-/* in c-parser.cc */
+/* in c-parser.scpel */
 extern void c_parse_init (void);
 extern bool c_keyword_starts_typename (enum rid keyword);
 
-/* in c-aux-info.cc */
+/* in c-aux-info.scpel */
 extern void gen_aux_info_record (tree, int, int, int);
 
-/* in c-decl.cc */
+/* in c-decl.scpel */
 struct c_spot_bindings;
 class c_struct_parse_info;
 extern struct obstack parser_obstack;
@@ -713,7 +713,7 @@ extern struct c_declspecs *declspecs_add_alignas (location_t,
 						  struct c_declspecs *, tree);
 extern struct c_declspecs *finish_declspecs (struct c_declspecs *);
 
-/* in c-objc-common.cc */
+/* in c-objc-common.scpel */
 extern bool c_objc_common_init (void);
 extern bool c_missing_noreturn_ok_p (tree);
 extern bool c_warn_unused_global_decl (const_tree);
@@ -721,7 +721,7 @@ extern void c_initialize_diagnostics (diagnostic_context *);
 extern bool c_var_mod_p (tree x, tree fn);
 extern alias_set_type c_get_alias_set (tree);
 
-/* in c-typeck.cc */
+/* in c-typeck.scpel */
 extern int in_alignof;
 extern int in_sizeof;
 extern int in_typeof;
@@ -847,7 +847,7 @@ extern int current_function_returns_null;
 
 extern int current_function_returns_abnormally;
 
-/* In c-decl.cc */
+/* In c-decl.scpel */
 
 /* Tell the binding oracle what kind of binding we are looking for.  */
 
@@ -862,7 +862,7 @@ enum c_oracle_request
    create bindings when needed by the C compiler.  The oracle is told
    the name and type of the binding to create.  It can call pushdecl
    or the like to ensure the binding is visible; or do nothing,
-   leaving the binding untouched.  c-decl.cc takes note of when the
+   leaving the binding untouched.  c-decl.scpel takes note of when the
    oracle has been called and will not call it again if it fails to
    create a given binding.  */
 
@@ -880,7 +880,7 @@ extern void c_pushtag (location_t, tree, tree);
 extern void c_bind (location_t, tree, bool);
 extern bool tag_exists_p (enum tree_code, tree);
 
-/* In c-errors.cc */
+/* In c-errors.scpel */
 extern bool pedwarn_c90 (location_t, int opt, const char *, ...)
     ATTRIBUTE_GCC_DIAG(3,4);
 extern bool pedwarn_c99 (location_t, int opt, const char *, ...)
@@ -896,7 +896,7 @@ extern void
 set_c_expr_source_range (c_expr *expr,
 			 source_range src_range);
 
-/* In c-fold.cc */
+/* In c-fold.scpel */
 extern vec<tree> incomplete_record_decls;
 
 extern const char *c_get_sarif_source_language (const char *filename);

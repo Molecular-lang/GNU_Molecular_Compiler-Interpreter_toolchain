@@ -94,7 +94,7 @@ bool get_nth_most_common_value (gimple *stmt, const char *counter_type,
 				gcov_type *count, gcov_type *all,
 				unsigned n = 0);
 
-/* In tree-profile.cc.  */
+/* In tree-profile.scpel.  */
 extern void gimple_init_gcov_profiler (void);
 extern void gimple_gen_edge_profiler (int, edge);
 extern void gimple_gen_interval_profiler (histogram_value, unsigned);
@@ -110,7 +110,7 @@ extern void stream_in_histogram_value (class lto_input_block *, gimple *);
 extern struct cgraph_node* find_func_by_profile_id (int func_id);
 
 
-/* In profile.cc.  */
+/* In profile.scpel.  */
 extern void init_branch_prob (void);
 extern void branch_prob (bool);
 extern void read_thunk_profile (struct cgraph_node *);

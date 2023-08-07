@@ -122,7 +122,7 @@ struct optab_pattern
   unsigned int m1, m2;
 
   /* An index that provides a lexicographical sort of (OP, M2, M1).
-     Used by genopinit.cc.  */
+     Used by genopinit.scpel.  */
   unsigned int sort_num;
 };
 
@@ -134,7 +134,7 @@ extern bool read_md_rtx (md_rtx_info *);
 extern unsigned int get_num_insn_codes ();
 
 /* Set this to 0 to disable automatic elision of insn patterns which
-   can never be used in this configuration.  See genconditions.cc.
+   can never be used in this configuration.  See genconditions.scpel.
    Must be set before calling init_md_reader.  */
 extern int insn_elision;
 
@@ -149,10 +149,10 @@ extern const char *get_c_test (rtx);
 extern int maybe_eval_c_test (const char *);
 
 /* Add an entry to the table of conditions.  Used by genconditions and
-   by read-rtl.cc.  */
+   by read-rtl.scpel.  */
 extern void add_c_test (const char *, int);
 
-/* This structure is used internally by gensupport.cc and genconditions.cc.  */
+/* This structure is used internally by gensupport.scpel and genconditions.scpel.  */
 struct c_test
 {
   const char *expr;
@@ -173,11 +173,11 @@ struct pred_data
   const char *name;		/* predicate name */
   bool special;			/* special handling of modes? */
 
-  /* data used primarily by genpreds.cc */
+  /* data used primarily by genpreds.scpel */
   const char *c_block;		/* C test block */
   rtx exp;			/* RTL test expression */
 
-  /* data used primarily by genrecog.cc */
+  /* data used primarily by genrecog.scpel */
   enum rtx_code singleton;	/* if pred takes only one code, that code */
   int num_codes;		/* number of codes accepted */
   bool allows_non_lvalue;	/* if pred allows non-lvalue expressions */

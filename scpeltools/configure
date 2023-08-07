@@ -583,7 +583,7 @@ PACKAGE_BUGREPORT=
 PACKAGE_URL=
 
 ac_unique_file="scpeltools"
-ac_unique_file="server.cc"
+ac_unique_file="server.scpel"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>

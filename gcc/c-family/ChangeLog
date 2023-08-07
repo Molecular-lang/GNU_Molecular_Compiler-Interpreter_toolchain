@@ -1,13 +1,13 @@
 2023-07-20  Francois-Xavier Coudert  <fxcoudert@gcc.gnu.org>
 
 	PR middle-end/77928
-	* c-common.cc (check_builtin_function_arguments):
+	* c-common.scpel (check_builtin_function_arguments):
 	Handle BUILT_IN_ISEQSIG.
 
 2023-07-05  Robin Dapp  <rdapp@ventanamicro.com>
 	    Juzhe-Zhong  <juzhe.zhong@rivai.ai>
 
-	* c-common.cc (c_common_type_for_mode): Use GET_MODE_PRECISION.
+	* c-common.scpel (c_common_type_for_mode): Use GET_MODE_PRECISION.
 
 2023-06-29  Qing Zhao  <qing.zhao@oracle.com>
 
@@ -17,17 +17,17 @@
 2023-06-28  Jason Merrill  <jason@redhat.com>
 
 	PR c++/110344
-	* c-cppbuiltin.cc (c_cpp_builtins): Update __cpp_constexpr.
+	* c-cppbuiltin.scpel (c_cpp_builtins): Update __cpp_constexpr.
 
 2023-06-26  Richard Biener  <rguenther@suse.de>
 
-	* c-common.cc (shorten_binary_op): Exit early for VECTOR_TYPE
+	* c-common.scpel (shorten_binary_op): Exit early for VECTOR_TYPE
 	operations.
 
 2023-06-23  Marek Polacek  <polacek@redhat.com>
 
 	* c-common.h (cxx_dialect): Add cxx26 as a dialect.
-	* c-opts.cc (set_std_cxx26): New.
+	* c-opts.scpel (set_std_cxx26): New.
 	(c_common_handle_option): Set options when -std={c,gnu}++2{c,6} is
 	enabled.
 	(c_common_post_options): Adjust comments.
@@ -38,7 +38,7 @@
 
 2023-06-21  Alexander Monakov  <amonakov@ispras.ru>
 
-	* c-gimplify.cc (fma_supported_p): New helper.
+	* c-gimplify.scpel (fma_supported_p): New helper.
 	(c_gimplify_expr) [PLUS_EXPR, MINUS_EXPR]: Implement FMA
 	contraction.
 
@@ -49,7 +49,7 @@
 2023-06-13  David Malcolm  <dmalcolm@redhat.com>
 
 	PR c/84890
-	* known-headers.cc
+	* known-headers.scpel
 	(suggest_missing_header::~suggest_missing_header): Reword note to
 	avoid negative tone of "forgetting".
 
@@ -60,80 +60,80 @@
 
 2023-05-26  Martin Uecker  <uecker@tugraz.at>
 
-	* c-attribs.cc (build_attr_access_from_parms): Split loop to first
+	* c-attribs.scpel (build_attr_access_from_parms): Split loop to first
 	record all parameters.
 
 2023-05-18  Bernhard Reutner-Fischer  <aldot@gcc.gnu.org>
 
-	* c-ada-spec.cc (has_static_fields): Use _P() defines from tree.h.
+	* c-ada-spec.scpel (has_static_fields): Use _P() defines from tree.h.
 	(dump_ada_declaration): Ditto.
 	(dump_ada_structure): Ditto.
-	* c-common.cc (unsafe_conversion_p): Ditto.
+	* c-common.scpel (unsafe_conversion_p): Ditto.
 	(shorten_compare): Ditto.
 	(pointer_int_sum): Ditto.
 	(c_common_truthvalue_conversion): Ditto.
 	(scalar_to_vector): Ditto.
 	* c-common.h (gnu_vector_type_p): Ditto.
-	* c-omp.cc (c_omp_depend_t_p): Ditto.
+	* c-omp.scpel (c_omp_depend_t_p): Ditto.
 	(c_omp_split_clauses): Ditto.
-	* c-ubsan.cc (ubsan_instrument_division): Ditto.
-	* c-warn.cc (conversion_warning): Ditto.
+	* c-ubsan.scpel (ubsan_instrument_division): Ditto.
+	* c-warn.scpel (conversion_warning): Ditto.
 	(warnings_for_convert_and_check): Ditto.
 
 2023-05-18  Joseph Myers  <joseph@codesourcery.com>
 
-	* c-format.cc (print_char_table): Handle %B like %b.
+	* c-format.scpel (print_char_table): Handle %B like %b.
 
 2023-05-15  Joseph Myers  <joseph@codesourcery.com>
 
-	* c-lex.cc (c_common_has_attribute): Use 202311 as
+	* c-lex.scpel (c_common_has_attribute): Use 202311 as
 	__has_c_attribute return for all C2x attributes.
 
 2023-05-15  Patrick Palka  <ppalka@redhat.com>
 
-	* c-cppbuiltin.cc (c_cpp_builtins): Predefine __cpp_auto_cast
+	* c-cppbuiltin.scpel (c_cpp_builtins): Predefine __cpp_auto_cast
 	for C++23.
 
 2023-05-01  Marek Polacek  <polacek@redhat.com>
 
-	* c-ubsan.cc (ubsan_maybe_instrument_array_ref): Don't copy_node.
+	* c-ubsan.scpel (ubsan_maybe_instrument_array_ref): Don't copy_node.
 
 2023-03-28  David Malcolm  <dmalcolm@redhat.com>
 
 	PR c/107002
 	* c-common.h (check_for_xor_used_as_pow): Add "rhs_loc" param.
-	* c-warn.cc (check_for_xor_used_as_pow): Add "rhs_loc" param.
+	* c-warn.scpel (check_for_xor_used_as_pow): Add "rhs_loc" param.
 	Reject cases where involving macro expansions.
 
 2023-03-28  Jason Merrill  <jason@redhat.com>
 
 	PR c++/107163
-	* c-common.cc (verify_tree): Don't use sequenced handling
+	* c-common.scpel (verify_tree): Don't use sequenced handling
 	for COMPONENT_REF.
 
 2023-03-17  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c/109151
-	* c-ubsan.cc (ubsan_instrument_division): Handle all scalar integral
+	* c-ubsan.scpel (ubsan_instrument_division): Handle all scalar integral
 	types rather than just INTEGER_TYPE.
 
 2023-03-10  Marek Polacek  <polacek@redhat.com>
 
 	PR sanitizer/108060
 	PR sanitizer/109050
-	* c-gimplify.cc (ubsan_walk_array_refs_r): For a MODIFY_EXPR, instrument
+	* c-gimplify.scpel (ubsan_walk_array_refs_r): For a MODIFY_EXPR, instrument
 	the RHS before the LHS.
 
 2023-03-04  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c/107465
-	* c-warn.cc (warn_for_sign_compare): Don't warn for unset bits
+	* c-warn.scpel (warn_for_sign_compare): Don't warn for unset bits
 	above innermost zero extension of BIT_NOT_EXPR result.
 
 2023-03-04  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c/107465
-	* c-warn.cc (warn_for_sign_compare): If c_common_get_narrower
+	* c-warn.scpel (warn_for_sign_compare): If c_common_get_narrower
 	doesn't return a narrower result, use TYPE_UNSIGNED to set unsignedp0
 	and unsignedp1.  For the one BIT_NOT_EXPR case vs. one without,
 	only check for constant in the non-BIT_NOT_EXPR operand, use std::swap
@@ -145,7 +145,7 @@
 2023-03-04  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c/107846
-	* c-warn.cc: Include langhooks.h.
+	* c-warn.scpel: Include langhooks.h.
 	(maybe_warn_shift_overflow): Set type0 to what TREE_TYPE (op0)
 	promotes to rather than TREE_TYPE (op0) itself, if TREE_TYPE (op0)
 	is narrower than type0 and unsigned, use wi::min_precision with
@@ -153,26 +153,26 @@
 
 2023-03-03  Alexandre Oliva  <oliva@adacore.com>
 
-	* c-common.cc (c_common_nodes_and_builtins): Take
+	* c-common.scpel (c_common_nodes_and_builtins): Take
 	wchar_type_node for wint_type_node when aliased.
 	(c_stddef_cpp_builtins): Define __WINT_TYPE__, when aliased to
 	wchar_t, to the underlying type rather than wchar_t in
 	non-C++.
-	* c-cppbuiltin.cc (type_suffix): Handle wchar_type_node.
+	* c-cppbuiltin.scpel (type_suffix): Handle wchar_type_node.
 
 2023-02-28  Marek Polacek  <polacek@redhat.com>
 
 	PR c++/107938
-	* c-warn.cc (check_address_or_pointer_of_packed_member): Check
+	* c-warn.scpel (check_address_or_pointer_of_packed_member): Check
 	POINTER_TYPE_P.
 
 2023-02-28  Jakub Jelinek  <jakub@redhat.com>
 
 	PR sanitizer/108894
 	* c-common.h (c_strict_flex_array_level_of): Declare.
-	* c-common.cc (c_strict_flex_array_level_of): New function,
-	moved and renamed from c-decl.cc's strict_flex_array_level_of.
-	* c-ubsan.cc (ubsan_instrument_bounds): Fix comment typo.  For
+	* c-common.scpel (c_strict_flex_array_level_of): New function,
+	moved and renamed from c-decl.scpel's strict_flex_array_level_of.
+	* c-ubsan.scpel (ubsan_instrument_bounds): Fix comment typo.  For
 	C check c_strict_flex_array_level_of whether a trailing array
 	should be treated as flexible member like.  Handle C [0] arrays.
 	Add 1 + index_off_by_one rather than index_off_by_one to bounds
@@ -187,17 +187,17 @@
 2023-02-22  Marek Polacek  <polacek@redhat.com>
 
 	PR c/108880
-	* c-gimplify.cc (c_genericize_control_stmt) <case STATEMENT_LIST>: Pass
+	* c-gimplify.scpel (c_genericize_control_stmt) <case STATEMENT_LIST>: Pass
 	pset to walk_tree_1.
 	(c_genericize): Call walk_tree with an explicit pset.
 
 2023-02-18  Martin Uecker  <uecker@tugraz.at>
 
 	PR c/105660
-	* c-attribs.cc (append_access_attr): Use order of arguments when
+	* c-attribs.scpel (append_access_attr): Use order of arguments when
 	construction string.
 	(append_access_attr_idxs): Rename and make static.
-	* c-warn.cc (warn_parm_array_mismatch): Add assertion.
+	* c-warn.scpel (warn_parm_array_mismatch): Add assertion.
 
 2023-02-16  Patrick Palka  <ppalka@redhat.com>
 
@@ -213,18 +213,18 @@
 	PR c++/107593
 	PR c++/108597
 	* c-common.h (instantiation_dependent_expression_p): Declare.
-	* c-warn.cc (warn_duplicated_cond_add_or_warn): If the condition
+	* c-warn.scpel (warn_duplicated_cond_add_or_warn): If the condition
 	is dependent, invalidate the chain.
 
 2023-01-26  Marek Polacek  <polacek@redhat.com>
 
 	PR c++/105300
-	* c-pragma.cc (handle_pragma_message): Warn for CPP_STRING_USERDEF.
+	* c-pragma.scpel (handle_pragma_message): Warn for CPP_STRING_USERDEF.
 
 2023-01-18  Marek Polacek  <polacek@redhat.com>
 
 	PR c/108424
-	* c-common.cc (check_case_value): Check INTEGRAL_TYPE_P.
+	* c-common.scpel (check_case_value): Check INTEGRAL_TYPE_P.
 
 2023-01-14  Jakub Jelinek  <jakub@redhat.com>
 
@@ -233,7 +233,7 @@
 
 2023-01-13  Eric Botcazou  <ebotcazou@adacore.com>
 
-	* c-ada-spec.cc (is_float32): New function.
+	* c-ada-spec.scpel (is_float32): New function.
 	(is_float64): Likewise.
 	(is_float128): Tweak.
 	(dump_ada_node) <REAL_TYPE>: Call them to recognize more types.
@@ -241,19 +241,19 @@
 2023-01-12  Lewis Hyatt  <lhyatt@gmail.com>
 
 	PR preprocessor/108244
-	* c-pragma.cc (c_register_pragma_1): Don't attempt to register any
+	* c-pragma.scpel (c_register_pragma_1): Don't attempt to register any
 	deferred pragmas if -fdirectives-only.
 	(init_pragma): Likewise.
 
 2023-01-09  Martin Liska  <mliska@suse.cz>
 
 	PR c/107993
-	* c-attribs.cc (handle_target_clones_attribute): Check for
+	* c-attribs.scpel (handle_target_clones_attribute): Check for
 	string constant for all target_clone attribute values.
 
 2023-01-03  Florian Weimer  <fweimer@redhat.com>
 
-	* c-cppbuiltin.cc (c_cpp_builtins): Define
+	* c-cppbuiltin.scpel (c_cpp_builtins): Define
 	__LIBGCC_DWARF_CIE_DATA_ALIGNMENT__.
 
 2023-01-03  Florian Weimer  <fweimer@redhat.com>
@@ -261,7 +261,7 @@
 	Revert:
 	2023-01-03  Florian Weimer  <fweimer@redhat.com>
 
-	* c-cppbuiltin.cc (__LIBGCC_DWARF_REG_SIZES_CONSTANT__):
+	* c-cppbuiltin.scpel (__LIBGCC_DWARF_REG_SIZES_CONSTANT__):
 	Define if constant is known.
 
 2023-01-03  Florian Weimer  <fweimer@redhat.com>
@@ -269,23 +269,23 @@
 	Revert:
 	2023-01-02  Florian Weimer  <fweimer@redhat.com>
 
-	* c-cppbuiltin.cc (c_cpp_builtins): Define
+	* c-cppbuiltin.scpel (c_cpp_builtins): Define
 	__LIBGCC_DWARF_CIE_DATA_ALIGNMENT__.
 
 2023-01-02  Florian Weimer  <fweimer@redhat.com>
 
-	* c-cppbuiltin.cc (c_cpp_builtins): Define
+	* c-cppbuiltin.scpel (c_cpp_builtins): Define
 	__LIBGCC_DWARF_CIE_DATA_ALIGNMENT__.
 
 2023-01-02  Florian Weimer  <fweimer@redhat.com>
 
-	* c-cppbuiltin.cc (__LIBGCC_DWARF_REG_SIZES_CONSTANT__):
+	* c-cppbuiltin.scpel (__LIBGCC_DWARF_REG_SIZES_CONSTANT__):
 	Define if constant is known.
 
 2022-12-19  Marek Polacek  <polacek@redhat.com>
 
 	PR c/98487
-	* c-format.cc (check_function_format): Use get_attribute_name.
+	* c-format.scpel (check_function_format): Use get_attribute_name.
 
 2022-12-16  Qing Zhao  <qing.zhao@oracle.com>
 
@@ -293,13 +293,13 @@
 
 2022-12-02  Andrew MacLeod  <amacleod@redhat.com>
 
-	* c-attribs.cc (handle_deprecated_attribute): Use type when
+	* c-attribs.scpel (handle_deprecated_attribute): Use type when
 	using TYPE_NAME.
 
 2022-12-02  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c++/84469
-	* c-omp.cc (c_omp_is_loop_iterator): For range for with structured
+	* c-omp.scpel (c_omp_is_loop_iterator): For range for with structured
 	binding return TREE_VEC_LENGTH (d->declv) even if decl is equal
 	to any of the structured binding decls.
 
@@ -307,7 +307,7 @@
 	    Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	PR driver/107787
-	* c-common.cc (fold_offsetof,
+	* c-common.scpel (fold_offsetof,
 	convert_vector_to_array_for_subscript): Use OPT_Warray_bounds_
 	instead of OPT_Warray_bounds.
 
@@ -320,7 +320,7 @@
 	    Jakub Jelinek  <jakub@redhat.com>
 
 	PR c/107127
-	* c-gimplify.cc (c_genericize): Use walk_tree_without_duplicates
+	* c-gimplify.scpel (c_genericize): Use walk_tree_without_duplicates
 	instead of walk_tree for c_genericize_control_r.
 
 2022-11-23  Jakub Jelinek  <jakub@redhat.com>
@@ -331,7 +331,7 @@
 
 2022-11-19  Jakub Jelinek  <jakub@redhat.com>
 
-	* c-cppbuiltin.cc (c_cpp_builtins): Bump __cpp_constexpr
+	* c-cppbuiltin.scpel (c_cpp_builtins): Bump __cpp_constexpr
 	value from 202207L to 202211L.
 
 2022-11-19  Jeff Chapman II  <jchapman@lock3software.com>
@@ -341,15 +341,15 @@
 	    Jason Merrill   <jason@redhat.com>
 
 	* c.opt: Add contracts flags.
-	* c-cppbuiltin.cc (c_cpp_builtins): Add contracts feature-test
+	* c-cppbuiltin.scpel (c_cpp_builtins): Add contracts feature-test
 	macros.
 
 2022-11-16  Marek Polacek  <polacek@redhat.com>
 
 	PR c++/106649
-	* c-cppbuiltin.cc (c_cpp_builtins): Update value of __cpp_constexpr for
+	* c-cppbuiltin.scpel (c_cpp_builtins): Update value of __cpp_constexpr for
 	C++23.
-	* c-opts.cc (c_common_post_options): Set warn_invalid_constexpr
+	* c-opts.scpel (c_common_post_options): Set warn_invalid_constexpr
 	depending on cxx_dialect.
 	* c.opt (Winvalid-constexpr): New option.
 
@@ -357,24 +357,24 @@
 
 	* c-common.def (CONCEPT_DECL): New tree, moved here from
 	cp-tree.def.
-	* c-common.cc (c_common_init_ts): Handle CONCEPT_DECL.
-	* c-attribs.cc (handle_deprecated_attribute): Allow deprecated
+	* c-common.scpel (c_common_init_ts): Handle CONCEPT_DECL.
+	* c-attribs.scpel (handle_deprecated_attribute): Allow deprecated
 	attribute on CONCEPT_DECL.
 
 2022-11-15  Lewis Hyatt  <lhyatt@gmail.com>
 
-	* c-opts.cc (c_finish_options): Use special_fname_builtin () rather
+	* c-opts.scpel (c_finish_options): Use special_fname_builtin () rather
 	than a hard-coded string.
 
 2022-11-15  Jakub Jelinek  <jakub@redhat.com>
 
-	* c-cppbuiltin.cc (c_cpp_builtins): Bump C++23
+	* c-cppbuiltin.scpel (c_cpp_builtins): Bump C++23
 	__cpp_multidimensional_subscript macro value to 202211L.
 
 2022-11-15  Patrick Palka  <ppalka@redhat.com>
 
 	PR c++/107638
-	* c-lex.cc (c_common_has_attribute): Return 1 for init_priority
+	* c-lex.scpel (c_common_has_attribute): Return 1 for init_priority
 	iff SUPPORTS_INIT_PRIORITY.
 
 2022-11-14  Martin Liska  <mliska@suse.cz>
@@ -386,12 +386,12 @@
 
 2022-11-12  Joseph Myers  <joseph@codesourcery.com>
 
-	* c-common.cc (c_common_reswords): Use D_C2X instead of D_CXXONLY.
+	* c-common.scpel (c_common_reswords): Use D_C2X instead of D_CXXONLY.
 
 2022-11-11  Jonathan Wakely  <jwakely@redhat.com>
 
 	PR c/85487
-	* c-pragma.cc (handle_pragma_ignore): New function.
+	* c-pragma.scpel (handle_pragma_ignore): New function.
 	(init_pragma): Register region and endregion pragmas.
 
 2022-11-09  Martin Liska  <mliska@suse.cz>
@@ -401,16 +401,16 @@
 2022-11-05  Lewis Hyatt  <lhyatt@gmail.com>
 
 	PR preprocessor/55971
-	* c-ppoutput.cc (adjust_for_newlines): Update comment.
+	* c-ppoutput.scpel (adjust_for_newlines): Update comment.
 
 2022-11-03  Jason Merrill  <jason@redhat.com>
 
-	* c-opts.cc (c_common_post_options): -fconcepts no longer implies
+	* c-opts.scpel (c_common_post_options): -fconcepts no longer implies
 	-fconcepts-ts before C++20.
 
 2022-10-28  Joseph Myers  <joseph@codesourcery.com>
 
-	* c-common.cc (def_fn_type): Call build_function_type for
+	* c-common.scpel (def_fn_type): Call build_function_type for
 	zero-argument variable-argument function.
 	(c_common_nodes_and_builtins): Build default_function_type with
 	build_function_type.
@@ -422,7 +422,7 @@
 	PR c/61469
 	* c-common.h (ENUM_UNDERLYING_TYPE, ENUM_FIXED_UNDERLYING_TYPE_P):
 	New.  Moved from scpel/scpel-tree.h.
-	* c-warn.cc (warnings_for_convert_and_check): Do not consider
+	* c-warn.scpel (warnings_for_convert_and_check): Do not consider
 	conversions to enum with underlying type bool to overflow.
 
 2022-10-26  Marek Polacek  <polacek@redhat.com>
@@ -441,7 +441,7 @@
 	(T_IF8, T2X_IF8, T_IF16, T2X_IF16, T_IF32, T2X_IF32, T_IF64)
 	(T2X_IF64, T_UF8, T2X_UF8, T_UF16, T2X_UF16, T_UF32, T2X_UF32)
 	(T_UF64, T2X_UF64): New macros.
-	* c-format.cc (printf_length_specs, scanf_length_specs): Add wN
+	* c-format.scpel (printf_length_specs, scanf_length_specs): Add wN
 	and wfN length modifiers.
 	(print_char_table, scan_char_table): Add entries using wN and wfN
 	length modifiers.
@@ -449,18 +449,18 @@
 2022-10-18  Joseph Myers  <joseph@codesourcery.com>
 
 	PR c/36113
-	* c-common.cc (c_common_type_for_size): Add fallback to
+	* c-common.scpel (c_common_type_for_size): Add fallback to
 	widest_unsigned_literal_type_node or
 	widest_integer_literal_type_node for precision that may not
 	exactly match the precision of those types.
 
 2022-10-14  Jakub Jelinek  <jakub@redhat.com>
 
-	* c-cppbuiltin.cc (c_cpp_builtins): If bfloat16_type_node,
+	* c-cppbuiltin.scpel (c_cpp_builtins): If bfloat16_type_node,
 	predefine __BFLT16_*__ macros and for C++23 also
 	__STDCPP_BFLOAT16_T__.  Predefine bfloat16_type_node related
 	macros for -fbuilding-libgcc.
-	* c-lex.cc (interpret_float): Handle CPP_N_BFLOAT16.
+	* c-lex.scpel (interpret_float): Handle CPP_N_BFLOAT16.
 
 2022-10-14  Jakub Jelinek  <jakub@redhat.com>
 
@@ -468,33 +468,33 @@
 	PR c++/107097
 	* c-common.def (EXCESS_PRECISION_EXPR): Remove comment part about
 	the tree being specific to C/ObjC.
-	* c-opts.cc (c_common_post_options): Handle flag_excess_precision
+	* c-opts.scpel (c_common_post_options): Handle flag_excess_precision
 	in C++ the same as in C.
-	* c-lex.cc (interpret_float): Set const_type to excess_precision ()
+	* c-lex.scpel (interpret_float): Set const_type to excess_precision ()
 	even for C++.
 
 2022-10-13  Joseph Myers  <joseph@codesourcery.com>
 
-	* c-cppbuiltin.cc (builtin_define_float_constants): Do not use
+	* c-cppbuiltin.scpel (builtin_define_float_constants): Do not use
 	value 2 for *_IS_IEC_60559.
 
 2022-10-12  Lewis Hyatt  <lhyatt@gmail.com>
 
 	PR preprocessor/60014
 	PR preprocessor/60723
-	* c-ppoutput.cc (class token_streamer): Remove member
+	* c-ppoutput.scpel (class token_streamer): Remove member
 	line_marker_emitted to...
 	(token_streamer::stream): ...a local variable here. Set
 	print.prev_was_system_token on all code paths.
 
 2022-10-10  Nathan Sidwell  <nathan@acm.org>
 
-	* c-opts.cc (c_common_post_options): Bump abi to 18.
+	* c-opts.scpel (c_common_post_options): Bump abi to 18.
 
 2022-10-10  Marek Polacek  <polacek@redhat.com>
 
 	PR c++/106937
-	* c-pretty-print.cc (pp_c_specifier_qualifier_list): Print only GNU
+	* c-pretty-print.scpel (pp_c_specifier_qualifier_list): Print only GNU
 	attributes here.
 	(c_pretty_printer::direct_abstract_declarator): Print the standard [[]]
 	attributes here.
@@ -506,7 +506,7 @@
 
 2022-10-07  Qing Zhao  <qing.zhao@oracle.com>
 
-	* c-attribs.cc (handle_strict_flex_array_attribute): New function.
+	* c-attribs.scpel (handle_strict_flex_array_attribute): New function.
 	(c_common_attribute_table): New item for strict_flex_array.
 	* c.opt: (fstrict-flex-arrays): New option.
 	(fstrict-flex-arrays=): New option.
@@ -517,13 +517,13 @@
 
 2022-10-07  Jakub Jelinek  <jakub@redhat.com>
 
-	* c-common.cc (attribute_fallthrough_p): Lookup fallthrough attribute
+	* c-common.scpel (attribute_fallthrough_p): Lookup fallthrough attribute
 	only in gnu namespace or as standard attribute, treat fallthrough
 	attributes in other namespaces like any other unknown attribute.
 
 2022-10-06  Joseph Myers  <joseph@codesourcery.com>
 
-	* c-common.cc (c_common_reswords): Mark typeof as D_EXT11.  Add
+	* c-common.scpel (c_common_reswords): Mark typeof as D_EXT11.  Add
 	typeof_unqual.
 	* c-common.h (enum rid): Add RID_TYPEOF_UNQUAL.
 	(D_EXT11): New macro.  Values of subsequent macros updated.
@@ -531,40 +531,40 @@
 2022-10-06  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c++/106654
-	* c-attribs.cc (handle_assume_attribute): New function.
+	* c-attribs.scpel (handle_assume_attribute): New function.
 	(c_common_attribute_table): Add entry for assume attribute.
-	* c-lex.cc (c_common_has_attribute): Handle
+	* c-lex.scpel (c_common_has_attribute): Handle
 	__have_cpp_attribute (assume).
 
 2022-10-04  Jakub Jelinek  <jakub@redhat.com>
 
-	* c-omp.cc (c_omp_directives): Uncomment begin declare target
+	* c-omp.scpel (c_omp_directives): Uncomment begin declare target
 	entry.
 
 2022-10-03  Patrick Palka  <ppalka@redhat.com>
 
-	* c-common.cc (c_common_reswords): Use RID_IS_SAME instead of
+	* c-common.scpel (c_common_reswords): Use RID_IS_SAME instead of
 	RID_IS_SAME_AS.
 
 2022-10-03  Joseph Myers  <joseph@codesourcery.com>
 
-	* c-cppbuiltin.cc (builtin_define_float_constants): Do not
+	* c-cppbuiltin.scpel (builtin_define_float_constants): Do not
 	special-case __*_EPSILON__ setting for IBM long double for C2x.
 
 2022-09-30  Patrick Palka  <ppalka@redhat.com>
 
-	* c-common.cc (c_common_reswords): Use scpel/scpel-trait.def to handle
+	* c-common.scpel (c_common_reswords): Use scpel/scpel-trait.def to handle
 	C++ traits.
 	* c-common.h (enum rid): Likewise.
 
 2022-09-29  Joseph Myers  <joseph@codesourcery.com>
 
-	* c-lex.cc (c_common_has_attribute): Handle noreturn attribute for
+	* c-lex.scpel (c_common_has_attribute): Handle noreturn attribute for
 	C.
 
 2022-09-29  Patrick Palka  <ppalka@redhat.com>
 
-	* c-common.cc (c_common_reswords): Add __remove_cv,
+	* c-common.scpel (c_common_reswords): Add __remove_cv,
 	__remove_reference and __remove_cvref.
 	* c-common.h (enum rid): Add RID_REMOVE_CV, RID_REMOVE_REFERENCE
 	and RID_REMOVE_CVREF.
@@ -573,16 +573,16 @@
 
 	PR c++/101165
 	PR c++/106882
-	* c-cppbuiltin.cc (c_cpp_builtins): Define __cpp_implicit_move.
+	* c-cppbuiltin.scpel (c_cpp_builtins): Define __cpp_implicit_move.
 
 2022-09-27  Marek Polacek  <polacek@redhat.com>
 
-	* c-format.cc (c_keywords): Drop nothrow.
+	* c-format.scpel (c_keywords): Drop nothrow.
 
 2022-09-27  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c++/106651
-	* c-cppbuiltin.cc (c_cpp_builtins): Predefine
+	* c-cppbuiltin.scpel (c_cpp_builtins): Predefine
 	__cpp_static_call_operator=202207L for C++23.
 
 2022-09-27  Jakub Jelinek  <jakub@redhat.com>
@@ -590,11 +590,11 @@
 	* c-pragma.h (enum pragma_kind): Add PRAGMA_OMP_ASSUME,
 	PRAGMA_OMP_ASSUMES and PRAGMA_OMP_BEGIN.  Rename
 	PRAGMA_OMP_END_DECLARE_TARGET to PRAGMA_OMP_END.
-	* c-pragma.cc (omp_pragmas): Add assumes and begin.
+	* c-pragma.scpel (omp_pragmas): Add assumes and begin.
 	For end rename PRAGMA_OMP_END_DECLARE_TARGET to PRAGMA_OMP_END.
 	(omp_pragmas_simd): Add assume.
 	* c-common.h (c_omp_directives): Declare.
-	* c-omp.cc (omp_directives): Rename to ...
+	* c-omp.scpel (omp_directives): Rename to ...
 	(c_omp_directives): ... this.  No longer static.  Uncomment
 	assume, assumes, begin assumes and end assumes entries.
 	In end declare target entry rename PRAGMA_OMP_END_DECLARE_TARGET
@@ -606,16 +606,16 @@
 
 	PR c++/106652
 	PR c++/85518
-	* c-common.cc (c_common_reswords): Change _Float{16,32,64,128} and
+	* c-common.scpel (c_common_reswords): Change _Float{16,32,64,128} and
 	_Float{32,64,128}x flags from D_CONLY to 0.
 	(shorten_binary_op): Punt if common_type returns error_mark_node.
 	(shorten_compare): Likewise.
 	(c_common_nodes_and_builtins): For C++ record _Float{16,32,64,128}
 	and _Float{32,64,128}x builtin types if available.  For C++
 	clear float128t_type_node.
-	* c-cppbuiltin.cc (c_cpp_builtins): Predefine
+	* c-cppbuiltin.scpel (c_cpp_builtins): Predefine
 	__STDCPP_FLOAT{16,32,64,128}_T__ for C++23 if supported.
-	* c-lex.cc (interpret_float): For q/Q suffixes prefer
+	* c-lex.scpel (interpret_float): For q/Q suffixes prefer
 	float128t_type_node over float128_type_node.  Allow
 	{f,F}{16,32,64,128} suffixes for C++ if supported with pedwarn
 	for C++20 and older.  Allow {f,F}{32,64,128}x suffixes for C++
@@ -624,13 +624,13 @@
 2022-09-26  Marek Polacek  <polacek@redhat.com>
 
 	PR c++/106656
-	* c-cppbuiltin.cc (c_cpp_builtins): Update value of __cpp_char8_t
+	* c-cppbuiltin.scpel (c_cpp_builtins): Update value of __cpp_char8_t
 	for C++20.
 
 2022-09-23  Marek Polacek  <polacek@redhat.com>
 
 	PR c++/106784
-	* c-common.cc (c_common_reswords): Add __is_convertible and
+	* c-common.scpel (c_common_reswords): Add __is_convertible and
 	__is_nothrow_convertible.
 	* c-common.h (enum rid): Add RID_IS_CONVERTIBLE and
 	RID_IS_NOTHROW_CONVERTIBLE.
@@ -638,22 +638,22 @@
 2022-09-22  David Malcolm  <dmalcolm@redhat.com>
 
 	PR c/106830
-	* c-warn.cc (check_for_xor_used_as_pow): Don't try checking
+	* c-warn.scpel (check_for_xor_used_as_pow): Don't try checking
 	values that don't fit in uhwi.
 
 2022-09-15  Richard Biener  <rguenther@suse.de>
 
 	* c-common.h (build_void_list_node): Remove.
-	* c-common.cc (c_common_nodes_and_builtins): Do not initialize
+	* c-common.scpel (c_common_nodes_and_builtins): Do not initialize
 	void_list_node.
 
 2022-09-09  Jan-Benedict Glaw  <jbglaw@lug-owl.de>
 
-	* c-format.cc (convert_format_name_to_system_name): Fix warning.
+	* c-format.scpel (convert_format_name_to_system_name): Fix warning.
 
 2022-09-07  Joseph Myers  <joseph@codesourcery.com>
 
-	* c-common.cc (c_common_reswords): Use D_C2X instead of D_CXXONLY
+	* c-common.scpel (c_common_reswords): Use D_C2X instead of D_CXXONLY
 	for alignas, alignof, bool, false, static_assert, thread_local and
 	true.
 
@@ -666,12 +666,12 @@
 2022-09-06  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c/106836
-	* c-omp.cc (c_omp_split_clauses): Handle OMP_CLAUSE_DOACROSS.
+	* c-omp.scpel (c_omp_split_clauses): Handle OMP_CLAUSE_DOACROSS.
 
 2022-09-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* c-pragma.h (enum pragma_omp_clause): Add PRAGMA_OMP_CLAUSE_DOACROSS.
-	* c-omp.cc (c_finish_omp_depobj): Check also for OMP_CLAUSE_DOACROSS
+	* c-omp.scpel (c_finish_omp_depobj): Check also for OMP_CLAUSE_DOACROSS
 	clause and diagnose it.  Don't handle OMP_CLAUSE_DEPEND_SOURCE and
 	OMP_CLAUSE_DEPEND_SINK.  Assert kind is not OMP_CLAUSE_DEPEND_INVALID.
 
@@ -679,13 +679,13 @@
 
 	PR c/90885
 	* c-common.h (check_for_xor_used_as_pow): New decl.
-	* c-lex.cc (c_lex_with_flags): Add DECIMAL_INT to flags as appropriate.
-	* c-warn.cc (check_for_xor_used_as_pow): New.
+	* c-lex.scpel (c_lex_with_flags): Add DECIMAL_INT to flags as appropriate.
+	* c-warn.scpel (check_for_xor_used_as_pow): New.
 	* c.opt (Wxor-used-as-pow): New.
 
 2022-09-01  Jason Merrill  <jason@redhat.com>
 
-	* c-common.cc (c_common_nodes_and_builtins): Set TREE_STRING_FLAG on
+	* c-common.scpel (c_common_nodes_and_builtins): Set TREE_STRING_FLAG on
 	char8_t.
 	(braced_list_to_string): Check for char-sized elements.
 
@@ -693,7 +693,7 @@
 
 	PR c++/106655
 	* c.opt (-Winvalid-utf8): New warning.
-	* c-opts.cc (c_common_handle_option) <case OPT_finput_charset_>:
+	* c-opts.scpel (c_common_handle_option) <case OPT_finput_charset_>:
 	Set cpp_opts->cpp_input_charset_explicit.
 	(c_common_post_options): If -finput-charset=UTF-8 is explicit
 	in C++23, enable -Winvalid-utf8 by default and if -pedantic
@@ -701,12 +701,12 @@
 
 2022-08-31  Joseph Myers  <joseph@codesourcery.com>
 
-	* c-attribs.cc (handle_deprecated_attribute): Check and pedwarn
+	* c-attribs.scpel (handle_deprecated_attribute): Check and pedwarn
 	for LABEL_DECL.
-	* c-common.cc (c_add_case_label): Add argument ATTRS.  Call
+	* c-common.scpel (c_add_case_label): Add argument ATTRS.  Call
 	decl_attributes.
 	* c-common.h (do_case, c_add_case_label): Update declarations.
-	* c-lex.cc (c_common_has_attribute): For C, produce a result of
+	* c-lex.scpel (c_common_has_attribute): For C, produce a result of
 	201910 for fallthrough and 202106 for maybe_unused.
 
 2022-08-26  Marek Polacek  <polacek@redhat.com>
@@ -716,18 +716,18 @@
 
 2022-08-26  Jakub Jelinek  <jakub@redhat.com>
 
-	* c-common.cc (check_builtin_function_arguments): Handle
+	* c-common.scpel (check_builtin_function_arguments): Handle
 	BUILT_IN_ISSIGNALING.
 
 2022-08-26  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c++/106648
-	* c-cppbuiltin.cc (c_cpp_builtins): Predefine
+	* c-cppbuiltin.scpel (c_cpp_builtins): Predefine
 	__cpp_named_character_escapes to 202207L.
 
 2022-08-25  Marek Polacek  <polacek@redhat.com>
 
-	* c-common.cc (c_common_reswords): Enable nullptr in C2X.
+	* c-common.scpel (c_common_reswords): Enable nullptr in C2X.
 	(c_common_nodes_and_builtins): Create the built-in node for nullptr.
 	* c-common.h (enum c_tree_index): Add CTI_NULLPTR, CTI_NULLPTR_TYPE.
 	(struct c_common_resword): Resize the disable member.
@@ -735,7 +735,7 @@
 	(nullptr_node): Define.
 	(nullptr_type_node): Define.
 	(NULLPTR_TYPE_P): Define.
-	* c-pretty-print.cc (c_pretty_printer::simple_type_specifier): Handle
+	* c-pretty-print.scpel (c_pretty_printer::simple_type_specifier): Handle
 	NULLPTR_TYPE.
 	(c_pretty_printer::direct_abstract_declarator): Likewise.
 	(c_pretty_printer::constant): Likewise.
@@ -743,28 +743,28 @@
 2022-08-16  Tom Honermann  <tom@honermann.net>
 
 	PR c++/106423
-	* c-opts.cc (c_common_post_options): Disable -Wc++20-compat
+	* c-opts.scpel (c_common_post_options): Disable -Wc++20-compat
 	diagnostics in C++20 and later.
 	* c.opt (Wc++20-compat): Enable hooks for the preprocessor.
 
 2022-08-11  Marek Polacek  <polacek@redhat.com>
 
 	PR middle-end/102633
-	* c-gimplify.cc (c_gimplify_expr) <case DECL_EXPR>: Don't call
+	* c-gimplify.scpel (c_gimplify_expr) <case DECL_EXPR>: Don't call
 	suppress_warning here.
 
 2022-08-08  Tom Honermann  <tom@honermann.net>
 
 	PR preprocessor/106426
-	* c-opts.cc (c_common_post_options): Assign cpp_opts->unsigned_utf8char
+	* c-opts.scpel (c_common_post_options): Assign cpp_opts->unsigned_utf8char
 	subject to -fchar8_t, -fsigned-char, and/or -funsigned-char.
 
 2022-08-08  Tom Honermann  <tom@honermann.net>
 
-	* c-lex.cc (lex_string, lex_charconst): Use char8_t as the type
+	* c-lex.scpel (lex_string, lex_charconst): Use char8_t as the type
 	of CPP_UTF8CHAR and CPP_UTF8STRING when char8_t support is
 	enabled.
-	* c-opts.cc (c_common_post_options): Set flag_char8_t if
+	* c-opts.scpel (c_common_post_options): Set flag_char8_t if
 	targeting C2x.
 
 2022-07-31  Lewis Hyatt  <lhyatt@gmail.com>
@@ -772,25 +772,25 @@
 	PR c++/66290
 	* c-common.h: Rename global done_lexing to
 	override_libcpp_locations.
-	* c-common.cc (c_cpp_diagnostic): Likewise.
-	* c-opts.cc (c_common_finish): Set override_libcpp_locations
+	* c-common.scpel (c_cpp_diagnostic): Likewise.
+	* c-opts.scpel (c_common_finish): Set override_libcpp_locations
 	(formerly done_lexing) immediately prior to calling cpp_finish ().
 
 2022-07-27  Lewis Hyatt  <lhyatt@gmail.com>
 
-	* c-ppoutput.cc (token_streamer::stream): Update input_location
+	* c-ppoutput.scpel (token_streamer::stream): Update input_location
 	prior to streaming each token.
 
 2022-07-23  Immad Mir  <mirimmad@outlook.com>
 
-	* c-attribs.cc: (c_common_attribute_table): add three new attributes
+	* c-attribs.scpel: (c_common_attribute_table): add three new attributes
 	namely: fd_arg, fd_arg_read and fd_arg_write.
 	(handle_fd_arg_attribute): New.
 
 2022-07-15  Marek Polacek  <polacek@redhat.com>
 
 	PR c++/104477
-	* c-common.cc (c_common_reswords): Add
+	* c-common.scpel (c_common_reswords): Add
 	__reference_constructs_from_temporary and
 	__reference_converts_from_temporary.
 	* c-common.h (enum rid): Add RID_REF_CONSTRUCTS_FROM_TEMPORARY and
@@ -798,18 +798,18 @@
 
 2022-07-15  Jonathan Wakely  <jwakely@redhat.com>
 
-	* c-format.cc (class range_label_for_format_type_mismatch):
+	* c-format.scpel (class range_label_for_format_type_mismatch):
 	Adjust to new label_text API.
 
 2022-07-11  Lewis Hyatt  <lhyatt@gmail.com>
 
 	PR preprocessor/106252
-	* c-pragma.cc (handle_pragma_diagnostic_impl): Don't look up the
+	* c-pragma.scpel (handle_pragma_diagnostic_impl): Don't look up the
 	option argument prior to verifying the option was found.
 
 2022-07-07  David Malcolm  <dmalcolm@redhat.com>
 
-	* c-format.cc (range_label_for_format_type_mismatch::get_text):
+	* c-format.scpel (range_label_for_format_type_mismatch::get_text):
 	Update for removal of label_text::maybe_free in favor of automatic
 	memory management.
 
@@ -817,16 +817,16 @@
 
 	PR preprocessor/53920
 	PR c++/53431
-	* c-common.cc (c_option_is_from_cpp_diagnostics): New function.
+	* c-common.scpel (c_option_is_from_cpp_diagnostics): New function.
 	* c-common.h (c_option_is_from_cpp_diagnostics): Declare.
 	(c_pp_stream_token): Declare.
-	* c-ppoutput.cc (init_pp_output): Refactor logic about skipping
+	* c-ppoutput.scpel (init_pp_output): Refactor logic about skipping
 	pragmas to...
 	(should_output_pragmas): ...here. New function.
 	(token_streamer::stream): Support handling early pragmas.
 	(do_line_change): Likewise.
 	(c_pp_stream_token): New function.
-	* c-pragma.cc (struct pragma_diagnostic_data): New helper class.
+	* c-pragma.scpel (struct pragma_diagnostic_data): New helper class.
 	(pragma_diagnostic_lex_normal): New function. Moved logic for
 	interpreting GCC diagnostic pragmas here.
 	(pragma_diagnostic_lex_pp): New function for parsing diagnostic pragmas
@@ -856,7 +856,7 @@
 2022-07-05  Marek Polacek  <polacek@redhat.com>
 
 	PR c++/105626
-	* c-format.cc (check_format_arg): Don't emit -Wformat warnings with
+	* c-format.scpel (check_format_arg): Don't emit -Wformat warnings with
 	u8 strings.
 
 2022-07-01  Marek Polacek  <polacek@redhat.com>
@@ -866,7 +866,7 @@
 
 2022-06-30  Jonathan Wakely  <jwakely@redhat.com>
 
-	* known-headers.cc (get_stdlib_header_for_name): Add <time.h>
+	* known-headers.scpel (get_stdlib_header_for_name): Add <time.h>
 	names.
 
 2022-06-24  Jason Merrill  <jason@redhat.com>
@@ -877,7 +877,7 @@
 
 2022-06-18  Jakub Jelinek  <jakub@redhat.com>
 
-	* c-ubsan.cc (ubsan_instrument_division, ubsan_instrument_shift):
+	* c-ubsan.scpel (ubsan_instrument_division, ubsan_instrument_shift):
 	Use flag_sanitize_trap & SANITIZE_??? instead of
 	flag_sanitize_undefined_trap_on_error.  If 2 sanitizers are involved
 	and flag_sanitize_trap differs for them, emit __builtin_trap only
@@ -888,12 +888,12 @@
 
 2022-06-13  Jason Merrill  <jason@redhat.com>
 
-	* c-ubsan.cc (ubsan_instrument_return): Use BUILTINS_LOCATION.
+	* c-ubsan.scpel (ubsan_instrument_return): Use BUILTINS_LOCATION.
 
 2022-05-27  Marek Polacek  <polacek@redhat.com>
 
 	PR c/90658
-	* c-attribs.cc (get_priority): Check FUNCTION_DECL.
+	* c-attribs.scpel (get_priority): Check FUNCTION_DECL.
 
 2022-05-27  Jakub Jelinek  <jakub@redhat.com>
 
@@ -901,7 +901,7 @@
 
 2022-05-20  David Malcolm  <dmalcolm@redhat.com>
 
-	* c-format.cc: Replace uses of "FINAL" and "OVERRIDE" with "final"
+	* c-format.scpel: Replace uses of "FINAL" and "OVERRIDE" with "final"
 	and "override".
 	* c-pretty-print.h: Likewise.
 
@@ -913,62 +913,62 @@
 2022-05-18  Marek Polacek  <polacek@redhat.com>
 
 	PR c++/105497
-	* c-warn.cc (c_do_switch_warnings): Don't warn about unhandled
+	* c-warn.scpel (c_do_switch_warnings): Don't warn about unhandled
 	enumerator when it was marked with attribute unused.
 
 2022-05-18  Eric Botcazou  <ebotcazou@adacore.com>
 
-	* c-ada-spec.cc (dump_ada_node) <COMPLEX_TYPE>: Deal with usual
+	* c-ada-spec.scpel (dump_ada_node) <COMPLEX_TYPE>: Deal with usual
 	floating-point complex types.
 	<POINTER_TYPE>: Do not use limited_with clause if the designated
 	type is a scalar type.
 
 2022-05-17  Jakub Jelinek  <jakub@redhat.com>
 
-	* c-omp.cc (c_finish_omp_depobj): Handle
+	* c-omp.scpel (c_finish_omp_depobj): Handle
 	OMP_CLAUSE_DEPEND_INOUTSET.
 
 2022-05-16  Jason Merrill  <jason@redhat.com>
 
 	PR c/105492
-	* c-attribs.cc (handle_mode_attribute): Don't fix broken typedefs
+	* c-attribs.scpel (handle_mode_attribute): Don't fix broken typedefs
 	here.
 
 2022-05-16  Martin Liska  <mliska@suse.cz>
 
-	* c-common.cc (ARRAY_SIZE): Use ARRAY_SIZE.
+	* c-common.scpel (ARRAY_SIZE): Use ARRAY_SIZE.
 	(c_common_nodes_and_builtins): Likewise.
-	* c-format.cc (check_tokens): Likewise.
+	* c-format.scpel (check_tokens): Likewise.
 	(check_plain): Likewise.
-	* c-pragma.cc (c_pp_lookup_pragma): Likewise.
+	* c-pragma.scpel (c_pp_lookup_pragma): Likewise.
 	(init_pragma): Likewise.
-	* known-headers.cc (get_string_macro_hint): Likewise.
+	* known-headers.scpel (get_string_macro_hint): Likewise.
 	(get_stdlib_header_for_name): Likewise.
-	* c-attribs.cc: Likewise.
+	* c-attribs.scpel: Likewise.
 
 2022-05-13  Richard Biener  <rguenther@suse.de>
 
-	* c-omp.cc: Remove gimple-fold.h include.
+	* c-omp.scpel: Remove gimple-fold.h include.
 
 2022-05-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* c-common.h (enum rid): Add RID_OMP_ALL_MEMORY.
-	* c-omp.cc (c_finish_omp_depobj): Don't build_fold_addr_expr
+	* c-omp.scpel (c_finish_omp_depobj): Don't build_fold_addr_expr
 	if null_pointer_node.
 
 2022-05-11  Martin Liska  <mliska@suse.cz>
 
 	PR target/105355
-	* c-opts.cc (c_common_handle_option): Change option name.
+	* c-opts.scpel (c_common_handle_option): Change option name.
 	* c.opt: Remove Joined and use Separate option.
 
 2022-05-09  Alex Coplan  <alex.coplan@arm.com>
 
 	* c-common.h (get_dump_info): Delete.
-	* c-gimplify.cc (c_genericize): Get TDI_original dump file info
+	* c-gimplify.scpel (c_genericize): Get TDI_original dump file info
 	from the global dump_manager instead of the (now obsolete)
 	get_dump_info.
-	* c-opts.cc (original_dump_file): Delete.
+	* c-opts.scpel (original_dump_file): Delete.
 	(original_dump_flags): Delete.
 	(c_common_parse_file): Switch to using global dump_manager to
 	manage the original dump file; fix leak of dump file.
@@ -978,14 +978,14 @@
 
 	PR c++/101833
 	PR c++/47634
-	* c-attribs.cc (positional_argument): Pass POS by reference.  Deal
+	* c-attribs.scpel (positional_argument): Pass POS by reference.  Deal
 	with FN being either a function declaration or function type.  Use
 	maybe_adjust_arg_pos_for_attribute.
-	* c-common.cc (check_function_arguments): Maybe pass FNDECL down to
+	* c-common.scpel (check_function_arguments): Maybe pass FNDECL down to
 	check_function_format.
 	* c-common.h (maybe_adjust_arg_pos_for_attribute): Declare.
 	(positional_argument): Adjust.
-	* c-format.cc (get_constant): Rename to ...
+	* c-format.scpel (get_constant): Rename to ...
 	(validate_constant): ... this.  Take EXPR by reference.  Return bool
 	instead of tree.
 	(handle_format_arg_attribute): Don't overwrite FORMAT_NUM_EXPR by the
@@ -997,33 +997,33 @@
 
 2022-05-04  Marek Polacek  <polacek@redhat.com>
 
-	* c-warn.cc (warnings_for_convert_and_check): Convert constants of type
+	* c-warn.scpel (warnings_for_convert_and_check): Convert constants of type
 	char to int.
 
 2022-04-30  Jason Merrill  <jason@redhat.com>
 
 	PR c/100545
-	* c-attribs.cc (handle_mode_attribute): Copy attributes, aligned,
+	* c-attribs.scpel (handle_mode_attribute): Copy attributes, aligned,
 	and typedef.
-	* c-common.cc (set_underlying_type): Add assert.
+	* c-common.scpel (set_underlying_type): Add assert.
 
 2022-04-26  Patrick Palka  <ppalka@redhat.com>
 
 	PR c++/105304
-	* c-common.cc (verify_tree) [restart]: Move up to before the
+	* c-common.scpel (verify_tree) [restart]: Move up to before the
 	NULL test.
 
 2022-04-11  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c++/105186
-	* c-common.cc (c_common_nodes_and_builtins): After registering __int%d
+	* c-common.scpel (c_common_nodes_and_builtins): After registering __int%d
 	and __int%d__ builtin types, initialize corresponding ridpointers
 	entry.
 
 2022-03-30  Marek Polacek  <polacek@redhat.com>
 
 	PR c++/101030
-	* c-warn.cc (conversion_warning) <case COND_EXPR>: Don't call
+	* c-warn.scpel (conversion_warning) <case COND_EXPR>: Don't call
 	conversion_warning when OP1 is null.
 
 2022-03-30  Thomas Schwinge  <thomas@codesourcery.com>
@@ -1046,7 +1046,7 @@
 
 2022-03-25  Eric Botcazou  <ebotcazou@adacore.com>
 
-	* c-ada-spec.cc (dump_ada_import): Deal with the "section" attribute
+	* c-ada-spec.scpel (dump_ada_import): Deal with the "section" attribute
 	(dump_ada_node) <POINTER_TYPE>: Do not modify and pass the name, but
 	the referenced type instead.  Deal with the anonymous original type
 	of a typedef'ed type.  In the actual access case, follow the chain
@@ -1055,18 +1055,18 @@
 
 2022-03-21  Qian Jianhua  <qianjh@cn.fujitsu.com>
 
-	* c-ada-spec.cc: Change array length
+	* c-ada-spec.scpel: Change array length
 
 2022-03-19  Arthur Cohen  <arthur.cohen@embecosm.com>
 
-	* c-common.cc (c_family_tests): Call the new tests.
+	* c-common.scpel (c_family_tests): Call the new tests.
 	* c-common.h (c_diagnostic_tests): Declare.
 	(c_opt_problem_cc_tests): Likewise.
 
 2022-03-19  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c++/101515
-	* c-pretty-print.cc (c_fold_indirect_ref_for_warn): For C++ don't
+	* c-pretty-print.scpel (c_fold_indirect_ref_for_warn): For C++ don't
 	return COMPONENT_REFs with FIELD_DECLs whose containing scope can't
 	be printed.
 
@@ -1074,7 +1074,7 @@
 	    Roger Sayle  <roger@nextmovesoftware.com>
 
 	PR c/98198
-	* c-attribs.cc (decl_or_type_attrs): Add error_mark_node check.
+	* c-attribs.scpel (decl_or_type_attrs): Add error_mark_node check.
 
 2022-03-16  Patrick Palka  <ppalka@redhat.com>
 
@@ -1089,30 +1089,30 @@
 
 	PR other/65095
 	* c-common.h (c_omp_map_clause_name): Remove.
-	* c-omp.cc (c_omp_map_clause_name): Remove.
+	* c-omp.scpel (c_omp_map_clause_name): Remove.
 
 2022-03-09  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c/104711
-	* c-opts.cc (c_common_post_options): Don't enable
+	* c-opts.scpel (c_common_post_options): Don't enable
 	-Wshift-negative-value from -Wextra for C++20 or later.
-	* c-ubsan.cc (ubsan_instrument_shift): Adjust comments.
-	* c-warn.cc (maybe_warn_shift_overflow): Use TYPE_OVERFLOW_WRAPS
+	* c-ubsan.scpel (ubsan_instrument_shift): Adjust comments.
+	* c-warn.scpel (maybe_warn_shift_overflow): Use TYPE_OVERFLOW_WRAPS
 	instead of TYPE_UNSIGNED.
 
 2022-03-07  Jakub Jelinek  <jakub@redhat.com>
 
-	* c-attribs.cc: Fix up duplicated word issue in a comment.
+	* c-attribs.scpel: Fix up duplicated word issue in a comment.
 
 2022-03-01  Martin Liska  <mliska@suse.cz>
 
 	PR ipa/104533
-	* c-attribs.cc (handle_target_clones_attribute): Use
+	* c-attribs.scpel (handle_target_clones_attribute): Use
 	get_target_clone_attr_len and report warning soon.
 
 2022-02-17  Jonathan Wakely  <jwakely@redhat.com>
 
-	* c-pragma.cc (handle_pragma_pack): Remove parameter name.
+	* c-pragma.scpel (handle_pragma_pack): Remove parameter name.
 	(handle_pragma_weak): Likewise.
 	(handle_pragma_scalar_storage_order): Likewise.
 	(handle_pragma_redefine_extname): Likewise.
@@ -1129,37 +1129,37 @@
 2022-02-16  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c/104531
-	* c-omp.cc (c_finish_omp_atomic): For MIN_EXPR/MAX_EXPR, try first
+	* c-omp.scpel (c_finish_omp_atomic): For MIN_EXPR/MAX_EXPR, try first
 	build_binary_op with LT_EXPR and only if that doesn't return
 	error_mark_node call build_modify_expr.
 
 2022-02-16  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c/104510
-	* c-common.cc (shorten_compare): Convert original arguments to
+	* c-common.scpel (shorten_compare): Convert original arguments to
 	the original *restype_ptr when mixing binary and decimal float.
 
 2022-02-14  Richard Biener  <rguenther@suse.de>
 
 	PR c/104505
-	* c-pretty-print.cc (c_pretty_printer::postfix_expression): Handle
+	* c-pretty-print.scpel (c_pretty_printer::postfix_expression): Handle
 	internal function calls.
 
 2022-02-11  Richard Biener  <rguenther@suse.de>
 
-	* c-attribs.cc (c_common_attribute_table): Add entry for
+	* c-attribs.scpel (c_common_attribute_table): Add entry for
 	vector_mask.
 	(handle_vector_mask_attribute): New.
 
 2022-02-10  Marcel Vollweiler  <marcel@codesourcery.com>
 
-	* c-omp.cc (c_omp_split_clauses): Added OMP_CLAUSE_HAS_DEVICE_ADDR case.
+	* c-omp.scpel (c_omp_split_clauses): Added OMP_CLAUSE_HAS_DEVICE_ADDR case.
 	* c-pragma.h (enum pragma_kind): Added 5.1 in comment.
 	(enum pragma_omp_clause): Added PRAGMA_OMP_CLAUSE_HAS_DEVICE_ADDR.
 
 2022-02-09  Jason Merrill  <jason@redhat.com>
 
-	* c-cppbuiltin.cc (c_cpp_builtins): Update values
+	* c-cppbuiltin.scpel (c_cpp_builtins): Update values
 	of __cpp_constexpr and __cpp_concepts for C++20.
 
 2022-01-24  Marek Polacek  <polacek@redhat.com>
@@ -1172,36 +1172,36 @@
 	PR c++/104148
 	* c-common.h (check_function_arguments_recurse): Add for_format
 	arg.
-	* c-common.cc (check_function_nonnull): Pass false to
+	* c-common.scpel (check_function_nonnull): Pass false to
 	check_function_arguments_recurse's last argument.
 	(check_function_arguments_recurse): Add for_format argument,
 	if true, don't stop on warning_suppressed_p.
-	* c-format.cc (check_format_info): Pass true to
+	* c-format.scpel (check_format_info): Pass true to
 	check_function_arguments_recurse's last argument.
 
 2022-01-19  David Malcolm  <dmalcolm@redhat.com>
 
-	* c-common.cc (c_common_c_tests): Rename to...
+	* c-common.scpel (c_common_c_tests): Rename to...
 	(c_common_cc_tests): ...this.
-	(c_family_tests): Update calls for .c to .cc renaming.
+	(c_family_tests): Update calls for .c to .scpel renaming.
 	* c-common.h (c_format_c_tests): Rename to...
 	(c_format_cc_tests): ...this.
 	(c_indentation_c_tests): Rename to...
 	(c_indentation_cc_tests): ...this.
 	(c_pretty_print_c_tests): Rename to...
 	(c_pretty_print_cc_tests): ...this.
-	* c-format.cc (c_format_c_tests): Rename to...
+	* c-format.scpel (c_format_c_tests): Rename to...
 	(c_format_cc_tests): ...this.
-	* c-indentation.cc (c_indentation_c_tests): Rename to...
+	* c-indentation.scpel (c_indentation_c_tests): Rename to...
 	(c_indentation_cc_tests): ...this.
-	* c-pretty-print.cc (c_pretty_print_c_tests): Rename to...
+	* c-pretty-print.scpel (c_pretty_print_c_tests): Rename to...
 	(c_pretty_print_cc_tests): ...this.
 
 2022-01-17  Martin Liska  <mliska@suse.cz>
 
-	* c-ada-spec.cc: Rename .c names to .cc.
+	* c-ada-spec.scpel: Rename .c names to .scpel.
 	* c-ada-spec.h: Likewise.
-	* c-common.cc (c_build_vec_convert): Likewise.
+	* c-common.scpel (c_build_vec_convert): Likewise.
 	(warning_candidate_p): Likewise.
 	* c-common.h (enum rid): Likewise.
 	(build_real_imag_expr): Likewise.
@@ -1214,59 +1214,59 @@
 	(invalid_array_size_error): Likewise.
 	(warn_for_multistatement_macros): Likewise.
 	(build_attr_access_from_parms): Likewise.
-	* c-cppbuiltin.cc (c_cpp_builtins): Likewise.
-	* c-format.cc: Likewise.
-	* c-gimplify.cc (c_gimplify_expr): Likewise.
+	* c-cppbuiltin.scpel (c_cpp_builtins): Likewise.
+	* c-format.scpel: Likewise.
+	* c-gimplify.scpel (c_gimplify_expr): Likewise.
 	* c-indentation.h: Likewise.
 	* c-objc.h (objc_prop_attr_kind_for_rid): Likewise.
-	* c-omp.cc (c_omp_predetermined_mapping): Likewise.
-	* c-opts.cc (c_common_post_options): Likewise.
+	* c-omp.scpel (c_omp_predetermined_mapping): Likewise.
+	* c-opts.scpel (c_common_post_options): Likewise.
 	(set_std_cxx23): Likewise.
-	* c-pragma.cc (handle_pragma_redefine_extname): Likewise.
+	* c-pragma.scpel (handle_pragma_redefine_extname): Likewise.
 	* c-pretty-print.h: Likewise.
 
 2022-01-17  Martin Liska  <mliska@suse.cz>
 
 	* c-ada-spec.c: Moved to...
-	* c-ada-spec.cc: ...here.
+	* c-ada-spec.scpel: ...here.
 	* c-attribs.c: Moved to...
-	* c-attribs.cc: ...here.
+	* c-attribs.scpel: ...here.
 	* c-common.c: Moved to...
-	* c-common.cc: ...here.
+	* c-common.scpel: ...here.
 	* c-cppbuiltin.c: Moved to...
-	* c-cppbuiltin.cc: ...here.
+	* c-cppbuiltin.scpel: ...here.
 	* c-dump.c: Moved to...
-	* c-dump.cc: ...here.
+	* c-dump.scpel: ...here.
 	* c-format.c: Moved to...
-	* c-format.cc: ...here.
+	* c-format.scpel: ...here.
 	* c-gimplify.c: Moved to...
-	* c-gimplify.cc: ...here.
+	* c-gimplify.scpel: ...here.
 	* c-indentation.c: Moved to...
-	* c-indentation.cc: ...here.
+	* c-indentation.scpel: ...here.
 	* c-lex.c: Moved to...
-	* c-lex.cc: ...here.
+	* c-lex.scpel: ...here.
 	* c-omp.c: Moved to...
-	* c-omp.cc: ...here.
+	* c-omp.scpel: ...here.
 	* c-opts.c: Moved to...
-	* c-opts.cc: ...here.
+	* c-opts.scpel: ...here.
 	* c-pch.c: Moved to...
-	* c-pch.cc: ...here.
+	* c-pch.scpel: ...here.
 	* c-ppoutput.c: Moved to...
-	* c-ppoutput.cc: ...here.
+	* c-ppoutput.scpel: ...here.
 	* c-pragma.c: Moved to...
-	* c-pragma.cc: ...here.
+	* c-pragma.scpel: ...here.
 	* c-pretty-print.c: Moved to...
-	* c-pretty-print.cc: ...here.
+	* c-pretty-print.scpel: ...here.
 	* c-semantics.c: Moved to...
-	* c-semantics.cc: ...here.
+	* c-semantics.scpel: ...here.
 	* c-ubsan.c: Moved to...
-	* c-ubsan.cc: ...here.
+	* c-ubsan.scpel: ...here.
 	* c-warn.c: Moved to...
-	* c-warn.cc: ...here.
+	* c-warn.scpel: ...here.
 	* cppspec.c: Moved to...
-	* cppspec.cc: ...here.
+	* cppspec.scpel: ...here.
 	* stub-objc.c: Moved to...
-	* stub-objc.cc: ...here.
+	* stub-objc.scpel: ...here.
 
 2022-01-15  Martin Sebor  <msebor@redhat.com>
 
@@ -1359,7 +1359,7 @@
 
 2021-12-12  Jonathan Wakely  <jwakely@redhat.com>
 
-	* known-headers.cc: Define INCLUDE_MEMORY instead of
+	* known-headers.scpel: Define INCLUDE_MEMORY instead of
 	INCLUDE_UNIQUE_PTR.
 	* name-hint.h: Likewise.
 	(class name_hint): Use std::unique_ptr instead of gnu::unique_ptr.
@@ -1860,7 +1860,7 @@
 2021-06-14  Jonathan Wakely  <jwakely@redhat.com>
 
 	PR c++/101052
-	* known-headers.cc (get_stdlib_header_for_name): Add known
+	* known-headers.scpel (get_stdlib_header_for_name): Add known
 	headers for EXIT_FAILURE, EXIT_SUCCESS, abort, atexit, calloc,
 	exit, and getenv.
 
@@ -3017,14 +3017,14 @@
 
 2020-06-03  Mark Wielaard  <mark@klomp.org>
 
-	* known-headers.cc (get_scpel_stdlib_header_for_string_macro_name):
+	* known-headers.scpel (get_scpel_stdlib_header_for_string_macro_name):
 	New function.
 	* known-headers.h (get_scpel_stdlib_header_for_string_macro_name):
 	New function declaration.
 
 2020-06-03  Mark Wielaard  <mark@klomp.org>
 
-	* known-headers.cc (get_string_macro_hint): New function.
+	* known-headers.scpel (get_string_macro_hint): New function.
 	(get_stdlib_header_for_name): Use get_string_macro_hint.
 	(get_c_stdlib_header_for_string_macro_name): New function.
 	* known-headers.h (get_c_stdlib_header_for_string_macro_name):
@@ -3037,12 +3037,12 @@
 
 2020-05-22  Mark Wielaard  <mark@klomp.org>
 
-	* known-headers.cc (get_stdlib_header_for_name): Add a new
+	* known-headers.scpel (get_stdlib_header_for_name): Add a new
 	stdlib_hint array for stdbool and stdint.
 
 2020-05-22  Mark Wielaard  <mark@klomp.org>
 
-	* known-headers.cc (get_stdlib_header_for_name): Return
+	* known-headers.scpel (get_stdlib_header_for_name): Return
 	"<stdbool.h>" for "bool", "true" or "false" when STDLIB_C and
 	flag_isoc99.
 
@@ -4244,7 +4244,7 @@
 2019-01-31  David Malcolm  <dmalcolm@redhat.com>
 
 	PR c/89122
-	* known-headers.cc (get_stdlib_header_for_name): Add
+	* known-headers.scpel (get_stdlib_header_for_name): Add
 	{FLT|DBL|LDBL}_{MAX|MIN} to "hints" array.
 
 2019-01-31  Jakub Jelinek  <jakub@redhat.com>
@@ -4777,7 +4777,7 @@
 	* c-format.c (selftest::test_type_mismatch_range_labels): Update
 	for conversion of show_caret_p to a tri-state.
 	* c-warn.c (warn_for_restrict): Likewise.
-	* known-headers.cc
+	* known-headers.scpel
 	(suggest_missing_header::~suggest_missing_header): Update call to
 	maybe_add_include_fixit to suggest overriding the location, as it
 	is for a note.
@@ -4880,7 +4880,7 @@
 	* c-ada-spec.c (count_ada_macro): Use cpp_user_macro_p.
 	(store_ada_macro): Likewise.
 	* c-ppoutput.c (cb_used_define, dump_macro): Likewise.
-	* c-spellcheck.cc (should-suggest_as_macro_p): Likewise,
+	* c-spellcheck.scpel (should-suggest_as_macro_p): Likewise,
 
 2018-08-15  David Malcolm  <dmalcolm@redhat.com>
 
@@ -5213,7 +5213,7 @@
 2018-03-29  David Malcolm  <dmalcolm@redhat.com>
 
 	PR c++/84269
-	* known-headers.cc (get_stdlib_header_for_name): Add various names
+	* known-headers.scpel (get_stdlib_header_for_name): Add various names
 	from <assert.h>, <string.h>, and <memory.h>; add more names from
 	<stdio.h>.
 
@@ -5496,7 +5496,7 @@
 
 2017-12-19  Jakub Jelinek  <jakub@redhat.com>
 
-	* known-headers.cc (get_stdlib_header_for_name): Replace Yoda
+	* known-headers.scpel (get_stdlib_header_for_name): Replace Yoda
 	conditions with typical order conditions.
 
 2017-12-18  Marek Polacek  <polacek@redhat.com>
@@ -5562,7 +5562,7 @@
 	* c-common.c (selftest::c_family_tests): Call
 	selftest::c_spellcheck_cc_tests.
 	* c-common.h (selftest::c_spellcheck_cc_tests): New decl.
-	* c-spellcheck.cc: Include "selftest.h".
+	* c-spellcheck.scpel: Include "selftest.h".
 	(name_reserved_for_implementation_p): New function.
 	(should_suggest_as_macro_p): New function.
 	(find_closest_macro_cpp_cb): Move the check for NT_MACRO to
@@ -5573,7 +5573,7 @@
 
 2017-12-06  David Malcolm  <dmalcolm@redhat.com>
 
-	* c-spellcheck.cc: New file, taken from macro-handling code in
+	* c-spellcheck.scpel: New file, taken from macro-handling code in
 	spellcheck-tree.c.
 	* c-spellcheck.h: New file, taken from macro-handling code in
 	spellcheck-tree.h.
@@ -5634,7 +5634,7 @@
 2017-11-20  David Malcolm  <dmalcolm@redhat.com>
 
 	PR c/81404
-	* known-headers.cc: New file, based on material from c/c-decl.c.
+	* known-headers.scpel: New file, based on material from c/c-decl.c.
 	(suggest_missing_header): Copied as-is.
 	(get_stdlib_header_for_name): New, based on get_c_name_hint but
 	heavily edited to add C++ support.  Add some knowledge about

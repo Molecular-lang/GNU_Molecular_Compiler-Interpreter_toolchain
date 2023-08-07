@@ -1335,7 +1335,7 @@ do {									\
 }
 
 /* If defined, C string expressions to be used for the `%R', `%L', `%U', and
-   `%I' options of `asm_fprintf' (see `final.cc').  */
+   `%I' options of `asm_fprintf' (see `final.scpel').  */
 
 #define REGISTER_PREFIX ""
 #define LOCAL_LABEL_PREFIX "."

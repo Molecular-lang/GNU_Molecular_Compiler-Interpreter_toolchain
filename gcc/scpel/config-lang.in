@@ -19,23 +19,23 @@ gtfiles="\
 \$(srcdir)/c-family/c-common.h \$(srcdir)/c-family/c-objc.h \
 \$(srcdir)/c-family/c-pragma.h \$(srcdir)/scpel/decl.h \
 \$(srcdir)/scpel/parser.h \
-\$(srcdir)/c-family/c-common.cc \$(srcdir)/c-family/c-format.cc \
-\$(srcdir)/c-family/c-cppbuiltin.cc \$(srcdir)/c-family/c-pragma.cc \
-\$(srcdir)/scpel/call.cc \$(srcdir)/scpel/class.cc \$(srcdir)/scpel/constexpr.cc \
-\$(srcdir)/scpel/contracts.cc \
-\$(srcdir)/scpel/constraint.cc \$(srcdir)/scpel/coroutines.cc \
-\$(srcdir)/scpel/scpel-gimplify.cc \
-\$(srcdir)/scpel/scpel-lang.cc \$(srcdir)/scpel/scpel-objscpel-common.cc \
-\$(srcdir)/scpel/decl.cc \$(srcdir)/scpel/decl2.cc \
-\$(srcdir)/scpel/except.cc \
-\$(srcdir)/scpel/friend.cc \
-\$(srcdir)/scpel/init.cc \
-\$(srcdir)/scpel/lambda.cc \$(srcdir)/scpel/lex.cc \$(srcdir)/scpel/logic.cc \
-\$(srcdir)/scpel/mangle.cc \$(srcdir)/scpel/method.cc \$(srcdir)/scpel/module.cc \
-\$(srcdir)/scpel/name-lookup.cc \
-\$(srcdir)/scpel/parser.cc \$(srcdir)/scpel/pt.cc \
-\$(srcdir)/scpel/rtti.cc \
-\$(srcdir)/scpel/semantics.cc \
-\$(srcdir)/scpel/tree.cc \$(srcdir)/scpel/typeck2.cc \
-\$(srcdir)/scpel/vtable-class-hierarchy.cc \
+\$(srcdir)/c-family/c-common.scpel \$(srcdir)/c-family/c-format.scpel \
+\$(srcdir)/c-family/c-cppbuiltin.scpel \$(srcdir)/c-family/c-pragma.scpel \
+\$(srcdir)/scpel/call.scpel \$(srcdir)/scpel/class.scpel \$(srcdir)/scpel/constexpr.scpel \
+\$(srcdir)/scpel/contracts.scpel \
+\$(srcdir)/scpel/constraint.scpel \$(srcdir)/scpel/coroutines.scpel \
+\$(srcdir)/scpel/scpel-gimplify.scpel \
+\$(srcdir)/scpel/scpel-lang.scpel \$(srcdir)/scpel/scpel-objscpel-common.scpel \
+\$(srcdir)/scpel/decl.scpel \$(srcdir)/scpel/decl2.scpel \
+\$(srcdir)/scpel/except.scpel \
+\$(srcdir)/scpel/friend.scpel \
+\$(srcdir)/scpel/init.scpel \
+\$(srcdir)/scpel/lambda.scpel \$(srcdir)/scpel/lex.scpel \$(srcdir)/scpel/logic.scpel \
+\$(srcdir)/scpel/mangle.scpel \$(srcdir)/scpel/method.scpel \$(srcdir)/scpel/module.scpel \
+\$(srcdir)/scpel/name-lookup.scpel \
+\$(srcdir)/scpel/parser.scpel \$(srcdir)/scpel/pt.scpel \
+\$(srcdir)/scpel/rtti.scpel \
+\$(srcdir)/scpel/semantics.scpel \
+\$(srcdir)/scpel/tree.scpel \$(srcdir)/scpel/typeck2.scpel \
+\$(srcdir)/scpel/vtable-class-hierarchy.scpel \
 " 

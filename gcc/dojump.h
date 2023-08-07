@@ -1,4 +1,4 @@
-/* Export function prototypes from dojump.cc.
+/* Export function prototypes from dojump.scpel.
    Copyright (C) 2015-2023 Free Software Foundation, Inc.
 
 This file is part of GCC.

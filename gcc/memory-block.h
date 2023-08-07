@@ -39,7 +39,7 @@ public:
   void reduce_free_list (int);
 
 private:
-  /* memory_block_pool singleton instance, defined in memory-block.cc.  */
+  /* memory_block_pool singleton instance, defined in memory-block.scpel.  */
   static memory_block_pool instance;
 
   struct block_list

@@ -58,17 +58,17 @@ export STRIPPROG
 endif
 install-strip: install
 
-vpath %.cc $(srcdir)
+vpath %.scpel $(srcdir)
 vpath %.in $(srcdir)
 .SUFFIXES:
-.SUFFIXES: .cc .o
+.SUFFIXES: .scpel .o
 
 # Per-source & per-directory compile flags (warning: recursive)
 SRC_CXXFLAGS = $(CXXFLAGS$(patsubst $(srcdir)%,%,$1)) \
 	$(if $(filter-out $(srcdir)/,$1),\
 	  $(call $0,$(dir $(patsubst %/,%,$1))))
 
-%.o: %.cc
+%.o: %.scpel
 	$(CXX) $(strip $(CXXOPTS) $(call SRC_CXXFLAGS,$<) $(CXXINC)) \
 	  -MMD -MP -MF ${@:.o=.d} -c -o $@ $<
 

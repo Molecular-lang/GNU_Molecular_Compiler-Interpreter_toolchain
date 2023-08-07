@@ -1,4 +1,4 @@
-/* An overview of the state machine from sm-file.cc.
+/* An overview of the state machine from sm-file.scpel.
    Copyright (C) 2022-2023 Free Software Foundation, Inc.
    Contributed by David Malcolm <dmalcolm@redhat.com>.
 
@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with GCC; see the file COPYING3.  If not see
 <http://www.gnu.org/licenses/>.  */
 
-/* Keep this in-sync with sm-file.cc  */
+/* Keep this in-sync with sm-file.scpel  */
 
 digraph "file" {
 

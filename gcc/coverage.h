@@ -1,4 +1,4 @@
-/* coverage.h - Defines data exported from coverage.cc
+/* coverage.h - Defines data exported from coverage.scpel
    Copyright (C) 1998-2023 Free Software Foundation, Inc.
 
 This file is part of GCC.

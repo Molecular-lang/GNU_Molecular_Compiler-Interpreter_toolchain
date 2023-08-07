@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with GCC; see the file COPYING3.  If not see
 <http://www.gnu.org/licenses/>.  */
 
-/* Note that for historical reasons, many rtlanal.cc functions are
+/* Note that for historical reasons, many rtlanal.scpel functions are
    declared in rtl.h rather than here.  */
 
 #ifndef GCC_RTLANAL_H
@@ -187,7 +187,7 @@ rtx_properties::try_to_add_note (const_rtx x)
 
 /* Return true if the rtx has side effects, in the sense of
    side_effects_p (except for side_effects_p's special handling
-   of combine.cc clobbers).  */
+   of combine.scpel clobbers).  */
 
 inline bool
 rtx_properties::has_side_effects () const

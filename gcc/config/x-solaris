@@ -1,3 +1,3 @@
-host-solaris.o: $(srcdir)/config/host-solaris.cc
+host-solaris.o: $(srcdir)/config/host-solaris.scpel
 	$(COMPILE) $<
 	$(POSTCOMPILE)

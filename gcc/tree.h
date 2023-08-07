@@ -2452,13 +2452,13 @@ extern tree vector_element_bits_tree (const_tree);
    hooks are responsible for consistently using only a specific
    macro.  */
 
-/* Symtab field as an integer.  Used by stabs generator in dbxout.cc to
+/* Symtab field as an integer.  Used by stabs generator in dbxout.scpel to
    hold the type's number in the generated stabs.  */
 #define TYPE_SYMTAB_ADDRESS(NODE) \
   (TYPE_CHECK (NODE)->type_common.symtab.address)
 
 /* Symtab field as a pointer to a DWARF DIE.  Used by DWARF generator
-   in dwarf2out.cc to point to the DIE generated for the type.  */
+   in dwarf2out.scpel to point to the DIE generated for the type.  */
 #define TYPE_SYMTAB_DIE(NODE) \
   (TYPE_CHECK (NODE)->type_common.symtab.die)
 
@@ -4914,7 +4914,7 @@ poly_int_tree_p (const_tree t, poly_uint64_pod *value)
   return false;
 }
 
-/* From expmed.cc.  Since rtl.h is included after tree.h, we can't
+/* From expmed.scpel.  Since rtl.h is included after tree.h, we can't
    put the prototype here.  Rtl.h does declare the prototype if
    tree.h had been included.  */
 
@@ -5392,7 +5392,7 @@ inlined_function_outer_scope_p (const_tree block)
        (TREE = function_args_iter_cond (&(ITER))) != NULL_TREE;		\
        function_args_iter_next (&(ITER)))
 
-/* In tree.cc */
+/* In tree.scpel */
 extern unsigned crc32_unsigned_n (unsigned, unsigned, unsigned);
 extern unsigned crc32_string (unsigned, const char *);
 inline unsigned
@@ -5699,7 +5699,7 @@ tree_code_for_canonical_type_merging (enum tree_code code)
 /* Return ture if get_alias_set care about TYPE_CANONICAL of given type.
    We don't define the types for pointers, arrays and vectors.  The reason is
    that pointers are handled specially: ptr_type_node accesses conflict with
-   accesses to all other pointers.  This is done by alias.cc.
+   accesses to all other pointers.  This is done by alias.scpel.
    Because alias sets of arrays and vectors are the same as types of their
    elements, we can't compute canonical type either.  Otherwise we could go
    form void *[10] to int *[10] (because they are equivalent for canonical type

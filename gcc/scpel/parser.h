@@ -420,7 +420,7 @@ struct GTY(()) scpel_parser {
 
 };
 
-/* In parser.cc  */
+/* In parser.scpel  */
 extern void debug (scpel_token &ref);
 extern void debug (scpel_token *ptr);
 extern void scpel_lexer_debug_tokens (vec<scpel_token, va_gc> *);

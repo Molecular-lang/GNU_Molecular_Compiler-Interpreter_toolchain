@@ -79,7 +79,7 @@ along with GCC; see the file COPYING3.  If not see
                         put out in a post order traversial of the
                         tree.  Siblings are output as lists terminated
 			by a 0.  The set of fields matches the fields
-			defined in except.cc.
+			defined in except.scpel.
 
      last_basic_block - in uleb128 form.
 
@@ -203,7 +203,7 @@ enum LTO_tags
    own section type to store its summary information.
 
    When adding a new section type, you must also extend the
-   LTO_SECTION_NAME array in lto-section-in.cc.  */
+   LTO_SECTION_NAME array in lto-section-in.scpel.  */
 enum lto_section_type
 {
   LTO_section_decls = 0,
@@ -765,7 +765,7 @@ public:
 };
 
 
-/* In lto-section-in.cc  */
+/* In lto-section-in.scpel  */
 extern class lto_input_block * lto_create_simple_input_block (
 			       struct lto_file_decl_data *,
 			       enum lto_section_type, const char **, size_t *);
@@ -810,7 +810,7 @@ extern void lto_value_range_error (const char *,
 				   HOST_WIDE_INT, HOST_WIDE_INT,
 				   HOST_WIDE_INT) ATTRIBUTE_NORETURN;
 
-/* In lto-section-out.cc  */
+/* In lto-section-out.scpel  */
 extern void lto_begin_section (const char *, bool);
 extern void lto_end_section (void);
 extern void lto_write_data (const void *, unsigned int);
@@ -829,7 +829,7 @@ extern void lto_record_function_out_decl_state (tree,
 extern void lto_append_block (struct lto_output_stream *);
 
 
-/* In lto-streamer.cc.  */
+/* In lto-streamer.scpel.  */
 
 /* Set when streaming LTO for offloading compiler.  */
 extern bool lto_stream_offload_p;
@@ -843,7 +843,7 @@ extern bool gate_lto_out (void);
 extern void lto_check_version (int, int, const char *);
 extern void lto_streamer_hooks_init (void);
 
-/* In lto-streamer-in.cc */
+/* In lto-streamer-in.scpel */
 extern void lto_input_cgraph (struct lto_file_decl_data *, const char *);
 extern void lto_reader_init (void);
 extern void lto_free_file_name_hash (void);
@@ -875,7 +875,7 @@ tree lto_input_tree (class lto_input_block *, class data_in *);
 tree stream_read_tree_ref (class lto_input_block *, class data_in *);
 
 
-/* In lto-streamer-out.cc  */
+/* In lto-streamer-out.scpel  */
 extern void lto_register_decl_definition (tree, struct lto_file_decl_data *);
 extern struct output_block *create_output_block (enum lto_section_type);
 extern void destroy_output_block (struct output_block *);
@@ -904,7 +904,7 @@ void lto_output_init_mode_table (void);
 void lto_prepare_function_for_streaming (cgraph_node *);
 
 
-/* In lto-cgraph.cc  */
+/* In lto-cgraph.scpel  */
 extern bool asm_nodes_output;
 lto_symtab_encoder_t lto_symtab_encoder_new (bool);
 int lto_symtab_encoder_encode (lto_symtab_encoder_t, symtab_node *);
@@ -934,13 +934,13 @@ bool reachable_from_this_partition_p (struct cgraph_node *,
 lto_symtab_encoder_t compute_ltrans_boundary (lto_symtab_encoder_t encoder);
 void select_what_to_stream (void);
 
-/* In omp-general.cc.  */
+/* In omp-general.scpel.  */
 void omp_lto_output_declare_variant_alt (lto_simple_output_block *,
 					 cgraph_node *, lto_symtab_encoder_t);
 void omp_lto_input_declare_variant_alt (lto_input_block *, cgraph_node *,
 					vec<symtab_node *>);
 
-/* In options-save.cc.  */
+/* In options-save.scpel.  */
 void cl_target_option_stream_out (struct output_block *, struct bitpack_d *,
 				  struct cl_target_option *);
 
@@ -956,7 +956,7 @@ void cl_optimization_stream_in (class data_in *,
 
 
 
-/* In lto-opts.cc.  */
+/* In lto-opts.scpel.  */
 extern void lto_write_options (void);
 
 

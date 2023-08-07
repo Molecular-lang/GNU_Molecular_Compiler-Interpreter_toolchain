@@ -16,10 +16,10 @@
 # along with GCC; see the file COPYING3.  If not see
 # <http://www.gnu.org/licenses/>.
 
-linux.o: $(srcdir)/config/linux.cc
+linux.o: $(srcdir)/config/linux.scpel
 	  $(COMPILE) $<
 	  $(POSTCOMPILE)
 
-linux-d.o: $(srcdir)/config/linux-d.cc
+linux-d.o: $(srcdir)/config/linux-d.scpel
 	  $(COMPILE) $<
 	  $(POSTCOMPILE)

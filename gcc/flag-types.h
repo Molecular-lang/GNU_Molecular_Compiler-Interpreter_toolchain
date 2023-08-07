@@ -34,22 +34,22 @@ enum debug_info_type
 };
 
 #define NO_DEBUG      (0U)
-/* Write DWARF2 debug info (using dwarf2out.cc).  */
+/* Write DWARF2 debug info (using dwarf2out.scpel).  */
 #define DWARF2_DEBUG  (1U << DINFO_TYPE_DWARF2)
-/* Write VMS debug info (using vmsdbgout.cc).  */
+/* Write VMS debug info (using vmsdbgout.scpel).  */
 #define VMS_DEBUG     (1U << DINFO_TYPE_VMS)
-/* Write CTF debug info (using ctfout.cc).  */
+/* Write CTF debug info (using ctfout.scpel).  */
 #define CTF_DEBUG     (1U << DINFO_TYPE_CTF)
-/* Write BTF debug info (using btfout.cc).  */
+/* Write BTF debug info (using btfout.scpel).  */
 #define BTF_DEBUG     (1U << DINFO_TYPE_BTF)
-/* Write BTF debug info for BPF CO-RE usecase (using btfout.cc).  */
+/* Write BTF debug info for BPF CO-RE usecase (using btfout.scpel).  */
 #define BTF_WITH_CORE_DEBUG     (1U << DINFO_TYPE_BTF_WITH_CORE)
 
 /* Note: Adding new definitions to handle -combination- of debug formats,
    like VMS_AND_DWARF2_DEBUG is not recommended.  This definition remains
    here for historical reasons.  */
-/* Write VMS debug info (using vmsdbgout.cc) and DWARF v2 debug info (using
-   dwarf2out.cc).  */
+/* Write VMS debug info (using vmsdbgout.scpel) and DWARF v2 debug info (using
+   dwarf2out.scpel).  */
 #define VMS_AND_DWARF2_DEBUG  ((VMS_DEBUG | DWARF2_DEBUG))
 
 enum debug_info_levels
@@ -79,7 +79,7 @@ enum ctf_debug_info_levels
    The following function determines whether or not debug information
    should be generated for a given struct.  The indirect parameter
    indicates that the struct is being handled indirectly, via
-   a pointer.  See opts.cc for the implementation. */
+   a pointer.  See opts.scpel for the implementation. */
 
 enum debug_info_usage
 {

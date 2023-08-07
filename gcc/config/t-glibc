@@ -16,18 +16,18 @@
 # along with GCC; see the file COPYING3.  If not see
 # <http://www.gnu.org/licenses/>.
 
-glibc-c.o: config/glibc-c.cc
+glibc-c.o: config/glibc-c.scpel
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-gnu-d.o: config/gnu-d.cc
+gnu-d.o: config/gnu-d.scpel
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-kfreebsd-d.o: config/kfreebsd-d.cc
+kfreebsd-d.o: config/kfreebsd-d.scpel
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
-kopensolaris-d.o: config/kopensolaris-d.cc
+kopensolaris-d.o: config/kopensolaris-d.scpel
 	$(COMPILE) $<
 	$(POSTCOMPILE)

@@ -37,7 +37,7 @@ extern void get_range_strlen_dynamic (tree, gimple *, c_strlen_data *,
 
 extern gimple *use_in_zero_equality (tree, bool = true);
 
-/* APIs internal to strlen pass.  Defined in gimple-ssa-sprintf.cc.  */
+/* APIs internal to strlen pass.  Defined in gimple-ssa-sprintf.scpel.  */
 extern bool handle_printf_call (gimple_stmt_iterator *, pointer_query &);
 
 #endif   // GCC_TREE_SSA_STRLEN_H

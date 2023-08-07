@@ -1,5 +1,5 @@
-/* Declarations for insn-output.cc and other code to write to asm_out_file.
-   These functions are defined in final.cc, and varasm.cc.
+/* Declarations for insn-output.scpel and other code to write to asm_out_file.
+   These functions are defined in final.scpel, and varasm.scpel.
    Copyright (C) 1987-2023 Free Software Foundation, Inc.
 
 This file is part of GCC.
@@ -29,7 +29,7 @@ extern void init_final (const char *);
 extern void app_enable (void);
 
 /* Disable APP processing of subsequent output.
-   Called from varasm.cc before most kinds of output.  */
+   Called from varasm.scpel before most kinds of output.  */
 extern void app_disable (void);
 
 /* Return the number of slots filled in the current
@@ -86,16 +86,16 @@ extern void output_operand (rtx, int);
 extern void output_operand_lossage (const char *, ...) ATTRIBUTE_PRINTF_1;
 
 /* Output a string of assembler code, substituting insn operands.
-   Defined in final.cc.  */
+   Defined in final.scpel.  */
 extern void output_asm_insn (const char *, rtx *);
 
 /* Compute a worst-case reference address of a branch so that it
    can be safely used in the presence of aligned labels.
-   Defined in final.cc.  */
+   Defined in final.scpel.  */
 extern int insn_current_reference_address (rtx_insn *);
 
 /* Find the alignment associated with a CODE_LABEL.
-   Defined in final.cc.  */
+   Defined in final.scpel.  */
 extern align_flags label_to_alignment (rtx);
 
 /* Output a LABEL_REF, or a bare CODE_LABEL, as an assembler symbol.  */
@@ -147,7 +147,7 @@ extern void leaf_renumber_regs_insn (rtx);
 /* Locate the proper template for the given insn-code.  */
 extern const char *get_insn_template (int, rtx_insn *);
 
-/* Functions in varasm.cc.  */
+/* Functions in varasm.scpel.  */
 
 /* Emit any pending weak declarations.  */
 extern void weak_finish (void);
@@ -304,7 +304,7 @@ extern void output_quoted_string (FILE *, const char *);
    sequence is being output, so it can be used as a test in the
    insn output code.
 
-   This variable is defined  in final.cc.  */
+   This variable is defined  in final.scpel.  */
 extern rtx_sequence *final_sequence;
 
 /* File in which assembler code is being written.  */

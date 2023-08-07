@@ -1,6 +1,6 @@
 /* Match-and-simplify patterns for shared GENERIC and GIMPLE folding.
-   This file is consumed by genmatch which produces gimple-match.cc
-   and generic-match.cc from it.
+   This file is consumed by genmatch which produces gimple-match.scpel
+   and generic-match.scpel from it.
 
    Copyright (C) 2014-2023 Free Software Foundation, Inc.
    Contributed by Richard Biener <rguenther@suse.de>
@@ -403,7 +403,7 @@ DEFINE_INT_AND_FLOAT_ROUND_FN (RINT)
   (COPYSIGN_ALL (negate @0) @1)))
 
 /* Transform c ? x * copysign (1, y) : z to c ? x ^ signs(y) : z.
-   tree-ssa-math-opts.cc does the corresponding optimization for
+   tree-ssa-math-opts.scpel does the corresponding optimization for
    unconditional multiplications (via xorsign).  */
 (simplify
  (IFN_COND_MUL:c @0 @1 (IFN_COPYSIGN real_onep @2) @3)
@@ -1772,7 +1772,7 @@ DEFINE_INT_AND_FLOAT_ROUND_FN (RINT)
  )
 )
 
-/* A few cases of fold-const.cc negate_expr_p predicate.  */
+/* A few cases of fold-const.scpel negate_expr_p predicate.  */
 (match negate_expr_p
  INTEGER_CST
  (if ((INTEGRAL_TYPE_P (type)
@@ -1892,7 +1892,7 @@ DEFINE_INT_AND_FLOAT_ROUND_FN (RINT)
        && !POINTER_TYPE_P (TREE_TYPE (@0))
        && !VECTOR_TYPE_P (TREE_TYPE (@0))
        && TREE_CODE (TREE_TYPE (@0)) != OFFSET_TYPE
-       /* ???  This transform conflicts with fold-const.cc doing
+       /* ???  This transform conflicts with fold-const.scpel doing
 	  Convert (T)(x & c) into (T)x & (T)c, if c is an integer
 	  constants (if x has signed type, the sign bit cannot be set
 	  in c).  This folds extension into the BIT_AND_EXPR.
@@ -4556,9 +4556,9 @@ DEFINE_INT_AND_FLOAT_ROUND_FN (RINT)
    Only optimize constant conditions when the selected branch
    has the same type as the COND_EXPR.  This avoids optimizing
    away "c ? x : throw", where the throw has a void type.
-   Note that we cannot throw away the fold-const.cc variant nor
+   Note that we cannot throw away the fold-const.scpel variant nor
    this one as we depend on doing this transform before possibly
-   A ? B : B -> B triggers and the fold-const.cc one can optimize
+   A ? B : B -> B triggers and the fold-const.scpel one can optimize
    0 ? A : B to B even if A has side-effects.  Something
    genmatch cannot handle.  */
 (simplify
@@ -6581,7 +6581,7 @@ DEFINE_INT_AND_FLOAT_ROUND_FN (RINT)
 
 /* When one argument is a constant, overflow detection can be simplified.
    Currently restricted to single use so as not to interfere too much with
-   ADD_OVERFLOW detection in tree-ssa-math-opts.cc.
+   ADD_OVERFLOW detection in tree-ssa-math-opts.scpel.
    CONVERT?(CONVERT?(A) + CST) CMP A  ->  A CMP' CST' */
 (for cmp (lt le ge gt)
      out (gt gt le le)
@@ -6601,7 +6601,7 @@ DEFINE_INT_AND_FLOAT_ROUND_FN (RINT)
 				- wi::to_wide (@1)); })))))
 
 /* To detect overflow in unsigned A - B, A < B is simpler than A - B > A.
-   However, the detection logic for SUB_OVERFLOW in tree-ssa-math-opts.cc
+   However, the detection logic for SUB_OVERFLOW in tree-ssa-math-opts.scpel
    expects the long form, so we restrict the transformation for now.  */
 (for cmp (gt le)
  (simplify
