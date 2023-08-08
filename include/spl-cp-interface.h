@@ -20,7 +20,7 @@
 #ifndef GCC_CP_INTERFACE_H
 #define GCC_CP_INTERFACE_H
 
-#include "gcc-interface.h"
+#include "spl-interface.h"
 
 /* This header defines the interface to the GCC API.  It must be both
    valid C and valid C++, because it is included by both programs.  */
@@ -444,7 +444,7 @@ struct gcc_cp_fe_vtable
 #define GCC_METHOD7(R, N, A, B, C, D, E, F, G) \
   R (*N) (struct gcc_cp_context *, A, B, C, D, E, F, G);
 
-#include "gcc-cp-fe.def"
+#include "spl-cp-fe.def"
 
 #undef GCC_METHOD0
 #undef GCC_METHOD1
