@@ -1,5 +1,5 @@
 # This shell script emits a C file. -*- C -*-
-#   Copyright (C) 2021-2023 Free Software Foundation, Inc.
+#   Copyright (C) 2021-2022 Free Software Foundation, Inc.
 #   Contributed by Loongson Ltd.
 #
 # This file is part of the GNU Binutils.
@@ -23,7 +23,6 @@ fragment <<EOF
 #include "ldmain.h"
 #include "ldctor.h"
 #include "elf/loongarch.h"
-#include "elfxx-loongarch.h"
 
 static void
 larch_elf_before_allocation (void)
@@ -62,8 +61,6 @@ gld${EMULATION_NAME}_after_allocation (void)
 	}
     }
 
-  enum phase_enum *phase = &(expld.dataseg.phase);
-  bfd_elf${ELFSIZE}_loongarch_set_data_segment_info (&link_info, (int *) phase);
   /* gld${EMULATION_NAME}_map_segments (need_layout); */
   ldelf_map_segments (need_layout);
 }

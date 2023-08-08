@@ -1,4 +1,4 @@
-/* Interface for the GNU C++ pretty-printer. */
+/* Interface for the GNU Scpel pretty-printer. */
 
 #ifndef GCC_CXX_PRETTY_PRINT_H
 #define GCC_CXX_PRETTY_PRINT_H

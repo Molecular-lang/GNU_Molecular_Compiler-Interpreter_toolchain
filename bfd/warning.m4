@@ -1,6 +1,6 @@
 dnl Common configure.ac fragment
 dnl
-dnl   Copyright (C) 2012-2023 Free Software Foundation, Inc.
+dnl   Copyright (C) 2012-2022 Free Software Foundation, Inc.
 dnl
 dnl This file is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
@@ -50,8 +50,7 @@ GCC_WARN_CFLAGS_FOR_BUILD="-W -Wall -Wstrict-prototypes -Wmissing-prototypes"
 AC_EGREP_CPP([(^[0-3]$|^__GNUC__$)],[__GNUC__],,GCC_WARN_CFLAGS="$GCC_WARN_CFLAGS -Wshadow")
 
 # Add -Wstack-usage if the compiler is a sufficiently recent version of GCC.
-AC_EGREP_CPP([(^[0-4]$|^__GNUC__$)],[__GNUC__],,dnl
-[AC_EGREP_CPP([^__clang__$],[__clang__],[GCC_WARN_CFLAGS="$GCC_WARN_CFLAGS -Wstack-usage=262144"],)])
+AC_EGREP_CPP([(^[0-4]$|^__GNUC__$)],[__GNUC__],,GCC_WARN_CFLAGS="$GCC_WARN_CFLAGS -Wstack-usage=262144")
 
 # Set WARN_WRITE_STRINGS if the compiler supports -Wwrite-strings.
 WARN_WRITE_STRINGS=""
@@ -63,8 +62,7 @@ AC_EGREP_CPP([(^[0-3]$|^__GNUC__$)],[__GNUC__],,WARN_WRITE_STRINGS="-Wwrite-stri
 AC_EGREP_CPP_FOR_BUILD([(^[0-3]$|^__GNUC__$)],[__GNUC__],,GCC_WARN_CFLAGS_FOR_BUILD="$GCC_WARN_CFLAGS_FOR_BUILD -Wshadow")
 
 # Add -Wstack-usage if the compiler is a sufficiently recent version of GCC.
-AC_EGREP_CPP_FOR_BUILD([(^[0-4]$|^__GNUC__$)],[__GNUC__],,dnl
-[AC_EGREP_CPP_FOR_BUILD([^__clang__$],[__clang__],[GCC_WARN_CFLAGS_FOR_BUILD="$GCC_WARN_CFLAGS_FOR_BUILD -Wstack-usage=262144"],)])
+AC_EGREP_CPP_FOR_BUILD([(^[0-4]$|^__GNUC__$)],[__GNUC__],,GCC_WARN_CFLAGS_FOR_BUILD="$GCC_WARN_CFLAGS_FOR_BUILD -Wstack-usage=262144")
 
 AC_ARG_ENABLE(werror,
   [  --enable-werror         treat compile warnings as errors],
@@ -74,7 +72,7 @@ AC_ARG_ENABLE(werror,
      *) AC_MSG_ERROR(bad value ${enableval} for --enable-werror) ;;
    esac])
 
-# Disable -Wformat by default when using spl on mingw
+# Disable -Wformat by default when using gcc on mingw
 case "${host}" in
   *-*-mingw32*)
     if test "${GCC}" = yes -a -z "${ERROR_ON_WARNING}" ; then
@@ -85,7 +83,7 @@ case "${host}" in
   *) ;;
 esac
 
-# Enable -Werror by default when using spl.  Turn it off for releases.
+# Enable -Werror by default when using gcc.  Turn it off for releases.
 if test "${GCC}" = yes -a -z "${ERROR_ON_WARNING}" -a "$development" = true ; then
     ERROR_ON_WARNING=yes
 fi

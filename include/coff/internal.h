@@ -1,7 +1,7 @@
 /* Internal format of COFF object file data structures, for GNU BFD.
    This file is part of BFD, the Binary File Descriptor library.
 
-   Copyright (C) 1999-2023 Free Software Foundation, Inc.
+   Copyright (C) 1999-2022 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -549,40 +549,40 @@ union internal_auxent
   {
     union
     {
-      uint32_t u32;		/* str, un, or enum tag indx */
+      long l;			/* str, un, or enum tag indx */
       struct coff_ptr_struct *p;
-    } x_tagndx;
+    }     x_tagndx;
 
     union
     {
       struct
       {
-	uint16_t x_lnno;	/* declaration line number */
-	uint16_t x_size;	/* str/union/array size */
-      } x_lnsz;
-      uint32_t x_fsize;		/* size of function */
-    } x_misc;
+	unsigned short x_lnno;	/* declaration line number */
+	unsigned short x_size;	/* str/union/array size */
+      }      x_lnsz;
+      long x_fsize;		/* size of function */
+    }     x_misc;
 
     union
     {
       struct
       {				/* if ISFCN, tag, or .bb */
-	uint64_t x_lnnoptr;	/* ptr to fcn line # */
+	bfd_signed_vma x_lnnoptr;		/* ptr to fcn line # */
 	union
 	{			/* entry ndx past block end */
-	  uint32_t u32;
+	  long l;
 	  struct coff_ptr_struct *p;
-	} x_endndx;
-      } x_fcn;
+	}     x_endndx;
+      }      x_fcn;
 
       struct
       {				/* if ISARY, up to 4 dimen. */
-	uint16_t x_dimen[DIMNUM];
-      } x_ary;
-    } x_fcnary;
+	unsigned short x_dimen[DIMNUM];
+      }      x_ary;
+    }     x_fcnary;
 
-    uint16_t x_tvndx;		/* tv index */
-  } x_sym;
+    unsigned short x_tvndx;	/* tv index */
+  }      x_sym;
 
   struct
   {
@@ -600,28 +600,28 @@ union internal_auxent
 	   32 bits.  */
 	uintptr_t x_zeroes;
 	uintptr_t x_offset;
-      } x_n;
+      }      x_n;
     } x_n;
 
-    uint8_t x_ftype;
-  } x_file;
+    unsigned char x_ftype;
+  }     x_file;
 
   struct
   {
-    uint32_t x_scnlen;		/* section length */
-    uint16_t x_nreloc;		/* # relocation entries */
-    uint16_t x_nlinno;		/* # line numbers */
-    uint32_t x_checksum;	/* section COMDAT checksum for PE */
-    uint16_t x_associated;	/* COMDAT associated section index for PE */
-    uint8_t x_comdat;		/* COMDAT selection number for PE */
-  } x_scn;
+    long x_scnlen;		/* section length */
+    unsigned short x_nreloc;	/* # relocation entries */
+    unsigned short x_nlinno;	/* # line numbers */
+    unsigned long x_checksum;	/* section COMDAT checksum for PE */
+    unsigned short x_associated; /* COMDAT associated section index for PE */
+    unsigned char x_comdat;	/* COMDAT selection number for PE */
+  }      x_scn;
 
   struct
   {
-    uint32_t x_tvfill;		/* tv fill value */
-    uint16_t x_tvlen;		/* length of .tv */
-    uint16_t x_tvran[2];	/* tv range */
-  } x_tv;			/* info about .tv section (in auxent of symbol .tv)) */
+    long x_tvfill;		/* tv fill value */
+    unsigned short x_tvlen;	/* length of .tv */
+    unsigned short x_tvran[2];	/* tv range */
+  }      x_tv;			/* info about .tv section (in auxent of symbol .tv)) */
 
   /******************************************
    * RS/6000-specific auxent - last auxent for every external symbol
@@ -630,18 +630,18 @@ union internal_auxent
   {
     union
       {				/* csect length or enclosing csect */
-	uint64_t u64;
+	bfd_signed_vma l;
 	struct coff_ptr_struct *p;
       } x_scnlen;
-    uint32_t x_parmhash;	/* parm type hash index */
-    uint16_t x_snhash;		/* sect num with parm hash */
-    uint8_t x_smtyp;		/* symbol align and type */
+    long x_parmhash;		/* parm type hash index */
+    unsigned short x_snhash;	/* sect num with parm hash */
+    unsigned char x_smtyp;	/* symbol align and type */
     /* 0-4 - Log 2 of alignment */
     /* 5-7 - symbol type */
-    uint8_t x_smclas;		/* storage mapping class */
-    uint32_t x_stab;		/* dbx stab info index */
-    uint16_t x_snstab;		/* sect num with dbx stab */
-  } x_csect;			/* csect definition information */
+    unsigned char x_smclas;	/* storage mapping class */
+    long x_stab;		/* dbx stab info index */
+    unsigned short x_snstab;	/* sect num with dbx stab */
+  }      x_csect;		/* csect definition information */
 
 /* x_smtyp values:  */
 
@@ -677,8 +677,8 @@ union internal_auxent
 
   struct
   {
-    uint64_t x_scnlen;		/* Section length */
-    uint64_t x_nreloc;		/* Number of relocation entries */
+    long x_scnlen;              /* Section length */
+    long x_nreloc;              /* Number of relocation entries */
   } x_sect;
 };
 

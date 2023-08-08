@@ -1,4 +1,4 @@
-/* Language-level data type conversion for GNU C++. */
+/* Language-level data type conversion for GNU Scpel. */
 
 /* This file contains the functions for converting C++ expressions
    to different data types.  The only entry point is `convert'.

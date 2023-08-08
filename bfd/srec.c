@@ -1,5 +1,5 @@
 /* BFD back-end for s-record objects.
-   Copyright (C) 1990-2023 Free Software Foundation, Inc.
+   Copyright (C) 1990-2022 Free Software Foundation, Inc.
    Written by Steve Chamberlain of Cygnus Support <sac@cygnus.com>.
 
    This file is part of BFD, the Binary File Descriptor library.
@@ -1096,19 +1096,26 @@ srec_write_symbols (bfd *abfd)
 	      && s->section->output_section != NULL)
 	    {
 	      /* Just dump out non debug symbols.  */
-	      char buf[43];
+	      char buf[43], *p;
 
 	      len = strlen (s->name);
 	      if (bfd_bwrite ("  ", (bfd_size_type) 2, abfd) != 2
 		  || bfd_bwrite (s->name, len, abfd) != len)
 		return false;
 
-	      sprintf (buf, " $%" PRIx64 "\r\n",
-		       (uint64_t) (s->value
-				   + s->section->output_section->lma
-				   + s->section->output_offset));
-	      len = strlen (buf);
-	      if (bfd_bwrite (buf, len, abfd) != len)
+	      sprintf_vma (buf + 2, (s->value
+				     + s->section->output_section->lma
+				     + s->section->output_offset));
+	      p = buf + 2;
+	      while (p[0] == '0' && p[1] != 0)
+		p++;
+	      len = strlen (p);
+	      p[len] = '\r';
+	      p[len + 1] = '\n';
+	      *--p = '$';
+	      *--p = ' ';
+	      len += 4;
+	      if (bfd_bwrite (p, len, abfd) != len)
 		return false;
 	    }
 	}
@@ -1249,7 +1256,6 @@ srec_print_symbol (bfd *abfd,
 #define srec_bfd_is_local_label_name		  bfd_generic_is_local_label_name
 #define srec_get_lineno				  _bfd_nosymbols_get_lineno
 #define srec_find_nearest_line			  _bfd_nosymbols_find_nearest_line
-#define srec_find_nearest_line_with_alt		  _bfd_nosymbols_find_nearest_line_with_alt
 #define srec_find_line				  _bfd_nosymbols_find_line
 #define srec_find_inliner_info			  _bfd_nosymbols_find_inliner_info
 #define srec_make_empty_symbol			  _bfd_generic_make_empty_symbol

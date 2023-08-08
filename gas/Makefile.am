@@ -1,6 +1,6 @@
 ## Process this file with automake to generate Makefile.in
 #
-#   Copyright (C) 2012-2023 Free Software Foundation, Inc.
+#   Copyright (C) 2012-2022 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ ACLOCAL_AMFLAGS = -I .. -I ../config -I ../bfd
 
 MAINTAINERCLEANFILES =
 
-SUBDIRS = po
+SUBDIRS =
 
 tooldir = $(exec_prefix)/$(target_alias)
 
@@ -42,7 +42,7 @@ am__skipyacc =
 
 WARN_CFLAGS = @WARN_CFLAGS@ @WARN_WRITE_STRINGS@
 NO_WERROR = @NO_WERROR@
-AM_CFLAGS = $(WARN_CFLAGS) $(ZLIBINC) $(ZSTD_CFLAGS)
+AM_CFLAGS = $(WARN_CFLAGS) $(ZLIBINC)
 
 TARG_CPU = @target_cpu_type@
 TARG_CPU_C = $(srcdir)/config/tc-@target_cpu_type@.c
@@ -68,7 +68,6 @@ GAS_CFILES = \
 	app.c \
 	as.c \
 	atof-generic.c \
-	codeview.c \
 	compress-debug.c \
 	cond.c \
 	depend.c \
@@ -81,7 +80,6 @@ GAS_CFILES = \
 	flonum-konst.c \
 	flonum-mult.c \
 	frags.c \
-	gen-sframe.c \
 	hash.c \
 	input-file.c \
 	input-scrub.c \
@@ -93,7 +91,6 @@ GAS_CFILES = \
 	read.c \
 	remap.c \
 	sb.c \
-	sframe-opt.c \
 	stabs.c \
 	subsegs.c \
 	symbols.c \
@@ -107,7 +104,6 @@ HFILES = \
 	bignum.h \
 	bit_fix.h \
 	cgen.h \
-	codeview.h \
 	compress-debug.h \
 	dwarf2dbg.h \
 	dw2gencfi.h \
@@ -117,7 +113,6 @@ HFILES = \
 	expr.h \
 	flonum.h \
 	frags.h \
-	gen-sframe.h \
 	hash.h \
 	input-file.h \
 	itbl-lex.h \
@@ -341,6 +336,7 @@ TARG_ENV_HFILES = \
 	config/te-pc532mach.h \
 	config/te-pe.h \
 	config/te-solaris.h \
+	config/te-svr4.h \
 	config/te-tmips.h \
 	config/te-vxworks.h \
 	config/te-wince-pe.h
@@ -366,9 +362,7 @@ POTFILES = $(MULTI_CFILES) $(CONFIG_ATOF_CFILES) \
 	$(TARG_ENV_HFILES) $(TARG_ENV_CFILES) $(OBJ_FORMAT_HFILES) \
 	$(OBJ_FORMAT_CFILES) $(TARGET_CPU_HFILES) $(TARGET_CPU_CFILES) \
 	$(TARGET_EXTRA_FILES) $(HFILES) $(CFILES)
-po/POTFILES.in: @MAINT@ Makefile
-	for f in $(POTFILES); do echo $$f; done | LC_ALL=C sort > tmp \
-	  && mv tmp $(srcdir)/po/POTFILES.in
+po/POTFILES.in:
 
 # Note: GASP is now deprecated and has been removed.  It is still
 # available in the CVS archive or older binutils releases if it is needed.
@@ -411,7 +405,7 @@ STAGESTUFF = *.@OBJEXT@ $(noinst_PROGRAMS)
 
 as_new_SOURCES = $(GAS_CFILES)
 as_new_LDADD = $(TARG_CPU_O) $(OBJ_FORMAT_O) $(ATOF_TARG_O) \
-	$(extra_objects) $(GASLIBS) $(LIBINTL) $(LIBM) $(ZLIB) $(ZSTD_LIBS)
+	$(extra_objects) $(GASLIBS) $(LIBINTL) $(LIBM) $(ZLIB)
 as_new_DEPENDENCIES = $(TARG_CPU_O) $(OBJ_FORMAT_O) $(ATOF_TARG_O) \
 	$(extra_objects) $(GASLIBS) $(LIBINTL_DEP)
 EXTRA_as_new_SOURCES = $(CFILES) $(HFILES) $(TARGET_CPU_CFILES) \
@@ -423,40 +417,11 @@ EXPECT = expect
 RUNTEST = runtest
 RUNTESTFLAGS=
 
-check-DEJAGNU: site.exp
-	if [ -d testsuite ]; then \
-	  true; \
-	else \
-	  mkdir testsuite; \
-	fi
-	rm -f testsuite/site.exp
-	cp site.exp testsuite/site.exp
-	rootme=`pwd`; export rootme; \
-	srcdir=`cd ${srcdir}; pwd` ; export srcdir ; \
-	LC_ALL=C; export LC_ALL; \
-	EXPECT=${EXPECT} ; export EXPECT ; \
-	runtest=$(RUNTEST); \
-	cd testsuite; \
-	if $(SHELL) -c "$$runtest --version" > /dev/null 2>&1; then \
-	  $$runtest --tool $(DEJATOOL) --srcdir $${srcdir}/testsuite \
-		$(RUNTESTFLAGS); \
-	else echo "WARNING: could not find \`runtest'" 1>&2; :;\
-	fi
+check-DEJAGNU:
 
 development.exp: $(BFDDIR)/development.sh
 	$(EGREP) "(development|experimental)=" $(BFDDIR)/development.sh  \
 	  | $(AWK) -F= '{ print "set " $$1 " " $$2 }' > $@
-
-config/tc-i386.o: $(srcdir)/../opcodes/i386-init.h $(srcdir)/../opcodes/i386-tbl.h
-
-i386_tbl_deps = $(srcdir)/../opcodes/i386-opc.tbl \
-	$(srcdir)/../opcodes/i386-reg.tbl \
-	$(srcdir)/../opcodes/i386-gen.c $(srcdir)/../opcodes/i386-opc.h
-
-$(srcdir)/../opcodes/i386%init.h $(srcdir)/../opcodes/i386%tbl.h $(srcdir)/../opcodes/i386%mnem.h: @MAINT@ $(i386_tbl_deps)
-	@echo '"$@" is outdated wrt "$?"' >&2
-	@echo 'Please rebuild from the top level or in $(CURDIR)/../opcodes/' >&2
-	@false
 
 EXTRA_as_new_SOURCES += config/m68k-parse.y
 config/m68k-parse.c: $(srcdir)/config/m68k-parse.y
@@ -531,17 +496,7 @@ endif
 	$(COMPILE) -o $@ -DSTAND_ALONE -c $(srcdir)/itbl-ops.c
 endif
 
-itbl-test.@OBJEXT@: $(srcdir)/testsuite/gas/all/itbl-test.c
-if am__fastdepCC
-	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ -DSTAND_ALONE $(srcdir)/testsuite/gas/all/itbl-test.c
-	mv -f $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
-else
-if AMDEP
-	source='itbl-test.c' object='$@' libtool=no @AMDEPBACKSLASH@
-	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-endif
-	$(COMPILE) -c -DSTAND_ALONE $(srcdir)/testsuite/gas/all/itbl-test.c
-endif
+itbl-test.@OBJEXT@:
 
 # CGEN interface.
 
@@ -555,8 +510,7 @@ cgen.@OBJEXT@: cgen.c cgen.h cgen-desc.h subsegs.h \
 # Remake the info files.
 
 MOSTLYCLEANFILES = $(STAGESTUFF) core \
-	testsuite/*.@OBJEXT@ testsuite/*.out testsuite/gas.log testsuite/gas.sum \
-	testsuite/site.exp site.bak site.exp development.exp stage stage1 stage2
+	site.bak site.exp development.exp stage stage1 stage2
 
 .PHONY: install-exec-local install-data-local
 .PHONY: install-exec-bindir install-exec-tooldir
@@ -660,4 +614,3 @@ CONFIG_STATUS_DEPENDENCIES = $(srcdir)/configure.tgt $(BFDDIR)/development.sh
 
 EXTRA_DEJAGNU_SITE_CONFIG = development.exp
 
-include doc/local.mk

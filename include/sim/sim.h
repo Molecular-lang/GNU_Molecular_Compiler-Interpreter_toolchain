@@ -1,6 +1,6 @@
 /* This file defines the interface between the simulator and gdb.
 
-   Copyright (C) 1993-2023 Free Software Foundation, Inc.
+   Copyright (C) 1993-2022 Free Software Foundation, Inc.
 
    This file is part of GDB.
 
@@ -20,12 +20,22 @@
 #ifndef SIM_SIM_H
 #define SIM_SIM_H 1
 
-#include <stdbool.h>
-#include <stdint.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/* This file is used when building stand-alone simulators, so isolate this
+   file from gdb.  */
+
+/* Pick up CORE_ADDR_TYPE if defined (from gdb), otherwise use same value as
+   gdb does (unsigned int - from defs.h).  */
+
+#ifndef CORE_ADDR_TYPE
+typedef unsigned int SIM_ADDR;
+#else
+typedef CORE_ADDR_TYPE SIM_ADDR;
+#endif
+
 
 /* Semi-opaque type used as result of sim_open and passed back to all
    other routines.  "desc" is short for "descriptor".
@@ -160,14 +170,14 @@ SIM_RC sim_create_inferior (SIM_DESC sd, struct bfd *abfd,
    at virtual address MEM and store in BUF.  Result is number of bytes
    read, or zero if error.  */
 
-uint64_t sim_read (SIM_DESC sd, uint64_t mem, void *buf, uint64_t length);
+int sim_read (SIM_DESC sd, SIM_ADDR mem, unsigned char *buf, int length);
 
 
 /* Store LENGTH bytes from BUF into the simulated program's
    memory. Store bytes starting at virtual address MEM. Result is
    number of bytes write, or zero if error.  */
 
-uint64_t sim_write (SIM_DESC sd, uint64_t mem, const void *buf, uint64_t length);
+int sim_write (SIM_DESC sd, SIM_ADDR mem, const unsigned char *buf, int length);
 
 
 /* Fetch register REGNO storing its raw (target endian) value in the
@@ -179,7 +189,7 @@ uint64_t sim_write (SIM_DESC sd, uint64_t mem, const void *buf, uint64_t length)
    If LENGTH does not match the size of REGNO no data is transfered
    (the actual register size is still returned). */
 
-int sim_fetch_register (SIM_DESC sd, int regno, void *buf, int length);
+int sim_fetch_register (SIM_DESC sd, int regno, unsigned char *buf, int length);
 
 
 /* Store register REGNO from the raw (target endian) value in BUF.
@@ -193,14 +203,14 @@ int sim_fetch_register (SIM_DESC sd, int regno, void *buf, int length);
    Return a LENGTH of 0 to indicate the register was not updated
    but no error has occurred. */
 
-int sim_store_register (SIM_DESC sd, int regno, const void *buf, int length);
+int sim_store_register (SIM_DESC sd, int regno, unsigned char *buf, int length);
 
 
 /* Print whatever statistics the simulator has collected.
 
-   When VERBOSE is enabled, extra details will be shown.  */
+   VERBOSE is currently unused and must always be zero.  */
 
-void sim_info (SIM_DESC sd, bool verbose);
+void sim_info (SIM_DESC sd, int verbose);
 
 
 /* Return a memory map in XML format.

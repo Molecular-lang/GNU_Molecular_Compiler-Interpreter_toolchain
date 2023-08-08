@@ -1,5 +1,5 @@
 /* debug.c -- Handle generic debugging information.
-   Copyright (C) 1995-2023 Free Software Foundation, Inc.
+   Copyright (C) 1995-2022 Free Software Foundation, Inc.
    Written by Ian Lance Taylor <ian@cygnus.com>.
 
    This file is part of GNU Binutils.
@@ -31,7 +31,6 @@
 #include "bfd.h"
 #include "libiberty.h"
 #include "filenames.h"
-#include "bucomm.h"
 #include "debug.h"
 
 /* Global information we keep for debugging.  A pointer to this
@@ -39,8 +38,6 @@
 
 struct debug_handle
 {
-  /* The bfd where we objalloc memory.  */
-  bfd *abfd;
   /* A linked list of compilation units.  */
   struct debug_unit *units;
   /* The current compilation unit.  */
@@ -105,8 +102,6 @@ struct debug_type_s
   enum debug_type_kind kind;
   /* Size of type (0 if not known).  */
   unsigned int size;
-  /* Used by debug_write to stop DEBUG_KIND_INDIRECT infinite recursion.  */
-  unsigned int mark;
   /* Type which is a pointer to this type.  */
   debug_type pointer;
   /* Tagged union with additional information about the type.  */
@@ -605,7 +600,7 @@ debug_error (const char *message)
 /* Add an object to a namespace.  */
 
 static struct debug_name *
-debug_add_to_namespace (struct debug_handle *info,
+debug_add_to_namespace (struct debug_handle *info ATTRIBUTE_UNUSED,
 			struct debug_namespace **nsp, const char *name,
 			enum debug_object_kind kind,
 			enum debug_object_linkage linkage)
@@ -613,7 +608,8 @@ debug_add_to_namespace (struct debug_handle *info,
   struct debug_name *n;
   struct debug_namespace *ns;
 
-  n = debug_xzalloc (info, sizeof (*n));
+  n = (struct debug_name *) xmalloc (sizeof *n);
+  memset (n, 0, sizeof *n);
 
   n->name = name;
   n->kind = kind;
@@ -622,7 +618,8 @@ debug_add_to_namespace (struct debug_handle *info,
   ns = *nsp;
   if (ns == NULL)
     {
-      ns = debug_xzalloc (info, sizeof (*ns));
+      ns = (struct debug_namespace *) xmalloc (sizeof *ns);
+      memset (ns, 0, sizeof *ns);
 
       ns->tail = &ns->list;
 
@@ -662,30 +659,13 @@ debug_add_to_current_namespace (struct debug_handle *info, const char *name,
 /* Return a handle for debugging information.  */
 
 void *
-debug_init (bfd *abfd)
+debug_init (void)
 {
   struct debug_handle *ret;
 
-  ret = bfd_xalloc (abfd, sizeof (*ret));
-  memset (ret, 0, sizeof (*ret));
-  ret->abfd = abfd;
-  return ret;
-}
-
-void *
-debug_xalloc (void *handle, size_t size)
-{
-  struct debug_handle *info = (struct debug_handle *) handle;
-  return bfd_xalloc (info->abfd, size);
-}
-
-void *
-debug_xzalloc (void *handle, size_t size)
-{
-  struct debug_handle *info = (struct debug_handle *) handle;
-  void *mem = bfd_xalloc (info->abfd, size);
-  memset (mem, 0, size);
-  return mem;
+  ret = (struct debug_handle *) xmalloc (sizeof *ret);
+  memset (ret, 0, sizeof *ret);
+  return (void *) ret;
 }
 
 /* Set the source filename.  This implicitly starts a new compilation
@@ -701,11 +681,13 @@ debug_set_filename (void *handle, const char *name)
   if (name == NULL)
     name = "";
 
-  nfile = debug_xzalloc (info, sizeof (*nfile));
+  nfile = (struct debug_file *) xmalloc (sizeof *nfile);
+  memset (nfile, 0, sizeof *nfile);
 
   nfile->filename = name;
 
-  nunit = debug_xzalloc (info, sizeof (*nunit));
+  nunit = (struct debug_unit *) xmalloc (sizeof *nunit);
+  memset (nunit, 0, sizeof *nunit);
 
   nunit->files = nfile;
   info->current_file = nfile;
@@ -754,7 +736,9 @@ debug_start_source (void *handle, const char *name)
 	}
     }
 
-  f = debug_xzalloc (info, sizeof (*f));
+  f = (struct debug_file *) xmalloc (sizeof *f);
+  memset (f, 0, sizeof *f);
+
   f->filename = name;
 
   for (pf = &info->current_file->next;
@@ -797,11 +781,13 @@ debug_record_function (void *handle, const char *name,
       return false;
     }
 
-  f = debug_xzalloc (info, sizeof (*f));
+  f = (struct debug_function *) xmalloc (sizeof *f);
+  memset (f, 0, sizeof *f);
 
   f->return_type = return_type;
 
-  b = debug_xzalloc (info, sizeof (*b));
+  b = (struct debug_block *) xmalloc (sizeof *b);
+  memset (b, 0, sizeof *b);
 
   b->start = addr;
   b->end = (bfd_vma) -1;
@@ -847,7 +833,8 @@ debug_record_parameter (void *handle, const char *name, debug_type type,
       return false;
     }
 
-  p = debug_xzalloc (info, sizeof (*p));
+  p = (struct debug_parameter *) xmalloc (sizeof *p);
+  memset (p, 0, sizeof *p);
 
   p->name = name;
   p->type = type;
@@ -912,7 +899,8 @@ debug_start_block (void *handle, bfd_vma addr)
       return false;
     }
 
-  b = debug_xzalloc (info, sizeof (*b));
+  b = (struct debug_block *) xmalloc (sizeof *b);
+  memset (b, 0, sizeof *b);
 
   b->parent = info->current_block;
   b->start = addr;
@@ -999,7 +987,8 @@ debug_record_line (void *handle, unsigned long lineno, bfd_vma addr)
      it in the right place, and make it the new current_lineno
      structure.  */
 
-  l = debug_xzalloc (info, sizeof (*l));
+  l = (struct debug_lineno *) xmalloc (sizeof *l);
+  memset (l, 0, sizeof *l);
 
   l->file = info->current_file;
   l->linenos[0] = lineno;
@@ -1100,7 +1089,8 @@ debug_record_typed_const (void *handle, const char *name, debug_type type,
   if (n == NULL)
     return false;
 
-  tc = debug_xzalloc (info, sizeof (*tc));
+  tc = (struct debug_typed_constant *) xmalloc (sizeof *tc);
+  memset (tc, 0, sizeof *tc);
 
   tc->type = type;
   tc->val = val;
@@ -1166,7 +1156,8 @@ debug_record_variable (void *handle, const char *name, debug_type type,
   if (n == NULL)
     return false;
 
-  v = debug_xzalloc (info, sizeof (*v));
+  v = (struct debug_variable *) xmalloc (sizeof *v);
+  memset (v, 0, sizeof *v);
 
   v->kind = kind;
   v->type = type;
@@ -1180,12 +1171,13 @@ debug_record_variable (void *handle, const char *name, debug_type type,
 /* Make a type with a given kind and size.  */
 
 static struct debug_type_s *
-debug_make_type (struct debug_handle *info,
+debug_make_type (struct debug_handle *info ATTRIBUTE_UNUSED,
 		 enum debug_type_kind kind, unsigned int size)
 {
   struct debug_type_s *t;
 
-  t = debug_xzalloc (info, sizeof (*t));
+  t = (struct debug_type_s *) xmalloc (sizeof *t);
+  memset (t, 0, sizeof *t);
 
   t->kind = kind;
   t->size = size;
@@ -1207,7 +1199,8 @@ debug_make_indirect_type (void *handle, debug_type *slot, const char *tag)
   if (t == NULL)
     return DEBUG_TYPE_NULL;
 
-  i = debug_xzalloc (info, sizeof (*i));
+  i = (struct debug_indirect_type *) xmalloc (sizeof *i);
+  memset (i, 0, sizeof *i);
 
   i->slot = slot;
   i->tag = tag;
@@ -1295,7 +1288,8 @@ debug_make_struct_type (void *handle, bool structp, bfd_vma size,
   if (t == NULL)
     return DEBUG_TYPE_NULL;
 
-  c = debug_xzalloc (info, sizeof (*c));
+  c = (struct debug_class_type *) xmalloc (sizeof *c);
+  memset (c, 0, sizeof *c);
 
   c->fields = fields;
 
@@ -1327,7 +1321,8 @@ debug_make_object_type (void *handle, bool structp, bfd_vma size,
   if (t == NULL)
     return DEBUG_TYPE_NULL;
 
-  c = debug_xzalloc (info, sizeof (*c));
+  c = (struct debug_class_type *) xmalloc (sizeof *c);
+  memset (c, 0, sizeof *c);
 
   c->fields = fields;
   c->baseclasses = baseclasses;
@@ -1357,7 +1352,8 @@ debug_make_enum_type (void *handle, const char **names,
   if (t == NULL)
     return DEBUG_TYPE_NULL;
 
-  e = debug_xzalloc (info, sizeof (*e));
+  e = (struct debug_enum_type *) xmalloc (sizeof *e);
+  memset (e, 0, sizeof *e);
 
   e->names = names;
   e->values = values;
@@ -1410,7 +1406,8 @@ debug_make_function_type (void *handle, debug_type type,
   if (t == NULL)
     return DEBUG_TYPE_NULL;
 
-  f = debug_xzalloc (info, sizeof (*f));
+  f = (struct debug_function_type *) xmalloc (sizeof *f);
+  memset (f, 0, sizeof *f);
 
   f->return_type = type;
   f->arg_types = arg_types;
@@ -1458,7 +1455,8 @@ debug_make_range_type (void *handle, debug_type type, bfd_signed_vma lower,
   if (t == NULL)
     return DEBUG_TYPE_NULL;
 
-  r = debug_xzalloc (info, sizeof (*r));
+  r = (struct debug_range_type *) xmalloc (sizeof *r);
+  memset (r, 0, sizeof *r);
 
   r->type = type;
   r->lower = lower;
@@ -1491,7 +1489,8 @@ debug_make_array_type (void *handle, debug_type element_type,
   if (t == NULL)
     return DEBUG_TYPE_NULL;
 
-  a = debug_xzalloc (info, sizeof (*a));
+  a = (struct debug_array_type *) xmalloc (sizeof *a);
+  memset (a, 0, sizeof *a);
 
   a->element_type = element_type;
   a->range_type = range_type;
@@ -1522,7 +1521,8 @@ debug_make_set_type (void *handle, debug_type type, bool bitstringp)
   if (t == NULL)
     return DEBUG_TYPE_NULL;
 
-  s = debug_xzalloc (info, sizeof (*s));
+  s = (struct debug_set_type *) xmalloc (sizeof *s);
+  memset (s, 0, sizeof *s);
 
   s->type = type;
   s->bitstringp = bitstringp;
@@ -1552,7 +1552,8 @@ debug_make_offset_type (void *handle, debug_type base_type,
   if (t == NULL)
     return DEBUG_TYPE_NULL;
 
-  o = debug_xzalloc (info, sizeof (*o));
+  o = (struct debug_offset_type *) xmalloc (sizeof *o);
+  memset (o, 0, sizeof *o);
 
   o->base_type = base_type;
   o->target_type = target_type;
@@ -1582,7 +1583,8 @@ debug_make_method_type (void *handle, debug_type return_type,
   if (t == NULL)
     return DEBUG_TYPE_NULL;
 
-  m = debug_xzalloc (info, sizeof (*m));
+  m = (struct debug_method_type *) xmalloc (sizeof *m);
+  memset (m, 0, sizeof *m);
 
   m->return_type = return_type;
   m->domain_type = domain_type;
@@ -1675,14 +1677,14 @@ debug_make_undefined_tagged_type (void *handle, const char *name,
    argument is the visibility of the base class.  */
 
 debug_baseclass
-debug_make_baseclass (void *handle, debug_type type,
+debug_make_baseclass (void *handle ATTRIBUTE_UNUSED, debug_type type,
 		      bfd_vma bitpos, bool is_virtual,
 		      enum debug_visibility visibility)
 {
-  struct debug_handle *info = (struct debug_handle *) handle;
   struct debug_baseclass_s *b;
 
-  b = debug_xzalloc (info, sizeof (*b));
+  b = (struct debug_baseclass_s *) xmalloc (sizeof *b);
+  memset (b, 0, sizeof *b);
 
   b->type = type;
   b->bitpos = bitpos;
@@ -1699,14 +1701,14 @@ debug_make_baseclass (void *handle, debug_type type,
    of the field.  */
 
 debug_field
-debug_make_field (void *handle, const char *name,
+debug_make_field (void *handle ATTRIBUTE_UNUSED, const char *name,
 		  debug_type type, bfd_vma bitpos, bfd_vma bitsize,
 		  enum debug_visibility visibility)
 {
-  struct debug_handle *info = (struct debug_handle *) handle;
   struct debug_field_s *f;
 
-  f = debug_xzalloc (info, sizeof (*f));
+  f = (struct debug_field_s *) xmalloc (sizeof *f);
+  memset (f, 0, sizeof *f);
 
   f->name = name;
   f->type = type;
@@ -1725,14 +1727,14 @@ debug_make_field (void *handle, const char *name,
    member.  */
 
 debug_field
-debug_make_static_member (void *handle, const char *name,
+debug_make_static_member (void *handle ATTRIBUTE_UNUSED, const char *name,
 			  debug_type type, const char *physname,
 			  enum debug_visibility visibility)
 {
-  struct debug_handle *info = (struct debug_handle *) handle;
   struct debug_field_s *f;
 
-  f = debug_xzalloc (info, sizeof (*f));
+  f = (struct debug_field_s *) xmalloc (sizeof *f);
+  memset (f, 0, sizeof *f);
 
   f->name = name;
   f->type = type;
@@ -1747,13 +1749,13 @@ debug_make_static_member (void *handle, const char *name,
    argument is a NULL terminated array of method variants.  */
 
 debug_method
-debug_make_method (void *handle, const char *name,
+debug_make_method (void *handle ATTRIBUTE_UNUSED, const char *name,
 		   debug_method_variant *variants)
 {
-  struct debug_handle *info = (struct debug_handle *) handle;
   struct debug_method_s *m;
 
-  m = debug_xzalloc (info, sizeof (*m));
+  m = (struct debug_method_s *) xmalloc (sizeof *m);
+  memset (m, 0, sizeof *m);
 
   m->name = name;
   m->variants = variants;
@@ -1771,16 +1773,16 @@ debug_make_method (void *handle, const char *name,
    necessary?  Could we just use debug_make_const_type?  */
 
 debug_method_variant
-debug_make_method_variant (void *handle,
+debug_make_method_variant (void *handle ATTRIBUTE_UNUSED,
 			   const char *physname, debug_type type,
 			   enum debug_visibility visibility,
 			   bool constp, bool volatilep,
 			   bfd_vma voffset, debug_type context)
 {
-  struct debug_handle *info = (struct debug_handle *) handle;
   struct debug_method_variant_s *m;
 
-  m = debug_xzalloc (info, sizeof (*m));
+  m = (struct debug_method_variant_s *) xmalloc (sizeof *m);
+  memset (m, 0, sizeof *m);
 
   m->physname = physname;
   m->type = type;
@@ -1798,15 +1800,15 @@ debug_make_method_variant (void *handle,
    since a static method can not also be virtual.  */
 
 debug_method_variant
-debug_make_static_method_variant (void *handle,
+debug_make_static_method_variant (void *handle ATTRIBUTE_UNUSED,
 				  const char *physname, debug_type type,
 				  enum debug_visibility visibility,
 				  bool constp, bool volatilep)
 {
-  struct debug_handle *info = (struct debug_handle *) handle;
   struct debug_method_variant_s *m;
 
-  m = debug_xzalloc (info, sizeof (*m));
+  m = (struct debug_method_variant_s *) xmalloc (sizeof *m);
+  memset (m, 0, sizeof *m);
 
   m->physname = physname;
   m->type = type;
@@ -1842,7 +1844,8 @@ debug_name_type (void *handle, const char *name, debug_type type)
   if (t == NULL)
     return DEBUG_TYPE_NULL;
 
-  n = debug_xzalloc (info, sizeof (*n));
+  n = (struct debug_named_type *) xmalloc (sizeof *n);
+  memset (n, 0, sizeof *n);
 
   n->type = type;
 
@@ -1894,7 +1897,8 @@ debug_tag_type (void *handle, const char *name, debug_type type)
   if (t == NULL)
     return DEBUG_TYPE_NULL;
 
-  n = debug_xzalloc (info, sizeof (*n));
+  n = (struct debug_named_type *) xmalloc (sizeof *n);
+  memset (n, 0, sizeof *n);
 
   n->type = type;
 
@@ -2424,9 +2428,6 @@ debug_write_type (struct debug_handle *info,
   if (type == DEBUG_TYPE_NULL)
     return (*fns->empty_type) (fhandle);
 
-  /* Mark the type so that we don't define a type in terms of itself.  */
-  type->mark = info->mark;
-
   /* If we have a name for this type, just output it.  We only output
      typedef names after they have been defined.  We output type tags
      whenever we are not actually defining them.  */
@@ -2490,8 +2491,7 @@ debug_write_type (struct debug_handle *info,
       return false;
     case DEBUG_KIND_INDIRECT:
       /* Prevent infinite recursion.  */
-      if (*type->u.kindirect->slot != DEBUG_TYPE_NULL
-	  && (*type->u.kindirect->slot)->mark == info->mark)
+      if (*type->u.kindirect->slot == type)
 	return (*fns->empty_type) (fhandle);
       return debug_write_type (info, fns, fhandle, *type->u.kindirect->slot,
 			       name);
@@ -2988,7 +2988,8 @@ debug_set_class_id (struct debug_handle *info, const char *tag,
   ++info->class_id;
   c->id = info->class_id;
 
-  l = debug_xzalloc (info, sizeof (*l));
+  l = (struct debug_class_id *) xmalloc (sizeof *l);
+  memset (l, 0, sizeof *l);
 
   l->type = type;
   l->tag = tag;

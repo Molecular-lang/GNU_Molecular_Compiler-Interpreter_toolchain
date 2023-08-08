@@ -1,5 +1,5 @@
 /* Select disassembly routine for specified architecture.
-   Copyright (C) 1994-2023 Free Software Foundation, Inc.
+   Copyright (C) 1994-2022 Free Software Foundation, Inc.
 
    This file is part of the GNU opcodes library.
 
@@ -610,19 +610,12 @@ disassemble_init_for_target (struct disassemble_info * info)
     case bfd_arch_aarch64:
       info->symbol_is_valid = aarch64_symbol_is_valid;
       info->disassembler_needs_relocs = true;
-      info->created_styled_output = true;
-      break;
-#endif
-#ifdef ARCH_arc
-    case bfd_arch_arc:
-      info->created_styled_output = true;
       break;
 #endif
 #ifdef ARCH_arm
     case bfd_arch_arm:
       info->symbol_is_valid = arm_symbol_is_valid;
       info->disassembler_needs_relocs = true;
-      info->created_styled_output = true;
       break;
 #endif
 #ifdef ARCH_avr
@@ -647,19 +640,9 @@ disassemble_init_for_target (struct disassemble_info * info)
       info->skip_zeroes = 16;
       break;
 #endif
-#ifdef ARCH_loongarch
-    case bfd_arch_loongarch:
-      info->created_styled_output = true;
-      break;
-#endif
 #ifdef ARCH_tic4x
     case bfd_arch_tic4x:
       info->skip_zeroes = 32;
-      break;
-#endif
-#ifdef ARCH_m68k
-    case bfd_arch_m68k:
-      info->created_styled_output = true;
       break;
 #endif
 #ifdef ARCH_mep
@@ -671,11 +654,6 @@ disassemble_init_for_target (struct disassemble_info * info)
 #ifdef ARCH_metag
     case bfd_arch_metag:
       info->disassembler_needs_relocs = true;
-      break;
-#endif
-#ifdef ARCH_mips
-    case bfd_arch_mips:
-      info->created_styled_output = true;
       break;
 #endif
 #ifdef ARCH_m32c
@@ -727,7 +705,6 @@ disassemble_init_for_target (struct disassemble_info * info)
 #endif
 #if defined (ARCH_powerpc) || defined (ARCH_rs6000)
       disassemble_init_powerpc (info);
-      info->created_styled_output = true;
       break;
 #endif
 #ifdef ARCH_riscv
@@ -805,7 +782,6 @@ disassemble_free_target (struct disassemble_info *info)
 #endif
 #ifdef ARCH_riscv
     case bfd_arch_riscv:
-      disassemble_free_riscv (info);
       break;
 #endif
 #ifdef ARCH_rs6000

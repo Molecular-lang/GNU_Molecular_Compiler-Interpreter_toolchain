@@ -428,7 +428,7 @@ names_builtin_p (const char *name)
   return false;
 }
 
-/* Register c++-specific dumps.  */
+/* Register scpel-specific dumps.  */
 
 void
 scpel_register_dumps (spl::dump_manager *dumps)

@@ -1,4 +1,4 @@
-/* C++ modules.  Experimental!	-*- c++ -*- */
+/* C++ modules.  Experimental!	-*- scpel -*- */
 
 /* Forward to the header in scpeltools.  */
 

@@ -1,5 +1,5 @@
 /* BFD back-end for archive files (libraries).
-   Copyright (C) 1990-2023 Free Software Foundation, Inc.
+   Copyright (C) 1990-2022 Free Software Foundation, Inc.
    Written by Cygnus Support.  Mostly Gumby Henkel-Wallace's fault.
 
    This file is part of BFD, the Binary File Descriptor library.
@@ -146,37 +146,6 @@ SUBSECTION
 extern int errno;
 #endif
 
-/*
-EXTERNAL
-.{* A canonical archive symbol.  *}
-.{* This is a type pun with struct symdef/struct ranlib on purpose!  *}
-.typedef struct carsym
-.{
-.  const char *name;
-.  file_ptr file_offset;	{* Look here to find the file.  *}
-.}
-.carsym;
-.
-.{* A count of carsyms (canonical archive symbols).  *}
-. typedef unsigned long symindex;
-.#define BFD_NO_MORE_SYMBOLS ((symindex) ~0)
-.
-
-INTERNAL
-.{* Used in generating armaps (archive tables of contents).  *}
-.struct orl		{* Output ranlib.  *}
-.{
-.  char **name;		{* Symbol name.  *}
-.  union
-.  {
-.    file_ptr pos;
-.    bfd *abfd;
-.  } u;			{* bfd* or file position.  *}
-.  int namidx;		{* Index into string table.  *}
-.};
-.
-*/
-
 /* We keep a cache of archive filepointers to archive elements to
    speed up searching the archive by filepos.  We only add an entry to
    the cache when we actually read one.  We also don't sort the cache;
@@ -223,7 +192,7 @@ _bfd_ar_sizepad (char *p, size_t n, bfd_size_type size)
   char buf[21];
   size_t len;
 
-  snprintf (buf, sizeof (buf), "%-10" PRIu64, (uint64_t) size);
+  snprintf (buf, sizeof (buf), "%-10" BFD_VMA_FMT "u", size);
   len = strlen (buf);
   if (len > n)
     {
@@ -246,7 +215,18 @@ _bfd_generic_mkarchive (bfd *abfd)
   size_t amt = sizeof (struct artdata);
 
   abfd->tdata.aout_ar_data = (struct artdata *) bfd_zalloc (abfd, amt);
-  return bfd_ardata (abfd) != NULL;
+  if (bfd_ardata (abfd) == NULL)
+    return false;
+
+  /* Already cleared by bfd_zalloc above.
+     bfd_ardata (abfd)->cache = NULL;
+     bfd_ardata (abfd)->archive_head = NULL;
+     bfd_ardata (abfd)->symdefs = NULL;
+     bfd_ardata (abfd)->extended_names = NULL;
+     bfd_ardata (abfd)->extended_names_size = 0;
+     bfd_ardata (abfd)->tdata = NULL;  */
+
+  return true;
 }
 
 /*
@@ -505,7 +485,7 @@ _bfd_generic_read_ar_hdr_mag (bfd *abfd, const char *mag)
 {
   struct ar_hdr hdr;
   char *hdrp = (char *) &hdr;
-  uint64_t parsed_size;
+  bfd_size_type parsed_size;
   struct areltdata *ared;
   char *filename = NULL;
   ufile_ptr filesize;
@@ -534,7 +514,7 @@ _bfd_generic_read_ar_hdr_mag (bfd *abfd, const char *mag)
   errno = 0;
   fmag_save = hdr.ar_fmag[0];
   hdr.ar_fmag[0] = 0;
-  scan = sscanf (hdr.ar_size, "%" SCNu64, &parsed_size);
+  scan = sscanf (hdr.ar_size, "%" BFD_VMA_FMT "u", &parsed_size);
   hdr.ar_fmag[0] = fmag_save;
   if (scan != 1)
     {
@@ -925,6 +905,13 @@ bfd_generic_archive_p (bfd *abfd)
     }
 
   bfd_ardata (abfd)->first_file_filepos = SARMAG;
+  /* Cleared by bfd_zalloc above.
+     bfd_ardata (abfd)->cache = NULL;
+     bfd_ardata (abfd)->archive_head = NULL;
+     bfd_ardata (abfd)->symdefs = NULL;
+     bfd_ardata (abfd)->extended_names = NULL;
+     bfd_ardata (abfd)->extended_names_size = 0;
+     bfd_ardata (abfd)->tdata = NULL;  */
 
   if (!BFD_SEND (abfd, _bfd_slurp_armap, (abfd))
       || !BFD_SEND (abfd, _bfd_slurp_extended_name_table, (abfd)))
@@ -2142,7 +2129,6 @@ _bfd_write_archive_contents (bfd *arch)
   bfd_size_type wrote;
   int tries;
   char *armag;
-  char *buffer = NULL;
 
   /* Verify the viability of all entries; if any of them live in the
      filesystem (as opposed to living in an archive open for input)
@@ -2223,23 +2209,16 @@ _bfd_write_archive_contents (bfd *arch)
 	}
     }
 
-#define AR_WRITE_BUFFERSIZE (DEFAULT_BUFFERSIZE * 1024)
-
-  /* FIXME: Find a way to test link_info.reduce_memory_overheads
-     and change the buffer size.  */
-  buffer = bfd_malloc (AR_WRITE_BUFFERSIZE);
-  if (buffer == NULL)
-    goto input_err;
-
   for (current = arch->archive_head;
        current != NULL;
        current = current->archive_next)
     {
+      char buffer[DEFAULT_BUFFERSIZE];
       bfd_size_type remaining = arelt_size (current);
 
       /* Write ar header.  */
       if (!_bfd_write_ar_hdr (arch, current))
-	goto input_err;
+	return false;
       if (bfd_is_thin_archive (arch))
 	continue;
       if (bfd_seek (current, (file_ptr) 0, SEEK_SET) != 0)
@@ -2247,7 +2226,7 @@ _bfd_write_archive_contents (bfd *arch)
 
       while (remaining)
 	{
-	  size_t amt = AR_WRITE_BUFFERSIZE;
+	  size_t amt = DEFAULT_BUFFERSIZE;
 
 	  if (amt > remaining)
 	    amt = remaining;
@@ -2255,18 +2234,16 @@ _bfd_write_archive_contents (bfd *arch)
 	  if (bfd_bread (buffer, amt, current) != amt)
 	    goto input_err;
 	  if (bfd_bwrite (buffer, amt, arch) != amt)
-	    goto input_err;
+	    return false;
 	  remaining -= amt;
 	}
 
       if ((arelt_size (current) % 2) == 1)
 	{
 	  if (bfd_bwrite (&ARFMAG[1], 1, arch) != 1)
-	    goto input_err;
+	    return false;
 	}
     }
-
-  free (buffer);
 
   if (makemap && hasobjects)
     {
@@ -2291,7 +2268,6 @@ _bfd_write_archive_contents (bfd *arch)
 
  input_err:
   bfd_set_input_error (current, bfd_get_error ());
-  free (buffer);
   return false;
 }
 

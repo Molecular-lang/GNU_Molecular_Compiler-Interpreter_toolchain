@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl
-dnl   Copyright (C) 2012-2023 Free Software Foundation, Inc.
+dnl   Copyright (C) 2012-2022 Free Software Foundation, Inc.
 dnl
 dnl This file is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
@@ -282,7 +282,7 @@ if test x${all_targets} = xfalse ; then
 	bfd_h8300_arch)		ta="$ta h8300-dis.lo" ;;
 	bfd_hppa_arch)		ta="$ta hppa-dis.lo" ;;
 	bfd_i386_arch|bfd_iamcu_arch)
-				ta="$ta i386-dis.lo" ;;
+				ta="$ta i386-dis.lo i386-opc.lo" ;;
 	bfd_ia64_arch)		ta="$ta ia64-dis.lo ia64-opc.lo" ;;
 	bfd_ip2k_arch)		ta="$ta ip2k-asm.lo ip2k-desc.lo ip2k-dis.lo ip2k-ibld.lo ip2k-opc.lo" using_cgen=yes ;;
 	bfd_epiphany_arch)	ta="$ta epiphany-asm.lo epiphany-desc.lo epiphany-dis.lo epiphany-ibld.lo epiphany-opc.lo" using_cgen=yes ;;
@@ -391,7 +391,7 @@ fi
 AC_SUBST(archdefs)
 AC_SUBST(BFD_MACHINES)
 
-AC_CONFIG_FILES([Makefile po/Makefile.in:po/Make-in])
+AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
 
 GNU_MAKE_JOBSERVER

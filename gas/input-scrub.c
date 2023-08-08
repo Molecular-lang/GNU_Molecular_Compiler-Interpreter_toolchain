@@ -1,5 +1,5 @@
 /* input_scrub.c - Break up input buffers into whole numbers of lines.
-   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+   Copyright (C) 1987-2022 Free Software Foundation, Inc.
 
    This file is part of GAS, the GNU Assembler.
 
@@ -104,9 +104,6 @@ static const char *logical_input_file;
 static unsigned int physical_input_line;
 static unsigned int logical_input_line;
 
-/* Indicator whether the origin of an update was a .linefile directive. */
-static bool is_linefile;
-
 /* Struct used to save the state of the input handler during include files */
 struct input_save {
   char *              buffer_start;
@@ -118,7 +115,6 @@ struct input_save {
   const char *        logical_input_file;
   unsigned int        physical_input_line;
   unsigned int        logical_input_line;
-  bool                is_linefile;
   size_t              sb_index;
   sb                  from_sb;
   enum expansion      from_sb_expansion; /* Should we do a conditional check?  */
@@ -170,7 +166,6 @@ input_scrub_push (char *saved_position)
   saved->logical_input_file = logical_input_file;
   saved->physical_input_line = physical_input_line;
   saved->logical_input_line = logical_input_line;
-  saved->is_linefile = is_linefile;
   saved->sb_index = sb_index;
   saved->from_sb = from_sb;
   saved->from_sb_expansion = from_sb_expansion;
@@ -198,7 +193,6 @@ input_scrub_pop (struct input_save *saved)
   logical_input_file = saved->logical_input_file;
   physical_input_line = saved->physical_input_line;
   logical_input_line = saved->logical_input_line;
-  is_linefile = saved->is_linefile;
   sb_index = saved->sb_index;
   from_sb = saved->from_sb;
   from_sb_expansion = saved->from_sb_expansion;
@@ -220,7 +214,6 @@ input_scrub_begin (void)
 
   physical_input_file = NULL;	/* No file read yet.  */
   next_saved_file = NULL;	/* At EOF, don't pop to any other file */
-  macro_nest = 0;
   input_scrub_reinit ();
   do_scrub_begin (flag_m68k_mri);
 }
@@ -274,6 +267,8 @@ input_scrub_include_sb (sb *from, char *position, enum expansion expansion)
     as_fatal (_("macros nested too deeply"));
   ++macro_nest;
 
+  gas_assert (expansion < expanding_nested);
+
 #ifdef md_macro_start
   if (expansion == expanding_macro)
     {
@@ -283,11 +278,11 @@ input_scrub_include_sb (sb *from, char *position, enum expansion expansion)
 
   next_saved_file = input_scrub_push (position);
 
-  /* Allocate sufficient space: from->len plus optional newline
-     plus two ".linefile " directives, plus a little more for other
-     expansion.  */
+  /* Allocate sufficient space: from->len + optional newline.  */
   newline = from->len >= 1 && from->ptr[0] != '\n';
-  sb_build (&from_sb, from->len + newline + 2 * sizeof (".linefile") + 30);
+  sb_build (&from_sb, from->len + newline);
+  if (expansion == expanding_repeat && from_sb_expansion >= expanding_macro)
+    expansion = expanding_nested;
   from_sb_expansion = expansion;
   if (newline)
     {
@@ -440,7 +435,10 @@ bump_line_counters (void)
   if (sb_index == (size_t) -1)
     ++physical_input_line;
 
-  if (logical_input_line != -1u)
+  /* PR gas/16908 workaround: Don't bump logical line numbers while
+     expanding macros, unless file (and maybe line; see as_where()) are
+     used inside the macro.  */
+  if (logical_input_line != -1u && from_sb_expansion < expanding_macro)
     ++logical_input_line;
 }
 
@@ -469,11 +467,13 @@ new_logical_line_flags (const char *fname, /* DON'T destroy it!  We point to it!
       /* FIXME: we could check that include nesting is correct.  */
       break;
     case 1 << 3:
-      if (line_number < 0 || fname != NULL)
+      if (line_number < 0 || fname != NULL || next_saved_file == NULL)
 	abort ();
-      if (next_saved_file == NULL)
-	fname = physical_input_file;
-      else if (next_saved_file->logical_input_file)
+      /* PR gas/16908 workaround: Ignore updates when nested inside a macro
+	 expansion.  */
+      if (from_sb_expansion == expanding_nested)
+	return;
+      if (next_saved_file->logical_input_file)
 	fname = next_saved_file->logical_input_file;
       else
 	fname = next_saved_file->physical_input_file;
@@ -481,8 +481,6 @@ new_logical_line_flags (const char *fname, /* DON'T destroy it!  We point to it!
     default:
       abort ();
     }
-
-  is_linefile = flags != 1 && (flags != 0 || fname);
 
   if (line_number >= 0)
     logical_input_line = line_number;
@@ -497,6 +495,15 @@ new_logical_line_flags (const char *fname, /* DON'T destroy it!  We point to it!
       && (logical_input_file == NULL
 	  || filename_cmp (logical_input_file, fname)))
     logical_input_file = fname;
+
+  /* When encountering file or line changes inside a macro, arrange for
+     bump_line_counters() to henceforth increment the logical line number
+     again, just like it does when expanding repeats.  See as_where() for
+     why changing file or line alone doesn't alter expansion mode.  */
+  if (from_sb_expansion == expanding_macro
+      && logical_input_file != NULL
+      && logical_input_line != -1u)
+    from_sb_expansion = expanding_repeat;
 }
 
 void
@@ -505,33 +512,6 @@ new_logical_line (const char *fname, int line_number)
   new_logical_line_flags (fname, line_number, 0);
 }
 
-void
-as_report_context (void)
-{
-  const struct input_save *saved = next_saved_file;
-  enum expansion expansion = from_sb_expansion;
-  int indent = 1;
-
-  if (!macro_nest)
-    return;
-
-  do
-    {
-      if (expansion != expanding_macro)
-	/* Nothing.  */;
-      else if (saved->logical_input_file != NULL
-	       && saved->logical_input_line != -1u)
-	as_info_where (saved->logical_input_file, saved->logical_input_line,
-		       indent, _("macro invoked from here"));
-      else
-	as_info_where (saved->physical_input_file, saved->physical_input_line,
-		       indent, _("macro invoked from here"));
-
-      expansion = saved->from_sb_expansion;
-      ++indent;
-    }
-  while ((saved = saved->next_saved_file) != NULL);
-}
 
 /* Return the current physical input file name and line number, if known  */
 
@@ -550,49 +530,10 @@ as_where_physical (unsigned int *linep)
   return NULL;
 }
 
-/* Return the file name and line number at the top most macro
-   invocation, unless .file / .line were used inside a macro.  */
-
-const char *
-as_where (unsigned int *linep)
-{
-  const char *file = as_where_top (linep);
-
-  if (macro_nest && is_linefile)
-    {
-      const struct input_save *saved = next_saved_file;
-      enum expansion expansion = from_sb_expansion;
-
-      do
-	{
-	  if (expansion != expanding_macro)
-	    /* Nothing.  */;
-	  else if (saved->logical_input_file != NULL
-		   && (linep == NULL || saved->logical_input_line != -1u))
-	    {
-	      if (linep != NULL)
-		*linep = saved->logical_input_line;
-	      file = saved->logical_input_file;
-	    }
-	  else if (saved->physical_input_file != NULL)
-	    {
-	      if (linep != NULL)
-		*linep = saved->physical_input_line;
-	      file = saved->physical_input_file;
-	    }
-
-	  expansion = saved->from_sb_expansion;
-	}
-      while ((saved = saved->next_saved_file) != NULL);
-    }
-
-  return file;
-}
-
 /* Return the current file name and line number.  */
 
 const char *
-as_where_top (unsigned int *linep)
+as_where (unsigned int *linep)
 {
   if (logical_input_file != NULL
       && (linep == NULL || logical_input_line != -1u))
@@ -604,3 +545,4 @@ as_where_top (unsigned int *linep)
 
   return as_where_physical (linep);
 }
+

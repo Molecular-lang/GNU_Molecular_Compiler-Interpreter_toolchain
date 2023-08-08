@@ -1,5 +1,5 @@
 /* BFD back-end for mmo objects (MMIX-specific object-format).
-   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+   Copyright (C) 2001-2022 Free Software Foundation, Inc.
    Written by Hans-Peter Nilsson (hp@bitrange.com).
    Infrastructure and other bits originally copied from srec.c and
    binary.c.
@@ -382,7 +382,7 @@ static bool mmo_scan (bfd *);
 static asection *mmo_decide_section (bfd *, bfd_vma);
 static asection *mmo_get_generic_spec_data_section (bfd *, int);
 static asection *mmo_get_spec_section (bfd *, int);
-static bfd_byte *mmo_get_loc (asection *, bfd_vma, unsigned int);
+static bfd_byte *mmo_get_loc (asection *, bfd_vma, int);
 static bfd_cleanup mmo_object_p (bfd *);
 static void mmo_map_set_sizes (bfd *, asection *, void *);
 static bool mmo_get_symbols (bfd *);
@@ -463,15 +463,17 @@ mmo_make_section (bfd *abfd, const char *secname)
 
   if (sec == NULL)
     {
-      size_t len = strlen (secname) + 1;
-      char *newsecname = bfd_alloc (abfd, len);
+      char *newsecname = strdup (secname);
 
       if (newsecname == NULL)
 	{
-	  bfd_set_error (bfd_error_no_memory);
+	  _bfd_error_handler
+	    /* xgettext:c-format */
+	    (_("%pB: no core to allocate section name %s"),
+	     abfd, secname);
+	  bfd_set_error (bfd_error_system_call);
 	  return NULL;
 	}
-      memcpy (newsecname, secname, len);
       sec = bfd_make_section (abfd, newsecname);
     }
 
@@ -526,7 +528,7 @@ mmo_object_p (bfd *abfd)
      important as all of the symbol information can only be 256k.  */
   abfd->tdata.mmo_data->max_symbol_length = (b[2] * 256 + b[3]) * 4;
   abfd->tdata.mmo_data->lop_stab_symbol
-    = bfd_alloc (abfd, abfd->tdata.mmo_data->max_symbol_length + 1);
+    = bfd_malloc (abfd->tdata.mmo_data->max_symbol_length + 1);
 
   if (abfd->tdata.mmo_data->lop_stab_symbol == NULL)
     {
@@ -539,7 +541,7 @@ mmo_object_p (bfd *abfd)
 
   /* Read in everything.  */
   if (! mmo_scan (abfd))
-    goto bad_format;
+    goto bad_format_free;
 
   if (abfd->symcount > 0)
     abfd->flags |= HAS_SYMS;
@@ -548,10 +550,12 @@ mmo_object_p (bfd *abfd)
      arches (not recommended due to its small-size limitations).  Look at
      the ELF format for how to make it target-generic.  */
   if (! bfd_default_set_arch_mach (abfd, bfd_arch_mmix, 0))
-    goto bad_format;
+    goto bad_format_free;
 
   return _bfd_no_cleanup;
 
+ bad_format_free:
+  free (abfd->tdata.mmo_data->lop_stab_symbol);
  bad_format:
   bfd_set_error (bfd_error_wrong_format);
  bad_final:
@@ -723,7 +727,7 @@ mmo_decide_section (bfd *abfd, bfd_vma vma)
   sprintf (sec_name, ".MMIX.sec.%d", abfd->tdata.mmo_data->sec_no++);
   sec = mmo_make_section (abfd, sec_name);
 
-  if (!sec || (!sec->user_set_vma && !bfd_set_section_vma (sec, vma)))
+  if (!sec->user_set_vma && !bfd_set_section_vma (sec, vma))
     return NULL;
 
   if (!bfd_set_section_flags (sec, (bfd_section_flags (sec)
@@ -1126,8 +1130,8 @@ mmo_get_spec_section (bfd *abfd, int spec_data_number)
 
   /* We allocate a buffer here for the advertised size, with head room for
      tetrabyte alignment.  */
-  loc = bfd_zalloc (abfd, (section_length + 3
-			   + sizeof (struct mmo_data_list_struct)));
+  loc = bfd_zmalloc (section_length + 3
+		     + sizeof (struct mmo_data_list_struct));
   if (loc == NULL)
     goto format_error;
 
@@ -1178,14 +1182,15 @@ mmo_get_byte (bfd *abfd)
 
   if (abfd->tdata.mmo_data->byte_no == 0)
     {
-      if (!abfd->tdata.mmo_data->have_error
+      if (! abfd->tdata.mmo_data->have_error
 	  && bfd_bread (abfd->tdata.mmo_data->buf, 4, abfd) != 4)
-	abfd->tdata.mmo_data->have_error = true;
+	{
+	  abfd->tdata.mmo_data->have_error = true;
 
-      /* A value somewhat safe against tripping on some inconsistency
-	 when mopping up after this error.  */
-      if (abfd->tdata.mmo_data->have_error)
-	return 128;
+	  /* A value somewhat safe against tripping on some inconsistency
+	     when mopping up after this error.  */
+	  return 128;
+	}
     }
 
   retval = abfd->tdata.mmo_data->buf[abfd->tdata.mmo_data->byte_no];
@@ -1487,7 +1492,7 @@ SUBSECTION
    MMO_SEC_CONTENTS_CHUNK_SIZE.  */
 
 static bfd_byte *
-mmo_get_loc (asection *sec, bfd_vma vma, unsigned int size)
+mmo_get_loc (asection *sec, bfd_vma vma, int size)
 {
   bfd_size_type allocated_size;
   struct mmo_section_data_struct *sdatap = mmo_section_data (sec);
@@ -1499,29 +1504,27 @@ mmo_get_loc (asection *sec, bfd_vma vma, unsigned int size)
   for (; datap != NULL; datap = datap->next)
     {
       if (datap->where <= vma
-	  && datap->size >= size
-	  && datap->size - size >= vma - datap->where)
-	return datap->data + (vma - datap->where);
+	  && datap->where + datap->size >= vma + size)
+	return datap->data + vma - datap->where;
       else if (datap->where <= vma
-	       && datap->allocated_size >= size
-	       && datap->allocated_size - size >= vma - datap->where
+	       && datap->where + datap->allocated_size >= vma + size
 	       /* Only munch on the "allocated size" if it does not
 		  overlap the next chunk.  */
 	       && (datap->next == NULL || datap->next->where >= vma + size))
 	{
 	  /* There was room allocated, but the size wasn't set to include
 	     it.  Do that now.  */
-	  datap->size = vma - datap->where + size;
+	  datap->size += (vma + size) - (datap->where + datap->size);
 
 	  /* Update the section size.  This happens only if we update the
 	     32-bit-aligned chunk size.  Callers that have
 	     non-32-bit-aligned sections should do all allocation and
 	     size-setting by themselves or at least set the section size
 	     after the last allocating call to this function.  */
-	  if (vma - sec->vma + size > sec->size)
-	    sec->size = vma - sec->vma + size;
+	  if (vma + size > sec->vma + sec->size)
+	    sec->size += (vma + size) - (sec->vma + sec->size);
 
-	  return datap->data + (vma - datap->where);
+	  return datap->data + vma - datap->where;
 	}
     }
 
@@ -1532,7 +1535,7 @@ mmo_get_loc (asection *sec, bfd_vma vma, unsigned int size)
      for no more than MMO_SEC_CONTENTS_CHUNK_SIZE will always get resolved.  */
 
   for (datap = sdatap->head; datap != NULL; datap = datap->next)
-    if ((datap->where <= vma && datap->size > vma - datap->where)
+    if ((datap->where <= vma && datap->where + datap->size > vma)
 	|| (datap->where < vma + size
 	    && datap->where + datap->size >= vma + size))
       return NULL;
@@ -1580,8 +1583,8 @@ mmo_get_loc (asection *sec, bfd_vma vma, unsigned int size)
 
   /* Update the section size.  This happens only when we add contents and
      re-size as we go.  The section size will then be aligned to 32 bits.  */
-  if (vma - sec->vma + size > sec->size)
-    sec->size = vma - sec->vma + size;
+  if (vma + size > sec->vma + sec->size)
+    sec->size += (vma + size) - (sec->vma + sec->size);
   return entry->data;
 }
 
@@ -1600,7 +1603,7 @@ static bool
 mmo_scan (bfd *abfd)
 {
   unsigned int i;
-  unsigned int lineno ATTRIBUTE_UNUSED = 1;
+  unsigned int lineno = 1;
   bool error = false;
   bfd_vma vma = 0;
   asection *sec = NULL;
@@ -1886,7 +1889,6 @@ mmo_scan (bfd *abfd)
 			   " was already entered as `%s'\n"),
 			 abfd, y, fname, file_names[y]);
 		      bfd_set_error (bfd_error_bad_value);
-		      free (fname);
 		      goto error_return;
 		    }
 
@@ -3008,13 +3010,18 @@ mmo_write_symbols_and_terminator (bfd *abfd)
 	  {
 	    /* Arbitrary buffer to hold the printable representation of a
 	       vma.  */
+	    char vmas_main[40];
+	    char vmas_start[40];
 	    bfd_vma vma_start = bfd_get_start_address (abfd);
+
+	    sprintf_vma (vmas_main, mainvalue);
+	    sprintf_vma (vmas_start, vma_start);
 
 	    _bfd_error_handler
 	      /* xgettext:c-format */
-	      (_("%pB: bad symbol definition: `Main' set to %" PRIx64 " rather"
-		 " than the start address %" PRIx64 "\n"),
-	       abfd, mainvalue, vma_start);
+	      (_("%pB: bad symbol definition: `Main' set to %s rather"
+		 " than the start address %s\n"),
+	       abfd, vmas_main, vmas_start);
 	    bfd_set_error (bfd_error_bad_value);
 	    return false;
 	  }
@@ -3315,7 +3322,6 @@ mmo_write_object_contents (bfd *abfd)
 /* FIXME: We can do better on this one, if we have a dwarf2 .debug_line
    section or if MMO line numbers are implemented.  */
 #define mmo_find_nearest_line _bfd_nosymbols_find_nearest_line
-#define mmo_find_nearest_line_with_alt _bfd_nosymbols_find_nearest_line_with_alt
 #define mmo_find_line _bfd_nosymbols_find_line
 #define mmo_find_inliner_info _bfd_nosymbols_find_inliner_info
 #define mmo_make_empty_symbol _bfd_generic_make_empty_symbol

@@ -1,5 +1,5 @@
 /* dllwrap.c -- wrapper for DLLTOOL and GCC to generate PE style DLLs
-   Copyright (C) 1998-2023 Free Software Foundation, Inc.
+   Copyright (C) 1998-2022 Free Software Foundation, Inc.
    Contributed by Mumit Khan (khan@xraylith.wisc.edu).
 
    This file is part of GNU Binutils.
@@ -351,7 +351,7 @@ run (const char *what, char *args)
   int i;
   const char **argv;
   char *errmsg_fmt = NULL, *errmsg_arg = NULL;
-  char *temp_base = make_temp_file (NULL);
+  char *temp_base = choose_temp_base ();
   int in_quote;
   char sep;
 
@@ -482,7 +482,7 @@ usage (FILE *file, int status)
   fprintf (file, _("   --version              Print dllwrap version\n"));
   fprintf (file, _("   --implib <outname>     Synonym for --output-lib\n"));
   fprintf (file, _("  Options for %s:\n"), prog_name);
-  fprintf (file, _("   --driver-name <driver> Defaults to \"spl\"\n"));
+  fprintf (file, _("   --driver-name <driver> Defaults to \"gcc\"\n"));
   fprintf (file, _("   --driver-flags <flags> Override default ld flags\n"));
   fprintf (file, _("   --dlltool-name <dlltool> Defaults to \"dlltool\"\n"));
   fprintf (file, _("   --entry <entry>        Specify alternate DLL entry point\n"));
@@ -637,7 +637,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  warn (_("WARNING: %s is deprecated, use spl -shared or ld -shared instead\n"),
+  warn (_("WARNING: %s is deprecated, use gcc -shared or ld -shared instead\n"),
 	prog_name);
 
   expandargv (&argc, &argv);
@@ -811,14 +811,14 @@ main (int argc, char **argv)
 
   /* Deduce driver-name and dlltool-name from our own.  */
   if (driver_name == NULL)
-    driver_name = deduce_name ("spl");
+    driver_name = deduce_name ("gcc");
 
   if (dlltool_name == NULL)
     dlltool_name = deduce_name ("dlltool");
 
   if (! def_file_seen)
     {
-      char *fileprefix = make_temp_file (NULL);
+      char *fileprefix = choose_temp_base ();
 
       def_file_name = (char *) xmalloc (strlen (fileprefix) + 5);
       sprintf (def_file_name, "%s.def",
@@ -1024,14 +1024,14 @@ Creating one, but that may not be what you want"));
   /* Step 1. Call GCC/LD to create base relocation file. If using GCC, the
      driver command line will look like the following:
 
-        % spl -Wl,--dll --Wl,--base-file,foo.base [rest of command line]
+        % gcc -Wl,--dll --Wl,--base-file,foo.base [rest of command line]
 
      If the user does not specify a base name, create temporary one that
      is deleted at exit.  */
 
   if (! base_file_name)
     {
-      char *fileprefix = make_temp_file (NULL);
+      char *fileprefix = choose_temp_base ();
       base_file_name = (char *) xmalloc (strlen (fileprefix) + 6);
       sprintf (base_file_name, "%s.base",
 	       (dontdeltemps) ? mybasename (fileprefix) : fileprefix);
@@ -1127,7 +1127,7 @@ Creating one, but that may not be what you want"));
    * Step 3. Call GCC/LD to again, adding the exp file this time.
    * driver command line will look like the following:
    *
-   *    % spl -Wl,--dll --Wl,--base-file,foo.base foo.exp [rest ...]
+   *    % gcc -Wl,--dll --Wl,--base-file,foo.base foo.exp [rest ...]
    */
 
   {
@@ -1219,7 +1219,7 @@ Creating one, but that may not be what you want"));
    * Step 5. Link it all together and be done with it.
    * driver command line will look like the following:
    *
-   *    % spl -Wl,--dll foo.exp [rest ...]
+   *    % gcc -Wl,--dll foo.exp [rest ...]
    *
    */
 

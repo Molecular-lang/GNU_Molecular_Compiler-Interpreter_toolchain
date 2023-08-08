@@ -1,5 +1,5 @@
 /* as.h - global header file
-   Copyright (C) 1987-2023 Free Software Foundation, Inc.
+   Copyright (C) 1987-2022 Free Software Foundation, Inc.
 
    This file is part of GAS, the GNU Assembler.
 
@@ -77,6 +77,9 @@
 #include "bfd.h"
 #include "libiberty.h"
 
+/* Define the standard progress macros.  */
+#include "progress.h"
+
 /* Other stuff from config.h.  */
 #ifdef NEED_DECLARATION_ENVIRON
 extern char **environ;
@@ -118,14 +121,6 @@ void *mempcpy(void *, const void *, size_t);
 #define obstack_chunk_free xfree
 
 #define xfree free
-
-#if GCC_VERSION >= 7000
-#define gas_mul_overflow(a, b, res) __builtin_mul_overflow (a, b, res)
-#else
-/* Assumes unsigned values.  Careful!  Args evaluated multiple times.  */
-#define gas_mul_overflow(a, b, res) \
-  ((*res) = (a), (*res) *= (b), (b) != 0 && (*res) / (b) != (a))
-#endif
 
 #include "asintl.h"
 
@@ -258,10 +253,7 @@ enum _relax_state
   rs_cfa,
 
   /* Cross-fragment dwarf2 line number optimization.  */
-  rs_dwarf2dbg,
-
-  /* SFrame FRE type selection optimization.  */
-  rs_sframe
+  rs_dwarf2dbg
 };
 
 typedef enum _relax_state relax_stateT;
@@ -305,9 +297,6 @@ COMMON int flag_keep_locals; /* -L */
 /* True if we are assembling in MRI mode.  */
 COMMON int flag_mri;
 
-/* True if alternate macro mode is in effect.  */
-COMMON bool flag_macro_alternate;
-
 /* Should the data section be made read-only and appended to the text
    section?  */
 COMMON unsigned char flag_readonly_data_in_text; /* -R */
@@ -340,14 +329,8 @@ COMMON int flag_execstack;
 /* TRUE if .note.GNU-stack section with SEC_CODE should be created */
 COMMON int flag_noexecstack;
 
-/* TRUE if .sframe section should be created.  */
-COMMON int flag_gen_sframe;
-
 /* name of emitted object file */
 COMMON const char *out_file_name;
-
-/* Keep the output file.  */
-COMMON int keep_it;
 
 /* name of file defining extensions to the basic instruction set */
 COMMON char *insttbl_file_name;
@@ -387,8 +370,7 @@ enum debug_info_type
   DEBUG_STABS,
   DEBUG_ECOFF,
   DEBUG_DWARF,
-  DEBUG_DWARF2,
-  DEBUG_CODEVIEW
+  DEBUG_DWARF2
 };
 
 extern enum debug_info_type debug_type;
@@ -425,7 +407,7 @@ typedef struct _pseudo_type pseudo_typeS;
 /* for use with -Wformat */
 
 #if __GNUC__ == 2 && __GNUC_MINOR__ < 6
-/* Support for double underscores in attribute names was added in spl
+/* Support for double underscores in attribute names was added in gcc
    2.6, so avoid them if we are using an earlier version.  */
 #define __printf__ printf
 #define __format__ format
@@ -437,20 +419,12 @@ typedef struct _pseudo_type pseudo_typeS;
 #define PRINTF_WHERE_LIKE(FCN) \
   void FCN (const char *file, unsigned int line, const char *format, ...) \
     __attribute__ ((__format__ (__printf__, 3, 4)))
-#define PRINTF_INDENT_LIKE(FCN) \
-  void FCN (const char *file, unsigned int line, unsigned int indent, \
-	    const char *format, ...) \
-    __attribute__ ((__format__ (__printf__, 4, 5)))
 
 #else /* __GNUC__ < 2 || defined(VMS) */
 
 #define PRINTF_LIKE(FCN)	void FCN (const char *format, ...)
 #define PRINTF_WHERE_LIKE(FCN)	void FCN (const char *file, \
 					  unsigned int line, \
-					  const char *format, ...)
-#define PRINTF_INDENT_LIKE(FCN)	void FCN (const char *file, \
-					  unsigned int line, \
-					  unsigned int indent, \
 					  const char *format, ...)
 
 #endif /* __GNUC__ < 2 || defined(VMS) */
@@ -461,7 +435,6 @@ PRINTF_LIKE (as_tsktsk);
 PRINTF_LIKE (as_warn);
 PRINTF_WHERE_LIKE (as_bad_where);
 PRINTF_WHERE_LIKE (as_warn_where);
-PRINTF_INDENT_LIKE (as_info_where);
 
 void   as_abort (const char *, int, const char *) ATTRIBUTE_NORETURN;
 void   signal_init (void);
@@ -487,7 +460,6 @@ void   input_scrub_insert_file (char *);
 char * input_scrub_new_file (const char *);
 char * input_scrub_next_buffer (char **bufp);
 size_t do_scrub_chars (size_t (*get) (char *, size_t), char *, size_t);
-size_t do_scrub_pending (void);
 bool   scan_for_multibyte_characters (const unsigned char *, const unsigned char *, bool);
 int    gen_to_words (LITTLENUM_TYPE *, int, long);
 int    had_err (void);
@@ -496,9 +468,7 @@ void   cond_finish_check (int);
 void   cond_exit_macro (int);
 int    seen_at_least_1_file (void);
 void   app_pop (char *);
-void   as_report_context (void);
 const char * as_where (unsigned int *);
-const char * as_where_top (unsigned int *);
 const char * as_where_physical (unsigned int *);
 void   bump_line_counters (void);
 void   do_scrub_begin (int);
@@ -541,13 +511,7 @@ int check_eh_frame (struct expressionS *, unsigned int *);
 int eh_frame_estimate_size_before_relax (fragS *);
 int eh_frame_relax_frag (fragS *);
 void eh_frame_convert_frag (fragS *);
-void eh_begin (void);
 int generic_force_reloc (struct fix *);
-
-/* SFrame FRE optimization.  */
-int sframe_estimate_size_before_relax (fragS *);
-int sframe_relax_frag (fragS *);
-void sframe_convert_frag (fragS *);
 
 #include "expr.h"		/* Before targ-*.h */
 
@@ -566,10 +530,10 @@ void sframe_convert_frag (fragS *);
 
 #include "write.h"
 #include "frags.h"
-#include "read.h"
-#include "symbols.h"
 #include "hashtab.h"
 #include "hash.h"
+#include "read.h"
+#include "symbols.h"
 
 #include "tc.h"
 #include "obj.h"

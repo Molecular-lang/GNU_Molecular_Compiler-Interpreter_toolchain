@@ -24,7 +24,7 @@ static const char *scpel_get_sarif_source_language (const char *);
    consequently, there should be very few hooks below.  */
 
 #undef LANG_HOOKS_NAME
-#define LANG_HOOKS_NAME "GNU C++"
+#define LANG_HOOKS_NAME "GNU Scpel"
 #undef LANG_HOOKS_INIT
 #define LANG_HOOKS_INIT cxx_init
 #undef LANG_HOOKS_CLASSIFY_RECORD

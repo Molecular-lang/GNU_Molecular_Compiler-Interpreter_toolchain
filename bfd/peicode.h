@@ -1,5 +1,5 @@
 /* Support for the generic parts of PE/PEI, for BFD.
-   Copyright (C) 1995-2023 Free Software Foundation, Inc.
+   Copyright (C) 1995-2022 Free Software Foundation, Inc.
    Written by Cygnus Solutions.
 
    This file is part of BFD, the Binary File Descriptor library.
@@ -191,8 +191,6 @@ coff_swap_filehdr_in (bfd * abfd, void * src, void * dst)
 
 #ifdef COFF_IMAGE_WITH_PE
 # define coff_swap_filehdr_out _bfd_XXi_only_swap_filehdr_out
-#elif defined COFF_WITH_peAArch64
-# define coff_swap_filehdr_out _bfd_XX_only_swap_filehdr_out
 #elif defined COFF_WITH_pex64
 # define coff_swap_filehdr_out _bfd_pex64_only_swap_filehdr_out
 #elif defined COFF_WITH_pep
@@ -233,7 +231,7 @@ coff_swap_scnhdr_in (bfd * abfd, void * ext, void * in)
     {
       scnhdr_int->s_vaddr += pe_data (abfd)->pe_opthdr.ImageBase;
       /* Do not cut upper 32-bits for 64-bit vma.  */
-#if !defined(COFF_WITH_pex64) && !defined(COFF_WITH_peAArch64) && !defined(COFF_WITH_peLoongArch64)
+#if !defined(COFF_WITH_pex64) && !defined(COFF_WITH_peAArch64)
       scnhdr_int->s_vaddr &= 0xffffffff;
 #endif
     }
@@ -292,10 +290,6 @@ pe_mkobject (bfd * abfd)
   pe->dos_message[15] = 0x0;
 
   memset (& pe->pe_opthdr, 0, sizeof pe->pe_opthdr);
-
-  bfd_coff_long_section_names (abfd)
-    = coff_backend_info (abfd)->_bfd_coff_long_section_names;
-
   return true;
 }
 
@@ -401,11 +395,11 @@ pe_bfd_copy_private_bfd_data (bfd *ibfd, bfd *obfd)
 
 #ifdef COFF_IMAGE_WITH_PE
 
-/* Code to handle Microsoft's Import Library Format.
+/* Code to handle Microsoft's Image Library Format.
    Also known as LINK6 format.
    Documentation about this format can be found at:
 
-   https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#import-library-format  */
+   http://msdn.microsoft.com/library/specs/pecoff_section8.htm  */
 
 /* The following constants specify the sizes of the various data
    structures that we have to create in order to build a bfd describing
@@ -444,7 +438,7 @@ pe_bfd_copy_private_bfd_data (bfd *ibfd, bfd *obfd)
 #define SIZEOF_IDATA2		(5 * 4)
 
 /* For PEx64 idata4 & 5 have thumb size of 8 bytes.  */
-#if defined(COFF_WITH_pex64) || defined(COFF_WITH_peAArch64)
+#ifdef COFF_WITH_pex64
 #define SIZEOF_IDATA4		(2 * 4)
 #define SIZEOF_IDATA5		(2 * 4)
 #else
@@ -526,6 +520,7 @@ pe_ILF_save_relocs (pe_ILF_vars * vars,
     abort ();
 
   coff_section_data (vars->abfd, sec)->relocs = vars->int_reltab;
+  coff_section_data (vars->abfd, sec)->keep_relocs = true;
 
   sec->relocation  = vars->reltab;
   sec->reloc_count = vars->relcount;
@@ -576,7 +571,7 @@ pe_ILF_make_a_symbol (pe_ILF_vars *  vars,
   esym = vars->esym_ptr;
 
   /* Copy the symbol's name into the string table.  */
-  int len = sprintf (vars->string_ptr, "%s%s", prefix, symbol_name);
+  sprintf (vars->string_ptr, "%s%s", prefix, symbol_name);
 
   if (section == NULL)
     section = bfd_und_section_ptr;
@@ -612,7 +607,7 @@ pe_ILF_make_a_symbol (pe_ILF_vars *  vars,
   vars->table_ptr ++;
   vars->native_ptr ++;
   vars->esym_ptr ++;
-  vars->string_ptr += len + 1;
+  vars->string_ptr += strlen (symbol_name) + strlen (prefix) + 1;
 
   BFD_ASSERT (vars->string_ptr < vars->end_string_ptr);
 }
@@ -768,17 +763,6 @@ static const jump_table jtab[] =
     16, 12
   },
 #endif
-
-#ifdef LOONGARCH64MAGIC
-/* We don't currently support jumping to DLLs, so if
-   someone does try emit a runtime trap.  Through BREAK 0.  */
-  { LOONGARCH64MAGIC,
-    { 0x00, 0x00, 0x2a, 0x00 },
-    4, 0
-  },
-
-#endif
-
   { 0, { 0 }, 0, 0 }
 };
 
@@ -902,7 +886,7 @@ pe_ILF_build_a_bfd (bfd *	    abfd,
      by the pe_ILF_make_a_section() function.  */
 
   /* PR 18758: Make sure that the data area is sufficiently aligned for
-     struct coff_section_tdata.  __alignof__ is a spl extension, hence
+     struct coff_section_tdata.  __alignof__ is a gcc extension, hence
      the test of GCC_VERSION.  For other compilers we assume 8 byte
      alignment.  */
 #if GCC_VERSION >= 3000
@@ -936,7 +920,7 @@ pe_ILF_build_a_bfd (bfd *	    abfd,
 	/* See PR 20907 for a reproducer.  */
 	goto error_return;
 
-#if defined(COFF_WITH_pex64) || defined(COFF_WITH_peAArch64) || defined(COFF_WITH_peLoongArch64)
+#if defined(COFF_WITH_pex64) || defined(COFF_WITH_peAArch64)
       ((unsigned int *) id4->contents)[0] = ordinal;
       ((unsigned int *) id4->contents)[1] = 0x80000000;
       ((unsigned int *) id5->contents)[0] = ordinal;
@@ -1074,6 +1058,38 @@ pe_ILF_build_a_bfd (bfd *	    abfd,
       abort ();
     }
 
+  /* Initialise the bfd.  */
+  memset (& internal_f, 0, sizeof (internal_f));
+
+  internal_f.f_magic  = magic;
+  internal_f.f_symptr = 0;
+  internal_f.f_nsyms  = 0;
+  internal_f.f_flags  = F_AR32WR | F_LNNO; /* XXX is this correct ?  */
+
+  if (   ! bfd_set_start_address (abfd, (bfd_vma) 0)
+      || ! bfd_coff_set_arch_mach_hook (abfd, & internal_f))
+    goto error_return;
+
+  if (bfd_coff_mkobject_hook (abfd, (void *) & internal_f, NULL) == NULL)
+    goto error_return;
+
+  coff_data (abfd)->pe = 1;
+#ifdef THUMBPEMAGIC
+  if (vars.magic == THUMBPEMAGIC)
+    /* Stop some linker warnings about thumb code not supporting interworking.  */
+    coff_data (abfd)->flags |= F_INTERWORK | F_INTERWORK_SET;
+#endif
+
+  /* Switch from file contents to memory contents.  */
+  bfd_cache_close (abfd);
+
+  abfd->iostream = (void *) vars.bim;
+  abfd->flags |= BFD_IN_MEMORY /* | HAS_LOCALS */;
+  abfd->iovec = &_bfd_memory_iovec;
+  abfd->where = 0;
+  abfd->origin = 0;
+  obj_sym_filepos (abfd) = 0;
+
   /* Now create a symbol describing the imported value.  */
   switch (import_type)
     {
@@ -1100,39 +1116,6 @@ pe_ILF_build_a_bfd (bfd *	    abfd,
   if (ptr)
     * ptr = '.';
 
-  /* Initialise the bfd.  */
-  memset (& internal_f, 0, sizeof (internal_f));
-
-  internal_f.f_magic  = magic;
-  internal_f.f_symptr = 0;
-  internal_f.f_nsyms  = 0;
-  internal_f.f_flags  = F_AR32WR | F_LNNO; /* XXX is this correct ?  */
-
-  if (   ! bfd_set_start_address (abfd, (bfd_vma) 0)
-      || ! bfd_coff_set_arch_mach_hook (abfd, & internal_f))
-    goto error_return;
-
-  if (bfd_coff_mkobject_hook (abfd, (void *) & internal_f, NULL) == NULL)
-    goto error_return;
-
-  obj_pe (abfd) = true;
-#ifdef THUMBPEMAGIC
-  if (vars.magic == THUMBPEMAGIC)
-    /* Stop some linker warnings about thumb code not supporting interworking.  */
-    coff_data (abfd)->flags |= F_INTERWORK | F_INTERWORK_SET;
-#endif
-
-  /* Switch from file contents to memory contents.  */
-  bfd_cache_close (abfd);
-
-  abfd->iostream = (void *) vars.bim;
-  abfd->flags |= BFD_IN_MEMORY | HAS_SYMS;
-  abfd->iovec = &_bfd_memory_iovec;
-  abfd->where = 0;
-  abfd->origin = 0;
-  abfd->size = 0;
-  obj_sym_filepos (abfd) = 0;
-
   /* Point the bfd at the symbol table.  */
   obj_symbols (abfd) = vars.sym_cache;
   abfd->symcount = vars.sym_index;
@@ -1147,8 +1130,9 @@ pe_ILF_build_a_bfd (bfd *	    abfd,
   obj_conv_table_size (abfd) = vars.sym_index;
 
   obj_coff_strings (abfd) = vars.string_table;
-  obj_coff_strings_len (abfd) = vars.string_ptr - vars.string_table;
   obj_coff_keep_strings (abfd) = true;
+
+  abfd->flags |= HAS_SYMS;
 
   return true;
 
@@ -1158,18 +1142,7 @@ pe_ILF_build_a_bfd (bfd *	    abfd,
   return false;
 }
 
-/* Cleanup function, returned from check_format hook.  */
-
-static void
-pe_ILF_cleanup (bfd *abfd)
-{
-  struct bfd_in_memory *bim = abfd->iostream;
-  free (bim->buffer);
-  free (bim);
-  abfd->iostream = NULL;
-}
-
-/* We have detected an Import Library Format archive element.
+/* We have detected a Image Library Format archive element.
    Decode the element and return the appropriate target.  */
 
 static bfd_cleanup
@@ -1186,7 +1159,7 @@ pe_ILF_object_p (bfd * abfd)
   unsigned int	  magic;
 
   /* Upon entry the first six bytes of the ILF header have
-     already been read.  Now read the rest of the header.  */
+      already been read.  Now read the rest of the header.  */
   if (bfd_bread (buffer, (bfd_size_type) 14, abfd) != 14)
     return NULL;
 
@@ -1246,12 +1219,6 @@ pe_ILF_object_p (bfd * abfd)
     case IMAGE_FILE_MACHINE_ARM64:
 #ifdef AARCH64MAGIC
       magic = AARCH64MAGIC;
-#endif
-      break;
-
-    case IMAGE_FILE_MACHINE_LOONGARCH64:
-#ifdef LOONGARCH64MAGIC
-      magic = LOONGARCH64MAGIC;
 #endif
       break;
 
@@ -1342,7 +1309,7 @@ pe_ILF_object_p (bfd * abfd)
       return NULL;
     }
 
-  return pe_ILF_cleanup;
+  return _bfd_no_cleanup;
 }
 
 static void
@@ -1416,7 +1383,7 @@ pe_bfd_read_buildid (bfd *abfd)
 	  */
 	  if (_bfd_XXi_slurp_codeview_record (abfd,
 					      (file_ptr) idd.PointerToRawData,
-					      idd.SizeOfData, cvinfo, NULL))
+					      idd.SizeOfData, cvinfo))
 	    {
 	      struct bfd_build_id* build_id = bfd_alloc (abfd,
 			 sizeof (struct bfd_build_id) + cvinfo->SignatureLength);
@@ -1535,52 +1502,18 @@ pe_bfd_object_p (bfd * abfd)
       if (amt > opt_hdr_size)
 	memset (opthdr + opt_hdr_size, 0, amt - opt_hdr_size);
 
-      bfd_coff_swap_aouthdr_in (abfd, opthdr, &internal_a);
-
-      struct internal_extra_pe_aouthdr *a = &internal_a.pe;
-
-#ifdef ARM
-      /* Use Subsystem to distinguish between pei-arm-little and
-	 pei-arm-wince-little.  */
-#ifdef WINCE
-      if (a->Subsystem != IMAGE_SUBSYSTEM_WINDOWS_CE_GUI)
-#else
-      if (a->Subsystem == IMAGE_SUBSYSTEM_WINDOWS_CE_GUI)
-#endif
-	{
-	  bfd_set_error (bfd_error_wrong_format);
-	  return NULL;
-	}
-#endif
-
-      if ((a->SectionAlignment & -a->SectionAlignment) != a->SectionAlignment
-	  || a->SectionAlignment >= 0x80000000)
-	{
-	  _bfd_error_handler (_("%pB: adjusting invalid SectionAlignment"),
-				abfd);
-	  a->SectionAlignment &= -a->SectionAlignment;
-	  if (a->SectionAlignment >= 0x80000000)
-	    a->SectionAlignment = 0x40000000;
-	}
-
-      if ((a->FileAlignment & -a->FileAlignment) != a->FileAlignment
-	  || a->FileAlignment > a->SectionAlignment)
-	{
-	  _bfd_error_handler (_("%pB: adjusting invalid FileAlignment"),
-			      abfd);
-	  a->FileAlignment &= -a->FileAlignment;
-	  if (a->FileAlignment > a->SectionAlignment)
-	    a->FileAlignment = a->SectionAlignment;
-	}
-
-      if (a->NumberOfRvaAndSizes > IMAGE_NUMBEROF_DIRECTORY_ENTRIES)
-	_bfd_error_handler (_("%pB: invalid NumberOfRvaAndSizes"), abfd);
+      bfd_set_error (bfd_error_no_error);
+      bfd_coff_swap_aouthdr_in (abfd, opthdr, & internal_a);
+      if (bfd_get_error () != bfd_error_no_error)
+	return NULL;
     }
+
 
   result = coff_real_object_p (abfd, internal_f.f_nscns, &internal_f,
 			       (opt_hdr_size != 0
 				? &internal_a
 				: (struct internal_aouthdr *) NULL));
+
 
   if (result)
     {

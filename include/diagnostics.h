@@ -1,4 +1,4 @@
-/* Copyright (C) 2017-2023 Free Software Foundation, Inc.
+/* Copyright (C) 2017-2022 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,15 +19,15 @@
 /* If at all possible, fix the source rather than using these macros
    to silence warnings.  If you do use these macros be aware that
    you'll need to condition their use on particular compiler versions,
-   which can be done for spl using ansidecl.h's GCC_VERSION macro.
+   which can be done for gcc using ansidecl.h's GCC_VERSION macro.
 
-   spl versions between 4.2 and 4.6 do not allow pragma control of
+   gcc versions between 4.2 and 4.6 do not allow pragma control of
    diagnostics inside functions, giving a hard error if you try to use
    the finer control available with later versions.
-   spl prior to 4.2 warns about diagnostic push and pop.
+   gcc prior to 4.2 warns about diagnostic push and pop.
 
-   The other macros have restrictions too, for example spl-5, spl-6
-   and spl-7 warn that -Wstringop-truncation is unknown, unless you
+   The other macros have restrictions too, for example gcc-5, gcc-6
+   and gcc-7 warn that -Wstringop-truncation is unknown, unless you
    also add DIAGNOSTIC_IGNORE ("-Wpragma").  */
 
 #ifdef __GNUC__
@@ -63,28 +63,10 @@
 # define DIAGNOSTIC_IGNORE_FORMAT_NONLITERAL \
   DIAGNOSTIC_IGNORE ("-Wformat-nonliteral")
 
-# if __has_warning ("-Wuser-defined-warnings")
-#  define DIAGNOSTIC_IGNORE_USER_DEFINED_WARNINGS \
-   DIAGNOSTIC_IGNORE ("-Wuser-defined-warnings")
-# endif
-
-# if __has_warning ("-Wunused-but-set-variable")
-#  define DIAGNOSTIC_IGNORE_UNUSED_BUT_SET_VARIABLE \
-   DIAGNOSTIC_IGNORE ("-Wunused-but-set-variable")
-# endif
-
 # define DIAGNOSTIC_ERROR_SWITCH \
   DIAGNOSTIC_ERROR ("-Wswitch")
 
-# if __has_warning ("-Wenum-constexpr-conversion")
-#  define DIAGNOSTIC_IGNORE_ENUM_CONSTEXPR_CONVERSION \
-   DIAGNOSTIC_IGNORE ("-Wenum-constexpr-conversion")
-# endif
-
 #elif defined (__GNUC__) /* GCC */
-
-# define DIAGNOSTIC_IGNORE_DEPRECATED_DECLARATIONS \
-  DIAGNOSTIC_IGNORE ("-Wdeprecated-declarations")
 
 # if __GNUC__ >= 7
 #  define DIAGNOSTIC_IGNORE_DEPRECATED_REGISTER \
@@ -101,15 +83,6 @@
 
 # define DIAGNOSTIC_IGNORE_FORMAT_NONLITERAL \
   DIAGNOSTIC_IGNORE ("-Wformat-nonliteral")
-
-# if __GNUC__ >= 5
-#  define DIAGNOSTIC_IGNORE_UNUSED_BUT_SET_VARIABLE \
-   DIAGNOSTIC_IGNORE ("-Wunused-but-set-variable")
-# endif
-
-# if __GNUC__ >= 13
-#  define DIAGNOSTIC_IGNORE_SELF_MOVE DIAGNOSTIC_IGNORE ("-Wself-move")
-# endif
 
 /* GCC 4.8's "diagnostic push/pop" seems broken when using this, -Wswitch
    remains enabled at the error level even after a pop.  Therefore, don't
@@ -148,20 +121,8 @@
 # define DIAGNOSTIC_IGNORE_FORMAT_NONLITERAL
 #endif
 
-#ifndef DIAGNOSTIC_IGNORE_USER_DEFINED_WARNINGS
-# define DIAGNOSTIC_IGNORE_USER_DEFINED_WARNINGS
-#endif
-
-#ifndef DIAGNOSTIC_IGNORE_UNUSED_BUT_SET_VARIABLE
-# define DIAGNOSTIC_IGNORE_UNUSED_BUT_SET_VARIABLE
-#endif
-
 #ifndef DIAGNOSTIC_ERROR_SWITCH
 # define DIAGNOSTIC_ERROR_SWITCH
-#endif
-
-#ifndef DIAGNOSTIC_IGNORE_ENUM_CONSTEXPR_CONVERSION
-# define DIAGNOSTIC_IGNORE_ENUM_CONSTEXPR_CONVERSION
 #endif
 
 #endif /* DIAGNOSTICS_H */

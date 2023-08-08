@@ -1,5 +1,5 @@
 /* stabs.c -- Parse COFF debugging information
-   Copyright (C) 1996-2023 Free Software Foundation, Inc.
+   Copyright (C) 1996-2022 Free Software Foundation, Inc.
    Written by Ian Lance Taylor <ian@cygnus.com>.
 
    This file is part of GNU Binutils.
@@ -58,58 +58,88 @@ struct coff_symbols
   long coff_symno;
 };
 
+/* The largest basic type we are prepared to handle.  */
+
+#define T_MAX (T_LNGDBL)
+
+/* This structure is used to hold slots.  */
+
+struct coff_slots
+{
+  /* Next set of slots.  */
+  struct coff_slots *next;
+  /* Slots.  */
+#define COFF_SLOTS (16)
+  debug_type slots[COFF_SLOTS];
+};
+
 /* This structure is used to map symbol indices to types.  */
 
 struct coff_types
 {
-  /* Next set of slots.  */
-  struct coff_types *next;
-  /* Where the TYPES array starts.  */
-  unsigned int base_index;
   /* Slots.  */
-#define COFF_SLOTS (16)
-  debug_type types[COFF_SLOTS];
+  struct coff_slots *slots;
+  /* Basic types.  */
+  debug_type basic[T_MAX + 1];
 };
 
+static debug_type *coff_get_slot (struct coff_types *, long);
+static debug_type parse_coff_type
+  (bfd *, struct coff_symbols *, struct coff_types *, long, int,
+   union internal_auxent *, bool, void *);
 static debug_type parse_coff_base_type
-  (bfd *, struct coff_symbols *, struct coff_types **, long, int,
+  (bfd *, struct coff_symbols *, struct coff_types *, long, int,
    union internal_auxent *, void *);
 static debug_type parse_coff_struct_type
-  (bfd *, struct coff_symbols *, struct coff_types **, int,
+  (bfd *, struct coff_symbols *, struct coff_types *, int,
    union internal_auxent *, void *);
 static debug_type parse_coff_enum_type
-  (bfd *, struct coff_symbols *, struct coff_types **,
+  (bfd *, struct coff_symbols *, struct coff_types *,
    union internal_auxent *, void *);
+static bool parse_coff_symbol
+  (bfd *, struct coff_types *, asymbol *, long, struct internal_syment *,
+   void *, debug_type, bool);
+static bool external_coff_symbol_p (int sym_class);
 
 /* Return the slot for a type.  */
 
 static debug_type *
-coff_get_slot (void *dhandle, struct coff_types **types, long indx)
+coff_get_slot (struct coff_types *types, long indx)
 {
-  unsigned int base_index;
+  struct coff_slots **pps;
 
-  base_index = indx / COFF_SLOTS * COFF_SLOTS;
-  indx -= base_index;
+  pps = &types->slots;
 
-  while (*types && (*types)->base_index < base_index)
-    types = &(*types)->next;
+  /* PR 17512: file: 078-18333-0.001:0.1.
+     FIXME: The value of 1000 is a guess.  Maybe a better heuristic is needed.  */
+  if (indx / COFF_SLOTS > 1000)
+    fatal (_("Excessively large slot index: %lx"), indx);
 
-  if (*types == NULL || (*types)->base_index != base_index)
+  while (indx >= COFF_SLOTS)
     {
-      struct coff_types *n = debug_xzalloc (dhandle, sizeof (*n));
-      n->next = *types;
-      n->base_index = base_index;
-      *types = n;
+      if (*pps == NULL)
+	{
+	  *pps = (struct coff_slots *) xmalloc (sizeof **pps);
+	  memset (*pps, 0, sizeof **pps);
+	}
+      pps = &(*pps)->next;
+      indx -= COFF_SLOTS;
     }
 
-  return (*types)->types + indx;
+  if (*pps == NULL)
+    {
+      *pps = (struct coff_slots *) xmalloc (sizeof **pps);
+      memset (*pps, 0, sizeof **pps);
+    }
+
+  return (*pps)->slots + indx;
 }
 
 /* Parse a COFF type code in NTYPE.  */
 
 static debug_type
 parse_coff_type (bfd *abfd, struct coff_symbols *symbols,
-		 struct coff_types **types, long coff_symno, int ntype,
+		 struct coff_types *types, long coff_symno, int ntype,
 		 union internal_auxent *pauxent, bool useaux,
 		 void *dhandle)
 {
@@ -176,13 +206,13 @@ parse_coff_type (bfd *abfd, struct coff_symbols *symbols,
       return type;
     }
 
-  if (pauxent != NULL && (int32_t) pauxent->x_sym.x_tagndx.u32 > 0)
+  if (pauxent != NULL && pauxent->x_sym.x_tagndx.l > 0)
     {
       debug_type *slot;
 
       /* This is a reference to an existing type.  FIXME: gdb checks
 	 that the class is not C_STRTAG, nor C_UNTAG, nor C_ENTAG.  */
-      slot = coff_get_slot (dhandle, types, pauxent->x_sym.x_tagndx.u32);
+      slot = coff_get_slot (types, pauxent->x_sym.x_tagndx.l);
       if (*slot != DEBUG_TYPE_NULL)
 	return *slot;
       else
@@ -206,11 +236,21 @@ parse_coff_type (bfd *abfd, struct coff_symbols *symbols,
 
 static debug_type
 parse_coff_base_type (bfd *abfd, struct coff_symbols *symbols,
-		      struct coff_types **types, long coff_symno, int ntype,
+		      struct coff_types *types, long coff_symno, int ntype,
 		      union internal_auxent *pauxent, void *dhandle)
 {
   debug_type ret;
-  const char *name = NULL;
+  bool set_basic;
+  const char *name;
+  debug_type *slot;
+
+  if (ntype >= 0
+      && ntype <= T_MAX
+      && types->basic[ntype] != DEBUG_TYPE_NULL)
+    return types->basic[ntype];
+
+  set_basic = true;
+  name = NULL;
 
   switch (ntype)
     {
@@ -287,6 +327,11 @@ parse_coff_base_type (bfd *abfd, struct coff_symbols *symbols,
       else
 	ret = parse_coff_struct_type (abfd, symbols, types, ntype, pauxent,
 				      dhandle);
+
+      slot = coff_get_slot (types, coff_symno);
+      *slot = ret;
+
+      set_basic = false;
       break;
 
     case T_UNION:
@@ -295,6 +340,11 @@ parse_coff_base_type (bfd *abfd, struct coff_symbols *symbols,
       else
 	ret = parse_coff_struct_type (abfd, symbols, types, ntype, pauxent,
 				      dhandle);
+
+      slot = coff_get_slot (types, coff_symno);
+      *slot = ret;
+
+      set_basic = false;
       break;
 
     case T_ENUM:
@@ -303,14 +353,21 @@ parse_coff_base_type (bfd *abfd, struct coff_symbols *symbols,
 				    (bfd_signed_vma *) NULL);
       else
 	ret = parse_coff_enum_type (abfd, symbols, types, pauxent, dhandle);
+
+      slot = coff_get_slot (types, coff_symno);
+      *slot = ret;
+
+      set_basic = false;
       break;
     }
 
   if (name != NULL)
     ret = debug_name_type (dhandle, name, ret);
 
-  debug_type *slot = coff_get_slot (dhandle, types, coff_symno);
-  *slot = ret;
+  if (set_basic
+      && ntype >= 0
+      && ntype <= T_MAX)
+    types->basic[ntype] = ret;
 
   return ret;
 }
@@ -319,16 +376,16 @@ parse_coff_base_type (bfd *abfd, struct coff_symbols *symbols,
 
 static debug_type
 parse_coff_struct_type (bfd *abfd, struct coff_symbols *symbols,
-			struct coff_types **types, int ntype,
+			struct coff_types *types, int ntype,
 			union internal_auxent *pauxent, void *dhandle)
 {
   long symend;
   int alloc;
-  debug_field *fields, *xfields;
+  debug_field *fields;
   int count;
   bool done;
 
-  symend = pauxent->x_sym.x_fcnary.x_fcn.x_endndx.u32;
+  symend = pauxent->x_sym.x_fcnary.x_fcn.x_endndx.l;
 
   alloc = 10;
   fields = (debug_field *) xmalloc (alloc * sizeof *fields);
@@ -385,8 +442,7 @@ parse_coff_struct_type (bfd *abfd, struct coff_symbols *symbols,
 
 	case C_FIELD:
 	  bitpos = bfd_asymbol_value (sym);
-	  if (psubaux != NULL)
-	    bitsize = psubaux->x_sym.x_misc.x_lnsz.x_size;
+	  bitsize = auxent.x_sym.x_misc.x_lnsz.x_size;
 	  break;
 
 	case C_EOS:
@@ -404,10 +460,7 @@ parse_coff_struct_type (bfd *abfd, struct coff_symbols *symbols,
 	  f = debug_make_field (dhandle, bfd_asymbol_name (sym), ftype,
 				bitpos, bitsize, DEBUG_VISIBILITY_PUBLIC);
 	  if (f == DEBUG_FIELD_NULL)
-	    {
-	      free (fields);
-	      return DEBUG_TYPE_NULL;
-	    }
+	    return DEBUG_TYPE_NULL;
 
 	  if (count + 1 >= alloc)
 	    {
@@ -422,30 +475,27 @@ parse_coff_struct_type (bfd *abfd, struct coff_symbols *symbols,
     }
 
   fields[count] = DEBUG_FIELD_NULL;
-  xfields = debug_xalloc (dhandle, (count + 1) * sizeof (*fields));
-  memcpy (xfields, fields, (count + 1) * sizeof (*fields));
-  free (fields);
 
   return debug_make_struct_type (dhandle, ntype == T_STRUCT,
 				 pauxent->x_sym.x_misc.x_lnsz.x_size,
-				 xfields);
+				 fields);
 }
 
 /* Parse an enum type.  */
 
 static debug_type
 parse_coff_enum_type (bfd *abfd, struct coff_symbols *symbols,
-		      struct coff_types **types ATTRIBUTE_UNUSED,
+		      struct coff_types *types ATTRIBUTE_UNUSED,
 		      union internal_auxent *pauxent, void *dhandle)
 {
   long symend;
   int alloc;
-  const char **names, **xnames;
-  bfd_signed_vma *vals, *xvals;
+  const char **names;
+  bfd_signed_vma *vals;
   int count;
   bool done;
 
-  symend = pauxent->x_sym.x_fcnary.x_fcn.x_endndx.u32;
+  symend = pauxent->x_sym.x_fcnary.x_fcn.x_endndx.l;
 
   alloc = 10;
   names = (const char **) xmalloc (alloc * sizeof *names);
@@ -498,21 +548,14 @@ parse_coff_enum_type (bfd *abfd, struct coff_symbols *symbols,
     }
 
   names[count] = NULL;
-  vals[count] = 0;
-  xnames = debug_xalloc (dhandle, (count + 1) * sizeof (*names));
-  memcpy (xnames, names, (count + 1) * sizeof (*names));
-  free (names);
-  xvals = debug_xalloc (dhandle, (count + 1) * sizeof (*vals));
-  memcpy (xvals, vals, (count + 1) * sizeof (*vals));
-  free (vals);
 
-  return debug_make_enum_type (dhandle, xnames, xvals);
+  return debug_make_enum_type (dhandle, names, vals);
 }
 
 /* Handle a single COFF symbol.  */
 
 static bool
-parse_coff_symbol (bfd *abfd ATTRIBUTE_UNUSED, struct coff_types **types,
+parse_coff_symbol (bfd *abfd ATTRIBUTE_UNUSED, struct coff_types *types,
 		   asymbol *sym, long coff_symno,
 		   struct internal_syment *psyment, void *dhandle,
 		   debug_type type, bool within_function)
@@ -585,7 +628,7 @@ parse_coff_symbol (bfd *abfd ATTRIBUTE_UNUSED, struct coff_types **types,
 
 	/* Store the named type into the slot, so that references get
            the name.  */
-	slot = coff_get_slot (dhandle, types, coff_symno);
+	slot = coff_get_slot (types, coff_symno);
 	*slot = type;
       }
       break;
@@ -620,7 +663,8 @@ bool
 parse_coff (bfd *abfd, asymbol **syms, long symcount, void *dhandle)
 {
   struct coff_symbols symbols;
-  struct coff_types *types;
+  struct coff_types types;
+  int i;
   long next_c_file;
   const char *fnname;
   int fnclass;
@@ -635,7 +679,9 @@ parse_coff (bfd *abfd, asymbol **syms, long symcount, void *dhandle)
   symbols.symno = 0;
   symbols.coff_symno = 0;
 
-  types= NULL;
+  types.slots = NULL;
+  for (i = 0; i <= T_MAX; i++)
+    types.basic[i] = DEBUG_TYPE_NULL;
 
   next_c_file = -1;
   fnname = NULL;

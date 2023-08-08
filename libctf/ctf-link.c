@@ -1,5 +1,5 @@
 /* CTF linking.
-   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Copyright (C) 2019-2022 Free Software Foundation, Inc.
 
    This file is part of libctf.
 
@@ -321,12 +321,12 @@ ctf_create_per_cu (ctf_dict_t *fp, ctf_dict_t *input, const char *cu_name)
   if (ctf_name == NULL)
     ctf_name = cu_name;
 
-  /* Look up the per-CU dict.  If we don't know of one, or it is for a different input
-     CU which just happens to have the same name, create a new one.  If we are creating
-     a dict with no input specified, anything will do.  */
+  /* Look up the per-CU dict.  If we don't know of one, or it is for
+     a different input CU which just happens to have the same name,
+     create a new one.  */
 
   if ((cu_fp = ctf_dynhash_lookup (fp->ctf_link_outputs, ctf_name)) == NULL
-      || (input && cu_fp->ctf_link_in_out != fp))
+      || cu_fp->ctf_link_in_out != fp)
     {
       int err;
 
@@ -431,10 +431,7 @@ ctf_link_add_cu_mapping (ctf_dict_t *fp, const char *from, const char *to)
 	}
     }
   else
-    {
-      free (t);
-      t = NULL;
-    }
+    free (t);
 
   if (ctf_dynhash_insert (one_out, f, NULL) < 0)
     {
@@ -1505,17 +1502,11 @@ ctf_link (ctf_dict_t *fp, int flags)
   if (fp->ctf_link_outputs == NULL)
     return ctf_set_errno (fp, ENOMEM);
 
-  fp->ctf_flags |= LCTF_LINKING;
-  ctf_link_deduplicating (fp);
-  fp->ctf_flags &= ~LCTF_LINKING;
-
-  if ((ctf_errno (fp) != 0) && (ctf_errno (fp) != ECTF_NOCTFDATA))
-    return -1;
-
   /* Create empty CUs if requested.  We do not currently claim that multiple
      links in succession with CTF_LINK_EMPTY_CU_MAPPINGS set in some calls and
      not set in others will do anything especially sensible.  */
 
+  fp->ctf_flags |= LCTF_LINKING;
   if (fp->ctf_link_out_cu_mapping && (flags & CTF_LINK_EMPTY_CU_MAPPINGS))
     {
       ctf_next_t *i = NULL;
@@ -1541,6 +1532,11 @@ ctf_link (ctf_dict_t *fp, int flags)
 	}
     }
 
+  ctf_link_deduplicating (fp);
+
+  fp->ctf_flags &= ~LCTF_LINKING;
+  if ((ctf_errno (fp) != 0) && (ctf_errno (fp) != ECTF_NOCTFDATA))
+    return -1;
   return 0;
 }
 
@@ -1849,42 +1845,19 @@ ctf_link_warn_outdated_inputs (ctf_dict_t *fp)
 {
   ctf_next_t *i = NULL;
   void *name_;
-  void *input_;
+  void *ifp_;
   int err;
 
-  while ((err = ctf_dynhash_next (fp->ctf_link_inputs, &i, &name_, &input_)) == 0)
+  while ((err = ctf_dynhash_next (fp->ctf_link_inputs, &i, &name_, &ifp_)) == 0)
     {
       const char *name = (const char *) name_;
-      ctf_link_input_t *input = (ctf_link_input_t *) input_;
-      ctf_next_t *j = NULL;
-      ctf_dict_t *ifp;
-      int err;
-
-      /* We only care about CTF archives by this point: lazy-opened archives
-	 have always been opened by this point, and short-circuited entries have
-	 a matching corresponding archive member. Entries with NULL clin_arc can
-	 exist, and constitute old entries renamed via a name changer: the
-	 renamed entries exist elsewhere in the list, so we can just skip
-	 those.  */
-
-      if (!input->clin_arc)
-	continue;
-
-      /* All entries in the archive will necessarily contain the same
-	 CTF_F_NEWFUNCINFO flag, so we only need to check the first. We don't
-	 even need to do that if we can't open it for any reason at all: the
-	 link will fail later on regardless, since an input can't be opened. */
-
-      ifp = ctf_archive_next (input->clin_arc, &j, NULL, 0, &err);
-      if (!ifp)
-	continue;
-      ctf_next_destroy (j);
+      ctf_dict_t *ifp = (ctf_dict_t *) ifp_;
 
       if (!(ifp->ctf_header->cth_flags & CTF_F_NEWFUNCINFO)
 	  && (ifp->ctf_header->cth_varoff - ifp->ctf_header->cth_funcoff) > 0)
-	ctf_err_warn (fp, 1, 0, _("linker input %s has CTF func info but uses "
-				  "an old, unreleased func info format: "
-				  "this func info section will be dropped."),
+	ctf_err_warn (ifp, 1, 0, _("linker input %s has CTF func info but uses "
+				   "an old, unreleased func info format: "
+				   "this func info section will be dropped."),
 		      name);
     }
   if (err != ECTF_NEXT_END)

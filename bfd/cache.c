@@ -1,6 +1,6 @@
 /* BFD library -- caching of file descriptors.
 
-   Copyright (C) 1990-2023 Free Software Foundation, Inc.
+   Copyright (C) 1990-2022 Free Software Foundation, Inc.
 
    Hacked by Steve Chamberlain of Cygnus Support (steve@cygnus.com).
 
@@ -177,7 +177,6 @@ bfd_cache_delete (bfd *abfd)
 
   abfd->iostream = NULL;
   --open_files;
-  abfd->flags |= BFD_CLOSED_BY_CACHE;
 
   return ret;
 }
@@ -269,7 +268,7 @@ bfd_cache_lookup_worker (bfd *abfd, enum cache_flag flag)
     return (FILE *) abfd->iostream;
 
   /* xgettext:c-format */
-  _bfd_error_handler (_("reopening %pB: %s"),
+  _bfd_error_handler (_("reopening %pB: %s\n"),
 		      abfd, bfd_errmsg (bfd_get_error ()));
   return NULL;
 }
@@ -503,13 +502,12 @@ bfd_cache_init (bfd *abfd)
     }
   abfd->iovec = &cache_iovec;
   insert (abfd);
-  abfd->flags &= ~BFD_CLOSED_BY_CACHE;
   ++open_files;
   return true;
 }
 
 /*
-FUNCTION
+INTERNAL_FUNCTION
 	bfd_cache_close
 
 SYNOPSIS
@@ -519,6 +517,7 @@ DESCRIPTION
 	Remove the BFD @var{abfd} from the cache. If the attached file is open,
 	then close it too.
 
+RETURNS
 	<<FALSE>> is returned if closing the file fails, <<TRUE>> is
 	returned if all is well.
 */
@@ -526,7 +525,6 @@ DESCRIPTION
 bool
 bfd_cache_close (bfd *abfd)
 {
-  /* Don't remove this test.  bfd_reinit depends on it.  */
   if (abfd->iovec != &cache_iovec)
     return true;
 
@@ -548,6 +546,7 @@ DESCRIPTION
 	Remove all BFDs from the cache. If the attached file is open,
 	then close it too.
 
+RETURNS
 	<<FALSE>> is returned if closing one of the file fails, <<TRUE>> is
 	returned if all is well.
 */
@@ -612,9 +611,9 @@ bfd_open_file (bfd *abfd)
 	     Some operating systems won't let us overwrite a running
 	     binary.  For them, we want to unlink the file first.
 
-	     However, spl 2.95 will create temporary files using
+	     However, gcc 2.95 will create temporary files using
 	     O_EXCL and tight permissions to prevent other users from
-	     substituting other .o files during the compilation.  spl
+	     substituting other .o files during the compilation.  gcc
 	     will then tell the assembler to use the newly created
 	     file as an output file.  If we unlink the file here, we
 	     open a brief window when another user could still

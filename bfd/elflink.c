@@ -1,5 +1,5 @@
 /* ELF linking support for BFD.
-   Copyright (C) 1995-2023 Free Software Foundation, Inc.
+   Copyright (C) 1995-2022 Free Software Foundation, Inc.
 
    This file is part of BFD, the Binary File Descriptor library.
 
@@ -3571,12 +3571,6 @@ elf_link_is_defined_archive_symbol (bfd * abfd, carsym * symdef)
   if (! bfd_check_format (abfd, bfd_object))
     return false;
 
-  if (elf_use_dt_symtab_p (abfd))
-    {
-      bfd_set_error (bfd_error_wrong_format);
-      return false;
-    }
-
   /* Select the appropriate symbol table.  If we don't know if the
      object file is an IR object, give linker LTO plugin a chance to
      get the correct symbol table.  */
@@ -4239,12 +4233,6 @@ elf_link_add_object_symbols (bfd *abfd, struct bfd_link_info *info)
   htab = elf_hash_table (info);
   bed = get_elf_backend_data (abfd);
 
-  if (elf_use_dt_symtab_p (abfd))
-    {
-      bfd_set_error (bfd_error_wrong_format);
-      return false;
-    }
-
   if ((abfd->flags & DYNAMIC) == 0)
     dynamic = false;
   else
@@ -4398,7 +4386,7 @@ elf_link_add_object_symbols (bfd *abfd, struct bfd_link_info *info)
 		       | DYN_NO_NEEDED)) == 0;
 
       s = bfd_get_section_by_name (abfd, ".dynamic");
-      if (s != NULL && s->size != 0 && (s->flags & SEC_HAS_CONTENTS) != 0)
+      if (s != NULL && s->size != 0)
 	{
 	  bfd_byte *dynbuf;
 	  bfd_byte *extdyn;
@@ -4418,7 +4406,7 @@ elf_link_add_object_symbols (bfd *abfd, struct bfd_link_info *info)
 	  shlink = elf_elfsections (abfd)[elfsec]->sh_link;
 
 	  for (extdyn = dynbuf;
-	       (size_t) (dynbuf + s->size - extdyn) >= bed->s->sizeof_dyn;
+	       extdyn <= dynbuf + s->size - bed->s->sizeof_dyn;
 	       extdyn += bed->s->sizeof_dyn)
 	    {
 	      Elf_Internal_Dyn dyn;
@@ -5314,14 +5302,10 @@ elf_link_add_object_symbols (bfd *abfd, struct bfd_link_info *info)
 		  else
 		    _bfd_error_handler
 		      /* xgettext:c-format */
-		      (_("warning: alignment %u of normal symbol `%s' in %pB"
-			 " is smaller than %u used by the common definition in %pB"),
+		      (_("warning: alignment %u of symbol `%s' in %pB"
+			 " is smaller than %u in %pB"),
 		       1 << normal_align, name, normal_bfd,
 		       1 << common_align, common_bfd);
-
-		  /* PR 30499: make sure that users understand that this warning is serious.  */
-		  _bfd_error_handler
-		    (_("warning: NOTE: alignment discrepancies can cause real problems.  Investigation is advised."));
 		}
 	    }
 
@@ -5333,18 +5317,12 @@ elf_link_add_object_symbols (bfd *abfd, struct bfd_link_info *info)
 	      if (h->size != 0
 		  && h->size != isym->st_size
 		  && ! size_change_ok)
-		{
-		  _bfd_error_handler
-		    /* xgettext:c-format */
-		    (_("warning: size of symbol `%s' changed"
-		       " from %" PRIu64 " in %pB to %" PRIu64 " in %pB"),
-		     name, (uint64_t) h->size, old_bfd,
-		     (uint64_t) isym->st_size, abfd);
-
-		  /* PR 30499: make sure that users understand that this warning is serious.  */
-		  _bfd_error_handler
-		    (_("warning: NOTE: size discrepancies can cause real problems.  Investigation is advised."));
-		}
+		_bfd_error_handler
+		  /* xgettext:c-format */
+		  (_("warning: size of symbol `%s' changed"
+		     " from %" PRIu64 " in %pB to %" PRIu64 " in %pB"),
+		   name, (uint64_t) h->size, old_bfd,
+		   (uint64_t) isym->st_size, abfd);
 
 	      h->size = isym->st_size;
 	    }
@@ -5404,14 +5382,7 @@ elf_link_add_object_symbols (bfd *abfd, struct bfd_link_info *info)
 	      h->unique_global = (flags & BSF_GNU_UNIQUE) != 0;
 	    }
 
-	  /* Don't add indirect symbols for .symver x, x@FOO aliases
-	     in IR.  Since all data or text symbols in IR have the
-	     same type, value and section, we can't tell if a symbol
-	     is an alias of another symbol by their types, values and
-	     sections.  */
-	  if (definition
-	      && !dynamic
-	      && (abfd->flags & BFD_PLUGIN) == 0)
+	  if (definition && !dynamic)
 	    {
 	      char *p = strchr (name, ELF_VER_CHR);
 	      if (p != NULL && p[1] != ELF_VER_CHR)
@@ -8233,7 +8204,7 @@ bfd_elf_get_bfd_needed_list (bfd *abfd,
     return true;
 
   s = bfd_get_section_by_name (abfd, ".dynamic");
-  if (s == NULL || s->size == 0 || (s->flags & SEC_HAS_CONTENTS) == 0)
+  if (s == NULL || s->size == 0)
     return true;
 
   if (!bfd_malloc_and_get_section (abfd, s, &dynbuf))
@@ -8248,9 +8219,9 @@ bfd_elf_get_bfd_needed_list (bfd *abfd,
   extdynsize = get_elf_backend_data (abfd)->s->sizeof_dyn;
   swap_dyn_in = get_elf_backend_data (abfd)->s->swap_dyn_in;
 
-  for (extdyn = dynbuf, extdynend = dynbuf + s->size;
-       (size_t) (extdynend - extdyn) >= extdynsize;
-       extdyn += extdynsize)
+  extdyn = dynbuf;
+  extdynend = extdyn + s->size;
+  for (; extdyn < extdynend; extdyn += extdynsize)
     {
       Elf_Internal_Dyn dyn;
 
@@ -9713,7 +9684,7 @@ elf_link_sort_relocs (bfd *abfd, struct bfd_link_info *info, asection **psec)
     {
       bool use_rela_initialised = false;
 
-      /* This is just here to stop spl from complaining.
+      /* This is just here to stop gcc from complaining.
 	 Its initialization checking code is not perfect.  */
       use_rela = true;
 
@@ -10024,7 +9995,9 @@ elf_link_output_symstrtab (void *finf,
   if (ELF_ST_BIND (elfsym->st_info) == STB_GNU_UNIQUE)
     elf_tdata (flinfo->output_bfd)->has_gnu_osabi |= elf_gnu_osabi_unique;
 
-  if (name == NULL || *name == '\0')
+  if (name == NULL
+      || *name == '\0'
+      || (input_sec->flags & SEC_EXCLUDE))
     elfsym->st_name = (unsigned long) -1;
   else
     {
@@ -10926,7 +10899,6 @@ elf_section_ignore_discarded_relocs (asection *sec)
     case SEC_INFO_TYPE_STABS:
     case SEC_INFO_TYPE_EH_FRAME:
     case SEC_INFO_TYPE_EH_FRAME_ENTRY:
-    case SEC_INFO_TYPE_SFRAME:
       return true;
     default:
       break;
@@ -10952,20 +10924,10 @@ elf_section_ignore_discarded_relocs (asection *sec)
 unsigned int
 _bfd_elf_default_action_discarded (asection *sec)
 {
-  const struct elf_backend_data *bed;
-  bed = get_elf_backend_data (sec->owner);
-
   if (sec->flags & SEC_DEBUGGING)
     return PRETEND;
 
   if (strcmp (".eh_frame", sec->name) == 0)
-    return 0;
-
-  if (bed->elf_backend_can_make_multiple_eh_frame
-      && strncmp (sec->name, ".eh_frame.", 10) == 0)
-    return 0;
-
-  if (strcmp (".sframe", sec->name) == 0)
     return 0;
 
   if (strcmp (".gcc_except_table", sec->name) == 0)
@@ -11180,10 +11142,22 @@ elf_link_input_bfd (struct elf_final_link_info *flinfo, bfd *input_bfd)
 
       /* If this symbol is defined in a section which we are
 	 discarding, we don't need to keep it.  */
-      if (isym->st_shndx < SHN_LORESERVE
-	  && (isec->output_section == NULL
-	      || bfd_section_removed_from_list (output_bfd,
-						isec->output_section)))
+      if (isym->st_shndx != SHN_UNDEF
+	  && isym->st_shndx < SHN_LORESERVE
+	  && isec->output_section == NULL
+	  && flinfo->info->non_contiguous_regions
+	  && flinfo->info->non_contiguous_regions_warnings)
+	{
+	  _bfd_error_handler (_("warning: --enable-non-contiguous-regions "
+				"discards section `%s' from '%s'\n"),
+			      isec->name, bfd_get_filename (isec->owner));
+	  continue;
+	}
+
+      if (isym->st_shndx != SHN_UNDEF
+	  && isym->st_shndx < SHN_LORESERVE
+	  && bfd_section_removed_from_list (output_bfd,
+					    isec->output_section))
 	continue;
 
       /* Get the name of the symbol.  */
@@ -11390,13 +11364,6 @@ elf_link_input_bfd (struct elf_final_link_info *flinfo, bfd *input_bfd)
 	      contents = flinfo->contents;
 	    }
 	}
-      else if (!(o->flags & SEC_RELOC)
-	       && !bed->elf_backend_write_section
-	       && o->sec_info_type == SEC_INFO_TYPE_MERGE)
-	/* A MERGE section that has no relocations doesn't need the
-	   contents anymore, they have been recorded earlier.  Except
-	   if the backend has special provisions for writing sections.  */
-	contents = NULL;
       else
 	{
 	  contents = flinfo->contents;
@@ -11548,7 +11515,7 @@ elf_link_input_bfd (struct elf_final_link_info *flinfo, bfd *input_bfd)
 			   sym_name, o, input_bfd, sec, sec->owner);
 
 		      /* Try to do the best we can to support buggy old
-			 versions of spl.  Pretend that the symbol is
+			 versions of gcc.  Pretend that the symbol is
 			 really defined in the kept linkonce section.
 			 FIXME: This is quite broken.  Modifying the
 			 symbol here means we will be changing all later
@@ -11896,16 +11863,6 @@ elf_link_input_bfd (struct elf_final_link_info *flinfo, bfd *input_bfd)
 	      return false;
 	  }
 	  break;
-	case SEC_INFO_TYPE_SFRAME:
-	    {
-	      /* Merge .sframe sections into the ctf frame encoder
-		 context of the output_bfd's section.  The final .sframe
-		 output section will be written out later.  */
-	      if (!_bfd_elf_merge_section_sframe (output_bfd, flinfo->info,
-						  o, contents))
-		return false;
-	    }
-	    break;
 	default:
 	  {
 	    if (! (o->flags & SEC_EXCLUDE))
@@ -12583,7 +12540,7 @@ bfd_elf_final_link (bfd *abfd, struct bfd_link_info *info)
 	     later.  Use bfd_malloc since it will be freed by
 	     bfd_compress_section_contents.  */
 	  unsigned char *contents = esdo->this_hdr.contents;
-	  if (contents != NULL)
+	  if ((o->flags & SEC_ELF_COMPRESS) == 0 || contents != NULL)
 	    abort ();
 	  contents
 	    = (unsigned char *) bfd_malloc (esdo->this_hdr.sh_size);
@@ -12898,7 +12855,8 @@ bfd_elf_final_link (bfd *abfd, struct bfd_link_info *info)
 
   /* If backend needs to output some local symbols not present in the hash
      table, do it now.  */
-  if (bed->elf_backend_output_arch_local_syms)
+  if (bed->elf_backend_output_arch_local_syms
+      && (info->strip != strip_all || emit_relocs))
     {
       if (! ((*bed->elf_backend_output_arch_local_syms)
 	     (abfd, info, &flinfo, elf_link_output_symstrtab)))
@@ -13486,9 +13444,6 @@ bfd_elf_final_link (bfd *abfd, struct bfd_link_info *info)
     }
 
   if (! _bfd_elf_write_section_eh_frame_hdr (abfd, info))
-    goto error_return;
-
-  if (! _bfd_elf_write_section_sframe (abfd, info))
     goto error_return;
 
   if (info->callbacks->emit_ctf)
@@ -14946,41 +14901,6 @@ bfd_elf_discard_info (bfd *output_bfd, struct bfd_link_info *info)
 				_bfd_elf_adjust_eh_frame_global_symbol, NULL);
     }
 
-  o = bfd_get_section_by_name (output_bfd, ".sframe");
-  if (o != NULL)
-    {
-      asection *i;
-
-      for (i = o->map_head.s; i != NULL; i = i->map_head.s)
-	{
-	  if (i->size == 0)
-	    continue;
-
-	  abfd = i->owner;
-	  if (bfd_get_flavour (abfd) != bfd_target_elf_flavour)
-	    continue;
-
-	  if (!init_reloc_cookie_for_section (&cookie, info, i))
-	    return -1;
-
-	  if (_bfd_elf_parse_sframe (abfd, info, i, &cookie))
-	    {
-	      if (_bfd_elf_discard_section_sframe (i,
-						   bfd_elf_reloc_symbol_deleted_p,
-						   &cookie))
-		{
-		  if (i->size != i->rawsize)
-		    changed = 1;
-		}
-	    }
-	  fini_reloc_cookie_for_section (&cookie, i);
-	}
-      /* Update the reference to the output .sframe section.  Used to
-	 determine later if PT_GNU_SFRAME segment is to be generated.  */
-      if (!_bfd_elf_set_section_sframe (output_bfd, info))
-	return -1;
-    }
-
   for (abfd = info->input_bfds; abfd != NULL; abfd = abfd->link.next)
     {
       const struct elf_backend_data *bed;
@@ -15055,7 +14975,7 @@ _bfd_elf_section_already_linked (bfd *abfd,
 	  && (key = strchr (name + sizeof (".gnu.linkonce.") - 1, '.')) != NULL)
 	key++;
       else
-	/* Must be a user linkonce section that doesn't follow spl's
+	/* Must be a user linkonce section that doesn't follow gcc's
 	   naming convention.  In this case we won't be matching
 	   single member groups.  */
 	key = name;
@@ -15139,8 +15059,8 @@ _bfd_elf_section_already_linked (bfd *abfd,
 	}
 
   /* Do not complain on unresolved relocations in `.gnu.linkonce.r.F'
-     referencing its discarded `.gnu.linkonce.t.F' counterpart - scpel-3.4
-     specific as scpel-4.x is using COMDAT groups (without the `.gnu.linkonce'
+     referencing its discarded `.gnu.linkonce.t.F' counterpart - g++-3.4
+     specific as g++-4.x is using COMDAT groups (without the `.gnu.linkonce'
      prefix) instead.  `.gnu.linkonce.r.*' were the `.rodata' part of its
      matching `.gnu.linkonce.t.*'.  If `.gnu.linkonce.r.F' is not discarded
      but its `.gnu.linkonce.t.F' is discarded means we chose one-only

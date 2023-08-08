@@ -1,5 +1,5 @@
 /* od-macho.c -- dump information about an Mach-O object file.
-   Copyright (C) 2011-2023 Free Software Foundation, Inc.
+   Copyright (C) 2011-2022 Free Software Foundation, Inc.
    Written by Tristan Gingold, Adacore.
 
    This file is part of GNU Binutils.
@@ -357,9 +357,9 @@ dump_section_map (bfd *abfd)
       seg = &cmd->command.segment;
 
       printf ("[Segment %-16s ", seg->segname);
-      bfd_printf_vma (abfd, seg->vmaddr);
+      printf_vma (seg->vmaddr);
       putchar ('-');
-      bfd_printf_vma (abfd, seg->vmaddr + seg->vmsize - 1);
+      printf_vma  (seg->vmaddr + seg->vmsize - 1);
       putchar (' ');
       disp_segment_prot (seg->initprot);
       printf ("]\n");
@@ -368,29 +368,29 @@ dump_section_map (bfd *abfd)
 	{
 	  printf ("%02u: %-16s %-16s ", ++sec_nbr,
                   sec->segname, sec->sectname);
-	  bfd_printf_vma (abfd, sec->addr);
+	  printf_vma (sec->addr);
 	  putchar (' ');
-	  bfd_printf_vma (abfd, sec->size);
+	  printf_vma  (sec->size);
 	  printf (" %08lx\n", sec->flags);
 	}
     }
 }
 
 static void
-dump_section_header (bfd *abfd, bfd_mach_o_section *sec)
+dump_section_header (bfd *abfd ATTRIBUTE_UNUSED, bfd_mach_o_section *sec)
 {
   printf (" Section: %-16s %-16s (bfdname: %s)\n",
            sec->sectname, sec->segname, sec->bfdsection->name);
   printf ("  addr: ");
-  bfd_printf_vma (abfd, sec->addr);
+  printf_vma (sec->addr);
   printf (" size: ");
-  bfd_printf_vma (abfd, sec->size);
+  printf_vma (sec->size);
   printf (" offset: ");
-  bfd_printf_vma (abfd, sec->offset);
+  printf_vma (sec->offset);
   printf ("\n");
   printf ("  align: %ld", sec->align);
   printf ("  nreloc: %lu  reloff: ", sec->nreloc);
-  bfd_printf_vma (abfd, sec->reloff);
+  printf_vma (sec->reloff);
   printf ("\n");
   printf ("  flags: %08lx (type: %s", sec->flags,
           bfd_mach_o_get_name (bfd_mach_o_section_type_name,
@@ -425,7 +425,7 @@ dump_section_header (bfd *abfd, bfd_mach_o_section *sec)
 }
 
 static void
-dump_segment (bfd *abfd, bfd_mach_o_load_command *cmd)
+dump_segment (bfd *abfd ATTRIBUTE_UNUSED, bfd_mach_o_load_command *cmd)
 {
   bfd_mach_o_segment_command *seg = &cmd->command.segment;
   bfd_mach_o_section *sec;
@@ -439,16 +439,16 @@ dump_segment (bfd *abfd, bfd_mach_o_load_command *cmd)
   disp_segment_prot (seg->maxprot);
   printf ("\n");
   printf ("   vmaddr: ");
-  bfd_printf_vma (abfd, seg->vmaddr);
+  printf_vma (seg->vmaddr);
   printf ("   vmsize: ");
-  bfd_printf_vma (abfd, seg->vmsize);
+  printf_vma  (seg->vmsize);
   printf ("\n");
   printf ("  fileoff: ");
-  bfd_printf_vma (abfd, seg->fileoff);
+  printf_vma (seg->fileoff);
   printf (" filesize: ");
-  bfd_printf_vma (abfd, (bfd_vma) seg->filesize);
+  printf_vma ((bfd_vma)seg->filesize);
   printf (" endoff: ");
-  bfd_printf_vma (abfd, (bfd_vma) (seg->fileoff + seg->filesize));
+  printf_vma ((bfd_vma)(seg->fileoff + seg->filesize));
   printf ("\n");
   for (sec = seg->sect_head; sec != NULL; sec = sec->next)
     dump_section_header (abfd, sec);
@@ -540,7 +540,7 @@ dump_dysymtab (bfd *abfd, bfd_mach_o_load_command *cmd, bool verbose)
       printf ("        term: idx: %8u  num: %u\n",
                module->iterm, module->nterm);
       printf ("   objc_module_info: addr: ");
-      bfd_printf_vma (abfd, module->objc_module_info_addr);
+      printf_vma (module->objc_module_info_addr);
       printf ("  size: %lu\n", module->objc_module_info_size);
     }
 
@@ -608,7 +608,7 @@ dump_dysymtab (bfd *abfd, bfd_mach_o_load_command *cmd, bool verbose)
                   unsigned int isym = dysymtab->indirect_syms[j];
 
                   printf ("   ");
-                  bfd_printf_vma (abfd, addr);
+                  printf_vma (addr);
                   printf (" %5u: 0x%08x", j, isym);
                   if (isym & BFD_MACH_O_INDIRECT_SYMBOL_LOCAL)
                     printf (" LOCAL");

@@ -1,5 +1,5 @@
 /* depend.c - Handle dependency tracking.
-   Copyright (C) 1997-2023 Free Software Foundation, Inc.
+   Copyright (C) 1997-2022 Free Software Foundation, Inc.
 
    This file is part of GAS, the GNU Assembler.
 
@@ -77,7 +77,7 @@ register_dependency (const char *filename)
    If FILE is NULL, do no printing, but return the length of the
    quoted string.
 
-   This code is taken from spl with only minor changes.  */
+   This code is taken from gcc with only minor changes.  */
 
 static int
 quote_string_for_make (FILE *file, const char *src)

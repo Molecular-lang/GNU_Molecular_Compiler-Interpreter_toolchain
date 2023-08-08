@@ -1,5 +1,5 @@
 /* ar.c - Archive modify and extract.
-   Copyright (C) 1991-2023 Free Software Foundation, Inc.
+   Copyright (C) 1991-2022 Free Software Foundation, Inc.
 
    This file is part of GNU Binutils.
 
@@ -26,6 +26,7 @@
 #include "sysdep.h"
 #include "bfd.h"
 #include "libiberty.h"
+#include "progress.h"
 #include "getopt.h"
 #include "aout/ar.h"
 #include "bucomm.h"
@@ -197,7 +198,10 @@ map_over_members (bfd *arch, void (*function)(bfd *), char **files, int count)
   if (count == 0)
     {
       for (head = arch->archive_next; head; head = head->archive_next)
-	function (head);
+	{
+	  PROGRESS (1);
+	  function (head);
+	}
       return;
     }
 
@@ -219,6 +223,7 @@ map_over_members (bfd *arch, void (*function)(bfd *), char **files, int count)
 	{
 	  const char * filename;
 
+	  PROGRESS (1);
 	  /* PR binutils/15796: Once an archive element has been matched
 	     do not match it again.  If the user provides multiple same-named
 	     parameters on the command line their intent is to match multiple
@@ -426,12 +431,15 @@ normalize (const char *file, bfd *abfd)
 
 static const char *output_filename = NULL;
 static FILE *output_file = NULL;
+static bfd *output_bfd = NULL;
 
 static void
 remove_output (void)
 {
   if (output_filename != NULL)
     {
+      if (output_bfd != NULL)
+	bfd_cache_close (output_bfd);
       if (output_file != NULL)
 	fclose (output_file);
       unlink_if_ordinary (output_filename);
@@ -744,6 +752,8 @@ main (int argc, char **argv)
 	is_ranlib = 0;
     }
 
+  START_PROGRESS (program_name, 0);
+
   if (bfd_init () != BFD_INIT_MAGIC)
     fatal (_("fatal error: libbfd ABI mismatch"));
   set_default_bfd_target ();
@@ -945,6 +955,8 @@ main (int argc, char **argv)
 	}
     }
 
+  END_PROGRESS (program_name);
+
   xexit (0);
   return 0;
 }
@@ -1054,6 +1066,7 @@ open_inarch (const char *archive_filename, const char *file)
        next_one;
        next_one = bfd_openr_next_archived_file (arch, next_one))
     {
+      PROGRESS (1);
       *last_one = next_one;
       last_one = &next_one->archive_next;
     }
@@ -1259,6 +1272,8 @@ write_archive (bfd *iarch)
       bfd_fatal (old_name);
     }
 
+  output_bfd = obfd;
+
   bfd_set_format (obfd, bfd_archive);
 
   /* Request writing the archive symbol table unless we've
@@ -1288,6 +1303,7 @@ write_archive (bfd *iarch)
   if (!bfd_close (obfd))
     bfd_fatal (old_name);
 
+  output_bfd = NULL;
   output_filename = NULL;
 
   /* We don't care if this fails; we might be creating the archive.  */

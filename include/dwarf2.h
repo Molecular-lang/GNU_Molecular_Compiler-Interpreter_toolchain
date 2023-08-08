@@ -314,7 +314,7 @@ enum dwarf_location_list_entry_type
 #define DW_LLE_view_pair DW_LLE_GNU_view_pair
 
     /* Former extension for Fission.
-       See http://spl.gnu.org/wiki/DebugFission.  */
+       See http://gcc.gnu.org/wiki/DebugFission.  */
     DW_LLE_GNU_end_of_list_entry = 0x00,
     DW_LLE_GNU_base_address_selection_entry = 0x01,
     DW_LLE_GNU_start_end_entry = 0x02,
@@ -493,7 +493,7 @@ enum dwarf_range_list_entry
 
 /* Codes for the debug sections in a dwarf package (.dwp) file.
    (From the pre-standard formats Extensions for Fission.
-   See http://spl.gnu.org/wiki/DebugFissionDWP).  */
+   See http://gcc.gnu.org/wiki/DebugFissionDWP).  */
 enum dwarf_sect
 {
   DW_SECT_INFO = 1,

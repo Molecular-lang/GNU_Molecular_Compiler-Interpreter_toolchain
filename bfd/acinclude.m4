@@ -1,5 +1,5 @@
 dnl
-dnl   Copyright (C) 2012-2023 Free Software Foundation, Inc.
+dnl   Copyright (C) 2012-2022 Free Software Foundation, Inc.
 dnl
 dnl This file is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ if test -z "$CC_FOR_BUILD"; then
   if test "x$cross_compiling" = "xno"; then
     CC_FOR_BUILD='$(CC)'
   else
-    CC_FOR_BUILD=spl
+    CC_FOR_BUILD=gcc
   fi
 fi
 AC_SUBST(CC_FOR_BUILD)

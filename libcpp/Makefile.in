@@ -1,23 +1,4 @@
 # @configure_input@
-# Makefile for libcpp.  Run 'configure' to generate Makefile from Makefile.in
-
-# Copyright (C) 2004-2023 Free Software Foundation, Inc.
-
-#This file is part of libcpp.
-
-#libcpp is free software; you can redistribute it and/or modify
-#it under the terms of the GNU General Public License as published by
-#the Free Software Foundation; either version 3, or (at your option)
-#any later version.
-
-#libcpp is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
-
-#You should have received a copy of the GNU General Public License
-#along with libcpp; see the file COPYING3.  If not see
-#<http://www.gnu.org/licenses/>.
 
 @SET_MAKE@
 
@@ -30,7 +11,7 @@ ARFLAGS = cru
 ACLOCAL = @ACLOCAL@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
-CATALOGS = $(patsubst %,po/%,@CATALOGS@)
+CATALOGS =
 CC = @CC@
 CFLAGS = @CFLAGS@
 WARN_CFLAGS = @warn@ @c_warn@ @WARN_PEDANTIC@ @WERROR@
@@ -96,7 +77,7 @@ libcpp_a_SOURCES = charset.cc directives.cc errors.cc \
 all: libcpp.a $(USED_CATALOGS)
 
 .SUFFIXES:
-.SUFFIXES: .cc .gmo .o .obj .po .pox
+.SUFFIXES: .cc .gmo .o .obj
 
 libcpp.a: $(libcpp_a_OBJS)
 	-rm -f libcpp.a
@@ -199,11 +180,10 @@ install-dvi:
 install-man:
 install-html:
 
-update-po: $(CATALOGS:.gmo=.pox)
+update-po:
 
 .PHONY: installdirs install install-strip mostlyclean clean distclean \
-  maintainer-clean check installcheck dvi pdf html info install-info \
-  install-man update-po install-html install-pdf install-dvi
+  maintainer-clean check installcheck
 
 # Dependency rule.
 COMPILE.base = $(COMPILER) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(COMPILER_FLAGS) -c
@@ -229,43 +209,15 @@ endif
 
 # N.B. We do not attempt to copy these into $(srcdir).
 .po.gmo:
-	$(mkinstalldirs) po
-	$(GMSGFMT) --statistics -o $@ $<
 
 # The new .po has to be gone over by hand, so we deposit it into
 # build/po with a different extension.
 # If build/po/$(PACKAGE).pot exists, use it (it was just created),
 # else use the one in srcdir.
 .po.pox:
-	$(mkinstalldirs) po
-	$(MSGMERGE) $< `if test -f po/$(PACKAGE).pot; \
-	                then echo po/$(PACKAGE).pot; \
-	                else echo $(srcdir)/po/$(PACKAGE).pot; fi` -o $@
 
 # Rule for regenerating the message template.
-$(PACKAGE).pot: po/$(PACKAGE).pot
-po/$(PACKAGE).pot: $(libcpp_a_SOURCES)
-	$(mkinstalldirs) $(srcdir)/po
-	$(XGETTEXT) --default-domain=$(PACKAGE) \
-	  --keyword=_ --keyword=N_ \
-	  --keyword=cpp_error:3 \
-	  --keyword=cpp_warning:3 \
-	  --keyword=cpp_pedwarning:3 \
-	  --keyword=cpp_warning_syshdr:3 \
-	  --keyword=cpp_warning_at:4 \
-	  --keyword=cpp_pedwarning_at:4 \
-	  --keyword=cpp_error_with_line:5 \
-	  --keyword=cpp_warning_with_line:5 \
-	  --keyword=cpp_pedwarning_with_line:5 \
-	  --keyword=cpp_warning_with_line_syshdr:5 \
-	  --keyword=cpp_error_at:4 \
-	  --keyword=cpp_errno:3 \
-	  --keyword=SYNTAX_ERROR --keyword=SYNTAX_ERROR2 \
-	  --copyright-holder="Free Software Foundation, Inc." \
-	  --msgid-bugs-address="https://spl.gnu.org/bugs/" \
-	  --language=c -o po/$(PACKAGE).pot.tmp $^
-	sed 's:$(srcdir)/::g' <po/$(PACKAGE).pot.tmp >po/$(PACKAGE).pot
-	rm po/$(PACKAGE).pot.tmp
+$(PACKAGE).pot:
 
 ETAGS = @ETAGS@
 

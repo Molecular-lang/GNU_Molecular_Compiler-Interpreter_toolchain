@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2023 Free Software Foundation, Inc.
+# Copyright (C) 2014-2022 Free Software Foundation, Inc.
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -16,7 +16,7 @@
 #         __RODATA_PM_OFFSET__ (which defaults to RODATA_PM_OFFSET).
 
 cat <<EOF
-/* Copyright (C) 2014-2023 Free Software Foundation, Inc.
+/* Copyright (C) 2014-2022 Free Software Foundation, Inc.
 
    Copying and distribution of this script, with or without modification,
    are permitted in any medium without royalty provided the copyright
@@ -28,9 +28,7 @@ EOF
 
 test -n "${RELOCATING}" && cat <<EOF
 __TEXT_REGION_LENGTH__ = DEFINED(__TEXT_REGION_LENGTH__) ? __TEXT_REGION_LENGTH__ : $TEXT_LENGTH;
-__DATA_REGION_ORIGIN__ = DEFINED(__DATA_REGION_ORIGIN__) ? __DATA_REGION_ORIGIN__ : $DATA_ORIGIN;
 __DATA_REGION_LENGTH__ = DEFINED(__DATA_REGION_LENGTH__) ? __DATA_REGION_LENGTH__ : $DATA_LENGTH;
-
 ${EEPROM_LENGTH+__EEPROM_REGION_LENGTH__ = DEFINED(__EEPROM_REGION_LENGTH__) ? __EEPROM_REGION_LENGTH__ : $EEPROM_LENGTH;}
 __FUSE_REGION_LENGTH__ = DEFINED(__FUSE_REGION_LENGTH__) ? __FUSE_REGION_LENGTH__ : $FUSE_LENGTH;
 __LOCK_REGION_LENGTH__ = DEFINED(__LOCK_REGION_LENGTH__) ? __LOCK_REGION_LENGTH__ : $LOCK_LENGTH;
@@ -40,7 +38,7 @@ ${RODATA_PM_OFFSET+__RODATA_PM_OFFSET__ = DEFINED(__RODATA_PM_OFFSET__) ? __RODA
 MEMORY
 {
   text   (rx)   : ORIGIN = 0, LENGTH = __TEXT_REGION_LENGTH__
-  data   (rw!x) : ORIGIN = __DATA_REGION_ORIGIN__, LENGTH = __DATA_REGION_LENGTH__
+  data   (rw!x) : ORIGIN = $DATA_ORIGIN, LENGTH = __DATA_REGION_LENGTH__
 ${EEPROM_LENGTH+  eeprom (rw!x) : ORIGIN = 0x810000, LENGTH = __EEPROM_REGION_LENGTH__}
   $FUSE_NAME      (rw!x) : ORIGIN = 0x820000, LENGTH = __FUSE_REGION_LENGTH__
   lock      (rw!x) : ORIGIN = 0x830000, LENGTH = __LOCK_REGION_LENGTH__
@@ -119,7 +117,7 @@ SECTIONS
     KEEP(*(.vectors))
 
     /* For data that needs to reside in the lower 64k of progmem.  */
-    *(.progmem.spl*)
+    *(.progmem.gcc*)
 
     /* PR 13812: Placing the trampolines here gives a better chance
        that they will be in range of the code that uses them.  */
@@ -245,7 +243,7 @@ EOF
 
 if test -z "$RODATA_PM_OFFSET" && test -n "${RELOCATING}"; then
     cat <<EOF
-    *(.rodata)  /* We need to include .rodata here if spl is used */
+    *(.rodata)  /* We need to include .rodata here if gcc is used */
     *(.rodata*) /* with -fdata-sections.  */
     *(.gnu.linkonce.r*)
 EOF
@@ -328,13 +326,20 @@ cat <<EOF
 EOF
 fi
 
-source_sh $srcdir/scripttempl/misc-sections.sc
-
 cat <<EOF
+
+  /* Stabs debugging sections.  */
+  .stab 0 : { *(.stab) }
+  .stabstr 0 : { *(.stabstr) }
+  .stab.excl 0 : { *(.stab.excl) }
+  .stab.exclstr 0 : { *(.stab.exclstr) }
+  .stab.index 0 : { *(.stab.index) }
+  .stab.indexstr 0 : { *(.stab.indexstr) }
+  .comment 0 : { *(.comment) }
   .note.gnu.build-id ${RELOCATING-0} : { *(.note.gnu.build-id) }
 EOF
 
-source_sh $srcdir/scripttempl/DWARF.sc
+. $srcdir/scripttempl/DWARF.sc
 
 cat <<EOF
 }

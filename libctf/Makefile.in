@@ -15,7 +15,7 @@
 @SET_MAKE@
 
 #
-#   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+#   Copyright (C) 2019-2022 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@
 #
 
 #
-#   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+#   Copyright (C) 2019-2022 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -127,9 +127,10 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 @NEED_CTF_QSORT_R_TRUE@am__append_1 = ctf-qsort_r.c
-@BUILD_INFO_TRUE@am__append_2 = doc/ctf-spec.texi
-@BUILD_INFO_TRUE@am__append_3 = texput.log
-@BUILD_INFO_TRUE@am__append_4 = doc/ctf-spec.info
+@TCL_TRY_TRUE@am__append_2 = site.exp development.exp
+@BUILD_INFO_TRUE@am__append_3 =
+@BUILD_INFO_TRUE@am__append_4 = texput.log
+@BUILD_INFO_TRUE@am__append_5 =
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/../bfd/acinclude.m4 \
@@ -305,13 +306,13 @@ am__v_texidevnull_ = $(am__v_texidevnull_@AM_DEFAULT_V@)
 am__v_texidevnull_0 = > /dev/null
 am__v_texidevnull_1 = 
 am__dirstamp = $(am__leading_dot)dirstamp
-INFO_DEPS = doc/ctf-spec.info
+INFO_DEPS =
 am__TEXINFO_TEX_DIR = $(srcdir)
-DVIS = doc/ctf-spec.dvi
-PDFS = doc/ctf-spec.pdf
-PSS = doc/ctf-spec.ps
-HTMLS = doc/ctf-spec.html
-TEXINFOS = $(am__append_2)
+DVIS =
+PDFS =
+PSS =
+HTMLS =
+TEXINFOS = $(am__append_3)
 TEXI2DVI = texi2dvi
 TEXI2PDF = $(TEXI2DVI) --pdf --batch
 MAKEINFOHTML = $(MAKEINFO) --html
@@ -349,7 +350,7 @@ AM_RECURSIVE_TARGETS = cscope
 DEJATOOL = $(PACKAGE)
 RUNTESTDEFAULTFLAGS = --tool $$tool --srcdir $$srcdir
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
-	$(srcdir)/doc/local.mk $(top_srcdir)/../ar-lib \
+	$(top_srcdir)/../ar-lib \
 	$(top_srcdir)/../compile $(top_srcdir)/../config.guess \
 	$(top_srcdir)/../config.sub $(top_srcdir)/../depcomp \
 	$(top_srcdir)/../install-sh $(top_srcdir)/../ltmain.sh \
@@ -406,7 +407,6 @@ FGREP = @FGREP@
 GENCAT = @GENCAT@
 GMSGFMT = @GMSGFMT@
 GREP = @GREP@
-HAVE_TCL_TRY = @HAVE_TCL_TRY@
 INCINTL = @INCINTL@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -522,9 +522,9 @@ ACLOCAL_AMFLAGS = -I .. -I ../config -I ../bfd
 AUTOMAKE_OPTIONS = dejagnu foreign info-in-builddir no-texinfo.tex
 
 # Variables that we might accumulate conditionally or in subdirs.
-info_TEXINFOS = $(am__append_2)
-DISTCLEANFILES = site.exp development.exp $(am__append_3)
-MAINTAINERCLEANFILES = $(am__append_4)
+info_TEXINFOS = $(am__append_3)
+DISTCLEANFILES = $(am__append_2) $(am__append_4)
+MAINTAINERCLEANFILES = $(am__append_5)
 
 # This is where we get zlib from.  zlibdir is -L../zlib and zlibinc is
 # -I../zlib, unless we were configured with --with-system-zlib, in which
@@ -559,25 +559,25 @@ libctf_la_LDFLAGS = $(libctf_ldflags_nover) @VERSION_FLAGS@
 libctf_la_SOURCES = $(libctf_nobfd_la_SOURCES) ctf-open-bfd.c
 RUNTEST = runtest
 RUNTESTFLAGS = 
-CC_FOR_TARGET = ` \
-  if [ -f $$r/../spl/xspl ] ; then \
-    if [ -f $$r/../newlib/Makefile ] ; then \
-      echo $$r/../spl/xspl -B$$r/../spl/ -idirafter $$r/../newlib/targ-include -idirafter $${srcroot}/../newlib/libc/include -nostdinc; \
-    else \
-      echo $$r/../spl/xspl -B$$r/../spl/; \
-    fi; \
-  else \
-    if [ "@host@" = "@target@" ] ; then \
-      echo $(CC); \
-    else \
-      echo spl | sed '$(transform)'; \
-    fi; \
-  fi`
+@TCL_TRY_TRUE@CC_FOR_TARGET = ` \
+@TCL_TRY_TRUE@  if [ -f $$r/../gcc/xgcc ] ; then \
+@TCL_TRY_TRUE@    if [ -f $$r/../newlib/Makefile ] ; then \
+@TCL_TRY_TRUE@      echo $$r/../gcc/xgcc -B$$r/../gcc/ -idirafter $$r/../newlib/targ-include -idirafter $${srcroot}/../newlib/libc/include -nostdinc; \
+@TCL_TRY_TRUE@    else \
+@TCL_TRY_TRUE@      echo $$r/../gcc/xgcc -B$$r/../gcc/; \
+@TCL_TRY_TRUE@    fi; \
+@TCL_TRY_TRUE@  else \
+@TCL_TRY_TRUE@    if [ "@host@" = "@target@" ] ; then \
+@TCL_TRY_TRUE@      echo $(CC); \
+@TCL_TRY_TRUE@    else \
+@TCL_TRY_TRUE@      echo gcc | sed '$(transform)'; \
+@TCL_TRY_TRUE@    fi; \
+@TCL_TRY_TRUE@  fi`
 
 
 # development.sh is used to determine -Werror default.
-CONFIG_STATUS_DEPENDENCIES = $(BFDDIR)/development.sh
-EXTRA_DEJAGNU_SITE_CONFIG = development.exp
+@TCL_TRY_TRUE@CONFIG_STATUS_DEPENDENCIES = $(BFDDIR)/development.sh
+@TCL_TRY_TRUE@EXTRA_DEJAGNU_SITE_CONFIG = development.exp
 @BUILD_INFO_TRUE@AM_MAKEINFOFLAGS = --no-split
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -586,7 +586,7 @@ all: config.h
 .SUFFIXES: .c .dvi .lo .o .obj .ps
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/doc/local.mk $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -1019,52 +1019,12 @@ clean-libtool:
 distclean-libtool:
 	-rm -f libtool config.lt
 doc/$(am__dirstamp):
-	@$(MKDIR_P) doc
-	@: > doc/$(am__dirstamp)
 
-@BUILD_INFO_TRUE@doc/ctf-spec.info: doc/ctf-spec.texi 
-@BUILD_INFO_TRUE@	@test -f doc/$(am__dirstamp) || $(MAKE) $(AM_MAKEFLAGS) doc/$(am__dirstamp)
-@BUILD_INFO_TRUE@	$(AM_V_MAKEINFO)restore=: && backupdir="$(am__leading_dot)am$$$$" && \
-@BUILD_INFO_TRUE@	rm -rf $$backupdir && mkdir $$backupdir && \
-@BUILD_INFO_TRUE@	if ($(MAKEINFO) --version) >/dev/null 2>&1; then \
-@BUILD_INFO_TRUE@	  for f in $@ $@-[0-9] $@-[0-9][0-9] $(@:.info=).i[0-9] $(@:.info=).i[0-9][0-9]; do \
-@BUILD_INFO_TRUE@	    if test -f $$f; then mv $$f $$backupdir; restore=mv; else :; fi; \
-@BUILD_INFO_TRUE@	  done; \
-@BUILD_INFO_TRUE@	else :; fi && \
-@BUILD_INFO_TRUE@	if $(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -I doc -I $(srcdir)/doc \
-@BUILD_INFO_TRUE@	 -o $@ `test -f 'doc/ctf-spec.texi' || echo '$(srcdir)/'`doc/ctf-spec.texi; \
-@BUILD_INFO_TRUE@	then \
-@BUILD_INFO_TRUE@	  rc=0; \
-@BUILD_INFO_TRUE@	else \
-@BUILD_INFO_TRUE@	  rc=$$?; \
-@BUILD_INFO_TRUE@	  $$restore $$backupdir/* `echo "./$@" | sed 's|[^/]*$$||'`; \
-@BUILD_INFO_TRUE@	fi; \
-@BUILD_INFO_TRUE@	rm -rf $$backupdir; exit $$rc
-
-doc/ctf-spec.dvi: doc/ctf-spec.texi  doc/$(am__dirstamp)
-	$(AM_V_TEXI2DVI)TEXINPUTS="$(am__TEXINFO_TEX_DIR)$(PATH_SEPARATOR)$$TEXINPUTS" \
-	MAKEINFO='$(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -I doc -I $(srcdir)/doc' \
-	$(TEXI2DVI) $(AM_V_texinfo) --build-dir=$(@:.dvi=.t2d) -o $@ $(AM_V_texidevnull) \
-	`test -f 'doc/ctf-spec.texi' || echo '$(srcdir)/'`doc/ctf-spec.texi
-
-doc/ctf-spec.pdf: doc/ctf-spec.texi  doc/$(am__dirstamp)
-	$(AM_V_TEXI2PDF)TEXINPUTS="$(am__TEXINFO_TEX_DIR)$(PATH_SEPARATOR)$$TEXINPUTS" \
-	MAKEINFO='$(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -I doc -I $(srcdir)/doc' \
-	$(TEXI2PDF) $(AM_V_texinfo) --build-dir=$(@:.pdf=.t2p) -o $@ $(AM_V_texidevnull) \
-	`test -f 'doc/ctf-spec.texi' || echo '$(srcdir)/'`doc/ctf-spec.texi
-
-doc/ctf-spec.html: doc/ctf-spec.texi  doc/$(am__dirstamp)
-	$(AM_V_MAKEINFO)rm -rf $(@:.html=.htp)
-	$(AM_V_at)if $(MAKEINFOHTML) $(AM_MAKEINFOHTMLFLAGS) $(MAKEINFOFLAGS) -I doc -I $(srcdir)/doc \
-	 -o $(@:.html=.htp) `test -f 'doc/ctf-spec.texi' || echo '$(srcdir)/'`doc/ctf-spec.texi; \
-	then \
-	  rm -rf $@ && mv $(@:.html=.htp) $@; \
-	else \
-	  rm -rf $(@:.html=.htp); exit 1; \
-	fi
+@BUILD_INFO_TRUE@doc/ctf-spec.info:
+doc/ctf-spec.dvi:
+doc/ctf-spec.pdf:
+doc/ctf-spec.html:
 .dvi.ps:
-	$(AM_V_DVIPS)TEXINPUTS="$(am__TEXINFO_TEX_DIR)$(PATH_SEPARATOR)$$TEXINPUTS" \
-	$(DVIPS) $(AM_V_texinfo) -o $@ $<
 
 uninstall-dvi-am:
 	@$(NORMAL_UNINSTALL)
@@ -1143,11 +1103,8 @@ dist-info: $(INFO_DEPS)
 	done
 
 mostlyclean-aminfo:
-	-rm -rf doc/ctf-spec.t2d doc/ctf-spec.t2p
 
 clean-aminfo:
-	-test -z "doc/ctf-spec.dvi doc/ctf-spec.pdf doc/ctf-spec.ps doc/ctf-spec.html" \
-	|| rm -rf doc/ctf-spec.dvi doc/ctf-spec.pdf doc/ctf-spec.ps doc/ctf-spec.html
 
 maintainer-clean-aminfo:
 	@list='$(INFO_DEPS)'; for i in $$list; do \
@@ -1235,6 +1192,18 @@ cscopelist-am: $(am__tagged_files)
 distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 	-rm -f cscope.out cscope.in.out cscope.po.out cscope.files
+
+@TCL_TRY_FALSE@check-DEJAGNU: site.exp
+@TCL_TRY_FALSE@	srcdir='$(srcdir)'; export srcdir; \
+@TCL_TRY_FALSE@	EXPECT=$(EXPECT); export EXPECT; \
+@TCL_TRY_FALSE@	if $(SHELL) -c "$(RUNTEST) --version" > /dev/null 2>&1; then \
+@TCL_TRY_FALSE@	  exit_status=0; l='$(DEJATOOL)'; for tool in $$l; do \
+@TCL_TRY_FALSE@	    if $(RUNTEST) $(AM_RUNTESTFLAGS) $(RUNTESTDEFAULTFLAGS) $(RUNTESTFLAGS); \
+@TCL_TRY_FALSE@	    then :; else exit_status=1; fi; \
+@TCL_TRY_FALSE@	  done; \
+@TCL_TRY_FALSE@	else echo "WARNING: could not find '$(RUNTEST)'" 1>&2; :;\
+@TCL_TRY_FALSE@	fi; \
+@TCL_TRY_FALSE@	exit $$exit_status
 site.exp: Makefile $(EXTRA_DEJAGNU_SITE_CONFIG)
 	@echo 'Making a new site.exp file ...'
 	@echo '## these variables are automatically generated by make ##' >site.tmp
@@ -1673,34 +1642,13 @@ uninstall-am: uninstall-dvi-am uninstall-html-am \
 .PRECIOUS: Makefile
 
 
-check-DEJAGNU: site.exp development.exp
-	srcroot=`cd $(srcdir) && pwd`; export srcroot; \
-	r=`pwd`; export r; \
-	LC_ALL=C; export LC_ALL; \
-	EXPECT=$(EXPECT); export EXPECT; \
-	if [ "@host@" = "@target@" ] ; then \
-	  TEST_CROSS=no; \
-	else \
-	  TEST_CROSS=yes; \
-	fi; \
-	runtest=$(RUNTEST); \
-	if $(SHELL) -c "$$runtest --version" > /dev/null 2>&1; then \
-	  $$runtest --tool $(DEJATOOL) --srcdir $${srcroot}/testsuite \
-		CC="$(CC)" CC_FOR_TARGET="$(CC_FOR_TARGET)" TEST_CROSS="$${TEST_CROSS}" \
-		CFLAGS="$(CFLAGS) -I$(INCDIR) -I$(srcdir) -I$(builddir) -I$(builddir)/../bfd $(ZLIBINC)" \
-		LIBS="$(libctf_nobfd_la_LIBADD) $(LIBS)" $(RUNTESTFLAGS); \
-	else echo "WARNING: could not find \`runtest'" 1>&2; :;\
-	fi
+@TCL_TRY_TRUE@check-DEJAGNU:
 
-development.exp: $(BFDDIR)/development.sh
-	$(AM_V_GEN)$(EGREP) "(development|experimental)=" $(BFDDIR)/development.sh  \
-	  | $(AWK) -F= '{ print "set " $$1 " " $$2 }' > $@
-	echo "set have_tcl_try @HAVE_TCL_TRY@" >> $@
+@TCL_TRY_TRUE@development.exp: $(BFDDIR)/development.sh
+@TCL_TRY_TRUE@	$(AM_V_GEN)$(EGREP) "(development|experimental)=" $(BFDDIR)/development.sh  \
+@TCL_TRY_TRUE@	  | $(AWK) -F= '{ print "set " $$1 " " $$2 }' > $@
 
-@BUILD_INFO_TRUE@html-local: doc/ctf-spec/index.html
-@BUILD_INFO_TRUE@doc/ctf-spec/index.html: doc/ctf-spec.texi doc/$(am__dirstamp)
-@BUILD_INFO_TRUE@	$(AM_V_GEN)$(MAKEINFOHTML) $(AM_MAKEINFOHTMLFLAGS) $(MAKEINFOFLAGS) \
-@BUILD_INFO_TRUE@	  --split=node -I$(srcdir) --output doc/ctf-spec $(srcdir)/doc/ctf-spec.texi
+@BUILD_INFO_TRUE@html-local:
 
 # Workaround bug in automake: it can't handle conditionally building info pages
 # since GNU projects normally include info pages in the source distributions.

@@ -1,5 +1,5 @@
 /* bucomm.c -- Bin Utils COMmon code.
-   Copyright (C) 1991-2023 Free Software Foundation, Inc.
+   Copyright (C) 1991-2022 Free Software Foundation, Inc.
 
    This file is part of GNU Binutils.
 
@@ -455,6 +455,7 @@ print_arelt_descr (FILE *file, bfd *abfd, bool verbose, bool offsets)
 	  char timebuf[40];
 	  time_t when = buf.st_mtime;
 	  const char *ctime_result = (const char *) ctime (&when);
+	  bfd_size_type size;
 
 	  /* PR binutils/17605: Check for corrupt time values.  */
 	  if (ctime_result == NULL)
@@ -465,10 +466,11 @@ print_arelt_descr (FILE *file, bfd *abfd, bool verbose, bool offsets)
 
 	  mode_string (buf.st_mode, modebuf);
 	  modebuf[10] = '\0';
+	  size = buf.st_size;
 	  /* POSIX 1003.2/D11 says to skip first character (entry type).  */
-	  fprintf (file, "%s %ld/%ld %6" PRIu64 " %s ", modebuf + 1,
+	  fprintf (file, "%s %ld/%ld %6" BFD_VMA_FMT "u %s ", modebuf + 1,
 		   (long) buf.st_uid, (long) buf.st_gid,
-		   (uint64_t) buf.st_size, timebuf);
+		   size, timebuf);
 	}
     }
 
@@ -555,7 +557,6 @@ make_tempname (const char *filename, int *ofd)
   if (fd == -1)
     {
       free (tmpname);
-      bfd_set_error (bfd_error_system_call);
       return NULL;
     }
   *ofd = fd;
@@ -584,10 +585,7 @@ make_tempdir (const char *filename)
 #endif
 #endif
   if (ret == NULL)
-    {
-      free (tmpname);
-      bfd_set_error (bfd_error_system_call);
-    }
+    free (tmpname);
   return ret;
 }
 

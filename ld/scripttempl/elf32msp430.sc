@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2023 Free Software Foundation, Inc.
+# Copyright (C) 2014-2022 Free Software Foundation, Inc.
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -23,7 +23,7 @@ fi
 
 
 cat <<EOF
-/* Copyright (C) 2014-2023 Free Software Foundation, Inc.
+/* Copyright (C) 2014-2022 Free Software Foundation, Inc.
 
    Copying and distribution of this script, with or without modification,
    are permitted in any medium without royalty provided the copyright
@@ -225,7 +225,7 @@ SECTIONS
     KEEP (*(SORT(.fini_array.*)))
     PROVIDE (__fini_array_end = .);
 
-    /* spl uses crtbegin.o to find the start of the constructors, so
+    /* gcc uses crtbegin.o to find the start of the constructors, so
        we make sure it is first.  Because this is a wildcard, it
        doesn't matter if the user does not actually link against
        crtbegin.o; the linker won't look for a file to match a
@@ -330,10 +330,17 @@ SECTIONS
   /* Stabs for profiling information*/
   .profiler 0 : { *(.profiler) }
 
+  /* Stabs debugging sections.  */
+  .stab 0 : { *(.stab) }
+  .stabstr 0 : { *(.stabstr) }
+  .stab.excl 0 : { *(.stab.excl) }
+  .stab.exclstr 0 : { *(.stab.exclstr) }
+  .stab.index 0 : { *(.stab.index) }
+  .stab.indexstr 0 : { *(.stab.indexstr) }
+  .comment 0 : { *(.comment) }
 EOF
 
-source_sh $srcdir/scripttempl/misc-sections.sc
-source_sh $srcdir/scripttempl/DWARF.sc
+. $srcdir/scripttempl/DWARF.sc
 
 test -n "${RELOCATING}" && cat <<EOF
   .MSP430.attributes 0 :

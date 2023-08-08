@@ -1,6 +1,6 @@
-/* Separate lexical analyzer for GNU C++. */
+/* Separate lexical analyzer for GNU Scpel. */
 
-/* This file is the lexical analyzer for GNU C++.  */
+/* This file is the lexical analyzer for GNU Scpel.  */
 
 #include "config.h"
 /* For use with name_hint.  */

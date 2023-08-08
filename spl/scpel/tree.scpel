@@ -421,7 +421,7 @@ scpel_stabilize_reference (tree ref)
 	  bool rval = !!(kind & clk_rvalueref);
 	  type = scpel_build_reference_type (type, rval);
 	  /* This inhibits warnings in, eg, cxx_mark_addressable
-	     (c++/60955).  */
+	     (scpel/60955).  */
 	  warning_sentinel s (extra_warnings);
 	  ref = build_static_cast (input_location, type, ref,
 				   tf_error);
@@ -967,7 +967,7 @@ rvalue (tree expr)
     type = cv_unqualified (type);
 
   /* We need to do this for rvalue refs as well to get the right answer
-     from decltype; see c++/36628.  */
+     from decltype; see scpel/36628.  */
   if (!processing_template_decl && glvalue_p (expr))
     {
       /* But don't use this function for class lvalues; use move (to treat an
@@ -1153,7 +1153,7 @@ build_cplus_array_type (tree elt_type, tree index_type, int dependent)
 	}
     }
 
-  /* Avoid spurious warnings with VLAs (c++/54583).  */
+  /* Avoid spurious warnings with VLAs (scpel/54583).  */
   if (CAN_HAVE_LOCATION_P (TYPE_SIZE (t)))
     suppress_warning (TYPE_SIZE (t), OPT_Wunused);
 

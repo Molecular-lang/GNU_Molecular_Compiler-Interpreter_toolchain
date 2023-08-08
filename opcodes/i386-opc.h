@@ -1,5 +1,5 @@
 /* Declarations for Intel 80386 opcode table
-   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+   Copyright (C) 2007-2022 Free Software Foundation, Inc.
 
    This file is part of the GNU opcodes library.
 
@@ -88,8 +88,6 @@ enum
   CpuLZCNT,
   /* POPCNT support required */
   CpuPOPCNT,
-  /* MONITOR support required */
-  CpuMONITOR,
   /* SSE4.1 support required */
   CpuSSE4_1,
   /* SSE4.2 support required */
@@ -139,8 +137,6 @@ enum
   CpuMovbe,
   /* CMPXCHG16B instruction support required.  */
   CpuCX16,
-  /* LAHF/SAHF instruction support required (in 64-bit mode).  */
-  CpuLAHF_SAHF,
   /* EPT Instructions required */
   CpuEPT,
   /* RDTSCP Instruction support required */
@@ -213,26 +209,6 @@ enum
   CpuAVX_VNNI,
   /* Intel AVX-512 FP16 Instructions support required.  */
   CpuAVX512_FP16,
-  /* PREFETCHI instruction required */
-  CpuPREFETCHI,
-  /* Intel AVX IFMA Instructions support required.  */
-  CpuAVX_IFMA,
-  /* Intel AVX VNNI-INT8 Instructions support required.  */
-  CpuAVX_VNNI_INT8,
-  /* Intel CMPccXADD instructions support required.  */
-  CpuCMPCCXADD,
-  /* Intel WRMSRNS Instructions support required */
-  CpuWRMSRNS,
-  /* Intel MSRLIST Instructions support required.  */
-  CpuMSRLIST,
-  /* Intel AVX NE CONVERT Instructions support required.  */
-  CpuAVX_NE_CONVERT,
-  /* Intel RAO INT Instructions support required.  */
-  CpuRAO_INT,
-  /* fred instruction required */
-  CpuFRED,
-  /* lkgs instruction required */
-  CpuLKGS,
   /* mwaitx instruction required */
   CpuMWAITX,
   /* Clzero instruction required */
@@ -250,10 +226,6 @@ enum
   CpuAMX_INT8,
   /* AMX-BF16 instructions required */
   CpuAMX_BF16,
-  /* AMX-FP16 instructions required */
-  CpuAMX_FP16,
-  /* AMX-COMPLEX instructions required.  */
-  CpuAMX_COMPLEX,
   /* AMX-TILE instructions required */
   CpuAMX_TILE,
   /* GFNI instructions required */
@@ -300,8 +272,6 @@ enum
   CpuTLBSYNC,
   /* SNP instructions required */
   CpuSNP,
-  /* RMPQUERY instruction required */
-  CpuRMPQUERY,
 
   /* NOTE: These last three items need to remain last and in this order. */
 
@@ -358,7 +328,6 @@ typedef union i386_cpu_flags
       unsigned int cpusse4a:1;
       unsigned int cpulzcnt:1;
       unsigned int cpupopcnt:1;
-      unsigned int cpumonitor:1;
       unsigned int cpusse4_1:1;
       unsigned int cpusse4_2:1;
       unsigned int cpuavx:1;
@@ -383,7 +352,6 @@ typedef union i386_cpu_flags
       unsigned int cputbm:1;
       unsigned int cpumovbe:1;
       unsigned int cpucx16:1;
-      unsigned int cpulahf_sahf:1;
       unsigned int cpuept:1;
       unsigned int cpurdtscp:1;
       unsigned int cpufsgsbase:1;
@@ -420,16 +388,6 @@ typedef union i386_cpu_flags
       unsigned int cputdx:1;
       unsigned int cpuavx_vnni:1;
       unsigned int cpuavx512_fp16:1;
-      unsigned int cpuprefetchi:1;
-      unsigned int cpuavx_ifma:1;
-      unsigned int cpuavx_vnni_int8:1;
-      unsigned int cpucmpccxadd:1;
-      unsigned int cpuwrmsrns:1;
-      unsigned int cpumsrlist:1;
-      unsigned int cpuavx_ne_convert:1;
-      unsigned int cpurao_int:1;
-      unsigned int cpufred:1;
-      unsigned int cpulkgs:1;
       unsigned int cpumwaitx:1;
       unsigned int cpuclzero:1;
       unsigned int cpuospke:1;
@@ -439,8 +397,6 @@ typedef union i386_cpu_flags
       unsigned int cpushstk:1;
       unsigned int cpuamx_int8:1;
       unsigned int cpuamx_bf16:1;
-      unsigned int cpuamx_fp16:1;
-      unsigned int cpuamx_complex:1;
       unsigned int cpuamx_tile:1;
       unsigned int cpugfni:1;
       unsigned int cpuvaes:1;
@@ -464,7 +420,6 @@ typedef union i386_cpu_flags
       unsigned int cpuinvlpgb:1;
       unsigned int cputlbsync:1;
       unsigned int cpusnp:1;
-      unsigned int cpurmpquery:1;
       /* NOTE: These last three fields need to remain last and in this order. */
       unsigned int cpu64:1;
       unsigned int cpuno64:1;
@@ -502,6 +457,8 @@ enum
   Jump,
   /* FP insn memory format bit, sized by 0x4 */
   FloatMF,
+  /* src/dest swap for floats. */
+  FloatR,
   /* needs size prefix if in 32-bit mode */
 #define SIZE16 1
   /* needs size prefix if in 16-bit mode */
@@ -509,37 +466,19 @@ enum
   /* needs size prefix if in 64-bit mode */
 #define SIZE64 3
   Size,
-  /* Check that operand sizes match.  */
-  CheckOperandSize,
-  /* any memory size */
-#define ANY_SIZE 1
-  /* fake an extra reg operand for clr, imul and special register
-     processing for some instructions.  */
-#define REG_KLUDGE 2
-  /* deprecated fp insn, gets a warning */
-#define UGH 3
-  /* An implicit xmm0 as the first operand */
-#define IMPLICIT_1ST_XMM0 4
-  /* The second operand must be a vector register, {x,y,z}mmN, where N is a multiple of 4.
-     It implicitly denotes the register group of {x,y,z}mmN - {x,y,z}mm(N + 3).
-   */
-#define IMPLICIT_QUAD_GROUP 5
-  /* Two source operands are swapped.  */
-#define SWAP_SOURCES 6
-  /* Default mask isn't allowed.  */
-#define NO_DEFAULT_MASK 7
-  /* Address prefix changes register operand */
-#define ADDR_PREFIX_OP_REG 8
+  /* check register size.  */
+  CheckRegSize,
   /* Instrucion requires that destination must be distinct from source
      registers.  */
-#define DISTINCT_DEST 9
-  OperandConstraint,
+  DistinctDest,
   /* instruction ignores operand size prefix and in Intel mode ignores
      mnemonic size suffix check.  */
 #define IGNORESIZE	1
   /* default insn size depends on mode */
 #define DEFAULTSIZE	2
   MnemonicSize,
+  /* any memory size */
+  Anysize,
   /* b suffix on instruction illegal */
   No_bSuf,
   /* w suffix on instruction illegal */
@@ -550,6 +489,8 @@ enum
   No_sSuf,
   /* q suffix on instruction illegal */
   No_qSuf,
+  /* long double suffix on instruction illegal */
+  No_ldSuf,
   /* instruction needs FWAIT */
   FWait,
   /* IsString provides for a quick test for string instructions, and
@@ -565,6 +506,11 @@ enum
   RegMem,
   /* quick test if branch instruction is MPX supported */
   BNDPrefixOk,
+  /* fake an extra reg operand for clr, imul and special register
+     processing for some instructions.  */
+  RegKludge,
+  /* An implicit xmm0 as the first operand */
+  Implicit1stXmm0,
 #define PrefixNone		0
 #define PrefixRep		1
 #define PrefixHLERelease	2 /* Okay with an XRELEASE (0xf3) prefix. */
@@ -575,12 +521,22 @@ enum
 #define PrefixHLELock		5 /* Okay with a LOCK prefix.  */
 #define PrefixHLEAny		6 /* Okay with or without a LOCK prefix.  */
   PrefixOk,
+  /* Convert to DWORD */
+  ToDword,
+  /* Convert to QWORD */
+  ToQword,
+  /* Address prefix changes register operand */
+  AddrPrefixOpReg,
   /* opcode is a prefix */
   IsPrefix,
   /* instruction has extension in 8 bit imm */
   ImmExt,
   /* instruction don't need Rex64 prefix.  */
   NoRex64,
+  /* deprecated fp insn, gets a warning */
+  Ugh,
+  /* Intel AVX Instructions support via {vex} prefix */
+  PseudoVexPrefix,
   /* insn has VEX prefix:
 	1: 128bit VEX prefix (or operand dependent).
 	2: 256bit VEX prefix.
@@ -592,8 +548,23 @@ enum
   Vex,
   /* How to encode VEX.vvvv:
      0: VEX.vvvv must be 1111b.
-     1: VEX.vvvv encodes one of the register operands.
+     1: VEX.NDS.  Register-only source is encoded in VEX.vvvv where
+	the content of source registers will be preserved.
+	VEX.DDS.  The second register operand is encoded in VEX.vvvv
+	where the content of first source register will be overwritten
+	by the result.
+	VEX.NDD2.  The second destination register operand is encoded in
+	VEX.vvvv for instructions with 2 destination register operands.
+	For assembler, there are no difference between VEX.NDS, VEX.DDS
+	and VEX.NDD2.
+     2. VEX.NDD.  Register destination is encoded in VEX.vvvv for
+     instructions with 1 destination register operand.
+     3. VEX.LWP.  Register destination is encoded in VEX.vvvv and one
+	of the operands can access a memory location.
    */
+#define VEXXDS	1
+#define VEXNDD	2
+#define VEXLWP	3
   VexVVVV,
   /* How the VEX.W bit is used:
      0: Set by the REX.W bit.
@@ -605,6 +576,28 @@ enum
 #define VEXW1	2
 #define VEXWIG	3
   VexW,
+  /* Opcode encoding space (values chosen to be usable directly in
+     VEX/XOP mmmmm and EVEX mm fields):
+     0: Base opcode space.
+     1: 0F opcode prefix / space.
+     2: 0F38 opcode prefix / space.
+     3: 0F3A opcode prefix / space.
+     5: EVEXMAP5 opcode prefix / space.
+     6: EVEXMAP6 opcode prefix / space.
+     8: XOP 08 opcode space.
+     9: XOP 09 opcode space.
+     A: XOP 0A opcode space.
+   */
+#define SPACE_BASE	0
+#define SPACE_0F	1
+#define SPACE_0F38	2
+#define SPACE_0F3A	3
+#define SPACE_EVEXMAP5	5
+#define SPACE_EVEXMAP6	6
+#define SPACE_XOP08	8
+#define SPACE_XOP09	9
+#define SPACE_XOP0A	0xA
+  OpcodeSpace,
   /* Opcode prefix (values chosen to be usable directly in
      VEX/XOP/EVEX pp fields):
      0: None
@@ -617,6 +610,14 @@ enum
 #define PREFIX_0XF3	2
 #define PREFIX_0XF2	3
   OpcodePrefix,
+  /* number of VEX source operands:
+     0: <= 2 source operands.
+     1: 2 XOP source operands.
+     2: 3 source operands.
+   */
+#define XOP2SOURCES	1
+#define VEX3SOURCES	2
+  VexSources,
   /* Instruction with a mandatory SIB byte:
 	1: 128bit vector register.
 	2: 256bit vector register.
@@ -637,17 +638,22 @@ enum
 	3: 256bit EVEX prefix.
 	4: Length-ignored (LIG) EVEX prefix.
 	5: Length determined from actual operands.
-	6: L'L = 3 (reserved, .insn only)
    */
 #define EVEX512                1
 #define EVEX128                2
 #define EVEX256                3
 #define EVEXLIG                4
 #define EVEXDYN                5
-#define EVEX_L3                6
   EVex,
 
-  /* AVX512 masking support */
+  /* AVX512 masking support:
+	1: Zeroing or merging masking depending on operands.
+	2: Merging-masking.
+	3: Both zeroing and merging masking.
+   */
+#define DYNAMIC_MASKING 1
+#define MERGING_MASKING 2
+#define BOTH_MASKING    3
   Masking,
 
   /* AVX512 broadcast support.  The number of bytes to broadcast is
@@ -672,6 +678,17 @@ enum
   /* Compressed Disp8*N attribute.  */
 #define DISP8_SHIFT_VL 7
   Disp8MemShift,
+
+  /* Default mask isn't allowed.  */
+  NoDefMask,
+
+  /* The second operand must be a vector register, {x,y,z}mmN, where N is a multiple of 4.
+     It implicitly denotes the register group of {x,y,z}mmN - {x,y,z}mm(N + 3).
+   */
+  ImplicitQuadGroup,
+
+  /* Two source operands are swapped.  */
+  SwapSources,
 
   /* Support encoding optimization.  */
   Optimize,
@@ -704,35 +721,50 @@ typedef struct i386_opcode_modifier
   unsigned int modrm:1;
   unsigned int jump:3;
   unsigned int floatmf:1;
+  unsigned int floatr:1;
   unsigned int size:2;
-  unsigned int checkoperandsize:1;
-  unsigned int operandconstraint:4;
+  unsigned int checkregsize:1;
+  unsigned int distinctdest:1;
   unsigned int mnemonicsize:2;
+  unsigned int anysize:1;
   unsigned int no_bsuf:1;
   unsigned int no_wsuf:1;
   unsigned int no_lsuf:1;
   unsigned int no_ssuf:1;
   unsigned int no_qsuf:1;
+  unsigned int no_ldsuf:1;
   unsigned int fwait:1;
   unsigned int isstring:2;
   unsigned int regmem:1;
   unsigned int bndprefixok:1;
+  unsigned int regkludge:1;
+  unsigned int implicit1stxmm0:1;
   unsigned int prefixok:3;
+  unsigned int todword:1;
+  unsigned int toqword:1;
+  unsigned int addrprefixopreg:1;
   unsigned int isprefix:1;
   unsigned int immext:1;
   unsigned int norex64:1;
+  unsigned int ugh:1;
+  unsigned int pseudovexprefix:1;
   unsigned int vex:2;
-  unsigned int vexvvvv:1;
+  unsigned int vexvvvv:2;
   unsigned int vexw:2;
+  unsigned int opcodespace:4;
   unsigned int opcodeprefix:2;
+  unsigned int vexsources:2;
   unsigned int sib:3;
   unsigned int sse2avx:1;
   unsigned int evex:3;
-  unsigned int masking:1;
+  unsigned int masking:2;
   unsigned int broadcast:3;
   unsigned int staticrounding:1;
   unsigned int sae:1;
   unsigned int disp8memshift:3;
+  unsigned int nodefmask:1;
+  unsigned int implicitquadgroup:1;
+  unsigned int swapsources:1;
   unsigned int optimize:1;
   unsigned int attmnemonic:1;
   unsigned int attsyntax:1;
@@ -881,12 +913,7 @@ typedef union i386_operand_type
 typedef struct insn_template
 {
   /* instruction name sans width suffix ("mov" for movl insns) */
-  unsigned int mnem_off;
-
-  /* Bitfield arrangement is such that individual fields can be easily
-     extracted (in native builds at least) - either by at most a masking
-     operation (base_opcode, operands), or by just a (signed) right shift
-     (extension_opcode).  Please try to maintain this property.  */
+  char *name;
 
   /* base_opcode is the fundamental opcode byte without optional
      prefix(es).  */
@@ -894,40 +921,13 @@ typedef struct insn_template
 #define Opcode_D	0x2 /* Direction bit:
 			       set if Reg --> Regmem;
 			       unset if Regmem --> Reg. */
-#define Opcode_FloatR	0x8 /* ModR/M bit to swap src/dest for float insns. */
-#define Opcode_FloatD   0x4 /* Direction bit for float insns. */
-#define Opcode_ExtD	0x1 /* Direction bit for extended opcode space insns. */
+#define Opcode_FloatR	0x8 /* Bit to swap src/dest for float insns. */
+#define Opcode_FloatD 0x400 /* Direction bit for float insns. */
+#define Opcode_SIMD_FloatD 0x1 /* Direction bit for SIMD fp insns. */
 #define Opcode_SIMD_IntD 0x10 /* Direction bit for SIMD int insns. */
 /* The next value is arbitrary, as long as it's non-zero and distinct
    from all other values above.  */
 #define Opcode_VexW	0xf /* Operand order controlled by VEX.W. */
-
-  /* how many operands */
-  unsigned int operands:3;
-
-  /* opcode space */
-  unsigned int opcode_space:4;
-  /* Opcode encoding space (values chosen to be usable directly in
-     VEX/XOP mmmmm and EVEX mm fields):
-     0: Base opcode space.
-     1: 0F opcode prefix / space.
-     2: 0F38 opcode prefix / space.
-     3: 0F3A opcode prefix / space.
-     5: EVEXMAP5 opcode prefix / space.
-     6: EVEXMAP6 opcode prefix / space.
-     8: XOP 08 opcode space.
-     9: XOP 09 opcode space.
-     A: XOP 0A opcode space.
-   */
-#define SPACE_BASE	0
-#define SPACE_0F	1
-#define SPACE_0F38	2
-#define SPACE_0F3A	3
-#define SPACE_EVEXMAP5	5
-#define SPACE_EVEXMAP6	6
-#define SPACE_XOP08	8
-#define SPACE_XOP09	9
-#define SPACE_XOP0A	0xA
 
 /* (Fake) base opcode value for pseudo prefixes.  */
 #define PSEUDO_PREFIX 0
@@ -952,6 +952,9 @@ typedef struct insn_template
 #define Prefix_REX		8	/* {rex} */
 #define Prefix_NoOptimize	9	/* {nooptimize} */
 
+  /* how many operands */
+  unsigned int operands:3;
+
   /* the bits in opcode_modifier are used to generate the final opcode from
      the base_opcode.  These bits also are used to detect alternate forms of
      the same instruction */
@@ -968,10 +971,12 @@ typedef struct insn_template
 }
 insn_template;
 
+extern const insn_template i386_optab[];
+
 /* these are for register name --> number & type hash lookup */
 typedef struct
 {
-  char reg_name[8];
+  const char *reg_name;
   i386_operand_type reg_type;
   unsigned char reg_flags;
 #define RegRex	    0x1  /* Extended register.  */
@@ -987,3 +992,7 @@ typedef struct
 #define Dw2Inval (-1)
 }
 reg_entry;
+
+extern const reg_entry i386_regtab[];
+extern const unsigned int i386_regtab_size;
+extern const unsigned char i386_seg_prefixes[6];

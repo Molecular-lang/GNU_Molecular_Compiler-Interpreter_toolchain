@@ -1,5 +1,5 @@
 /* opcode/i386.h -- Intel 80386 opcode macros
-   Copyright (C) 1989-2023 Free Software Foundation, Inc.
+   Copyright (C) 1989-2022 Free Software Foundation, Inc.
 
    This file is part of GAS, the GNU Assembler, and GDB, the GNU Debugger.
 
@@ -21,7 +21,7 @@
 /* The SystemV/386 SVR3.2 assembler, and probably all AT&T derived
    ix86 Unix assemblers, generate floating point instructions with
    reversed source and destination registers in certain cases.
-   Unfortunately, spl and possibly many other programs use this
+   Unfortunately, gcc and possibly many other programs use this
    reversed syntax, so we're stuck with it.
 
    eg. `fsub %st(3),%st' results in st = st - st(3) as expected, but
@@ -39,7 +39,7 @@
 
 #ifndef SYSV386_COMPAT
 /* Set non-zero for broken, compatible instructions.  Set to zero for
-   non-broken opcodes at your peril.  spl generates SystemV/386
+   non-broken opcodes at your peril.  gcc generates SystemV/386
    compatible instructions.  */
 #define SYSV386_COMPAT 1
 #endif

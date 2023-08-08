@@ -1,5 +1,5 @@
 /* ldmisc.h -
-   Copyright (C) 1991-2023 Free Software Foundation, Inc.
+   Copyright (C) 1991-2022 Free Software Foundation, Inc.
 
    This file is part of the GNU Binutils.
 
@@ -38,8 +38,7 @@ do { if (!(x)) info_assert(__FILE__,__LINE__); } while (0)
 #define FAIL() \
 do { info_assert(__FILE__,__LINE__); } while (0)
 
-extern void print_spaces (int);
-#define print_space() print_spaces (1)
+extern void print_space (void);
 extern void print_nl (void);
 
 #endif

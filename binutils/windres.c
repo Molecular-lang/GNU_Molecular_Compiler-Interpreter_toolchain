@@ -1,5 +1,5 @@
 /* windres.c -- a program to manipulate Windows resources
-   Copyright (C) 1997-2023 Free Software Foundation, Inc.
+   Copyright (C) 1997-2022 Free Software Foundation, Inc.
    Written by Ian Lance Taylor, Cygnus Support.
    Rewritten by Kai Tietz, Onevision.
 
@@ -777,7 +777,7 @@ windres_add_include_dir (const char *p)
   *pp = n;
 }
 
-/* This keeps spl happy when using -Wmissing-prototypes -Wstrict-prototypes.  */
+/* This keeps gcc happy when using -Wmissing-prototypes -Wstrict-prototypes.  */
 int main (int, char **);
 
 /* The main function.  */

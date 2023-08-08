@@ -1,13 +1,12 @@
 /* DO NOT EDIT!  -*- buffer-read-only: t -*-  This file is automatically
-   generated from "libbfd-in.h", "libbfd.c", "bfd.c", "bfdio.c",
-   "archive.c", "archures.c", "bfdwin.c", "cache.c", "hash.c", "linker.c",
-   "opncls.c", "reloc.c", "section.c", "stabs.c" and "targets.c".
+   generated from "libbfd-in.h", "libbfd.c", "bfdio.c", "bfdwin.c",
+   "cache.c", "reloc.c", "archures.c" and "linker.c".
    Run "make headers" in your build bfd/ to regenerate.  */
 
 /* libbfd.h -- Declarations used by bfd library *implementation*.
    (This include file is not for users of the library.)
 
-   Copyright (C) 1990-2023 Free Software Foundation, Inc.
+   Copyright (C) 1990-2022 Free Software Foundation, Inc.
 
    Written by Cygnus Support.
 
@@ -78,9 +77,10 @@ extern unsigned int _bfd_section_id ATTRIBUTE_HIDDEN;
 
 struct artdata
 {
-  ufile_ptr first_file_filepos;
+  file_ptr first_file_filepos;
   /* Speed up searching the armap */
   htab_t cache;
+  bfd *archive_head;		/* Only interesting in output routines.  */
   carsym *symdefs;		/* The symdef entries.  */
   symindex symdef_count;	/* How many there are.  */
   char *extended_names;		/* Clever intel extension.  */
@@ -125,6 +125,10 @@ bfd_strdup (const char *str)
     memcpy (buf, str, len);
   return buf;
 }
+/* These routines allocate and free things on the BFD's objalloc.  */
+
+extern void bfd_release
+  (bfd *, void *) ATTRIBUTE_HIDDEN;
 
 extern bfd * _bfd_create_empty_archive_element_shell
   (bfd *) ATTRIBUTE_HIDDEN;
@@ -176,6 +180,10 @@ extern bfd *_bfd_get_elt_at_filepos
   (bfd *, file_ptr, struct bfd_link_info *) ATTRIBUTE_HIDDEN;
 extern bfd *_bfd_generic_get_elt_at_index
   (bfd *, symindex) ATTRIBUTE_HIDDEN;
+extern bfd * _bfd_new_bfd
+  (void) ATTRIBUTE_HIDDEN;
+extern bool _bfd_free_cached_info
+  (bfd *) ATTRIBUTE_HIDDEN;
 
 extern bool _bfd_bool_bfd_false
   (bfd *) ATTRIBUTE_HIDDEN;
@@ -216,6 +224,8 @@ extern void _bfd_void_bfd_link
 extern void _bfd_void_bfd_asection
   (bfd *, asection *) ATTRIBUTE_HIDDEN;
 
+extern bfd *_bfd_new_bfd_contained_in
+  (bfd *) ATTRIBUTE_HIDDEN;
 extern bfd_cleanup _bfd_dummy_target
   (bfd *) ATTRIBUTE_HIDDEN;
 #define _bfd_no_cleanup _bfd_void_bfd
@@ -267,7 +277,7 @@ extern int bfd_generic_stat_arch_elt
 extern bool _bfd_archive_close_and_cleanup
   (bfd *) ATTRIBUTE_HIDDEN;
 extern void _bfd_unlink_from_archive_parent (bfd *) ATTRIBUTE_HIDDEN;
-#define _bfd_generic_bfd_free_cached_info _bfd_free_cached_info
+#define _bfd_generic_bfd_free_cached_info _bfd_bool_bfd_true
 extern bool _bfd_generic_new_section_hook
   (bfd *, asection *) ATTRIBUTE_HIDDEN;
 extern bool _bfd_generic_get_section_contents
@@ -446,17 +456,13 @@ extern bool _bfd_nosymbols_find_nearest_line
   (bfd *, asymbol **, asection *, bfd_vma,
    const char **, const char **, unsigned int *, unsigned int *)
   ATTRIBUTE_HIDDEN;
-extern bool _bfd_nosymbols_find_nearest_line_with_alt
-  (bfd *, const char *, asymbol **, asection *, bfd_vma,
-   const char **, const char **, unsigned int *, unsigned int *)
-  ATTRIBUTE_HIDDEN;
 extern bool _bfd_nosymbols_find_line
   (bfd *, asymbol **, asymbol *, const char **, unsigned int *)
   ATTRIBUTE_HIDDEN;
 extern bool _bfd_nosymbols_find_inliner_info
   (bfd *, const char **, const char **, unsigned int *) ATTRIBUTE_HIDDEN;
 extern asymbol *_bfd_nosymbols_bfd_make_debug_symbol
-  (bfd *) ATTRIBUTE_HIDDEN;
+  (bfd *, void *, unsigned long) ATTRIBUTE_HIDDEN;
 extern long _bfd_nosymbols_read_minisymbols
   (bfd *, bool, void **, unsigned int *) ATTRIBUTE_HIDDEN;
 extern asymbol *_bfd_nosymbols_minisymbol_to_symbol
@@ -568,10 +574,6 @@ extern bool _bfd_dwarf1_find_nearest_line
   (bfd *, asymbol **, asection *, bfd_vma,
    const char **, const char **, unsigned int *) ATTRIBUTE_HIDDEN;
 
-/* Clean up the data used to handle DWARF 1 debugging information. */
-extern void _bfd_dwarf1_cleanup_debug_info
-  (bfd *, void **) ATTRIBUTE_HIDDEN;
-
 struct dwarf_debug_section
 {
   const char * uncompressed_name;
@@ -586,13 +588,6 @@ extern const struct dwarf_debug_section dwarf_debug_sections[] ATTRIBUTE_HIDDEN;
 /* Find the nearest line using DWARF 2 debugging information.  */
 extern int _bfd_dwarf2_find_nearest_line
   (bfd *, asymbol **, asymbol *, asection *, bfd_vma,
-   const char **, const char **, unsigned int *, unsigned int *,
-   const struct dwarf_debug_section *, void **) ATTRIBUTE_HIDDEN;
-
-/* Find the nearest line using DWARF 2 debugging information, with
-   the option of specifying a .gnu_debugaltlink file.  */
-extern int _bfd_dwarf2_find_nearest_line_with_alt
-  (bfd *, const char *, asymbol **, asymbol *, asection *, bfd_vma,
    const char **, const char **, unsigned int *, unsigned int *,
    const struct dwarf_debug_section *, void **) ATTRIBUTE_HIDDEN;
 
@@ -612,9 +607,6 @@ extern bool _bfd_dwarf2_slurp_debug_info
 
 /* Clean up the data used to handle DWARF 2 debugging information. */
 extern void _bfd_dwarf2_cleanup_debug_info
-  (bfd *, void **) ATTRIBUTE_HIDDEN;
-
-extern void _bfd_stab_cleanup
   (bfd *, void **) ATTRIBUTE_HIDDEN;
 
 /* Create a new section entry.  */
@@ -709,6 +701,34 @@ extern bfd_reloc_status_type _bfd_relocate_contents
 extern bfd_reloc_status_type _bfd_clear_contents
   (reloc_howto_type *, bfd *, asection *, bfd_byte *, bfd_vma) ATTRIBUTE_HIDDEN;
 
+/* Link stabs in sections in the first pass.  */
+
+extern bool _bfd_link_section_stabs
+  (bfd *, struct stab_info *, asection *, asection *, void **,
+   bfd_size_type *) ATTRIBUTE_HIDDEN;
+
+/* Eliminate stabs for discarded functions and symbols.  */
+extern bool _bfd_discard_section_stabs
+  (bfd *, asection *, void *, bool (*) (bfd_vma, void *), void *)
+  ATTRIBUTE_HIDDEN;
+
+/* Write out the .stab section when linking stabs in sections.  */
+
+extern bool _bfd_write_section_stabs
+  (bfd *, struct stab_info *, asection *, void **, bfd_byte *)
+  ATTRIBUTE_HIDDEN;
+
+/* Write out the .stabstr string table when linking stabs in sections.  */
+
+extern bool _bfd_write_stab_strings
+  (bfd *, struct stab_info *) ATTRIBUTE_HIDDEN;
+
+/* Find an offset within a .stab section when linking stabs in
+   sections.  */
+
+extern bfd_vma _bfd_stab_section_offset
+  (asection *, void *, bfd_vma) ATTRIBUTE_HIDDEN;
+
 /* Register a SEC_MERGE section as a candidate for merging.  */
 
 extern bool _bfd_add_merge_section
@@ -734,6 +754,31 @@ extern bfd_vma _bfd_merged_section_offset
 
 extern void _bfd_merge_sections_free (void *) ATTRIBUTE_HIDDEN;
 
+/* Create a string table.  */
+extern struct bfd_strtab_hash *_bfd_stringtab_init
+  (void) ATTRIBUTE_HIDDEN;
+
+/* Create an XCOFF .debug section style string table.  */
+extern struct bfd_strtab_hash *_bfd_xcoff_stringtab_init
+  (bool isxcoff64) ATTRIBUTE_HIDDEN;
+
+/* Free a string table.  */
+extern void _bfd_stringtab_free
+  (struct bfd_strtab_hash *) ATTRIBUTE_HIDDEN;
+
+/* Get the size of a string table.  */
+extern bfd_size_type _bfd_stringtab_size
+  (struct bfd_strtab_hash *) ATTRIBUTE_HIDDEN;
+
+/* Add a string to a string table.  */
+extern bfd_size_type _bfd_stringtab_add
+  (struct bfd_strtab_hash *, const char *, bool hash, bool copy)
+  ATTRIBUTE_HIDDEN;
+
+/* Write out a string table.  */
+extern bool _bfd_stringtab_emit
+  (bfd *, struct bfd_strtab_hash *) ATTRIBUTE_HIDDEN;
+
 /* Macros to tell if bfds are read or write enabled.
 
    Note that bfds open for read may be scribbled into if the fd passed
@@ -760,7 +805,7 @@ extern void bfd_assert
 extern void _bfd_abort
   (const char *, int, const char *) ATTRIBUTE_NORETURN ATTRIBUTE_HIDDEN;
 
-/* if spl >= 2.6, we can give a function name, too */
+/* if gcc >= 2.6, we can give a function name, too */
 #if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 6)
 #define __PRETTY_FUNCTION__  ((char *) NULL)
 #endif
@@ -788,13 +833,10 @@ extern const bfd_target *const *const bfd_associated_vector ATTRIBUTE_HIDDEN;
 /* Functions shared by the ECOFF and MIPS ELF backends, which have no
    other common header files.  */
 
-struct ecoff_debug_info;
-struct ecoff_debug_swap;
-struct ecoff_extr;
+#if defined(__STDC__) || defined(ALMOST_STDC)
 struct ecoff_find_line;
+#endif
 
-extern void _bfd_ecoff_free_ecoff_debug_info
-  (struct ecoff_debug_info *debug);
 extern bool _bfd_ecoff_locate_line
   (bfd *, asection *, bfd_vma, struct ecoff_debug_info * const,
    const struct ecoff_debug_swap * const, struct ecoff_find_line *,
@@ -874,10 +916,10 @@ extern bool _bfd_link_keep_memory (struct bfd_link_info *)
 #define _bfd_constant_p(v) 0
 #endif
 
-static inline void *
+static inline bfd_byte *
 _bfd_alloc_and_read (bfd *abfd, bfd_size_type asize, bfd_size_type rsize)
 {
-  void *mem;
+  bfd_byte *mem;
   if (!_bfd_constant_p (rsize))
     {
       ufile_ptr filesize = bfd_get_file_size (abfd);
@@ -897,10 +939,10 @@ _bfd_alloc_and_read (bfd *abfd, bfd_size_type asize, bfd_size_type rsize)
   return NULL;
 }
 
-static inline void *
+static inline bfd_byte *
 _bfd_malloc_and_read (bfd *abfd, bfd_size_type asize, bfd_size_type rsize)
 {
-  void *mem;
+  bfd_byte *mem;
   if (!_bfd_constant_p (rsize))
     {
       ufile_ptr filesize = bfd_get_file_size (abfd);
@@ -920,27 +962,17 @@ _bfd_malloc_and_read (bfd *abfd, bfd_size_type asize, bfd_size_type rsize)
   return NULL;
 }
 /* Extracted from libbfd.c.  */
-void *bfd_malloc (bfd_size_type /*size*/) ATTRIBUTE_HIDDEN;
+extern void * bfd_malloc (bfd_size_type SIZE) ATTRIBUTE_HIDDEN;
 
-void *bfd_realloc (void */*mem*/, bfd_size_type /*size*/) ATTRIBUTE_HIDDEN;
+extern void * bfd_realloc (void * MEM, bfd_size_type SIZE) ATTRIBUTE_HIDDEN;
 
-void *bfd_realloc_or_free (void */*mem*/, bfd_size_type /*size*/) ATTRIBUTE_HIDDEN;
+extern void * bfd_realloc_or_free (void * MEM, bfd_size_type SIZE) ATTRIBUTE_HIDDEN;
 
-void *bfd_zmalloc (bfd_size_type /*size*/) ATTRIBUTE_HIDDEN;
+extern void * bfd_zmalloc (bfd_size_type SIZE) ATTRIBUTE_HIDDEN;
 
-bool bfd_write_bigendian_4byte_int (bfd *, unsigned int) ATTRIBUTE_HIDDEN;
+bool bfd_write_bigendian_4byte_int (bfd *, unsigned int);
 
-unsigned int bfd_log2 (bfd_vma x) ATTRIBUTE_HIDDEN;
-
-/* Extracted from bfd.c.  */
-/* A buffer that is freed on bfd_close.  */
-extern char *_bfd_error_buf;
-
-char *bfd_asprintf (const char *fmt, ...) ATTRIBUTE_HIDDEN;
-
-bfd_error_handler_type _bfd_set_error_handler_caching (bfd *) ATTRIBUTE_HIDDEN;
-
-const char *_bfd_get_error_program_name (void) ATTRIBUTE_HIDDEN;
+unsigned int bfd_log2 (bfd_vma x);
 
 /* Extracted from bfdio.c.  */
 struct bfd_iovec
@@ -953,7 +985,7 @@ struct bfd_iovec
      or -1 (setting <<bfd_error>>) if an error occurs.  */
   file_ptr (*bread) (struct bfd *abfd, void *ptr, file_ptr nbytes);
   file_ptr (*bwrite) (struct bfd *abfd, const void *ptr,
-		      file_ptr nbytes);
+                      file_ptr nbytes);
   /* Return the current IOSTREAM file offset, or -1 (setting <<bfd_error>>
      if an error occurs.  */
   file_ptr (*btell) (struct bfd *abfd);
@@ -970,79 +1002,24 @@ struct bfd_iovec
      MAP_LEN the size mapped (a page multiple).  Use unmap with MAP_ADDR and
      MAP_LEN to unmap.  */
   void *(*bmmap) (struct bfd *abfd, void *addr, bfd_size_type len,
-		  int prot, int flags, file_ptr offset,
-		  void **map_addr, bfd_size_type *map_len);
+                  int prot, int flags, file_ptr offset,
+                  void **map_addr, bfd_size_type *map_len);
 };
 extern const struct bfd_iovec _bfd_memory_iovec;
-
-/* Extracted from archive.c.  */
-/* Used in generating armaps (archive tables of contents).  */
-struct orl             /* Output ranlib.  */
-{
-  char **name;         /* Symbol name.  */
-  union
-  {
-    file_ptr pos;
-    bfd *abfd;
-  } u;                 /* bfd* or file position.  */
-  int namidx;          /* Index into string table.  */
-};
-
-/* Extracted from archures.c.  */
-extern const bfd_arch_info_type bfd_default_arch_struct;
-
-const bfd_arch_info_type *bfd_default_compatible
-   (const bfd_arch_info_type *a, const bfd_arch_info_type *b) ATTRIBUTE_HIDDEN;
-
-bool bfd_default_scan
-   (const struct bfd_arch_info *info, const char *string) ATTRIBUTE_HIDDEN;
-
-void *bfd_arch_default_fill (bfd_size_type count,
-    bool is_bigendian,
-    bool code) ATTRIBUTE_HIDDEN;
-
 /* Extracted from bfdwin.c.  */
-typedef struct _bfd_window_internal
-{
+struct _bfd_window_internal {
   struct _bfd_window_internal *next;
   void *data;
   bfd_size_type size;
   int refcount : 31;           /* should be enough...  */
   unsigned mapped : 1;         /* 1 = mmap, 0 = malloc */
-}
-bfd_window_internal;
-
+};
 /* Extracted from cache.c.  */
-bool bfd_cache_init (bfd *abfd) ATTRIBUTE_HIDDEN;
+bool bfd_cache_init (bfd *abfd);
 
-FILE* bfd_open_file (bfd *abfd) ATTRIBUTE_HIDDEN;
+bool bfd_cache_close (bfd *abfd);
 
-/* Extracted from hash.c.  */
-struct bfd_strtab_hash *_bfd_stringtab_init (void) ATTRIBUTE_HIDDEN;
-
-struct bfd_strtab_hash *_bfd_xcoff_stringtab_init
-   (bool /*isxcoff64*/) ATTRIBUTE_HIDDEN;
-
-void _bfd_stringtab_free (struct bfd_strtab_hash *) ATTRIBUTE_HIDDEN;
-
-bfd_size_type _bfd_stringtab_add
-   (struct bfd_strtab_hash *, const char *,
-    bool /*hash*/, bool /*copy*/) ATTRIBUTE_HIDDEN;
-
-bfd_size_type _bfd_stringtab_size (struct bfd_strtab_hash *) ATTRIBUTE_HIDDEN;
-
-bool _bfd_stringtab_emit (bfd *, struct bfd_strtab_hash *) ATTRIBUTE_HIDDEN;
-
-/* Extracted from linker.c.  */
-bool _bfd_generic_verify_endian_match
-   (bfd *ibfd, struct bfd_link_info *info) ATTRIBUTE_HIDDEN;
-
-/* Extracted from opncls.c.  */
-bfd *_bfd_new_bfd (void) ATTRIBUTE_HIDDEN;
-
-bfd *_bfd_new_bfd_contained_in (bfd *) ATTRIBUTE_HIDDEN;
-
-bool _bfd_free_cached_info (bfd *) ATTRIBUTE_HIDDEN;
+FILE* bfd_open_file (bfd *abfd);
 
 /* Extracted from reloc.c.  */
 #ifdef _BFD_MAKE_TABLE_bfd_reloc_code_real
@@ -2424,8 +2401,6 @@ static const char *const bfd_reloc_code_real_names[] = { "@@uninitialized@@",
   "BFD_RELOC_RISCV_SET16",
   "BFD_RELOC_RISCV_SET32",
   "BFD_RELOC_RISCV_32_PCREL",
-  "BFD_RELOC_RISCV_SET_ULEB128",
-  "BFD_RELOC_RISCV_SUB_ULEB128",
   "BFD_RELOC_RL78_NEG8",
   "BFD_RELOC_RL78_NEG16",
   "BFD_RELOC_RL78_NEG24",
@@ -3345,6 +3320,9 @@ static const char *const bfd_reloc_code_real_names[] = { "@@uninitialized@@",
   "BFD_RELOC_TILEGX_IMM8_Y0_TLS_ADD",
   "BFD_RELOC_TILEGX_IMM8_Y1_TLS_ADD",
   "BFD_RELOC_BPF_64",
+  "BFD_RELOC_BPF_32",
+  "BFD_RELOC_BPF_16",
+  "BFD_RELOC_BPF_DISP16",
   "BFD_RELOC_BPF_DISP32",
   "BFD_RELOC_EPIPHANY_SIMM8",
   "BFD_RELOC_EPIPHANY_SIMM24",
@@ -3479,73 +3457,27 @@ static const char *const bfd_reloc_code_real_names[] = { "@@uninitialized@@",
   "BFD_RELOC_LARCH_SUB24",
   "BFD_RELOC_LARCH_SUB32",
   "BFD_RELOC_LARCH_SUB64",
-  "BFD_RELOC_LARCH_B16",
-  "BFD_RELOC_LARCH_B21",
-  "BFD_RELOC_LARCH_B26",
-  "BFD_RELOC_LARCH_ABS_HI20",
-  "BFD_RELOC_LARCH_ABS_LO12",
-  "BFD_RELOC_LARCH_ABS64_LO20",
-  "BFD_RELOC_LARCH_ABS64_HI12",
-  "BFD_RELOC_LARCH_PCALA_HI20",
-  "BFD_RELOC_LARCH_PCALA_LO12",
-  "BFD_RELOC_LARCH_PCALA64_LO20",
-  "BFD_RELOC_LARCH_PCALA64_HI12",
-  "BFD_RELOC_LARCH_GOT_PC_HI20",
-  "BFD_RELOC_LARCH_GOT_PC_LO12",
-  "BFD_RELOC_LARCH_GOT64_PC_LO20",
-  "BFD_RELOC_LARCH_GOT64_PC_HI12",
-  "BFD_RELOC_LARCH_GOT_HI20",
-  "BFD_RELOC_LARCH_GOT_LO12",
-  "BFD_RELOC_LARCH_GOT64_LO20",
-  "BFD_RELOC_LARCH_GOT64_HI12",
-  "BFD_RELOC_LARCH_TLS_LE_HI20",
-  "BFD_RELOC_LARCH_TLS_LE_LO12",
-  "BFD_RELOC_LARCH_TLS_LE64_LO20",
-  "BFD_RELOC_LARCH_TLS_LE64_HI12",
-  "BFD_RELOC_LARCH_TLS_IE_PC_HI20",
-  "BFD_RELOC_LARCH_TLS_IE_PC_LO12",
-  "BFD_RELOC_LARCH_TLS_IE64_PC_LO20",
-  "BFD_RELOC_LARCH_TLS_IE64_PC_HI12",
-  "BFD_RELOC_LARCH_TLS_IE_HI20",
-  "BFD_RELOC_LARCH_TLS_IE_LO12",
-  "BFD_RELOC_LARCH_TLS_IE64_LO20",
-  "BFD_RELOC_LARCH_TLS_IE64_HI12",
-  "BFD_RELOC_LARCH_TLS_LD_PC_HI20",
-  "BFD_RELOC_LARCH_TLS_LD_HI20",
-  "BFD_RELOC_LARCH_TLS_GD_PC_HI20",
-  "BFD_RELOC_LARCH_TLS_GD_HI20",
-  "BFD_RELOC_LARCH_32_PCREL",
-  "BFD_RELOC_LARCH_RELAX",
-  "BFD_RELOC_LARCH_DELETE",
-  "BFD_RELOC_LARCH_ALIGN",
-  "BFD_RELOC_LARCH_PCREL20_S2",
-  "BFD_RELOC_LARCH_CFA",
-  "BFD_RELOC_LARCH_ADD6",
-  "BFD_RELOC_LARCH_SUB6",
-  "BFD_RELOC_LARCH_ADD_ULEB128",
-  "BFD_RELOC_LARCH_SUB_ULEB128",
-  "BFD_RELOC_LARCH_64_PCREL",
  "@@overflow: BFD_RELOC_UNUSED@@",
 };
 #endif
 
 reloc_howto_type *bfd_default_reloc_type_lookup
-   (bfd *abfd, bfd_reloc_code_real_type  code) ATTRIBUTE_HIDDEN;
+   (bfd *abfd, bfd_reloc_code_real_type  code);
 
 bool bfd_generic_relax_section
    (bfd *abfd,
     asection *section,
     struct bfd_link_info *,
-    bool *) ATTRIBUTE_HIDDEN;
+    bool *);
 
 bool bfd_generic_gc_sections
-   (bfd *, struct bfd_link_info *) ATTRIBUTE_HIDDEN;
+   (bfd *, struct bfd_link_info *);
 
 bool bfd_generic_lookup_section_flags
-   (struct bfd_link_info *, struct flag_info *, asection *) ATTRIBUTE_HIDDEN;
+   (struct bfd_link_info *, struct flag_info *, asection *);
 
 bool bfd_generic_merge_sections
-   (bfd *, struct bfd_link_info *) ATTRIBUTE_HIDDEN;
+   (bfd *, struct bfd_link_info *);
 
 bfd_byte *bfd_generic_get_relocated_section_contents
    (bfd *abfd,
@@ -3553,46 +3485,34 @@ bfd_byte *bfd_generic_get_relocated_section_contents
     struct bfd_link_order *link_order,
     bfd_byte *data,
     bool relocatable,
-    asymbol **symbols) ATTRIBUTE_HIDDEN;
+    asymbol **symbols);
 
 void _bfd_generic_set_reloc
    (bfd *abfd,
     sec_ptr section,
     arelent **relptr,
-    unsigned int count) ATTRIBUTE_HIDDEN;
+    unsigned int count);
 
 bool _bfd_unrecognized_reloc
    (bfd * abfd,
     sec_ptr section,
-    unsigned int r_type) ATTRIBUTE_HIDDEN;
+    unsigned int r_type);
 
-/* Extracted from section.c.  */
-bool _bfd_section_size_insane (bfd *abfd, asection *sec) ATTRIBUTE_HIDDEN;
+/* Extracted from archures.c.  */
+extern const bfd_arch_info_type bfd_default_arch_struct;
+const bfd_arch_info_type *bfd_default_compatible
+   (const bfd_arch_info_type *a, const bfd_arch_info_type *b);
 
-/* Extracted from stabs.c.  */
-bool _bfd_link_section_stabs
-   (bfd *, struct stab_info *, asection *, asection *, void **,
-    bfd_size_type *) ATTRIBUTE_HIDDEN;
+bool bfd_default_scan
+   (const struct bfd_arch_info *info, const char *string);
 
-bool _bfd_discard_section_stabs
-   (bfd *, asection *, void *, bool (*) (bfd_vma, void *), void *) ATTRIBUTE_HIDDEN;
+void *bfd_arch_default_fill (bfd_size_type count,
+    bool is_bigendian,
+    bool code);
 
-bool _bfd_write_section_stabs
-   (bfd *, struct stab_info *, asection *, void **, bfd_byte *) ATTRIBUTE_HIDDEN;
-
-bool _bfd_write_stab_strings (bfd *, struct stab_info *) ATTRIBUTE_HIDDEN;
-
-bfd_vma _bfd_stab_section_offset (asection *, void *, bfd_vma) ATTRIBUTE_HIDDEN;
-
-/* Extracted from targets.c.  */
-/* Cached _bfd_check_format messages are put in this.  */
-struct per_xvec_message
-{
-  struct per_xvec_message *next;
-  char message[];
-};
-
-struct per_xvec_message **_bfd_per_xvec_warn (const bfd_target *, size_t) ATTRIBUTE_HIDDEN;
+/* Extracted from linker.c.  */
+bool _bfd_generic_verify_endian_match
+   (bfd *ibfd, struct bfd_link_info *info);
 
 #ifdef __cplusplus
 }

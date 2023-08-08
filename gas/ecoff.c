@@ -1,5 +1,5 @@
 /* ECOFF debugging support.
-   Copyright (C) 1993-2023 Free Software Foundation, Inc.
+   Copyright (C) 1993-2022 Free Software Foundation, Inc.
    Contributed by Cygnus Support.
    This file was put together by Ian Lance Taylor <ian@cygnus.com>.  A
    good deal of it comes directly from mips-tfile.c, by Michael
@@ -1132,7 +1132,7 @@ static symbolS *last_func_sym_value;
    It would make sense for the .type and .scl directives to use the
    ECOFF numbers directly, rather than using the COFF numbers and
    mapping them.  Unfortunately, this is historically what mips-tfile
-   expects, and changing spl now would be a considerable pain (the
+   expects, and changing gcc now would be a considerable pain (the
    native compiler generates debugging information internally, rather
    than via the assembler, so it will never use .type or .scl).  */
 
@@ -1850,6 +1850,7 @@ add_aux_sym_tir (type_info_t *t,	/* current type information */
 {
   varray_t *vp;
   aux_t *aux_ptr;
+  static AUXU init_aux;
   symint_t ret;
   int i;
   AUXU aux;
@@ -1859,7 +1860,7 @@ add_aux_sym_tir (type_info_t *t,	/* current type information */
 
   vp = &cur_file_ptr->aux_syms;
 
-  memset (&aux, 0, sizeof (aux));
+  aux = init_aux;
   aux.ti.bt = (int) t->basic_type;
   aux.ti.continued = 0;
   aux.ti.fBitfield = t->bitfield;
@@ -1938,7 +1939,7 @@ add_aux_sym_tir (type_info_t *t,	/* current type information */
      AUX record, but the DECstation compiler emits it here.
      (This would only make a difference for enum bitfields.)
 
-     Also note:  We use the last size given since spl may emit 2
+     Also note:  We use the last size given since gcc may emit 2
      for an enum bitfield.  */
 
   if (t->bitfield)
@@ -2610,7 +2611,7 @@ ecoff_directive_scl (int ignore ATTRIBUTE_UNUSED)
 }
 
 /* Handle a .size directive.  For some reason mips-tfile.c thinks that
-   .size can have multiple arguments.  We humor it, although spl will
+   .size can have multiple arguments.  We humor it, although gcc will
    never generate more than one argument.  */
 
 void
@@ -3665,7 +3666,7 @@ ecoff_build_lineno (const struct ecoff_debug_swap *backend,
      remove this code.  */
   /* For some reason the address of the first procedure is ignored
      when reading line numbers.  This doesn't matter if the address of
-     the first procedure is 0, but when spl is generating MIPS
+     the first procedure is 0, but when gcc is generating MIPS
      embedded PIC code, it will put strings in the .text section
      before the first procedure.  We cope by inserting a dummy line if
      the address of the first procedure is not 0.  Hopefully this
@@ -4059,7 +4060,7 @@ ecoff_build_symbols (const struct ecoff_debug_swap *backend,
 
 		      /* This is just an external symbol if it is
 		         outside a procedure and it has a type.
-		         FIXME: scpel will generate symbols which have
+		         FIXME: g++ will generate symbols which have
 		         different names in the debugging information
 		         than the actual symbol.  Should we handle
 		         them here?  */
@@ -4807,6 +4808,7 @@ static scope_t *
 allocate_scope (void)
 {
   scope_t *ptr;
+  static scope_t initial_scope;
 
 #ifndef MALLOC_CHECK
 
@@ -4836,7 +4838,7 @@ allocate_scope (void)
 #endif
 
   alloc_counts[(int) alloc_type_scope].total_alloc++;
-  memset (ptr, 0, sizeof (*ptr));
+  *ptr = initial_scope;
   return ptr;
 }
 
@@ -4861,6 +4863,7 @@ static vlinks_t *
 allocate_vlinks (void)
 {
   vlinks_t *ptr;
+  static vlinks_t initial_vlinks;
 
 #ifndef MALLOC_CHECK
 
@@ -4884,7 +4887,7 @@ allocate_vlinks (void)
 #endif
 
   alloc_counts[(int) alloc_type_vlinks].total_alloc++;
-  memset (ptr, 0, sizeof (*ptr));
+  *ptr = initial_vlinks;
   return ptr;
 }
 
@@ -4894,6 +4897,7 @@ static shash_t *
 allocate_shash (void)
 {
   shash_t *ptr;
+  static shash_t initial_shash;
 
 #ifndef MALLOC_CHECK
 
@@ -4917,7 +4921,7 @@ allocate_shash (void)
 #endif
 
   alloc_counts[(int) alloc_type_shash].total_alloc++;
-  memset (ptr, 0, sizeof (*ptr));
+  *ptr = initial_shash;
   return ptr;
 }
 
@@ -4927,6 +4931,7 @@ static thash_t *
 allocate_thash (void)
 {
   thash_t *ptr;
+  static thash_t initial_thash;
 
 #ifndef MALLOC_CHECK
 
@@ -4950,7 +4955,7 @@ allocate_thash (void)
 #endif
 
   alloc_counts[(int) alloc_type_thash].total_alloc++;
-  memset (ptr, 0, sizeof (*ptr));
+  *ptr = initial_thash;
   return ptr;
 }
 
@@ -4960,6 +4965,7 @@ static tag_t *
 allocate_tag (void)
 {
   tag_t *ptr;
+  static tag_t initial_tag;
 
 #ifndef MALLOC_CHECK
 
@@ -4989,7 +4995,7 @@ allocate_tag (void)
 #endif
 
   alloc_counts[(int) alloc_type_tag].total_alloc++;
-  memset (ptr, 0, sizeof (*ptr));
+  *ptr = initial_tag;
   return ptr;
 }
 
@@ -5014,6 +5020,7 @@ static forward_t *
 allocate_forward (void)
 {
   forward_t *ptr;
+  static forward_t initial_forward;
 
 #ifndef MALLOC_CHECK
 
@@ -5037,7 +5044,7 @@ allocate_forward (void)
 #endif
 
   alloc_counts[(int) alloc_type_forward].total_alloc++;
-  memset (ptr, 0, sizeof (*ptr));
+  *ptr = initial_forward;
   return ptr;
 }
 
@@ -5047,6 +5054,7 @@ static thead_t *
 allocate_thead (void)
 {
   thead_t *ptr;
+  static thead_t initial_thead;
 
 #ifndef MALLOC_CHECK
 
@@ -5076,7 +5084,7 @@ allocate_thead (void)
 #endif
 
   alloc_counts[(int) alloc_type_thead].total_alloc++;
-  memset (ptr, 0, sizeof (*ptr));
+  *ptr = initial_thead;
   return ptr;
 }
 
@@ -5099,6 +5107,7 @@ static lineno_list_t *
 allocate_lineno_list (void)
 {
   lineno_list_t *ptr;
+  static lineno_list_t initial_lineno_list;
 
 #ifndef MALLOC_CHECK
 
@@ -5122,7 +5131,7 @@ allocate_lineno_list (void)
 #endif
 
   alloc_counts[(int) alloc_type_lineno].total_alloc++;
-  memset (ptr, 0, sizeof (*ptr));
+  *ptr = initial_lineno_list;
   return ptr;
 }
 

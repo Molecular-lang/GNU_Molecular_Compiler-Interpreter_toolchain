@@ -1,5 +1,5 @@
 /* prdbg.c -- Print out generic debugging information.
-   Copyright (C) 1995-2023 Free Software Foundation, Inc.
+   Copyright (C) 1995-2022 Free Software Foundation, Inc.
    Written by Ian Lance Taylor <ian@cygnus.com>.
    Tags style generation written by Salvador E. Tropea <set@computer.org>.
 
@@ -65,14 +65,25 @@ struct pr_stack
   /* Current visibility of fields if this is a class.  */
   enum debug_visibility visibility;
   /* Name of the current method we are handling.  */
-  char *method;
+  const char *method;
   /* The following are used only by the tags code (tg_).  */
   /* Type for the container (struct, union, class, union class).  */
   const char *flavor;
   /* A comma separated list of parent classes.  */
   char *parents;
+  /* How many parents contains parents.  */
+  int num_parents;
 };
 
+static void indent (struct pr_handle *);
+static bool push_type (struct pr_handle *, const char *);
+static bool prepend_type (struct pr_handle *, const char *);
+static bool append_type (struct pr_handle *, const char *);
+static bool substitute_type (struct pr_handle *, const char *);
+static bool indent_type (struct pr_handle *);
+static char *pop_type (struct pr_handle *);
+static void print_vma (bfd_vma, char *, bool, bool);
+static bool pr_fix_visibility (struct pr_handle *, enum debug_visibility);
 static bool pr_start_compilation_unit (void *, const char *);
 static bool pr_start_source (void *, const char *);
 static bool pr_empty_type (void *);
@@ -127,9 +138,13 @@ static bool pr_start_block (void *, bfd_vma);
 static bool pr_end_block (void *, bfd_vma);
 static bool pr_end_function (void *);
 static bool pr_lineno (void *, const char *, unsigned long, bfd_vma);
-
+static bool append_parent (struct pr_handle *, const char *);
+/* Only used by tg_ code.  */
+static bool tg_fix_visibility
+  (struct pr_handle *, enum debug_visibility);
+static void find_address_in_section (bfd *, asection *, void *);
+static void translate_addresses (bfd *, char *, FILE *, asymbol **);
 static const char *visibility_name (enum debug_visibility);
-
 /* Tags style replacements.  */
 static bool tg_start_compilation_unit (void *, const char *);
 static bool tg_start_source (void *, const char *);
@@ -293,18 +308,8 @@ print_debugging_info (FILE *f, void *dhandle, bfd *abfd, asymbol **syms,
       fputs ("!_TAG_PROGRAM_NAME\tobjdump\t/From GNU binutils/\n", f);
     }
 
-  bool ret = debug_write (dhandle, as_tags ? &tg_fns : &pr_fns, &info);
-  while (info.stack != NULL)
-    {
-      struct pr_stack *s = info.stack;
-      info.stack = s->next;
-      free (s->type);
-      free (s->method);
-      free (s->parents);
-      free (s);
-    }
-  free (info.filename);
-  return ret;
+  return as_tags ? debug_write (dhandle, &tg_fns, (void *) & info)
+    : debug_write (dhandle, &pr_fns, (void *) & info);
 }
 
 /* Indent to the current indentation level.  */
@@ -328,7 +333,7 @@ push_type (struct pr_handle *info, const char *type)
   if (type == NULL)
     return false;
 
-  n = xmalloc (sizeof *n);
+  n = (struct pr_stack *) xmalloc (sizeof *n);
   memset (n, 0, sizeof *n);
 
   n->type = xstrdup (type);
@@ -349,7 +354,7 @@ prepend_type (struct pr_handle *info, const char *s)
 
   assert (info->stack != NULL);
 
-  n = xmalloc (strlen (s) + strlen (info->stack->type) + 1);
+  n = (char *) xmalloc (strlen (s) + strlen (info->stack->type) + 1);
   sprintf (n, "%s%s", s, info->stack->type);
   free (info->stack->type);
   info->stack->type = n;
@@ -370,7 +375,8 @@ append_type (struct pr_handle *info, const char *s)
   assert (info->stack != NULL);
 
   len = strlen (info->stack->type);
-  info->stack->type = xrealloc (info->stack->type, len + strlen (s) + 1);
+  info->stack->type = (char *) xrealloc (info->stack->type,
+					 len + strlen (s) + 1);
   strcpy (info->stack->type + len, s);
 
   return true;
@@ -389,7 +395,8 @@ append_parent (struct pr_handle *info, const char *s)
   assert (info->stack != NULL);
 
   len = info->stack->parents ? strlen (info->stack->parents) : 0;
-  info->stack->parents = xrealloc (info->stack->parents, len + strlen (s) + 1);
+  info->stack->parents = (char *) xrealloc (info->stack->parents,
+					    len + strlen (s) + 1);
   strcpy (info->stack->parents + len, s);
 
   return true;
@@ -411,7 +418,7 @@ substitute_type (struct pr_handle *info, const char *s)
     {
       char *n;
 
-      n = xmalloc (strlen (info->stack->type) + strlen (s));
+      n = (char *) xmalloc (strlen (info->stack->type) + strlen (s));
 
       memcpy (n, info->stack->type, u - info->stack->type);
       strcpy (n + (u - info->stack->type), s);
@@ -686,14 +693,17 @@ pr_function_type (void *p, int argcount, bool varargs)
     {
       int i;
 
-      arg_types = xmalloc (argcount * sizeof (*arg_types));
+      arg_types = (char **) xmalloc (argcount * sizeof *arg_types);
       for (i = argcount - 1; i >= 0; i--)
 	{
-	  if (!substitute_type (info, "")
-	      || (arg_types[i] = pop_type (info)) == NULL)
+	  if (! substitute_type (info, ""))
 	    {
-	      for (int j = i + 1; j < argcount; j++)
-		free (arg_types[j]);
+	      free (arg_types);
+	      return false;
+	    }
+	  arg_types[i] = pop_type (info);
+	  if (arg_types[i] == NULL)
+	    {
 	      free (arg_types);
 	      return false;
 	    }
@@ -705,7 +715,7 @@ pr_function_type (void *p, int argcount, bool varargs)
 
   /* Now the return type is on the top of the stack.  */
 
-  s = xmalloc (len);
+  s = (char *) xmalloc (len);
   strcpy (s, "(|) (");
 
   if (argcount < 0)
@@ -719,7 +729,6 @@ pr_function_type (void *p, int argcount, bool varargs)
 	  if (i > 0)
 	    strcat (s, ", ");
 	  strcat (s, arg_types[i]);
-	  free (arg_types[i]);
 	}
       if (varargs)
 	{
@@ -727,7 +736,8 @@ pr_function_type (void *p, int argcount, bool varargs)
 	    strcat (s, ", ");
 	  strcat (s, "...");
 	}
-      free (arg_types);
+      if (argcount > 0)
+	free (arg_types);
     }
 
   strcat (s, ")");
@@ -804,27 +814,22 @@ pr_array_type (void *p, bfd_signed_vma lower, bfd_signed_vma upper,
     }
 
   if (! substitute_type (info, ab))
-    goto fail;
+    return false;
 
   if (strcmp (range_type, "int") != 0)
     {
       if (! append_type (info, ":")
 	  || ! append_type (info, range_type))
-	goto fail;
+	return false;
     }
 
   if (stringp)
     {
       if (! append_type (info, " /* string */"))
-	goto fail;
+	return false;
     }
 
-  free (range_type);
   return true;
-
- fail:
-  free (range_type);
-  return false;
 }
 
 /* Make a set type.  */
@@ -865,12 +870,10 @@ pr_offset_type (void *p)
   if (t == NULL)
     return false;
 
-  bool ret = (substitute_type (info, "")
-	      && prepend_type (info, " ")
-	      && prepend_type (info, t)
-	      && append_type (info, "::|"));
-  free (t);
-  return ret;
+  return (substitute_type (info, "")
+	  && prepend_type (info, " ")
+	  && prepend_type (info, t)
+	  && append_type (info, "::|"));
 }
 
 /* Make a method type.  */
@@ -880,20 +883,21 @@ pr_method_type (void *p, bool domain, int argcount, bool varargs)
 {
   struct pr_handle *info = (struct pr_handle *) p;
   unsigned int len;
-  char *domain_type = NULL, *free_domain = NULL;
+  char *domain_type;
   char **arg_types;
   char *s;
 
   len = 10;
 
-  if (domain)
+  if (! domain)
+    domain_type = NULL;
+  else
     {
       if (! substitute_type (info, ""))
 	return false;
       domain_type = pop_type (info);
       if (domain_type == NULL)
 	return false;
-      free_domain = domain_type;
       if (startswith (domain_type, "class ")
 	  && strchr (domain_type + sizeof "class " - 1, ' ') == NULL)
 	domain_type += sizeof "class " - 1;
@@ -913,14 +917,17 @@ pr_method_type (void *p, bool domain, int argcount, bool varargs)
     {
       int i;
 
-      arg_types = xmalloc (argcount * sizeof (*arg_types));
+      arg_types = (char **) xmalloc (argcount * sizeof *arg_types);
       for (i = argcount - 1; i >= 0; i--)
 	{
-	  if (!substitute_type (info, "")
-	      || (arg_types[i] = pop_type (info)) == NULL)
+	  if (! substitute_type (info, ""))
 	    {
-	      for (int j = i + 1; j < argcount; ++j)
-		free (arg_types[j]);
+	      free (arg_types);
+	      return false;
+	    }
+	  arg_types[i] = pop_type (info);
+	  if (arg_types[i] == NULL)
+	    {
 	      free (arg_types);
 	      return false;
 	    }
@@ -932,13 +939,11 @@ pr_method_type (void *p, bool domain, int argcount, bool varargs)
 
   /* Now the return type is on the top of the stack.  */
 
-  s = xmalloc (len);
-  *s = 0;
-  if (domain)
-    {
-      strcpy (s, domain_type);
-      free (free_domain);
-    }
+  s = (char *) xmalloc (len);
+  if (! domain)
+    *s = '\0';
+  else
+    strcpy (s, domain_type);
   strcat (s, "::| (");
 
   if (argcount < 0)
@@ -952,7 +957,6 @@ pr_method_type (void *p, bool domain, int argcount, bool varargs)
 	  if (i > 0)
 	    strcat (s, ", ");
 	  strcat (s, arg_types[i]);
-	  free (arg_types[i]);
 	}
       if (varargs)
 	{
@@ -960,14 +964,18 @@ pr_method_type (void *p, bool domain, int argcount, bool varargs)
 	    strcat (s, ", ");
 	  strcat (s, "...");
 	}
-      free (arg_types);
+      if (argcount > 0)
+	free (arg_types);
     }
 
   strcat (s, ")");
 
-  bool ret = substitute_type (info, s);
+  if (! substitute_type (info, s))
+    return false;
+
   free (s);
-  return ret;
+
+  return true;
 }
 
 /* Make a const qualified type.  */
@@ -1135,9 +1143,10 @@ pr_struct_field (void *p, const char *name, bfd_vma bitpos, bfd_vma bitsize,
   if (t == NULL)
     return false;
 
-  bool ret = pr_fix_visibility (info, visibility) && append_type (info, t);
-  free (t);
-  return ret;
+  if (! pr_fix_visibility (info, visibility))
+    return false;
+
+  return append_type (info, t);
 }
 
 /* Finish a struct type.  */
@@ -1172,7 +1181,6 @@ pr_start_class_type (void *p, const char *tag, unsigned int id,
 {
   struct pr_handle *info = (struct pr_handle *) p;
   char *tv = NULL;
-  bool ret = false;
 
   info->indent += 2;
 
@@ -1184,11 +1192,11 @@ pr_start_class_type (void *p, const char *tag, unsigned int id,
     }
 
   if (! push_type (info, structp ? "class " : "union class "))
-    goto out;
+    return false;
   if (tag != NULL)
     {
       if (! append_type (info, tag))
-	goto out;
+	return false;
     }
   else
     {
@@ -1196,15 +1204,15 @@ pr_start_class_type (void *p, const char *tag, unsigned int id,
 
       sprintf (idbuf, "%%anon%u", id);
       if (! append_type (info, idbuf))
-	goto out;
+	return false;
     }
 
   if (! append_type (info, " {"))
-    goto out;
+    return false;
   if (size != 0 || vptr || ownvptr || tag != NULL)
     {
       if (! append_type (info, " /*"))
-	goto out;
+	return false;
 
       if (size != 0)
 	{
@@ -1213,23 +1221,23 @@ pr_start_class_type (void *p, const char *tag, unsigned int id,
 	  sprintf (ab, "%u", size);
 	  if (! append_type (info, " size ")
 	      || ! append_type (info, ab))
-	    goto out;
+	    return false;
 	}
 
       if (vptr)
 	{
 	  if (! append_type (info, " vtable "))
-	    goto out;
+	    return false;
 	  if (ownvptr)
 	    {
 	      if (! append_type (info, "self "))
-		goto out;
+		return false;
 	    }
 	  else
 	    {
 	      if (! append_type (info, tv)
 		  || ! append_type (info, " "))
-		goto out;
+		return false;
 	    }
 	}
 
@@ -1239,19 +1247,17 @@ pr_start_class_type (void *p, const char *tag, unsigned int id,
 
 	  sprintf (ab, " id %u", id);
 	  if (! append_type (info, ab))
-	    goto out;
+	    return false;
 	}
 
       if (! append_type (info, " */"))
-	goto out;
+	return false;
     }
 
   info->stack->visibility = DEBUG_VISIBILITY_PRIVATE;
 
-  ret = append_type (info, "\n") && indent_type (info);
- out:
-  free (tv);
-  return ret;
+  return (append_type (info, "\n")
+	  && indent_type (info));
 }
 
 /* Add a static member to a class.  */
@@ -1277,9 +1283,10 @@ pr_class_static_member (void *p, const char *name, const char *physname,
   if (t == NULL)
     return false;
 
-  bool ret = pr_fix_visibility (info, visibility) && append_type (info, t);
-  free (t);
-  return ret;
+  if (! pr_fix_visibility (info, visibility))
+    return false;
+
+  return append_type (info, t);
 }
 
 /* Add a base class to a class.  */
@@ -1303,15 +1310,13 @@ pr_class_baseclass (void *p, bfd_vma bitpos, bool is_virtual,
   if (t == NULL)
     return false;
 
+  if (startswith (t, "class "))
+    t += sizeof "class " - 1;
+
   /* Push it back on to take advantage of the prepend_type and
      append_type routines.  */
-  if (! push_type (info, t + (startswith (t, "class ")
-			      ? sizeof "class " - 1 : 0)))
-    {
-      free (t);
-      return false;
-    }
-  free (t);
+  if (! push_type (info, t))
+    return false;
 
   if (is_virtual)
     {
@@ -1367,7 +1372,7 @@ pr_class_baseclass (void *p, bfd_vma bitpos, bool is_virtual,
   if (t == NULL)
     return false;
 
-  n = xmalloc (strlen (info->stack->type) + strlen (t) + 1);
+  n = (char *) xmalloc (strlen (info->stack->type) + strlen (t) + 1);
   memcpy (n, info->stack->type, s - info->stack->type);
   strcpy (n + (s - info->stack->type), t);
   strcat (n, s);
@@ -1388,8 +1393,7 @@ pr_class_start_method (void *p, const char *name)
   struct pr_handle *info = (struct pr_handle *) p;
 
   assert (info->stack != NULL);
-  free (info->stack->method);
-  info->stack->method = xstrdup (name);
+  info->stack->method = name;
   return true;
 }
 
@@ -1404,7 +1408,6 @@ pr_class_method_variant (void *p, const char *physname,
   struct pr_handle *info = (struct pr_handle *) p;
   char *method_type;
   char *context_type;
-  bool ret = false;
 
   assert (info->stack != NULL);
   assert (info->stack->next != NULL);
@@ -1440,19 +1443,19 @@ pr_class_method_variant (void *p, const char *physname,
     {
       context_type = pop_type (info);
       if (context_type == NULL)
-	goto out;
+	return false;
     }
 
   /* Now the top of the stack is the class.  */
 
   if (! pr_fix_visibility (info, visibility))
-    goto out;
+    return false;
 
   if (! append_type (info, method_type)
       || ! append_type (info, " /* ")
       || ! append_type (info, physname)
       || ! append_type (info, " "))
-    goto out;
+    return false;
   if (context || voffset != 0)
     {
       char ab[22];
@@ -1462,19 +1465,16 @@ pr_class_method_variant (void *p, const char *physname,
 	  if (! append_type (info, "context ")
 	      || ! append_type (info, context_type)
 	      || ! append_type (info, " "))
-	    goto out;
+	    return false;
 	}
       print_vma (voffset, ab, true, false);
       if (! append_type (info, "voffset ")
 	  || ! append_type (info, ab))
-	goto out;
+	return false;
     }
 
-  ret = append_type (info, " */;\n") && indent_type (info);
- out:
-  free (method_type);
-  free (context_type);
-  return ret;
+  return (append_type (info, " */;\n")
+	  && indent_type (info));
 }
 
 /* Add a static variant to a method.  */
@@ -1518,14 +1518,14 @@ pr_class_static_method_variant (void *p, const char *physname,
 
   /* Now the top of the stack is the class.  */
 
-  bool ret = (pr_fix_visibility (info, visibility)
-	      && append_type (info, method_type)
-	      && append_type (info, " /* ")
-	      && append_type (info, physname)
-	      && append_type (info, " */;\n")
-	      && indent_type (info));
-  free (method_type);
-  return ret;
+  if (! pr_fix_visibility (info, visibility))
+    return false;
+
+  return (append_type (info, method_type)
+	  && append_type (info, " /* ")
+	  && append_type (info, physname)
+	  && append_type (info, " */;\n")
+	  && indent_type (info));
 }
 
 /* Finish up a method.  */
@@ -1535,7 +1535,6 @@ pr_class_end_method (void *p)
 {
   struct pr_handle *info = (struct pr_handle *) p;
 
-  free (info->stack->method);
   info->stack->method = NULL;
   return true;
 }
@@ -1762,8 +1761,6 @@ pr_start_function (void *p, const char *name, bool global)
     fprintf (info->f, "static ");
   fprintf (info->f, "%s (", t);
 
-  free (t);
-
   info->parameter = 1;
 
   return true;
@@ -1931,7 +1928,7 @@ tg_start_compilation_unit (void * p, const char *fname ATTRIBUTE_UNUSED)
 
   free (info->filename);
   /* Should it be relative? best way to do it here?.  */
-  info->filename = xstrdup (fname);
+  info->filename = strdup (fname);
 
   return true;
 }
@@ -1945,7 +1942,7 @@ tg_start_source (void *p, const char *fname)
 
   free (info->filename);
   /* Should it be relative? best way to do it here?.  */
-  info->filename = xstrdup (fname);
+  info->filename = strdup (fname);
 
   return true;
 }
@@ -2048,23 +2045,15 @@ tg_struct_field (void *p, const char *name, bfd_vma bitpos ATTRIBUTE_UNUSED,
     return false;
 
   if (! tg_fix_visibility (info, visibility))
-    {
-      free (t);
-      return false;
-    }
+    return false;
 
   /* It happens, a bug? */
   if (! name[0])
-    {
-      free (t);
-      return true;
-    }
+    return true;
 
   fprintf (info->f, "%s\t%s\t0;\"\tkind:m\ttype:%s\t%s:%s\taccess:%s\n",
 	   name, info->filename, t, info->stack->flavor, info->stack->type,
 	   visibility_name (visibility));
-
-  free (t);
 
   return true;
 }
@@ -2090,7 +2079,6 @@ tg_start_class_type (void *p, const char *tag, unsigned int id,
   char *tv = NULL;
   const char *name;
   char idbuf[20];
-  bool ret = false;
 
   info->indent += 2;
 
@@ -2110,38 +2098,35 @@ tg_start_class_type (void *p, const char *tag, unsigned int id,
     }
 
   if (! push_type (info, name))
-    goto out;
+    return false;
 
   info->stack->flavor = structp ? "class" : "union class";
-  free (info->stack->parents);
   info->stack->parents = NULL;
+  info->stack->num_parents = 0;
 
   if (size != 0 || vptr || ownvptr || tag != NULL)
     {
       if (vptr)
 	{
 	  if (! append_type (info, " vtable "))
-	    goto out;
+	    return false;
 	  if (ownvptr)
 	    {
 	      if (! append_type (info, "self "))
-		goto out;
+		return false;
 	    }
 	  else
 	    {
 	      if (! append_type (info, tv)
 		  || ! append_type (info, " "))
-		goto out;
+		return false;
 	    }
 	}
     }
 
   info->stack->visibility = DEBUG_VISIBILITY_PRIVATE;
 
-  ret = true;
- out:
-  free (tv);
-  return ret;
+  return true;
 }
 
 /* Add a static member to a class.  */
@@ -2158,7 +2143,9 @@ tg_class_static_member (void *p, const char *name,
 
   len_var = strlen (name);
   len_class = strlen (info->stack->next->type);
-  full_name = xmalloc (len_var + len_class + 3);
+  full_name = (char *) xmalloc (len_var + len_class + 3);
+  if (! full_name)
+    return false;
   sprintf (full_name, "%s::%s", info->stack->next->type, name);
 
   if (! substitute_type (info, full_name))
@@ -2212,15 +2199,13 @@ tg_class_baseclass (void *p, bfd_vma bitpos ATTRIBUTE_UNUSED,
   if (t == NULL)
     return false;
 
+  if (startswith (t, "class "))
+    t += sizeof "class " - 1;
+
   /* Push it back on to take advantage of the prepend_type and
      append_type routines.  */
-  if (! push_type (info, t + (startswith (t, "class ")
-			      ? sizeof "class " - 1 : 0)))
-    {
-      free (t);
-      return false;
-    }
-  free (t);
+  if (! push_type (info, t))
+    return false;
 
   if (is_virtual)
     {
@@ -2251,10 +2236,16 @@ tg_class_baseclass (void *p, bfd_vma bitpos ATTRIBUTE_UNUSED,
   if (t == NULL)
     return false;
 
-  bool ret = ((!info->stack->parents || append_parent (info, ", "))
-	      && append_parent (info, t));
+  if (info->stack->num_parents && ! append_parent (info, ", "))
+    return false;
+
+  if (! append_parent (info, t))
+    return false;
+  info->stack->num_parents++;
+
   free (t);
-  return ret;
+
+  return true;
 }
 
 /* Add a variant to a method.  */
@@ -2410,11 +2401,10 @@ tg_end_class_type (void *p)
 
   fprintf (info->f, "%s\t%s\t0;\"\tkind:c\ttype:%s", info->stack->type,
 	   info->filename, info->stack->flavor);
-  if (info->stack->parents)
+  if (info->stack->num_parents)
     {
       fprintf  (info->f, "\tinherits:%s", info->stack->parents);
       free (info->stack->parents);
-      info->stack->parents = NULL;
     }
   fputc ('\n', info->f);
 
@@ -2638,7 +2628,6 @@ tg_start_function (void *p, const char *name, bool global)
   if (! substitute_type (info, dname ? dname : name))
     return false;
 
-  free (info->stack->method);
   info->stack->method = NULL;
   if (dname != NULL)
     {
@@ -2647,13 +2636,12 @@ tg_start_function (void *p, const char *name, bool global)
       if (sep)
 	{
 	  info->stack->method = dname;
-	  dname = NULL;
 	  *sep = 0;
 	  name = sep + 2;
 	}
       else
 	{
-	  info->stack->method = xstrdup ("");
+	  info->stack->method = "";
 	  name = dname;
 	}
       sep = strchr (name, '(');
@@ -2662,9 +2650,7 @@ tg_start_function (void *p, const char *name, bool global)
       /* Obscure functions as type_info function.  */
     }
 
-  free (info->stack->parents);
   info->stack->parents = strdup (name);
-  free (dname);
 
   if (! info->stack->method && ! append_type (info, "("))
     return false;
@@ -2700,23 +2686,14 @@ tg_function_parameter (void *p, const char *name, enum debug_parm_kind kind,
   if (! info->stack->method)
     {
       if (info->parameter != 1 && ! append_type (info, ", "))
-	{
-	  free (t);
-	  return false;
-	}
+	return false;
 
       if (kind == DEBUG_PARM_REG || kind == DEBUG_PARM_REF_REG)
 	if (! append_type (info, "register "))
-	  {
-	    free (t);
-	    return false;
-	  }
+	  return false;
 
       if (! append_type (info, t))
-	{
-	  free (t);
-	  return false;
-	}
+	return false;
     }
 
   free (t);
@@ -2743,7 +2720,6 @@ tg_start_block (void *p, bfd_vma addr)
       /* Delayed name.  */
       fprintf (info->f, "%s\t%s\t", info->stack->parents, info->filename);
       free (info->stack->parents);
-      info->stack->parents = NULL;
 
       print_vma (addr, ab, true, true);
       translate_addresses (info->abfd, ab, info->f, info->syms);
@@ -2764,14 +2740,14 @@ tg_start_block (void *p, bfd_vma addr)
       if (t == NULL)
 	return false;
       fprintf (info->f, ";\"\tkind:%c\ttype:%s", kind, t);
-      free (t);
       if (local)
 	fputs ("\tfile:", info->f);
       if (partof)
-	fprintf (info->f, "\tclass:%s", partof);
+	{
+	  fprintf (info->f, "\tclass:%s", partof);
+	  free (partof);
+	}
       fputc ('\n', info->f);
-      free (info->stack->method);
-      info->stack->method = NULL;
     }
 
   return true;

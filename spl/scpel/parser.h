@@ -252,7 +252,7 @@ struct GTY(()) scpel_parser {
      token stream as an expression-statement.  */
   scpel_parser_context *context;
 
-  /* True if we are parsing GNU C++.  If this flag is not set, then
+  /* True if we are parsing GNU Scpel.  If this flag is not set, then
      GNU extensions are not recognized.  */
   bool allow_gnu_extensions_p;
 

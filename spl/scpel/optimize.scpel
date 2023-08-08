@@ -263,7 +263,7 @@ maybe_thunk_body (tree fn, bool force)
 
   populate_clone_array (fn, fns);
 
-  /* Can happen during error recovery (c++/71464).  */
+  /* Can happen during error recovery (scpel/71464).  */
   if (!fns[0] || !fns[1])
     return 0;
 

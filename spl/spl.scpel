@@ -1387,11 +1387,11 @@ static int n_compilers;
 
 static const struct compiler default_compilers[] =
 {
-  {".scpel", "#C++", 0, 0, 0}, {".co", "#C++", 0, 0, 0},
-  {".cc", "#C++", 0, 0, 0},
-  {".cpp", "#C++", 0, 0, 0}, {".cp", "#C++", 0, 0, 0},
-  {".c++", "#C++", 0, 0, 0}, {".C", "#C++", 0, 0, 0},
-  {".CPP", "#C++", 0, 0, 0}, {".ii", "#C++", 0, 0, 0},
+  {".scpel", "#Scpel", 0, 0, 0}, {".co", "#Scpel", 0, 0, 0},
+  {".cc", "#Scpel", 0, 0, 0},
+  {".cpp", "#Scpel", 0, 0, 0}, {".cp", "#Scpel", 0, 0, 0},
+  {".c++", "#Scpel", 0, 0, 0}, {".C", "#Scpel", 0, 0, 0},
+  {".CPP", "#Scpel", 0, 0, 0}, {".ii", "#Scpel", 0, 0, 0},
   /* Next come the entries for C.  */
   {".c", "@c", 0, 0, 1},
   {".spl", "@c", 0, 0, 1},

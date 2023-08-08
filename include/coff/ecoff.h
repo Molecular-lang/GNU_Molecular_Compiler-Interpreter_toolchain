@@ -2,7 +2,7 @@
    This does not include symbol information, found in sym.h and
    symconst.h.
 
-   Copyright (C) 2001-2023 Free Software Foundation, Inc.
+   Copyright (C) 2001-2022 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -134,10 +134,10 @@
 
 /********************** STABS **********************/
 
-/* spl uses mips-tfile to output type information in special stabs
+/* gcc uses mips-tfile to output type information in special stabs
    entries.  These must match the corresponding definition in
-   spl/config/mips.h.  At some point, these should probably go into a
-   shared include file, but currently spl and gdb do not share any
+   gcc/config/mips.h.  At some point, these should probably go into a
+   shared include file, but currently gcc and gdb do not share any
    directories. */
 #define CODE_MASK 0x8F300
 #define ECOFF_IS_STAB(sym) (((sym)->index & 0xFFF00) == CODE_MASK)
@@ -147,7 +147,7 @@
 
 /********************** COFF **********************/
 
-/* spl also uses mips-tfile to output COFF debugging information.
+/* gcc also uses mips-tfile to output COFF debugging information.
    These are the values it uses when outputting the .type directive.
    These should also be in a shared include file.  */
 #define N_BTMASK	(017)
@@ -299,10 +299,7 @@ struct ecoff_debug_info
      all pointers to arrays, not single structures.  They will be NULL
      if there are no instances of the relevant structure.  These
      fields are also used by the assembler to output ECOFF debugging
-     information.  If alloc_syments is true then the pointers are to
-     objalloc memory, or into a single malloc'd buffer, or otherwise
-     should not be freed.  */
-  bool alloc_syments;
+     information.  */
   unsigned char *line;
   void *external_dnr;	/* struct dnr_ext */
   void *external_pdr;	/* struct pdr_ext */

@@ -60,10 +60,18 @@ SECTIONS
 
   ${RELOCATING+ __data_load_start = LOADADDR(.data); }
   ${RELOCATING+ __data_load_end = __data_load_start + SIZEOF(.data); }
+
+  .stab 0 ${RELOCATING+(NOLOAD)} :
+  {
+    *(.stab)
+  }
+  .stabstr 0 ${RELOCATING+(NOLOAD)} :
+  {
+    *(.stabstr)
+  }
 EOF
 
-source_sh $srcdir/scripttempl/misc-sections.sc
-source_sh $srcdir/scripttempl/DWARF.sc
+. $srcdir/scripttempl/DWARF.sc
 
 cat <<EOF
 }

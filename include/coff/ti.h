@@ -2,7 +2,7 @@
    customized in a target-specific file, and then this file included (see
    tic54x.h for an example).
    
-   Copyright (C) 2000-2023 Free Software Foundation, Inc.
+   Copyright (C) 2000-2022 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -220,7 +220,7 @@ struct external_scnhdr {
    Assume we're dealing with the COFF2 scnhdr structure, and adjust
    accordingly.  Note: The GNU C versions of some of these macros
    are necessary in order to avoid compile time warnings triggered
-   spl's array bounds checking.  The PUT_SCNHDR_PAGE macro also has
+   gcc's array bounds checking.  The PUT_SCNHDR_PAGE macro also has
    the advantage on not evaluating LOC twice.  */
 
 #define GET_SCNHDR_NRELOC(ABFD, LOC) \

@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2023 Free Software Foundation, Inc.
+# Copyright (C) 2014-2022 Free Software Foundation, Inc.
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -158,7 +158,7 @@ test -n "$SEPARATE_GOTPLT" && SEPARATE_GOTPLT=" "
 CTOR=".ctors        ${CONSTRUCTING-0} :
   {
     ${CONSTRUCTING+${CTOR_START}}
-    /* spl uses crtbegin.o to find the start of
+    /* gcc uses crtbegin.o to find the start of
        the constructors, so we make sure it is
        first.  Because this is a wildcard, it
        doesn't matter if the user does not
@@ -203,7 +203,7 @@ else
 fi
 
 cat <<EOF
-/* Copyright (C) 2014-2023 Free Software Foundation, Inc.
+/* Copyright (C) 2014-2022 Free Software Foundation, Inc.
 
    Copying and distribution of this script, with or without modification,
    are permitted in any medium without royalty provided the copyright
@@ -406,10 +406,19 @@ cat <<EOF
   ${RELOCATING+PROVIDE (end = .);}
   ${RELOCATING+${DATA_SEGMENT_END}}
 
+  /* Stabs debugging sections.  */
+  .stab          0 : { *(.stab) }
+  .stabstr       0 : { *(.stabstr) }
+  .stab.excl     0 : { *(.stab.excl) }
+  .stab.exclstr  0 : { *(.stab.exclstr) }
+  .stab.index    0 : { *(.stab.index) }
+  .stab.indexstr 0 : { *(.stab.indexstr) }
+
+  .comment       0 : { *(.comment) }
+
 EOF
 
-source_sh $srcdir/scripttempl/misc-sections.sc
-source_sh $srcdir/scripttempl/DWARF.sc
+. $srcdir/scripttempl/DWARF.sc
 
 cat <<EOF
   ${STACK_ADDR+${STACK}}

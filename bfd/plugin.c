@@ -1,5 +1,5 @@
 /* Plugin support for BFD.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2022 Free Software Foundation, Inc.
 
    This file is part of BFD, the Binary File Descriptor library.
 
@@ -83,7 +83,6 @@ dlerror (void)
 #define bfd_plugin_bfd_is_target_special_symbol	      _bfd_bool_bfd_asymbol_false
 #define bfd_plugin_get_lineno			      _bfd_nosymbols_get_lineno
 #define bfd_plugin_find_nearest_line		      _bfd_nosymbols_find_nearest_line
-#define bfd_plugin_find_nearest_line_with_alt	      _bfd_nosymbols_find_nearest_line_with_alt
 #define bfd_plugin_find_line			      _bfd_nosymbols_find_line
 #define bfd_plugin_find_inliner_info		      _bfd_nosymbols_find_inliner_info
 #define bfd_plugin_get_symbol_version_string	      _bfd_nosymbols_get_symbol_version_string
@@ -129,7 +128,6 @@ struct plugin_list_entry
 {
   /* These must be initialized for each IR object with LTO wrapper.  */
   ld_plugin_claim_file_handler claim_file;
-  ld_plugin_claim_file_handler_v2 claim_file_v2;
   ld_plugin_all_symbols_read_handler all_symbols_read;
   ld_plugin_all_symbols_read_handler cleanup_handler;
   bool has_symbol_type;
@@ -157,16 +155,6 @@ static enum ld_plugin_status
 register_claim_file (ld_plugin_claim_file_handler handler)
 {
   current_plugin->claim_file = handler;
-  return LDPS_OK;
-}
-
-
-/* Register a claim-file handler, version 2. */
-
-static enum ld_plugin_status
-register_claim_file_v2 (ld_plugin_claim_file_handler_v2 handler)
-{
-  current_plugin->claim_file_v2 = handler;
   return LDPS_OK;
 }
 
@@ -348,7 +336,7 @@ try_load_plugin (const char *pname,
 		 bool build_list_p)
 {
   void *plugin_handle;
-  struct ld_plugin_tv tv[6];
+  struct ld_plugin_tv tv[5];
   int i;
   ld_plugin_onload onload;
   enum ld_plugin_status status;
@@ -414,10 +402,6 @@ try_load_plugin (const char *pname,
   tv[i].tv_u.tv_register_claim_file = register_claim_file;
 
   ++i;
-  tv[i].tv_tag = LDPT_REGISTER_CLAIM_FILE_HOOK_V2;
-  tv[i].tv_u.tv_register_claim_file_v2 = register_claim_file_v2;
-
-  ++i;
   tv[i].tv_tag = LDPT_ADD_SYMBOLS;
   tv[i].tv_u.tv_add_symbols = add_symbols;
 
@@ -454,7 +438,7 @@ try_load_plugin (const char *pname,
 /* There may be plugin libraries in lib/bfd-plugins.  */
 static int has_plugin_list = -1;
 
-static bfd_cleanup (*ld_plugin_object_p) (bfd *, bool);
+static bfd_cleanup (*ld_plugin_object_p) (bfd *);
 
 static const char *plugin_name;
 
@@ -478,7 +462,7 @@ bool
 bfd_link_plugin_object_p (bfd *abfd)
 {
   if (ld_plugin_object_p)
-    return ld_plugin_object_p (abfd, false) != NULL;
+    return ld_plugin_object_p (abfd) != NULL;
   return false;
 }
 
@@ -495,7 +479,7 @@ bfd_plugin_target_p (const bfd_target *target)
 /* Register OBJECT_P to be used by bfd_plugin_object_p.  */
 
 void
-register_ld_plugin_object_p (bfd_cleanup (*object_p) (bfd *, bool))
+register_ld_plugin_object_p (bfd_cleanup (*object_p) (bfd *))
 {
   ld_plugin_object_p = object_p;
 }
@@ -587,7 +571,7 @@ static bfd_cleanup
 bfd_plugin_object_p (bfd *abfd)
 {
   if (ld_plugin_object_p)
-    return ld_plugin_object_p (abfd, false);
+    return ld_plugin_object_p (abfd);
 
   if (abfd->plugin_format == bfd_plugin_unknown && !load_plugin (abfd))
     return NULL;

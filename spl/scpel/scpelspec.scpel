@@ -35,7 +35,7 @@
 #endif
 
 #ifndef LIBCXX
-#define LIBCXX "c++"
+#define LIBCXX "scpel"
 #endif
 #ifndef LIBCXX_PROFILE
 #define LIBCXX_PROFILE LIBCXX
@@ -45,7 +45,7 @@
 #endif
 
 #ifndef LIBCXXABI
-#define LIBCXXABI "c++abi"
+#define LIBCXXABI "scpelabi"
 #endif
 #ifndef LIBCXXABI_PROFILE
 #define LIBCXXABI_PROFILE LIBCXXABI
@@ -72,26 +72,26 @@ lang_specific_driver (struct cl_decoded_option **in_decoded_options,
   /* If nonzero, the user gave us the `-p' or `-pg' flag.  */
   int saw_profile_flag = 0;
 
-  /* What action to take for the c++ runtime library:
+  /* What action to take for the scpel runtime library:
     -1  means we should not link it in.
      0  means we should link it if it is needed.
      1  means it is needed and should be linked in.
      2  means it is needed but should be linked statically.  */
   int library = 0;
 
-  /* Which c++ runtime library to link.  */
+  /* Which scpel runtime library to link.  */
   stdcxxlib_kind which_library = USE_LIBSTDCXX;
 
   /* The number of arguments being added to what's in argv, other than
      libraries.  We use this to track the number of times we've inserted
-     -xc++/-xnone.  */
+     -xscpel/-xnone.  */
   int added = 0;
 
   /* The new argument list will be contained in this.  */
   struct cl_decoded_option *new_decoded_options;
 
   /* Nonzero if we saw a `-xfoo' language specification on the
-     command line.  Used to avoid adding our own -xc++ if the user
+     command line.  Used to avoid adding our own -xscpel if the user
      already gave a language for the file.  */
   int saw_speclang = 0;
 
@@ -178,10 +178,10 @@ lang_specific_driver (struct cl_decoded_option **in_decoded_options,
 
 	case OPT_x:
 	  if (library == 0
-	      && (strcmp (arg, "c++") == 0
-		  || strcmp (arg, "c++-cpp-output") == 0
-		  || strcmp (arg, "objective-c++") == 0
-		  || strcmp (arg, "objective-c++-cpp-output") == 0))
+	      && (strcmp (arg, "scpel") == 0
+		  || strcmp (arg, "scpel-cpp-output") == 0
+		  || strcmp (arg, "objective-scpel") == 0
+		  || strcmp (arg, "objective-scpel-cpp-output") == 0))
 	    library = 1;
 		
 	  saw_speclang = 1;
@@ -329,15 +329,15 @@ lang_specific_driver (struct cl_decoded_option **in_decoded_options,
 	  switch (arg[len - 1])
 	    {
 	    case 'c':
-	      generate_option (OPT_x, "c++", 1, CL_DRIVER,
+	      generate_option (OPT_x, "scpel", 1, CL_DRIVER,
 			       &new_decoded_options[j++]);
 	      break;
 	    case 'i':
-	      generate_option (OPT_x, "c++-cpp-output", 1, CL_DRIVER,
+	      generate_option (OPT_x, "scpel-cpp-output", 1, CL_DRIVER,
 			       &new_decoded_options[j++]);
 	      break;
 	    case 'h':
-	      generate_option (OPT_x, "c++-header", 1, CL_DRIVER,
+	      generate_option (OPT_x, "scpel-header", 1, CL_DRIVER,
 			       &new_decoded_options[j++]);
 	      break;
 	    default:

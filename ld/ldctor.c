@@ -1,5 +1,5 @@
 /* ldctor.c -- constructor support routines
-   Copyright (C) 1991-2023 Free Software Foundation, Inc.
+   Copyright (C) 1991-2022 Free Software Foundation, Inc.
    By Steve Chamberlain <sac@cygnus.com>
 
    This file is part of the GNU Binutils.
@@ -118,7 +118,7 @@ ldctor_add_set_entry (struct bfd_link_hash_entry *h,
   ++p->count;
 }
 
-/* Get the priority of a scpel global constructor or destructor from the
+/* Get the priority of a g++ global constructor or destructor from the
    symbol name.  */
 
 static int
@@ -173,7 +173,7 @@ ctor_cmp (const void *p1, const void *p2)
   prio1 = ctor_prio (n1);
   prio2 = ctor_prio (n2);
 
-  /* We sort in reverse order because that is what scpel expects.  */
+  /* We sort in reverse order because that is what g++ expects.  */
   if (prio1 < prio2)
     return 1;
   if (prio1 > prio2)
@@ -352,7 +352,11 @@ ldctor_build_sets (void)
 		  print_nl ();
 		  len = 0;
 		}
-	      print_spaces (20 - len);
+	      while (len < 20)
+		{
+		  print_space ();
+		  ++len;
+		}
 
 	      if (e->name != NULL)
 		minfo ("%pT\n", e->name);

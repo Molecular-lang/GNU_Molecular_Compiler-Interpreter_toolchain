@@ -1,5 +1,5 @@
 /* sysdep.h -- handle host dependencies for the GNU linker
-   Copyright (C) 1995-2023 Free Software Foundation, Inc.
+   Copyright (C) 1995-2022 Free Software Foundation, Inc.
 
    This file is part of the GNU Binutils.
 
@@ -59,6 +59,10 @@
 #ifdef HAVE_SYS_FILE_H
 #include <sys/file.h>
 #endif
+#endif
+
+#ifdef HAVE_DLFCN_H
+#include <dlfcn.h>
 #endif
 
 #ifndef O_RDONLY

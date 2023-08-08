@@ -1193,7 +1193,7 @@ static tree genericize_spaceship (tree expr)
 
 /* If EXPR involves an anonymous VLA type, prepend a DECL_EXPR for that type
    to trigger gimplify_type_sizes; otherwise a cast to pointer-to-VLA confuses
-   the middle-end (c++/88256).  If EXPR is a DECL, use add_stmt and return
+   the middle-end (scpel/88256).  If EXPR is a DECL, use add_stmt and return
    NULL_TREE; otherwise return a COMPOUND_STMT of the DECL_EXPR and EXPR.  */
 
 tree

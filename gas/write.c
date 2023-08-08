@@ -1,5 +1,5 @@
 /* write.c - emit .o file
-   Copyright (C) 1986-2023 Free Software Foundation, Inc.
+   Copyright (C) 1986-2022 Free Software Foundation, Inc.
 
    This file is part of GAS, the GNU Assembler.
 
@@ -123,10 +123,10 @@ void print_fixup (fixS *);
 /* We generally attach relocs to frag chains.  However, after we have
    chained these all together into a segment, any relocs we add after
    that must be attached to a segment.  This will include relocs added
-   in md_estimate_size_before_relax, for example.  */
-static bool frags_chained = false;
+   in md_estimate_size_for_relax, for example.  */
+static int frags_chained = 0;
 
-static unsigned int n_fixups;
+static int n_fixups;
 
 #define RELOC_ENUM enum bfd_reloc_code_real
 
@@ -380,7 +380,7 @@ chain_frchains_together_1 (segT section, struct frchain *frchp)
   fragS dummy, *prev_frag = &dummy;
   fixS fix_dummy, *prev_fix = &fix_dummy;
 
-  do
+  for (; frchp; frchp = frchp->frch_next)
     {
       prev_frag->fr_next = frchp->frch_root;
       prev_frag = frchp->frch_last;
@@ -393,8 +393,7 @@ chain_frchains_together_1 (segT section, struct frchain *frchp)
 	  seg_info (section)->fix_tail = frchp->fix_tail;
 	  prev_fix = frchp->fix_tail;
 	}
-      frchp = frchp->frch_next;
-    } while (frchp);
+    }
   gas_assert (prev_frag != &dummy
 	      && prev_frag->fr_type != 0);
   prev_frag->fr_next = 0;
@@ -417,7 +416,7 @@ chain_frchains_together (bfd *abfd ATTRIBUTE_UNUSED,
 
   /* Now that we've chained the frags together, we must add new fixups
      to the segment, not to the frag chain.  */
-  frags_chained = true;
+  frags_chained = 1;
 }
 
 static void
@@ -486,10 +485,6 @@ cvt_frag_to_fill (segT sec ATTRIBUTE_UNUSED, fragS *fragP)
 
     case rs_dwarf2dbg:
       dwarf2dbg_convert_frag (fragP);
-      break;
-
-    case rs_sframe:
-      sframe_convert_frag (fragP);
       break;
 
     case rs_machine_dependent:
@@ -584,6 +579,7 @@ size_seg (bfd *abfd ATTRIBUTE_UNUSED, asection *sec, void *xxx ATTRIBUTE_UNUSED)
   if (size > 0 && ! seginfo->bss)
     flags |= SEC_HAS_CONTENTS;
 
+  flags &= ~SEC_RELOC;
   x = bfd_set_section_flags (sec, flags);
   gas_assert (x);
 
@@ -976,18 +972,16 @@ fixup_segment (fixS *fixP, segT this_segment)
       if (fixP->fx_subsy != NULL)
 	{
 	  segT sub_symbol_segment;
-
 	  resolve_symbol_value (fixP->fx_subsy);
 	  sub_symbol_segment = S_GET_SEGMENT (fixP->fx_subsy);
-
 	  if (fixP->fx_addsy != NULL
 	      && sub_symbol_segment == add_symbol_segment
 	      && !S_FORCE_RELOC (fixP->fx_addsy, 0)
 	      && !S_FORCE_RELOC (fixP->fx_subsy, 0)
 	      && !TC_FORCE_RELOCATION_SUB_SAME (fixP, add_symbol_segment))
 	    {
-	      add_number += S_GET_VALUE_WHERE (fixP->fx_addsy, fixP->fx_file, fixP->fx_line);
-	      add_number -= S_GET_VALUE_WHERE (fixP->fx_subsy, fixP->fx_file, fixP->fx_line);
+	      add_number += S_GET_VALUE (fixP->fx_addsy);
+	      add_number -= S_GET_VALUE (fixP->fx_subsy);
 	      fixP->fx_offset = add_number;
 	      fixP->fx_addsy = NULL;
 	      fixP->fx_subsy = NULL;
@@ -1000,7 +994,7 @@ fixup_segment (fixS *fixP, segT this_segment)
 		   && !S_FORCE_RELOC (fixP->fx_subsy, 0)
 		   && !TC_FORCE_RELOCATION_SUB_ABS (fixP, add_symbol_segment))
 	    {
-	      add_number -= S_GET_VALUE_WHERE (fixP->fx_subsy, fixP->fx_file, fixP->fx_line);
+	      add_number -= S_GET_VALUE (fixP->fx_subsy);
 	      fixP->fx_offset = add_number;
 	      fixP->fx_subsy = NULL;
 	    }
@@ -1008,7 +1002,7 @@ fixup_segment (fixS *fixP, segT this_segment)
 		   && !S_FORCE_RELOC (fixP->fx_subsy, 0)
 		   && !TC_FORCE_RELOCATION_SUB_LOCAL (fixP, add_symbol_segment))
 	    {
-	      add_number -= S_GET_VALUE_WHERE (fixP->fx_subsy, fixP->fx_file, fixP->fx_line);
+	      add_number -= S_GET_VALUE (fixP->fx_subsy);
 	      fixP->fx_offset = (add_number + fixP->fx_dot_value
 				 + fixP->fx_dot_frag->fr_address);
 
@@ -1041,7 +1035,7 @@ fixup_segment (fixS *fixP, segT this_segment)
 	  else if (sub_symbol_segment != undefined_section
 		   && ! bfd_is_com_section (sub_symbol_segment)
 		   && MD_APPLY_SYM_VALUE (fixP))
-	    add_number -= S_GET_VALUE_WHERE (fixP->fx_subsy, fixP->fx_file, fixP->fx_line);
+	    add_number -= S_GET_VALUE (fixP->fx_subsy);
 	}
 
       if (fixP->fx_addsy)
@@ -1053,7 +1047,7 @@ fixup_segment (fixS *fixP, segT this_segment)
 	      /* This fixup was made when the symbol's segment was
 		 SEG_UNKNOWN, but it is now in the local segment.
 		 So we know how to do the address without relocation.  */
-	      add_number += S_GET_VALUE_WHERE (fixP->fx_addsy, fixP->fx_file, fixP->fx_line);
+	      add_number += S_GET_VALUE (fixP->fx_addsy);
 	      fixP->fx_offset = add_number;
 	      if (fixP->fx_pcrel)
 		add_number -= MD_PCREL_FROM_SECTION (fixP, this_segment);
@@ -1064,14 +1058,14 @@ fixup_segment (fixS *fixP, segT this_segment)
 		   && !S_FORCE_RELOC (fixP->fx_addsy, 0)
 		   && !TC_FORCE_RELOCATION_ABS (fixP))
 	    {
-	      add_number += S_GET_VALUE_WHERE (fixP->fx_addsy, fixP->fx_file, fixP->fx_line);
+	      add_number += S_GET_VALUE (fixP->fx_addsy);
 	      fixP->fx_offset = add_number;
 	      fixP->fx_addsy = NULL;
 	    }
 	  else if (add_symbol_segment != undefined_section
 		   && ! bfd_is_com_section (add_symbol_segment)
 		   && MD_APPLY_SYM_VALUE (fixP))
-	    add_number += S_GET_VALUE_WHERE (fixP->fx_addsy, fixP->fx_file, fixP->fx_line);
+	    add_number += S_GET_VALUE (fixP->fx_addsy);
 	}
 
       if (fixP->fx_pcrel)
@@ -1131,7 +1125,7 @@ fixup_segment (fixS *fixP, segT this_segment)
 #ifdef WARN_SIGNED_OVERFLOW_WORD
 	  /* Warn if a .word value is too large when treated as a signed
 	     number.  We already know it is not too negative.  This is to
-	     catch over-large switches generated by spl on the 68k.  */
+	     catch over-large switches generated by gcc on the 68k.  */
 	  if (!flag_signed_overflow_ok
 	      && fixP->fx_size == 2
 	      && add_number > 0x7fff)
@@ -1389,7 +1383,13 @@ write_relocs (bfd *abfd ATTRIBUTE_UNUSED, asection *sec,
   }
 #endif
 
-  bfd_set_reloc (stdoutput, sec, n ? relocs : NULL, n);
+  if (n)
+    {
+      flagword flags = bfd_section_flags (sec);
+      flags |= SEC_RELOC;
+      bfd_set_section_flags (sec, flags);
+      bfd_set_reloc (stdoutput, sec, relocs, n);
+    }
 
 #ifdef SET_SECTION_RELOCS
   SET_SECTION_RELOCS (sec, relocs, n);
@@ -1413,7 +1413,7 @@ write_relocs (bfd *abfd ATTRIBUTE_UNUSED, asection *sec,
 }
 
 static int
-compress_frag (bool use_zstd, void *ctx, const char *contents, int in_size,
+compress_frag (struct z_stream_s *strm, const char *contents, int in_size,
 	       fragS **last_newf, struct obstack *ob)
 {
   int out_size;
@@ -1442,10 +1442,10 @@ compress_frag (bool use_zstd, void *ctx, const char *contents, int in_size,
 	as_fatal (_("can't extend frag"));
       next_out = obstack_next_free (ob);
       obstack_blank_fast (ob, avail_out);
-      out_size = compress_data (use_zstd, ctx, &contents, &in_size, &next_out,
-				&avail_out);
+      out_size = compress_data (strm, &contents, &in_size,
+				&next_out, &avail_out);
       if (out_size < 0)
-	return -1;
+        return -1;
 
       f->fr_fix += out_size;
       total_out_size += out_size;
@@ -1462,34 +1462,47 @@ static void
 compress_debug (bfd *abfd, asection *sec, void *xxx ATTRIBUTE_UNUSED)
 {
   segment_info_type *seginfo = seg_info (sec);
-  bfd_size_type uncompressed_size = sec->size;
+  fragS *f;
+  fragS *first_newf;
+  fragS *last_newf;
+  struct obstack *ob = &seginfo->frchainP->frch_obstack;
+  bfd_size_type uncompressed_size = (bfd_size_type) sec->size;
+  bfd_size_type compressed_size;
+  const char *section_name;
+  char *compressed_name;
+  char *header;
+  struct z_stream_s *strm;
+  int x;
   flagword flags = bfd_section_flags (sec);
+  unsigned int header_size, compression_header_size;
 
   if (seginfo == NULL
-      || uncompressed_size < 32
-      || (flags & SEC_HAS_CONTENTS) == 0)
+      || sec->size < 32
+      || (flags & (SEC_ALLOC | SEC_HAS_CONTENTS)) == SEC_ALLOC)
     return;
 
-  const char *section_name = bfd_section_name (sec);
-  if (!startswith (section_name, ".debug_")
-      && !startswith (section_name, ".gnu.debuglto_.debug_")
-      && !startswith (section_name, ".gnu.linkonce.wi."))
+  section_name = bfd_section_name (sec);
+  if (!startswith (section_name, ".debug_"))
     return;
 
-  bool use_zstd = abfd->flags & BFD_COMPRESS_ZSTD;
-  void *ctx = compress_init (use_zstd);
-  if (ctx == NULL)
+  strm = compress_init ();
+  if (strm == NULL)
     return;
 
-  unsigned int header_size;
-  if ((abfd->flags & BFD_COMPRESS_GABI) == 0)
-    header_size = 12;
+  if (flag_compress_debug == COMPRESS_DEBUG_GABI_ZLIB)
+    {
+      compression_header_size
+	= bfd_get_compression_header_size (stdoutput, NULL);
+      header_size = compression_header_size;
+    }
   else
-    header_size = bfd_get_compression_header_size (stdoutput, NULL);
+    {
+      compression_header_size = 0;
+      header_size = 12;
+    }
 
   /* Create a new frag to contain the compression header.  */
-  struct obstack *ob = &seginfo->frchainP->frch_obstack;
-  fragS *first_newf = frag_alloc (ob);
+  first_newf = frag_alloc (ob);
   if (obstack_room (ob) < header_size)
     first_newf = frag_alloc (ob);
   if (obstack_room (ob) < header_size)
@@ -1497,16 +1510,16 @@ compress_debug (bfd *abfd, asection *sec, void *xxx ATTRIBUTE_UNUSED)
 			"can't extend frag %lu chars",
 			(unsigned long) header_size),
 	      (unsigned long) header_size);
-  fragS *last_newf = first_newf;
+  last_newf = first_newf;
   obstack_blank_fast (ob, header_size);
   last_newf->fr_type = rs_fill;
   last_newf->fr_fix = header_size;
-  char *header = last_newf->fr_literal;
-  bfd_size_type compressed_size = header_size;
+  header = last_newf->fr_literal;
+  compressed_size = header_size;
 
   /* Stream the frags through the compression engine, adding new frags
      as necessary to accommodate the compressed output.  */
-  for (fragS *f = seginfo->frchainP->frch_root;
+  for (f = seginfo->frchainP->frch_root;
        f;
        f = f->fr_next)
     {
@@ -1518,7 +1531,7 @@ compress_debug (bfd *abfd, asection *sec, void *xxx ATTRIBUTE_UNUSED)
       gas_assert (f->fr_type == rs_fill);
       if (f->fr_fix)
 	{
-	  out_size = compress_frag (use_zstd, ctx, f->fr_literal, f->fr_fix,
+	  out_size = compress_frag (strm, f->fr_literal, f->fr_fix,
 				    &last_newf, ob);
 	  if (out_size < 0)
 	    return;
@@ -1532,8 +1545,8 @@ compress_debug (bfd *abfd, asection *sec, void *xxx ATTRIBUTE_UNUSED)
 	{
 	  while (count--)
 	    {
-	      out_size = compress_frag (use_zstd, ctx, fill_literal,
-					(int)fill_size, &last_newf, ob);
+	      out_size = compress_frag (strm, fill_literal, (int) fill_size,
+				        &last_newf, ob);
 	      if (out_size < 0)
 		return;
 	      compressed_size += out_size;
@@ -1566,7 +1579,7 @@ compress_debug (bfd *abfd, asection *sec, void *xxx ATTRIBUTE_UNUSED)
 	as_fatal (_("can't extend frag"));
       next_out = obstack_next_free (ob);
       obstack_blank_fast (ob, avail_out);
-      int x = compress_finish (use_zstd, ctx, &next_out, &avail_out, &out_size);
+      x = compress_finish (strm, &next_out, &avail_out, &out_size);
       if (x < 0)
 	return;
 
@@ -1592,12 +1605,11 @@ compress_debug (bfd *abfd, asection *sec, void *xxx ATTRIBUTE_UNUSED)
 
   /* Update the section size and its name.  */
   bfd_update_compression_header (abfd, (bfd_byte *) header, sec);
-  bool x = bfd_set_section_size (sec, compressed_size);
+  x = bfd_set_section_size (sec, compressed_size);
   gas_assert (x);
-  if ((abfd->flags & BFD_COMPRESS_GABI) == 0
-      && section_name[1] == 'd')
+  if (!compression_header_size)
     {
-      char *compressed_name = bfd_debug_name_to_zdebug (abfd, section_name);
+      compressed_name = concat (".z", section_name + 1, (char *) NULL);
       bfd_rename_section (sec, compressed_name);
     }
 }
@@ -2084,7 +2096,7 @@ maybe_generate_build_notes (void)
 	  }
 
 	/* The a1 version number indicates that this note was
-	   generated by the assembler and not the spl annobin plugin.  */
+	   generated by the assembler and not the gcc annobin plugin.  */
 	memcpy (note + 12, "GA$3a1", 8);
 
 	/* Create a relocation to install the start address of the note...  */
@@ -2329,6 +2341,8 @@ write_object_file (void)
     maybe_generate_build_notes ();
 #endif
 
+  PROGRESS (1);
+
 #ifdef tc_frob_file_before_adjust
   tc_frob_file_before_adjust ();
 #endif
@@ -2471,6 +2485,8 @@ write_object_file (void)
 	}
     }
 
+  PROGRESS (1);
+
   /* Now do any format-specific adjustments to the symbol table, such
      as adding file symbols.  */
 #ifdef tc_adjust_symtab
@@ -2520,16 +2536,13 @@ write_object_file (void)
      contents of the debug sections.  This needs to be done before
      we start writing any sections, because it will affect the file
      layout, which is fixed once we start writing contents.  */
-  if (flag_compress_debug != COMPRESS_DEBUG_NONE)
+  if (flag_compress_debug)
     {
-      flagword flags = BFD_COMPRESS;
       if (flag_compress_debug == COMPRESS_DEBUG_GABI_ZLIB)
-	flags = BFD_COMPRESS | BFD_COMPRESS_GABI;
-      else if (flag_compress_debug == COMPRESS_DEBUG_ZSTD)
-	flags = BFD_COMPRESS | BFD_COMPRESS_GABI | BFD_COMPRESS_ZSTD;
-      stdoutput->flags |= flags & bfd_applicable_file_flags (stdoutput);
-      if ((stdoutput->flags & BFD_COMPRESS) != 0)
-	bfd_map_over_sections (stdoutput, compress_debug, (char *) 0);
+	stdoutput->flags |= BFD_COMPRESS | BFD_COMPRESS_GABI;
+      else
+	stdoutput->flags |= BFD_COMPRESS;
+      bfd_map_over_sections (stdoutput, compress_debug, (char *) 0);
     }
 
   bfd_map_over_sections (stdoutput, write_contents, (char *) 0);
@@ -2775,11 +2788,6 @@ relax_segment (struct frag *segment_frag_root, segT segment, int pass)
 	  address += dwarf2dbg_estimate_size_before_relax (fragP);
 	  break;
 
-	case rs_sframe:
-	  /* Initial estimate can be set to atleast 1 byte.  */
-	  address += sframe_estimate_size_before_relax (fragP);
-	  break;
-
 	default:
 	  BAD_CASE (fragP->fr_type);
 	  break;
@@ -2798,7 +2806,7 @@ relax_segment (struct frag *segment_frag_root, segT segment, int pass)
        shrank.  */
     int stretched;
 
-    /* Most horrible, but spl may give us some exception data that
+    /* Most horrible, but gcc may give us some exception data that
        is impossible to assemble, of the form
 
        .align 4
@@ -3123,10 +3131,6 @@ relax_segment (struct frag *segment_frag_root, segT segment, int pass)
 		growth = dwarf2dbg_relax_frag (fragP);
 		break;
 
-	      case rs_sframe:
-		growth = sframe_relax_frag (fragP);
-		break;
-
 	      default:
 		BAD_CASE (fragP->fr_type);
 		break;
@@ -3207,7 +3211,9 @@ void
 print_fixup (fixS *fixp)
 {
   indent_level = 1;
-  fprintf (stderr, "fix %p %s:%d", fixp, fixp->fx_file, fixp->fx_line);
+  fprintf (stderr, "fix ");
+  fprintf_vma (stderr, (bfd_vma) (uintptr_t) fixp);
+  fprintf (stderr, " %s:%d",fixp->fx_file, fixp->fx_line);
   if (fixp->fx_pcrel)
     fprintf (stderr, " pcrel");
   if (fixp->fx_pcrel_adjust)
@@ -3216,10 +3222,12 @@ print_fixup (fixS *fixp)
     fprintf (stderr, " tcbit");
   if (fixp->fx_done)
     fprintf (stderr, " done");
-  fprintf (stderr, "\n    size=%d frag=%p", fixp->fx_size, fixp->fx_frag);
-  fprintf (stderr, " where=%ld offset=%" PRIx64 " addnumber=%" PRIx64,
-	   fixp->fx_where, (uint64_t) fixp->fx_offset,
-	   (uint64_t) fixp->fx_addnumber);
+  fprintf (stderr, "\n    size=%d frag=", fixp->fx_size);
+  fprintf_vma (stderr, (bfd_vma) (uintptr_t) fixp->fx_frag);
+  fprintf (stderr, " where=%ld offset=%lx addnumber=%lx",
+	   (long) fixp->fx_where,
+	   (unsigned long) fixp->fx_offset,
+	   (unsigned long) fixp->fx_addnumber);
   fprintf (stderr, "\n    %s (%d)", bfd_get_reloc_code_name (fixp->fx_r_type),
 	   fixp->fx_r_type);
   if (fixp->fx_addsy)

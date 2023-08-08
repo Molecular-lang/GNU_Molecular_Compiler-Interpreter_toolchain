@@ -1,5 +1,5 @@
 /* RISC-V ELF support for BFD.
-   Copyright (C) 2011-2023 Free Software Foundation, Inc.
+   Copyright (C) 2011-2022 Free Software Foundation, Inc.
 
    Contributed by Andrew Waterman (andrew@sifive.com).
    Based on MIPS ELF support for BFD, by Ian Lance Taylor.
@@ -71,6 +71,8 @@ START_RELOC_NUMBERS (elf_riscv_reloc_type)
   RELOC_NUMBER (R_RISCV_SUB16, 38)
   RELOC_NUMBER (R_RISCV_SUB32, 39)
   RELOC_NUMBER (R_RISCV_SUB64, 40)
+  RELOC_NUMBER (R_RISCV_GNU_VTINHERIT, 41)
+  RELOC_NUMBER (R_RISCV_GNU_VTENTRY, 42)
   RELOC_NUMBER (R_RISCV_ALIGN, 43)
   RELOC_NUMBER (R_RISCV_RVC_BRANCH, 44)
   RELOC_NUMBER (R_RISCV_RVC_JUMP, 45)
@@ -87,9 +89,6 @@ START_RELOC_NUMBERS (elf_riscv_reloc_type)
   RELOC_NUMBER (R_RISCV_SET32, 56)
   RELOC_NUMBER (R_RISCV_32_PCREL, 57)
   RELOC_NUMBER (R_RISCV_IRELATIVE, 58)
-  /* Reserved 59 for R_RISCV_PLT32.  */
-  RELOC_NUMBER (R_RISCV_SET_ULEB128, 60)
-  RELOC_NUMBER (R_RISCV_SUB_ULEB128, 61)
 END_RELOC_NUMBERS (R_RISCV_max)
 
 /* Processor specific flags for the ELF header e_flags field.  */
@@ -123,9 +122,6 @@ END_RELOC_NUMBERS (R_RISCV_max)
 
 /* RISC-V specific values for st_other.  */
 #define STO_RISCV_VARIANT_CC 0x80
-
-/* File uses the TSO model. */
-#define EF_RISCV_TSO 0x0010
 
 /* Additional section types.  */
 #define SHT_RISCV_ATTRIBUTES 0x70000003 /* Section holds attributes.  */

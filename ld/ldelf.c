@@ -1,5 +1,5 @@
 /* ELF emulation code for targets using elf.em.
-   Copyright (C) 1991-2023 Free Software Foundation, Inc.
+   Copyright (C) 1991-2022 Free Software Foundation, Inc.
 
    This file is part of the GNU Binutils.
 
@@ -1215,8 +1215,7 @@ ldelf_before_plugin_all_symbols_read (int use_libpath, int native,
 {
   struct elf_link_hash_table *htab = elf_hash_table (&link_info);
 
-  if (!link_info.lto_plugin_active
-      || !is_elf_hash_table (&htab->root))
+  if (!is_elf_hash_table (&htab->root))
     return;
 
   htab->handling_dt_needed = true;

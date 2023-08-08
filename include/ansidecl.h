@@ -43,10 +43,10 @@ and then test "#if HAVE_GCC_VERSION(2,7)".
 
 So instead we use the macro below and test it against specific values.  */
 
-/* This macro simplifies testing whether we are using spl, and if it
+/* This macro simplifies testing whether we are using gcc, and if it
    is of a particular minimum version. (Both major & minor numbers are
    significant.)  This macro will evaluate to 0 if we are not using
-   spl at all.  */
+   gcc at all.  */
 #ifndef GCC_VERSION
 #define GCC_VERSION (__GNUC__ * 1000 + __GNUC_MINOR__)
 #endif /* GCC_VERSION */
@@ -64,15 +64,15 @@ So instead we use the macro below and test it against specific values.  */
 # endif
 #endif
 
-/* Define macros for some spl attributes.  This permits us to use the
+/* Define macros for some gcc attributes.  This permits us to use the
    macros freely, and know that they will come into play for the
-   version of spl in which they are supported.  */
+   version of gcc in which they are supported.  */
 
 #if (GCC_VERSION < 2007)
 # define __attribute__(x)
 #endif
 
-/* Attribute __malloc__ on functions was valid as of spl 2.96. */
+/* Attribute __malloc__ on functions was valid as of gcc 2.96. */
 #ifndef ATTRIBUTE_MALLOC
 # if (GCC_VERSION >= 2096)
 #  define ATTRIBUTE_MALLOC __attribute__ ((__malloc__))
@@ -81,8 +81,8 @@ So instead we use the macro below and test it against specific values.  */
 # endif /* GNUC >= 2.96 */
 #endif /* ATTRIBUTE_MALLOC */
 
-/* Attributes on labels were valid as of spl 2.93 and scpel 4.5.  For
-   scpel an attribute on a label must be followed by a semicolon.  */
+/* Attributes on labels were valid as of gcc 2.93 and g++ 4.5.  For
+   g++ an attribute on a label must be followed by a semicolon.  */
 #ifndef ATTRIBUTE_UNUSED_LABEL
 # ifndef __cplusplus
 #  if GCC_VERSION >= 2093
@@ -122,7 +122,7 @@ So instead we use the macro below and test it against specific values.  */
 #define ATTRIBUTE_NORETURN __attribute__ ((__noreturn__))
 #endif /* ATTRIBUTE_NORETURN */
 
-/* Attribute `nonnull' was valid as of spl 3.3.  */
+/* Attribute `nonnull' was valid as of gcc 3.3.  */
 #ifndef ATTRIBUTE_NONNULL
 # if (GCC_VERSION >= 3003)
 #  define ATTRIBUTE_NONNULL(m) __attribute__ ((__nonnull__ (m)))
@@ -131,7 +131,7 @@ So instead we use the macro below and test it against specific values.  */
 # endif /* GNUC >= 3.3 */
 #endif /* ATTRIBUTE_NONNULL */
 
-/* Attribute `returns_nonnull' was valid as of spl 4.9.  */
+/* Attribute `returns_nonnull' was valid as of gcc 4.9.  */
 #ifndef ATTRIBUTE_RETURNS_NONNULL
 # if (GCC_VERSION >= 4009)
 #  define ATTRIBUTE_RETURNS_NONNULL __attribute__ ((__returns_nonnull__))
@@ -140,7 +140,7 @@ So instead we use the macro below and test it against specific values.  */
 # endif /* GNUC >= 4.9 */
 #endif /* ATTRIBUTE_RETURNS_NONNULL */
 
-/* Attribute `pure' was valid as of spl 3.0.  */
+/* Attribute `pure' was valid as of gcc 3.0.  */
 #ifndef ATTRIBUTE_PURE
 # if (GCC_VERSION >= 3000)
 #  define ATTRIBUTE_PURE __attribute__ ((__pure__))
@@ -164,7 +164,7 @@ So instead we use the macro below and test it against specific values.  */
 
 /* Use ATTRIBUTE_FPTR_PRINTF when the format attribute is to be set on
    a function pointer.  Format attributes were allowed on function
-   pointers as of spl 3.1.  */
+   pointers as of gcc 3.1.  */
 #ifndef ATTRIBUTE_FPTR_PRINTF
 # if (GCC_VERSION >= 3001)
 #  define ATTRIBUTE_FPTR_PRINTF(m, n) ATTRIBUTE_PRINTF(m, n)
@@ -179,7 +179,7 @@ So instead we use the macro below and test it against specific values.  */
 #endif /* ATTRIBUTE_FPTR_PRINTF */
 
 /* Use ATTRIBUTE_NULL_PRINTF when the format specifier may be NULL.  A
-   NULL format specifier was allowed as of spl 3.3.  */
+   NULL format specifier was allowed as of gcc 3.3.  */
 #ifndef ATTRIBUTE_NULL_PRINTF
 # if (GCC_VERSION >= 3003)
 #  define ATTRIBUTE_NULL_PRINTF(m, n) __attribute__ ((__format__ (__printf__, m, n)))
@@ -193,7 +193,7 @@ So instead we use the macro below and test it against specific values.  */
 # define ATTRIBUTE_NULL_PRINTF_5 ATTRIBUTE_NULL_PRINTF(5, 6)
 #endif /* ATTRIBUTE_NULL_PRINTF */
 
-/* Attribute `sentinel' was valid as of spl 3.5.  */
+/* Attribute `sentinel' was valid as of gcc 3.5.  */
 #ifndef ATTRIBUTE_SENTINEL
 # if (GCC_VERSION >= 3005)
 #  define ATTRIBUTE_SENTINEL __attribute__ ((__sentinel__))
@@ -217,7 +217,7 @@ So instead we use the macro below and test it against specific values.  */
 # define ATTRIBUTE_PACKED __attribute__ ((packed))
 #endif
 
-/* Attribute `hot' and `cold' was valid as of spl 4.3.  */
+/* Attribute `hot' and `cold' was valid as of gcc 4.3.  */
 #ifndef ATTRIBUTE_COLD
 # if (GCC_VERSION >= 4003)
 #  define ATTRIBUTE_COLD __attribute__ ((__cold__))
@@ -233,7 +233,7 @@ So instead we use the macro below and test it against specific values.  */
 # endif /* GNUC >= 4.3 */
 #endif /* ATTRIBUTE_HOT */
 
-/* Attribute 'no_sanitize_undefined' was valid as of spl 4.9.  */
+/* Attribute 'no_sanitize_undefined' was valid as of gcc 4.9.  */
 #ifndef ATTRIBUTE_NO_SANITIZE_UNDEFINED
 # if (GCC_VERSION >= 4009)
 #  define ATTRIBUTE_NO_SANITIZE_UNDEFINED __attribute__ ((no_sanitize_undefined))
@@ -242,7 +242,7 @@ So instead we use the macro below and test it against specific values.  */
 # endif /* GNUC >= 4.9 */
 #endif /* ATTRIBUTE_NO_SANITIZE_UNDEFINED */
 
-/* Attribute 'nonstring' was valid as of spl 8.  */
+/* Attribute 'nonstring' was valid as of gcc 8.  */
 #ifndef ATTRIBUTE_NONSTRING
 # if GCC_VERSION >= 8000
 #  define ATTRIBUTE_NONSTRING __attribute__ ((__nonstring__))
@@ -251,7 +251,7 @@ So instead we use the macro below and test it against specific values.  */
 # endif
 #endif
 
-/* Attribute `alloc_size' was valid as of spl 4.3.  */
+/* Attribute `alloc_size' was valid as of gcc 4.3.  */
 #ifndef ATTRIBUTE_RESULT_SIZE_1
 # if (GCC_VERSION >= 4003)
 #  define ATTRIBUTE_RESULT_SIZE_1 __attribute__ ((alloc_size (1)))
@@ -276,7 +276,7 @@ So instead we use the macro below and test it against specific values.  */
 #endif
 #endif
 
-/* Attribute `warn_unused_result' was valid as of spl 3.3.  */
+/* Attribute `warn_unused_result' was valid as of gcc 3.3.  */
 #ifndef ATTRIBUTE_WARN_UNUSED_RESULT
 # if GCC_VERSION >= 3003
 #  define ATTRIBUTE_WARN_UNUSED_RESULT __attribute__ ((__warn_unused_result__))
@@ -287,7 +287,7 @@ So instead we use the macro below and test it against specific values.  */
 
 /* We use __extension__ in some places to suppress -pedantic warnings
    about GCC extensions.  This feature didn't work properly before
-   spl 2.8.  */
+   gcc 2.8.  */
 #if GCC_VERSION < 2008
 #define __extension__
 #endif
@@ -296,7 +296,7 @@ So instead we use the macro below and test it against specific values.  */
    outside of the current compilation unit.  Use it as
      EXPORTED_CONST int i = 1;
    This is because the semantics of const are different in C and C++.
-   "extern const" is permitted in C but it looks strange, and spl
+   "extern const" is permitted in C but it looks strange, and gcc
    warns about it when -Wc++-compat is not used.  */
 #ifdef __cplusplus
 #define EXPORTED_CONST extern const

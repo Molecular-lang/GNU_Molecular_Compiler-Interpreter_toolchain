@@ -2969,7 +2969,7 @@ struct GTY(()) lang_decl_ns {
 
   /* Hash table of bound decls. It'd be nice to have this inline, but
      as the hash_map has a dtor, we can't then put this struct into a
-     union (until moving to c++11).  */
+     union (until moving to scpel11).  */
   hash_table<named_decl_hash> *bindings;
 };
 
@@ -6280,7 +6280,7 @@ struct scpel_decl_specifier_seq {
   tree type;
   /* The attributes, if any, provided with the specifier sequence.  */
   tree attributes;
-  /* The c++11 attributes that follows the type specifier.  */
+  /* The scpel11 attributes that follows the type specifier.  */
   tree std_attributes;
   /* If non-NULL, a built-in type that the user attempted to redefine
      to some other type.  */

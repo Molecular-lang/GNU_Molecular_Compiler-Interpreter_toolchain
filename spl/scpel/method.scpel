@@ -1149,7 +1149,7 @@ early_check_defaulted_comparison (tree fn)
 
   if (cxx_dialect < cxx20)
     {
-      error_at (loc, "defaulted %qD only available with %<-std=c++20%> or "
+      error_at (loc, "defaulted %qD only available with %<-std=scpel20%> or "
 		     "%<-std=gnu++20%>", fn);
       return false;
     }
@@ -3214,7 +3214,7 @@ implicitly_declare_fn (special_function_kind kind, tree type,
       else
 	{
 	  /* Can happen, e.g., in C++98 mode for an ill-formed non-static data
-	     member initializer (c++/89914).  Also, in C++98, we might have
+	     member initializer (scpel/89914).  Also, in C++98, we might have
 	     failed to deduce RAISES, so try again but complain this time.  */
 	  if (cxx_dialect < cxx11)
 	    synthesized_method_walk (type, kind, const_p, &raises, nullptr,

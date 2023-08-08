@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script
 dnl
-dnl   Copyright (C) 2012-2023 Free Software Foundation, Inc.
+dnl   Copyright (C) 2012-2022 Free Software Foundation, Inc.
 dnl
 dnl This file is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
@@ -34,7 +34,6 @@ AC_PROG_GREP
 AC_GNU_SOURCE
 AC_USE_SYSTEM_EXTENSIONS
 AC_PROG_INSTALL
-PKG_PROG_PKG_CONFIG
 
 LT_INIT
 ACX_LARGEFILE
@@ -161,15 +160,6 @@ AC_ARG_ENABLE(compressed_debug_sections,
 [case ,"${enableval}", in
   ,yes, | ,all, | *,ld,*) ac_default_compressed_debug_sections=yes ;;
   ,no, | ,none,)  ac_default_compressed_debug_sections=no ;;
-esac])dnl
-
-# Select default compression algorithm.
-ac_default_compressed_debug_sections_algorithm=COMPRESS_DEBUG_GABI_ZLIB
-AC_ARG_ENABLE(default_compressed_debug_sections_algorithm,
-	      AS_HELP_STRING([--enable-default-compressed-debug-sections-algorithm={zlib,zstd}],
-	      [Default compression algorithm for --enable-compressed-debug-sections.]),
-[case "${enableval}" in
-   zstd) ac_default_compressed_debug_sections_algorithm=COMPRESS_DEBUG_ZSTD ;;
 esac])dnl
 
 # Decide setting DT_RUNPATH instead of DT_RPATH by default
@@ -306,15 +296,24 @@ AC_ARG_ENABLE([jansson],
   [enable_jansson=$enableval],
   [enable_jansson="no"])
 
-AS_IF([test "x$enable_jansson" != "xno"],
-  [PKG_CHECK_MODULES(JANSSON, [jansson],
+if test "x$enable_jansson" != "xno"; then
+  PKG_PROG_PKG_CONFIG
+  AS_IF([test -n "$PKG_CONFIG"],
     [
-      AC_DEFINE(HAVE_JANSSON, 1, [The jansson library is to be used])
-      AC_SUBST([JANSSON_CFLAGS])
-      AC_SUBST([JANSSON_LIBS])
+      PKG_CHECK_MODULES(JANSSON, [jansson],
+	[
+	  AC_DEFINE(HAVE_JANSSON, 1, [The jansson library is to be used])
+	  AC_SUBST([JANSSON_CFLAGS])
+	  AC_SUBST([JANSSON_LIBS])
+	],
+	[
+	  AC_MSG_ERROR([Cannot find jansson library])
+	])
     ],
-    [AC_MSG_ERROR([Cannot find jansson library])])
-  ])
+    [
+      AC_MSG_ERROR([Cannot find pkg-config])
+    ])
+fi
 
 AM_BINUTILS_WARNINGS
 
@@ -367,11 +366,11 @@ AC_SUBST(NATIVE_LIB_DIRS)
 AC_CHECK_HEADERS(fcntl.h elf-hints.h limits.h inttypes.h stdint.h \
 		 sys/file.h sys/mman.h sys/param.h sys/stat.h sys/time.h \
 		 sys/types.h unistd.h)
-AC_CHECK_FUNCS(close glob lseek mkstemp open realpath waitpid)
+AC_CHECK_FUNCS(close glob lseek mkstemp open realpath sbrk waitpid)
 
 BFD_BINARY_FOPEN
 
-AC_CHECK_DECLS([asprintf, environ])
+AC_CHECK_DECLS([asprintf, environ, sbrk])
 
 AC_FUNC_MMAP
 
@@ -387,10 +386,9 @@ if test $ld_cv_decl_getopt_unistd_h = yes; then
 	    [Is the prototype for getopt in <unistd.h> in the expected format?])
 fi
 
-# Link in zlib/zstd if we can.  This allows us to read and write
-# compressed debug sections.
+# Link in zlib if we can.  This allows us to read and write
+# compressed CTF sections.
 AM_ZLIB
-AC_ZSTD
 
 # When converting linker scripts into strings for use in emulation
 # files, use astring.sed if the compiler supports ANSI string
@@ -519,9 +517,6 @@ if test x$ac_default_compressed_debug_sections = xyes ; then
   AC_DEFINE(DEFAULT_FLAG_COMPRESS_DEBUG, 1, [Define if you want compressed debug sections by default.])
 fi
 
-AC_DEFINE_UNQUOTED(DEFAULT_COMPRESSED_DEBUG_ALGORITHM, $ac_default_compressed_debug_sections_algorithm,
-		   [Default compression algorithm for --enable-compressed-debug-sections.])
-
 if test "${ac_default_new_dtags}" = unset; then
   ac_default_new_dtags=0
 fi
@@ -628,18 +623,15 @@ AC_SUBST(EMULATION_LIBPATH)
 if test x${enable_static} = xno; then
   TESTBFDLIB="-Wl,--rpath,../bfd/.libs ../bfd/.libs/libbfd.so"
   TESTCTFLIB="-Wl,--rpath,../libctf/.libs ../libctf/.libs/libctf.so"
-  TESTSFRAMELIB="-Wl,--rpath,../libsframe/.libs ../libsframe/.libs/libsframe.so"
 else
   TESTBFDLIB="../bfd/.libs/libbfd.a"
   TESTCTFLIB="../libctf/.libs/libctf.a"
-  TESTSFRAMELIB="../libsframe/.libs/libsframe.a"
 fi
 if test "${enable_libctf}" = no; then
     TESTCTFLIB=
 fi
 AC_SUBST(TESTBFDLIB)
 AC_SUBST(TESTCTFLIB)
-AC_SUBST(TESTSFRAMELIB)
 
 target_vendor=${target_vendor=$host_vendor}
 case "$target_vendor" in
@@ -682,7 +674,7 @@ AC_SUBST(docdir)
 AC_SUBST(htmldir)
 AC_SUBST(pdfdir)
 
-AC_CONFIG_FILES(Makefile po/Makefile.in:po/Make-in)
+AC_CONFIG_FILES(Makefile)
 AC_OUTPUT
 
 GNU_MAKE_JOBSERVER

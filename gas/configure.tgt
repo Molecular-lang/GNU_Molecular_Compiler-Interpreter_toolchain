@@ -1,6 +1,6 @@
 # gas target specific configuration file.  This is a -*- sh -*- file.
 #
-#   Copyright (C) 2012-2023 Free Software Foundation, Inc.
+#   Copyright (C) 2012-2022 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -134,9 +134,7 @@ case ${generic_target} in
       aarch64*-linux-gnu_ilp32)		arch=aarch64:32 ;;
     esac ;;
   aarch64*-*-netbsd*)			fmt=elf em=nbsd;;
-  aarch64*-*-nto*)			fmt=elf;;
-  aarch64*-*-openbsd*)			fmt=elf;;
-  aarch64*-*-pe* | aarch64*-*-mingw*)	fmt=coff em=pepaarch64 ;;
+
   alpha-*-*vms*)			fmt=evax ;;
   alpha-*-osf*)				fmt=ecoff ;;
   alpha-*-linux*ecoff*)			fmt=ecoff ;;
@@ -160,7 +158,7 @@ case ${generic_target} in
   arm-*-uclinux*eabi*)			fmt=elf  em=armlinuxeabi ;;
   arm-*-uclinux*)			fmt=elf  em=linux ;;
   arm-*-nacl*)				fmt=elf  em=nacl ;;
-  arm-*-netbsd* | arm-*-openbsd*)	fmt=elf  em=nbsd ;;
+  arm-*-netbsd*)			fmt=elf  em=nbsd ;;
   arm-*-nto*)				fmt=elf ;;
   arm-wince-pe | arm-*-wince | arm*-*-mingw32ce* | arm*-*-cegcc*)
 					fmt=coff em=wince-pe ;;
@@ -292,6 +290,7 @@ case ${generic_target} in
   m68hc12-*-* | m6812-*-*)		fmt=elf ;;
 
   m68k-*-elf*)				fmt=elf ;;
+  m68k-*-sysv4*)			fmt=elf em=svr4 ;;
   m68k-*-linux-*)			fmt=elf em=linux ;;
   m68k-*-uclinux*)			fmt=elf em=uclinux ;;
   m68k-*-gnu*)				fmt=elf ;;

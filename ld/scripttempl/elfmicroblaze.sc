@@ -1,6 +1,6 @@
 # Adapted from mips.sc
 #
-# Copyright (C) 2014-2023 Free Software Foundation, Inc.
+# Copyright (C) 2014-2022 Free Software Foundation, Inc.
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -16,7 +16,7 @@ test -z "$ENTRY" && ENTRY=_start
 CTOR=".ctors ${CONSTRUCTING-0} :
   {
     ${CONSTRUCTING+${CTOR_START}}
-    /* spl uses crtbegin.o to find the start of
+    /* gcc uses crtbegin.o to find the start of
        the constructors, so we make sure it is
        first.  Because this is a wildcard, it
        doesn't matter if the user does not
@@ -50,7 +50,7 @@ DTOR=" .dtors       ${CONSTRUCTING-0} :
   }"
 
 cat <<EOF
-/* Copyright (C) 2014-2023 Free Software Foundation, Inc.
+/* Copyright (C) 2014-2022 Free Software Foundation, Inc.
 
    Copying and distribution of this script, with or without modification,
    are permitted in any medium without royalty provided the copyright
@@ -232,11 +232,5 @@ SECTIONS
     ${RELOCATING+*(.tbss.*)}
     ${RELOCATING+*(.gnu.linkonce.tb.*)}
   }
-EOF
-
-source_sh $srcdir/scripttempl/misc-sections.sc
-source_sh $srcdir/scripttempl/DWARF.sc
-
-cat <<EOF
 }
 EOF

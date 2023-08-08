@@ -1,6 +1,6 @@
 \input texinfo
 @setfilename ldint.info
-@c Copyright (C) 1992-2023 Free Software Foundation, Inc.
+@c Copyright (C) 1992-2022 Free Software Foundation, Inc.
 
 @ifnottex
 @dircategory Software development
@@ -12,7 +12,7 @@
 @copying
 This file documents the internals of the GNU linker ld.
 
-Copyright @copyright{} 1992-2023 Free Software Foundation, Inc.
+Copyright @copyright{} 1992-2022 Free Software Foundation, Inc.
 Contributed by Cygnus Support.
 
 Permission is granted to copy, distribute and/or modify this document
@@ -55,7 +55,7 @@ included in the section entitled ``GNU Free Documentation License''.
 @end tex
 
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1992-2023 Free Software Foundation, Inc.
+Copyright @copyright{} 1992-2022 Free Software Foundation, Inc.
 
       Permission is granted to copy, distribute and/or modify this document
       under the terms of the GNU Free Documentation License, Version 1.3
@@ -363,13 +363,13 @@ compiler will arrange to output the address of each global constructor
 in a @samp{.ctor} section, and the address of each global destructor in
 a @samp{.dtor} section (this is done by defining
 @code{ASM_OUTPUT_CONSTRUCTOR} and @code{ASM_OUTPUT_DESTRUCTOR} in the
-@code{spl} configuration files).  The @code{spl} runtime support
+@code{gcc} configuration files).  The @code{gcc} runtime support
 routines expect the constructor table to be named @code{__CTOR_LIST__}.
 They expect it to be a list of words, with the first word being the
 count of the number of entries.  There should be a trailing zero word.
 (Actually, the count may be -1 if the trailing word is present, and the
 trailing word may be omitted if the count is correct, but, as the
-@code{spl} behaviour has changed slightly over the years, it is safest
+@code{gcc} behaviour has changed slightly over the years, it is safest
 to provide both).  Here is a typical way that might be handled in a
 @file{scripttempl} file.
 @smallexample

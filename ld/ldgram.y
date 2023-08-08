@@ -1,5 +1,5 @@
 /* A YACC grammar to parse a superset of the AT&T linker scripting language.
-   Copyright (C) 1991-2023 Free Software Foundation, Inc.
+   Copyright (C) 1991-2022 Free Software Foundation, Inc.
    Written by Steve Chamberlain of Cygnus Support (steve@cygnus.com).
 
    This file is part of the GNU Binutils.
@@ -125,8 +125,8 @@ static int error_index;
 %right UNARY
 %token END
 %left <token> '('
-%token <token> ALIGN_K BLOCK BIND QUAD SQUAD LONG SHORT BYTE ASCIZ
-%token SECTIONS PHDRS INSERT_K AFTER BEFORE LINKER_VERSION
+%token <token> ALIGN_K BLOCK BIND QUAD SQUAD LONG SHORT BYTE
+%token SECTIONS PHDRS INSERT_K AFTER BEFORE
 %token DATA_SEGMENT_ALIGN DATA_SEGMENT_RELRO_END DATA_SEGMENT_END
 %token SORT_BY_NAME SORT_BY_ALIGNMENT SORT_NONE
 %token SORT_BY_INIT_PRIORITY
@@ -668,17 +668,10 @@ statement:
 		{
 		  lang_add_data ((int) $1, $3);
 		}
-	| ASCIZ NAME
-		{
-		  lang_add_string ($2);
-		}
+
 	| FILL '(' fill_exp ')'
 		{
 		  lang_add_fill ($3);
-		}
-	| LINKER_VERSION
-		{
-		  lang_add_version_string ();
 		}
 	| ASSERT_K
 		{ ldlex_expression (); }
@@ -720,7 +713,7 @@ length:
 fill_exp:
 	mustbe_exp
 		{
-		  $$ = exp_get_fill ($1, 0, _("fill value"));
+		  $$ = exp_get_fill ($1, 0, "fill value");
 		}
 	;
 
@@ -1113,7 +1106,7 @@ section:	NAME
 					      $15, $12, $14, $13);
 			}
 		opt_comma
-	|	/* The GROUP case is just enough to support the spl
+	|	/* The GROUP case is just enough to support the gcc
 		   svr3.ifile script.  It is not intended to be full
 		   support.  I'm not even sure what GROUP is supposed
 		   to mean.  */
@@ -1152,7 +1145,7 @@ atype:
 opt_exp_with_type:
 		exp atype ':'		{ $$ = $1; }
 	|	atype ':'		{ $$ = (etree_type *)NULL;  }
-	|	/* The BIND cases are to support the spl svr3.ifile
+	|	/* The BIND cases are to support the gcc svr3.ifile
 		   script.  They aren't intended to implement full
 		   support for the BIND keyword.  I'm not even sure
 		   what BIND is supposed to mean.  */
@@ -1512,7 +1505,7 @@ yyerror(arg)
     einfo (_("%P:%s: file format not recognized; treating as linker script\n"),
 	   ldlex_filename ());
   if (error_index > 0 && error_index < ERROR_NAME_MAX)
-    einfo (_("%F%P:%pS: %s in %s\n"), NULL, arg, error_names[error_index - 1]);
+    einfo ("%F%P:%pS: %s in %s\n", NULL, arg, error_names[error_index - 1]);
   else
     einfo ("%F%P:%pS: %s\n", NULL, arg);
 }

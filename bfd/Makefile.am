@@ -1,6 +1,6 @@
 ## Process this file with automake to generate Makefile.in
 #
-#   Copyright (C) 2012-2023 Free Software Foundation, Inc.
+#   Copyright (C) 2012-2022 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,9 +28,9 @@ MAINTAINERCLEANFILES =
 INCDIR = $(srcdir)/../include
 CSEARCH = -I. -I$(srcdir) -I$(INCDIR)
 
-SUBDIRS = po
+SUBDIRS =
 
-bfddocdir = doc
+bfddocdir =
 
 libbfd_la_LDFLAGS =
 if INSTALL_LIBBFD
@@ -57,7 +57,7 @@ ZLIBINC = @zlibinc@
 
 WARN_CFLAGS = @WARN_CFLAGS@
 NO_WERROR = @NO_WERROR@
-AM_CFLAGS = $(WARN_CFLAGS) $(ZLIBINC) $(ZSTD_CFLAGS)
+AM_CFLAGS = $(WARN_CFLAGS) $(ZLIBINC)
 AM_CPPFLAGS = -DBINDIR='"$(bindir)"' -DLIBDIR='"$(libdir)"' @LARGEFILE_CPPFLAGS@
 if PLUGINS
 bfdinclude_HEADERS += $(INCDIR)/plugin-api.h
@@ -77,7 +77,7 @@ BFD_H = bfd.h
 BFD32_LIBS = \
 	archive.lo archures.lo bfd.lo bfdio.lo bfdwin.lo cache.lo \
 	coff-bfd.lo compress.lo corefile.lo elf-properties.lo format.lo \
-	hash.lo libbfd.lo linker.lo merge.lo opncls.lo reloc.lo \
+	hash.lo init.lo libbfd.lo linker.lo merge.lo opncls.lo reloc.lo \
 	section.lo simple.lo stab-syms.lo stabs.lo syms.lo targets.lo \
 	binary.lo ihex.lo srec.lo tekhex.lo verilog.lo
 
@@ -86,7 +86,7 @@ BFD64_LIBS = archive64.lo
 BFD32_LIBS_CFILES = \
 	archive.c archures.c bfd.c bfdio.c bfdwin.c cache.c coff-bfd.c \
 	compress.c corefile.c elf-properties.c format.c hash.c \
-	libbfd.c linker.c merge.c opncls.c reloc.c \
+	init.c libbfd.c linker.c merge.c opncls.c reloc.c \
 	section.c simple.c stab-syms.c stabs.c syms.c targets.c \
 	binary.c ihex.c srec.c tekhex.c verilog.c
 
@@ -286,7 +286,6 @@ BFD32_BACKENDS = \
 	ecofflink.lo \
 	elf-attrs.lo \
 	elf-eh-frame.lo \
-	elf-sframe.lo \
 	elf-ifunc.lo \
 	elf-m10200.lo \
 	elf-m10300.lo \
@@ -368,7 +367,6 @@ BFD32_BACKENDS = \
 	mach-o-arm.lo \
 	ns32knetbsd.lo \
 	pc532-mach.lo \
-	pdb.lo \
 	pdp11.lo \
 	pe-arm-wince.lo \
 	pe-arm.lo \
@@ -393,7 +391,6 @@ BFD32_BACKENDS = \
 	wasm-module.lo \
 	xcofflink.lo \
 	xsym.lo \
-	xtensa-dynconfig.lo \
 	xtensa-isa.lo \
 	xtensa-modules.lo
 
@@ -421,7 +418,6 @@ BFD32_BACKENDS_CFILES = \
 	ecofflink.c \
 	elf-attrs.c \
 	elf-eh-frame.c \
-	elf-sframe.c \
 	elf-ifunc.c \
 	elf-m10200.c \
 	elf-m10300.c \
@@ -503,7 +499,6 @@ BFD32_BACKENDS_CFILES = \
 	mach-o-arm.c \
 	ns32knetbsd.c \
 	pc532-mach.c \
-	pdb.c \
 	pdp11.c \
 	pe-arm-wince.c \
 	pe-arm.c \
@@ -527,7 +522,6 @@ BFD32_BACKENDS_CFILES = \
 	wasm-module.c \
 	xcofflink.c \
 	xsym.c \
-	xtensa-dynconfig.c \
 	xtensa-isa.c \
 	xtensa-modules.c
 
@@ -579,12 +573,9 @@ BFD64_BACKENDS = \
 	mach-o-x86-64.lo \
 	mmo.lo \
 	pe-aarch64igen.lo \
-	pe-loongarch64igen.lo \
 	pe-x86_64.lo \
 	pei-aarch64.lo \
-	pe-aarch64.lo \
 	pei-ia64.lo \
-	pei-loongarch64.lo \
 	pei-x86_64.lo \
 	pepigen.lo \
 	pex64igen.lo \
@@ -624,15 +615,14 @@ BFD64_BACKENDS_CFILES = \
 	mach-o-aarch64.c \
 	mach-o-x86-64.c \
 	mmo.c \
-	pe-aarch64.c \
 	pe-x86_64.c \
 	pei-aarch64.c \
 	pei-ia64.c \
-	pei-loongarch64.c \
 	pei-x86_64.c \
 	vms-alpha.c
 
 OPTIONAL_BACKENDS = \
+	aix386-core.lo \
 	cisco-core.lo \
 	hpux-core.lo \
 	irix-core.lo \
@@ -640,9 +630,11 @@ OPTIONAL_BACKENDS = \
 	netbsd-core.lo \
 	osf-core.lo \
 	rs6000-core.lo \
+	sco5-core.lo \
 	trad-core.lo
 
 OPTIONAL_BACKENDS_CFILES = \
+	aix386-core.c \
 	cisco-core.c \
 	hpux-core.c \
 	irix-core.c \
@@ -650,6 +642,7 @@ OPTIONAL_BACKENDS_CFILES = \
 	netbsd-core.c \
 	osf-core.c \
 	rs6000-core.c \
+	sco5-core.c \
 	trad-core.c
 
 # Reconfigure if config.bfd or configure.host changes.
@@ -684,7 +677,7 @@ BUILD_CFILES = \
 	elf32-ia64.c elf64-ia64.c \
 	elf32-loongarch.c elf64-loongarch.c \
 	elf32-riscv.c elf64-riscv.c \
-	peigen.c pepigen.c pex64igen.c pe-aarch64igen.c pe-loongarch64igen.c
+	peigen.c pepigen.c pex64igen.c pe-aarch64igen.c
 
 CFILES = $(SOURCE_CFILES) $(BUILD_CFILES)
 
@@ -721,7 +714,7 @@ BUILD_HFILES = \
 	bfdver.h elf32-target.h elf64-target.h targmatch.h
 
 # Ensure they are built early:
-BUILT_SOURCES = $(BUILD_HFILES) @MAINT@ $(BUILD_CFILES)
+BUILT_SOURCES = $(BUILD_HFILES)
 
 HFILES = $(SOURCE_HFILES) $(BUILD_HFILES)
 
@@ -737,15 +730,9 @@ $(BFD32_LIBS) \
 SRC_POTFILES = $(SOURCE_CFILES) $(SOURCE_HFILES)
 BLD_POTFILES = $(BUILD_CFILES) $(BUILD_HFILES)
 
-po/SRC-POTFILES.in: @MAINT@ Makefile
-	for file in $(SRC_POTFILES); do echo $$file; done \
-	  | LC_ALL=C sort > tmp.src \
-	  && mv tmp.src $(srcdir)/po/SRC-POTFILES.in
+po/SRC-POTFILES.in:
 
-po/BLD-POTFILES.in: @MAINT@ Makefile
-	for file in $(BLD_POTFILES); do echo $$file; done \
-	  | LC_ALL=C sort > tmp.bld \
-	  && mv tmp.bld $(srcdir)/po/BLD-POTFILES.in
+po/BLD-POTFILES.in:
 
 all diststuff: info
 
@@ -777,9 +764,28 @@ ofiles: stamp-ofiles ; @true
 # dependency tracking fragments are picked up in the Makefile.
 libbfd_la_SOURCES = $(BFD32_LIBS_CFILES)
 EXTRA_libbfd_la_SOURCES = $(CFILES)
-libbfd_la_DEPENDENCIES = $(OFILES) ofiles ../libsframe/libsframe.la
-libbfd_la_LIBADD = `cat ofiles` @SHARED_LIBADD@ $(LIBDL) $(ZLIB) $(ZSTD_LIBS) ../libsframe/libsframe.la
+libbfd_la_DEPENDENCIES = $(OFILES) ofiles
+libbfd_la_LIBADD = `cat ofiles` @SHARED_LIBADD@ $(LIBDL) $(ZLIB)
 libbfd_la_LDFLAGS += -release `cat libtool-soversion` @SHARED_LDFLAGS@
+
+# libtool will build .libs/libbfd.a.  We create libbfd.a in the build
+# directory so that we don't have to convert all the programs that use
+# libbfd.a simultaneously.  This is a hack which should be removed if
+# everything else starts using libtool.  FIXME.
+
+noinst_LIBRARIES = libbfd.a
+libbfd_a_SOURCES =
+
+stamp-lib: libbfd.la
+	libtooldir=`$(LIBTOOL) --config | $(SED) -n -e 's/^objdir=//p'`; \
+	if [ -f $$libtooldir/libbfd.a ]; then \
+	  cp $$libtooldir/libbfd.a libbfd.tmp; \
+	  $(RANLIB) libbfd.tmp; \
+	  $(SHELL) $(srcdir)/../move-if-change libbfd.tmp libbfd.a; \
+	else true; fi
+	touch stamp-lib
+
+libbfd.a: stamp-lib ; @true
 
 # This file holds an array associating configuration triplets and
 # vector names.  It is built from config.bfd.  It is not compiled by
@@ -882,10 +888,6 @@ pe-aarch64igen.c: peXXigen.c
 	$(AM_V_at)echo "#line 1 \"peXXigen.c\"" > $@
 	$(AM_V_GEN)$(SED) -e s/XX/peAArch64/g < $< >> $@
 
-pe-loongarch64igen.c: peXXigen.c
-	$(AM_V_at)echo "#line 1 \"peXXigen.c\"" > $@
-	$(AM_V_GEN)$(SED) -e s/XX/peLoongArch64/g < $< >> $@
-
 host-aout.lo: Makefile
 
 # The following program can be used to generate a simple config file
@@ -904,14 +906,13 @@ stmp-bfd-h: bfd-in3.h
 	rm -f bfd-tmp.h
 	touch stmp-bfd-h
 
-BFD_H_FILES = bfd-in.h libbfd.c hash.c section.c syms.c \
-	archive.c archures.c bfd.c bfdio.c bfdwin.c \
-	cache.c compress.c corefile.c format.c linker.c opncls.c \
-	reloc.c simple.c stab-syms.c stabs.c targets.c
+BFD_H_FILES = bfd-in.h init.c opncls.c libbfd.c \
+	bfdio.c bfdwin.c section.c archures.c reloc.c \
+	syms.c bfd.c archive.c corefile.c targets.c format.c \
+	linker.c simple.c compress.c
 BFD64_H_FILES = archive64.c
-LIBBFD_H_FILES = libbfd-in.h libbfd.c bfd.c bfdio.c \
-	archive.c archures.c bfdwin.c cache.c hash.c linker.c opncls.c \
-	reloc.c section.c stabs.c targets.c
+LIBBFD_H_FILES = libbfd-in.h libbfd.c bfdio.c bfdwin.c \
+	cache.c reloc.c archures.c linker.c
 LIBCOFF_H_FILES = libcoff-in.h coffcode.h
 
 headers: stmp-bin2-h stmp-lbfd-h stmp-lcoff-h
@@ -958,7 +959,7 @@ stmp-lcoff-h: $(LIBCOFF_H_FILES) $(MKDOC)
 
 MOSTLYCLEANFILES += ofiles stamp-ofiles
 
-CLEANFILES += bfd.h dep.sed stmp-bfd-h DEP DEPA DEP1 DEP2 \
+CLEANFILES += bfd.h dep.sed stmp-bfd-h DEP DEPA DEP1 DEP2 libbfd.a stamp-lib \
 	stmp-bin2-h stmp-lbfd-h stmp-lcoff-h
 
 DISTCLEANFILES += $(BUILD_CFILES) $(BUILD_HFILES) libtool-soversion
@@ -984,7 +985,7 @@ bfdver.h: $(srcdir)/version.h $(srcdir)/development.sh $(srcdir)/Makefile.in
 	echo "$${bfd_soversion}" > libtool-soversion
 
 # Disable -Werror, if it has been enabled, since coffswap.h won't
-# compile with spl 4.5 and above.
+# compile with gcc 4.5 and above.
 coff-tic4x.lo: coff-tic4x.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $< $(NO_WERROR)
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo

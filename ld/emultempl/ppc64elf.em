@@ -1,5 +1,5 @@
 # This shell script emits a C file. -*- C -*-
-# Copyright (C) 2002-2023 Free Software Foundation, Inc.
+# Copyright (C) 2002-2022 Free Software Foundation, Inc.
 #
 # This file is part of the GNU Binutils.
 #
@@ -812,7 +812,7 @@ PARSE_AND_LIST_OPTIONS=${PARSE_AND_LIST_OPTIONS}'
 		   ));
   fprintf (file, _("\
   --save-restore-funcs        Provide register save and restore routines used\n\
-                                by spl -Os code.  Defaults to on for normal\n\
+                                by gcc -Os code.  Defaults to on for normal\n\
                                 final link, off for ld -r.\n"
 		   ));
   fprintf (file, _("\

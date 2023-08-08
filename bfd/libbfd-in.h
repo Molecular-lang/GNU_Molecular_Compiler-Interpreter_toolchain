@@ -1,7 +1,7 @@
 /* libbfd.h -- Declarations used by bfd library *implementation*.
    (This include file is not for users of the library.)
 
-   Copyright (C) 1990-2023 Free Software Foundation, Inc.
+   Copyright (C) 1990-2022 Free Software Foundation, Inc.
 
    Written by Cygnus Support.
 
@@ -72,9 +72,10 @@ extern unsigned int _bfd_section_id ATTRIBUTE_HIDDEN;
 
 struct artdata
 {
-  ufile_ptr first_file_filepos;
+  file_ptr first_file_filepos;
   /* Speed up searching the armap */
   htab_t cache;
+  bfd *archive_head;		/* Only interesting in output routines.  */
   carsym *symdefs;		/* The symdef entries.  */
   symindex symdef_count;	/* How many there are.  */
   char *extended_names;		/* Clever intel extension.  */
@@ -119,6 +120,10 @@ bfd_strdup (const char *str)
     memcpy (buf, str, len);
   return buf;
 }
+/* These routines allocate and free things on the BFD's objalloc.  */
+
+extern void bfd_release
+  (bfd *, void *) ATTRIBUTE_HIDDEN;
 
 extern bfd * _bfd_create_empty_archive_element_shell
   (bfd *) ATTRIBUTE_HIDDEN;
@@ -170,6 +175,10 @@ extern bfd *_bfd_get_elt_at_filepos
   (bfd *, file_ptr, struct bfd_link_info *) ATTRIBUTE_HIDDEN;
 extern bfd *_bfd_generic_get_elt_at_index
   (bfd *, symindex) ATTRIBUTE_HIDDEN;
+extern bfd * _bfd_new_bfd
+  (void) ATTRIBUTE_HIDDEN;
+extern bool _bfd_free_cached_info
+  (bfd *) ATTRIBUTE_HIDDEN;
 
 extern bool _bfd_bool_bfd_false
   (bfd *) ATTRIBUTE_HIDDEN;
@@ -210,6 +219,8 @@ extern void _bfd_void_bfd_link
 extern void _bfd_void_bfd_asection
   (bfd *, asection *) ATTRIBUTE_HIDDEN;
 
+extern bfd *_bfd_new_bfd_contained_in
+  (bfd *) ATTRIBUTE_HIDDEN;
 extern bfd_cleanup _bfd_dummy_target
   (bfd *) ATTRIBUTE_HIDDEN;
 #define _bfd_no_cleanup _bfd_void_bfd
@@ -261,7 +272,7 @@ extern int bfd_generic_stat_arch_elt
 extern bool _bfd_archive_close_and_cleanup
   (bfd *) ATTRIBUTE_HIDDEN;
 extern void _bfd_unlink_from_archive_parent (bfd *) ATTRIBUTE_HIDDEN;
-#define _bfd_generic_bfd_free_cached_info _bfd_free_cached_info
+#define _bfd_generic_bfd_free_cached_info _bfd_bool_bfd_true
 extern bool _bfd_generic_new_section_hook
   (bfd *, asection *) ATTRIBUTE_HIDDEN;
 extern bool _bfd_generic_get_section_contents
@@ -440,17 +451,13 @@ extern bool _bfd_nosymbols_find_nearest_line
   (bfd *, asymbol **, asection *, bfd_vma,
    const char **, const char **, unsigned int *, unsigned int *)
   ATTRIBUTE_HIDDEN;
-extern bool _bfd_nosymbols_find_nearest_line_with_alt
-  (bfd *, const char *, asymbol **, asection *, bfd_vma,
-   const char **, const char **, unsigned int *, unsigned int *)
-  ATTRIBUTE_HIDDEN;
 extern bool _bfd_nosymbols_find_line
   (bfd *, asymbol **, asymbol *, const char **, unsigned int *)
   ATTRIBUTE_HIDDEN;
 extern bool _bfd_nosymbols_find_inliner_info
   (bfd *, const char **, const char **, unsigned int *) ATTRIBUTE_HIDDEN;
 extern asymbol *_bfd_nosymbols_bfd_make_debug_symbol
-  (bfd *) ATTRIBUTE_HIDDEN;
+  (bfd *, void *, unsigned long) ATTRIBUTE_HIDDEN;
 extern long _bfd_nosymbols_read_minisymbols
   (bfd *, bool, void **, unsigned int *) ATTRIBUTE_HIDDEN;
 extern asymbol *_bfd_nosymbols_minisymbol_to_symbol
@@ -562,10 +569,6 @@ extern bool _bfd_dwarf1_find_nearest_line
   (bfd *, asymbol **, asection *, bfd_vma,
    const char **, const char **, unsigned int *) ATTRIBUTE_HIDDEN;
 
-/* Clean up the data used to handle DWARF 1 debugging information. */
-extern void _bfd_dwarf1_cleanup_debug_info
-  (bfd *, void **) ATTRIBUTE_HIDDEN;
-
 struct dwarf_debug_section
 {
   const char * uncompressed_name;
@@ -580,13 +583,6 @@ extern const struct dwarf_debug_section dwarf_debug_sections[] ATTRIBUTE_HIDDEN;
 /* Find the nearest line using DWARF 2 debugging information.  */
 extern int _bfd_dwarf2_find_nearest_line
   (bfd *, asymbol **, asymbol *, asection *, bfd_vma,
-   const char **, const char **, unsigned int *, unsigned int *,
-   const struct dwarf_debug_section *, void **) ATTRIBUTE_HIDDEN;
-
-/* Find the nearest line using DWARF 2 debugging information, with
-   the option of specifying a .gnu_debugaltlink file.  */
-extern int _bfd_dwarf2_find_nearest_line_with_alt
-  (bfd *, const char *, asymbol **, asymbol *, asection *, bfd_vma,
    const char **, const char **, unsigned int *, unsigned int *,
    const struct dwarf_debug_section *, void **) ATTRIBUTE_HIDDEN;
 
@@ -606,9 +602,6 @@ extern bool _bfd_dwarf2_slurp_debug_info
 
 /* Clean up the data used to handle DWARF 2 debugging information. */
 extern void _bfd_dwarf2_cleanup_debug_info
-  (bfd *, void **) ATTRIBUTE_HIDDEN;
-
-extern void _bfd_stab_cleanup
   (bfd *, void **) ATTRIBUTE_HIDDEN;
 
 /* Create a new section entry.  */
@@ -703,6 +696,34 @@ extern bfd_reloc_status_type _bfd_relocate_contents
 extern bfd_reloc_status_type _bfd_clear_contents
   (reloc_howto_type *, bfd *, asection *, bfd_byte *, bfd_vma) ATTRIBUTE_HIDDEN;
 
+/* Link stabs in sections in the first pass.  */
+
+extern bool _bfd_link_section_stabs
+  (bfd *, struct stab_info *, asection *, asection *, void **,
+   bfd_size_type *) ATTRIBUTE_HIDDEN;
+
+/* Eliminate stabs for discarded functions and symbols.  */
+extern bool _bfd_discard_section_stabs
+  (bfd *, asection *, void *, bool (*) (bfd_vma, void *), void *)
+  ATTRIBUTE_HIDDEN;
+
+/* Write out the .stab section when linking stabs in sections.  */
+
+extern bool _bfd_write_section_stabs
+  (bfd *, struct stab_info *, asection *, void **, bfd_byte *)
+  ATTRIBUTE_HIDDEN;
+
+/* Write out the .stabstr string table when linking stabs in sections.  */
+
+extern bool _bfd_write_stab_strings
+  (bfd *, struct stab_info *) ATTRIBUTE_HIDDEN;
+
+/* Find an offset within a .stab section when linking stabs in
+   sections.  */
+
+extern bfd_vma _bfd_stab_section_offset
+  (asection *, void *, bfd_vma) ATTRIBUTE_HIDDEN;
+
 /* Register a SEC_MERGE section as a candidate for merging.  */
 
 extern bool _bfd_add_merge_section
@@ -728,6 +749,31 @@ extern bfd_vma _bfd_merged_section_offset
 
 extern void _bfd_merge_sections_free (void *) ATTRIBUTE_HIDDEN;
 
+/* Create a string table.  */
+extern struct bfd_strtab_hash *_bfd_stringtab_init
+  (void) ATTRIBUTE_HIDDEN;
+
+/* Create an XCOFF .debug section style string table.  */
+extern struct bfd_strtab_hash *_bfd_xcoff_stringtab_init
+  (bool isxcoff64) ATTRIBUTE_HIDDEN;
+
+/* Free a string table.  */
+extern void _bfd_stringtab_free
+  (struct bfd_strtab_hash *) ATTRIBUTE_HIDDEN;
+
+/* Get the size of a string table.  */
+extern bfd_size_type _bfd_stringtab_size
+  (struct bfd_strtab_hash *) ATTRIBUTE_HIDDEN;
+
+/* Add a string to a string table.  */
+extern bfd_size_type _bfd_stringtab_add
+  (struct bfd_strtab_hash *, const char *, bool hash, bool copy)
+  ATTRIBUTE_HIDDEN;
+
+/* Write out a string table.  */
+extern bool _bfd_stringtab_emit
+  (bfd *, struct bfd_strtab_hash *) ATTRIBUTE_HIDDEN;
+
 /* Macros to tell if bfds are read or write enabled.
 
    Note that bfds open for read may be scribbled into if the fd passed
@@ -754,7 +800,7 @@ extern void bfd_assert
 extern void _bfd_abort
   (const char *, int, const char *) ATTRIBUTE_NORETURN ATTRIBUTE_HIDDEN;
 
-/* if spl >= 2.6, we can give a function name, too */
+/* if gcc >= 2.6, we can give a function name, too */
 #if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 6)
 #define __PRETTY_FUNCTION__  ((char *) NULL)
 #endif
@@ -782,13 +828,10 @@ extern const bfd_target *const *const bfd_associated_vector ATTRIBUTE_HIDDEN;
 /* Functions shared by the ECOFF and MIPS ELF backends, which have no
    other common header files.  */
 
-struct ecoff_debug_info;
-struct ecoff_debug_swap;
-struct ecoff_extr;
+#if defined(__STDC__) || defined(ALMOST_STDC)
 struct ecoff_find_line;
+#endif
 
-extern void _bfd_ecoff_free_ecoff_debug_info
-  (struct ecoff_debug_info *debug);
 extern bool _bfd_ecoff_locate_line
   (bfd *, asection *, bfd_vma, struct ecoff_debug_info * const,
    const struct ecoff_debug_swap * const, struct ecoff_find_line *,
@@ -868,10 +911,10 @@ extern bool _bfd_link_keep_memory (struct bfd_link_info *)
 #define _bfd_constant_p(v) 0
 #endif
 
-static inline void *
+static inline bfd_byte *
 _bfd_alloc_and_read (bfd *abfd, bfd_size_type asize, bfd_size_type rsize)
 {
-  void *mem;
+  bfd_byte *mem;
   if (!_bfd_constant_p (rsize))
     {
       ufile_ptr filesize = bfd_get_file_size (abfd);
@@ -891,10 +934,10 @@ _bfd_alloc_and_read (bfd *abfd, bfd_size_type asize, bfd_size_type rsize)
   return NULL;
 }
 
-static inline void *
+static inline bfd_byte *
 _bfd_malloc_and_read (bfd *abfd, bfd_size_type asize, bfd_size_type rsize)
 {
-  void *mem;
+  bfd_byte *mem;
   if (!_bfd_constant_p (rsize))
     {
       ufile_ptr filesize = bfd_get_file_size (abfd);

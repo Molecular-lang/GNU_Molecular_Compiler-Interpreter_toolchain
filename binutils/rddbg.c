@@ -1,5 +1,5 @@
 /* rddbg.c -- Read debugging information into a generic form.
-   Copyright (C) 1995-2023 Free Software Foundation, Inc.
+   Copyright (C) 1995-2022 Free Software Foundation, Inc.
    Written by Ian Lance Taylor <ian@cygnus.com>.
 
    This file is part of GNU Binutils.
@@ -49,22 +49,19 @@ read_debugging_info (bfd *abfd, asymbol **syms, long symcount,
   void *dhandle;
   bool found;
 
-  dhandle = debug_init (abfd);
+  dhandle = debug_init ();
   if (dhandle == NULL)
-    return NULL;
-
-  if (!debug_set_filename (dhandle, bfd_get_filename (abfd)))
     return NULL;
 
   if (! read_section_stabs_debugging_info (abfd, syms, symcount, dhandle,
 					   &found))
-    return NULL;
+    goto err_exit;
 
   if (bfd_get_flavour (abfd) == bfd_target_aout_flavour)
     {
       if (! read_symbol_stabs_debugging_info (abfd, syms, symcount, dhandle,
 					      &found))
-	return NULL;
+	goto err_exit;
     }
 
   /* Try reading the COFF symbols if we didn't find any stabs in COFF
@@ -74,7 +71,7 @@ read_debugging_info (bfd *abfd, asymbol **syms, long symcount,
       && symcount > 0)
     {
       if (! parse_coff (abfd, syms, symcount, dhandle))
-	return NULL;
+	goto err_exit;
       found = true;
     }
 
@@ -83,6 +80,8 @@ read_debugging_info (bfd *abfd, asymbol **syms, long symcount,
       if (! no_messages)
 	non_fatal (_("%s: no recognized debugging information"),
 		   bfd_get_filename (abfd));
+    err_exit:
+      free (dhandle);
       return NULL;
     }
 
@@ -108,7 +107,6 @@ read_section_stabs_debugging_info (bfd *abfd, asymbol **syms, long symcount,
     };
   unsigned int i;
   void *shandle;
-  bool ret = false;
 
   *pfound = false;
   shandle = NULL;
@@ -119,37 +117,39 @@ read_section_stabs_debugging_info (bfd *abfd, asymbol **syms, long symcount,
 
       sec = bfd_get_section_by_name (abfd, names[i].secname);
       strsec = bfd_get_section_by_name (abfd, names[i].strsecname);
-      if (sec != NULL
-	  && (bfd_section_flags (sec) & SEC_HAS_CONTENTS) != 0
-	  && bfd_section_size (sec) >= 12
-	  && strsec != NULL
-	  && (bfd_section_flags (strsec) & SEC_HAS_CONTENTS) != 0)
+      if (sec != NULL && strsec != NULL)
 	{
 	  bfd_size_type stabsize, strsize;
 	  bfd_byte *stabs, *strings;
 	  bfd_byte *stab;
 	  bfd_size_type stroff, next_stroff;
 
-	  if (!bfd_malloc_and_get_section (abfd, sec, &stabs))
+	  stabsize = bfd_section_size (sec);
+	  stabs = (bfd_byte *) xmalloc (stabsize);
+	  if (! bfd_get_section_contents (abfd, sec, stabs, 0, stabsize))
 	    {
 	      fprintf (stderr, "%s: %s: %s\n",
 		       bfd_get_filename (abfd), names[i].secname,
 		       bfd_errmsg (bfd_get_error ()));
-	      goto out;
+	      free (shandle);
+	      free (stabs);
+	      return false;
 	    }
 
-	  if (!bfd_malloc_and_get_section (abfd, strsec, &strings))
+	  strsize = bfd_section_size (strsec);
+	  strings = (bfd_byte *) xmalloc (strsize + 1);
+	  if (! bfd_get_section_contents (abfd, strsec, strings, 0, strsize))
 	    {
 	      fprintf (stderr, "%s: %s: %s\n",
 		       bfd_get_filename (abfd), names[i].strsecname,
 		       bfd_errmsg (bfd_get_error ()));
+	      free (shandle);
+	      free (strings);
 	      free (stabs);
-	      goto out;
+	      return false;
 	    }
 	  /* Zero terminate the strings table, just in case.  */
-	  strsize = bfd_section_size (strsec);
-	  if (strsize != 0)
-	    strings [strsize - 1] = 0;
+	  strings [strsize] = 0;
 	  if (shandle == NULL)
 	    {
 	      shandle = start_stab (dhandle, abfd, true, syms, symcount);
@@ -157,7 +157,7 @@ read_section_stabs_debugging_info (bfd *abfd, asymbol **syms, long symcount,
 		{
 		  free (strings);
 		  free (stabs);
-		  goto out;
+		  return false;
 		}
 	    }
 
@@ -165,7 +165,6 @@ read_section_stabs_debugging_info (bfd *abfd, asymbol **syms, long symcount,
 
 	  stroff = 0;
 	  next_stroff = 0;
-	  stabsize = bfd_section_size (sec);
 	  /* PR 17512: file: 078-60391-0.001:0.1.  */
 	  for (stab = stabs; stab <= (stabs + stabsize) - 12; stab += 12)
 	    {
@@ -241,35 +240,39 @@ read_section_stabs_debugging_info (bfd *abfd, asymbol **syms, long symcount,
 
 		  save_stab (type, desc, value, s);
 
-		  if (!parse_stab (dhandle, shandle, type, desc, value, s))
+		  if (! parse_stab (dhandle, shandle, type, desc, value, s))
 		    {
 		      stab_context ();
 		      free_saved_stabs ();
 		      free (f);
+		      free (shandle);
 		      free (stabs);
 		      free (strings);
-		      goto out;
+		      return false;
 		    }
 
-		  free (f);
+		  /* Don't free f, since I think the stabs code
+		     expects strings to hang around.  This should be
+		     straightened out.  FIXME.  */
 		}
 	    }
 
 	  free_saved_stabs ();
 	  free (stabs);
-	  free (strings);
+
+	  /* Don't free strings, since I think the stabs code expects
+	     the strings to hang around.  This should be straightened
+	     out.  FIXME.  */
 	}
     }
-  ret = true;
 
- out:
   if (shandle != NULL)
     {
-      if (! finish_stab (dhandle, shandle, ret))
+      if (! finish_stab (dhandle, shandle))
 	return false;
     }
 
-  return ret;
+  return true;
 }
 
 /* Read stabs in the symbol table.  */
@@ -305,7 +308,7 @@ read_symbol_stabs_debugging_info (bfd *abfd, asymbol **syms, long symcount,
 
 	  s = i.name;
 	  if (s == NULL || strlen (s) < 1)
-	    break;
+	    return false;
 	  f = NULL;
 
 	  while (strlen (s) > 0
@@ -326,28 +329,29 @@ read_symbol_stabs_debugging_info (bfd *abfd, asymbol **syms, long symcount,
 
 	  save_stab (i.stab_type, i.stab_desc, i.value, s);
 
-	  if (!parse_stab (dhandle, shandle, i.stab_type, i.stab_desc,
-			   i.value, s))
+	  if (! parse_stab (dhandle, shandle, i.stab_type, i.stab_desc,
+			    i.value, s))
 	    {
 	      stab_context ();
-	      free (f);
-	      break;
+	      free_saved_stabs ();
+	      return false;
 	    }
 
-	  free (f);
+	  /* Don't free f, since I think the stabs code expects
+	     strings to hang around.  This should be straightened out.
+	     FIXME.  */
 	}
     }
-  bool ret = ps >= symend;
 
   free_saved_stabs ();
 
   if (shandle != NULL)
     {
-      if (! finish_stab (dhandle, shandle, ret))
+      if (! finish_stab (dhandle, shandle))
 	return false;
     }
 
-  return ret;
+  return true;
 }
 
 /* Record stabs strings, so that we can give some context for errors.  */
@@ -406,7 +410,7 @@ stab_context (void)
 	  else
 	    fprintf (stderr, "%-6d", stabp->type);
 	  fprintf (stderr, " %-6d ", stabp->desc);
-	  fprintf (stderr, "%08" PRIx64, (uint64_t) stabp->value);
+	  fprintf_vma (stderr, stabp->value);
 	  if (stabp->type != 0)
 	    fprintf (stderr, " %s", stabp->string);
 	  fprintf (stderr, "\n");

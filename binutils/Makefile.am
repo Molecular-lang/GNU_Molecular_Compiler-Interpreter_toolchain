@@ -1,26 +1,9 @@
 ## Process this file with automake to generate Makefile.in
-#
-#   Copyright (C) 2012-2023 Free Software Foundation, Inc.
-#
-# This file is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; see the file COPYING3.  If not see
-# <http://www.gnu.org/licenses/>.
-#
 
 AUTOMAKE_OPTIONS = dejagnu no-dist foreign subdir-objects info-in-builddir no-texinfo.tex
 ACLOCAL_AMFLAGS = -I .. -I ../config -I ../bfd
 
-SUBDIRS = po
+SUBDIRS =
 
 tooldir = $(exec_prefix)/$(target_alias)
 
@@ -54,8 +37,8 @@ DEBUGINFOD_LIBS = @DEBUGINFOD_LIBS@
 WARN_CFLAGS = @WARN_CFLAGS@
 WARN_CFLAGS_FOR_BUILD = @WARN_CFLAGS_FOR_BUILD@
 NO_WERROR = @NO_WERROR@
-AM_CFLAGS = $(WARN_CFLAGS) $(ZLIBINC) $(ZSTD_CFLAGS)
-AM_CFLAGS_FOR_BUILD = $(WARN_CFLAGS_FOR_BUILD) $(ZLIBINC) $(ZSTD_CFLAGS)
+AM_CFLAGS = $(WARN_CFLAGS) $(ZLIBINC)
+AM_CFLAGS_FOR_BUILD = $(WARN_CFLAGS_FOR_BUILD) $(ZLIBINC)
 LIBICONV = @LIBICONV@
 
 # these two are almost the same program
@@ -98,7 +81,7 @@ EXTRA_SCRIPTS = embedspu
 ## Test programs.
 BFDTEST1_PROG = bfdtest1
 BFDTEST2_PROG = bfdtest2
-GENTESTDLLS_PROG = testsuite/gentestdlls
+GENTESTDLLS_PROG =
 
 TEST_PROGS = $(BFDTEST1_PROG) $(BFDTEST2_PROG) $(GENTESTDLLS_PROG)
 
@@ -140,7 +123,7 @@ CFILES = \
 	is-ranlib.c is-strip.c maybe-ranlib.c maybe-strip.c \
 	nm.c not-ranlib.c not-strip.c \
 	objcopy.c objdump.c prdbg.c \
-	od-elf32_avr.c od-macho.c od-pe.c od-xcoff.c \
+	od-elf32_avr.c od-macho.c od-xcoff.c \
 	rclex.c rdcoff.c rddbg.c readelf.c rename.c \
 	resbin.c rescoff.c resrc.c resres.c \
 	size.c srconv.c stabs.c strings.c sysdump.c \
@@ -176,48 +159,30 @@ LIBCTF =
 LIBCTF_NOBFD =
 endif
 
-LIBSFRAME = ../libsframe/libsframe.la
-
 LIBIBERTY = ../libiberty/libiberty.a
 
 POTFILES = $(CFILES) $(DEBUG_SRCS) $(HFILES)
-po/POTFILES.in: @MAINT@ Makefile
-	for f in $(POTFILES); do echo $$f; done | LC_ALL=C sort > tmp \
-	  && mv tmp $(srcdir)/po/POTFILES.in
+po/POTFILES.in:
 
 EXPECT = expect
 RUNTEST = runtest
 
 CC_FOR_TARGET = ` \
-  if [ -f $$r/../spl/xspl ] ; then \
+  if [ -f $$r/../gcc/xgcc ] ; then \
     if [ -f $$r/../newlib/Makefile ] ; then \
-      echo $$r/../spl/xspl -B$$r/../spl/ -idirafter $$r/../newlib/targ-include -idirafter $${srcroot}/../newlib/libc/include -nostdinc; \
+      echo $$r/../gcc/xgcc -B$$r/../gcc/ -idirafter $$r/../newlib/targ-include -idirafter $${srcroot}/../newlib/libc/include -nostdinc; \
     else \
-      echo $$r/../spl/xspl -B$$r/../spl/; \
+      echo $$r/../gcc/xgcc -B$$r/../gcc/; \
     fi; \
   else \
     if [ "@host@" = "@target@" ] ; then \
       echo $(CC); \
     else \
-      echo spl | sed '$(transform)'; \
+      echo gcc | sed '$(transform)'; \
     fi; \
   fi`
 
-check-DEJAGNU: site.exp
-	srcdir=`cd $(srcdir) && pwd`; export srcdir; \
-	r=`pwd`; export r; \
-	LC_ALL=C; export LC_ALL; \
-	EXPECT=$(EXPECT); export EXPECT; \
-	runtest=$(RUNTEST); \
-	if $(SHELL) -c "$$runtest --version" > /dev/null 2>&1; then \
-	  $$runtest --tool $(DEJATOOL) --srcdir $${srcdir}/testsuite \
-		CC="$(CC)" CFLAGS="$(CFLAGS)" \
-		CC_FOR_BUILD="$(CC_FOR_BUILD)" \
-		CC_FOR_TARGET="$(CC_FOR_TARGET)" \
-		CFLAGS_FOR_TARGET="$(filter-out -ffile-prefix-map=%,$(CFLAGS_FOR_TARGET)) -O0" \
-		$(RUNTESTFLAGS); \
-	else echo "WARNING: could not find \`runtest'" 1>&2; :;\
-	fi
+check-DEJAGNU:
 
 development.exp: $(BFDDIR)/development.sh
 	$(AM_V_GEN)$(EGREP) "(development|experimental)=" $(BFDDIR)/development.sh  \
@@ -230,7 +195,7 @@ installcheck-local:
 # which depends on libintl, since we don't know whether LIBINTL_DEP will be
 # non-empty until configure time.  Ugh!
 size_DEPENDENCIES =      $(LIBINTL_DEP) $(LIBIBERTY) $(BFDLIB)
-objdump_DEPENDENCIES =   $(LIBINTL_DEP) $(LIBIBERTY) $(BFDLIB) $(OPCODES) $(LIBCTF) $(OBJDUMP_PRIVATE_OFILES) $(LIBSFRAME)
+objdump_DEPENDENCIES =   $(LIBINTL_DEP) $(LIBIBERTY) $(BFDLIB) $(OPCODES) $(LIBCTF) $(OBJDUMP_PRIVATE_OFILES)
 nm_new_DEPENDENCIES =    $(LIBINTL_DEP) $(LIBIBERTY) $(BFDLIB)
 ar_DEPENDENCIES =        $(LIBINTL_DEP) $(LIBIBERTY) $(BFDLIB)
 strings_DEPENDENCIES =   $(LIBINTL_DEP) $(LIBIBERTY) $(BFDLIB)
@@ -245,7 +210,7 @@ dlltool_DEPENDENCIES =   $(LIBINTL_DEP) $(LIBIBERTY) $(BFDLIB)
 windres_DEPENDENCIES =   $(LIBINTL_DEP) $(LIBIBERTY) $(BFDLIB)
 windmc_DEPENDENCIES =    $(LIBINTL_DEP) $(LIBIBERTY) $(BFDLIB)
 addr2line_DEPENDENCIES = $(LIBINTL_DEP) $(LIBIBERTY) $(BFDLIB)
-readelf_DEPENDENCIES =   $(LIBINTL_DEP) $(LIBIBERTY) $(LIBCTF_NOBFD) $(LIBSFRAME)
+readelf_DEPENDENCIES =   $(LIBINTL_DEP) $(LIBIBERTY) $(LIBCTF_NOBFD)
 elfedit_DEPENDENCIES = $(LIBINTL_DEP) $(LIBIBERTY)
 dllwrap_DEPENDENCIES =   $(LIBINTL_DEP) $(LIBIBERTY)
 bfdtest1_DEPENDENCIES =  $(LIBINTL_DEP) $(LIBIBERTY) $(BFDLIB)
@@ -260,7 +225,7 @@ objcopy_SOURCES = objcopy.c not-strip.c rename.c $(WRITE_DEBUG_SRCS) $(BULIBS)
 strings_SOURCES = strings.c $(BULIBS)
 
 readelf_SOURCES = readelf.c version.c unwind-ia64.c dwarf.c demanguse.c $(ELFLIBS)
-readelf_LDADD   = $(LIBCTF_NOBFD) $(LIBINTL) $(LIBIBERTY) $(ZLIB) $(ZSTD_LIBS) $(DEBUGINFOD_LIBS) $(MSGPACK_LIBS) $(LIBSFRAME)
+readelf_LDADD   = $(LIBCTF_NOBFD) $(LIBINTL) $(LIBIBERTY) $(ZLIB) $(DEBUGINFOD_LIBS) $(MSGPACK_LIBS)
 
 elfedit_SOURCES = elfedit.c version.c $(ELFLIBS)
 elfedit_LDADD = $(LIBINTL) $(LIBIBERTY)
@@ -270,8 +235,8 @@ strip_new_SOURCES = objcopy.c is-strip.c rename.c $(WRITE_DEBUG_SRCS) $(BULIBS)
 nm_new_SOURCES = nm.c demanguse.c $(BULIBS)
 
 objdump_SOURCES = objdump.c dwarf.c prdbg.c demanguse.c $(DEBUG_SRCS) $(BULIBS) $(ELFLIBS)
-EXTRA_objdump_SOURCES = od-elf32_avr.c od-macho.c od-xcoff.c od-pe.c
-objdump_LDADD = $(OBJDUMP_PRIVATE_OFILES) $(OPCODES) $(LIBCTF) $(BFDLIB) $(LIBIBERTY) $(LIBINTL) $(DEBUGINFOD_LIBS) $(LIBSFRAME)
+EXTRA_objdump_SOURCES = od-xcoff.c
+objdump_LDADD = $(OBJDUMP_PRIVATE_OFILES) $(OPCODES) $(LIBCTF) $(BFDLIB) $(LIBIBERTY) $(LIBINTL) $(DEBUGINFOD_LIBS)
 
 objdump.@OBJEXT@:objdump.c
 if am__fastdepCC
@@ -570,5 +535,3 @@ install-exec-local: install-binPROGRAMS $(bin_PROGRAMS) $(noinst_PROGRAMS)
 	  else true; \
 	  fi; \
 	done
-
-include doc/local.mk

@@ -1,5 +1,5 @@
 /* ldmisc.c
-   Copyright (C) 1991-2023 Free Software Foundation, Inc.
+   Copyright (C) 1991-2022 Free Software Foundation, Inc.
    Written by Steve Chamberlain of Cygnus Support.
 
    This file is part of the GNU Binutils.
@@ -47,12 +47,11 @@
  %H like %C but in addition emit section+offset
  %P print program name
  %V hex bfd_vma
- %W hex bfd_vma with 0x with no leading zeros taking up 10 spaces
+ %W hex bfd_vma with 0x with no leading zeros taking up 8 spaces
  %X no object output, fail return
  %d integer, like printf
  %ld long, like printf
  %lu unsigned long, like printf
- %lx unsigned long, like printf
  %p native (host) void* pointer, like printf
  %pA section name from a section
  %pB filename from a bfd
@@ -64,7 +63,6 @@
  %s arbitrary string, like printf
  %u integer, like printf
  %v hex bfd_vma, no leading zeros
- %x integer, like printf
 */
 
 void
@@ -97,9 +95,6 @@ vfinfo (FILE *fp, const char *fmt, va_list ap, bool is_warning)
       } type;
   } args[9];
 
-  if (is_warning && config.no_warnings)
-    return;
-  
   for (arg_no = 0; arg_no < sizeof (args) / sizeof (args[0]); arg_no++)
     args[arg_no].type = Bad;
 
@@ -154,12 +149,11 @@ vfinfo (FILE *fp, const char *fmt, va_list ap, bool is_warning)
 
 	    case 'd':
 	    case 'u':
-	    case 'x':
 	      arg_type = Int;
 	      break;
 
 	    case 'l':
-	      if (*scan == 'd' || *scan == 'u' || *scan == 'x')
+	      if (*scan == 'd' || *scan == 'u')
 		{
 		  ++scan;
 		  arg_type = Long;
@@ -247,36 +241,51 @@ vfinfo (FILE *fp, const char *fmt, va_list ap, bool is_warning)
 	    case 'V':
 	      /* hex bfd_vma */
 	      {
-		char buf[32];
-		bfd_vma value;
-
-		value = args[arg_no].v;
+		bfd_vma value = args[arg_no].v;
 		++arg_count;
-		bfd_sprintf_vma (link_info.output_bfd, buf, value);
-		fprintf (fp, "%s", buf);
+		fprintf_vma (fp, value);
 	      }
 	      break;
 
 	    case 'v':
 	      /* hex bfd_vma, no leading zeros */
 	      {
-		uint64_t value = args[arg_no].v;
+		char buf[100];
+		char *p = buf;
+		bfd_vma value = args[arg_no].v;
 		++arg_count;
-		fprintf (fp, "%" PRIx64, value);
+		sprintf_vma (p, value);
+		while (*p == '0')
+		  p++;
+		if (!*p)
+		  p--;
+		fputs (p, fp);
 	      }
 	      break;
 
 	    case 'W':
 	      /* hex bfd_vma with 0x with no leading zeroes taking up
-		 10 spaces (including the 0x).  */
+		 8 spaces.  */
 	      {
-		char buf[32];
-		uint64_t value;
+		char buf[100];
+		bfd_vma value;
+		char *p;
+		int len;
 
 		value = args[arg_no].v;
 		++arg_count;
-		sprintf (buf, "0x%" PRIx64, value);
-		fprintf (fp, "%10s", buf);
+		sprintf_vma (buf, value);
+		for (p = buf; *p == '0'; ++p)
+		  ;
+		if (*p == '\0')
+		  --p;
+		len = strlen (p);
+		while (len < 8)
+		  {
+		    putc (' ', fp);
+		    ++len;
+		  }
+		fprintf (fp, "0x%s", p);
 	      }
 	      break;
 
@@ -547,12 +556,6 @@ vfinfo (FILE *fp, const char *fmt, va_list ap, bool is_warning)
 	      ++arg_count;
 	      break;
 
-	    case 'x':
-	      /* unsigned integer, like printf */
-	      fprintf (fp, "%x", args[arg_no].i);
-	      ++arg_count;
-	      break;
-
 	    case 'l':
 	      if (*fmt == 'd')
 		{
@@ -564,13 +567,6 @@ vfinfo (FILE *fp, const char *fmt, va_list ap, bool is_warning)
 	      else if (*fmt == 'u')
 		{
 		  fprintf (fp, "%lu", args[arg_no].l);
-		  ++arg_count;
-		  ++fmt;
-		  break;
-		}
-	      else if (*fmt == 'x')
-		{
-		  fprintf (fp, "%lx", args[arg_no].l);
 		  ++arg_count;
 		  ++fmt;
 		  break;
@@ -669,9 +665,9 @@ lfinfo (FILE *file, const char *fmt, ...)
 /* Functions to print the link map.  */
 
 void
-print_spaces (int count)
+print_space (void)
 {
-  fprintf (config.map_file, "%*s", count, "");
+  fprintf (config.map_file, " ");
 }
 
 void

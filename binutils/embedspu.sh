@@ -1,7 +1,7 @@
 #! /bin/sh
 # Embed an SPU ELF executable into a PowerPC object file.
 #
-# Copyright (C) 2006-2023 Free Software Foundation, Inc.
+# Copyright (C) 2006-2022 Free Software Foundation, Inc.
 #
 # This file is part of GNU Binutils.
 #
@@ -83,11 +83,11 @@ main ()
 {
   parse_args "$@"
 
-  # Find a powerpc spl.  Support running from a combined tree build.
-  if test -x "$mydir/../spl/xspl"; then
-    CC="$mydir/../spl/xspl -B$mydir/../spl/"
+  # Find a powerpc gcc.  Support running from a combined tree build.
+  if test -x "$mydir/../gcc/xgcc"; then
+    CC="$mydir/../gcc/xgcc -B$mydir/../gcc/"
   else
-    find_prog spl
+    find_prog gcc
     if test $? -ne 0; then
       echo "Cannot find $prog"
       exit 1
@@ -108,7 +108,9 @@ main ()
   READELF="$prog"
 
   # Sanity check the input file
-  if test `${READELF} -h ${INFILE} | sed -n -e '/Class:.*ELF32/p' -e '/Type:.*EXEC/p' -e '/Machine:.*SPU/p' -e '/Machine:.*17/p' | sed -n '$='` != 3
+  if ! ${READELF} -h ${INFILE} | grep 'Class:.*ELF32' >/dev/null 2>/dev/null \
+     || ! ${READELF} -h ${INFILE} | grep 'Type:.*EXEC' >/dev/null 2>/dev/null \
+     || ! ${READELF} -h ${INFILE} | egrep 'Machine:.*(SPU|17)' >/dev/null 2>/dev/null
   then
     echo "${INFILE}: Does not appear to be an SPU executable"
     exit 1

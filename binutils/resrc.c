@@ -1,5 +1,5 @@
 /* resrc.c -- read and write Windows rc files.
-   Copyright (C) 1997-2023 Free Software Foundation, Inc.
+   Copyright (C) 1997-2022 Free Software Foundation, Inc.
    Written by Ian Lance Taylor, Cygnus Support.
    Rewritten by Kai Tietz, Onevision.
 
@@ -75,7 +75,7 @@
 
 /* The default preprocessor.  */
 
-#define DEFAULT_PREPROCESSOR_CMD "spl"
+#define DEFAULT_PREPROCESSOR_CMD "gcc"
 #define DEFAULT_PREPROCESSOR_ARGS "-E -xc -DRC_INVOKED"
 
 /* We read the directory entries in a cursor or icon file into
@@ -202,7 +202,7 @@ run_cmd (char *cmd, const char *redir)
   int i;
   const char **argv;
   char *errmsg_fmt = NULL, *errmsg_arg = NULL;
-  char *temp_base = make_temp_file (NULL);
+  char *temp_base = choose_temp_base ();
   int in_quote;
   char sep;
   int redir_handle = -1;
@@ -316,7 +316,7 @@ open_input_stream (char *cmd)
     {
       char *fileprefix;
 
-      fileprefix = make_temp_file (NULL);
+      fileprefix = choose_temp_base ();
       cpp_temp_file = (char *) xmalloc (strlen (fileprefix) + 5);
       sprintf (cpp_temp_file, "%s.irc", fileprefix);
       free (fileprefix);
@@ -525,7 +525,7 @@ read_rc_file (const char *filename, const char *preprocessor,
 
       if (dash)
 	{
-	  /* First, try looking for a prefixed spl in the windres
+	  /* First, try looking for a prefixed gcc in the windres
 	     directory, with the same prefix as windres */
 
 	  cpp_pipe = look_for_default (cmd, program_name, dash - program_name + 1,
@@ -534,7 +534,7 @@ read_rc_file (const char *filename, const char *preprocessor,
 
       if (slash && ! cpp_pipe)
 	{
-	  /* Next, try looking for a spl in the same directory as
+	  /* Next, try looking for a gcc in the same directory as
              that windres */
 
 	  cpp_pipe = look_for_default (cmd, program_name, slash - program_name + 1,

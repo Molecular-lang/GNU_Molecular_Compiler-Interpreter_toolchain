@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl
-dnl   Copyright (C) 2012-2023 Free Software Foundation, Inc.
+dnl   Copyright (C) 2012-2022 Free Software Foundation, Inc.
 dnl
 dnl This file is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
@@ -109,21 +109,6 @@ AC_DEFINE_UNQUOTED(DEFAULT_FOR_FOLLOW_LINKS, $default_for_follow_links,
 		   [Have readelf and objdump follow debug links by default])
 
 
-
-
-AC_ARG_ENABLE(colored-disassembly,
-[AS_HELP_STRING([--enable-colored-disassembly],
-	[Have objdump use colors in its disassembly by default])], [
-if test "${enableval}" = no; then
-  default_for_colored_disassembly=0
-else
-  default_for_colored_disassembly=1
-fi], [default_for_colored_disassembly=0])
-
-AC_DEFINE_UNQUOTED(DEFAULT_FOR_COLORED_DISASSEMBLY, $default_for_colored_disassembly,
-		   [Have objdump use colors in its disassembly by default])
-
-
 AC_DEBUGINFOD
 
 GCC_ENABLE([libctf], [yes], [], [Handle .ctf type-info sections])
@@ -189,6 +174,9 @@ case "${host}" in
 esac
 AC_SUBST(DEMANGLER_NAME)
 
+AC_CHECK_SIZEOF([long])
+AC_CHECK_SIZEOF([long long])
+
 # We use headers from include/ that check various HAVE_*_H macros, thus
 # should ensure they are set by configure.  This is true even when C99
 # guarantees they are available.
@@ -198,7 +186,7 @@ AC_CHECK_HEADERS(fcntl.h inttypes.h stdint.h sys/file.h \
 		 sys/stat.h sys/time.h sys/types.h unistd.h)
 AC_HEADER_SYS_WAIT
 AC_FUNC_MMAP
-AC_CHECK_FUNCS(fseeko fseeko64 getc_unlocked mkdtemp mkstemp utimensat utimes)
+AC_CHECK_FUNCS(getc_unlocked mkdtemp mkstemp sbrk utimensat utimes)
 
 AC_MSG_CHECKING([for mbstate_t])
 AC_TRY_COMPILE([#include <wchar.h>],
@@ -278,13 +266,12 @@ if test $bu_cv_header_utime_h = yes; then
   AC_DEFINE(HAVE_GOOD_UTIME_H, 1, [Does <utime.h> define struct utimbuf?])
 fi
 
-AC_CHECK_DECLS([asprintf, environ, getc_unlocked, stpcpy, strnlen])
+AC_CHECK_DECLS([asprintf, environ, getc_unlocked, sbrk, stpcpy, strnlen])
 
-# Link in zlib/zstd if we can.  This allows us to read compressed debug
+# Link in zlib if we can.  This allows us to read compressed debug
 # sections.  This is used only by readelf.c (objdump uses bfd for
 # reading compressed sections).
 AM_ZLIB
-AC_ZSTD
 
 BFD_BINARY_FOPEN
 
@@ -294,11 +281,16 @@ AC_ARG_WITH([msgpack],
 	    [],
 	    [with_msgpack=auto])
 
-AS_IF([test "$with_msgpack" != no],
-  [PKG_CHECK_MODULES(MSGPACK, msgpack,
-    [AC_DEFINE([HAVE_MSGPACK], [1], [Define to 1 if msgpack is available.])],
-    [AS_IF([test "$with_msgpack" = yes],
-      [AC_MSG_ERROR([--with-msgpack was given, but msgpack is missing or unusable.])])])])
+
+if test "$with_msgpack" != no; then
+  PKG_CHECK_MODULES(MSGPACK, msgpack, [
+    AC_DEFINE([HAVE_MSGPACK], [1], [Define to 1 if msgpack is available.])
+  ], [
+      if test "$with_msgpack" = yes; then
+	AC_MSG_ERROR([--with-msgpack was given, but msgpack is missing or unusable.])
+      fi
+  ])
+fi
 
 # target-specific stuff:
 
@@ -348,23 +340,13 @@ do
 	fi
 	DLLTOOL_DEFS="$DLLTOOL_DEFS -DDLLTOOL_I386"
 	BUILD_DLLWRAP='$(DLLWRAP_PROG)$(EXEEXT)'
-	od_vectors="$od_vectors objdump_private_desc_xcoff objdump_private_desc_pe"
+	od_vectors="$od_vectors objdump_private_desc_xcoff"
     else
 	case $targ in
 	*-*-hms*) BUILD_SRCONV='$(SRCONV_PROG)' ;;
 	esac
 
 	case $targ in
-	aarch64-*-mingw*)
-	  BUILD_DLLTOOL='$(DLLTOOL_PROG)$(EXEEXT)'
-	  if test -z "$DLLTOOL_DEFAULT"; then
-	    DLLTOOL_DEFAULT="-DDLLTOOL_DEFAULT_AARCH64"
-	  fi
-	  DLLTOOL_DEFS="$DLLTOOL_DEFS -DDLLTOOL_AARCH64"
-	  BUILD_WINDRES='$(WINDRES_PROG)$(EXEEXT)'
-	  BUILD_WINDMC='$(WINDMC_PROG)$(EXEEXT)'
-	  BUILD_DLLWRAP='$(DLLWRAP_PROG)$(EXEEXT)'
-	  ;;
 	arm-wince-pe* | arm-*-wince | arm*-*-cegcc* | arm*-*-mingw32ce*)
   	  BUILD_DLLTOOL='$(DLLTOOL_PROG)$(EXEEXT)'
 	  if test -z "$DLLTOOL_DEFAULT"; then
@@ -441,6 +423,15 @@ changequote([,])dnl
 	spu-*-*)
 	  BUILD_MISC="${BUILD_MISC} "'bin2c$(EXEEXT_FOR_BUILD)'
 	  ;;
+	mips*-*-pe)
+  	  BUILD_DLLTOOL='$(DLLTOOL_PROG)$(EXEEXT)'
+	  if test -z "$DLLTOOL_DEFAULT"; then
+	    DLLTOOL_DEFAULT="-DDLLTOOL_DEFAULT_MIPS"
+	  fi
+	  DLLTOOL_DEFS="$DLLTOOL_DEFS -DDLLTOOL_MIPS"
+	  BUILD_WINDRES='$(WINDRES_PROG)$(EXEEXT)'
+	  BUILD_WINDMC='$(WINDMC_PROG)$(EXEEXT)'
+	  ;;
 	mcore-*-pe)
   	  BUILD_DLLTOOL='$(DLLTOOL_PROG)$(EXEEXT)'
 	  if test -z "$DLLTOOL_DEFAULT"; then
@@ -470,9 +461,6 @@ changequote([,])dnl
 	powerpc*-*-aix* | rs6000-*-aix*)
 	  od_vectors="$od_vectors objdump_private_desc_xcoff"
 	  ;;
-	*-*-pe* | *-*-cygwin* | *-*-mingw*)
-	  od_vectors="$od_vectors objdump_private_desc_pe"
-	  ;;
         *-*-darwin*)
 	  od_vectors="$od_vectors objdump_private_desc_mach_o"
 	  ;;
@@ -494,8 +482,6 @@ for i in $od_vectors ; do
 	    od_files="$od_files od-elf32_avr" ;;
 	objdump_private_desc_xcoff)
 	    od_files="$od_files od-xcoff" ;;
-	objdump_private_desc_pe)
-	    od_files="$od_files od-pe" ;;
 	objdump_private_desc_mach_o)
 	    od_files="$od_files od-macho" ;;
 	*) AC_MSG_ERROR(*** unknown private vector $i) ;;
@@ -566,7 +552,7 @@ AC_SUBST(docdir)
 AC_SUBST(htmldir)
 AC_SUBST(pdfdir)
 
-AC_CONFIG_FILES(Makefile po/Makefile.in:po/Make-in)
+AC_CONFIG_FILES(Makefile)
 AC_OUTPUT
 
 GNU_MAKE_JOBSERVER
