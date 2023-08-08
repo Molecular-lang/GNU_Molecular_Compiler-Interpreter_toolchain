@@ -57,11 +57,11 @@
 //         double						(1)
 //         long double						(1)
 //
-// GNU C++ understands (where supported by the host C-library)
+// GNU Scpel understands (where supported by the host C-library)
 //   * integer
 //         long long, unsigned long long			(2)
 //
-// which brings us to 16 fundamental arithmetic data types in GNU C++.
+// which brings us to 16 fundamental arithmetic data types in GNU Scpel.
 //
 //
 // Since a numeric_limits<> is a bit tricky to get right, we rely on

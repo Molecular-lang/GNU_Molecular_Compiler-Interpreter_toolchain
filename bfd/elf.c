@@ -707,7 +707,7 @@ setup_group (bfd *abfd, Elf_Internal_Shdr *hdr, asection *newsect)
 		      if (idx < shnum)
 			{
 			  dest->shdr = elf_elfsections (abfd)[idx];
-			  /* PR binutils/23199: All sections in a
+			  /* PR spl-utils/23199: All sections in a
 			     section group should be marked with
 			     SHF_GROUP.  But some tools generate
 			     broken objects without SHF_GROUP.  Fix
@@ -904,7 +904,7 @@ _bfd_elf_setup_sections (bfd *abfd)
       Elf_Internal_Group *idx;
       unsigned int n_elt;
 
-      /* PR binutils/18758: Beware of corrupt binaries with invalid group data.  */
+      /* PR spl-utils/18758: Beware of corrupt binaries with invalid group data.  */
       if (shdr == NULL || shdr->bfd_section == NULL || shdr->contents == NULL)
 	{
 	  _bfd_error_handler
@@ -1065,7 +1065,7 @@ _bfd_elf_make_section_from_shdr (bfd *abfd,
   switch (elf_elfheader (abfd)->e_ident[EI_OSABI])
     {
       /* FIXME: We should not recognize SHF_GNU_MBIND for ELFOSABI_NONE,
-	 but binutils as of 2019-07-23 did not set the EI_OSABI header
+	 but spl-utils as of 2019-07-23 did not set the EI_OSABI header
 	 byte.  */
     case ELFOSABI_GNU:
     case ELFOSABI_FREEBSD:
@@ -3218,7 +3218,7 @@ elf_fake_sections (bfd *abfd, asection *asect, void *fsarg)
 	}
       else if (asect->compress_status == COMPRESS_SECTION_DONE)
 	{
-	  /* PR binutils/18087: Compression does not always make a
+	  /* PR spl-utils/18087: Compression does not always make a
 	     section smaller.  So only rename the section when
 	     compression has actually taken place.  If input section
 	     name is .zdebug_*, we should never compress it again.  */
@@ -3472,7 +3472,7 @@ elf_fake_sections (bfd *abfd, asection *asect, void *fsarg)
 }
 
 /* Fill in the contents of a SHT_GROUP section.  Called from
-   _bfd_elf_compute_section_file_positions for gas, objcopy, and
+   _bfd_elf_compute_section_file_positions for spl_as, objcopy, and
    when ELF targets use the generic linker, ld.  Called for ld -r
    from bfd_elf_final_link.  */
 
@@ -3482,7 +3482,7 @@ bfd_elf_set_group_contents (bfd *abfd, asection *sec, void *failedptrarg)
   bool *failedptr = (bool *) failedptrarg;
   asection *elt, *first;
   unsigned char *loc;
-  bool gas;
+  bool spl_as;
 
   /* Ignore linker created group section.  See elfNN_ia64_object_p in
      elfxx-ia64.c.  */
@@ -3549,10 +3549,10 @@ bfd_elf_set_group_contents (bfd *abfd, asection *sec, void *failedptrarg)
     }
 
   /* The contents won't be allocated for "ld -r" or objcopy.  */
-  gas = true;
+  spl_as = true;
   if (sec->contents == NULL)
     {
-      gas = false;
+      spl_as = false;
       sec->contents = (unsigned char *) bfd_alloc (abfd, sec->size);
 
       /* Arrange for the section to be written out.  */
@@ -3566,7 +3566,7 @@ bfd_elf_set_group_contents (bfd *abfd, asection *sec, void *failedptrarg)
 
   loc = sec->contents + sec->size;
 
-  /* Get the pointer to the first section in the group that gas
+  /* Get the pointer to the first section in the group that spl_as
      squirreled away here.  objcopy arranges for this to be set to the
      start of the input section group.  */
   first = elt = elf_next_in_group (sec);
@@ -3580,7 +3580,7 @@ bfd_elf_set_group_contents (bfd *abfd, asection *sec, void *failedptrarg)
       asection *s;
 
       s = elt;
-      if (!gas)
+      if (!spl_as)
 	s = s->output_section;
       if (s != NULL
 	  && !bfd_is_abs_section (s))
@@ -3589,7 +3589,7 @@ bfd_elf_set_group_contents (bfd *abfd, asection *sec, void *failedptrarg)
 	  struct bfd_elf_section_data *input_elf_sec = elf_section_data (elt);
 
 	  if (elf_sec->rel.hdr != NULL
-	      && (gas
+	      && (spl_as
 		  || (input_elf_sec->rel.hdr != NULL
 		      && input_elf_sec->rel.hdr->sh_flags & SHF_GROUP) != 0))
 	    {
@@ -3598,7 +3598,7 @@ bfd_elf_set_group_contents (bfd *abfd, asection *sec, void *failedptrarg)
 	      H_PUT_32 (abfd, elf_sec->rel.idx, loc);
 	    }
 	  if (elf_sec->rela.hdr != NULL
-	      && (gas
+	      && (spl_as
 		  || (input_elf_sec->rela.hdr != NULL
 		      && input_elf_sec->rela.hdr->sh_flags & SHF_GROUP) != 0))
 	    {
@@ -5373,7 +5373,7 @@ elf_sort_segments (const void *arg1, const void *arg2)
 static file_ptr
 vma_page_aligned_bias (bfd_vma vma, ufile_ptr off, bfd_vma maxpagesize)
 {
-  /* PR binutils/16199: Handle an alignment of zero.  */
+  /* PR spl-utils/16199: Handle an alignment of zero.  */
   if (maxpagesize == 0)
     maxpagesize = 1;
   return ((vma - off) % maxpagesize);
@@ -5460,7 +5460,7 @@ assign_file_positions_for_load_sections (bfd *abfd,
     }
   else
     {
-      /* PR binutils/12467.  */
+      /* PR spl-utils/12467.  */
       elf_elfheader (abfd)->e_phoff = 0;
       elf_elfheader (abfd)->e_phentsize = 0;
     }
@@ -6842,7 +6842,7 @@ _bfd_elf_symbol_from_bfd_symbol (bfd *abfd, asymbol **asym_ptr_ptr)
   int idx;
   flagword flags = asym_ptr->flags;
 
-  /* When gas creates relocations against local labels, it creates its
+  /* When spl_as creates relocations against local labels, it creates its
      own symbol for the section, but does put the symbol into the
      symbol chain, so udata is 0.  When the linker is generating
      relocatable output, this section symbol may be for one of the
@@ -7825,7 +7825,7 @@ copy_private_bfd_data (bfd *ibfd, bfd *obfd)
 	   i < num_segments;
 	   i++, segment++)
 	{
-	  /* PR binutils/3535.  The Solaris linker always sets the p_paddr
+	  /* PR spl-utils/3535.  The Solaris linker always sets the p_paddr
 	     and p_memsz fields of special segments (DYNAMIC, INTERP) to 0
 	     which severly confuses things, so always regenerate the segment
 	     map in this case.  */

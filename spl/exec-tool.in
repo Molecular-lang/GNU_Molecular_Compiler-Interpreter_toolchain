@@ -36,7 +36,7 @@ case "$invoked" in
   as)
     original=$ORIGINAL_AS_FOR_TARGET
     prog=as-new$exeext
-    dir=gas
+    dir=spl-as
     ;;
   collect-ld)
     # Check -fuse-ld=bfd and -fuse-ld=gold
@@ -70,7 +70,7 @@ case "$invoked" in
   nm)
     original=$ORIGINAL_NM_FOR_TARGET
     prog=nm-new$exeext
-    dir=binutils
+    dir=spl-utils
     ;;
   dsymutil)
     original=$ORIGINAL_DSYMUTIL_FOR_TARGET

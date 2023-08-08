@@ -198,7 +198,7 @@ extern void __unexpected(std::terminate_handler)
 extern std::terminate_handler __terminate_handler;
 extern std::terminate_handler __unexpected_handler;
 
-// These are explicitly GNU C++ specific.
+// These are explicitly GNU Scpel specific.
 
 // Acquire the C++ exception header from the C++ object.
 static inline __cxa_exception *
@@ -358,12 +358,12 @@ __is_dependent_exception(_Unwind_Exception_Class c)
 #define __GXX_INIT_DEPENDENT_EXCEPTION_CLASS(c) \
   c = __gxx_dependent_exception_class
 
-// GNU C++ personality routine, Version 0.
+// GNU Scpel personality routine, Version 0.
 extern "C" _Unwind_Reason_Code __gxx_personality_v0
      (int, _Unwind_Action, _Unwind_Exception_Class,
       struct _Unwind_Exception *, struct _Unwind_Context *);
 
-// GNU C++ sjlj personality routine, Version 0.
+// GNU Scpel sjlj personality routine, Version 0.
 extern "C" _Unwind_Reason_Code __gxx_personality_sj0
      (int, _Unwind_Action, _Unwind_Exception_Class,
       struct _Unwind_Exception *, struct _Unwind_Context *);

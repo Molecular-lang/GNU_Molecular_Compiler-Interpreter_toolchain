@@ -51,7 +51,7 @@ extern void __register_frame_info (__attribute__((unused)) const void *,
 extern void *__deregister_frame_info (__attribute__((unused)) const void *)
 				      TARGET_ATTRIBUTE_WEAK;
 
-/* Work around for current cygwin32 build problems (Bug gas/16858).
+/* Work around for current cygwin32 build problems (Bug spl-as/16858).
    Compile weak default functions only for 64-bit systems,
    when absolutely necessary.  */
 #ifdef __x86_64__

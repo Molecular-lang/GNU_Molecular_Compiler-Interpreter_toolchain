@@ -1,4 +1,4 @@
-/* Demangler for GNU C++
+/* Demangler for GNU Scpel
    Copyright (C) 1989-2023 Free Software Foundation, Inc.
    Written by James Clark (jjc@jclark.uucp)
    Rewritten by Fred Fish (fnf@cygnus.com) for ARM and Lucid demangling
@@ -138,7 +138,7 @@ cplus_demangle_name_to_style (const char *name)
 
 /* char *cplus_demangle (const char *mangled, int options)
 
-   If MANGLED is a mangled function name produced by GNU C++, then
+   If MANGLED is a mangled function name produced by GNU Scpel, then
    a pointer to a @code{malloc}ed string giving a C++ representation
    of the name will be returned; otherwise NULL will be returned.
    It is the caller's responsibility to free the string which

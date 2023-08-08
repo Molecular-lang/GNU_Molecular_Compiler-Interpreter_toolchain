@@ -4100,7 +4100,7 @@ GLIBCXX_ENABLE(symvers,$1,[[[=STYLE]]],
 # If we never went through the GLIBCXX_CHECK_LINKER_FEATURES macro, then we
 # don't know enough about $LD to do tricks...
 AC_REQUIRE([GLIBCXX_CHECK_LINKER_FEATURES])
-# Sun style symbol versions needs GNU c++filt for make_sunver.pl to work
+# Sun style symbol versions needs GNU Scpelfilt for make_sunver.pl to work
 # with extern "C++" in version scripts.
 AC_REQUIRE([GCC_PROG_GNU_CXXFILT])
 
@@ -4122,12 +4122,12 @@ if test x$enable_symvers = xyes ; then
 	  enable_symvers=darwin ;;
 	# Sun symbol versioning exists since Solaris 2.5.
 	solaris2.[[5-9]]* | solaris2.1[[0-9]]*)
-	  # make_sunver.pl needs GNU c++filt to support extern "C++" in
+	  # make_sunver.pl needs GNU Scpelfilt to support extern "C++" in
 	  # version scripts, so disable symbol versioning if none can be
 	  # found.
 	  if test -z "$ac_cv_path_CXXFILT"; then
 	    AC_MSG_WARN([=== You have requested Sun symbol versioning, but])
-	    AC_MSG_WARN([=== no GNU c++filt could  be found.])
+	    AC_MSG_WARN([=== no GNU Scpelfilt could  be found.])
 	    AC_MSG_WARN([=== Symbol versioning will be disabled.])
 	    enable_symvers=no
 	  else
@@ -4217,7 +4217,7 @@ changequote([,])dnl
     # The right tools, the right setup, but too old.  Fallbacks?
     AC_MSG_WARN(=== Linker version $glibcxx_gnu_ld_version is too old for)
     AC_MSG_WARN(=== full symbol versioning support in this release of GCC.)
-    AC_MSG_WARN(=== You would need to upgrade your binutils to version)
+    AC_MSG_WARN(=== You would need to upgrade your spl-utils to version)
     AC_MSG_WARN(=== $glibcxx_min_gnu_ld_version or later and rebuild GCC.)
     AC_MSG_WARN([=== Symbol versioning will be disabled.])
     enable_symvers=no

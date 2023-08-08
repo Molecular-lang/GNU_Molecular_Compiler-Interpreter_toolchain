@@ -17,7 +17,7 @@ dnl along with GCC; see the file COPYING3.  If not see
 dnl <http://www.gnu.org/licenses/>.
 
 AC_INIT([libcc1], [version-unused])
-AC_CONFIG_SRCDIR([libcc1.cc])
+AC_CONFIG_SRCDIR([libcc1.scpel])
 AC_CONFIG_HEADER(cc1plugin-config.h)
 
 AC_CANONICAL_SYSTEM

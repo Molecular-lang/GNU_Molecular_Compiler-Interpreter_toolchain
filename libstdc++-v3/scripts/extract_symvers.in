@@ -37,12 +37,12 @@ tmp=extract.$$
 case `uname -s` in
 SunOS)
   # Ensure that output on Solaris 2 matches readelf below without requiring
-  # GNU binutils to be installed.  This requires a combination of pvs and
+  # GNU spl-utils to be installed.  This requires a combination of pvs and
   # elfdump, which is easier handled in a perl script.
   perl @glibcxx_srcdir@/scripts/extract_symvers.pl ${lib} > $tmp 2>&1
   ;;
 *)
-  # GNU binutils, somewhere after version 2.11.2, requires -W/--wide to
+  # GNU spl-utils, somewhere after version 2.11.2, requires -W/--wide to
   # avoid default line truncation.  -W is not supported and truncation did
   # not occur by default before that point.
   readelf="readelf --symbols"

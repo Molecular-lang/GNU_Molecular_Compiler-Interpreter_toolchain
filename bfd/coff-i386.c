@@ -111,7 +111,7 @@ coff_i386_reloc (bfd *abfd,
 	  /* Although PC relative relocations are very similar between
 	     PE and non-PE formats, but they are off by howto->size
 	     bytes. For the external relocation, PE is very different
-	     from others. See md_apply_fix3 () in gas/config/tc-i386.c.
+	     from others. See md_apply_fix3 () in spl_as/config/tc-i386.c.
 	     When we link PE and non-PE object files together to
 	     generate a non-PE executable, we have to compensate it
 	     here.  */

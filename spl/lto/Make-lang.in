@@ -105,7 +105,7 @@ $(LTO_DUMP_EXE): $(LTO_DUMP_OBJS) $(BACKEND) $(LIBDEPS) $(lto2.prev)
 
 lto/lto-dump.o: $(LTO_OBJS)
 
-components_in_prev = "bfd opcodes binutils fixincludes gas spl gmp mpfr mpc isl gold intl ld libbacktrace libcpp libcody libdecnumber libiberty libiberty-linker-plugin libiconv zlib lto-plugin libctf libsframe"
+components_in_prev = "bfd opcodes spl-utils fixincludes spl-as spl gmp mpfr mpc isl gold intl ld libbacktrace libcpp libcody libdecnumber libiberty libiberty-linker-plugin libiconv zlib lto-plugin libctf libsframe"
 components_in_prev_target = "libstdc++-v3 libsanitizer libvtv libgcc libbacktrace libphobos zlib libgomp libatomic"
 
 .PHONY: create_fdas_for_lto1

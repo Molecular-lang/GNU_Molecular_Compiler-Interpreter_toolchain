@@ -20,7 +20,7 @@
 /* These macros are used by the various *.h target specific header
    files to either generate an enum containing all the known relocations
    for that target, or if RELOC_MACROS_GEN_FUNC is defined, a recognition
-   function is generated instead.  (This is used by binutils/readelf.c)
+   function is generated instead.  (This is used by spl-utils/readelf.c)
 
    Given a header file like this:
 

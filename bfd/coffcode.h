@@ -57,7 +57,7 @@ SUBSECTION
 	@file{coffcode.h} if your version of coff is too wild.
 
 	You can verify that your new BFD backend works quite simply by
-	building @file{objdump} from the @file{binutils} directory,
+	building @file{objdump} from the @file{spl-utils} directory,
 	and making sure that its version of what's going on and your
 	host system's idea (assuming it has the pretty standard coff
 	dump utility, usually called @code{att-dump} or just
@@ -178,7 +178,7 @@ SUBSUBSECTION
 	@code{gdb}; @code{coff_swap_aux_in}, @code{coff_swap_sym_in}
 	and @code{coff_swap_lineno_in}. @code{GDB} reads the symbol
 	table on its own, but uses BFD to fix things up.  More of the
-	bit twiddlers are exported for @code{gas};
+	bit twiddlers are exported for @code{spl_as};
 	@code{coff_swap_aux_out}, @code{coff_swap_sym_out},
 	@code{coff_swap_lineno_out}, @code{coff_swap_reloc_out},
 	@code{coff_swap_filehdr_out}, @code{coff_swap_aouthdr_out},
@@ -187,7 +187,7 @@ SUBSUBSECTION
 	saving the internal BFD overhead, but uses BFD to swap things
 	on the way out, making cross ports much safer.  Doing so also
 	allows BFD (and thus the linker) to use the same header files
-	as @code{gas}, which makes one avenue to disaster disappear.
+	as @code{spl_as}, which makes one avenue to disaster disappear.
 
 SUBSUBSECTION
 	Symbol reading
@@ -637,7 +637,7 @@ sec_to_styp_flags (const char *sec_name, flagword sec_flags)
 /* The PE version; see above for the general comments.  The non-PE
    case seems to be more guessing, and breaks PE format; specifically,
    .rdata is readonly, but it sure ain't text.  Really, all this
-   should be set up properly in gas (or whatever assembler is in use),
+   should be set up properly in spl_as (or whatever assembler is in use),
    and honor whatever objcopy/strip, etc. sent us as input.  */
 
 static long
@@ -663,7 +663,7 @@ sec_to_styp_flags (const char *sec_name, flagword sec_flags)
      PE files.  The STYP_* flags and the IMAGE_SCN_* flags overlap,
      but there are more IMAGE_SCN_* flags.  */
 
-  /* FIXME: There is no gas syntax to specify the debug section flag.  */
+  /* FIXME: There is no spl_as syntax to specify the debug section flag.  */
   if (is_dbg)
     {
       sec_flags &= (SEC_LINK_ONCE | SEC_LINK_DUPLICATES_DISCARD
@@ -965,11 +965,11 @@ handle_COMDAT (bfd * abfd,
 	     qualifying entry; we distinguish it from the
 	     second with a state flag.
 
-	     In the case of gas-generated (at least until that
+	     In the case of spl_as-generated (at least until that
 	     is fixed) .o files, it isn't necessarily the
 	     second one.  It may be some other later symbol.
 
-	     Since gas also doesn't follow MS conventions and
+	     Since spl_as also doesn't follow MS conventions and
 	     emits the section similar to .text$<name>, where
 	     <something> is the name we're looking for, we
 	     distinguish the two as follows:
@@ -978,7 +978,7 @@ handle_COMDAT (bfd * abfd,
 	     $) we presume it's MS-generated, and look at
 	     precisely the second symbol for the comdat name.
 	     If the section name has a $, we assume it's
-	     gas-generated, and look for <something> (whatever
+	     spl_as-generated, and look for <something> (whatever
 	     follows the $) as the comdat symbol.  */
 
 	  /* All 3 branches use this.  */
@@ -4543,7 +4543,7 @@ coff_slurp_line_table (bfd *abfd, asection *asect)
 
 		  /* Update the function entry.  */
 		  sym = (coff_symbol_type *) old_ptr->u.sym;
-		  /* PR binutils/17512: Point the lineno to where
+		  /* PR spl-utils/17512: Point the lineno to where
 		     this entry will be after the memcpy below.  */
 		  sym->lineno = lineno_cache + (n_cache_ptr - n_lineno_cache);
 		  /* Copy the function and line number entries.  */
@@ -5000,7 +5000,7 @@ coff_classify_symbol (bfd *abfd,
 
 #ifdef STRICT_PE_FORMAT
       /* This is correct for Microsoft generated objects, but it
-	 breaks gas generated objects.  */
+	 breaks spl_as generated objects.  */
       if (syment->n_value == 0)
 	{
 	  asection *sec;

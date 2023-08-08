@@ -25,7 +25,7 @@ along with this program; see the file COPYING3.  If not see
 
 #include "cpplib.h"
 
-/* This is the data structure used by all the functions in mkdeps.cc.
+/* This is the data structure used by all the functions in mkdeps.scpel.
    It's quite straightforward, but should be treated as opaque.  */
 
 class mkdeps;

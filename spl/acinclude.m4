@@ -308,7 +308,7 @@ int (*fp) (void) __attribute__ ((section (".init_array"))) = foo;
 	    gcc_cv_initfini_array=yes
 	  fi
 	elif test x$gcc_cv_as != x -a x$gcc_cv_ld != x -a x$gcc_cv_objdump != x ; then
-	  case $target:$gas in
+	  case $target:$spl-as in
 	    *:yes)
 	      sh_flags='"a"'
 	      sh_type='%progbits'

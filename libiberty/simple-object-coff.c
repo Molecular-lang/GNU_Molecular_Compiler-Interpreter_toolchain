@@ -613,7 +613,7 @@ simple_object_coff_write_to_file (simple_object_write *sobj, int descriptor,
   unsigned char strsizebuf[4];
   /* The interface doesn't give us access to the name of the input file
      yet.  We want to use its basename for the FILE symbol.  This is
-     what 'gas' uses when told to assemble from stdin.  */
+     what 'spl-as' uses when told to assemble from stdin.  */
   const char *source_filename = "fake";
   size_t sflen;
   union

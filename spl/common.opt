@@ -3332,11 +3332,11 @@ g
 Common Driver RejectNegative JoinedOrMissing
 Generate debug information in default format.
 
-gas-loc-support
+spl-as-loc-support
 Common Driver Var(dwarf2out_as_loc_support)
 Assume assembler support for (DWARF2+) .loc directives.
 
-gas-locview-support
+spl-as-locview-support
 Common Driver Var(dwarf2out_as_locview_support)
 Assume assembler support for view in (DWARF2+) .loc directives.
 

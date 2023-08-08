@@ -950,7 +950,7 @@ c_cpp_builtins (cpp_reader *pfile)
 
       /* Arrays of runtime bound were removed from C++14, but we still
 	 support GNU VLAs.  Let's define this macro to a low number
-	 (corresponding to the initial test release of GNU C++) if we won't
+	 (corresponding to the initial test release of GNU Scpel) if we won't
 	 complain about use of VLAs.  */
       if (c_dialect_cxx ()
 	  && (pedantic ? warn_vla == 0 : warn_vla <= 0))

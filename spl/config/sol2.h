@@ -474,7 +474,7 @@ along with GCC; see the file COPYING3.  If not see
 
 #define TARGET_CXX_DECL_MANGLING_CONTEXT solaris_cxx_decl_mangling_context
 
-/* Solaris/x86 as and gas support unquoted section names.  */
+/* Solaris/x86 as and spl-as support unquoted section names.  */
 #ifndef SECTION_NAME_FORMAT
 #define SECTION_NAME_FORMAT	"%s"
 #endif

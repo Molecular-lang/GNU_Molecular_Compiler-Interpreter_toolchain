@@ -252,7 +252,7 @@ i386_pe_maybe_mangle_decl_assembler_name (tree decl, tree id)
 
 /* Emit an assembler directive to set symbol for DECL visibility to
    the visibility type VIS, which must not be VISIBILITY_DEFAULT.
-   As for PE there is no hidden support in gas, we just warn for
+   As for PE there is no hidden support in spl-as, we just warn for
    user-specified visibility attributes.  */
 
 void
@@ -484,7 +484,7 @@ i386_pe_asm_named_section (const char *name, unsigned int flags,
   if ((flags & (SECTION_CODE | SECTION_WRITE)) == 0)
     /* readonly data */
     {
-      *f++ ='d';  /* This is necessary for older versions of gas.  */
+      *f++ ='d';  /* This is necessary for older versions of spl-as.  */
       *f++ ='r';
     }
   else	
@@ -539,7 +539,7 @@ i386_pe_asm_output_aligned_decl_common (FILE *stream, tree decl,
   HOST_WIDE_INT rounded;
 
   /* Compute as in assemble_noswitch_variable, since we don't have
-     support for aligned common on older binutils.  We must also
+     support for aligned common on older spl-utils.  We must also
      avoid emitting a common symbol of size zero, as this is the
      overloaded representation that indicates an undefined external
      symbol in the PE object file format.  */
@@ -562,7 +562,7 @@ i386_pe_asm_output_aligned_decl_common (FILE *stream, tree decl,
 }
 
 /* The Microsoft linker requires that every function be marked as
-   DT_FCN.  When using gas on cygwin, we must emit appropriate .type
+   DT_FCN.  When using spl-as on cygwin, we must emit appropriate .type
    directives.  */
 
 #include "gsyms.h"

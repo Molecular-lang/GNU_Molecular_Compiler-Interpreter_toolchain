@@ -538,7 +538,7 @@ bts, 0xfab, None, Cpu386, Modrm|CheckRegSize|No_bSuf|No_sSuf|No_ldSuf|HLEPrefixL
 bts, 0xfba, 5, Cpu386, Modrm|No_bSuf|No_sSuf|No_ldSuf|HLEPrefixLock, { Imm8, Reg16|Reg32|Reg64|Word|Dword|Qword|Unspecified|BaseIndex }
 
 // Interrupts & op. sys insns.
-// See gas/config/tc-i386.c for conversion of 'int $3' into the special
+// See spl-as/config/tc-i386.c for conversion of 'int $3' into the special
 // int 3 insn.
 int, 0xcd, None, 0, No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSuf, { Imm8 }
 int1, 0xf1, None, 0, No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSuf, {}
@@ -1266,11 +1266,11 @@ monitor, 0xf01c8, None, CpuSSE3, No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSu
 // address size override prefix can be used to overrride the AX size in
 // all modes.
 monitor, 0xf01c8, None, CpuSSE3, AddrPrefixOpReg, { Acc|Word|Dword|Qword, RegC|Dword, RegD|Dword }
-// The 64-bit form exists only for compatibility with older gas.
+// The 64-bit form exists only for compatibility with older spl-as.
 monitor, 0xf01c8, None, CpuSSE3|Cpu64, AddrPrefixOpReg, { Acc|Dword|Qword, RegC|Qword, RegD|Qword }
 mwait, 0xf01c9, None, CpuSSE3, No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSuf, {}
 // mwait is very special. AX and CX are always 32 bits.
-// The 64-bit form exists only for compatibility with older gas.
+// The 64-bit form exists only for compatibility with older spl-as.
 mwait, 0xf01c9, None, CpuSSE3, CheckRegSize|IgnoreSize|No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSuf|NoRex64, { Acc|Dword|Qword, RegC|Dword|Qword }
 
 // VMX instructions.
@@ -3313,11 +3313,11 @@ clzero, 0xf01fc, None, CpuCLZERO, AddrPrefixOpReg, { Acc|Word|Dword|Qword }
 
 monitorx, 0xf01fa, None, CpuMWAITX, No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSuf, {}
 monitorx, 0xf01fa, None, CpuMWAITX, AddrPrefixOpReg, { Acc|Word|Dword|Qword, RegC|Dword, RegD|Dword }
-// The 64-bit form exists only for compatibility with older gas.
+// The 64-bit form exists only for compatibility with older spl-as.
 monitorx, 0xf01fa, None, CpuMWAITX|Cpu64, AddrPrefixOpReg, { Acc|Dword|Qword, RegC|Qword, RegD|Qword }
 
 mwaitx, 0xf01fb, None, CpuMWAITX, No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSuf, {}
-// The 64-bit form exists only for compatibility with older gas.
+// The 64-bit form exists only for compatibility with older spl-as.
 mwaitx, 0xf01fb, None, CpuMWAITX, CheckRegSize|IgnoreSize|No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSuf|NoRex64, { Acc|Dword|Qword, RegC|Dword|Qword, RegB|Dword|Qword }
 
 // MONITORX/MWAITX instructions end
@@ -3444,7 +3444,7 @@ rmpupdate, 0xf20f01fe, None, CpuSNP|Cpu64, No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qS
 rmpupdate, 0xf20f01fe, None, CpuSNP|Cpu64, AddrPrefixOpReg, { Acc|Dword|Qword, RegC|Qword }
 rmpadjust, 0xf30f01fe, None, CpuSNP|Cpu64, No_bSuf|No_wSuf|No_lSuf|No_sSuf|No_qSuf|No_ldSuf, {}
 rmpadjust, 0xf30f01fe, None, CpuSNP|Cpu64, AddrPrefixOpReg, { Acc|Dword|Qword, RegC|Qword, RegD|Qword }
-// The single-operand forms exist only for compatibility with older gas.
+// The single-operand forms exist only for compatibility with older spl-as.
 pvalidate, 0xf20f01ff, None, CpuSNP, AddrPrefixOpReg, { Acc|Word|Dword|Qword }
 rmpupdate, 0xf20f01fe, None, CpuSNP|Cpu64, AddrPrefixOpReg, { Acc|Dword|Qword }
 rmpadjust, 0xf30f01fe, None, CpuSNP|Cpu64, AddrPrefixOpReg, { Acc|Dword|Qword }

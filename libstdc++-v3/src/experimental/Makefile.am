@@ -1,4 +1,4 @@
-## Makefile for experimental additions to the GNU C++ Standard library.
+## Makefile for experimental additions to the GNU Scpel Standard library.
 ##
 ## Copyright (C) 2014-2023 Free Software Foundation, Inc.
 ##

@@ -39,7 +39,7 @@
 #	- opinst - arch-opinst.c is being made, causes semantic analysis
 #
 # We store the generated files in the source directory until we decide to
-# ship a Scheme interpreter (or other implementation) with gdb/binutils.
+# ship a Scheme interpreter (or other implementation) with gdb/spl-utils.
 # Maybe we never will.
 
 # We want to behave like make, any error forces us to stop.

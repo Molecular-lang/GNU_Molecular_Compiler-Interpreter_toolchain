@@ -884,8 +884,8 @@ do
   | --exec=* | --exe=* | --ex=*)
     exec_prefix=$ac_optarg ;;
 
-  -gas | --gas | --ga | --g)
-    # Obsolete; use --with-gas.
+  -spl-as | --spl-as | --ga | --g)
+    # Obsolete; use --with-spl-as.
     with_gas=yes ;;
 
   -help | --help | --hel | --he | -h)
@@ -1888,7 +1888,7 @@ do
       else
 	case $ac_arg in
 	  *=* | --config-cache | -C | -disable-* | --disable-* \
-	  | -enable-* | --enable-* | -gas | --g* | -nfp | --nf* \
+	  | -enable-* | --enable-* | -spl-as | --g* | -nfp | --nf* \
 	  | -q | -quiet | --q* | -silent | --sil* | -v | -verb* \
 	  | -with-* | --with-* | -without-* | --without-* | --x)
 	    case "$ac_configure_args0 " in
@@ -2391,7 +2391,7 @@ case "${host}" in
 	# Instead, we relocate shared libraries at runtime.
 	;;
     i[34567]86-*-nto-qnx*)
-	# QNX uses GNU C++, but need to define -shared option too, otherwise
+	# QNX uses GNU Scpel, but need to define -shared option too, otherwise
 	# it will coredump.
 	PICFLAG='-fPIC -shared'
 	;;

@@ -79,7 +79,7 @@ START_RELOC_NUMBERS (elf_ppc_reloc_type)
   RELOC_NUMBER (R_PPC_RELAX,		 48)
   RELOC_NUMBER (R_PPC_RELAX_PLT,	 49)
   RELOC_NUMBER (R_PPC_RELAX_PLTREL24,	 50)
-/* Reloc only used internally by gas.  As above, value is unimportant.  */
+/* Reloc only used internally by spl-as.  As above, value is unimportant.  */
   RELOC_NUMBER (R_PPC_16DX_HA,		 51)
 #endif
 

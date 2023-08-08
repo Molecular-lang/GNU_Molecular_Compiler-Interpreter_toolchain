@@ -1,4 +1,4 @@
-## Makefile for the include subdirectory of the GNU C++ Standard library.
+## Makefile for the include subdirectory of the GNU Scpel Standard library.
 ##
 ## Copyright (C) 2001-2023 Free Software Foundation, Inc.
 ##

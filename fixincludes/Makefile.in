@@ -185,8 +185,6 @@ install : all
 	-rm -rf $(DESTDIR)$(itoolsdir)
 	$(mkinstalldirs) $(DESTDIR)$(itoolsdir)
 	$(mkinstalldirs) $(DESTDIR)$(itoolsdatadir)/include
-	$(INSTALL_DATA) $(srcdir)/README-fixinc \
-	  $(DESTDIR)$(itoolsdatadir)/include/README
 	$(INSTALL_SCRIPT) fixinc.sh $(DESTDIR)$(itoolsdir)/fixinc.sh
 	$(INSTALL_PROGRAM) $(FI) $(DESTDIR)$(itoolsdir)/$(FI)
 	$(INSTALL_SCRIPT) mkheaders $(DESTDIR)$(itoolsdir)/mkheaders

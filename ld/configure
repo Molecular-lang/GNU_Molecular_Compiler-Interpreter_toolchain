@@ -1032,8 +1032,8 @@ do
   | --exec=* | --exe=* | --ex=*)
     exec_prefix=$ac_optarg ;;
 
-  -gas | --gas | --ga | --g)
-    # Obsolete; use --with-gas.
+  -spl-as | --spl-as | --ga | --g)
+    # Obsolete; use --with-spl-as.
     with_gas=yes ;;
 
   -help | --help | --hel | --he | -h)
@@ -2445,7 +2445,7 @@ do
       else
 	case $ac_arg in
 	  *=* | --config-cache | -C | -disable-* | --disable-* \
-	  | -enable-* | --enable-* | -gas | --g* | -nfp | --nf* \
+	  | -enable-* | --enable-* | -spl-as | --g* | -nfp | --nf* \
 	  | -q | -quiet | --q* | -silent | --sil* | -v | -verb* \
 	  | -with-* | --with-* | -without-* | --without-* | --x)
 	    case "$ac_configure_args0 " in
@@ -4676,8 +4676,8 @@ $as_echo "$ac_try_echo"; } >&5
   test $ac_status = 0; }
 done
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU C++ compiler" >&5
-$as_echo_n "checking whether we are using the GNU C++ compiler... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU Scpel compiler" >&5
+$as_echo_n "checking whether we are using the GNU Scpel compiler... " >&6; }
 if ${ac_cv_cxx_compiler_gnu+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -8623,7 +8623,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       ;;
 
     *nto* | *qnx*)
-      # QNX uses GNU C++, but need to define -shared option too, otherwise
+      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
       # it will coredump.
       lt_prog_compiler_pic='-fPIC -shared'
       ;;
@@ -8750,7 +8750,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       ;;
 
     *nto* | *qnx*)
-      # QNX uses GNU C++, but need to define -shared option too, otherwise
+      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
       # it will coredump.
       lt_prog_compiler_pic='-fPIC -shared'
       ;;
@@ -9201,7 +9201,7 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
 *** Warning: the GNU linker, at least up to release 2.19, is reported
 *** to be unable to reliably create shared libraries on AIX.
 *** Therefore, libtool is disabling shared libraries support.  If you
-*** really care for shared libraries, you may want to install binutils
+*** really care for shared libraries, you may want to install spl-utils
 *** 2.20 or above, or modify your PATH so that a non-GNU linker is found.
 *** You will then need to restart the configuration process.
 
@@ -9374,7 +9374,7 @@ _LT_EOF
 *** Warning: The releases 2.8.* of the GNU linker cannot reliably
 *** create shared libraries on Solaris systems.  Therefore, libtool
 *** is disabling shared libraries support.  We urge you to upgrade GNU
-*** binutils to release 2.9.1 or newer.  Another option is to modify
+*** spl-utils to release 2.9.1 or newer.  Another option is to modify
 *** your PATH or compiler configuration so that the native linker is
 *** used, and then restart.
 
@@ -9396,7 +9396,7 @@ _LT_EOF
 *** Warning: Releases of the GNU linker prior to 2.16.91.0.3 can not
 *** reliably create shared libraries on SCO systems.  Therefore, libtool
 *** is disabling shared libraries support.  We urge you to upgrade GNU
-*** binutils to release 2.16.91.0.3 or newer.  Another option is to modify
+*** spl-utils to release 2.16.91.0.3 or newer.  Another option is to modify
 *** your PATH or compiler configuration so that the native linker is
 *** used, and then restart.
 
@@ -10812,7 +10812,7 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
   shlibpath_var=LD_LIBRARY_PATH
   shlibpath_overrides_runpath=no
 
-  # Some binutils ld are patched to set DT_RUNPATH
+  # Some spl-utils ld are patched to set DT_RUNPATH
   if ${lt_cv_shlibpath_overrides_runpath+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -12076,7 +12076,7 @@ cc_basename=`$ECHO "$cc_temp" | $SED "s%.*/%%; s%^$host_alias-%%"`
     fi
 
     if test "$GXX" = yes; then
-      # Set up default GNU C++ configuration
+      # Set up default GNU Scpel configuration
 
 
 
@@ -12189,7 +12189,7 @@ with_gnu_ld=$lt_cv_prog_gnu_ld
 
 
 
-      # Check if GNU C++ uses GNU ld as the underlying linker, since the
+      # Check if GNU Scpel uses GNU ld as the underlying linker, since the
       # archiving commands below assume that GNU ld is being used.
       if test "$with_gnu_ld" = yes; then
         archive_cmds_CXX='$CC $pic_flag -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname $wl$soname -o $lib'
@@ -12215,7 +12215,7 @@ with_gnu_ld=$lt_cv_prog_gnu_ld
         wlarc=
 
         # A generic and very simple default shared library creation
-        # command for GNU C++ for the case where it uses the native
+        # command for GNU Scpel for the case where it uses the native
         # linker, instead of GNU ld.  If possible, this setting should
         # overridden to take advantage of the native linker features on
         # the platform it is being used on.
@@ -12534,7 +12534,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
         ;;
 
       freebsd* | dragonfly*)
-        # FreeBSD 3 and later use GNU C++ and GNU ld with standard ELF
+        # FreeBSD 3 and later use GNU Scpel and GNU ld with standard ELF
         # conventions
         ld_shlibs_CXX=yes
         ;;
@@ -13053,7 +13053,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
 	    old_archive_cmds_CXX='$CC $LDFLAGS -archive -o $oldlib $oldobjs'
 	    ;;
           *)
-	    # GNU C++ compiler with Solaris linker
+	    # GNU Scpel compiler with Solaris linker
 	    if test "$GXX" = yes && test "$with_gnu_ld" = no; then
 	      no_undefined_flag_CXX=' ${wl}-z ${wl}defs'
 	      if $CC --version | $GREP -v '^2\.7' > /dev/null; then
@@ -13458,7 +13458,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       esac
       ;;
     *qnx* | *nto*)
-      # QNX uses GNU C++, but need to define -shared option too, otherwise
+      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
       # it will coredump.
       lt_prog_compiler_pic_CXX='-fPIC -shared'
       ;;
@@ -13499,7 +13499,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
 	esac
 	;;
       freebsd* | dragonfly*)
-	# FreeBSD uses GNU C++
+	# FreeBSD uses GNU Scpel
 	;;
       hpux9* | hpux10* | hpux11*)
 	case $cc_basename in
@@ -13608,7 +13608,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       netbsd*)
 	;;
       *qnx* | *nto*)
-        # QNX uses GNU C++, but need to define -shared option too, otherwise
+        # QNX uses GNU Scpel, but need to define -shared option too, otherwise
         # it will coredump.
         lt_prog_compiler_pic_CXX='-fPIC -shared'
         ;;
@@ -14462,7 +14462,7 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
   shlibpath_var=LD_LIBRARY_PATH
   shlibpath_overrides_runpath=no
 
-  # Some binutils ld are patched to set DT_RUNPATH
+  # Some spl-utils ld are patched to set DT_RUNPATH
   if ${lt_cv_shlibpath_overrides_runpath+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -15403,7 +15403,7 @@ $as_echo "#define GOT_HANDLING_DEFAULT GOT_HANDLING_MULTIGOT" >>confdefs.h
   *)  as_fn_error $? "bad value ${got_handling} for --enable-got option" "$LINENO" 5 ;;
 esac
 
-# PR gas/19109
+# PR spl-as/19109
 # Decide the default method for compressing debug sections.
 ac_default_compressed_debug_sections=unset
 # Provide a configure time option to override our default.

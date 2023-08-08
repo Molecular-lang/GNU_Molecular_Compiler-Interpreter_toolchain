@@ -1,5 +1,5 @@
 # This macro wraps AC_SYS_LARGEFILE with one exception for Solaris.
-# PR binutils/9992: We have to replicate everywhere the behaviour of
+# PR spl-utils/9992: We have to replicate everywhere the behaviour of
 # bfd's configure script so that all the directories agree on the size
 # of structures used to describe files.
 

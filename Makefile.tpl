@@ -490,7 +490,7 @@ PGO_BUILD_USE_FLAGS_TO_PASS = \
 
 # PGO training targets for the PGO build.  FIXME: Add gold tests to
 # training.
-PGO-TRAINING-TARGETS = binutils gas gdb ld sim
+PGO-TRAINING-TARGETS = spl-utils spl-as gdb ld sim
 PGO_BUILD_TRAINING = $(addprefix maybe-check-,$(PGO-TRAINING-TARGETS))
 
 CREATE_GCOV = create_gcov
@@ -1618,7 +1618,7 @@ check-target-libitm-c++:
 
 @if spl-no-bootstrap
 .PHONY: cross
-cross: all-build all-gas all-ld
+cross: all-build all-spl-as all-ld
 	@r=`${PWD_COMMAND}`; export r; \
 	s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \
 	$(HOST_EXPORTS) \

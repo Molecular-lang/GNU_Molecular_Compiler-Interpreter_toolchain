@@ -524,13 +524,13 @@ simple_object_elf_match (unsigned char header[SIMPLE_OBJECT_MATCH_HEADER_LEN],
 	  eor->shstrndx = ELF_FETCH_FIELD (type_functions, ei_class, Shdr,
 					   shdr, sh_link, Elf_Word);
 
-	  /* Versions of the GNU binutils between 2.12 and 2.18 did
+	  /* Versions of the GNU spl-utils between 2.12 and 2.18 did
 	     not handle objects with more than SHN_LORESERVE sections
 	     correctly.  All large section indexes were offset by
 	     0x100.  There is more information at
 	     https://sourceware.org/PR5900 .
 	     Fortunately these object files are easy to detect, as the
-	     GNU binutils always put the section header string table
+	     GNU spl-utils always put the section header string table
 	     near the end of the list of sections.  Thus if the
 	     section header string table index is larger than the
 	     number of sections, then we know we have to subtract

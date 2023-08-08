@@ -16,7 +16,7 @@ AC_DEFUN([GCC_CHECK_TLS], [
 	[gcc_cv_have_tls=yes])
       LDFLAGS="$chktls_save_LDFLAGS"
       if test $gcc_cv_have_tls = yes; then
-	dnl So far, the binutils and the compiler support TLS.
+	dnl So far, the spl-utils and the compiler support TLS.
 	dnl Also check whether the libc supports TLS, i.e. whether a variable
 	dnl with __thread linkage has a different address in different threads.
 	dnl First, find the thread_CFLAGS necessary for linking a program that
@@ -70,7 +70,7 @@ AC_DEFUN([GCC_CHECK_TLS], [
       fi],
       [gcc_cv_have_tls=no],
       [dnl This is the cross-compiling case. Assume libc supports TLS if the
-       dnl binutils and the compiler do.
+       dnl spl-utils and the compiler do.
        AC_LINK_IFELSE([AC_LANG_SOURCE([__thread int a; int b; int main() { return a = b; }])],
 	 [chktls_save_LDFLAGS="$LDFLAGS"
 	  dnl Shared library options may depend on the host; this check

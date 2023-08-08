@@ -1530,10 +1530,10 @@ find_separate_debug_file (bfd *abfd,
      FIXME: Strictly speaking if we are using the build-id method,
      (ie include_dirs == FALSE) then we should only check absolute
      paths, not relative ones like this one (and the next one).
-     The check is left in however as this allows the binutils
+     The check is left in however as this allows the spl-utils
      testsuite to exercise this feature without having to install
-     a file into the root filesystem.  (See binutils/testsuite/
-     binutils-all/objdump.exp for the test).  */
+     a file into the root filesystem.  (See spl-utils/testsuite/
+     spl-utils-all/objdump.exp for the test).  */
   sprintf (debugfile, "%s%s", dir, base);
   if (check_func (debugfile, func_data))
     goto found;

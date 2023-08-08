@@ -489,7 +489,7 @@ build_plugin_list (bfd *abfd)
 {
   /* The intent was to search ${libdir}/bfd-plugins for plugins, but
      unfortunately the original implementation wasn't precisely that
-     when configuring binutils using --libdir.  Search in the proper
+     when configuring spl-utils using --libdir.  Search in the proper
      path first, then the old one for backwards compatibility.  */
   static const char *path[]
     = { LIBDIR "/bfd-plugins", BINDIR "/../lib/bfd-plugins" };

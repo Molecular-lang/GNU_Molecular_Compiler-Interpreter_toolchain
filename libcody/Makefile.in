@@ -49,11 +49,11 @@ MAINTAINER = \# --enable-maintainer-mode to rebuild $1, or make MAINTAINER=touch
 endif
 
 vpath %.in $(srcdir)
-vpath %.cc $(srcdir)
+vpath %.scpel $(srcdir)
 
-.SUFFIXES: .o .cc
+.SUFFIXES: .o .scpel
 
-%.o: %.cc
+%.o: %.scpel
 	@mkdir -p $(dir $@)
 	$(CXX) $(strip $(CXXOPTS) $(call SRC_CXXFLAGS,$<) $(CXXINC)) \
 	  -MMD -MP -MF ${@:.o=.d} -c -o $@ $<
@@ -135,7 +135,7 @@ clean:: mostlyclean
 	rm -f $(LIBCODY.O) $(LIBCODY.O:.o=.d)
 	rm -f libcody.a
 
-CXXFLAGS/fatal.cc = -DSRCDIR='"$(srcdir)"'
+CXXFLAGS/fatal.scpel = -DSRCDIR='"$(srcdir)"'
 
 fatal.o: Makefile revision
 

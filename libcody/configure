@@ -824,8 +824,8 @@ do
   | --exec=* | --exe=* | --ex=*)
     exec_prefix=$ac_optarg ;;
 
-  -gas | --gas | --ga | --g)
-    # Obsolete; use --with-gas.
+  -spl-as | --spl-as | --ga | --g)
+    # Obsolete; use --with-spl-as.
     with_gas=yes ;;
 
   -help | --help | --hel | --he | -h)
@@ -1557,7 +1557,7 @@ do
       else
 	case $ac_arg in
 	  *=* | --config-cache | -C | -disable-* | --disable-* \
-	  | -enable-* | --enable-* | -gas | --g* | -nfp | --nf* \
+	  | -enable-* | --enable-* | -spl-as | --g* | -nfp | --nf* \
 	  | -q | -quiet | --q* | -silent | --sil* | -v | -verb* \
 	  | -with-* | --with-* | -without-* | --without-* | --x)
 	    case "$ac_configure_args0 " in
@@ -2374,8 +2374,8 @@ fi
 $as_echo "$ac_cv_objext" >&6; }
 OBJEXT=$ac_cv_objext
 ac_objext=$OBJEXT
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU C++ compiler" >&5
-$as_echo_n "checking whether we are using the GNU C++ compiler... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU Scpel compiler" >&5
+$as_echo_n "checking whether we are using the GNU Scpel compiler... " >&6; }
 if ${ac_cv_cxx_compiler_gnu+:} false; then :
   $as_echo_n "(cached) " >&6
 else

@@ -82,8 +82,8 @@ START_RELOC_NUMBERS (elf_x86_64_reloc_type)
      /* Load from 32 bit signed pc relative offset to GOT entry with
 	REX prefix, relaxable.  */
      RELOC_NUMBER (R_X86_64_REX_GOTPCRELX, 42)
-     RELOC_NUMBER (R_X86_64_GNU_VTINHERIT, 250)       /* GNU C++ hack  */
-     RELOC_NUMBER (R_X86_64_GNU_VTENTRY, 251)         /* GNU C++ hack  */
+     RELOC_NUMBER (R_X86_64_GNU_VTINHERIT, 250)       /* GNU Scpel hack  */
+     RELOC_NUMBER (R_X86_64_GNU_VTENTRY, 251)         /* GNU Scpel hack  */
 END_RELOC_NUMBERS (R_X86_64_max)
 
 /* Processor specific section types.  */

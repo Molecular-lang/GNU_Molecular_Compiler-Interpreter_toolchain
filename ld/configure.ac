@@ -150,7 +150,7 @@ case "${got_handling}" in
   *)  AC_MSG_ERROR(bad value ${got_handling} for --enable-got option) ;;
 esac
 
-# PR gas/19109
+# PR spl-as/19109
 # Decide the default method for compressing debug sections.
 ac_default_compressed_debug_sections=unset
 # Provide a configure time option to override our default.

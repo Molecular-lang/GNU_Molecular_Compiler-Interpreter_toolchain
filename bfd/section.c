@@ -112,7 +112,7 @@ SUBSECTION
 	Link orders
 
 	The data within a section is stored in a @dfn{link_order}.
-	These are much like the fixups in <<gas>>.  The link_order
+	These are much like the fixups in <<spl_as>>.  The link_order
 	abstraction allows a section to grow and shrink within itself.
 
 	A link_order knows how big it is, and which is the next

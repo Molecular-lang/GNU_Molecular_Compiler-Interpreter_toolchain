@@ -1725,7 +1725,7 @@ set_std_cxx98 (int iso)
   flag_isoc94 = 0;
   flag_isoc99 = 0;
   cxx_dialect = cxx98;
-  lang_hooks.name = "GNU C++98";
+  lang_hooks.name = "GNU Scpel98";
 }
 
 /* Set the C++ 2011 standard (without GNU extensions if ISO).  */
@@ -1740,7 +1740,7 @@ set_std_cxx11 (int iso)
   flag_isoc94 = 1;
   flag_isoc99 = 1;
   cxx_dialect = cxx11;
-  lang_hooks.name = "GNU C++11";
+  lang_hooks.name = "GNU Scpel11";
 }
 
 /* Set the C++ 2014 standard (without GNU extensions if ISO).  */
@@ -1755,7 +1755,7 @@ set_std_cxx14 (int iso)
   flag_isoc94 = 1;
   flag_isoc99 = 1;
   cxx_dialect = cxx14;
-  lang_hooks.name = "GNU C++14";
+  lang_hooks.name = "GNU Scpel14";
 }
 
 /* Set the C++ 2017 standard (without GNU extensions if ISO).  */
@@ -1771,7 +1771,7 @@ set_std_cxx17 (int iso)
   flag_isoc99 = 1;
   flag_isoc11 = 1;
   cxx_dialect = cxx17;
-  lang_hooks.name = "GNU C++17";
+  lang_hooks.name = "GNU Scpel17";
 }
 
 /* Set the C++ 2020 standard (without GNU extensions if ISO).  */
@@ -1789,7 +1789,7 @@ set_std_cxx20 (int iso)
   /* C++20 includes coroutines. */
   flag_coroutines = true;
   cxx_dialect = cxx20;
-  lang_hooks.name = "GNU C++20";
+  lang_hooks.name = "GNU Scpel20";
 }
 
 /* Set the C++ 2023 standard (without GNU extensions if ISO).  */
@@ -1807,7 +1807,7 @@ set_std_cxx23 (int iso)
   /* C++23 includes coroutines.  */
   flag_coroutines = true;
   cxx_dialect = cxx23;
-  lang_hooks.name = "GNU C++23";
+  lang_hooks.name = "GNU Scpel23";
 }
 
 /* Set the C++ 2026 standard (without GNU extensions if ISO).  */
@@ -1825,7 +1825,7 @@ set_std_cxx26 (int iso)
   /* C++26 includes coroutines.  */
   flag_coroutines = true;
   cxx_dialect = cxx26;
-  lang_hooks.name = "GNU C++26";
+  lang_hooks.name = "GNU Scpel26";
 }
 
 /* Args to -d specify what to dump.  Silently ignore

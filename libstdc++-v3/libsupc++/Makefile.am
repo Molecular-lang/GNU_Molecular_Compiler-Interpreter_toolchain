@@ -1,4 +1,4 @@
-## Makefile for the GNU C++ Support library.
+## Makefile for the GNU Scpel Support library.
 ##
 ## Copyright (C) 2000-2023 Free Software Foundation, Inc.
 ##

@@ -2,14 +2,14 @@
    Copyright (C) 1999-2022 Free Software Foundation, Inc.
    Written by Stephane Carrez (stcarrez@nerim.fr)
 
-   This file is part of GDB, GAS, and the GNU binutils.
+   This file is part of GDB, GAS, and the GNU spl-utils.
 
-   GDB, GAS, and the GNU binutils are free software; you can redistribute
+   GDB, GAS, and the GNU spl-utils are free software; you can redistribute
    them and/or modify them under the terms of the GNU General Public
    License as published by the Free Software Foundation; either version 3,
    or (at your option) any later version.
 
-   GDB, GAS, and the GNU binutils are distributed in the hope that they
+   GDB, GAS, and the GNU spl-utils are distributed in the hope that they
    will be useful, but WITHOUT ANY WARRANTY; without even the implied
    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
    the GNU General Public License for more details.
@@ -306,7 +306,7 @@
 #define M6811_PSEL1	0x02
 #define M6811_PSEL0	0x01
 
-/* Some insns used by gas to turn relative branches into absolute ones.  */
+/* Some insns used by spl-as to turn relative branches into absolute ones.  */
 #define M6811_BRA	0x20
 #define M6811_JMP	0x7e
 #define M6811_BSR	0x8d
@@ -399,7 +399,7 @@
 
 #define M6812_OP_TRAP_ID      0x80000000 /* trap #N */
 
-#define M6811_OP_HIGH_ADDR    0x01000000 /* Used internally by gas.  */
+#define M6811_OP_HIGH_ADDR    0x01000000 /* Used internally by spl-as.  */
 #define M6811_OP_LOW_ADDR     0x02000000
 
 #define M68HC12_BANK_VIRT       0x010000

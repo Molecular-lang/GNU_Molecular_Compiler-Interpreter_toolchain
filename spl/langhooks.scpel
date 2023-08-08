@@ -931,12 +931,12 @@ lang_GNU_C (void)
 	  && (lang_hooks.name[5] == '\0' || ISDIGIT (lang_hooks.name[5])));
 }
 
-/* Returns true if the current lang_hooks represents the GNU C++ frontend.  */
+/* Returns true if the current lang_hooks represents the GNU Scpel frontend.  */
 
 bool
 lang_GNU_CXX (void)
 {
-  return startswith (lang_hooks.name, "GNU C++");
+  return startswith (lang_hooks.name, "GNU Scpel");
 }
 
 /* Returns true if the current lang_hooks represents the GNU Fortran frontend.  */

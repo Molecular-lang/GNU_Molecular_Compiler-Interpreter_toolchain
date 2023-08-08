@@ -168,7 +168,7 @@
 #
 #  thread_file		Set to control which thread package to use.
 #
-#  gas			Set to yes or no depending on whether the target
+#  spl-as			Set to yes or no depending on whether the target
 #			system normally uses GNU as.
 #
 #  configure_default_options
@@ -233,7 +233,7 @@ gdb_needs_out_file_path=
 thread_file=
 # Reinitialize these from the flag values every loop pass, since some
 # configure entries modify them.
-gas="$gas_flag"
+spl-as="$gas_flag"
 gnu_ld="$gnu_ld_flag"
 default_use_cxa_atexit=no
 default_gnu_indirect_function=no
@@ -769,7 +769,7 @@ case ${target} in
   esac
   ;;
 *-*-dragonfly*)
-  gas=yes
+  spl-as=yes
   gnu_ld=yes
   tmake_file="t-slibgcc"
   case ${enable_threads} in
@@ -807,7 +807,7 @@ case ${target} in
   # The machine-specific section should not tamper with this
   # ordering but may order all other entries of tm_file as it
   # pleases around the provided core setting.
-  gas=yes
+  spl-as=yes
   gnu_ld=yes
   fbsd_major=`echo ${target} | sed -e 's/.*freebsd//g' | sed -e 's/\..*//g'`
   if test "$fbsd_major" = ""; then
@@ -847,7 +847,7 @@ case ${target} in
   ;;
 *-*-linux* | frv-*-*linux* | *-*-kfreebsd*-gnu | *-*-gnu* | *-*-kopensolaris*-gnu | *-*-uclinuxfdpiceabi)
   extra_options="$extra_options gnu-user.opt"
-  gas=yes
+  spl-as=yes
   gnu_ld=yes
   case ${enable_threads} in
     "" | yes | posix) thread_file='posix' ;;
@@ -934,7 +934,7 @@ case ${target} in
   tmake_file="t-netbsd t-slibgcc"
   extra_objs="${extra_objs} netbsd.o"
   d_target_objs="${d_target_objs} netbsd-d.o"
-  gas=yes
+  spl-as=yes
   gnu_ld=yes
   use_gcc_stdint=wrap
   case ${enable_threads} in
@@ -965,7 +965,7 @@ case ${target} in
   target_has_targetdm=yes
   ;;
 *-*-phoenix*)
-  gas=yes
+  spl-as=yes
   gnu_ld=yes
   default_use_cxa_atexit=yes
   ;;
@@ -1011,7 +1011,7 @@ case ${target} in
   if test x$gnu_ld = xyes; then
     tm_file="usegld.h ${tm_file}"
   fi
-  if test x$gas = xyes; then
+  if test x$spl-as = xyes; then
     tm_file="usegas.h ${tm_file}"
   fi
   tm_p_file="${tm_p_file} sol2-protos.h"
@@ -1348,7 +1348,7 @@ arm*-*-netbsdelf*)
 	esac
 	;;
 arm*-*-linux-* | arm*-*-uclinuxfdpiceabi)
-	tm_file="elfos.h gnu-user.h linux.h linux-android.h glibc-stdint.h arm/elf.h arm/linux-gas.h arm/linux-elf.h"
+	tm_file="elfos.h gnu-user.h linux.h linux-android.h glibc-stdint.h arm/elf.h arm/linux-spl-as.h arm/linux-elf.h"
 	extra_options="${extra_options} linux-android.opt"
 	case $target in
 	arm*b-*-linux*)
@@ -1386,7 +1386,7 @@ arm*-*-linux-* | arm*-*-uclinuxfdpiceabi)
 	with_tls=${with_tls:-gnu}
 	;;
 arm*-*-uclinux*eabi*)		# ARM ucLinux
-	tm_file="elfos.h arm/unknown-elf.h arm/elf.h arm/linux-gas.h arm/uclinux-elf.h glibc-stdint.h"
+	tm_file="elfos.h arm/unknown-elf.h arm/elf.h arm/linux-spl-as.h arm/uclinux-elf.h glibc-stdint.h"
 	tmake_file="${tmake_file} arm/t-arm arm/t-arm-elf arm/t-bpabi"
 	tm_file="$tm_file arm/bpabi.h arm/uclinux-eabi.h arm/aout.h arm/arm.h"
 	target_cpu_cname="arm7tdmi"
@@ -1603,7 +1603,7 @@ bpf-*-*)
 cris-*-elf | cris-*-none)
 	tm_file="elfos.h newlib-stdint.h ${tm_file}"
 	tmake_file="cris/t-cris cris/t-elfmulti"
-	gas=yes
+	spl-as=yes
 	extra_options="${extra_options} cris/elf.opt"
 	use_gcc_stdint=wrap
 	;;
@@ -1704,7 +1704,7 @@ frv-*-*linux*)
 	tmake_file="${tmake_file} frv/t-frv frv/t-linux"
 	;;
 ft32-*-elf)
-	gas=yes
+	spl-as=yes
 	gnu_ld=yes
 	tm_file="elfos.h newlib-stdint.h ${tm_file}"
 	tmake_file="${tmake_file} ft32/t-ft32"
@@ -1732,13 +1732,13 @@ amdgcn-*-amdhsa)
 	thread_file=gcn
 	;;
 moxie-*-elf)
-	gas=yes
+	spl-as=yes
 	gnu_ld=yes
 	tm_file="elfos.h newlib-stdint.h ${tm_file}"
 	tmake_file="${tmake_file} moxie/t-moxie"
 	;;
 moxie-*-uclinux*)
-	gas=yes
+	spl-as=yes
 	gnu_ld=yes
 	tm_file="elfos.h ${tm_file} gnu-user.h linux.h glibc-stdint.h moxie/uclinux.h"
 	tmake_file="${tmake_file} moxie/t-moxie"
@@ -1748,7 +1748,7 @@ moxie-*-rtems*)
 	tm_file="moxie/moxie.h elfos.h moxie/rtems.h rtems.h newlib-stdint.h"
 	;;
 moxie-*-moxiebox*)
-	gas=yes
+	spl-as=yes
 	gnu_ld=yes
 	tm_file="${tm_file} elfos.h moxie/moxiebox.h newlib-stdint.h"
 	tmake_file="${tmake_file} moxie/t-moxiebox"
@@ -1768,7 +1768,7 @@ hppa*64*-*-linux*)
 		 pa/pa64-linux.h"
 	tmake_file="${tmake_file} pa/t-pa pa/t-linux"
 	d_target_objs="${d_target_objs} pa-d.o"
-	gas=yes gnu_ld=yes
+	spl-as=yes gnu_ld=yes
 	;;
 hppa*-*-linux*)
 	target_cpu_default="MASK_PA_11|MASK_NO_SPACE_REGS|MASK_CALLER_COPIES"
@@ -1784,7 +1784,7 @@ hppa*-*-openbsd*)
 	extra_options="${extra_options} openbsd.opt"
 	tmake_file="pa/t-pa"
 	d_target_objs="${d_target_objs} pa-d.o"
-	gas=yes
+	spl-as=yes
 	gnu_ld=yes
 	;;
 hppa*-*-netbsd*)
@@ -1826,7 +1826,7 @@ hppa*64*-*-hpux11*)
 		thread_file=posix
 		;;
 	esac
-	gas=yes
+	spl-as=yes
 	case ${target} in
 	  *-*-hpux11.[01]*)
 		use_gcc_stdint=provide
@@ -1905,14 +1905,14 @@ i[34567]86-*-openbsd*)
 	tm_file="${tm_file} i386/unix.h i386/att.h elfos.h"
 	tm_file="${tm_file} openbsd.h openbsd-stdint.h openbsd-libpthread.h i386/openbsdelf.h"
 	extra_options="${extra_options} openbsd.opt"
-	gas=yes
+	spl-as=yes
 	gnu_ld=yes
 	;;
 x86_64-*-openbsd*)
 	tm_file="${tm_file} i386/unix.h i386/att.h elfos.h"
 	tm_file="${tm_file} openbsd.h openbsd-stdint.h openbsd-libpthread.h i386/x86-64.h i386/openbsdelf.h"
 	extra_options="${extra_options} openbsd.opt"
-	gas=yes
+	spl-as=yes
 	gnu_ld=yes
 	;;
 i[34567]86-*-linux* | i[34567]86-*-kfreebsd*-gnu | i[34567]86-*-gnu* | i[34567]86-*-kopensolaris*-gnu)
@@ -2016,11 +2016,11 @@ x86_64-*-linux* | x86_64-*-kfreebsd*-gnu | x86_64-*-gnu*)
 	;;
 i[34567]86-pc-msdosdjgpp*)
 	xm_file=i386/xm-djgpp.h
-	tm_file="${tm_file} i386/unix.h i386/bsd.h i386/gas.h i386/djgpp.h i386/djgpp-stdint.h"
+	tm_file="${tm_file} i386/unix.h i386/bsd.h i386/spl-as.h i386/djgpp.h i386/djgpp-stdint.h"
 	native_system_header_dir=/dev/env/DJDIR/include
 	extra_options="${extra_options} i386/djgpp.opt"
 	gnu_ld=yes
-	gas=yes
+	spl-as=yes
 	use_gcc_stdint=wrap
 	;;
 i[34567]86-*-lynxos*)
@@ -2030,13 +2030,13 @@ i[34567]86-*-lynxos*)
 	extra_options="${extra_options} lynx.opt"
 	thread_file=lynx
 	gnu_ld=yes
-	gas=yes
+	spl-as=yes
 	;;
 i[34567]86-*-nto-qnx*)
 	tm_file="${tm_file} i386/att.h tm-dwarf2.h elfos.h i386/unix.h i386/nto.h"
 	extra_options="${extra_options} i386/nto.opt"
 	gnu_ld=yes
-	gas=yes
+	spl-as=yes
 	;;
 i[34567]86-*-rtems*)
 	tm_file="${tm_file} i386/unix.h i386/att.h elfos.h i386/i386elf.h i386/rtemself.h rtems.h newlib-stdint.h"
@@ -2088,7 +2088,7 @@ i[4567]86-wrs-vxworks*|x86_64-wrs-vxworks7*)
 	esac
 	;;
 i[34567]86-*-cygwin*)
-	tm_file="${tm_file} i386/unix.h i386/bsd.h i386/gas.h i386/cygming.h i386/cygwin.h i386/cygwin-stdint.h"
+	tm_file="${tm_file} i386/unix.h i386/bsd.h i386/spl-as.h i386/cygming.h i386/cygwin.h i386/cygwin-stdint.h"
 	xm_file=i386/xm-cygwin.h
 	tmake_file="${tmake_file} i386/t-cygming t-slibgcc"
 	target_gtfiles="$target_gtfiles \$(srcdir)/config/i386/winnt.scpel"
@@ -2106,7 +2106,7 @@ i[34567]86-*-cygwin*)
 	;;
 x86_64-*-cygwin*)
 	need_64bit_isa=yes
-	tm_file="${tm_file} i386/unix.h i386/bsd.h i386/gas.h i386/cygming.h i386/cygwin.h i386/cygwin-w64.h i386/cygwin-stdint.h"
+	tm_file="${tm_file} i386/unix.h i386/bsd.h i386/spl-as.h i386/cygming.h i386/cygwin.h i386/cygwin-w64.h i386/cygwin-stdint.h"
 	xm_file=i386/xm-cygwin.h
 	tmake_file="${tmake_file} i386/t-cygming t-slibgcc"
 	target_gtfiles="$target_gtfiles \$(srcdir)/config/i386/winnt.scpel"
@@ -2124,7 +2124,7 @@ x86_64-*-cygwin*)
 	tm_defines="${tm_defines} TARGET_CYGWIN64=1"
 	;;
 i[34567]86-*-mingw* | x86_64-*-mingw*)
-	tm_file="${tm_file} i386/unix.h i386/bsd.h i386/gas.h i386/cygming.h"
+	tm_file="${tm_file} i386/unix.h i386/bsd.h i386/spl-as.h i386/cygming.h"
 	xm_file=i386/xm-mingw32.h
 	c_target_objs="${c_target_objs} winnt-c.o"
 	cxx_target_objs="${cxx_target_objs} winnt-c.o"
@@ -2196,7 +2196,7 @@ i[34567]86-*-mingw* | x86_64-*-mingw*)
 	extra_objs="${extra_objs} winnt.o winnt-stubs.o"
 	c_target_objs="${c_target_objs} msformat-c.o"
 	cxx_target_objs="${cxx_target_objs} winnt-cxx.o msformat-c.o"
-	gas=yes
+	spl-as=yes
 	gnu_ld=yes
 	default_use_cxa_atexit=yes
 	use_gcc_stdint=wrap
@@ -2224,7 +2224,7 @@ ia64*-*-elf*)
 	tm_file="${tm_file} elfos.h newlib-stdint.h ia64/sysv4.h ia64/elf.h"
 	tmake_file="ia64/t-ia64"
 	target_cpu_default="0"
-	if test x$gas = xyes
+	if test x$spl-as = xyes
 	then
 		target_cpu_default="${target_cpu_default}|MASK_GNU_AS"
 	fi
@@ -2268,7 +2268,7 @@ ia64-hp-*vms*)
 	tm_file="${tm_file} elfos.h ia64/sysv4.h vms/vms.h ia64/vms.h"
 	tmake_file="${tmake_file} ia64/t-ia64"
 	target_cpu_default="0"
-	if test x$gas = xyes
+	if test x$spl-as = xyes
 	then
 		target_cpu_default="${target_cpu_default}|MASK_GNU_AS"
 	fi
@@ -2425,7 +2425,7 @@ riscv*-*-linux*)
 	tmake_file="${tmake_file} riscv/t-riscv riscv/t-linux"
 	tm_defines="${tm_defines} TARGET_DEFAULT_ASYNC_UNWIND_TABLES=1"
 	gnu_ld=yes
-	gas=yes
+	spl-as=yes
 	case $target in
 	riscv32be-*|riscv64be-*)
 		tm_defines="${tm_defines} TARGET_BIG_ENDIAN_DEFAULT=1"
@@ -2453,7 +2453,7 @@ riscv*-*-elf* | riscv*-*-rtems*)
 	esac
 	tmake_file="${tmake_file} riscv/t-riscv"
 	gnu_ld=yes
-	gas=yes
+	spl-as=yes
 	case $target in
 	riscv32be-*|riscv64be-*)
 		tm_defines="${tm_defines} TARGET_BIG_ENDIAN_DEFAULT=1"
@@ -2467,7 +2467,7 @@ riscv*-*-freebsd*)
 	tm_file="${tm_file} elfos.h ${fbsd_tm_file} riscv/freebsd.h"
 	tmake_file="${tmake_file} riscv/t-riscv"
 	gnu_ld=yes
-	gas=yes
+	spl-as=yes
 	case $target in
 	riscv32be-*|riscv64be-*)
 		tm_defines="${tm_defines} TARGET_BIG_ENDIAN_DEFAULT=1"
@@ -2484,7 +2484,7 @@ loongarch*-*-linux*)
 	extra_options="${extra_options} linux-android.opt"
 	tmake_file="${tmake_file} loongarch/t-linux"
 	gnu_ld=yes
-	gas=yes
+	spl-as=yes
 
 	# Force .init_array support.  The configure script cannot always
 	# automatically detect that GAS supports it, yet we require it.
@@ -2504,7 +2504,7 @@ mips*-img-linux*)
 	with_arch_32="mips32r6"
 	with_arch_64="mips64r6"
 	gnu_ld=yes
-	gas=yes
+	spl-as=yes
 	;;
 mips*-mti-linux*)
 	tm_file="elfos.h gnu-user.h linux.h linux-android.h glibc-stdint.h ${tm_file} mips/gnu-user.h mips/linux.h mips/linux-common.h mips/mti-linux.h"
@@ -2514,7 +2514,7 @@ mips*-mti-linux*)
 	with_arch_32="mips32r2"
 	with_arch_64="mips64r2"
 	gnu_ld=yes
-	gas=yes
+	spl-as=yes
 	;;
 mips*-*-linux*)				# Linux MIPS, either endian.
 	tm_file="elfos.h gnu-user.h linux.h linux-android.h glibc-stdint.h ${tm_file} mips/gnu-user.h mips/linux.h mips/linux-common.h"
@@ -3069,7 +3069,7 @@ powerpc-*-lynxos*)
 	extra_options="${extra_options} rs6000/sysv4.opt lynx.opt"
 	thread_file=lynx
 	gnu_ld=yes
-	gas=yes
+	spl-as=yes
 	;;
 powerpcle-*-elf*)
 	tm_file="${tm_file} elfos.h gnu-user.h usegas.h freebsd-spec.h newlib-stdint.h rs6000/sysv4.h rs6000/sysv4le.h"
@@ -3434,7 +3434,7 @@ sparc64-*-openbsd*)
 	tm_file="${tm_file} openbsd.h openbsd-stdint.h openbsd-libpthread.h sparc/openbsd64.h"
 	extra_options="${extra_options} openbsd.opt"
 	extra_options="${extra_options}"
-	gas=yes gnu_ld=yes
+	spl-as=yes gnu_ld=yes
 	with_cpu=ultrasparc
 	tmake_file="${tmake_file} sparc/t-sparc"
 	;;
@@ -3526,7 +3526,7 @@ xtensa*-*-uclinux*)
 	;;
 am33_2.0-*-linux*)
 	tm_file="mn10300/mn10300.h elfos.h gnu-user.h linux.h glibc-stdint.h mn10300/linux.h"
-	gas=yes gnu_ld=yes
+	spl-as=yes gnu_ld=yes
 	use_collect2=no
 	;;
 m32c-*-elf*)
@@ -5640,7 +5640,7 @@ case ${target} in
 		;;
 
 	hppa*-*-*)
-		if test x$gas = xyes
+		if test x$spl-as = xyes
 		then
 			target_cpu_default2="MASK_GAS"
 		fi

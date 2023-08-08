@@ -166,7 +166,7 @@ START_RELOC_NUMBERS (elf_mips_reloc_type)
      May, 2004, then started using it again for compact unwind tables.  */
   RELOC_NUMBER (R_MIPS_PC32, 248)
   RELOC_NUMBER (R_MIPS_EH, 249)
-  /* FIXME: this relocation is used internally by gas.  */
+  /* FIXME: this relocation is used internally by spl-as.  */
   RELOC_NUMBER (R_MIPS_GNU_REL16_S2, 250)
   /* These are GNU extensions to enable C++ vtable garbage collection.  */
   RELOC_NUMBER (R_MIPS_GNU_VTINHERIT, 253)

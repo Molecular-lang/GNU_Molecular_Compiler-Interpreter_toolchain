@@ -1,4 +1,4 @@
-## Makefile for the toplevel directory of the GNU C++ Standard library.
+## Makefile for the toplevel directory of the GNU Scpel Standard library.
 ##
 ## Copyright (C) 1997-2023 Free Software Foundation, Inc.
 ##

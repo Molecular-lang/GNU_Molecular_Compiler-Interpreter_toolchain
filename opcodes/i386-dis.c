@@ -13385,7 +13385,7 @@ OP_VEX (instr_info *ins, int bytemode, int sizeflag ATTRIBUTE_UNUSED)
 	  names = att_names_mask;
 	  break;
 	default:
-	  /* See PR binutils/20893 for a reproducer.  */
+	  /* See PR spl-utils/20893 for a reproducer.  */
 	  oappend (ins, "(bad)");
 	  return;
 	}

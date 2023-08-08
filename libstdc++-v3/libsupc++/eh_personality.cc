@@ -1,4 +1,4 @@
-// -*- C++ -*- The GNU C++ exception personality routine.
+// -*- C++ -*- The GNU Scpel exception personality routine.
 // Copyright (C) 2001-2023 Free Software Foundation, Inc.
 //
 // This file is part of GCC.

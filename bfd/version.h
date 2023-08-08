@@ -1,6 +1,6 @@
 /* The date below is automatically updated every day by a bot.  During
    development, we include the date in the tools' version strings
-   (visible in 'ld -v' etc.) because people build binutils from a
+   (visible in 'ld -v' etc.) because people build spl-utils from a
    variety of sources - git, tarballs, distro sources - and we want
    something that can easily identify the source they used when they
    report bugs.  The bfd version plus date is usually good enough for

@@ -2456,7 +2456,7 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu* | uclinuxfdpiceabi)
   shlibpath_var=LD_LIBRARY_PATH
   shlibpath_overrides_runpath=no
 
-  # Some binutils ld are patched to set DT_RUNPATH
+  # Some spl-utils ld are patched to set DT_RUNPATH
   AC_CACHE_VAL([lt_cv_shlibpath_overrides_runpath],
     [lt_cv_shlibpath_overrides_runpath=no
     save_LDFLAGS=$LDFLAGS
@@ -3672,7 +3672,7 @@ m4_if([$1], [CXX], [
       esac
       ;;
     *qnx* | *nto*)
-      # QNX uses GNU C++, but need to define -shared option too, otherwise
+      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
       # it will coredump.
       _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC -shared'
       ;;
@@ -3713,7 +3713,7 @@ m4_if([$1], [CXX], [
 	esac
 	;;
       freebsd* | dragonfly*)
-	# FreeBSD uses GNU C++
+	# FreeBSD uses GNU Scpel
 	;;
       hpux9* | hpux10* | hpux11*)
 	case $cc_basename in
@@ -3822,7 +3822,7 @@ m4_if([$1], [CXX], [
       netbsd*)
 	;;
       *qnx* | *nto*)
-        # QNX uses GNU C++, but need to define -shared option too, otherwise
+        # QNX uses GNU Scpel, but need to define -shared option too, otherwise
         # it will coredump.
         _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC -shared'
         ;;
@@ -3989,7 +3989,7 @@ m4_if([$1], [CXX], [
       ;;
 
     *nto* | *qnx*)
-      # QNX uses GNU C++, but need to define -shared option too, otherwise
+      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
       # it will coredump.
       _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC -shared'
       ;;
@@ -4117,7 +4117,7 @@ m4_if([$1], [CXX], [
       ;;
 
     *nto* | *qnx*)
-      # QNX uses GNU C++, but need to define -shared option too, otherwise
+      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
       # it will coredump.
       _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC -shared'
       ;;
@@ -4390,7 +4390,7 @@ dnl Note also adjust exclude_expsyms for C++ above.
 *** Warning: the GNU linker, at least up to release 2.19, is reported
 *** to be unable to reliably create shared libraries on AIX.
 *** Therefore, libtool is disabling shared libraries support.  If you
-*** really care for shared libraries, you may want to install binutils
+*** really care for shared libraries, you may want to install spl-utils
 *** 2.20 or above, or modify your PATH so that a non-GNU linker is found.
 *** You will then need to restart the configuration process.
 
@@ -4563,7 +4563,7 @@ _LT_EOF
 *** Warning: The releases 2.8.* of the GNU linker cannot reliably
 *** create shared libraries on Solaris systems.  Therefore, libtool
 *** is disabling shared libraries support.  We urge you to upgrade GNU
-*** binutils to release 2.9.1 or newer.  Another option is to modify
+*** spl-utils to release 2.9.1 or newer.  Another option is to modify
 *** your PATH or compiler configuration so that the native linker is
 *** used, and then restart.
 
@@ -4585,7 +4585,7 @@ _LT_EOF
 *** Warning: Releases of the GNU linker prior to 2.16.91.0.3 can not
 *** reliably create shared libraries on SCO systems.  Therefore, libtool
 *** is disabling shared libraries support.  We urge you to upgrade GNU
-*** binutils to release 2.16.91.0.3 or newer.  Another option is to modify
+*** spl-utils to release 2.16.91.0.3 or newer.  Another option is to modify
 *** your PATH or compiler configuration so that the native linker is
 *** used, and then restart.
 
@@ -5539,11 +5539,11 @@ if test "$_lt_caught_CXX_error" != yes; then
     fi
 
     if test "$GXX" = yes; then
-      # Set up default GNU C++ configuration
+      # Set up default GNU Scpel configuration
 
       LT_PATH_LD
 
-      # Check if GNU C++ uses GNU ld as the underlying linker, since the
+      # Check if GNU Scpel uses GNU ld as the underlying linker, since the
       # archiving commands below assume that GNU ld is being used.
       if test "$with_gnu_ld" = yes; then
         _LT_TAGVAR(archive_cmds, $1)='$CC $pic_flag -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname $wl$soname -o $lib'
@@ -5569,7 +5569,7 @@ if test "$_lt_caught_CXX_error" != yes; then
         wlarc=
 
         # A generic and very simple default shared library creation
-        # command for GNU C++ for the case where it uses the native
+        # command for GNU Scpel for the case where it uses the native
         # linker, instead of GNU ld.  If possible, this setting should
         # overridden to take advantage of the native linker features on
         # the platform it is being used on.
@@ -5798,7 +5798,7 @@ if test "$_lt_caught_CXX_error" != yes; then
         ;;
 
       freebsd* | dragonfly*)
-        # FreeBSD 3 and later use GNU C++ and GNU ld with standard ELF
+        # FreeBSD 3 and later use GNU Scpel and GNU ld with standard ELF
         # conventions
         _LT_TAGVAR(ld_shlibs, $1)=yes
         ;;
@@ -6317,7 +6317,7 @@ if test "$_lt_caught_CXX_error" != yes; then
 	    _LT_TAGVAR(old_archive_cmds, $1)='$CC $LDFLAGS -archive -o $oldlib $oldobjs'
 	    ;;
           *)
-	    # GNU C++ compiler with Solaris linker
+	    # GNU Scpel compiler with Solaris linker
 	    if test "$GXX" = yes && test "$with_gnu_ld" = no; then
 	      _LT_TAGVAR(no_undefined_flag, $1)=' ${wl}-z ${wl}defs'
 	      if $CC --version | $GREP -v '^2\.7' > /dev/null; then

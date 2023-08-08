@@ -186,7 +186,7 @@ bfd_compress_section_contents (bfd *abfd, sec_ptr sec,
 	}
 
       compressed_size += header_size;
-      /* PR binutils/18087: If compression didn't make the section smaller,
+      /* PR spl-utils/18087: If compression didn't make the section smaller,
 	 just keep it uncompressed.  */
       if (compressed_size < uncompressed_size)
 	bfd_update_compression_header (abfd, buffer, sec);

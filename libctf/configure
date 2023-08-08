@@ -973,8 +973,8 @@ do
   | --exec=* | --exe=* | --ex=*)
     exec_prefix=$ac_optarg ;;
 
-  -gas | --gas | --ga | --g)
-    # Obsolete; use --with-gas.
+  -spl-as | --spl-as | --ga | --g)
+    # Obsolete; use --with-spl-as.
     with_gas=yes ;;
 
   -help | --help | --hel | --he | -h)
@@ -2035,7 +2035,7 @@ do
       else
 	case $ac_arg in
 	  *=* | --config-cache | -C | -disable-* | --disable-* \
-	  | -enable-* | --enable-* | -gas | --g* | -nfp | --nf* \
+	  | -enable-* | --enable-* | -spl-as | --g* | -nfp | --nf* \
 	  | -q | -quiet | --q* | -silent | --sil* | -v | -verb* \
 	  | -with-* | --with-* | -without-* | --without-* | --x)
 	    case "$ac_configure_args0 " in
@@ -8767,7 +8767,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       ;;
 
     *nto* | *qnx*)
-      # QNX uses GNU C++, but need to define -shared option too, otherwise
+      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
       # it will coredump.
       lt_prog_compiler_pic='-fPIC -shared'
       ;;
@@ -8894,7 +8894,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       ;;
 
     *nto* | *qnx*)
-      # QNX uses GNU C++, but need to define -shared option too, otherwise
+      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
       # it will coredump.
       lt_prog_compiler_pic='-fPIC -shared'
       ;;
@@ -9345,7 +9345,7 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
 *** Warning: the GNU linker, at least up to release 2.19, is reported
 *** to be unable to reliably create shared libraries on AIX.
 *** Therefore, libtool is disabling shared libraries support.  If you
-*** really care for shared libraries, you may want to install binutils
+*** really care for shared libraries, you may want to install spl-utils
 *** 2.20 or above, or modify your PATH so that a non-GNU linker is found.
 *** You will then need to restart the configuration process.
 
@@ -9518,7 +9518,7 @@ _LT_EOF
 *** Warning: The releases 2.8.* of the GNU linker cannot reliably
 *** create shared libraries on Solaris systems.  Therefore, libtool
 *** is disabling shared libraries support.  We urge you to upgrade GNU
-*** binutils to release 2.9.1 or newer.  Another option is to modify
+*** spl-utils to release 2.9.1 or newer.  Another option is to modify
 *** your PATH or compiler configuration so that the native linker is
 *** used, and then restart.
 
@@ -9540,7 +9540,7 @@ _LT_EOF
 *** Warning: Releases of the GNU linker prior to 2.16.91.0.3 can not
 *** reliably create shared libraries on SCO systems.  Therefore, libtool
 *** is disabling shared libraries support.  We urge you to upgrade GNU
-*** binutils to release 2.16.91.0.3 or newer.  Another option is to modify
+*** spl-utils to release 2.16.91.0.3 or newer.  Another option is to modify
 *** your PATH or compiler configuration so that the native linker is
 *** used, and then restart.
 
@@ -10956,7 +10956,7 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
   shlibpath_var=LD_LIBRARY_PATH
   shlibpath_overrides_runpath=no
 
-  # Some binutils ld are patched to set DT_RUNPATH
+  # Some spl-utils ld are patched to set DT_RUNPATH
   if ${lt_cv_shlibpath_overrides_runpath+:} false; then :
   $as_echo_n "(cached) " >&6
 else

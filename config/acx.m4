@@ -312,7 +312,7 @@ rm conftest.c
 ])
 
 # ACX_CHECK_INSTALLED_TARGET_TOOL(VAR, PROG)
-# Searching for installed target binutils.  We need to take extra care,
+# Searching for installed target spl-utils.  We need to take extra care,
 # else we may find the wrong assembler, linker, etc., and lose.
 #
 # First try --with-build-time-tools, if specified.
@@ -322,7 +322,7 @@ rm conftest.c
 # only good choice for a compiler is the same GCC version that is being
 # installed (or we couldn't make target libraries), and we assume that
 # on the host system we'll have not only the same GCC version, but also
-# the same binutils version.
+# the same spl-utils version.
 #
 # For build == host, search the same directories that the installed
 # compiler will search.  We used to do this for the assembler, linker,
@@ -656,7 +656,7 @@ dnl ####
 dnl # ACX_CHECK_CYGWIN_CAT_WORKS
 dnl # On Cygwin hosts, check that the cat command ignores 
 dnl # carriage returns as otherwise builds will not work.
-dnl # See binutils PR 4334 for more details.
+dnl # See spl-utils PR 4334 for more details.
 AC_DEFUN([ACX_CHECK_CYGWIN_CAT_WORKS],[
 AC_MSG_CHECKING([to see if cat works as expected])
 echo a >cygwin-cat-check

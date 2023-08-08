@@ -25,7 +25,7 @@ along with GCC; see the file COPYING3.  If not see
 
 /* Prefix for internally generated assembler labels.  If we aren't using
    underscores, we are using prefix `.'s to identify labels that should
-   be ignored, as in `i386/gas.h' --karl@cs.umb.edu  */
+   be ignored, as in `i386/spl-as.h' --karl@cs.umb.edu  */
 
 #define LPREFIX "L"
 

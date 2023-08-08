@@ -5291,7 +5291,7 @@ elf_link_add_object_symbols (bfd *abfd, struct bfd_link_info *info)
 
 	      if (normal_align < common_align)
 		{
-		  /* PR binutils/2735 */
+		  /* PR spl-utils/2735 */
 		  if (normal_bfd == NULL)
 		    _bfd_error_handler
 		      /* xgettext:c-format */
@@ -8756,7 +8756,7 @@ struct elf_outext_info
    The relocations use a reserved elf-wide relocation type code (R_RELC
    external / BFD_RELOC_RELC internal) and an encoding of relocation field
    information (start bit, end bit, word width, etc) into the addend.  This
-   information is extracted from CGEN-generated operand tables within gas.
+   information is extracted from CGEN-generated operand tables within spl_as.
 
    Complex symbols are mangled symbols (STT_RELC external / BSF_RELC
    internal) representing prefix-notation expressions, including but not
@@ -8994,7 +8994,7 @@ eval_symbol (bfd_vma *result,
       symbuf[symlen] = '\0';
       *symp = sym + symlen;
 
-      /* Is it always possible, with complex symbols, that gas "mis-guessed"
+      /* Is it always possible, with complex symbols, that spl_as "mis-guessed"
 	 the symbol as a section, or vice-versa. so we're pretty liberal in our
 	 interpretation here; section means "try section first", not "must be a
 	 section", and likewise with symbol.  */

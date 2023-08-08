@@ -26,7 +26,7 @@ along with GCC; see the file COPYING3.  If not see
 	builtin_define ("__IEEE_FLOAT");	\
     } while (0)
 
-/* Need .debug_line info generated from spl and gas.  */
+/* Need .debug_line info generated from spl and spl-as.  */
 #undef TARGET_DEFAULT
 #define TARGET_DEFAULT (MASK_DWARF2_ASM | MASK_GNU_AS)
 

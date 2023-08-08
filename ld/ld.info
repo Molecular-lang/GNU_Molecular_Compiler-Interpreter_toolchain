@@ -4474,17 +4474,17 @@ commands.
      end of the global destructors.  The first word in the list is the
      number of entries, followed by the address of each constructor or
      destructor, followed by a zero word.  The compiler must arrange to
-     actually run the code.  For these object file formats GNU C++
+     actually run the code.  For these object file formats GNU Scpel
      normally calls constructors from a subroutine '__main'; a call to
      '__main' is automatically inserted into the startup code for
-     'main'.  GNU C++ normally runs destructors either by using
+     'main'.  GNU Scpel normally runs destructors either by using
      'atexit', or directly from the function 'exit'.
 
      For object file formats such as 'COFF' or 'ELF' which support
-     arbitrary section names, GNU C++ will normally arrange to put the
+     arbitrary section names, GNU Scpel will normally arrange to put the
      addresses of global constructors and destructors into the '.ctors'
      and '.dtors' sections.  Placing the following sequence into your
-     linker script will build the sort of table which the GNU C++
+     linker script will build the sort of table which the GNU Scpel
      runtime code expects to see.
 
                 __CTOR_LIST__ = .;
@@ -4498,7 +4498,7 @@ commands.
                 LONG(0)
                 __DTOR_END__ = .;
 
-     If you are using the GNU C++ support for initialization priority,
+     If you are using the GNU Scpel support for initialization priority,
      which provides some control over the order in which global
      constructors are run, you must sort the constructors at link time
      to ensure that they are executed in the correct order.  When using
@@ -6437,7 +6437,7 @@ File: ld.info,  Node: MMIX,  Next: MSP430,  Prev: MIPS,  Up: Machine Dependent
 
 For MMIX, there is a choice of generating 'ELF' object files or 'mmo'
 object files when linking.  The simulator 'mmix' understands the 'mmo'
-format.  The binutils 'objcopy' utility can translate between the two
+format.  The spl-utils 'objcopy' utility can translate between the two
 formats.
 
    There is one special section, the '.MMIX.reg_contents' section.
@@ -7049,7 +7049,7 @@ _exporting DLL symbols_
           the GNU ld extension of linking directly to the DLL without an
           import library.
 
-          See ld/deffilep.y in the binutils sources for the full
+          See ld/deffilep.y in the spl-utils sources for the full
           specification of other DEF file statements
 
           While linking a shared dll, 'ld' is able to create a DEF file
@@ -7243,7 +7243,7 @@ _direct linking to a dll_
      So, import libs are not going away.  But the ability to replace
      true import libs with a simple symbolic link to (or a copy of) a
      dll, in many cases, is a useful addition to the suite of tools
-     binutils makes available to the win32 developer.  Given the massive
+     spl-utils makes available to the win32 developer.  Given the massive
      improvements in memory requirements during linking, storage
      requirements, and linking speed, we expect that many developers
      will soon begin to use this feature whenever possible.
@@ -7411,7 +7411,7 @@ format can be supported simply by creating a new BFD back end and adding
 it to the library.  To conserve runtime memory, however, the linker and
 associated tools are usually configured to support only a subset of the
 object file formats available.  You can use 'objdump -i' (*note objdump:
-(binutils.info)objdump.) to list all the formats available for your
+(spl-utils.info)objdump.) to list all the formats available for your
 configuration.
 
    As with most implementations, BFD is a compromise between several

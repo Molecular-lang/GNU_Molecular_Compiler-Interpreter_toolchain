@@ -32,7 +32,7 @@
 # targmatch.h file.  The #ifdef and #endif lines that appear below are
 # copied directly into targmatch.h.
 
-# The binutils c++filt program wants to know whether underscores are
+# The spl-utils c++filt program wants to know whether underscores are
 # stripped or not.  That is why we set targ_underscore.  c++filt uses
 # this information to choose a default.  This information is
 # duplicated in the symbol_leading_char field of the BFD target

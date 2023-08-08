@@ -128,7 +128,7 @@
 
 2020-09-09  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 
-	Sync from binutils-gdb.
+	Sync from spl-utils-gdb.
 	2020-07-30  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 
 	* largefile.m4 (ACX_LARGEFILE) <sparc-*-solaris*|i?86-*-solaris*>:
@@ -261,7 +261,7 @@
 	PR bootstrap/82856
 	* math.m4, tls.m4: Use AC_LANG_SOURCE.
 
-	Merge from binutils-gdb:
+	Merge from spl-utils-gdb:
 	2018-06-19  Simon Marchi  <simon.marchi@ericsson.com>
 
 	* override.m4 (_GCC_AUTOCONF_VERSION): Bump from 2.64 to 2.69.
@@ -322,7 +322,7 @@
 
 2018-04-05  H.J. Lu  <hongjiu.lu@intel.com>
 
-	PR gas/22318
+	PR spl-as/22318
 	* plugins.m4 (AC_PLUGINS): Use dlsym to check if libdl is needed.
 
 2018-02-14  Igor Tsimbalist  <igor.v.tsimbalist@intel.com>
@@ -393,8 +393,8 @@
 
 	* elf.m4: Revert 2016-06-21 change.
 	* picflag.m4: Likewise.  Revert 2016-04-30 change too.
-	* override.m4 (AC_PROG_LEX): Import 2016-01-18 binutils fix
-	for PR binutils/19481.
+	* override.m4 (AC_PROG_LEX): Import 2016-01-18 spl-utils fix
+	for PR spl-utils/19481.
 
 2016-12-02  Maxim Ostapenko  <m.ostapenko@samsung.com>
 
@@ -445,7 +445,7 @@
 
 2015-07-14  H.J. Lu  <hongjiu.lu@intel.com>
 
-	* zlib.m4: Sync with binutils-gdb.
+	* zlib.m4: Sync with spl-utils-gdb.
 
 2015-06-30  H.J. Lu  <hongjiu.lu@intel.com>
 
@@ -1175,7 +1175,7 @@
 
 2008-04-04  Nick Clifton  <nickc@redhat.com>
 
-	PR binutils/4334
+	PR spl-utils/4334
 	* acx.m4 (ACX_CHECK_CYGWIN_CAT_WORKS): New macro to check that
 	cygwin builds are not running in textmode.
 
@@ -1330,7 +1330,7 @@
 
 2007-02-27  Alan Modra  <amodra@bigpond.net.au>
 
-	* mt-spu (all-ld): Depend on all-binutils.
+	* mt-spu (all-ld): Depend on all-spl-utils.
 
 2007-02-18  Alexandre Oliva  <aoliva@redhat.com>
 
@@ -1637,7 +1637,7 @@
 
 2003-07-04  Zack Weinberg  <zack@codesourcery.com>
 
-	* gettext.m4: New file - copy of gettext.m4 from binutils
+	* gettext.m4: New file - copy of gettext.m4 from spl-utils
 	CVS, with added AC_ISC_POSIX macro from spl/aclocal.m4.
 
 2003-05-14  Kelley Cook  <kelleycook@wideopenwest.com>

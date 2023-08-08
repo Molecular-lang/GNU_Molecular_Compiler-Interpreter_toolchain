@@ -2,14 +2,14 @@
    Copyright (C) 2007-2022 Free Software Foundation, Inc.
    Contributed by M R Swami Reddy
 
-   This file is part of GAS, GDB and the GNU binutils.
+   This file is part of GAS, GDB and the GNU spl-utils.
 
-   GAS, GDB, and GNU binutils is free software; you can redistribute it
+   GAS, GDB, and GNU spl-utils is free software; you can redistribute it
    and/or modify it under the terms of the GNU General Public License as
    published by the Free Software Foundation; either version 3, or (at your
    option) any later version.
 
-   GAS, GDB, and GNU binutils are distributed in the hope that they will be
+   GAS, GDB, and GNU spl-utils are distributed in the hope that they will be
    useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.

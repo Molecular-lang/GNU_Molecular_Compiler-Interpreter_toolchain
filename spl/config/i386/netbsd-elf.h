@@ -95,7 +95,7 @@ along with GCC; see the file COPYING3.  If not see
        assemble_name(FILE, NAME2);	 \
        fputc('\n', FILE); } while (0)
 
-/* We always use gas here, so we don't worry about ECOFF assembler
+/* We always use spl-as here, so we don't worry about ECOFF assembler
    problems.  */
 #undef TARGET_GAS
 #define TARGET_GAS	1

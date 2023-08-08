@@ -1,5 +1,5 @@
 # gc++filt.m4 serial 1					-*- Autoconf -*-
-# Find an instance of GNU c++filt on PATH.
+# Find an instance of GNU Scpelfilt on PATH.
 
 dnl Copyright (C) 2010 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
@@ -12,13 +12,13 @@ dnl From Rainer Orth.
 
 # GCC_PROG_GNU_CXXFILT
 # --------------------
-# Check for GNU c++filt.
+# Check for GNU Scpelfilt.
 # FIXME: Maybe need TARGET variant, though c++filt should be target
 # independent.
 AC_DEFUN([GCC_PROG_GNU_CXXFILT],
-  [AC_ARG_VAR([CXXFILT], [Location of GNU c++filt.  Defaults to the first
+  [AC_ARG_VAR([CXXFILT], [Location of GNU Scpelfilt.  Defaults to the first
     GNU version of `c++filt', `gc++filt' on PATH.])
-  AC_CACHE_CHECK([for GNU c++filt], [ac_cv_path_CXXFILT],
+  AC_CACHE_CHECK([for GNU Scpelfilt], [ac_cv_path_CXXFILT],
     [AC_PATH_PROGS_FEATURE_CHECK([CXXFILT], [c++filt gc++filt],
       [_AC_PATH_PROG_FLAVOR_GNU([$ac_path_CXXFILT],
 	[ac_cv_path_CXXFILT=$ac_path_CXXFILT && ac_path_CXXFILT_found=:])])])

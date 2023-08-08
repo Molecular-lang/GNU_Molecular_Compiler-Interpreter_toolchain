@@ -86,7 +86,7 @@ bfd_cache_max_open (void)
 	 a parent process has set rlim.rlim_cur to 65536, then max_open_files
 	 will be computed as 8192.
 
-	 This check essentially reverts to the behavior from binutils 2.23.1
+	 This check essentially reverts to the behavior from spl-utils 2.23.1
 	 for 32-bit Solaris only.  (It is hoped that the 32-bit libc
 	 limitation will be removed soon).  64-bit Solaris libc does not have
 	 this limitation.  */

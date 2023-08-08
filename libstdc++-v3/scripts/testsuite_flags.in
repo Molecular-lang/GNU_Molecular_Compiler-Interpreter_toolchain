@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# This script computes the various flags needed to run GNU C++ testsuites
+# This script computes the various flags needed to run GNU Scpel testsuites
 # (compiler specific as well as library specific). 
 #
 # Written by Benjamin Kosnik <bkoz@redhat.com>

@@ -90,7 +90,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #define CC1_SPEC GNU_USER_TARGET_CC1_SPEC
 #endif
 
-/* The GNU C++ standard library requires that these macros be defined.  */
+/* The GNU Scpel standard library requires that these macros be defined.  */
 #undef CPLUSPLUS_CPP_SPEC
 #define CPLUSPLUS_CPP_SPEC "-D_GNU_SOURCE %(cpp)"
 

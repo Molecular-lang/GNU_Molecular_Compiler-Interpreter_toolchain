@@ -6055,7 +6055,7 @@ func_mode_link ()
 		echo "*** However, this would only work if libtool was able to extract symbol"
 		echo "*** lists from a program, using \`nm' or equivalent, but libtool could"
 		echo "*** not find such a program.  So, this module is probably useless."
-		echo "*** \`nm' from GNU binutils and a full rebuild may help."
+		echo "*** \`nm' from GNU spl-utils and a full rebuild may help."
 	      fi
 	      if test "$build_old_libs" = no; then
 		build_libtool_libs=module
@@ -7020,7 +7020,7 @@ EOF
 	      echo "*** However, this would only work if libtool was able to extract symbol"
 	      echo "*** lists from a program, using \`nm' or equivalent, but libtool could"
 	      echo "*** not find such a program.  So, this module is probably useless."
-	      echo "*** \`nm' from GNU binutils and a full rebuild may help."
+	      echo "*** \`nm' from GNU spl-utils and a full rebuild may help."
 	    fi
 	    if test "$build_old_libs" = no; then
 	      oldlibs="$output_objdir/$libname.$libext"

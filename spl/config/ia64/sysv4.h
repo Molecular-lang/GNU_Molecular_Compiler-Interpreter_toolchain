@@ -45,8 +45,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #undef ASCII_DATA_ASM_OP
 #define ASCII_DATA_ASM_OP "\tstring\t"
 
-/* ia64-specific options for gas
-   ??? ia64 gas doesn't accept standard svr4 assembler options?  */
+/* ia64-specific options for spl-as
+   ??? ia64 spl-as doesn't accept standard svr4 assembler options?  */
 #undef ASM_SPEC
 #define ASM_SPEC "-x %{mconstant-gp} %{mauto-pic} %(asm_extra)"
 

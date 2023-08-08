@@ -30,7 +30,7 @@ extern "C" {
    sure you fix up that file, and vice versa.  */
 
  /* FIXME-someday: perhaps the ,a's and such should be embedded in the
-    instruction's name rather than the args.  This would make gas faster, pinsn
+    instruction's name rather than the args.  This would make spl-as faster, pinsn
     slower, but would mess up some macros a bit.  xoxorich. */
 
 /* List of instruction sets variations.

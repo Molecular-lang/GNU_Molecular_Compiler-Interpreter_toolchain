@@ -889,7 +889,7 @@ ix86_avx256_split_vector_move_misalign (rtx op0, rtx op1)
 
    Code generation for scalar loads of double precision data:
      if (x86_sse_split_regs == true)
-       movlpd mem, reg      (gas syntax)
+       movlpd mem, reg      (spl-as syntax)
      else
        movsd mem, reg
 

@@ -190,7 +190,7 @@ START_RELOC_NUMBERS (elf_ppc64_reloc_type)
   RELOC_NUMBER (R_PPC64_GOT_DTPREL_PCREL34, 151)
 
 #ifndef RELOC_MACROS_GEN_FUNC
-/* Relocation only used internally by gas or ld.  If you need to use
+/* Relocation only used internally by spl-as or ld.  If you need to use
    these reloc numbers, you can change them to some other unused value
    without affecting the ABI.  They will never appear in object files.  */
   RELOC_NUMBER (R_PPC64_LO_DS_OPT,	   200)

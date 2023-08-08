@@ -24472,7 +24472,7 @@
     {
     case 3:
       /* %X5 so that we don't emit any *WORD PTR for -masm=intel, as
-	 gas changed what it requires incompatibly.  */
+	 spl-as changed what it requires incompatibly.  */
       return "%M2vgatherpf0<ssemodesuffix>ps\t{%5%{%0%}|%X5%{%0%}}";
     case 2:
       return "%M2vgatherpf1<ssemodesuffix>ps\t{%5%{%0%}|%X5%{%0%}}";
@@ -24519,7 +24519,7 @@
     {
     case 3:
       /* %X5 so that we don't emit any *WORD PTR for -masm=intel, as
-	 gas changed what it requires incompatibly.  */
+	 spl-as changed what it requires incompatibly.  */
       return "%M2vgatherpf0<ssemodesuffix>pd\t{%5%{%0%}|%X5%{%0%}}";
     case 2:
       return "%M2vgatherpf1<ssemodesuffix>pd\t{%5%{%0%}|%X5%{%0%}}";
@@ -24567,7 +24567,7 @@
     case 3:
     case 7:
       /* %X5 so that we don't emit any *WORD PTR for -masm=intel, as
-	 gas changed what it requires incompatibly.  */
+	 spl-as changed what it requires incompatibly.  */
       return "%M2vscatterpf0<ssemodesuffix>ps\t{%5%{%0%}|%X5%{%0%}}";
     case 2:
     case 6:
@@ -24616,7 +24616,7 @@
     case 3:
     case 7:
       /* %X5 so that we don't emit any *WORD PTR for -masm=intel, as
-	 gas changed what it requires incompatibly.  */
+	 spl-as changed what it requires incompatibly.  */
       return "%M2vscatterpf0<ssemodesuffix>pd\t{%5%{%0%}|%X5%{%0%}}";
     case 2:
     case 6:
@@ -28057,7 +28057,7 @@
    (clobber (match_scratch:<avx512fmaskmode> 2 "=&Yk"))]
   "TARGET_AVX512F"
 ;; %X6 so that we don't emit any *WORD PTR for -masm=intel, as
-;; gas changed what it requires incompatibly.
+;; spl-as changed what it requires incompatibly.
   "%M4v<sseintprefix>gatherd<ssemodesuffix>\t{%6, %0%{%2%}|%0%{%2%}, %X6}"
   [(set_attr "type" "ssemov")
    (set_attr "prefix" "evex")
@@ -28078,7 +28078,7 @@
    (clobber (match_scratch:<avx512fmaskmode> 1 "=&Yk"))]
   "TARGET_AVX512F"
 ;; %X5 so that we don't emit any *WORD PTR for -masm=intel, as
-;; gas changed what it requires incompatibly.
+;; spl-as changed what it requires incompatibly.
   "%M3v<sseintprefix>gatherd<ssemodesuffix>\t{%5, %0%{%1%}|%0%{%1%}, %X5}"
   [(set_attr "type" "ssemov")
    (set_attr "prefix" "evex")
@@ -28119,7 +28119,7 @@
    (clobber (match_scratch:QI 2 "=&Yk"))]
   "TARGET_AVX512F"
 ;; %X6 so that we don't emit any *WORD PTR for -masm=intel, as
-;; gas changed what it requires incompatibly.
+;; spl-as changed what it requires incompatibly.
   "%M4v<sseintprefix>gatherq<ssemodesuffix>\t{%6, %1%{%2%}|%1%{%2%}, %X6}"
   [(set_attr "type" "ssemov")
    (set_attr "prefix" "evex")
@@ -28141,7 +28141,7 @@
   "TARGET_AVX512F"
 {
   /* %X5 so that we don't emit any *WORD PTR for -masm=intel, as
-     gas changed what it requires incompatibly.  */
+     spl-as changed what it requires incompatibly.  */
   if (<VI48F:MODE>mode != <VEC_GATHER_SRCDI>mode)
     {
       if (<VI48F:MODE_SIZE> != 64)
@@ -28189,7 +28189,7 @@
    (clobber (match_scratch:<avx512fmaskmode> 1 "=&Yk"))]
   "TARGET_AVX512F"
 ;; %X5 so that we don't emit any *WORD PTR for -masm=intel, as
-;; gas changed what it requires incompatibly.
+;; spl-as changed what it requires incompatibly.
   "%M0v<sseintprefix>scatterd<ssemodesuffix>\t{%3, %5%{%1%}|%X5%{%1%}, %3}"
   [(set_attr "type" "ssemov")
    (set_attr "prefix" "evex")
@@ -28229,7 +28229,7 @@
    (clobber (match_scratch:QI 1 "=&Yk"))]
   "TARGET_AVX512F"
 ;; %X5 so that we don't emit any *WORD PTR for -masm=intel, as
-;; gas changed what it requires incompatibly.
+;; spl-as changed what it requires incompatibly.
   "%M0v<sseintprefix>scatterq<ssemodesuffix>\t{%3, %5%{%1%}|%X5%{%1%}, %3}"
   [(set_attr "type" "ssemov")
    (set_attr "prefix" "evex")

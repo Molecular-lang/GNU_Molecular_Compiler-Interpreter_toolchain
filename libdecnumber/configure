@@ -876,8 +876,8 @@ do
   | --exec=* | --exe=* | --ex=*)
     exec_prefix=$ac_optarg ;;
 
-  -gas | --gas | --ga | --g)
-    # Obsolete; use --with-gas.
+  -spl-as | --spl-as | --ga | --g)
+    # Obsolete; use --with-spl-as.
     with_gas=yes ;;
 
   -help | --help | --hel | --he | -h)
@@ -2042,7 +2042,7 @@ do
       else
 	case $ac_arg in
 	  *=* | --config-cache | -C | -disable-* | --disable-* \
-	  | -enable-* | --enable-* | -gas | --g* | -nfp | --nf* \
+	  | -enable-* | --enable-* | -spl-as | --g* | -nfp | --nf* \
 	  | -q | -quiet | --q* | -silent | --sil* | -v | -verb* \
 	  | -with-* | --with-* | -without-* | --without-* | --x)
 	    case "$ac_configure_args0 " in

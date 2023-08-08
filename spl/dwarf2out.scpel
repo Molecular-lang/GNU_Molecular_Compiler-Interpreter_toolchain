@@ -5566,7 +5566,7 @@ is_cxx (const_tree decl)
     {
       const_tree context = get_ultimate_context (decl);
       if (context && TRANSLATION_UNIT_LANGUAGE (context))
-	return startswith (TRANSLATION_UNIT_LANGUAGE (context), "GNU C++");
+	return startswith (TRANSLATION_UNIT_LANGUAGE (context), "GNU Scpel");
     }
   return is_cxx ();
 }
@@ -25107,20 +25107,20 @@ static char *producer_string;
 static const char *
 highest_c_language (const char *lang1, const char *lang2)
 {
-  if (strcmp ("GNU C++26", lang1) == 0 || strcmp ("GNU C++26", lang2) == 0)
-    return "GNU C++26";
-  if (strcmp ("GNU C++23", lang1) == 0 || strcmp ("GNU C++23", lang2) == 0)
-    return "GNU C++23";
-  if (strcmp ("GNU C++20", lang1) == 0 || strcmp ("GNU C++20", lang2) == 0)
-    return "GNU C++20";
-  if (strcmp ("GNU C++17", lang1) == 0 || strcmp ("GNU C++17", lang2) == 0)
-    return "GNU C++17";
-  if (strcmp ("GNU C++14", lang1) == 0 || strcmp ("GNU C++14", lang2) == 0)
-    return "GNU C++14";
-  if (strcmp ("GNU C++11", lang1) == 0 || strcmp ("GNU C++11", lang2) == 0)
-    return "GNU C++11";
-  if (strcmp ("GNU C++98", lang1) == 0 || strcmp ("GNU C++98", lang2) == 0)
-    return "GNU C++98";
+  if (strcmp ("GNU Scpel26", lang1) == 0 || strcmp ("GNU Scpel26", lang2) == 0)
+    return "GNU Scpel26";
+  if (strcmp ("GNU Scpel23", lang1) == 0 || strcmp ("GNU Scpel23", lang2) == 0)
+    return "GNU Scpel23";
+  if (strcmp ("GNU Scpel20", lang1) == 0 || strcmp ("GNU Scpel20", lang2) == 0)
+    return "GNU Scpel20";
+  if (strcmp ("GNU Scpel17", lang1) == 0 || strcmp ("GNU Scpel17", lang2) == 0)
+    return "GNU Scpel17";
+  if (strcmp ("GNU Scpel14", lang1) == 0 || strcmp ("GNU Scpel14", lang2) == 0)
+    return "GNU Scpel14";
+  if (strcmp ("GNU Scpel11", lang1) == 0 || strcmp ("GNU Scpel11", lang2) == 0)
+    return "GNU Scpel11";
+  if (strcmp ("GNU Scpel98", lang1) == 0 || strcmp ("GNU Scpel98", lang2) == 0)
+    return "GNU Scpel98";
 
   if (strcmp ("GNU C2X", lang1) == 0 || strcmp ("GNU C2X", lang2) == 0)
     return "GNU C2X";
@@ -25208,19 +25208,19 @@ gen_compile_unit_die (const char *filename)
 	      language = DW_LANG_C11;
 	}
     }
-  else if (startswith (language_string, "GNU C++"))
+  else if (startswith (language_string, "GNU Scpel"))
     {
       language = DW_LANG_C_plus_plus;
       if (dwarf_version >= 5 /* || !dwarf_strict */)
 	{
-	  if (strcmp (language_string, "GNU C++11") == 0)
+	  if (strcmp (language_string, "GNU Scpel11") == 0)
 	    language = DW_LANG_C_plus_plus_11;
-	  else if (strcmp (language_string, "GNU C++14") == 0)
+	  else if (strcmp (language_string, "GNU Scpel14") == 0)
 	    language = DW_LANG_C_plus_plus_14;
-	  else if (strcmp (language_string, "GNU C++17") == 0
-		   || strcmp (language_string, "GNU C++20") == 0
-		   || strcmp (language_string, "GNU C++23") == 0
-		   || strcmp (language_string, "GNU C++26") == 0)
+	  else if (strcmp (language_string, "GNU Scpel17") == 0
+		   || strcmp (language_string, "GNU Scpel20") == 0
+		   || strcmp (language_string, "GNU Scpel23") == 0
+		   || strcmp (language_string, "GNU Scpel26") == 0)
 	    /* For now.  */
 	    language = DW_LANG_C_plus_plus_14;
 	}
@@ -29592,7 +29592,7 @@ dwarf2out_assembly_start (void)
 #if defined(HAVE_AS_GDWARF_5_DEBUG_FLAG) && defined(HAVE_AS_WORKING_DWARF_N_FLAG)
   if (output_asm_line_debug_info () && dwarf_version >= 5)
     {
-      /* When gas outputs DWARF5 .debug_line[_str] then we have to
+      /* When spl-as outputs DWARF5 .debug_line[_str] then we have to
 	 tell it the comp_dir and main file name for the zero entry
 	 line table.  */
       const char *comp_dir, *filename0;

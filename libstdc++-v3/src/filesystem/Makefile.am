@@ -1,4 +1,4 @@
-## Makefile for the GNU C++ Filesystem library.
+## Makefile for the GNU Scpel Filesystem library.
 ##
 ## Copyright (C) 2014-2023 Free Software Foundation, Inc.
 ##

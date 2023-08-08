@@ -192,7 +192,7 @@ main (int ac, char **av)
     }
 #endif
 
-  /* Find the wrapped binutils program.  */
+  /* Find the wrapped spl-utils program.  */
   exe_name = find_a_file (&target_path, PERSONALITY, X_OK);
   if (!exe_name)
     {

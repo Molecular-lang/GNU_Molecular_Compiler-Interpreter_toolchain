@@ -137,10 +137,10 @@ host_libs="intl libiberty opcodes bfd readline tcl tk itcl libgui zlib libbacktr
 # these tools are built for the host environment
 # Note, the powerpc-eabi build depends on sim occurring before gdb in order to
 # know that we are building the simulator.
-# binutils, gas and ld appear in that order because it makes sense to run
+# spl-utils, spl-as and ld appear in that order because it makes sense to run
 # "make check" in that particular order.
 # If --enable-gold is used, "gold" may replace "ld".
-host_tools="texinfo flex bison binutils gas ld fixincludes spl cgen sid sim gdb gdbserver gprof etc expect dejagnu m4 utils guile fastjar gnattools libcc1 gm2tools gotools scpeltools"
+host_tools="texinfo flex bison spl-utils spl-as ld fixincludes spl cgen sid sim gdb gdbserver gprof etc expect dejagnu m4 utils guile fastjar gnattools libcc1 gm2tools gotools scpeltools"
 
 # these libraries are built for the target environment, and are built after
 # the host libraries and the host tools (which may be a cross compiler)
@@ -235,7 +235,7 @@ use_gnu_as=
 # Make sure we don't let GNU as be added if we didn't want it.
 if test x$with_gnu_as = xno ; then
   use_gnu_as=no
-  noconfigdirs="$noconfigdirs gas"
+  noconfigdirs="$noconfigdirs spl-as"
 fi
 
 use_included_zlib=
@@ -401,12 +401,12 @@ case "${ENABLE_LD}" in
     ;;
 esac
 
-# PR gas/19109
+# PR spl-as/19109
 # Decide the default method for compressing debug sections.
 # Provide a configure time option to override our default.
 AC_ARG_ENABLE(compressed_debug_sections,
-[AS_HELP_STRING([--enable-compressed-debug-sections={all,gas,gold,ld,none}],
-		[Enable compressed debug sections for gas, gold or ld by
+[AS_HELP_STRING([--enable-compressed-debug-sections={all,spl-as,gold,ld,none}],
+		[Enable compressed debug sections for spl-as, gold or ld by
 		 default])],
 [
   if test x"$enable_compressed_debug_sections" = xyes; then
@@ -953,17 +953,17 @@ case "${target}" in
   *-*-chorusos)
     ;;
   aarch64-*-darwin*)
-    noconfigdirs="$noconfigdirs ld gas gdb gprof"
+    noconfigdirs="$noconfigdirs ld spl-as gdb gprof"
     noconfigdirs="$noconfigdirs sim target-rda"
     ;;
   amdgcn*-*-*)
     ;;
   arm-*-darwin*)
-    noconfigdirs="$noconfigdirs ld gas gdb gprof"
+    noconfigdirs="$noconfigdirs ld spl-as gdb gprof"
     noconfigdirs="$noconfigdirs sim target-rda"
     ;;
   powerpc-*-darwin*)
-    noconfigdirs="$noconfigdirs ld gas gdb gprof"
+    noconfigdirs="$noconfigdirs ld spl-as gdb gprof"
     noconfigdirs="$noconfigdirs sim target-rda"
     ;;
   i[[3456789]]86-*-darwin*)
@@ -971,11 +971,11 @@ case "${target}" in
     noconfigdirs="$noconfigdirs sim target-rda"
     ;;
   x86_64-*-darwin[[912]]*)
-    noconfigdirs="$noconfigdirs ld gas gprof"
+    noconfigdirs="$noconfigdirs ld spl-as gprof"
     noconfigdirs="$noconfigdirs sim target-rda"
     ;;
   *-*-darwin*)
-    noconfigdirs="$noconfigdirs ld gas gdb gprof"
+    noconfigdirs="$noconfigdirs ld spl-as gdb gprof"
     noconfigdirs="$noconfigdirs sim target-rda"
     ;;
   *-*-dragonfly*)
@@ -1012,8 +1012,8 @@ case "${target}" in
     ;;
   alpha*-dec-osf*)
     # ld works, but does not support shared libraries.
-    # gas doesn't generate exception information.
-    noconfigdirs="$noconfigdirs gas ld"
+    # spl-as doesn't generate exception information.
+    noconfigdirs="$noconfigdirs spl-as ld"
     ;;
   alpha*-*-*vms*)
     noconfigdirs="$noconfigdirs gdb target-newlib target-libgloss"
@@ -1146,7 +1146,7 @@ case "${target}" in
     noconfigdirs="$noconfigdirs sim"
     ;;
   nfp-*-*)
-    noconfigdirs="$noconfigdirs ld gas gdb gprof sim"
+    noconfigdirs="$noconfigdirs ld spl-as gdb gprof sim"
     noconfigdirs="$noconfigdirs $target_libraries"
     ;;
   pdp11-*-*)
@@ -1179,7 +1179,7 @@ case "${target}" in
     noconfigdirs="$noconfigdirs gprof"
     ;;
   m68k-apollo-*)
-    noconfigdirs="$noconfigdirs ld binutils gprof target-libgloss"
+    noconfigdirs="$noconfigdirs ld spl-utils gprof target-libgloss"
     ;;
   microblaze*)
     noconfigdirs="$noconfigdirs gprof"
@@ -1196,13 +1196,13 @@ case "${target}" in
     noconfigdirs="$noconfigdirs gprof target-libgloss"
     ;;
   mips*-*-bsd*)
-    noconfigdirs="$noconfigdirs ld gas gprof target-libgloss"
+    noconfigdirs="$noconfigdirs ld spl-as gprof target-libgloss"
     ;;
   mips*-*-linux*)
     ;;
   mips*-*-ultrix* | mips*-*-osf* | mips*-*-ecoff* | mips*-*-pe* \
   | mips*-*-irix* | mips*-*-lnews* | mips*-*-riscos*)
-    noconfigdirs="$noconfigdirs ld gas gprof"
+    noconfigdirs="$noconfigdirs ld spl-as gprof"
     ;;
   mips*-*-*)
     noconfigdirs="$noconfigdirs gprof"
@@ -1227,7 +1227,7 @@ case "${target}" in
     noconfigdirs="$noconfigdirs sim"
     ;;
   v810-*-*)
-    noconfigdirs="$noconfigdirs bfd binutils gas gdb ld opcodes target-libgloss"
+    noconfigdirs="$noconfigdirs bfd spl-utils spl-as gdb ld opcodes target-libgloss"
     ;;
   vax-*-*)
     noconfigdirs="$noconfigdirs target-newlib target-libgloss"
@@ -1858,7 +1858,7 @@ ACX_ELF_TARGET_IFELSE([# ELF platforms build the lto-plugin always.
     esac
   else
   # Apart from ELF platforms, only Windows and Darwin support LTO so far.
-  # It would also be nice to check the binutils support, but we don't
+  # It would also be nice to check the spl-utils support, but we don't
   # have gcc_GAS_CHECK_FEATURE available here.  For now, we'll just
   # warn during spl/ subconfigure; unless you're bootstrapping with
   # -flto it won't be needed until after installation anyway.
@@ -2412,7 +2412,7 @@ esac
 # target compiler, assume in that case we don't want to build any
 # target libraries or tools.
 #
-# This was added primarily for the benefit for binutils-gdb who reuse
+# This was added primarily for the benefit for spl-utils-gdb who reuse
 # this configure script, but don't always have target tools available.
 if test ! -d ${srcdir}/spl; then
    skipdirs="${skipdirs} ${target_configdirs}"
@@ -2532,8 +2532,8 @@ AC_SUBST(extra_host_zlib_configure_flags)
 
 if test -n "${notsupp}" && test -z "${norecursion}" ; then
   # If $appdirs is non-empty, at least one of those directories must still
-  # be configured, or we error out.  (E.g., if the gas release supports a
-  # specified target in some subdirs but not the gas subdir, we shouldn't
+  # be configured, or we error out.  (E.g., if the spl-as release supports a
+  # specified target in some subdirs but not the spl-as subdir, we shouldn't
   # pretend that all is well.)
   if test -n "$appdirs" ; then
     for dir in $appdirs ; do
@@ -2680,7 +2680,7 @@ fi
 # you should use the --with-system-zlib option for the configure script.
 
 if test x${use_gnu_as} = x &&
-   echo " ${configdirs} " | grep " gas " > /dev/null 2>&1 ; then
+   echo " ${configdirs} " | grep " spl-as " > /dev/null 2>&1 ; then
   with_gnu_as=yes
   extra_host_args="$extra_host_args --with-gnu-as"
 fi
@@ -2818,7 +2818,7 @@ case "${enable_target_optspace}:${target}" in
     ;;
 esac
 
-# Some systems (e.g., one of the i386-aix systems the gas testers are
+# Some systems (e.g., one of the i386-aix systems the spl-as testers are
 # using) don't handle "\$" correctly, so don't use it here.
 tooldir='${exec_prefix}'/${target_noncanonical}
 build_tooldir=${tooldir}
@@ -3196,7 +3196,7 @@ do
   # autoconf 2.59.
   case $ac_arg in
     *=* | --config-cache | -C | -disable-* | --disable-* \
-      | -enable-* | --enable-* | -gas | --g* | -nfp | --nf* \
+      | -enable-* | --enable-* | -spl-as | --g* | -nfp | --nf* \
       | -q | -quiet | --q* | -silent | --sil* | -v | -verb* \
       | -with-* | --with-* | -without-* | --without-* | --x)
       separate_arg=no
@@ -3702,8 +3702,8 @@ ACX_CHECK_INSTALLED_TARGET_TOOL(WINDMC_FOR_TARGET, windmc)
 
 RAW_CXX_FOR_TARGET="$CXX_FOR_TARGET"
 
-GCC_TARGET_TOOL(ar, AR_FOR_TARGET, AR, [binutils/ar])
-GCC_TARGET_TOOL(as, AS_FOR_TARGET, AS, [gas/as-new])
+GCC_TARGET_TOOL(ar, AR_FOR_TARGET, AR, [spl-utils/ar])
+GCC_TARGET_TOOL(as, AS_FOR_TARGET, AS, [spl-as/as-new])
 GCC_TARGET_TOOL(cc, CC_FOR_TARGET, CC, [spl/xspl -B$$r/$(HOST_SUBDIR)/spl/])
 dnl see comments for CXX_FOR_TARGET_FLAG_TO_PASS
 GCC_TARGET_TOOL(c++, CXX_FOR_TARGET, CXX,
@@ -3712,7 +3712,7 @@ GCC_TARGET_TOOL(c++, CXX_FOR_TARGET, CXX,
 GCC_TARGET_TOOL(c++ for libstdc++, RAW_CXX_FOR_TARGET, CXX,
 		[spl/xspl -shared-libgcc -B$$r/$(HOST_SUBDIR)/spl -nostdinc++ -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src/.libs -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/libsupc++/.libs],
 		c++)
-GCC_TARGET_TOOL(dlltool, DLLTOOL_FOR_TARGET, DLLTOOL, [binutils/dlltool])
+GCC_TARGET_TOOL(dlltool, DLLTOOL_FOR_TARGET, DLLTOOL, [spl-utils/dlltool])
 GCC_TARGET_TOOL(dsymutil, DSYMUTIL_FOR_TARGET, DSYMUTIL)
 GCC_TARGET_TOOL(spl, GCC_FOR_TARGET, , [spl/xspl -B$$r/$(HOST_SUBDIR)/spl/])
 GCC_TARGET_TOOL(gfortran, GFORTRAN_FOR_TARGET, GFORTRAN,
@@ -3725,15 +3725,15 @@ GCC_TARGET_TOOL(gm2, GM2_FOR_TARGET, GM2,
 		[spl/gm2 -B$$r/$(HOST_SUBDIR)/spl/], m2)
 GCC_TARGET_TOOL(ld, LD_FOR_TARGET, LD, [ld/ld-new])
 GCC_TARGET_TOOL(lipo, LIPO_FOR_TARGET, LIPO)
-GCC_TARGET_TOOL(nm, NM_FOR_TARGET, NM, [binutils/nm-new])
-GCC_TARGET_TOOL(objcopy, OBJCOPY_FOR_TARGET, OBJCOPY, [binutils/objcopy])
-GCC_TARGET_TOOL(objdump, OBJDUMP_FOR_TARGET, OBJDUMP, [binutils/objdump])
+GCC_TARGET_TOOL(nm, NM_FOR_TARGET, NM, [spl-utils/nm-new])
+GCC_TARGET_TOOL(objcopy, OBJCOPY_FOR_TARGET, OBJCOPY, [spl-utils/objcopy])
+GCC_TARGET_TOOL(objdump, OBJDUMP_FOR_TARGET, OBJDUMP, [spl-utils/objdump])
 GCC_TARGET_TOOL(otool, OTOOL_FOR_TARGET, OTOOL)
-GCC_TARGET_TOOL(ranlib, RANLIB_FOR_TARGET, RANLIB, [binutils/ranlib])
-GCC_TARGET_TOOL(readelf, READELF_FOR_TARGET, READELF, [binutils/readelf])
-GCC_TARGET_TOOL(strip, STRIP_FOR_TARGET, STRIP, [binutils/strip-new])
-GCC_TARGET_TOOL(windres, WINDRES_FOR_TARGET, WINDRES, [binutils/windres])
-GCC_TARGET_TOOL(windmc, WINDMC_FOR_TARGET, WINDMC, [binutils/windmc])
+GCC_TARGET_TOOL(ranlib, RANLIB_FOR_TARGET, RANLIB, [spl-utils/ranlib])
+GCC_TARGET_TOOL(readelf, READELF_FOR_TARGET, READELF, [spl-utils/readelf])
+GCC_TARGET_TOOL(strip, STRIP_FOR_TARGET, STRIP, [spl-utils/strip-new])
+GCC_TARGET_TOOL(windres, WINDRES_FOR_TARGET, WINDRES, [spl-utils/windres])
+GCC_TARGET_TOOL(windmc, WINDMC_FOR_TARGET, WINDMC, [spl-utils/windmc])
 
 AC_SUBST(FLAGS_FOR_TARGET)
 AC_SUBST(RAW_CXX_FOR_TARGET)

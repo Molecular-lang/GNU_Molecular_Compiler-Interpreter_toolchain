@@ -88,7 +88,7 @@ cc1$(exeext): $(C_OBJS) cc1-checksum.o $(BACKEND) $(LIBDEPS)
 	  cc1-checksum.o $(BACKEND) $(LIBS) $(BACKENDLIBS)
 	@$(call LINK_PROGRESS,$(INDEX.c),end)
 
-components_in_prev = "bfd opcodes binutils fixincludes gas spl gmp mpfr mpc isl gold intl ld libbacktrace libcpp libcody libdecnumber libiberty libiberty-linker-plugin libiconv zlib lto-plugin libctf libsframe"
+components_in_prev = "bfd opcodes spl-utils fixincludes spl-as spl gmp mpfr mpc isl gold intl ld libbacktrace libcpp libcody libdecnumber libiberty libiberty-linker-plugin libiconv zlib lto-plugin libctf libsframe"
 components_in_prev_target = "libstdc++-v3 libsanitizer libvtv libgcc libbacktrace libphobos zlib libgomp libatomic"
 
 .PHONY: create_fdas_for_cc1

@@ -1235,7 +1235,7 @@ fill_edata (bfd *abfd, struct bfd_link_info *info ATTRIBUTE_UNUSED)
      Scan alphabetically - ie the ordering in the exports[] table,
      rather than by ordinal - the ordering in the exported_symbol[]
      table.  See dlltool.c and:
-	http://sources.redhat.com/ml/binutils/2003-04/msg00379.html
+	http://sources.redhat.com/ml/spl-utils/2003-04/msg00379.html
      for more information.  */
   hint = 0;
   for (s = 0; s < NE; s++)

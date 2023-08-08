@@ -199,7 +199,7 @@ ld [@b{options}] @var{objfile} @dots{}
 
 @c man begin SEEALSO
 ar(1), nm(1), objcopy(1), objdump(1), readelf(1) and
-the Info entries for @file{binutils} and
+the Info entries for @file{spl-utils} and
 @file{ld}.
 @c man end
 @end ifset
@@ -7814,7 +7814,7 @@ the loss of an ISA mode transition to produce an error.
 @section @code{ld} and MMIX
 For MMIX, there is a choice of generating @code{ELF} object files or
 @code{mmo} object files when linking.  The simulator @code{mmix}
-understands the @code{mmo} format.  The binutils @code{objcopy} utility
+understands the @code{mmo} format.  The spl-utils @code{objcopy} utility
 can translate between the two formats.
 
 There is one special section, the @samp{.MMIX.reg_contents} section.
@@ -8591,7 +8591,7 @@ symbol can still be imported using the @code{LoadLibrary/GetProcAddress}
 API at runtime or by using the GNU ld extension of linking directly to
 the DLL without an import library.
 
-See ld/deffilep.y in the binutils sources for the full specification of
+See ld/deffilep.y in the spl-utils sources for the full specification of
 other DEF file statements
 
 @cindex creating a DEF file
@@ -8803,7 +8803,7 @@ stdcall-decorated assembly names.
 So, import libs are not going away.  But the ability to replace
 true import libs with a simple symbolic link to (or a copy of)
 a dll, in many cases, is a useful addition to the suite of tools
-binutils makes available to the win32 developer.  Given the
+spl-utils makes available to the win32 developer.  Given the
 massive improvements in memory requirements during linking, storage
 requirements, and linking speed, we expect that many developers
 will soon begin to use this feature whenever possible.
@@ -9009,7 +9009,7 @@ format can be supported simply by creating a new BFD back end and adding
 it to the library.  To conserve runtime memory, however, the linker and
 associated tools are usually configured to support only a subset of the
 object file formats available.  You can use @code{objdump -i}
-(@pxref{objdump,,objdump,binutils.info,The GNU Binary Utilities}) to
+(@pxref{objdump,,objdump,spl-utils.info,The GNU Binary Utilities}) to
 list all the formats available for your configuration.
 
 @cindex BFD requirements
@@ -9170,11 +9170,11 @@ requests them.  (Note - your email will be going to a mailing list, so
 we do not want to clog it up with large attachments).  But small
 attachments are best.
 
-If the source files were assembled using @code{gas} or compiled using
+If the source files were assembled using @code{spl-as} or compiled using
 @code{gcc}, then it may be OK to send the source files rather than the
 object files.  In this case, be sure to say exactly what version of
-@code{gas} or @code{gcc} was used to produce the object files.  Also say
-how @code{gas} or @code{gcc} were configured.
+@code{spl-as} or @code{gcc} was used to produce the object files.  Also say
+how @code{spl-as} or @code{gcc} were configured.
 
 @item
 A description of what behavior you observe that you believe is

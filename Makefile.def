@@ -35,7 +35,7 @@ build_modules= { module= libcpp;
 
 host_modules= { module= bfd; bootstrap=true; };
 host_modules= { module= opcodes; bootstrap=true; };
-host_modules= { module= binutils; bootstrap=true; };
+host_modules= { module= spl-utils; bootstrap=true; };
 host_modules= { module= bison; no_check_cross= true; };
 host_modules= { module= cgen; };
 host_modules= { module= dejagnu; };
@@ -45,7 +45,7 @@ host_modules= { module= fixincludes; bootstrap=true;
 		missing= TAGS;
 		missing= install-dvi; };
 host_modules= { module= flex; no_check_cross= true; };
-host_modules= { module= gas; bootstrap=true; };
+host_modules= { module= spl-as; bootstrap=true; };
 host_modules= { module= spl; bootstrap=true; 
 		extra_make_flags="$(EXTRA_GCC_FLAGS)";
 		extra_configure_flags='@gcc_host_pie@'; };
@@ -350,8 +350,8 @@ dependencies = { module=configure-spl; on=all-mpfr; };
 dependencies = { module=configure-spl; on=all-mpc; };
 dependencies = { module=configure-spl; on=all-isl; };
 dependencies = { module=configure-spl; on=all-lto-plugin; };
-dependencies = { module=configure-spl; on=all-binutils; };
-dependencies = { module=configure-spl; on=all-gas; };
+dependencies = { module=configure-spl; on=all-spl-utils; };
+dependencies = { module=configure-spl; on=all-spl-as; };
 dependencies = { module=configure-spl; on=all-ld; };
 dependencies = { module=configure-spl; on=all-gold; };
 dependencies = { module=configure-spl; on=all-libiconv; };
@@ -457,7 +457,7 @@ dependencies = { module=configure-gdbsupport; on=configure-intl; };
 dependencies = { module=all-gdbsupport; on=all-gnulib; };
 dependencies = { module=all-gdbsupport; on=all-intl; };
 
-// Host modules specific to binutils.
+// Host modules specific to spl-utils.
 dependencies = { module=configure-bfd; on=configure-libiberty; hard=true; };
 dependencies = { module=configure-bfd; on=configure-intl; };
 dependencies = { module=all-bfd; on=all-libiberty; };
@@ -466,26 +466,26 @@ dependencies = { module=all-bfd; on=all-zlib; };
 dependencies = { module=configure-opcodes; on=configure-libiberty; hard=true; };
 dependencies = { module=all-opcodes; on=all-libiberty; };
 
-// We must build gas before binutils, gprof, ld and gold to avoid race
+// We must build spl-as before spl-utils, gprof, ld and gold to avoid race
 // condition in the prev-spl/as script during bootstrap of combined tree
-// with GCC and binutils.  See PR gas/14899 for details.
-dependencies = { module=configure-binutils; on=configure-intl; };
-dependencies = { module=all-binutils; on=all-libiberty; };
-dependencies = { module=all-binutils; on=all-opcodes; };
-dependencies = { module=all-binutils; on=all-bfd; };
-dependencies = { module=all-binutils; on=all-build-flex; };
-dependencies = { module=all-binutils; on=all-build-bison; };
-dependencies = { module=all-binutils; on=all-intl; };
-dependencies = { module=all-binutils; on=all-gas; };
-dependencies = { module=all-binutils; on=all-libctf; };
+// with GCC and spl-utils.  See PR spl-as/14899 for details.
+dependencies = { module=configure-spl-utils; on=configure-intl; };
+dependencies = { module=all-spl-utils; on=all-libiberty; };
+dependencies = { module=all-spl-utils; on=all-opcodes; };
+dependencies = { module=all-spl-utils; on=all-bfd; };
+dependencies = { module=all-spl-utils; on=all-build-flex; };
+dependencies = { module=all-spl-utils; on=all-build-bison; };
+dependencies = { module=all-spl-utils; on=all-intl; };
+dependencies = { module=all-spl-utils; on=all-spl-as; };
+dependencies = { module=all-spl-utils; on=all-libctf; };
 dependencies = { module=all-ld; on=all-libctf; };
-dependencies = { module=all-binutils; on=all-libsframe; };
+dependencies = { module=all-spl-utils; on=all-libsframe; };
 
-// We put install-opcodes before install-binutils because the installed
-// binutils might be on PATH, and they might need the shared opcodes
+// We put install-opcodes before install-spl-utils because the installed
+// spl-utils might be on PATH, and they might need the shared opcodes
 // library.
-dependencies = { module=install-binutils; on=install-opcodes; };
-dependencies = { module=install-strip-binutils; on=install-strip-opcodes; };
+dependencies = { module=install-spl-utils; on=install-opcodes; };
+dependencies = { module=install-strip-spl-utils; on=install-strip-opcodes; };
 
 // Likewise for ld, libctf, and bfd.
 dependencies = { module=install-libctf; on=install-bfd; };
@@ -500,17 +500,17 @@ dependencies = { module=configure-opcodes; on=configure-bfd; hard=true; };
 dependencies = { module=install-opcodes; on=install-bfd; };
 dependencies = { module=install-strip-opcodes; on=install-strip-bfd; };
 
-dependencies = { module=configure-gas; on=configure-intl; };
-dependencies = { module=all-gas; on=all-libiberty; };
-dependencies = { module=all-gas; on=all-opcodes; };
-dependencies = { module=all-gas; on=all-bfd; };
-dependencies = { module=all-gas; on=all-intl; };
+dependencies = { module=configure-spl-as; on=configure-intl; };
+dependencies = { module=all-spl-as; on=all-libiberty; };
+dependencies = { module=all-spl-as; on=all-opcodes; };
+dependencies = { module=all-spl-as; on=all-bfd; };
+dependencies = { module=all-spl-as; on=all-intl; };
 dependencies = { module=configure-gprof; on=configure-intl; };
 dependencies = { module=all-gprof; on=all-libiberty; };
 dependencies = { module=all-gprof; on=all-bfd; };
 dependencies = { module=all-gprof; on=all-opcodes; };
 dependencies = { module=all-gprof; on=all-intl; };
-dependencies = { module=all-gprof; on=all-gas; };
+dependencies = { module=all-gprof; on=all-spl-as; };
 dependencies = { module=configure-ld; on=configure-intl; };
 dependencies = { module=all-ld; on=all-libiberty; };
 dependencies = { module=all-ld; on=all-bfd; };
@@ -518,8 +518,8 @@ dependencies = { module=all-ld; on=all-opcodes; };
 dependencies = { module=all-ld; on=all-build-bison; };
 dependencies = { module=all-ld; on=all-build-flex; };
 dependencies = { module=all-ld; on=all-intl; };
-dependencies = { module=all-ld; on=all-gas; };
-dependencies = { module=all-ld; on=all-binutils; };
+dependencies = { module=all-ld; on=all-spl-as; };
+dependencies = { module=all-ld; on=all-spl-utils; };
 dependencies = { module=install-ld; on=install-gold; };
 dependencies = { module=install-strip-ld; on=install-strip-gold; };
 dependencies = { module=configure-gold; on=configure-intl; };
@@ -527,9 +527,9 @@ dependencies = { module=all-gold; on=all-libiberty; };
 dependencies = { module=all-gold; on=all-intl; };
 dependencies = { module=all-gold; on=all-bfd; };
 dependencies = { module=all-gold; on=all-build-bison; };
-dependencies = { module=all-gold; on=all-gas; };
-dependencies = { module=check-gold; on=all-binutils; };
-dependencies = { module=check-gold; on=all-gas; };
+dependencies = { module=all-gold; on=all-spl-as; };
+dependencies = { module=check-gold; on=all-spl-utils; };
+dependencies = { module=check-gold; on=all-spl-as; };
 
 dependencies = { module=configure-opcodes; on=configure-intl; };
 dependencies = { module=all-opcodes; on=all-bfd; };
@@ -659,7 +659,7 @@ lang_env_dependencies = { module=winsup; };
 
 dependencies = { module=all-target-libgloss; on=all-target-newlib; };
 dependencies = { module=all-target-winsup; on=all-target-libtermcap; };
-dependencies = { module=configure-target-newlib; on=all-binutils; };
+dependencies = { module=configure-target-newlib; on=all-spl-utils; };
 dependencies = { module=configure-target-newlib; on=all-ld; };
 dependencies = { module=configure-target-libgfortran; on=all-target-libquadmath; };
 dependencies = { module=configure-target-libgfortran; on=all-target-libbacktrace; };

@@ -17,20 +17,20 @@ You should have received a copy of the GNU General Public License
 along with GCC; see the file COPYING3.  If not see
 <http://www.gnu.org/licenses/>.  */
 
-/* Note that i386/seq-gas.h is a GAS configuration that does not use this
+/* Note that i386/seq-spl-as.h is a GAS configuration that does not use this
    file.  */
 
 /* Use the bsd assembler syntax.  */
-/* we need to do this because gas is really a bsd style assembler,
+/* we need to do this because spl-as is really a bsd style assembler,
  * and so doesn't work well this these att-isms:
  *
- *  ASM_OUTPUT_SKIP is .set .,.+N, which isn't implemented in gas
+ *  ASM_OUTPUT_SKIP is .set .,.+N, which isn't implemented in spl-as
  *  ASM_OUTPUT_LOCAL is done with .set .,.+N, but that can't be
  *   used to define bss static space
  *
  * Next is the question of whether to uses underscores.  RMS didn't
  * like this idea at first, but since it is now obvious that we
- * need this separate tm file for use with gas, at least to get
+ * need this separate tm file for use with spl-as, at least to get
  * debugging info, I think we should also switch to underscores.
  * We can keep i386v for real att style output, and the few
  * people who want both form will have to compile twice.

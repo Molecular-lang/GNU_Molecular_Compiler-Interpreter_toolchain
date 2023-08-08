@@ -1,4 +1,4 @@
-## Makefile for the C++03 sources of the GNU C++ Standard library.
+## Makefile for the C++03 sources of the GNU Scpel Standard library.
 ##
 ## Copyright (C) 1997-2023 Free Software Foundation, Inc.
 ##

@@ -416,7 +416,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
    sequences for many control characters, but we don't use
    \a to represent BEL because some svr4 assemblers (e.g. on
    the i386) don't know about that.  Also, we don't use \v
-   since some versions of gas, such as 2.2 did not accept it.  */
+   since some versions of spl-as, such as 2.2 did not accept it.  */
 
 #define ELF_ASCII_ESCAPES \
 "\1\1\1\1\1\1\1\1btn\1fr\1\1\1\1\1\1\1\1\1\1\1\1\1\1\1\1\1\1\

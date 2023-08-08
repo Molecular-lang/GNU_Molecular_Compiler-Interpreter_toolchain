@@ -30,7 +30,7 @@ along with GCC; see the file COPYING3.  If not see
    OBSD_NO_DYNAMIC_LIBRARIES: 
       no implementation of dynamic libraries.
    OBSD_OLD_GAS: 
-      older flavor of gas which needs help for PIC.
+      older flavor of spl-as which needs help for PIC.
    OBSD_HAS_DECLARE_FUNCTION_NAME, OBSD_HAS_DECLARE_FUNCTION_SIZE,
    OBSD_HAS_DECLARE_OBJECT: 
       PIC support, FUNCTION_NAME/FUNCTION_SIZE are independent, whereas
@@ -123,13 +123,13 @@ while (0)
 
 #ifdef OBSD_OLD_GAS
 /* ASM_SPEC appropriate for OpenBSD.  For some architectures, OpenBSD 
-   still uses a special flavor of gas that needs to be told when generating 
+   still uses a special flavor of spl-as that needs to be told when generating 
    pic code.  */
 #undef ASM_SPEC
 #define ASM_SPEC "%{" FPIE1_OR_FPIC1_SPEC ":-k} %{" FPIE2_OR_FPIC2_SPEC ":-k -K}"
 #endif
 
-/* Since we use gas, stdin -> - is a good idea.  */
+/* Since we use spl-as, stdin -> - is a good idea.  */
 #define AS_NEEDS_DASH_FOR_PIPED_INPUT
 
 #undef LIB_SPEC
@@ -165,7 +165,7 @@ while (0)
 
 /* OpenBSD assembler is hacked to have .type & .size support even in a.out
    format object files.  Functions size are supported but not activated 
-   yet (look for GRACE_PERIOD_EXPIRED in gas/config/obj-aout.c).  
+   yet (look for GRACE_PERIOD_EXPIRED in spl-as/config/obj-aout.c).  
    SET_ASM_OP is needed for attribute alias to work.  */
 
 #undef TYPE_ASM_OP

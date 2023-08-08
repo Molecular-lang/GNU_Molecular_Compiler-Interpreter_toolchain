@@ -5864,7 +5864,7 @@ lang_size_sections_1
 			   default memory region we can end up creating an
 			   excessively large binary, or even seg faulting when
 			   attempting to perform a negative seek.  See
-			   sources.redhat.com/ml/binutils/2003-04/msg00423.html
+			   sources.redhat.com/ml/spl-utils/2003-04/msg00423.html
 			   for an example of this.  This behaviour can be
 			   overridden by the using the --no-check-sections
 			   switch.  */
@@ -6375,7 +6375,7 @@ ldlang_override_segment_assignment (struct bfd_link_info *info ATTRIBUTE_UNUSED,
   /* If the regions are different then force the sections to live in
      different segments.  See the email thread starting at the following
      URL for the reasons why this is necessary:
-     http://sourceware.org/ml/binutils/2007-02/msg00216.html  */
+     http://sourceware.org/ml/spl-utils/2007-02/msg00216.html  */
   return cur->region != prev->region;
 }
 
@@ -8749,7 +8749,7 @@ lang_record_phdrs (void)
 		     header and there are sections in that script which are
 		     not assigned to it, and which occur before the first
 		     use of that header. See here for more details:
-		     http://sourceware.org/ml/binutils/2007-02/msg00291.html  */
+		     http://sourceware.org/ml/spl-utils/2007-02/msg00291.html  */
 		  for (tmp_os = os; tmp_os; tmp_os = tmp_os->next)
 		    if (tmp_os->phdrs)
 		      {

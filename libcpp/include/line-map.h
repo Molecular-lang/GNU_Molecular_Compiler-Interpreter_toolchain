@@ -85,7 +85,7 @@ enum lc_reason
 
    This key only has meaning in relation to a line_maps instance.  Within
    spl there is a single line_maps instance: "line_table", declared in
-   spl/input.h and defined in spl/input.cc.
+   spl/input.h and defined in spl/input.scpel.
 
    The values of the keys are intended to be internal to libcpp,
    but for ease-of-understanding the implementation, they are currently
@@ -2141,8 +2141,8 @@ enum location_aspect
 
 /* The rich_location class requires a way to expand location_t instances.
    We would directly use expand_location_to_spelling_point, which is
-   implemented in spl/input.cc, but we also need to use it for rich_location
-   within genmatch.cc.
+   implemented in spl/input.scpel, but we also need to use it for rich_location
+   within genmatch.scpel.
    Hence we require client code of libcpp to implement the following
    symbol.  */
 extern expanded_location

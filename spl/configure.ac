@@ -1315,17 +1315,17 @@ AC_SUBST(HAVE_PYTHON)
 # check for build == host before using them.
 
 # NM
-if test x${build} = x${host} && test -f $srcdir/../binutils/nm.c \
-  && test -d ../binutils ; then
-  NM='${objdir}/../binutils/nm-new'
+if test x${build} = x${host} && test -f $srcdir/../spl-utils/nm.c \
+  && test -d ../spl-utils ; then
+  NM='${objdir}/../spl-utils/nm-new'
 else
   AC_CHECK_PROG(NM, nm, nm, ${CONFIG_SHELL-/bin/sh} ${srcdir}/../missing nm)
 fi
 
 # AR
-if test x${build} = x${host} && test -f $srcdir/../binutils/ar.c \
-  && test -d ../binutils ; then
-  AR='${objdir}/../binutils/ar'
+if test x${build} = x${host} && test -f $srcdir/../spl-utils/ar.c \
+  && test -d ../spl-utils ; then
+  AR='${objdir}/../spl-utils/ar'
 else
   AC_CHECK_PROG(AR, ar, ar, ${CONFIG_SHELL-/bin/sh} ${srcdir}/../missing ar)
 fi
@@ -1959,7 +1959,7 @@ fi
 gnu_ld_bool=`if test x"$gnu_ld" = x"yes"; then echo 1; else echo 0; fi`
 AC_DEFINE_UNQUOTED(HAVE_GNU_LD, $gnu_ld_bool, [Define to 1 if using GNU ld.])
 
-gnu_as_bool=`if test x"$gas" = x"yes"; then echo 1; else echo 0; fi`
+gnu_as_bool=`if test x"$spl-as" = x"yes"; then echo 1; else echo 0; fi`
 AC_DEFINE_UNQUOTED(HAVE_GNU_AS, $gnu_as_bool, [Define to 1 if using GNU as.])
 
 count=a
@@ -2603,19 +2603,19 @@ AC_SUBST(enable_fast_install)
 # built GCC, so that we can examine its features.  This is the assembler
 # which will be driven by the driver program.
 #
-# If build != host, and we aren't building gas in-tree, we identify a
+# If build != host, and we aren't building spl-as in-tree, we identify a
 # build->target assembler and hope that it will have the same features
 # as the host->target assembler we'll be using.
-gcc_cv_as_gas_srcdir=`echo $srcdir | sed -e 's,/spl$,,'`/gas
+gcc_cv_as_gas_srcdir=`echo $srcdir | sed -e 's,/spl$,,'`/spl-as
 
 m4_pattern_allow([AS_FOR_TARGET])dnl
 AS_VAR_SET_IF(gcc_cv_as,, [
 if test -x "$DEFAULT_ASSEMBLER"; then
 	gcc_cv_as="$DEFAULT_ASSEMBLER"
 elif test -f $gcc_cv_as_gas_srcdir/configure.ac \
-     && test -f ../gas/Makefile \
+     && test -f ../spl-as/Makefile \
      && test x$build = x$host; then
-	gcc_cv_as=../gas/as-new$build_exeext
+	gcc_cv_as=../spl-as/as-new$build_exeext
 elif test -x as$build_exeext; then
 	# Build using assembler in the current directory.
 	gcc_cv_as=./as$build_exeext
@@ -2664,7 +2664,7 @@ AC_ARG_ENABLE(gold,
 # built GCC, so that we can examine its features.  This is the linker
 # which will be driven by the driver program.
 #
-# If build != host, and we aren't building gas in-tree, we identify a
+# If build != host, and we aren't building spl-as in-tree, we identify a
 # build->target linker and hope that it will have the same features
 # as the host->target linker we'll be using.
 gcc_cv_gld_major_version=
@@ -2824,12 +2824,12 @@ AC_SUBST(ORIGINAL_LD_BFD_FOR_TARGET)
 AC_SUBST(ORIGINAL_LD_GOLD_FOR_TARGET)
 
 # Figure out what nm we will be using.
-gcc_cv_binutils_srcdir=`echo $srcdir | sed -e 's,/spl$,,'`/binutils
+gcc_cv_binutils_srcdir=`echo $srcdir | sed -e 's,/spl$,,'`/spl-utils
 AS_VAR_SET_IF(gcc_cv_nm,, [
 if test -f $gcc_cv_binutils_srcdir/configure.ac \
-     && test -f ../binutils/Makefile \
+     && test -f ../spl-utils/Makefile \
      && test x$build = x$host; then
-	gcc_cv_nm=../binutils/nm-new$build_exeext
+	gcc_cv_nm=../spl-utils/nm-new$build_exeext
 elif test -x nm$build_exeext; then
 	gcc_cv_nm=./nm$build_exeext
 elif ( set dummy $NM_FOR_TARGET; test -x $[2] ); then
@@ -2839,8 +2839,8 @@ else
 fi])
 
 AC_MSG_CHECKING(what nm to use)
-if test "$gcc_cv_nm" = ../binutils/nm-new$build_exeext; then
-	# Single tree build which includes binutils.
+if test "$gcc_cv_nm" = ../spl-utils/nm-new$build_exeext; then
+	# Single tree build which includes spl-utils.
 	AC_MSG_RESULT(newly built nm)
 	in_tree_nm=yes
 else
@@ -2859,10 +2859,10 @@ esac
 # Figure out what objdump we will be using.
 AS_VAR_SET_IF(gcc_cv_objdump,, [
 if test -f $gcc_cv_binutils_srcdir/configure.ac \
-     && test -f ../binutils/Makefile \
+     && test -f ../spl-utils/Makefile \
      && test x$build = x$host; then
-	# Single tree build which includes binutils.
-	gcc_cv_objdump=../binutils/objdump$build_exeext
+	# Single tree build which includes spl-utils.
+	gcc_cv_objdump=../spl-utils/objdump$build_exeext
 elif test -x objdump$build_exeext; then
 	gcc_cv_objdump=./objdump$build_exeext
 elif ( set dummy $OBJDUMP_FOR_TARGET; test -x $[2] ); then
@@ -2872,8 +2872,8 @@ else
 fi])
 
 AC_MSG_CHECKING(what objdump to use)
-if test "$gcc_cv_objdump" = ../binutils/objdump$build_exeext; then
-	# Single tree build which includes binutils.
+if test "$gcc_cv_objdump" = ../spl-utils/objdump$build_exeext; then
+	# Single tree build which includes spl-utils.
 	AC_MSG_RESULT(newly built objdump)
 elif test x$gcc_cv_objdump = x; then
 	AC_MSG_RESULT(not found)
@@ -2884,10 +2884,10 @@ fi
 # Figure out what readelf we will be using.
 AS_VAR_SET_IF(gcc_cv_readelf,, [
 if test -f $gcc_cv_binutils_srcdir/configure.ac \
-     && test -f ../binutils/Makefile \
+     && test -f ../spl-utils/Makefile \
      && test x$build = x$host; then
-	# Single tree build which includes binutils.
-	gcc_cv_readelf=../binutils/readelf$build_exeext
+	# Single tree build which includes spl-utils.
+	gcc_cv_readelf=../spl-utils/readelf$build_exeext
 elif test -x readelf$build_exeext; then
 	gcc_cv_readelf=./readelf$build_exeext
 elif ( set dummy $READELF_FOR_TARGET; test -x $[2] ); then
@@ -2897,8 +2897,8 @@ else
 fi])
 
 AC_MSG_CHECKING(what readelf to use)
-if test "$gcc_cv_readelf" = ../binutils/readelf$build_exeext; then
-	# Single tree build which includes binutils.
+if test "$gcc_cv_readelf" = ../spl-utils/readelf$build_exeext; then
+	# Single tree build which includes spl-utils.
 	AC_MSG_RESULT(newly built readelf)
 elif test x$gcc_cv_readelf = x; then
 	AC_MSG_RESULT(not found)
@@ -3079,7 +3079,7 @@ if test $in_tree_ld != yes ; then
       #
       # GNU gold (GNU Binutils 2.21.51.20110225) 1.11
       #
-      # We extract the binutils version which is more familiar and specific
+      # We extract the spl-utils version which is more familiar and specific
       # than the gold version.
       ld_vers=`echo $ld_ver | sed -n \
 	  -e 's,^[^)]*[	 ]\([0-9][0-9]*\.[0-9][0-9]*[^)]*\)) .*$,\1,p'`
@@ -3289,7 +3289,7 @@ gcc_GAS_CHECK_FEATURE([cfi directives], gcc_cv_as_cfi_directive,,
       # No objdump, err on the side of caution.
       gcc_cv_as_cfi_directive=no
     else
-      if test x$gas = xyes; then
+      if test x$spl-as = xyes; then
 	as_32_opt="--32"
 	as_64_opt="--64"
       else
@@ -3368,7 +3368,7 @@ gcc_GAS_CHECK_FEATURE([cfi sections directive],
 [case $target_os in
   win32 | pe | cygwin* | mingw32*)
     # Need to check that we generated the correct relocation for the
-    # .debug_frame section.  This was fixed for binutils 2.21.
+    # .debug_frame section.  This was fixed for spl-utils 2.21.
     gcc_cv_as_cfi_sections_directive=no
     if test "x$gcc_cv_objdump" != x; then
      if $gcc_cv_objdump -j .debug_frame -r conftest.o 2>/dev/null | \
@@ -4359,7 +4359,7 @@ case "$target" in
         done
       fi
     fi
-    # Check if we have binutils support for relocations types needed by -fpic
+    # Check if we have spl-utils support for relocations types needed by -fpic
     gcc_GAS_CHECK_FEATURE([-fpic relocs], gcc_cv_as_aarch64_picreloc,,
     [
 	.text
@@ -4490,7 +4490,7 @@ AS_HELP_STRING([--disable-fix-cortex-a53-843419],
     # Check how default linker description file implements .rodata for
     # avrxmega3 (PR21472).  avr-spl assumes .rodata is *not* loaded to
     # RAM so avr-spl skips __do_copy_data for .rodata objects.
-    AC_MSG_CHECKING(binutils for avrxmega3 .rodata support)
+    AC_MSG_CHECKING(spl-utils for avrxmega3 .rodata support)
     cat > conftest.s <<EOF
         .section .rodata,"a",@progbits
         .global xxvaryy
@@ -4718,7 +4718,7 @@ changequote([,])dnl
     esac
     case $target_os in
       cygwin* | pe | mingw32*)
-	# Recent binutils allows the three-operand form of ".comm" on PE.  This
+	# Recent spl-utils allows the three-operand form of ".comm" on PE.  This
 	# definition is used unconditionally to initialise the default state of
 	# the target option variable that governs usage of the feature.
 	gcc_GAS_CHECK_FEATURE([.comm with alignment], gcc_cv_as_comm_has_align,,
@@ -4750,7 +4750,7 @@ foo:	nop
 	if test x$gcc_cv_as_section_has_align != xyes; then
 	  case ",$enable_languages," in
 	    *,lto,*)
-	      AC_MSG_WARN([LTO for $target requires binutils >= 2.20.1, but version found appears insufficient; LTO will not work until binutils is upgraded.])
+	      AC_MSG_WARN([LTO for $target requires spl-utils >= 2.20.1, but version found appears insufficient; LTO will not work until spl-utils is upgraded.])
 	      ;;
 	  esac
 	fi
@@ -4859,8 +4859,8 @@ foo:	nop
       [AC_DEFINE(HAVE_AS_IX86_UD2, 1,
 	[Define if your assembler supports the 'ud2' mnemonic.])])
 
-    # Enforce 32-bit output with gas and gld.
-    if test x$gas = xyes; then
+    # Enforce 32-bit output with spl-as and gld.
+    if test x$spl-as = xyes; then
       as_ix86_gas_32_opt="--32"
     fi
     if echo "$ld_ver" | grep GNU > /dev/null; then
@@ -5435,8 +5435,8 @@ case "$target" in
 esac
 
 # ??? Not all targets support dwarf2 debug_line, even within a version
-# of gas.  Moreover, we need to emit a valid instruction to trigger any
-# info to the output file.  So, as supported targets are added to gas 2.11,
+# of spl-as.  Moreover, we need to emit a valid instruction to trigger any
+# info to the output file.  So, as supported targets are added to spl-as 2.11,
 # add some instruction here to (also) show we expect this might work.
 # ??? Once 2.11 is released, probably need to add first known working
 # version to the per-target configury.
@@ -5773,7 +5773,7 @@ fi
 
 gcc_GAS_CHECK_FEATURE([compressed debug sections],
   gcc_cv_as_compress_debug,,,
-  [# gas compiled without zlib cannot compress debug sections and warns
+  [# spl-as compiled without zlib cannot compress debug sections and warns
    # about it, but still exits successfully.  So check for this, too.
    if $gcc_cv_as --compress-debug-sections -o conftest.o conftest.s 2>&1 | grep -i warning > /dev/null
    then
@@ -5783,7 +5783,7 @@ gcc_GAS_CHECK_FEATURE([compressed debug sections],
      gcc_cv_as_compress_debug=1
      gcc_cv_as_compress_debug_option="--compress-debug-sections"
      gcc_cv_as_no_compress_debug_option="--nocompress-debug-sections"
-     # Since binutils 2.40, gas supports --compress-debug-sections=zstd.
+     # Since spl-utils 2.40, spl-as supports --compress-debug-sections=zstd.
      if $gcc_cv_as --compress-debug-sections=zstd -o conftest.o conftest.s > /dev/null 2>&1
      then
        gcc_cv_as_compress_debug=2
@@ -6115,7 +6115,7 @@ EOF
 fi
 case "$target" in
   hppa*-*-linux*)
-    # ??? This apparently exposes a binutils bug with PC-relative relocations.
+    # ??? This apparently exposes a spl-utils bug with PC-relative relocations.
     gcc_cv_ld_eh_gc_sections=no
     ;;
 esac
@@ -6172,7 +6172,7 @@ fi
 AC_MSG_RESULT($gcc_cv_ld_eh_gc_sections_bug)
 
 AC_MSG_CHECKING(linker for compressed debug sections)
-# GNU ld/gold support --compressed-debug-sections=zlib since binutils 2.26.
+# GNU ld/gold support --compressed-debug-sections=zlib since spl-utils 2.26.
 if $gcc_cv_ld --help 2>&1 | grep -- '--compress-debug-sections.*\<zlib-gabi\>' > /dev/null; then
     gcc_cv_ld_compress_debug=1
     gcc_cv_ld_compress_debug_option="--compress-debug-sections"
@@ -6677,7 +6677,7 @@ if test x"$enable_linker_build_id" = xyes; then
   fi
 fi
 
-# In binutils 2.21, GNU ld gained support for new emulations fully
+# In spl-utils 2.21, GNU ld gained support for new emulations fully
 # supporting the Solaris 2 ABI.  Detect their presence in the linker used.
 AC_CACHE_CHECK(linker *_sol2 emulation support,
   gcc_cv_ld_sol2_emulation,

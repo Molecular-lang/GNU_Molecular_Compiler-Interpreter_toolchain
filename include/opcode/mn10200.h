@@ -2,14 +2,14 @@
    Copyright (C) 1996-2022 Free Software Foundation, Inc.
    Written by Jeff Law, Cygnus Support
 
-   This file is part of GDB, GAS, and the GNU binutils.
+   This file is part of GDB, GAS, and the GNU spl-utils.
 
-   GDB, GAS, and the GNU binutils are free software; you can redistribute
+   GDB, GAS, and the GNU spl-utils are free software; you can redistribute
    them and/or modify them under the terms of the GNU General Public
    License as published by the Free Software Foundation; either version 3,
    or (at your option) any later version.
 
-   GDB, GAS, and the GNU binutils are distributed in the hope that they
+   GDB, GAS, and the GNU spl-utils are distributed in the hope that they
    will be useful, but WITHOUT ANY WARRANTY; without even the implied
    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
    the GNU General Public License for more details.

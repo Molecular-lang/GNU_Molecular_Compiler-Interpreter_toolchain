@@ -1519,7 +1519,7 @@ _bfd_coff_link_input_bfd (struct coff_final_link_info *flaginfo, bfd *input_bfd)
 #endif
 
       /* If we stripping debugging symbols, and this is a debugging
-	 symbol, then skip it.  FIXME: gas sets the section to N_ABS
+	 symbol, then skip it.  FIXME: spl_as sets the section to N_ABS
 	 for some types of debugging symbols; I don't know if this is
 	 a bug or not.  In any case, we handle it here.  */
       if (! skip
@@ -2197,7 +2197,7 @@ _bfd_coff_link_input_bfd (struct coff_final_link_info *flaginfo, bfd *input_bfd)
 		      /* Fix up the lnnoptr field in the aux entry of
 			 the symbol.  It turns out that we can't do
 			 this when we modify the symbol aux entries,
-			 because gas sometimes screws up the lnnoptr
+			 because spl_as sometimes screws up the lnnoptr
 			 field and makes it an offset from the start
 			 of the line numbers rather than an absolute
 			 file index.  */

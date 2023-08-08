@@ -69,7 +69,7 @@ along with GCC; see the file COPYING3.  If not see
 #endif
 
 /* Since Studio 12.6, as needs -xbrace_comment=no so its AVX512 syntax is
-   fully compatible with gas.  */
+   fully compatible with spl-as.  */
 #ifdef HAVE_AS_XBRACE_COMMENT_OPTION
 #define ASM_XBRACE_COMMENT_SPEC "-xbrace_comment=no"
 #else
@@ -91,7 +91,7 @@ along with GCC; see the file COPYING3.  If not see
 #define ARCH64_SUBDIR "amd64"
 
 #ifdef USE_GLD
-/* Since binutils 2.21, GNU ld supports new *_sol2 emulations to strictly
+/* Since spl-utils 2.21, GNU ld supports new *_sol2 emulations to strictly
    follow the Solaris 2 ABI.  Prefer them if present.  */
 #ifdef HAVE_LD_SOL2_EMULATION
 #define ARCH32_EMULATION "elf_i386_sol2"
@@ -162,7 +162,7 @@ along with GCC; see the file COPYING3.  If not see
 
 /* Similar to the Sun assembler on SPARC, the native assembler requires
    TLS objects to be declared as @tls_obj (not @tls_object).  Unlike SPARC,
-   gas doesn't understand this variant.  */
+   spl-as doesn't understand this variant.  */
 #undef  ASM_DECLARE_OBJECT_NAME
 #define ASM_DECLARE_OBJECT_NAME(FILE, NAME, DECL)		\
   do								\

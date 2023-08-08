@@ -189,11 +189,11 @@ along with GCC; see the file COPYING3.  If not see
   (fprintf (asm_out_file, "\t.section .drectve\n"), \
    in_section = NULL)
 
-/* Older versions of gas don't handle 'r' as data.
+/* Older versions of spl-as don't handle 'r' as data.
    Explicitly set data flag with 'd'.  */  
 #define READONLY_DATA_SECTION_ASM_OP "\t.section .rdata,\"dr\""
 
-/* Don't allow flag_pic to propagate since gas may produce invalid code
+/* Don't allow flag_pic to propagate since spl-as may produce invalid code
    otherwise.  */
 
 #undef  SUBTARGET_OVERRIDE_OPTIONS

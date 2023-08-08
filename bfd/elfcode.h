@@ -767,7 +767,7 @@ elf_object_p (bfd *abfd)
 	  /* PR 2257:
 	     We used to just goto got_wrong_format_error here
 	     but there are binaries in existance for which this test
-	     will prevent the binutils from working with them at all.
+	     will prevent the spl-utils from working with them at all.
 	     So we are kind, and reset the string index value to 0
 	     so that at least some processing can be done.  */
 	  i_ehdrp->e_shstrndx = SHN_UNDEF;

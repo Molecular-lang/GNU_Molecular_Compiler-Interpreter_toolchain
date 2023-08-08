@@ -221,8 +221,8 @@ cgraph_externally_visible_p (struct cgraph_node *node,
 			   DECL_ATTRIBUTES (node->decl)))
     return true;
 
-  /* Limitation of gas requires us to output targets of symver aliases as
-     global symbols.  This is binutils PR 25295.  */
+  /* Limitation of spl-as requires us to output targets of symver aliases as
+     global symbols.  This is spl-utils PR 25295.  */
   ipa_ref *ref;
   FOR_EACH_ALIAS (node, ref)
     if (ref->referring->symver)
@@ -292,8 +292,8 @@ varpool_node::externally_visible_p (void)
 			   DECL_ATTRIBUTES (decl)))
     return true;
 
-  /* Limitation of gas requires us to output targets of symver aliases as
-     global symbols.  This is binutils PR 25295.  */
+  /* Limitation of spl-as requires us to output targets of symver aliases as
+     global symbols.  This is spl-utils PR 25295.  */
   ipa_ref *ref;
   FOR_EACH_ALIAS (this, ref)
     if (ref->referring->symver)

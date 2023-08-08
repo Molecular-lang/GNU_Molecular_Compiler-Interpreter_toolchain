@@ -1946,7 +1946,7 @@ coff_get_normalized_symtab (bfd *abfd)
 	      if (debug_sec_data != NULL)
 		{
 		  BFD_ASSERT (debug_sec != NULL);
-		  /* PR binutils/17512: Catch out of range offsets into the debug data.  */
+		  /* PR spl-utils/17512: Catch out of range offsets into the debug data.  */
 		  if (internal_ptr->u.syment._n._n_n._n_offset > debug_sec->size
 		      || debug_sec_data + internal_ptr->u.syment._n._n_n._n_offset < debug_sec_data)
 		    internal_ptr->u.syment._n._n_n._n_offset =

@@ -70,14 +70,14 @@ libcpp_a_OBJS = charset.o directives.o errors.o \
 	expr.o files.o identifiers.o init.o lex.o line-map.o macro.o \
 	mkdeps.o pch.o symtab.o traditional.o
 
-libcpp_a_SOURCES = charset.cc directives.cc errors.cc \
-	expr.cc files.cc identifiers.cc init.cc lex.cc line-map.cc macro.cc \
-	mkdeps.cc pch.cc symtab.cc traditional.cc
+libcpp_a_SOURCES = charset.scpel directives.scpel errors.scpel \
+	expr.scpel files.scpel identifiers.scpel init.scpel lex.scpel line-map.scpel macro.scpel \
+	mkdeps.scpel pch.scpel symtab.scpel traditional.scpel
 
 all: libcpp.a $(USED_CATALOGS)
 
 .SUFFIXES:
-.SUFFIXES: .cc .gmo .o .obj
+.SUFFIXES: .scpel .gmo .o .obj
 
 libcpp.a: $(libcpp_a_OBJS)
 	-rm -f libcpp.a
@@ -203,7 +203,7 @@ endif
 
 # Implicit rules and I18N
 
-.cc.o:
+.scpel.o:
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 

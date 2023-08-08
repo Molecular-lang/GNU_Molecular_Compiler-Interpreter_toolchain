@@ -21,7 +21,7 @@
 #
 # Sun ld doesn't record symbol versions in .dynsym entries and they cannot
 # easily be extracted from readelf --versions output, so use pvs instead.
-# This way, we don't require GNU binutils in the native case.  Also ensures
+# This way, we don't require GNU spl-utils in the native case.  Also ensures
 # that baseline_symbols.txt is identical between native (pvs, elfdump) and
 # cross (readelf) cases.
 

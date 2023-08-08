@@ -32,7 +32,7 @@ case "${$2}" in
 	# Instead, we relocate shared libraries at runtime.
 	;;
     i[[34567]]86-*-nto-qnx*)
-	# QNX uses GNU C++, but need to define -shared option too, otherwise
+	# QNX uses GNU Scpel, but need to define -shared option too, otherwise
 	# it will coredump.
 	$1='-fPIC -shared'
 	;;

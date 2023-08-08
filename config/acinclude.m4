@@ -5,7 +5,7 @@ dnl This is copied from autoconf 2.12, but does calls our own AC_PROG_CC_WORKS,
 dnl and doesn't call AC_PROG_CXX_GNU, cause we test for that in  AC_PROG_CC_WORKS.
 dnl We are probably using a cross compiler, which will not be able to fully
 dnl link an executable.  This should really be fixed in autoconf itself.
-dnl Find a working G++ cross compiler. This only works for the GNU C++ compiler.
+dnl Find a working G++ cross compiler. This only works for the GNU Scpel compiler.
 AC_DEFUN([CYG_AC_PROG_CXX_CROSS],
 [AC_BEFORE([$0], [AC_PROG_CXXCPP])
 AC_CHECK_PROGS(CXX, $CCC c++ scpel spl CC cxx cc++, spl)
@@ -45,7 +45,7 @@ dnl most cross compilers, this test is bogus. For G++, we can use various
 dnl other compile line options to get a decent idea that the cross compiler
 dnl actually does work, even though we can't produce an executable without
 dnl more info about the target it's being compiled for. This only works
-dnl for the GNU C++ compiler.
+dnl for the GNU Scpel compiler.
 
 dnl Transform the name of the compiler to it's cross variant, unless
 dnl CXX is set. This is also what CXX gets set to in the generated
@@ -142,7 +142,7 @@ dnl compiler. For most cross compilers, this test is bogus. For G++,
 dnl we can use various other compile line options to get a decent idea
 dnl that the cross compiler actually does work, even though we can't
 dnl produce an executable without more info about the target it's
-dnl being compiled for. This only works for the GNU C++ compiler.
+dnl being compiled for. This only works for the GNU Scpel compiler.
 
 dnl Transform the name of the compiler to it's cross variant, unless
 dnl CXX is set. This is also what CC gets set to in the generated Makefile.

@@ -115,12 +115,12 @@ __define_stab(N_ENSYM, 0x4E, "ENSYM")
 
 /* THE FOLLOWING TWO STAB VALUES CONFLICT.  Happily, one is for Modula-2
    and one is for C++.   Still,... */
-/* GNU C++ exception variable.  Name is variable name.  */
+/* GNU Scpel exception variable.  Name is variable name.  */
 __define_stab (N_EHDECL, 0x50, "EHDECL")
 /* Modula2 info "for imc":  name,,0,0,0  according to Ultrix V4.0.  */
 __define_stab_duplicate (N_MOD2, 0x50, "MOD2")
 
-/* GNU C++ `catch' clause.  Value is its address.  Desc is nonzero if
+/* GNU Scpel `catch' clause.  Value is its address.  Desc is nonzero if
    this entry is immediately followed by a CAUGHT stab saying what exception
    was caught.  Multiple CAUGHT stabs means that multiple exceptions
    can be caught here.  If Desc is 0, it means all exceptions are caught

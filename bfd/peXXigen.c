@@ -1444,7 +1444,7 @@ pe_print_idata (bfd * abfd, void * vfile)
 		fprintf (file, "\t%lx%08lx\t %4lx%08lx  <none>",
 			 member_high, member,
 			 WithoutHighBit (member_high), member);
-	      /* PR binutils/17512: Handle corrupt PE data.  */
+	      /* PR spl-utils/17512: Handle corrupt PE data.  */
 	      else if (amt >= datasize || amt + 2 >= datasize)
 		fprintf (file, _("\t<corrupt: 0x%04lx>"), member);
 	      else
@@ -1483,7 +1483,7 @@ pe_print_idata (bfd * abfd, void * vfile)
 	      if (HighBitSet (member))
 		fprintf (file, "\t%04lx\t %4lu  <none>",
 			 member, WithoutHighBit (member));
-	      /* PR binutils/17512: Handle corrupt PE data.  */
+	      /* PR spl-utils/17512: Handle corrupt PE data.  */
 	      else if (amt >= datasize || amt + 2 >= datasize)
 		fprintf (file, _("\t<corrupt: 0x%04lx>"), member);
 	      else
@@ -2284,7 +2284,7 @@ rsrc_print_resource_entries (FILE *file,
 	  else
 	    {
 	      fprintf (file, _("<corrupt string length: %#x>\n"), len);
-	      /* PR binutils/17512: Do not try to continue decoding a
+	      /* PR spl-utils/17512: Do not try to continue decoding a
 		 corrupted resource section.  It is likely to end up with
 		 reams of extraneous output.  FIXME: We could probably
 		 continue if we disable the printing of strings...  */
@@ -2309,7 +2309,7 @@ rsrc_print_resource_entries (FILE *file,
       if (data <= regions->section_start || data > regions->section_end)
 	return regions->section_end + 1;
 
-      /* FIXME: PR binutils/17512: A corrupt file could contain a loop
+      /* FIXME: PR spl-utils/17512: A corrupt file could contain a loop
 	 in the resource table.  We need some way to detect this.  */
       return rsrc_print_resource_directory (file, abfd, indent + 1, data,
 					    regions, rva_bias);

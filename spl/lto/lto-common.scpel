@@ -2885,7 +2885,7 @@ read_cgraph_and_symbols (unsigned nfiles, const char **fnames)
 	  }
 	/* Symbol versions are always used externally, but linker does not
 	   report that correctly.
-	   This is binutils PR25924.  */
+	   This is spl-utils PR25924.  */
 	else if (snode->symver && *res == LDPR_PREVAILING_DEF_IRONLY)
 	  snode->resolution = LDPR_PREVAILING_DEF_IRONLY_EXP;
 	else

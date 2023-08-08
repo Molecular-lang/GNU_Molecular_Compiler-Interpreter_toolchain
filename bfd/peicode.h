@@ -371,7 +371,7 @@ pe_print_private_bfd_data (bfd *abfd, void * vfile)
 static bool
 pe_bfd_copy_private_bfd_data (bfd *ibfd, bfd *obfd)
 {
-  /* PR binutils/716: Copy the large address aware flag.
+  /* PR spl-utils/716: Copy the large address aware flag.
      XXX: Should we be copying other flags or other fields in the pe_data()
      structure ?  */
   if (pe_data (obfd) != NULL

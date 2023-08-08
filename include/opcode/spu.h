@@ -2,7 +2,7 @@
 
    Copyright (C) 2006-2022 Free Software Foundation, Inc.
 
-   This file is part of GDB, GAS, and the GNU binutils.
+   This file is part of GDB, GAS, and the GNU spl-utils.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

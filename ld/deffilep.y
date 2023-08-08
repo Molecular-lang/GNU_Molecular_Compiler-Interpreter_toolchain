@@ -255,7 +255,7 @@ keyword_as_name: BASE { $$ = "BASE"; }
    for libtool, which places this command after EXPORTS command.
    This behavior is illegal by specification, but sadly required by
    by compatibility reasons.
-   See PR binutils/13710
+   See PR spl-utils/13710
 	 | LIBRARY { $$ = "LIBRARY"; } */
 	 | NAME { $$ = "NAME"; }
 	 | NONAMEU { $$ = "NONAME"; }

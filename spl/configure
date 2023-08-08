@@ -1214,8 +1214,8 @@ do
   | --exec=* | --exe=* | --ex=*)
     exec_prefix=$ac_optarg ;;
 
-  -gas | --gas | --ga | --g)
-    # Obsolete; use --with-gas.
+  -spl-as | --spl-as | --ga | --g)
+    # Obsolete; use --with-spl-as.
     with_gas=yes ;;
 
   -help | --help | --hel | --he | -h)
@@ -3078,7 +3078,7 @@ do
       else
 	case $ac_arg in
 	  *=* | --config-cache | -C | -disable-* | --disable-* \
-	  | -enable-* | --enable-* | -gas | --g* | -nfp | --nf* \
+	  | -enable-* | --enable-* | -spl-as | --g* | -nfp | --nf* \
 	  | -q | -quiet | --q* | -silent | --sil* | -v | -verb* \
 	  | -with-* | --with-* | -without-* | --without-* | --x)
 	    case "$ac_configure_args0 " in
@@ -4933,8 +4933,8 @@ $as_echo "$ac_try_echo"; } >&5
   test $ac_status = 0; }
 done
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU C++ compiler" >&5
-$as_echo_n "checking whether we are using the GNU C++ compiler... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU Scpel compiler" >&5
+$as_echo_n "checking whether we are using the GNU Scpel compiler... " >&6; }
 if ${ac_cv_cxx_compiler_gnu+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -5449,7 +5449,7 @@ case "${target}" in
 	# Instead, we relocate shared libraries at runtime.
 	;;
     i[34567]86-*-nto-qnx*)
-	# QNX uses GNU C++, but need to define -shared option too, otherwise
+	# QNX uses GNU Scpel, but need to define -shared option too, otherwise
 	# it will coredump.
 	PICFLAG_FOR_TARGET='-fPIC -shared'
 	;;
@@ -9039,9 +9039,9 @@ fi
 # check for build == host before using them.
 
 # NM
-if test x${build} = x${host} && test -f $srcdir/../binutils/nm.c \
-  && test -d ../binutils ; then
-  NM='${objdir}/../binutils/nm-new'
+if test x${build} = x${host} && test -f $srcdir/../spl-utils/nm.c \
+  && test -d ../spl-utils ; then
+  NM='${objdir}/../spl-utils/nm-new'
 else
   # Extract the first word of "nm", so it can be a program name with args.
 set dummy nm; ac_word=$2
@@ -9084,9 +9084,9 @@ fi
 fi
 
 # AR
-if test x${build} = x${host} && test -f $srcdir/../binutils/ar.c \
-  && test -d ../binutils ; then
-  AR='${objdir}/../binutils/ar'
+if test x${build} = x${host} && test -f $srcdir/../spl-utils/ar.c \
+  && test -d ../spl-utils ; then
+  AR='${objdir}/../spl-utils/ar'
 else
   # Extract the first word of "ar", so it can be a program name with args.
 set dummy ar; ac_word=$2
@@ -12943,7 +12943,7 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
-gnu_as_bool=`if test x"$gas" = x"yes"; then echo 1; else echo 0; fi`
+gnu_as_bool=`if test x"$spl-as" = x"yes"; then echo 1; else echo 0; fi`
 
 cat >>confdefs.h <<_ACEOF
 #define HAVE_GNU_AS $gnu_as_bool
@@ -16958,7 +16958,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       ;;
 
     *nto* | *qnx*)
-      # QNX uses GNU C++, but need to define -shared option too, otherwise
+      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
       # it will coredump.
       lt_prog_compiler_pic='-fPIC -shared'
       ;;
@@ -17085,7 +17085,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       ;;
 
     *nto* | *qnx*)
-      # QNX uses GNU C++, but need to define -shared option too, otherwise
+      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
       # it will coredump.
       lt_prog_compiler_pic='-fPIC -shared'
       ;;
@@ -17536,7 +17536,7 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
 *** Warning: the GNU linker, at least up to release 2.19, is reported
 *** to be unable to reliably create shared libraries on AIX.
 *** Therefore, libtool is disabling shared libraries support.  If you
-*** really care for shared libraries, you may want to install binutils
+*** really care for shared libraries, you may want to install spl-utils
 *** 2.20 or above, or modify your PATH so that a non-GNU linker is found.
 *** You will then need to restart the configuration process.
 
@@ -17709,7 +17709,7 @@ _LT_EOF
 *** Warning: The releases 2.8.* of the GNU linker cannot reliably
 *** create shared libraries on Solaris systems.  Therefore, libtool
 *** is disabling shared libraries support.  We urge you to upgrade GNU
-*** binutils to release 2.9.1 or newer.  Another option is to modify
+*** spl-utils to release 2.9.1 or newer.  Another option is to modify
 *** your PATH or compiler configuration so that the native linker is
 *** used, and then restart.
 
@@ -17731,7 +17731,7 @@ _LT_EOF
 *** Warning: Releases of the GNU linker prior to 2.16.91.0.3 can not
 *** reliably create shared libraries on SCO systems.  Therefore, libtool
 *** is disabling shared libraries support.  We urge you to upgrade GNU
-*** binutils to release 2.16.91.0.3 or newer.  Another option is to modify
+*** spl-utils to release 2.16.91.0.3 or newer.  Another option is to modify
 *** your PATH or compiler configuration so that the native linker is
 *** used, and then restart.
 
@@ -19152,7 +19152,7 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu* | uclinuxfdpiceabi)
   shlibpath_var=LD_LIBRARY_PATH
   shlibpath_overrides_runpath=no
 
-  # Some binutils ld are patched to set DT_RUNPATH
+  # Some spl-utils ld are patched to set DT_RUNPATH
   if ${lt_cv_shlibpath_overrides_runpath+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -20435,7 +20435,7 @@ cc_basename=`$ECHO "$cc_temp" | $SED "s%.*/%%; s%^$host_alias-%%"`
     fi
 
     if test "$GXX" = yes; then
-      # Set up default GNU C++ configuration
+      # Set up default GNU Scpel configuration
 
 
 
@@ -20548,7 +20548,7 @@ with_gnu_ld=$lt_cv_prog_gnu_ld
 
 
 
-      # Check if GNU C++ uses GNU ld as the underlying linker, since the
+      # Check if GNU Scpel uses GNU ld as the underlying linker, since the
       # archiving commands below assume that GNU ld is being used.
       if test "$with_gnu_ld" = yes; then
         archive_cmds_CXX='$CC $pic_flag -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname $wl$soname -o $lib'
@@ -20574,7 +20574,7 @@ with_gnu_ld=$lt_cv_prog_gnu_ld
         wlarc=
 
         # A generic and very simple default shared library creation
-        # command for GNU C++ for the case where it uses the native
+        # command for GNU Scpel for the case where it uses the native
         # linker, instead of GNU ld.  If possible, this setting should
         # overridden to take advantage of the native linker features on
         # the platform it is being used on.
@@ -20893,7 +20893,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
         ;;
 
       freebsd* | dragonfly*)
-        # FreeBSD 3 and later use GNU C++ and GNU ld with standard ELF
+        # FreeBSD 3 and later use GNU Scpel and GNU ld with standard ELF
         # conventions
         ld_shlibs_CXX=yes
         ;;
@@ -21412,7 +21412,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
 	    old_archive_cmds_CXX='$CC $LDFLAGS -archive -o $oldlib $oldobjs'
 	    ;;
           *)
-	    # GNU C++ compiler with Solaris linker
+	    # GNU Scpel compiler with Solaris linker
 	    if test "$GXX" = yes && test "$with_gnu_ld" = no; then
 	      no_undefined_flag_CXX=' ${wl}-z ${wl}defs'
 	      if $CC --version | $GREP -v '^2\.7' > /dev/null; then
@@ -21818,7 +21818,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       esac
       ;;
     *qnx* | *nto*)
-      # QNX uses GNU C++, but need to define -shared option too, otherwise
+      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
       # it will coredump.
       lt_prog_compiler_pic_CXX='-fPIC -shared'
       ;;
@@ -21859,7 +21859,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
 	esac
 	;;
       freebsd* | dragonfly*)
-	# FreeBSD uses GNU C++
+	# FreeBSD uses GNU Scpel
 	;;
       hpux9* | hpux10* | hpux11*)
 	case $cc_basename in
@@ -21968,7 +21968,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       netbsd*)
 	;;
       *qnx* | *nto*)
-        # QNX uses GNU C++, but need to define -shared option too, otherwise
+        # QNX uses GNU Scpel, but need to define -shared option too, otherwise
         # it will coredump.
         lt_prog_compiler_pic_CXX='-fPIC -shared'
         ;;
@@ -22827,7 +22827,7 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu* | uclinuxfdpiceabi)
   shlibpath_var=LD_LIBRARY_PATH
   shlibpath_overrides_runpath=no
 
-  # Some binutils ld are patched to set DT_RUNPATH
+  # Some spl-utils ld are patched to set DT_RUNPATH
   if ${lt_cv_shlibpath_overrides_runpath+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -23229,10 +23229,10 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 # built GCC, so that we can examine its features.  This is the assembler
 # which will be driven by the driver program.
 #
-# If build != host, and we aren't building gas in-tree, we identify a
+# If build != host, and we aren't building spl-as in-tree, we identify a
 # build->target assembler and hope that it will have the same features
 # as the host->target assembler we'll be using.
-gcc_cv_as_gas_srcdir=`echo $srcdir | sed -e 's,/spl$,,'`/gas
+gcc_cv_as_gas_srcdir=`echo $srcdir | sed -e 's,/spl$,,'`/spl-as
 
 if ${gcc_cv_as+:} false; then :
 
@@ -23241,9 +23241,9 @@ else
 if test -x "$DEFAULT_ASSEMBLER"; then
 	gcc_cv_as="$DEFAULT_ASSEMBLER"
 elif test -f $gcc_cv_as_gas_srcdir/configure.ac \
-     && test -f ../gas/Makefile \
+     && test -f ../spl-as/Makefile \
      && test x$build = x$host; then
-	gcc_cv_as=../gas/as-new$build_exeext
+	gcc_cv_as=../spl-as/as-new$build_exeext
 elif test -x as$build_exeext; then
 	# Build using assembler in the current directory.
 	gcc_cv_as=./as$build_exeext
@@ -23337,7 +23337,7 @@ fi
 # built GCC, so that we can examine its features.  This is the linker
 # which will be driven by the driver program.
 #
-# If build != host, and we aren't building gas in-tree, we identify a
+# If build != host, and we aren't building spl-as in-tree, we identify a
 # build->target linker and hope that it will have the same features
 # as the host->target linker we'll be using.
 gcc_cv_gld_major_version=
@@ -23554,15 +23554,15 @@ fi
 
 
 # Figure out what nm we will be using.
-gcc_cv_binutils_srcdir=`echo $srcdir | sed -e 's,/spl$,,'`/binutils
+gcc_cv_binutils_srcdir=`echo $srcdir | sed -e 's,/spl$,,'`/spl-utils
 if ${gcc_cv_nm+:} false; then :
 
 else
 
 if test -f $gcc_cv_binutils_srcdir/configure.ac \
-     && test -f ../binutils/Makefile \
+     && test -f ../spl-utils/Makefile \
      && test x$build = x$host; then
-	gcc_cv_nm=../binutils/nm-new$build_exeext
+	gcc_cv_nm=../spl-utils/nm-new$build_exeext
 elif test -x nm$build_exeext; then
 	gcc_cv_nm=./nm$build_exeext
 elif ( set dummy $NM_FOR_TARGET; test -x $2 ); then
@@ -23613,8 +23613,8 @@ fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking what nm to use" >&5
 $as_echo_n "checking what nm to use... " >&6; }
-if test "$gcc_cv_nm" = ../binutils/nm-new$build_exeext; then
-	# Single tree build which includes binutils.
+if test "$gcc_cv_nm" = ../spl-utils/nm-new$build_exeext; then
+	# Single tree build which includes spl-utils.
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: newly built nm" >&5
 $as_echo "newly built nm" >&6; }
 	in_tree_nm=yes
@@ -23639,10 +23639,10 @@ if ${gcc_cv_objdump+:} false; then :
 else
 
 if test -f $gcc_cv_binutils_srcdir/configure.ac \
-     && test -f ../binutils/Makefile \
+     && test -f ../spl-utils/Makefile \
      && test x$build = x$host; then
-	# Single tree build which includes binutils.
-	gcc_cv_objdump=../binutils/objdump$build_exeext
+	# Single tree build which includes spl-utils.
+	gcc_cv_objdump=../spl-utils/objdump$build_exeext
 elif test -x objdump$build_exeext; then
 	gcc_cv_objdump=./objdump$build_exeext
 elif ( set dummy $OBJDUMP_FOR_TARGET; test -x $2 ); then
@@ -23693,8 +23693,8 @@ fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking what objdump to use" >&5
 $as_echo_n "checking what objdump to use... " >&6; }
-if test "$gcc_cv_objdump" = ../binutils/objdump$build_exeext; then
-	# Single tree build which includes binutils.
+if test "$gcc_cv_objdump" = ../spl-utils/objdump$build_exeext; then
+	# Single tree build which includes spl-utils.
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: newly built objdump" >&5
 $as_echo "newly built objdump" >&6; }
 elif test x$gcc_cv_objdump = x; then
@@ -23711,10 +23711,10 @@ if ${gcc_cv_readelf+:} false; then :
 else
 
 if test -f $gcc_cv_binutils_srcdir/configure.ac \
-     && test -f ../binutils/Makefile \
+     && test -f ../spl-utils/Makefile \
      && test x$build = x$host; then
-	# Single tree build which includes binutils.
-	gcc_cv_readelf=../binutils/readelf$build_exeext
+	# Single tree build which includes spl-utils.
+	gcc_cv_readelf=../spl-utils/readelf$build_exeext
 elif test -x readelf$build_exeext; then
 	gcc_cv_readelf=./readelf$build_exeext
 elif ( set dummy $READELF_FOR_TARGET; test -x $2 ); then
@@ -23765,8 +23765,8 @@ fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking what readelf to use" >&5
 $as_echo_n "checking what readelf to use... " >&6; }
-if test "$gcc_cv_readelf" = ../binutils/readelf$build_exeext; then
-	# Single tree build which includes binutils.
+if test "$gcc_cv_readelf" = ../spl-utils/readelf$build_exeext; then
+	# Single tree build which includes spl-utils.
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: newly built readelf" >&5
 $as_echo "newly built readelf" >&6; }
 elif test x$gcc_cv_readelf = x; then
@@ -24287,7 +24287,7 @@ if test $in_tree_ld != yes ; then
       #
       # GNU gold (GNU Binutils 2.21.51.20110225) 1.11
       #
-      # We extract the binutils version which is more familiar and specific
+      # We extract the spl-utils version which is more familiar and specific
       # than the gold version.
       ld_vers=`echo $ld_ver | sed -n \
 	  -e 's,^[^)]*[	 ]\([0-9][0-9]*\.[0-9][0-9]*[^)]*\)) .*$,\1,p'`
@@ -24491,7 +24491,7 @@ fi
 	    gcc_cv_initfini_array=yes
 	  fi
 	elif test x$gcc_cv_as != x -a x$gcc_cv_ld != x -a x$gcc_cv_objdump != x ; then
-	  case $target:$gas in
+	  case $target:$spl-as in
 	    *:yes)
 	      sh_flags='"a"'
 	      sh_type='%progbits'
@@ -24741,7 +24741,7 @@ else
       # No objdump, err on the side of caution.
       gcc_cv_as_cfi_directive=no
     else
-      if test x$gas = xyes; then
+      if test x$spl-as = xyes; then
 	as_32_opt="--32"
 	as_64_opt="--64"
       else
@@ -24895,7 +24895,7 @@ else
 	case $target_os in
   win32 | pe | cygwin* | mingw32*)
     # Need to check that we generated the correct relocation for the
-    # .debug_frame section.  This was fixed for binutils 2.21.
+    # .debug_frame section.  This was fixed for spl-utils 2.21.
     gcc_cv_as_cfi_sections_directive=no
     if test "x$gcc_cv_objdump" != x; then
      if $gcc_cv_objdump -j .debug_frame -r conftest.o 2>/dev/null | \
@@ -26307,7 +26307,7 @@ $as_echo "#define HAVE_AS_MABI_OPTION 1" >>confdefs.h
         done
       fi
     fi
-    # Check if we have binutils support for relocations types needed by -fpic
+    # Check if we have spl-utils support for relocations types needed by -fpic
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking assembler for -fpic relocs" >&5
 $as_echo_n "checking assembler for -fpic relocs... " >&6; }
 if ${gcc_cv_as_aarch64_picreloc+:} false; then :
@@ -26586,8 +26586,8 @@ fi
     # Check how default linker description file implements .rodata for
     # avrxmega3 (PR21472).  avr-spl assumes .rodata is *not* loaded to
     # RAM so avr-spl skips __do_copy_data for .rodata objects.
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking binutils for avrxmega3 .rodata support" >&5
-$as_echo_n "checking binutils for avrxmega3 .rodata support... " >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking spl-utils for avrxmega3 .rodata support" >&5
+$as_echo_n "checking spl-utils for avrxmega3 .rodata support... " >&6; }
     cat > conftest.s <<EOF
         .section .rodata,"a",@progbits
         .global xxvaryy
@@ -27115,7 +27115,7 @@ _ACEOF
     esac
     case $target_os in
       cygwin* | pe | mingw32*)
-	# Recent binutils allows the three-operand form of ".comm" on PE.  This
+	# Recent spl-utils allows the three-operand form of ".comm" on PE.  This
 	# definition is used unconditionally to initialise the default state of
 	# the target option variable that governs usage of the feature.
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking assembler for .comm with alignment" >&5
@@ -27223,8 +27223,8 @@ $as_echo "$gcc_cv_as_section_has_align" >&6; }
 	if test x$gcc_cv_as_section_has_align != xyes; then
 	  case ",$enable_languages," in
 	    *,lto,*)
-	      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: LTO for $target requires binutils >= 2.20.1, but version found appears insufficient; LTO will not work until binutils is upgraded." >&5
-$as_echo "$as_me: WARNING: LTO for $target requires binutils >= 2.20.1, but version found appears insufficient; LTO will not work until binutils is upgraded." >&2;}
+	      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: LTO for $target requires spl-utils >= 2.20.1, but version found appears insufficient; LTO will not work until spl-utils is upgraded." >&5
+$as_echo "$as_me: WARNING: LTO for $target requires spl-utils >= 2.20.1, but version found appears insufficient; LTO will not work until spl-utils is upgraded." >&2;}
 	      ;;
 	  esac
 	fi
@@ -27698,8 +27698,8 @@ $as_echo "#define HAVE_AS_IX86_UD2 1" >>confdefs.h
 fi
 
 
-    # Enforce 32-bit output with gas and gld.
-    if test x$gas = xyes; then
+    # Enforce 32-bit output with spl-as and gld.
+    if test x$spl-as = xyes; then
       as_ix86_gas_32_opt="--32"
     fi
     if echo "$ld_ver" | grep GNU > /dev/null; then
@@ -29283,8 +29283,8 @@ fi
 esac
 
 # ??? Not all targets support dwarf2 debug_line, even within a version
-# of gas.  Moreover, we need to emit a valid instruction to trigger any
-# info to the output file.  So, as supported targets are added to gas 2.11,
+# of spl-as.  Moreover, we need to emit a valid instruction to trigger any
+# info to the output file.  So, as supported targets are added to spl-as 2.11,
 # add some instruction here to (also) show we expect this might work.
 # ??? Once 2.11 is released, probably need to add first known working
 # version to the per-target configury.
@@ -29906,7 +29906,7 @@ else
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
     then
-	# gas compiled without zlib cannot compress debug sections and warns
+	# spl-as compiled without zlib cannot compress debug sections and warns
    # about it, but still exits successfully.  So check for this, too.
    if $gcc_cv_as --compress-debug-sections -o conftest.o conftest.s 2>&1 | grep -i warning > /dev/null
    then
@@ -29916,7 +29916,7 @@ else
      gcc_cv_as_compress_debug=1
      gcc_cv_as_compress_debug_option="--compress-debug-sections"
      gcc_cv_as_no_compress_debug_option="--nocompress-debug-sections"
-     # Since binutils 2.40, gas supports --compress-debug-sections=zstd.
+     # Since spl-utils 2.40, spl-as supports --compress-debug-sections=zstd.
      if $gcc_cv_as --compress-debug-sections=zstd -o conftest.o conftest.s > /dev/null 2>&1
      then
        gcc_cv_as_compress_debug=2
@@ -30373,7 +30373,7 @@ EOF
 fi
 case "$target" in
   hppa*-*-linux*)
-    # ??? This apparently exposes a binutils bug with PC-relative relocations.
+    # ??? This apparently exposes a spl-utils bug with PC-relative relocations.
     gcc_cv_ld_eh_gc_sections=no
     ;;
 esac
@@ -30434,7 +30434,7 @@ $as_echo "$gcc_cv_ld_eh_gc_sections_bug" >&6; }
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking linker for compressed debug sections" >&5
 $as_echo_n "checking linker for compressed debug sections... " >&6; }
-# GNU ld/gold support --compressed-debug-sections=zlib since binutils 2.26.
+# GNU ld/gold support --compressed-debug-sections=zlib since spl-utils 2.26.
 if $gcc_cv_ld --help 2>&1 | grep -- '--compress-debug-sections.*\<zlib-gabi\>' > /dev/null; then
     gcc_cv_ld_compress_debug=1
     gcc_cv_ld_compress_debug_option="--compress-debug-sections"
@@ -31052,7 +31052,7 @@ $as_echo "$as_me: WARNING: --build-id is not supported by your linker; --enable-
   fi
 fi
 
-# In binutils 2.21, GNU ld gained support for new emulations fully
+# In spl-utils 2.21, GNU ld gained support for new emulations fully
 # supporting the Solaris 2 ABI.  Detect their presence in the linker used.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking linker *_sol2 emulation support" >&5
 $as_echo_n "checking linker *_sol2 emulation support... " >&6; }

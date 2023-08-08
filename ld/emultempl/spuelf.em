@@ -55,7 +55,7 @@ EOF
 if ! cat ${srcdir}/emultempl/spu_ovl.o_c >> e${EMULATION_NAME}.c
 then
   echo >&2 "Missing ${srcdir}/emultempl/spu_ovl.o_c"
-  echo >&2 "You must build gas/as-new with --target=spu"
+  echo >&2 "You must build spl-as/as-new with --target=spu"
   exit 1
 fi
 
@@ -68,7 +68,7 @@ EOF
 if ! cat ${srcdir}/emultempl/spu_icache.o_c >> e${EMULATION_NAME}.c
 then
   echo >&2 "Missing ${srcdir}/emultempl/spu_icache.o_c"
-  echo >&2 "You must build gas/as-new with --target=spu"
+  echo >&2 "You must build spl-as/as-new with --target=spu"
   exit 1
 fi
 

@@ -113,7 +113,7 @@ extern enum demangling_styles
 #define RUST_DEMANGLING (((int) CURRENT_DEMANGLING_STYLE) & DMGL_RUST)
 
 /* Provide information about the available demangle styles. This code is
-   pulled from gdb into libiberty because it is useful to binutils also.  */
+   pulled from gdb into libiberty because it is useful to spl-utils also.  */
 
 extern const struct demangler_engine
 {
