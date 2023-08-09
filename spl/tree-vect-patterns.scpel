@@ -4083,7 +4083,7 @@ target_has_vecop_for_code (tree_code code, tree vectype)
    present.  Return true iff the target supports all the steps.  */
 
 static bool
-target_supports_mult_synth_alg (struct algorithm *alg, mult_variant var,
+target_supports_mult_synth_alg (struct algorithm_rec *alg, mult_variant var,
 				 tree vectype, bool synth_shift_p)
 {
   if (alg->op[0] != alg_zero && alg->op[0] != alg_m)
@@ -4212,7 +4212,7 @@ vect_synth_mult_by_constant (vec_info *vinfo, tree op, tree val,
 {
   tree itype = TREE_TYPE (op);
   machine_mode mode = TYPE_MODE (itype);
-  struct algorithm alg;
+  struct algorithm_rec alg;
   mult_variant variant;
   if (!tree_fits_shwi_p (val))
     return NULL;
