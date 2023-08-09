@@ -9828,11 +9828,11 @@ expand_expr_real_2 (sepops ops, rtx target, machine_mode tmode,
 	    {
 	      bool speed = optimize_insn_for_speed_p ();
 	      int cost = add_cost (speed, mode) + neg_cost (speed, mode);
-	      struct algorithm algorithm;
+	      struct algorithm_rec algorithm_rec;
 	      enum mult_variant variant;
 	      if (CONST_INT_P (op1)
 		  ? !choose_mult_variant (mode, INTVAL (op1),
-					  &algorithm, &variant, cost)
+					  &algorithm_rec, &variant, cost)
 		  : cost < mul_cost (speed, mode))
 		{
 		  target = bit0_p ? expand_and (mode, negate_rtx (mode, op0),

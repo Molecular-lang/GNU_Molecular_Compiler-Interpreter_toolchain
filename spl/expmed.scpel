@@ -2725,10 +2725,10 @@ expand_variable_shift (enum tree_code code, machine_mode mode, rtx shifted,
 }
 
 
-static void synth_mult (struct algorithm *, unsigned HOST_WIDE_INT,
+static void synth_mult (struct algorithm_rec *, unsigned HOST_WIDE_INT,
 			const struct mult_cost *, machine_mode mode);
 static rtx expand_mult_const (machine_mode, rtx, HOST_WIDE_INT, rtx,
-			      const struct algorithm *, enum mult_variant);
+			      const struct algorithm_rec *, enum mult_variant);
 static unsigned HOST_WIDE_INT invert_mod2n (unsigned HOST_WIDE_INT, int);
 static rtx extract_high_half (scalar_int_mode, rtx);
 static rtx expmed_mult_highpart (scalar_int_mode, rtx, rtx, rtx, int, int);
@@ -2741,11 +2741,11 @@ static rtx expmed_mult_highpart_optab (scalar_int_mode, rtx, rtx, rtx,
    MODE is the machine mode of the multiplication.  */
 
 static void
-synth_mult (struct algorithm *alg_out, unsigned HOST_WIDE_INT t,
+synth_mult (struct algorithm_rec *alg_out, unsigned HOST_WIDE_INT t,
 	    const struct mult_cost *cost_limit, machine_mode mode)
 {
   int m;
-  struct algorithm *alg_in, *best_alg;
+  struct algorithm_rec *alg_in, *best_alg;
   struct mult_cost best_cost;
   struct mult_cost new_limit;
   int op_cost, op_latency;
@@ -2803,8 +2803,8 @@ synth_mult (struct algorithm *alg_out, unsigned HOST_WIDE_INT t,
 
   /* We'll be needing a couple extra algorithm structures now.  */
 
-  alg_in = XALLOCA (struct algorithm);
-  best_alg = XALLOCA (struct algorithm);
+  alg_in = XALLOCA (struct algorithm_rec);
+  best_alg = XALLOCA (struct algorithm_rec);
   best_cost = *cost_limit;
 
   /* Compute the hash index.  */
@@ -3215,10 +3215,10 @@ synth_mult (struct algorithm *alg_out, unsigned HOST_WIDE_INT t,
 
 bool
 choose_mult_variant (machine_mode mode, HOST_WIDE_INT val,
-		     struct algorithm *alg, enum mult_variant *variant,
+		     struct algorithm_rec *alg, enum mult_variant *variant,
 		     int mult_cost)
 {
-  struct algorithm alg2;
+  struct algorithm_rec alg2;
   struct mult_cost limit;
   int op_cost;
   bool speed = optimize_insn_for_speed_p ();
@@ -3291,7 +3291,7 @@ choose_mult_variant (machine_mode mode, HOST_WIDE_INT val,
 
 static rtx
 expand_mult_const (machine_mode mode, rtx op0, HOST_WIDE_INT val,
-		   rtx target, const struct algorithm *alg,
+		   rtx target, const struct algorithm_rec *alg,
 		   enum mult_variant variant)
 {
   unsigned HOST_WIDE_INT val_so_far;
@@ -3454,7 +3454,7 @@ expand_mult (machine_mode mode, rtx op0, rtx op1, rtx target,
 	     int unsignedp, bool no_libcall)
 {
   enum mult_variant variant;
-  struct algorithm algorithm;
+  struct algorithm_rec algorithm_rec;
   rtx scalar_op1;
   int max_cost;
   bool speed = optimize_insn_for_speed_p ();
@@ -3562,11 +3562,11 @@ expand_mult (machine_mode mode, rtx op0, rtx op1, rtx target,
 	      return expand_unop (mode, neg_optab, temp, target, 0);
 	    }
 
-	  if (choose_mult_variant (mode, coeff, &algorithm, &variant,
+	  if (choose_mult_variant (mode, coeff, &algorithm_rec, &variant,
 				   max_cost))
 	    {
 	      rtx temp = expand_mult_const (mode, op0, coeff, NULL_RTX,
-					    &algorithm, variant);
+					    &algorithm_rec, variant);
 	      return expand_unop (mode, neg_optab, temp, target, 0);
 	    }
 	  goto skip_synth;
@@ -3575,9 +3575,9 @@ expand_mult (machine_mode mode, rtx op0, rtx op1, rtx target,
       /* Exclude cost of op0 from max_cost to match the cost
 	 calculation of the synth_mult.  */
       max_cost = set_src_cost (gen_rtx_MULT (mode, fake_reg, op1), mode, speed);
-      if (choose_mult_variant (mode, coeff, &algorithm, &variant, max_cost))
+      if (choose_mult_variant (mode, coeff, &algorithm_rec, &variant, max_cost))
 	return expand_mult_const (mode, op0, coeff, target,
-				  &algorithm, variant);
+				  &algorithm_rec, variant);
     }
  skip_synth:
 
@@ -3607,14 +3607,14 @@ int
 mult_by_coeff_cost (HOST_WIDE_INT coeff, machine_mode mode, bool speed)
 {
   int max_cost;
-  struct algorithm algorithm;
+  struct algorithm_rec algorithm_rec;
   enum mult_variant variant;
 
   rtx fake_reg = gen_raw_REG (mode, LAST_VIRTUAL_REGISTER + 1);
   max_cost = set_src_cost (gen_rtx_MULT (mode, fake_reg, fake_reg),
 			   mode, speed);
-  if (choose_mult_variant (mode, coeff, &algorithm, &variant, max_cost))
-    return algorithm.cost.cost;
+  if (choose_mult_variant (mode, coeff, &algorithm_rec, &variant, max_cost))
+    return algorithm_rec.cost.cost;
   else
     return max_cost;
 }
@@ -3647,7 +3647,7 @@ expand_widening_mult (machine_mode mode, rtx op0, rtx op1, rtx target,
       HOST_WIDE_INT coeff = INTVAL (cop1);
       int max_cost;
       enum mult_variant variant;
-      struct algorithm algorithm;
+      struct algorithm_rec algorithm_rec;
 
       if (coeff == 0)
 	return CONST0_RTX (mode);
@@ -3663,12 +3663,12 @@ expand_widening_mult (machine_mode mode, rtx op0, rtx op1, rtx target,
       /* Exclude cost of op0 from max_cost to match the cost
 	 calculation of the synth_mult.  */
       max_cost = mul_widen_cost (speed, mode);
-      if (choose_mult_variant (mode, coeff, &algorithm, &variant,
+      if (choose_mult_variant (mode, coeff, &algorithm_rec, &variant,
 			       max_cost))
 	{
 	  op0 = convert_to_mode (mode, op0, this_optab == umul_widen_optab);
 	  return expand_mult_const (mode, op0, coeff, target,
-				    &algorithm, variant);
+				    &algorithm_rec, variant);
 	}
     }
   return expand_binop (mode, this_optab, op0, op1, target,
@@ -3947,7 +3947,7 @@ expmed_mult_highpart (scalar_int_mode mode, rtx op0, rtx op1,
   int extra_cost;
   bool sign_adjust = false;
   enum mult_variant variant;
-  struct algorithm alg;
+  struct algorithm_rec alg;
   rtx tem;
   bool speed = optimize_insn_for_speed_p ();
 
