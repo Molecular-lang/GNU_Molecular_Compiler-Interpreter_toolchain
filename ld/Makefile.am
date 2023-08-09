@@ -1069,21 +1069,17 @@ install-data-local: install-bfdpluginLTLIBRARIES
 # target is run by the taz target in ../Makefile.in.
 EXTRA_DIST = ldgram.c ldgram.h ldlex.c emultempl/spu_ovl.@OBJEXT@_c \
 	     emultempl/spu_icache.@OBJEXT@_c deffilep.c deffilep.h $(man_MANS)
-diststuff: info $(EXTRA_DIST)
+diststuff:
 
 # Both info (ld.info) and ld.1 depend on configdoc.texi.
 # But info isn't a direct target. Make info-recursive to depend on
 # ld.1 to support parallel build.
-info-recursive: ld.1
+info-recursive:
 
 html-local: doc/ld/index.html
-doc/ld/index.html: ld.texi $(ld_TEXINFOS)
-	$(AM_V_at)$(MKDIR_P) doc
-	$(AM_V_GEN)$(MAKEINFOHTML) $(AM_MAKEINFOHTMLFLAGS) $(MAKEINFOFLAGS) \
-	  --split=node -I$(srcdir) $(srcdir)/ld.texi -o doc/ld
+doc/ld/index.html:
 
 DISTCLEANFILES = site.exp development.exp enablings.exp site.bak stringify.sed
 distclean-local:
-	rm -rf ldscripts
 
-MAINTAINERCLEANFILES += ld.info
+MAINTAINERCLEANFILES +=
