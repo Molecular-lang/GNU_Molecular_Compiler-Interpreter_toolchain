@@ -2,3 +2,7 @@ This directory contains the memory management and handling routines in Scpel.
 All operations should and must fallthrough the immediate components like
 neurodes. By default, lets introducing function metatyping but only activate
 it at the main entry point of every AI program: main() [];
+
+
+Carry out minimal language and memory activities only done in the prefrontal 
+cortex - well atlease all what can be done programatically
