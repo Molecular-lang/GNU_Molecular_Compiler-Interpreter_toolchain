@@ -131,7 +131,7 @@ bin_PROGRAMS = ld-new
 info_TEXINFOS = ld.texi
 ld_TEXINFOS = configdoc.texi
 noinst_TEXINFOS = ldint.texi
-man_MANS = ld.1
+man_MANS =
 
 AM_MAKEINFOFLAGS = -I $(srcdir) -I $(BFDDIR)/doc -I ../bfd/doc \
 		   -I $(top_srcdir)/../libiberty --no-split
@@ -1011,16 +1011,9 @@ configdoc.texi:	${DOCVER}-doc.texi
 # Build the man page from the texinfo file
 # The sed command removes the no-adjust Nroff command so that
 # the man output looks standard.
-ld.1: $(srcdir)/ld.texi configdoc.texi
-	$(AM_V_GEN)touch $@
-	$(AM_V_at)-$(TEXI2POD) $(MANCONF) < $(srcdir)/ld.texi > ld.pod
-	$(AM_V_at)-($(POD2MAN) ld.pod | \
-		sed -e '/^.if n .na/d' > $@.T$$$$ && \
-		mv -f $@.T$$$$ $@) || \
-		(rm -f $@.T$$$$ && exit 1)
-	$(AM_V_at)rm -f ld.pod
+ld.1:
 
-MAINTAINERCLEANFILES = configdoc.texi ld.1
+MAINTAINERCLEANFILES = configdoc.texi
 
 # We want to reconfigure if configure.host or configure.tgt changes.
 # development.sh is used to determine -Werror default.
