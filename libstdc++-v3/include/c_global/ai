@@ -1,0 +1,8 @@
+namespace ai {
+void predict(void);
+
+}
+
+void ai::predict (void) {
+	
+}

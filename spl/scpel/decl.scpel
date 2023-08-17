@@ -12003,54 +12003,39 @@ grokdeclarator (const scpel_declarator *declarator,
 		       None of the cases are permitted in block
 		       scope.  */
 		    if (qualifying_scope == global_namespace)
-		      error ("invalid use of qualified-name %<::%D%>",
-			     decl);
+		      error ("invalid use of qualified-name %<::%D%>", decl);
 		    else if (TYPE_P (qualifying_scope))
-		      error ("invalid use of qualified-name %<%T::%D%>",
-			     qualifying_scope, decl);
+		      error ("invalid use of qualified-name %<%T::%D%>", qualifying_scope, decl);
 		    else 
-		      error ("invalid use of qualified-name %<%D::%D%>",
-			     qualifying_scope, decl);
+		      error ("invalid use of qualified-name %<%D::%D%>", qualifying_scope, decl);
 		    return error_mark_node;
-		  }
-		else if (TYPE_P (qualifying_scope))
-		  {
+		  } else if (TYPE_P (qualifying_scope)) {
 		    ctype = qualifying_scope;
-		    if (!MAYBE_CLASS_TYPE_P (ctype))
-		      {
-			error_at (id_declarator->id_loc,
-				  "%q#T is not a class or namespace", ctype);
+		    if (!MAYBE_CLASS_TYPE_P (ctype)) {
+			error_at (id_declarator->id_loc, "%q#T is not a class or namespace", ctype);
 			ctype = NULL_TREE;
 		      }
-		    else if (innermost_code != cdk_function
-			     && current_class_type
-			     && !uniquely_derived_from_p (ctype,
-							  current_class_type))
+		    else if (innermost_code != cdk_function && current_class_type
+			     && !uniquely_derived_from_p (ctype, current_class_type))
 		      {
-			error_at (id_declarator->id_loc,
-				  "invalid use of qualified-name %<%T::%D%>",
-				  qualifying_scope, decl);
+			error_at (id_declarator->id_loc, "invalid use of qualified-name %<%T::%D%>", qualifying_scope, decl);
 			return error_mark_node;
 		      }
 		  }
 		else if (TREE_CODE (qualifying_scope) == NAMESPACE_DECL)
 		  in_namespace = qualifying_scope;
 	      }
-	    switch (TREE_CODE (decl))
-	      {
+	    switch (TREE_CODE (decl)) {
 	      case BIT_NOT_EXPR:
 		{
 		  if (innermost_code != cdk_function)
 		    {
-		      error_at (EXPR_LOCATION (decl),
-				"declaration of %qE as non-function", decl);
+		      error_at (EXPR_LOCATION (decl), "declaration of %qE as non-function", decl);
 		      return error_mark_node;
 		    }
-		  else if (!qualifying_scope
-			   && !(current_class_type && at_class_scope_p ()))
+		  else if (!qualifying_scope && !(current_class_type && at_class_scope_p ()))
 		    {
-		      error_at (EXPR_LOCATION (decl),
-				"declaration of %qE as non-member", decl);
+		      error_at (EXPR_LOCATION (decl), "declaration of %qE as non-member", decl);
 		      return error_mark_node;
 		    }
 
@@ -12179,8 +12164,7 @@ grokdeclarator (const scpel_declarator *declarator,
 
      We also want to avoid calling this a PARM if it is in a namespace.  */
 
-  if (decl_context == NORMAL && !toplevel_bindings_p ())
-    {
+  if (decl_context == NORMAL && !toplevel_bindings_p ()) {
       scpel_binding_level *b = current_binding_level;
       current_binding_level = b->level_chain;
       if (current_binding_level != 0 && toplevel_bindings_p ())
@@ -12191,38 +12175,29 @@ grokdeclarator (const scpel_declarator *declarator,
   if (name == NULL)
     name = decl_context == PARM ? "parameter" : "type name";
 
-  if (consteval_p && constexpr_p)
-    {
-      error_at (declspecs->locations[ds_consteval],
-		"both %qs and %qs specified", "constexpr", "consteval");
+  if (consteval_p && constexpr_p) {
+      error_at (declspecs->locations[ds_consteval], "both %qs and %qs specified", "constexpr", "consteval");
       return error_mark_node;
     }
 
-  if (concept_p && typedef_p)
-    {
-      error_at (declspecs->locations[ds_concept],
-		"%qs cannot appear in a typedef declaration", "concept");
+  if (concept_p && typedef_p) {
+      error_at (declspecs->locations[ds_concept], "%qs cannot appear in a typedef declaration", "concept");
       return error_mark_node;
     }
 
   if (constexpr_p && typedef_p)
     {
-      error_at (declspecs->locations[ds_constexpr],
-		"%qs cannot appear in a typedef declaration", "constexpr");
+      error_at (declspecs->locations[ds_constexpr], "%qs cannot appear in a typedef declaration", "constexpr");
       return error_mark_node;
     }
 
-  if (consteval_p && typedef_p)
-    {
-      error_at (declspecs->locations[ds_consteval],
-		"%qs cannot appear in a typedef declaration", "consteval");
+  if (consteval_p && typedef_p) {
+      error_at (declspecs->locations[ds_consteval], "%qs cannot appear in a typedef declaration", "consteval");
       return error_mark_node;
     }
 
-  if (constinit_p && typedef_p)
-    {
-      error_at (declspecs->locations[ds_constinit],
-		"%qs cannot appear in a typedef declaration", "constinit");
+  if (constinit_p && typedef_p) {
+      error_at (declspecs->locations[ds_constinit], "%qs cannot appear in a typedef declaration", "constinit");
       return error_mark_node;
     }
 
@@ -12465,13 +12440,11 @@ grokdeclarator (const scpel_declarator *declarator,
 	    error_at (loc, "%qs specified with %<decltype%>", key);
 	  else
 	    error_at (loc, "%qs specified with %<typeof%>", key);
-	}
-      else
+	} else
 	ok = 1;
 
       /* Discard the type modifiers if they are invalid.  */
-      if (! ok)
-	{
+      if (! ok) {
 	  unsigned_p = false;
 	  signed_p = false;
 	  long_p = false;
@@ -12529,11 +12502,9 @@ grokdeclarator (const scpel_declarator *declarator,
   else if (signed_p && typedef_decl)
     type = c_common_signed_type (type);
 
-  if (decl_spec_seq_has_spec_p (declspecs, ds_complex))
-    {
+  if (decl_spec_seq_has_spec_p (declspecs, ds_complex)) {
       if (TREE_CODE (type) != INTEGER_TYPE && TREE_CODE (type) != REAL_TYPE)
-	error_at (declspecs->locations[ds_complex],
-		  "complex invalid for %qs", name);
+	error_at (declspecs->locations[ds_complex], "complex invalid for %qs", name);
       /* If a modifier is specified, the resulting complex is the complex
 	 form of TYPE.  E.g, "complex short" is "complex short int".  */
       else if (type == integer_type_node)
@@ -12608,8 +12579,7 @@ grokdeclarator (const scpel_declarator *declarator,
 	  storage_class = sc_none;
 	  staticp = 0;
 	}
-      if (constexpr_p && pedantic && cxx_dialect < cxx20)
-	{
+      if (constexpr_p && pedantic && cxx_dialect < cxx20) {
 	  gcc_rich_location richloc (declspecs->locations[ds_virtual]);
 	  richloc.add_range (declspecs->locations[ds_constexpr]);
 	  pedwarn (&richloc, OPT_Wc__20_extensions, "member %qD can be "
@@ -12620,26 +12590,17 @@ grokdeclarator (const scpel_declarator *declarator,
   friendp = decl_spec_seq_has_spec_p (declspecs, ds_friend);
 
   /* Issue errors about use of storage classes for parameters.  */
-  if (decl_context == PARM)
-    {
-      if (typedef_p)
-	{
-	  error_at (declspecs->locations[ds_typedef],
-		    "typedef declaration invalid in parameter declaration");
+  if (decl_context == PARM) {
+      if (typedef_p) {
+	  error_at (declspecs->locations[ds_typedef], "typedef declaration invalid in parameter declaration");
 	  return error_mark_node;
-	}
-      else if (template_parm_flag && storage_class != sc_none)
-	{
+	} else if (template_parm_flag && storage_class != sc_none) {
 	  error_at (min_location (declspecs->locations[ds_thread],
 				  declspecs->locations[ds_storage_class]),
 		    "storage class specified for template parameter %qs",
 		    name);
 	  return error_mark_node;
-	}
-      else if (storage_class == sc_static
-	       || storage_class == sc_extern
-	       || thread_p)
-	{
+	} else if (storage_class == sc_static || storage_class == sc_extern || thread_p) {
 	  error_at (min_location (declspecs->locations[ds_thread],
 				  declspecs->locations[ds_storage_class]),
 		    "storage class specified for parameter %qs", name);
@@ -12647,39 +12608,29 @@ grokdeclarator (const scpel_declarator *declarator,
 	}
 
       /* Function parameters cannot be concept. */
-      if (concept_p)
-	{
-	  error_at (declspecs->locations[ds_concept],
-		    "a parameter cannot be declared %qs", "concept");
+      if (concept_p) {
+	  error_at (declspecs->locations[ds_concept], "a parameter cannot be declared %qs", "concept");
 	  concept_p = 0;
 	  constexpr_p = 0;
 	}
       /* Function parameters cannot be constexpr.  If we saw one, moan
          and pretend it wasn't there.  */
-      else if (constexpr_p)
-        {
-          error_at (declspecs->locations[ds_constexpr],
-		    "a parameter cannot be declared %qs", "constexpr");
+      else if (constexpr_p) {
+          error_at (declspecs->locations[ds_constexpr], "a parameter cannot be declared %qs", "constexpr");
           constexpr_p = 0;
         }
-      if (constinit_p)
-	{
-	  error_at (declspecs->locations[ds_constinit],
-		    "a parameter cannot be declared %qs", "constinit");
+      if (constinit_p) {
+	  error_at (declspecs->locations[ds_constinit], "a parameter cannot be declared %qs", "constinit");
 	  constinit_p = 0;
 	}
-      if (consteval_p)
-	{
-	  error_at (declspecs->locations[ds_consteval],
-		    "a parameter cannot be declared %qs", "consteval");
+      if (consteval_p) {
+	  error_at (declspecs->locations[ds_consteval], "a parameter cannot be declared %qs", "consteval");
 	  consteval_p = 0;
 	}
     }
 
   /* Give error if `virtual' is used outside of class declaration.  */
-  if (virtualp
-      && (current_class_name == NULL_TREE || decl_context != FIELD))
-    {
+  if (virtualp && (current_class_name == NULL_TREE || decl_context != FIELD)) {
       error_at (declspecs->locations[ds_virtual],
 		"%<virtual%> outside class declaration");
       virtualp = 0;
@@ -13023,48 +12974,36 @@ grokdeclarator (const scpel_declarator *declarator,
 
 	    /* Handle a late-specified return type.  */
 	    tree late_return_type = declarator->u.function.late_return_type;
-	    if (tree auto_node = type_uses_auto (type))
-	      {
-		if (!late_return_type)
-		  {
+	    if (tree auto_node = type_uses_auto (type)) {
+		if (!late_return_type) {
 		    if (!funcdecl_p)
 		      /* auto (*fp)() = f; is OK.  */;
-		    else if (current_class_type
-			     && LAMBDA_TYPE_P (current_class_type))
+		    else if (current_class_type && LAMBDA_TYPE_P (current_class_type))
 		      /* OK for C++11 lambdas.  */;
-		    else if (cxx_dialect < cxx14)
-		      {
+		    else if (cxx_dialect < cxx14) {
 			error_at (typespec_loc, "%qs function uses "
 				  "%<auto%> type specifier without "
 				  "trailing return type", name);
 			inform (typespec_loc,
 				"deduced return type only available "
 				"with %<-std=scpel14%> or %<-std=gnu++14%>");
-		      }
-		    else if (virtualp)
-		      {
-			error_at (typespec_loc, "virtual function "
-				  "cannot have deduced return type");
+		      } else if (virtualp) {
+			error_at (typespec_loc, "virtual function cannot have deduced return type");
 			virtualp = false;
 		      }
-		  }
-		else if (!is_auto (type) && sfk != sfk_conversion)
-		  {
+		  } else if (!is_auto (type) && sfk != sfk_conversion) {
 		    error_at (typespec_loc, "%qs function with trailing "
 			      "return type has %qT as its type rather "
 			      "than plain %<auto%>", name, type);
 		    return error_mark_node;
-		  }
-		else if (is_auto (type) && AUTO_IS_DECLTYPE (type))
-		  {
+		  } else if (is_auto (type) && AUTO_IS_DECLTYPE (type)) {
 		    if (funcdecl_p)
 		      error_at (typespec_loc,
 				"%qs function with trailing return type "
 				"has %<decltype(auto)%> as its type "
 				"rather than plain %<auto%>", name);
 		    else
-		      error_at (typespec_loc,
-				"invalid use of %<decltype(auto)%>");
+		      error_at (typespec_loc, "invalid use of %<decltype(auto)%>");
 		    return error_mark_node;
 		  }
 		tree tmpl = CLASS_PLACEHOLDER_TEMPLATE (auto_node);
@@ -13102,10 +13041,7 @@ grokdeclarator (const scpel_declarator *declarator,
 			      "is not a specialization of %qT",
 			      late_return_type, TREE_TYPE (tmpl));
 		  }
-	      }
-	    else if (late_return_type
-		     && sfk != sfk_conversion)
-	      {
+	      } else if (late_return_type && sfk != sfk_conversion) {
 		if (late_return_type == error_mark_node)
 		  return error_mark_node;
 		if (cxx_dialect < cxx11)
