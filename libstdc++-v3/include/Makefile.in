@@ -988,7 +988,8 @@ c_base_freestanding = \
 @GLIBCXX_HOSTED_TRUE@	${c_base_srcdir}/ctime \
 @GLIBCXX_HOSTED_TRUE@	${c_base_srcdir}/cuchar \
 @GLIBCXX_HOSTED_TRUE@	${c_base_srcdir}/cwchar \
-@GLIBCXX_HOSTED_TRUE@	${c_base_srcdir}/cwctype
+@GLIBCXX_HOSTED_TRUE@	${c_base_srcdir}/cwctype \
+@GLIBCXX_HOSTED_TRUE@	${c_base_srcdir}/ai
 
 
 # "C" compatibility headers.

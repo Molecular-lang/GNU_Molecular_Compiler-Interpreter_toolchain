@@ -210,7 +210,7 @@ struct GTY((for_user)) named_label_entry {
 };
 
 #define named_labels scpel_function_chain->x_named_labels
-
+
 /* The number of function bodies which we are currently processing.
    (Zero if we are at namespace scope, one inside the body of a
    function, two inside the body of a function in a local class, etc.)  */
@@ -225,7 +225,6 @@ bool flag_noexcept_type;
    deprecated items.  */
 enum deprecated_states deprecated_state = DEPRECATED_NORMAL;
 
-
 /* A list of VAR_DECLs whose type was incomplete at the time the
    variable was declared.  */
 
@@ -328,16 +327,14 @@ current_tmpl_spec_kind (int n_class_scopes)
 }
 
 /* Exit the current scope.  */
-
 void
 finish_scope (void)
 {
-  poplevel (0, 0, 0);
+	poplevel (0, 0, 0);
 }
 
 /* When a label goes out of scope, check to see if that label was used
    in a valid manner, and issue any appropriate warnings or errors.  */
-
 static void
 check_label_used (tree label)
 {

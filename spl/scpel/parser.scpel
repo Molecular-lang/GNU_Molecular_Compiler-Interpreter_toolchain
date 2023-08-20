@@ -169,80 +169,53 @@ enum required_token {
 /* RAII wrapper for parser->in_type_id_in_expr_p, setting it on creation and
    reverting it on destruction.  */
 
-class type_id_in_expr_sentinel
-{
-  scpel_parser *parser;
-  bool saved;
-public:
-  type_id_in_expr_sentinel (scpel_parser *parser, bool set = true)
-    : parser (parser),
-      saved (parser->in_type_id_in_expr_p)
-  { parser->in_type_id_in_expr_p = set; }
-  ~type_id_in_expr_sentinel ()
-  { parser->in_type_id_in_expr_p = saved; }
+class type_id_in_expr_sentinel {
+	scpel_parser *parser;
+	bool saved;
+	public:
+		type_id_in_expr_sentinel (scpel_parser *parser, bool set = true)
+		: parser (parser), saved (parser->in_type_id_in_expr_p) {
+			parser->in_type_id_in_expr_p = set;
+		}
+		~type_id_in_expr_sentinel () {
+			parser->in_type_id_in_expr_p = saved;
+		}
 };
 
 /* Prototypes.  */
 
-static scpel_lexer *scpel_lexer_new_main
-  (void);
-static scpel_lexer *scpel_lexer_new_from_tokens
-  (scpel_token_cache *tokens);
-static void scpel_lexer_destroy
-  (scpel_lexer *);
-static int scpel_lexer_saving_tokens
-  (const scpel_lexer *);
-static scpel_token *scpel_lexer_token_at
-  (scpel_lexer *, scpel_token_position);
-static void scpel_lexer_get_preprocessor_token
-  (unsigned, scpel_token *);
-static inline scpel_token *scpel_lexer_peek_token
-  (scpel_lexer *);
-static scpel_token *scpel_lexer_peek_nth_token
-  (scpel_lexer *, size_t);
-static inline bool scpel_lexer_next_token_is
-  (scpel_lexer *, enum cpp_ttype);
-static bool scpel_lexer_next_token_is_not
-  (scpel_lexer *, enum cpp_ttype);
-static bool scpel_lexer_next_token_is_keyword
-  (scpel_lexer *, enum rid);
-static scpel_token *scpel_lexer_consume_token
-  (scpel_lexer *);
-static void scpel_lexer_purge_token
-  (scpel_lexer *);
-static void scpel_lexer_purge_tokens_after
-  (scpel_lexer *, scpel_token_position);
-static void scpel_lexer_save_tokens
-  (scpel_lexer *);
-static void scpel_lexer_commit_tokens
-  (scpel_lexer *);
-static void scpel_lexer_rollback_tokens
-  (scpel_lexer *);
-static void scpel_lexer_print_token
-  (FILE *, scpel_token *);
-static inline bool scpel_lexer_debugging_p
-  (scpel_lexer *);
-static void scpel_lexer_start_debugging
-  (scpel_lexer *) ATTRIBUTE_UNUSED;
-static void scpel_lexer_stop_debugging
-  (scpel_lexer *) ATTRIBUTE_UNUSED;
+static scpel_lexer *scpel_lexer_new_main(void);
+static scpel_lexer *scpel_lexer_new_from_tokens(scpel_token_cache *tokens);
+static void scpel_lexer_destroy(scpel_lexer *);
+static int scpel_lexer_saving_tokens(const scpel_lexer *);
+static scpel_token *scpel_lexer_token_at(scpel_lexer *, scpel_token_position);
+static void scpel_lexer_get_preprocessor_token(unsigned, scpel_token *);
+static inline scpel_token *scpel_lexer_peek_token(scpel_lexer *);
+static scpel_token *scpel_lexer_peek_nth_token(scpel_lexer *, size_t);
+static inline bool scpel_lexer_next_token_is(scpel_lexer *, enum cpp_ttype);
+static bool scpel_lexer_next_token_is_not(scpel_lexer *, enum cpp_ttype);
+static bool scpel_lexer_next_token_is_keyword(scpel_lexer *, enum rid);
+static scpel_token *scpel_lexer_consume_token(scpel_lexer *);
+static void scpel_lexer_purge_token(scpel_lexer *);
+static void scpel_lexer_purge_tokens_after(scpel_lexer *, scpel_token_position);
+static void scpel_lexer_save_tokens(scpel_lexer *);
+static void scpel_lexer_commit_tokens(scpel_lexer *);
+static void scpel_lexer_rollback_tokens(scpel_lexer *);
+static void scpel_lexer_print_token(FILE *, scpel_token *);
+static inline bool scpel_lexer_debugging_p(scpel_lexer *);
+static void scpel_lexer_start_debugging(scpel_lexer *) ATTRIBUTE_UNUSED;
+static void scpel_lexer_stop_debugging(scpel_lexer *) ATTRIBUTE_UNUSED;
 
-static scpel_token_cache *scpel_token_cache_new
-  (scpel_token *, scpel_token *);
-static tree scpel_parser_late_noexcept_specifier
-  (scpel_parser *, tree);
-static void noexcept_override_late_checks
-  (tree);
+static scpel_token_cache *scpel_token_cache_new(scpel_token *, scpel_token *);
+static tree scpel_parser_late_noexcept_specifier(scpel_parser *, tree);
+static void noexcept_override_late_checks(tree);
 
-static void scpel_parser_initial_pragma
-  (scpel_token *);
+static void scpel_parser_initial_pragma(scpel_token *);
 
-static bool scpel_parser_omp_declare_reduction_exprs
-  (tree, scpel_parser *);
-static void scpel_finalize_oacc_routine
-  (scpel_parser *, tree, bool);
+static bool scpel_parser_omp_declare_reduction_exprs(tree, scpel_parser *);
+static void scpel_finalize_oacc_routine(scpel_parser *, tree, bool);
 
-/* Manifest constants.  */
+/* Manifest constants. */
 #define SCPEL_LEXER_BUFFER_SIZE ((256 * 1024) / sizeof (scpel_token))
 #define SCPEL_SAVED_TOKEN_STACK 5
 
@@ -256,77 +229,73 @@ static FILE *scpel_lexer_debug_stream;
 int scpel_unevaluated_operand;
 
 /* Dump up to NUM tokens in BUFFER to FILE starting with token
-   START_TOKEN.  If START_TOKEN is NULL, the dump starts with the
-   first token in BUFFER.  If NUM is 0, dump all the tokens.  If
+   START_TOKEN. If START_TOKEN is NULL, the dump starts with the
+   first token in BUFFER. If NUM is 0, dump all the tokens. If
    CURR_TOKEN is set and it is one of the tokens in BUFFER, it will be
-   highlighted by surrounding it in [[ ]].  */
+   highlighted by surrounding it in [[ ]]. */
 
 static void
 scpel_lexer_dump_tokens (FILE *file, vec<scpel_token, va_gc> *buffer,
 		      scpel_token *start_token, unsigned num,
 		      scpel_token *curr_token)
 {
-  unsigned i, nprinted;
-  scpel_token *token;
-  bool do_print;
+	unsigned i, nprinted;
+	scpel_token *token;
+	bool do_print;
 
-  fprintf (file, "%u tokens\n", vec_safe_length (buffer));
+	fprintf (file, "%u tokens\n", vec_safe_length (buffer));
 
-  if (buffer == NULL)
-    return;
+	if (buffer == NULL)
+		return;
 
-  if (num == 0)
-    num = buffer->length ();
+	if (num == 0)
+		num = buffer->length ();
 
-  if (start_token == NULL)
-    start_token = buffer->address ();
+	if (start_token == NULL)
+		start_token = buffer->address ();
 
-  if (start_token > buffer->address ())
-    {
-      scpel_lexer_print_token (file, &(*buffer)[0]);
-      fprintf (file, " ... ");
-    }
-
-  do_print = false;
-  nprinted = 0;
-  for (i = 0; buffer->iterate (i, &token) && nprinted < num; i++)
-    {
-      if (token == start_token)
-	do_print = true;
-
-      if (!do_print)
-	continue;
-
-      nprinted++;
-      if (token == curr_token)
-	fprintf (file, "[[");
-
-      scpel_lexer_print_token (file, token);
-
-      if (token == curr_token)
-	fprintf (file, "]]");
-
-      switch (token->type)
-	{
-	  case CPP_SEMICOLON:
-	  case CPP_OPEN_BRACE:
-	  case CPP_CLOSE_BRACE:
-	  case CPP_EOF:
-	    fputc ('\n', file);
-	    break;
-
-	  default:
-	    fputc (' ', file);
+	if (start_token > buffer->address ()) {
+		scpel_lexer_print_token (file, &(*buffer)[0]);
+		fprintf (file, " ... ");
 	}
-    }
 
-  if (i == num && i < buffer->length ())
-    {
-      fprintf (file, " ... ");
-      scpel_lexer_print_token (file, &buffer->last ());
-    }
+	do_print = false;
+	nprinted = 0;
+	for (i = 0; buffer->iterate (i, &token) && nprinted < num; i++) {
+		if (token == start_token)
+			do_print = true;
 
-  fprintf (file, "\n");
+		if (!do_print)
+			continue;
+
+		nprinted++;
+		if (token == curr_token)
+			fprintf (file, "[[");
+
+		scpel_lexer_print_token (file, token);
+
+		if (token == curr_token)
+			fprintf (file, "]]");
+
+		switch (token->type) {
+			case CPP_SEMICOLON:
+			case CPP_OPEN_BRACE:
+			case CPP_CLOSE_BRACE:
+			case CPP_EOF:
+				fputc ('\n', file);
+				break;
+
+			default:
+				fputc (' ', file);
+		}
+	}
+
+	if (i == num && i < buffer->length ()) {
+		fprintf (file, " ... ");
+		scpel_lexer_print_token (file, &buffer->last ());
+	}
+
+	fprintf (file, "\n");
 }
 
 
@@ -335,22 +304,22 @@ scpel_lexer_dump_tokens (FILE *file, vec<scpel_token, va_gc> *buffer,
 void
 scpel_lexer_debug_tokens (vec<scpel_token, va_gc> *buffer)
 {
-  scpel_lexer_dump_tokens (stderr, buffer, NULL, 0, NULL);
+	scpel_lexer_dump_tokens (stderr, buffer, NULL, 0, NULL);
 }
 
 DEBUG_FUNCTION void
 debug (vec<scpel_token, va_gc> &ref)
 {
-  scpel_lexer_dump_tokens (stderr, &ref, NULL, 0, NULL);
+	scpel_lexer_dump_tokens (stderr, &ref, NULL, 0, NULL);
 }
 
 DEBUG_FUNCTION void
 debug (vec<scpel_token, va_gc> *ptr)
 {
-  if (ptr)
-    debug (*ptr);
-  else
-    fprintf (stderr, "<nil>\n");
+	if (ptr)
+		debug (*ptr);
+	else
+		fprintf (stderr, "<nil>\n");
 }
 
 
@@ -360,11 +329,10 @@ debug (vec<scpel_token, va_gc> *ptr)
 static void
 scpel_debug_print_tree_if_set (FILE *file, const char *desc, tree t)
 {
-  if (t)
-    {
-      fprintf (file, "%s: ", desc);
-      print_node_brief (file, "", t, 0);
-    }
+	if (t) {
+		fprintf (file, "%s: ", desc);
+		print_node_brief (file, "", t, 0);
+	}
 }
 
 
@@ -373,10 +341,10 @@ scpel_debug_print_tree_if_set (FILE *file, const char *desc, tree t)
 static void
 scpel_debug_print_context (FILE *file, scpel_parser_context *c)
 {
-  const char *status_s[] = { "OK", "ERROR", "COMMITTED" };
-  fprintf (file, "{ status = %s, scope = ", status_s[c->status]);
-  print_node_brief (file, "", c->object_type, 0);
-  fprintf (file, "}\n");
+	const char *status_s[] = { "OK", "ERROR", "COMMITTED" };
+	fprintf (file, "{ status = %s, scope = ", status_s[c->status]);
+	print_node_brief (file, "", c->object_type, 0);
+	fprintf (file, "}\n");
 }
 
 
@@ -385,15 +353,14 @@ scpel_debug_print_context (FILE *file, scpel_parser_context *c)
 static void
 scpel_debug_print_context_stack (FILE *file, scpel_parser_context *first)
 {
-  unsigned i;
-  scpel_parser_context *c;
+	unsigned i;
+	scpel_parser_context *c;
 
-  fprintf (file, "Parsing context stack:\n");
-  for (i = 0, c = first; c; c = c->next, i++)
-    {
-      fprintf (file, "\t#%u: ", i);
-      scpel_debug_print_context (file, c);
-    }
+	fprintf (file, "Parsing context stack:\n");
+	for (i = 0, c = first; c; c = c->next, i++) {
+		fprintf (file, "\t#%u: ", i);
+		scpel_debug_print_context (file, c);
+	}
 }
 
 
@@ -402,8 +369,8 @@ scpel_debug_print_context_stack (FILE *file, scpel_parser_context *first)
 static void
 scpel_debug_print_flag (FILE *file, const char *desc, bool flag)
 {
-  if (flag)
-    fprintf (file, "%s: true\n", desc);
+	if (flag)
+		fprintf (file, "%s: true\n", desc);
 }
 
 
@@ -412,57 +379,48 @@ scpel_debug_print_flag (FILE *file, const char *desc, bool flag)
 static void
 scpel_debug_print_unparsed_function (FILE *file, scpel_unparsed_functions_entry *uf)
 {
-  unsigned i;
-  scpel_default_arg_entry *default_arg_fn;
-  tree fn;
+	unsigned i;
+	scpel_default_arg_entry *default_arg_fn;
+	tree fn;
 
-  fprintf (file, "\tFunctions with default args:\n");
-  for (i = 0;
-       vec_safe_iterate (uf->funs_with_default_args, i, &default_arg_fn);
-       i++)
-    {
-      fprintf (file, "\t\tClass type: ");
-      print_node_brief (file, "", default_arg_fn->class_type, 0);
-      fprintf (file, "\t\tDeclaration: ");
-      print_node_brief (file, "", default_arg_fn->decl, 0);
-      fprintf (file, "\n");
-    }
+	fprintf (file, "\tFunctions with default args:\n");
+	for (i = 0; vec_safe_iterate (uf->funs_with_default_args, i, &default_arg_fn); i++) {
+		fprintf (file, "\t\tClass type: ");
+		print_node_brief (file, "", default_arg_fn->class_type, 0);
+		fprintf (file, "\t\tDeclaration: ");
+		print_node_brief (file, "", default_arg_fn->decl, 0);
+		fprintf (file, "\n");
+	}
 
-  fprintf (file, "\n\tFunctions with definitions that require "
-	   "post-processing\n\t\t");
-  for (i = 0; vec_safe_iterate (uf->funs_with_definitions, i, &fn); i++)
-    {
-      print_node_brief (file, "", fn, 0);
-      fprintf (file, " ");
-    }
-  fprintf (file, "\n");
+	fprintf (file, "\n\tFunctions with definitions that require post-processing\n\t\t");
+	for (i = 0; vec_safe_iterate (uf->funs_with_definitions, i, &fn); i++) {
+		print_node_brief (file, "", fn, 0);
+		fprintf (file, " ");
+	}
+	fprintf (file, "\n");
 
-  fprintf (file, "\n\tNon-static data members with initializers that require "
-           "post-processing\n\t\t");
-  for (i = 0; vec_safe_iterate (uf->nsdmis, i, &fn); i++)
-    {
-      print_node_brief (file, "", fn, 0);
-      fprintf (file, " ");
-    }
-  fprintf (file, "\n");
+	fprintf (file, "\n\tNon-static data members with initializers that require post-processing\n\t\t");
+	for (i = 0; vec_safe_iterate (uf->nsdmis, i, &fn); i++) {
+		print_node_brief (file, "", fn, 0);
+		fprintf (file, " ");
+	}
+	fprintf (file, "\n");
 }
 
 
 /* Print the stack of unparsed member functions S to FILE.  */
 
 static void
-scpel_debug_print_unparsed_queues (FILE *file,
-				vec<scpel_unparsed_functions_entry, va_gc> *s)
+scpel_debug_print_unparsed_queues (FILE *file, vec<scpel_unparsed_functions_entry, va_gc> *s)
 {
-  unsigned i;
-  scpel_unparsed_functions_entry *uf;
+	unsigned i;
+	scpel_unparsed_functions_entry *uf;
 
-  fprintf (file, "Unparsed functions\n");
-  for (i = 0; vec_safe_iterate (s, i, &uf); i++)
-    {
-      fprintf (file, "#%u:\n", i);
-      scpel_debug_print_unparsed_function (file, uf);
-    }
+	fprintf (file, "Unparsed functions\n");
+	for (i = 0; vec_safe_iterate (s, i, &uf); i++) {
+		fprintf (file, "#%u:\n", i);
+		scpel_debug_print_unparsed_function (file, uf);
+	}
 }
 
 
@@ -472,18 +430,15 @@ scpel_debug_print_unparsed_queues (FILE *file,
 static void
 scpel_debug_parser_tokens (FILE *file, scpel_parser *parser, int window_size)
 {
-  scpel_token *next_token, *first_token, *start_token;
+	scpel_token *next_token, *first_token, *start_token;
 
-  if (file == NULL)
-    file = stderr;
+	if (file == NULL)
+		file = stderr;
 
-  next_token = parser->lexer->next_token;
-  first_token = parser->lexer->buffer->address ();
-  start_token = (next_token > first_token + window_size / 2)
-		? next_token - window_size / 2
-		: first_token;
-  scpel_lexer_dump_tokens (file, parser->lexer->buffer, start_token, window_size,
-			next_token);
+	next_token = parser->lexer->next_token;
+	first_token = parser->lexer->buffer->address ();
+	start_token = (next_token > first_token + window_size / 2) ? next_token - window_size / 2 : first_token;
+	scpel_lexer_dump_tokens (file, parser->lexer->buffer, start_token, window_size, next_token);
 }
 
 
@@ -493,104 +448,75 @@ scpel_debug_parser_tokens (FILE *file, scpel_parser *parser, int window_size)
 void
 scpel_debug_parser (FILE *file, scpel_parser *parser)
 {
-  const size_t window_size = 20;
-  scpel_token *token;
-  expanded_location eloc;
+	const size_t window_size = 20;
+	scpel_token *token;
+	expanded_location eloc;
 
-  if (file == NULL)
-    file = stderr;
+	if (file == NULL)
+		file = stderr;
 
-  fprintf (file, "Parser state\n\n");
-  fprintf (file, "Number of tokens: %u\n",
-	   vec_safe_length (parser->lexer->buffer));
-  scpel_debug_print_tree_if_set (file, "Lookup scope", parser->scope);
-  scpel_debug_print_tree_if_set (file, "Object scope",
-				     parser->object_scope);
-  scpel_debug_print_tree_if_set (file, "Qualifying scope",
-				     parser->qualifying_scope);
-  scpel_debug_print_context_stack (file, parser->context);
-  scpel_debug_print_flag (file, "Allow GNU extensions",
-			      parser->allow_gnu_extensions_p);
-  scpel_debug_print_flag (file, "'>' token is greater-than",
-			      parser->greater_than_is_operator_p);
-  scpel_debug_print_flag (file, "Default args allowed in current "
-			      "parameter list", parser->default_arg_ok_p);
-  scpel_debug_print_flag (file, "Parsing integral constant-expression",
-			      parser->integral_constant_expression_p);
-  scpel_debug_print_flag (file, "Allow non-constant expression in current "
-			      "constant-expression",
-			      parser->allow_non_integral_constant_expression_p);
-  scpel_debug_print_flag (file, "Seen non-constant expression",
-			      parser->non_integral_constant_expression_p);
-  scpel_debug_print_flag (file, "Local names forbidden in current context",
-			      (parser->local_variables_forbidden_p
-			       & LOCAL_VARS_FORBIDDEN));
-  scpel_debug_print_flag (file, "'this' forbidden in current context",
-			      (parser->local_variables_forbidden_p
-			       & THIS_FORBIDDEN));
-  scpel_debug_print_flag (file, "In unbraced linkage specification",
-			      parser->in_unbraced_linkage_specification_p);
-  scpel_debug_print_flag (file, "Parsing a declarator",
-			      parser->in_declarator_p);
-  scpel_debug_print_flag (file, "In template argument list",
-			      parser->in_template_argument_list_p);
-  scpel_debug_print_flag (file, "Parsing an iteration statement",
-			      parser->in_statement & IN_ITERATION_STMT);
-  scpel_debug_print_flag (file, "Parsing a switch statement",
-			      parser->in_statement & IN_SWITCH_STMT);
-  scpel_debug_print_flag (file, "Parsing a structured OpenMP block",
-			      parser->in_statement & IN_OMP_BLOCK);
-  scpel_debug_print_flag (file, "Parsing an OpenMP loop",
-			      parser->in_statement & IN_OMP_FOR);
-  scpel_debug_print_flag (file, "Parsing an if statement",
-			      parser->in_statement & IN_IF_STMT);
-  scpel_debug_print_flag (file, "Parsing a type-id in an expression "
-			      "context", parser->in_type_id_in_expr_p);
-  scpel_debug_print_flag (file, "String expressions should be translated "
-			      "to execution character set",
-			      parser->translate_strings_p);
-  scpel_debug_print_flag (file, "Parsing function body outside of a "
-			      "local class", parser->in_function_body);
-  scpel_debug_print_flag (file, "Auto correct a colon to a scope operator",
-			      parser->colon_corrects_to_scope_p);
-  scpel_debug_print_flag (file, "Colon doesn't start a class definition",
-			      parser->colon_doesnt_start_class_def_p);
-  scpel_debug_print_flag (file, "Parsing an Objective-C++ message context",
-			      parser->objective_c_message_context_p);
-  if (parser->type_definition_forbidden_message)
-    fprintf (file, "Error message for forbidden type definitions: %s %s\n",
-	     parser->type_definition_forbidden_message,
-	     parser->type_definition_forbidden_message_arg
-	     ? parser->type_definition_forbidden_message_arg : "<none>");
-  scpel_debug_print_unparsed_queues (file, parser->unparsed_queues);
-  fprintf (file, "Number of class definitions in progress: %u\n",
-	   parser->num_classes_being_defined);
-  fprintf (file, "Number of template parameter lists for the current "
-	   "declaration: %u\n", parser->num_template_parameter_lists);
-  scpel_debug_parser_tokens (file, parser, window_size);
-  token = parser->lexer->next_token;
-  fprintf (file, "Next token to parse:\n");
-  fprintf (file, "\tToken:  ");
-  scpel_lexer_print_token (file, token);
-  eloc = expand_location (token->location);
-  fprintf (file, "\n\tFile:   %s\n", eloc.file);
-  fprintf (file, "\tLine:   %d\n", eloc.line);
-  fprintf (file, "\tColumn: %d\n", eloc.column);
+	fprintf (file, "Parser state\n\n");
+	fprintf (file, "Number of tokens: %u\n", vec_safe_length (parser->lexer->buffer));
+	scpel_debug_print_tree_if_set (file, "Lookup scope", parser->scope);
+	scpel_debug_print_tree_if_set (file, "Object scope", parser->object_scope);
+	scpel_debug_print_tree_if_set (file, "Qualifying scope", parser->qualifying_scope);
+	scpel_debug_print_context_stack (file, parser->context);
+	scpel_debug_print_flag (file, "Allow GNU extensions", parser->allow_gnu_extensions_p);
+	scpel_debug_print_flag (file, "'>' token is greater-than", parser->greater_than_is_operator_p);
+	scpel_debug_print_flag (file, "Default args allowed in current parameter list", parser->default_arg_ok_p);
+	scpel_debug_print_flag (file, "Parsing integral constant-expression", parser->integral_constant_expression_p);
+	scpel_debug_print_flag (file, "Allow non-constant expression in current constant-expression", parser->allow_non_integral_constant_expression_p);
+	scpel_debug_print_flag (file, "Seen non-constant expression", parser->non_integral_constant_expression_p);
+	scpel_debug_print_flag (file, "Local names forbidden in current context", (parser->local_variables_forbidden_p & LOCAL_VARS_FORBIDDEN));
+	scpel_debug_print_flag (file, "'this' forbidden in current context", (parser->local_variables_forbidden_p & THIS_FORBIDDEN));
+	scpel_debug_print_flag (file, "In unbraced linkage specification", parser->in_unbraced_linkage_specification_p);
+	scpel_debug_print_flag (file, "Parsing a declarator", parser->in_declarator_p);
+	scpel_debug_print_flag (file, "In template argument list", parser->in_template_argument_list_p);
+	scpel_debug_print_flag (file, "Parsing an iteration statement", parser->in_statement & IN_ITERATION_STMT);
+	scpel_debug_print_flag (file, "Parsing a switch statement", parser->in_statement & IN_SWITCH_STMT);
+	scpel_debug_print_flag (file, "Parsing a structured OpenMP block", parser->in_statement & IN_OMP_BLOCK);
+	scpel_debug_print_flag (file, "Parsing an OpenMP loop", parser->in_statement & IN_OMP_FOR);
+	scpel_debug_print_flag (file, "Parsing an if statement", parser->in_statement & IN_IF_STMT);
+	scpel_debug_print_flag (file, "Parsing a type-id in an expression context", parser->in_type_id_in_expr_p);
+	scpel_debug_print_flag (file, "String expressions should be translated to execution character set", parser->translate_strings_p);
+	scpel_debug_print_flag (file, "Parsing function body outside of a local class", parser->in_function_body);
+	scpel_debug_print_flag (file, "Auto correct a colon to a scope operator", parser->colon_corrects_to_scope_p);
+	scpel_debug_print_flag (file, "Colon doesn't start a class definition", parser->colon_doesnt_start_class_def_p);
+	scpel_debug_print_flag (file, "Parsing an Objective-C++ message context", parser->objective_c_message_context_p);
+	
+	if (parser->type_definition_forbidden_message)
+		fprintf (file, "Error message for forbidden type definitions: %s %s\n",
+		parser->type_definition_forbidden_message,
+		parser->type_definition_forbidden_message_arg
+		? parser->type_definition_forbidden_message_arg : "<none>");
+		
+	scpel_debug_print_unparsed_queues (file, parser->unparsed_queues);
+	fprintf (file, "Number of class definitions in progress: %u\n", parser->num_classes_being_defined);
+	fprintf (file, "Number of template parameter lists for the current declaration: %u\n", parser->num_template_parameter_lists);
+	scpel_debug_parser_tokens (file, parser, window_size);
+	token = parser->lexer->next_token;
+	fprintf (file, "Next token to parse:\n");
+	fprintf (file, "\tToken:  ");
+	scpel_lexer_print_token (file, token);
+	eloc = expand_location (token->location);
+	fprintf (file, "\n\tFile:   %s\n", eloc.file);
+	fprintf (file, "\tLine:   %d\n", eloc.line);
+	fprintf (file, "\tColumn: %d\n", eloc.column);
 }
 
 DEBUG_FUNCTION void
 debug (scpel_parser &ref)
 {
-  scpel_debug_parser (stderr, &ref);
+	scpel_debug_parser (stderr, &ref);
 }
 
 DEBUG_FUNCTION void
 debug (scpel_parser *ptr)
 {
-  if (ptr)
-    debug (*ptr);
-  else
-    fprintf (stderr, "<nil>\n");
+	if (ptr)
+		debug (*ptr);
+	else
+		fprintf (stderr, "<nil>\n");
 }
 
 /* Allocate memory for a new lexer object and return it.  */
@@ -598,18 +524,18 @@ debug (scpel_parser *ptr)
 static scpel_lexer *
 scpel_lexer_alloc (void)
 {
-  /* Allocate the memory.  */
-  scpel_lexer *lexer = ggc_cleared_alloc<scpel_lexer> ();
+	/* Allocate the memory.  */
+	scpel_lexer *lexer = ggc_cleared_alloc<scpel_lexer> ();
 
-  /* Initially we are not debugging.  */
-  lexer->debugging_p = false;
+	/* Initially we are not debugging.  */
+	lexer->debugging_p = false;
 
-  lexer->saved_tokens.create (SCPEL_SAVED_TOKEN_STACK);
+	lexer->saved_tokens.create (SCPEL_SAVED_TOKEN_STACK);
 
-  /* Create the buffer.  */
-  vec_alloc (lexer->buffer, SCPEL_LEXER_BUFFER_SIZE);
+	/* Create the buffer.  */
+	vec_alloc (lexer->buffer, SCPEL_LEXER_BUFFER_SIZE);
 
-  return lexer;
+	return lexer;
 }
 
 /* Return TRUE if token is the start of a module declaration that will be
@@ -617,9 +543,9 @@ scpel_lexer_alloc (void)
 static inline bool
 scpel_token_is_module_directive (scpel_token *token)
 {
-  return token->keyword == RID__EXPORT
-    || token->keyword == RID__MODULE
-    || token->keyword == RID__IMPORT;
+	return token->keyword == RID__EXPORT
+		|| token->keyword == RID__MODULE
+		|| token->keyword == RID__IMPORT;
 }
 
 /* Return TOKEN's pragma_kind if it is CPP_PRAGMA, otherwise
@@ -628,10 +554,10 @@ scpel_token_is_module_directive (scpel_token *token)
 static enum pragma_kind
 scpel_parser_pragma_kind (scpel_token *token)
 {
-  if (token->type != CPP_PRAGMA)
-    return PRAGMA_NONE;
-  /* We smuggled the cpp_token->u.pragma value in an INTEGER_CST.  */
-  return (enum pragma_kind) TREE_INT_CST_LOW (token->u.value);
+	if (token->type != CPP_PRAGMA)
+		return PRAGMA_NONE;
+	/* We smuggled the cpp_token->u.pragma value in an INTEGER_CST.  */
+	return (enum pragma_kind) TREE_INT_CST_LOW (token->u.value);
 }
 
 /* Handle early pragmas such as #pragma GCC diagnostic, which needs to be done
@@ -642,33 +568,31 @@ scpel_parser_pragma_kind (scpel_token *token)
 static void
 scpel_lexer_handle_early_pragma (scpel_lexer *lexer)
 {
-  const auto first_token = lexer->buffer->address ();
-  const auto last_token = first_token + lexer->buffer->length () - 1;
+	const auto first_token = lexer->buffer->address ();
+	const auto last_token = first_token + lexer->buffer->length () - 1;
 
-  /* Back up to the start of the pragma so pragma_lex () can parse it when
-     c-pragma lib asks it to.  */
-  auto begin = last_token;
-  gcc_assert (begin->type == CPP_PRAGMA_EOL);
-  while (begin->type != CPP_PRAGMA)
-    {
-      if (scpel_token_is_module_directive (begin))
-	return;
-      gcc_assert (begin != first_token);
-      --begin;
-    }
-  gcc_assert (!lexer->next_token);
-  gcc_assert (!lexer->last_token);
-  lexer->next_token = begin;
-  lexer->last_token = last_token;
+	/* Back up to the start of the pragma so pragma_lex () can parse it when
+	   c-pragma lib asks it to.  */
+	auto begin = last_token;
+	gcc_assert (begin->type == CPP_PRAGMA_EOL);
+	while (begin->type != CPP_PRAGMA) {
+		if (scpel_token_is_module_directive (begin))
+			return;
+		gcc_assert (begin != first_token);
+		--begin;
+	}
+	gcc_assert (!lexer->next_token);
+	gcc_assert (!lexer->last_token);
+	lexer->next_token = begin;
+	lexer->last_token = last_token;
 
-  /* Dispatch it.  */
-  const unsigned int id
-    = scpel_parser_pragma_kind (scpel_lexer_consume_token (lexer));
-  if (id >= PRAGMA_FIRST_EXTERNAL)
-    c_invoke_early_pragma_handler (id);
+	/* Dispatch it.  */
+	const unsigned int id = scpel_parser_pragma_kind (scpel_lexer_consume_token (lexer));
+	if (id >= PRAGMA_FIRST_EXTERNAL)
+		c_invoke_early_pragma_handler (id);
 
-  /* Reset to normal state.  */
-  lexer->next_token = lexer->last_token = nullptr;
+	/* Reset to normal state.  */
+	lexer->next_token = lexer->last_token = nullptr;
 }
 
 /* The parser.  */
@@ -681,69 +605,63 @@ static GTY (()) scpel_parser *the_parser;
 static scpel_lexer *
 scpel_lexer_new_main (void)
 {
-  scpel_token token;
+	scpel_token token;
 
-  /* It's possible that parsing the first pragma will load a PCH file,
-     which is a GC collection point.  So we have to do that before
-     allocating any memory.  */
-  scpel_lexer_get_preprocessor_token (C_LEX_STRING_NO_JOIN, &token);
-  scpel_parser_initial_pragma (&token);
-  c_common_no_more_pch ();
+	/* It's possible that parsing the first pragma will load a PCH file,
+	   which is a GC collection point.  So we have to do that before
+	   allocating any memory.  */
+	scpel_lexer_get_preprocessor_token (C_LEX_STRING_NO_JOIN, &token);
+	scpel_parser_initial_pragma (&token);
+	c_common_no_more_pch ();
 
-  scpel_lexer *lexer = scpel_lexer_alloc ();
-  /* Put the first token in the buffer.  */
-  scpel_token *tok = lexer->buffer->quick_push (token);
+	scpel_lexer *lexer = scpel_lexer_alloc ();
+	/* Put the first token in the buffer.  */
+	scpel_token *tok = lexer->buffer->quick_push (token);
 
-  uintptr_t filter = 0;
-  if (modules_p ())
-    filter = module_token_cdtor (parse_in, filter);
+	uintptr_t filter = 0;
+	if (modules_p ())
+		filter = module_token_cdtor (parse_in, filter);
 
-  /* Create the parser now, so we can use it to handle early pragmas.  */
-  gcc_assert (!the_parser);
-  the_parser = scpel_parser_new (lexer);
+	/* Create the parser now, so we can use it to handle early pragmas.  */
+	gcc_assert (!the_parser);
+	the_parser = scpel_parser_new (lexer);
 
-  /* Get the remaining tokens from the preprocessor.  */
-  while (tok->type != CPP_EOF)
-    {
-      if (filter)
-	/* Process the previous token.  */
-	module_token_lang (tok->type, tok->keyword, tok->u.value,
-			   tok->location, filter);
+	/* Get the remaining tokens from the preprocessor.  */
+	while (tok->type != CPP_EOF) {
+		if (filter)
+			/* Process the previous token.  */
+			module_token_lang (tok->type, tok->keyword, tok->u.value, tok->location, filter);
 
-      /* Check for early pragmas that need to be handled now.  */
-      if (tok->type == CPP_PRAGMA_EOL)
-	scpel_lexer_handle_early_pragma (lexer);
+		/* Check for early pragmas that need to be handled now.  */
+		if (tok->type == CPP_PRAGMA_EOL)
+			scpel_lexer_handle_early_pragma (lexer);
 
-      tok = vec_safe_push (lexer->buffer, scpel_token ());
-      scpel_lexer_get_preprocessor_token (C_LEX_STRING_NO_JOIN, tok);
-    }
+		tok = vec_safe_push (lexer->buffer, scpel_token ());
+		scpel_lexer_get_preprocessor_token (C_LEX_STRING_NO_JOIN, tok);
+	}
 
-  lexer->next_token = lexer->buffer->address ();
-  lexer->last_token = lexer->next_token
-                      + lexer->buffer->length ()
-		      - 1;
+	lexer->next_token = lexer->buffer->address ();
+	lexer->last_token = lexer->next_token + lexer->buffer->length () - 1;
 
-  if (lexer->buffer->length () != 1)
-    {
-      /* Set the EOF token's location to be the just after the previous
-         token's range.  That way 'at-eof' diagnostics point at something
-	 meaninful.  */
-      auto range = get_range_from_loc (line_table, tok[-1].location);
-      tok[0].location
-	= linemap_position_for_loc_and_offset (line_table, range.m_finish, 1);
-    }
+	if (lexer->buffer->length () != 1) {
+		/* Set the EOF token's location to be the just after the previous
+		   token's range.  That way 'at-eof' diagnostics point at something
+		   meaninful.  */
+		auto range = get_range_from_loc (line_table, tok[-1].location);
+		tok[0].location = linemap_position_for_loc_and_offset (line_table, range.m_finish, 1);
+	}
 
-  if (filter)
-    module_token_cdtor (parse_in, filter);
+	if (filter)
+		module_token_cdtor (parse_in, filter);
 
-  /* Subsequent preprocessor diagnostics should use compiler
-     diagnostic functions to get the compiler source location.  */
-  override_libcpp_locations = true;
+	/* Subsequent preprocessor diagnostics should use compiler
+	   diagnostic functions to get the compiler source location.  */
+	override_libcpp_locations = true;
 
-  maybe_check_all_macros (parse_in);
+	maybe_check_all_macros (parse_in);
 
-  gcc_assert (!lexer->next_token->purged_p);
-  return lexer;
+	gcc_assert (!lexer->next_token->purged_p);
+	return lexer;
 }
 
 /* Create a new lexer whose token stream is primed with the tokens in
@@ -752,30 +670,29 @@ scpel_lexer_new_main (void)
 static scpel_lexer *
 scpel_lexer_new_from_tokens (scpel_token_cache *cache)
 {
-  scpel_token *first = cache->first;
-  scpel_token *last = cache->last;
-  scpel_lexer *lexer = ggc_cleared_alloc<scpel_lexer> ();
+	scpel_token *first = cache->first;
+	scpel_token *last = cache->last;
+	scpel_lexer *lexer = ggc_cleared_alloc<scpel_lexer> ();
 
-  /* We do not own the buffer.  */
-  lexer->buffer = NULL;
+	/* We do not own the buffer.  */
+	lexer->buffer = NULL;
 
-  /* Insert an EOF token.  */
-  lexer->saved_type = last->type;
-  lexer->saved_keyword = last->keyword;
-  last->type = CPP_EOF;
-  last->keyword = RID_MAX;
+	/* Insert an EOF token.  */
+	lexer->saved_type = last->type;
+	lexer->saved_keyword = last->keyword;
+	last->type = CPP_EOF;
+	last->keyword = RID_MAX;
 
-  lexer->next_token = first;
-  lexer->last_token = last;
+	lexer->next_token = first;
+	lexer->last_token = last;
 
-  lexer->saved_tokens.create (SCPEL_SAVED_TOKEN_STACK);
+	lexer->saved_tokens.create (SCPEL_SAVED_TOKEN_STACK);
 
-  /* Initially we are not debugging.  */
-  lexer->debugging_p = false;
+	/* Initially we are not debugging.  */
+	lexer->debugging_p = false;
 
-  gcc_assert (!lexer->next_token->purged_p
-	      && !lexer->last_token->purged_p);
-  return lexer;
+	gcc_assert (!lexer->next_token->purged_p && !lexer->last_token->purged_p);
+	return lexer;
 }
 
 /* Frees all resources associated with LEXER.  */
@@ -783,23 +700,21 @@ scpel_lexer_new_from_tokens (scpel_token_cache *cache)
 static void
 scpel_lexer_destroy (scpel_lexer *lexer)
 {
-  if (lexer->buffer)
-    vec_free (lexer->buffer);
-  else
-    {
-      /* Restore the token we overwrite with EOF.  */
-      lexer->last_token->type = lexer->saved_type;
-      lexer->last_token->keyword = lexer->saved_keyword;
-    }
-  lexer->saved_tokens.release ();
-  ggc_free (lexer);
+	if (lexer->buffer)
+		vec_free (lexer->buffer);
+	else {
+		/* Restore the token we overwrite with EOF.  */
+		lexer->last_token->type = lexer->saved_type;
+		lexer->last_token->keyword = lexer->saved_keyword;
+	}
+	lexer->saved_tokens.release ();
+	ggc_free (lexer);
 }
 
 /* This needs to be set to TRUE before the lexer-debugging infrastructure can
    be used.  The point of this flag is to help the compiler to fold away calls
    to scpel_lexer_debugging_p within this source file at compile time, when the
    lexer is not being debugged.  */
-
 #define LEXER_DEBUGGING_ENABLED_P false
 
 /* Returns nonzero if debugging information should be output.  */
@@ -807,50 +722,49 @@ scpel_lexer_destroy (scpel_lexer *lexer)
 static inline bool
 scpel_lexer_debugging_p (scpel_lexer *lexer)
 {
-  if (!LEXER_DEBUGGING_ENABLED_P)
-    return false;
+	if (!LEXER_DEBUGGING_ENABLED_P)
+		return false;
 
-  return lexer->debugging_p;
+	return lexer->debugging_p;
 }
 
 
 static inline scpel_token_position
 scpel_lexer_token_position (scpel_lexer *lexer, bool previous_p)
 {
-  return lexer->next_token - previous_p;
+	return lexer->next_token - previous_p;
 }
 
 static inline scpel_token *
 scpel_lexer_token_at (scpel_lexer * /*lexer*/, scpel_token_position pos)
 {
-  return pos;
+	return pos;
 }
 
 static inline void
 scpel_lexer_set_token_position (scpel_lexer *lexer, scpel_token_position pos)
 {
-  lexer->next_token = scpel_lexer_token_at (lexer, pos);
+	lexer->next_token = scpel_lexer_token_at (lexer, pos);
 }
 
 static inline scpel_token_position
 scpel_lexer_previous_token_position (scpel_lexer *lexer)
 {
-  return scpel_lexer_token_position (lexer, true);
+	return scpel_lexer_token_position (lexer, true);
 }
 
 static inline scpel_token *
 scpel_lexer_previous_token (scpel_lexer *lexer)
 {
-  scpel_token_position tp = scpel_lexer_previous_token_position (lexer);
+	scpel_token_position tp = scpel_lexer_previous_token_position (lexer);
 
-  /* Skip past purged tokens.  */
-  while (tp->purged_p)
-    {
-      gcc_assert (tp != vec_safe_address (lexer->buffer));
-      tp--;
-    }
+	/* Skip past purged tokens.  */
+	while (tp->purged_p) {
+		gcc_assert (tp != vec_safe_address (lexer->buffer));
+		tp--;
+	}
 
-  return scpel_lexer_token_at (lexer, tp);
+	return scpel_lexer_token_at (lexer, tp);
 }
 
 /* Same as above, but return NULL when the lexer doesn't own the token
@@ -860,22 +774,19 @@ scpel_lexer_previous_token (scpel_lexer *lexer)
 static scpel_token *
 scpel_lexer_safe_previous_token (scpel_lexer *lexer)
 {
-  if (lexer->buffer
-      && lexer->next_token != lexer->buffer->address ())
-    {
-      scpel_token_position tp = scpel_lexer_previous_token_position (lexer);
+	if (lexer->buffer && lexer->next_token != lexer->buffer->address ()) {
+		scpel_token_position tp = scpel_lexer_previous_token_position (lexer);
 
-      /* Skip past purged tokens.  */
-      while (tp->purged_p)
-	{
-	  if (tp == lexer->buffer->address ())
-	    return NULL;
-	  tp--;
+		/* Skip past purged tokens.  */
+		while (tp->purged_p) {
+			if (tp == lexer->buffer->address ())
+				return NULL;
+			tp--;
+		}
+		return scpel_lexer_token_at (lexer, tp);
 	}
-      return scpel_lexer_token_at (lexer, tp);
-    }
 
-  return NULL;
+	return NULL;
 }
 
 /* Overload for make_location, taking the lexer to mean the location of the
@@ -884,8 +795,8 @@ scpel_lexer_safe_previous_token (scpel_lexer *lexer)
 static inline location_t
 make_location (location_t caret, location_t start, scpel_lexer *lexer)
 {
-  scpel_token *t = scpel_lexer_previous_token (lexer);
-  return make_location (caret, start, t->location);
+	scpel_token *t = scpel_lexer_previous_token (lexer);
+	return make_location (caret, start, t->location);
 }
 
 /* Overload for make_location taking tokens instead of locations.  */
@@ -893,7 +804,7 @@ make_location (location_t caret, location_t start, scpel_lexer *lexer)
 static inline location_t
 make_location (scpel_token *caret, scpel_token *start, scpel_token *end)
 {
-  return make_location (caret->location, start->location, end->location);
+	return make_location (caret->location, start->location, end->location);
 }
 
 /* nonzero if we are presently saving tokens.  */
@@ -901,7 +812,7 @@ make_location (scpel_token *caret, scpel_token *start, scpel_token *end)
 static inline int
 scpel_lexer_saving_tokens (const scpel_lexer* lexer)
 {
-  return lexer->saved_tokens.length () != 0;
+	return lexer->saved_tokens.length () != 0;
 }
 
 /* Store the next token from the preprocessor in *TOKEN.  Return true
@@ -918,9 +829,7 @@ scpel_lexer_get_preprocessor_token (unsigned flags, scpel_token *token)
   static int is_extern_c = 0;
 
    /* Get a new token from the preprocessor.  */
-  token->type
-    = c_lex_with_flags (&token->u.value, &token->location, &token->flags,
-    	flags);
+  token->type = c_lex_with_flags (&token->u.value, &token->location, &token->flags, flags);
   token->keyword = RID_MAX;
   token->purged_p = false;
   token->error_reported = false;
@@ -936,42 +845,32 @@ scpel_lexer_get_preprocessor_token (unsigned flags, scpel_token *token)
   token->implicit_extern_c = is_extern_c > 0;
 
   /* Check to see if this token is a keyword.  */
-  if (token->type == CPP_NAME)
-    {
-      if (IDENTIFIER_KEYWORD_P (token->u.value))
-	{
+  if (token->type == CPP_NAME) {
+      if (IDENTIFIER_KEYWORD_P (token->u.value)) {
 	  /* Mark this token as a keyword.  */
 	  token->type = CPP_KEYWORD;
 	  /* Record which keyword.  */
 	  token->keyword = C_RID_CODE (token->u.value);
 	} else {
-          if (warn_cxx11_compat
-	      && ((C_RID_CODE (token->u.value) >= RID_FIRST_CXX11
-		   && C_RID_CODE (token->u.value) <= RID_LAST_CXX11)
-		  /* These are outside the CXX11 range.  */
-		  || C_RID_CODE (token->u.value) == RID_ALIGNOF
-		  || C_RID_CODE (token->u.value) == RID_ALIGNAS
+          if (warn_cxx11_compat && ((C_RID_CODE (token->u.value) >= RID_FIRST_CXX11
+		   && C_RID_CODE (token->u.value) <= RID_LAST_CXX11) /* These are outside the CXX11 range.  */
+		  || C_RID_CODE (token->u.value) == RID_ALIGNOF || C_RID_CODE (token->u.value) == RID_ALIGNAS
 		  || C_RID_CODE (token->u.value)== RID_THREAD))
             {
 	      /* Warn about the C++11 keyword (but still treat it as
                  an identifier).  */
-	      warning_at (token->location, OPT_Wc__11_compat,
-			  "identifier %qE is a keyword in C++11",
-			  token->u.value);
+	      warning_at (token->location, OPT_Wc__11_compat, "identifier %qE is a keyword in C++11", token->u.value);
 
               /* Clear out the C_RID_CODE so we don't warn about this
                  particular identifier-turned-keyword again.  */
               C_SET_RID_CODE (token->u.value, RID_MAX);
             }
-	  if (warn_cxx20_compat
-	      && C_RID_CODE (token->u.value) >= RID_FIRST_CXX20
+	  if (warn_cxx20_compat && C_RID_CODE (token->u.value) >= RID_FIRST_CXX20
 	      && C_RID_CODE (token->u.value) <= RID_LAST_CXX20)
 	    {
 	      /* Warn about the C++20 keyword (but still treat it as
 		 an identifier).  */
-	      warning_at (token->location, OPT_Wc__20_compat,
-			  "identifier %qE is a keyword in C++20",
-			  token->u.value);
+	      warning_at (token->location, OPT_Wc__20_compat, "identifier %qE is a keyword in C++20", token->u.value);
 
 	      /* Clear out the C_RID_CODE so we don't warn about this
 		 particular identifier-turned-keyword again.  */
@@ -1024,7 +923,7 @@ scpel_lexer_next_token_is (scpel_lexer* lexer, enum cpp_ttype type)
 static inline bool
 scpel_lexer_next_token_is_not (scpel_lexer* lexer, enum cpp_ttype type)
 {
-  return !scpel_lexer_next_token_is (lexer, type);
+	return !scpel_lexer_next_token_is (lexer, type);
 }
 
 /* Return true if the next token is the indicated KEYWORD.  */
@@ -1032,19 +931,19 @@ scpel_lexer_next_token_is_not (scpel_lexer* lexer, enum cpp_ttype type)
 static inline bool
 scpel_lexer_next_token_is_keyword (scpel_lexer* lexer, enum rid keyword)
 {
-  return scpel_lexer_peek_token (lexer)->keyword == keyword;
+	return scpel_lexer_peek_token (lexer)->keyword == keyword;
 }
 
 static inline bool
 scpel_lexer_nth_token_is (scpel_lexer* lexer, size_t n, enum cpp_ttype type)
 {
-  return scpel_lexer_peek_nth_token (lexer, n)->type == type;
+	return scpel_lexer_peek_nth_token (lexer, n)->type == type;
 }
 
 static inline bool
 scpel_lexer_nth_token_is_keyword (scpel_lexer* lexer, size_t n, enum rid keyword)
 {
-  return scpel_lexer_peek_nth_token (lexer, n)->keyword == keyword;
+	return scpel_lexer_peek_nth_token (lexer, n)->keyword == keyword;
 }
 
 /* Return true if KEYWORD can start a decl-specifier.  */
@@ -1052,72 +951,71 @@ scpel_lexer_nth_token_is_keyword (scpel_lexer* lexer, size_t n, enum rid keyword
 bool
 scpel_keyword_starts_decl_specifier_p (enum rid keyword)
 {
-  switch (keyword)
-    {
-      /* auto specifier: storage-class-specifier in C++,
-         simple-type-specifier in C++0x.  */
-    case RID_AUTO:
-      /* Storage classes.  */
-    case RID_REGISTER:
-    case RID_STATIC:
-    case RID_EXTERN:
-    case RID_MUTABLE:
-    case RID_THREAD:
-      /* Elaborated type specifiers.  */
-    case RID_ENUM:
-    case RID_CLASS:
-    case RID_STRUCT:
-    case RID_UNION:
-    case RID_TYPENAME:
-      /* Simple type specifiers.  */
-    case RID_CHAR:
-    case RID_CHAR8:
-    case RID_CHAR16:
-    case RID_CHAR32:
-    case RID_WCHAR:
-    case RID_BOOL:
-    case RID_SHORT:
-    case RID_INT:
-    case RID_LONG:
-    case RID_SIGNED:
-    case RID_UNSIGNED:
-    case RID_FLOAT:
-    case RID_DOUBLE:
-    CASE_RID_FLOATN_NX:
-    case RID_VOID:
-      /* CV qualifiers.  */
-    case RID_CONST:
-    case RID_VOLATILE:
-      /* Function specifiers.  */
-    case RID_EXPLICIT:
-    case RID_VIRTUAL:
-      /* friend/typdef/inline specifiers.  */
-    case RID_FRIEND:
-    case RID_TYPEDEF:
-    case RID_INLINE:
-      /* GNU extensions.  */
-    case RID_TYPEOF:
-      /* C++11 extensions.  */
-    case RID_DECLTYPE:
-    case RID_CONSTEXPR:
-      /* C++20 extensions.  */
-    case RID_CONSTINIT:
-    case RID_CONSTEVAL:
-      return true;
+	switch (keyword) {
+		/* auto specifier: storage-class-specifier in C++,
+		   simple-type-specifier in C++0x.  */
+		case RID_AUTO:
+		/* Storage classes.  */
+		case RID_REGISTER:
+		case RID_STATIC:
+		case RID_EXTERN:
+		case RID_MUTABLE:
+		case RID_THREAD:
+		/* Elaborated type specifiers.  */
+		case RID_ENUM:
+		case RID_CLASS:
+		case RID_STRUCT:
+		case RID_UNION:
+		case RID_TYPENAME:
+		/* Simple type specifiers.  */
+		case RID_CHAR:
+		case RID_CHAR8:
+		case RID_CHAR16:
+		case RID_CHAR32:
+		case RID_WCHAR:
+		case RID_BOOL:
+		case RID_SHORT:
+		case RID_INT:
+		case RID_LONG:
+		case RID_SIGNED:
+		case RID_UNSIGNED:
+		case RID_FLOAT:
+		case RID_DOUBLE:
+		CASE_RID_FLOATN_NX:
+		case RID_VOID:
+		/* CV qualifiers.  */
+		case RID_CONST:
+		case RID_VOLATILE:
+		/* Function specifiers.  */
+		case RID_EXPLICIT:
+		case RID_VIRTUAL:
+		/* friend/typdef/inline specifiers.  */
+		case RID_FRIEND:
+		case RID_TYPEDEF:
+		case RID_INLINE:
+		/* GNU extensions.  */
+		case RID_TYPEOF:
+		/* C++11 extensions.  */
+		case RID_DECLTYPE:
+		case RID_CONSTEXPR:
+		/* C++20 extensions.  */
+		case RID_CONSTINIT:
+		case RID_CONSTEVAL:
+			return true;
 
 #define DEFTRAIT_TYPE(CODE, NAME, ARITY) \
-    case RID_##CODE:
+		case RID_##CODE:
 #include "scpel-trait.def"
 #undef DEFTRAIT_TYPE
-      return true;
+			return true;
 
-    default:
-      if (keyword >= RID_FIRST_INT_N
-	  && keyword < RID_FIRST_INT_N + NUM_INT_N_ENTS
-	  && int_n_enabled_p[keyword - RID_FIRST_INT_N])
-	return true;
-      return false;
-    }
+		default:
+			if (keyword >= RID_FIRST_INT_N
+					&& keyword < RID_FIRST_INT_N + NUM_INT_N_ENTS
+					&& int_n_enabled_p[keyword - RID_FIRST_INT_N])
+				return true;
+		return false;
+	}
 }
 
 /* Return true if the next token is a keyword for a decl-specifier.  */
@@ -1125,10 +1023,10 @@ scpel_keyword_starts_decl_specifier_p (enum rid keyword)
 static bool
 scpel_lexer_next_token_is_decl_specifier_keyword (scpel_lexer *lexer)
 {
-  scpel_token *token;
+	scpel_token *token;
 
-  token = scpel_lexer_peek_token (lexer);
-  return scpel_keyword_starts_decl_specifier_p (token->keyword);
+	token = scpel_lexer_peek_token (lexer);
+	return scpel_keyword_starts_decl_specifier_p (token->keyword);
 }
 
 /* Returns TRUE iff the token T begins a decltype type.  */
@@ -1136,8 +1034,7 @@ scpel_lexer_next_token_is_decl_specifier_keyword (scpel_lexer *lexer)
 static bool
 token_is_decltype (scpel_token *t)
 {
-  return (t->keyword == RID_DECLTYPE
-	  || t->type == CPP_DECLTYPE);
+	return (t->keyword == RID_DECLTYPE || t->type == CPP_DECLTYPE);
 }
 
 /* Returns TRUE iff the next token begins a decltype type.  */
@@ -1145,8 +1042,8 @@ token_is_decltype (scpel_token *t)
 static bool
 scpel_lexer_next_token_is_decltype (scpel_lexer *lexer)
 {
-  scpel_token *t = scpel_lexer_peek_token (lexer);
-  return token_is_decltype (t);
+	scpel_token *t = scpel_lexer_peek_token (lexer);
+	return token_is_decltype (t);
 }
 
 /* Called when processing a token with tree_check_value; perform or defer the
@@ -1155,20 +1052,17 @@ scpel_lexer_next_token_is_decltype (scpel_lexer *lexer)
 static tree
 saved_checks_value (struct tree_check *check_value)
 {
-  /* Perform any access checks that were deferred.  */
-  vec<deferred_access_check, va_gc> *checks;
-  deferred_access_check *chk;
-  checks = check_value->checks;
-  if (checks)
-    {
-      int i;
-      FOR_EACH_VEC_SAFE_ELT (checks, i, chk)
-	perform_or_defer_access_check (chk->binfo,
-				       chk->decl,
-				       chk->diag_decl, tf_warning_or_error);
-    }
-  /* Return the stored value.  */
-  return check_value->value;
+	/* Perform any access checks that were deferred.  */
+	vec<deferred_access_check, va_gc> *checks;
+	deferred_access_check *chk;
+	checks = check_value->checks;
+	if (checks) {
+		int i;
+		FOR_EACH_VEC_SAFE_ELT (checks, i, chk)
+			perform_or_defer_access_check (chk->binfo, chk->decl, chk->diag_decl, tf_warning_or_error);
+	}
+	/* Return the stored value.  */
+	return check_value->value;
 }
 
 /* Return a pointer to the Nth token in the token stream.  If N is 1,
@@ -1180,31 +1074,28 @@ saved_checks_value (struct tree_check *check_value)
 static scpel_token *
 scpel_lexer_peek_nth_token (scpel_lexer* lexer, size_t n)
 {
-  scpel_token *token;
+	scpel_token *token;
 
-  /* N is 1-based, not zero-based.  */
-  gcc_assert (n > 0);
+	/* N is 1-based, not zero-based.  */
+	gcc_assert (n > 0);
 
-  if (scpel_lexer_debugging_p (lexer))
-    fprintf (scpel_lexer_debug_stream,
-	     "scpel_lexer: peeking ahead %ld at token: ", (long)n);
+	if (scpel_lexer_debugging_p (lexer))
+		fprintf (scpel_lexer_debug_stream, "scpel_lexer: peeking ahead %ld at token: ", (long)n);
 
-  --n;
-  token = lexer->next_token;
-  while (n && token->type != CPP_EOF)
-    {
-      ++token;
-      if (!token->purged_p)
 	--n;
-    }
+	token = lexer->next_token;
+	while (n && token->type != CPP_EOF) {
+		++token;
+		if (!token->purged_p)
+			--n;
+	}
 
-  if (scpel_lexer_debugging_p (lexer))
-    {
-      scpel_lexer_print_token (scpel_lexer_debug_stream, token);
-      putc ('\n', scpel_lexer_debug_stream);
-    }
+	if (scpel_lexer_debugging_p (lexer)) {
+		scpel_lexer_print_token (scpel_lexer_debug_stream, token);
+		putc ('\n', scpel_lexer_debug_stream);
+	}
 
-  return token;
+	return token;
 }
 
 /* Return the next token, and advance the lexer's next_token pointer
@@ -1213,26 +1104,23 @@ scpel_lexer_peek_nth_token (scpel_lexer* lexer, size_t n)
 static scpel_token *
 scpel_lexer_consume_token (scpel_lexer* lexer)
 {
-  scpel_token *token = lexer->next_token;
+	scpel_token *token = lexer->next_token;
 
-  do
-    {
-      gcc_assert (token->type != CPP_EOF);
-      lexer->next_token++;
-    }
-  while (lexer->next_token->purged_p);
+	do {
+		gcc_assert (token->type != CPP_EOF);
+		lexer->next_token++;
+	}  while (lexer->next_token->purged_p);
 
-  scpel_lexer_set_source_position_from_token (token);
+	scpel_lexer_set_source_position_from_token (token);
 
-  /* Provide debugging output.  */
-  if (scpel_lexer_debugging_p (lexer))
-    {
-      fputs ("scpel_lexer: consuming token: ", scpel_lexer_debug_stream);
-      scpel_lexer_print_token (scpel_lexer_debug_stream, token);
-      putc ('\n', scpel_lexer_debug_stream);
-    }
+	/* Provide debugging output.  */
+	if (scpel_lexer_debugging_p (lexer)) {
+		fputs ("scpel_lexer: consuming token: ", scpel_lexer_debug_stream);
+		scpel_lexer_print_token (scpel_lexer_debug_stream, token);
+		putc ('\n', scpel_lexer_debug_stream);
+	}
 
-  return token;
+	return token;
 }
 
 /* Permanently remove the next token from the token stream, and
@@ -1242,18 +1130,18 @@ scpel_lexer_consume_token (scpel_lexer* lexer)
 static void
 scpel_lexer_purge_token (scpel_lexer *lexer)
 {
-  scpel_token *tok = lexer->next_token;
+	scpel_token *tok = lexer->next_token;
 
-  gcc_assert (tok->type != CPP_EOF);
-  tok->purged_p = true;
-  tok->location = UNKNOWN_LOCATION;
-  tok->u.value = NULL_TREE;
-  tok->keyword = RID_MAX;
+	gcc_assert (tok->type != CPP_EOF);
+	tok->purged_p = true;
+	tok->location = UNKNOWN_LOCATION;
+	tok->u.value = NULL_TREE;
+	tok->keyword = RID_MAX;
 
-  do
-    tok++;
-  while (tok->purged_p);
-  lexer->next_token = tok;
+	do
+		tok++;
+	while (tok->purged_p);
+	lexer->next_token = tok;
 }
 
 /* Permanently remove all tokens after TOK, up to, but not
@@ -1281,11 +1169,11 @@ scpel_lexer_purge_tokens_after (scpel_lexer *lexer, scpel_token *tok)
 static void
 scpel_lexer_save_tokens (scpel_lexer* lexer)
 {
-  /* Provide debugging output.  */
-  if (scpel_lexer_debugging_p (lexer))
-    fprintf (scpel_lexer_debug_stream, "scpel_lexer: saving tokens\n");
+	/* Provide debugging output.  */
+	if (scpel_lexer_debugging_p (lexer))
+		fprintf (scpel_lexer_debug_stream, "scpel_lexer: saving tokens\n");
 
-  lexer->saved_tokens.safe_push (lexer->next_token);
+	lexer->saved_tokens.safe_push (lexer->next_token);
 }
 
 /* Commit to the portion of the token stream most recently saved.  */
@@ -1293,11 +1181,11 @@ scpel_lexer_save_tokens (scpel_lexer* lexer)
 static void
 scpel_lexer_commit_tokens (scpel_lexer* lexer)
 {
-  /* Provide debugging output.  */
-  if (scpel_lexer_debugging_p (lexer))
-    fprintf (scpel_lexer_debug_stream, "scpel_lexer: committing tokens\n");
+	/* Provide debugging output.  */
+	if (scpel_lexer_debugging_p (lexer))
+		fprintf (scpel_lexer_debug_stream, "scpel_lexer: committing tokens\n");
 
-  lexer->saved_tokens.pop ();
+	lexer->saved_tokens.pop ();
 }
 
 /* Return all tokens saved since the last call to scpel_lexer_save_tokens
@@ -1306,19 +1194,19 @@ scpel_lexer_commit_tokens (scpel_lexer* lexer)
 static void
 scpel_lexer_rollback_tokens (scpel_lexer* lexer)
 {
-  /* Provide debugging output.  */
-  if (scpel_lexer_debugging_p (lexer))
-    fprintf (scpel_lexer_debug_stream, "scpel_lexer: restoring tokens\n");
+	/* Provide debugging output.  */
+	if (scpel_lexer_debugging_p (lexer))
+		fprintf (scpel_lexer_debug_stream, "scpel_lexer: restoring tokens\n");
 
-  lexer->next_token = lexer->saved_tokens.pop ();
+	lexer->next_token = lexer->saved_tokens.pop ();
 }
 
 /* Determines what saved_token_sentinel does when going out of scope.  */
 
 enum saved_token_sentinel_mode {
-  STS_COMMIT,
-  STS_ROLLBACK,
-  STS_DONOTHING
+	STS_COMMIT,
+	STS_ROLLBACK,
+	STS_DONOTHING
 };
 
 /* RAII wrapper around the above functions, with sanity checking (the token
@@ -1333,32 +1221,26 @@ enum saved_token_sentinel_mode {
 
 struct saved_token_sentinel
 {
-  scpel_lexer *lexer;
-  unsigned len;
-  saved_token_sentinel_mode mode;
-  saved_token_sentinel (scpel_lexer *_lexer,
-			saved_token_sentinel_mode _mode = STS_COMMIT)
-    : lexer (_lexer), mode (_mode)
-  {
-    len = lexer->saved_tokens.length ();
-    scpel_lexer_save_tokens (lexer);
-  }
-  void rollback ()
-  {
-    scpel_lexer_rollback_tokens (lexer);
-    scpel_lexer_set_source_position_from_token
-      (scpel_lexer_previous_token (lexer));
-    mode = STS_DONOTHING;
-  }
-  ~saved_token_sentinel ()
-  {
-    if (mode == STS_COMMIT)
-      scpel_lexer_commit_tokens (lexer);
-    else if (mode == STS_ROLLBACK)
-      rollback ();
+	scpel_lexer *lexer;
+	unsigned len;
+	saved_token_sentinel_mode mode;
+	saved_token_sentinel (scpel_lexer *_lexer, saved_token_sentinel_mode _mode = STS_COMMIT) : lexer (_lexer), mode (_mode) {
+		len = lexer->saved_tokens.length ();
+		scpel_lexer_save_tokens (lexer);
+	}
+	void rollback () {
+		scpel_lexer_rollback_tokens (lexer);
+		scpel_lexer_set_source_position_from_token(scpel_lexer_previous_token (lexer));
+		mode = STS_DONOTHING;
+	}
+	~saved_token_sentinel () {
+		if (mode == STS_COMMIT)
+			scpel_lexer_commit_tokens (lexer);
+		else if (mode == STS_ROLLBACK)
+			rollback ();
 
-    gcc_assert (lexer->saved_tokens.length () == len);
-  }
+		gcc_assert (lexer->saved_tokens.length () == len);
+	}
 };
 
 /* Print a representation of the TOKEN on the STREAM.  */
@@ -1366,71 +1248,70 @@ struct saved_token_sentinel
 static void
 scpel_lexer_print_token (FILE * stream, scpel_token *token)
 {
-  /* We don't use cpp_type2name here because the parser defines
-     a few tokens of its own.  */
-  static const char *const token_names[] = {
-    /* cpplib-defined token types */
+	/* We don't use cpp_type2name here because the parser defines
+	   a few tokens of its own.  */
+	static const char *const token_names[] = {
+		/* cpplib-defined token types */
 #define OP(e, s) #e,
 #define TK(e, s) #e,
-    TTYPE_TABLE
+		TTYPE_TABLE
 #undef OP
 #undef TK
-    /* C++ parser token types - see "Manifest constants", above.  */
-    "KEYWORD",
-    "TEMPLATE_ID",
-    "NESTED_NAME_SPECIFIER",
-  };
+		/* C++ parser token types - see "Manifest constants", above.  */
+		"KEYWORD",
+		"TEMPLATE_ID",
+		"NESTED_NAME_SPECIFIER",
+	};
 
-  /* For some tokens, print the associated data.  */
-  switch (token->type)
-    {
-    case CPP_KEYWORD:
-      /* Some keywords have a value that is not an IDENTIFIER_NODE.
-	 For example, `struct' is mapped to an INTEGER_CST.  */
-      if (!identifier_p (token->u.value))
-	break;
-      /* fall through */
-    case CPP_NAME:
-      fputs (IDENTIFIER_POINTER (token->u.value), stream);
-      break;
+	/* For some tokens, print the associated data.  */
+	switch (token->type) {
+		case CPP_KEYWORD:
+			/* Some keywords have a value that is not an IDENTIFIER_NODE.
+			   For example, `struct' is mapped to an INTEGER_CST.  */
+			if (!identifier_p (token->u.value))
+				break;
+			/* fall through */
+		case CPP_NAME:
+			fputs (IDENTIFIER_POINTER (token->u.value), stream);
+			break;
 
-    case CPP_STRING:
-    case CPP_STRING16:
-    case CPP_STRING32:
-    case CPP_WSTRING:
-    case CPP_UTF8STRING:
-      fprintf (stream, " \"%s\"", TREE_STRING_POINTER (token->u.value));
-      break;
+		case CPP_STRING:
+		case CPP_STRING16:
+		case CPP_STRING32:
+		case CPP_WSTRING:
+		case CPP_UTF8STRING:
+			fprintf (stream, " \"%s\"", TREE_STRING_POINTER (token->u.value));
+			break;
 
-    case CPP_NUMBER:
-      print_generic_expr (stream, token->u.value);
-      break;
+		case CPP_NUMBER:
+			print_generic_expr (stream, token->u.value);
+			break;
 
-    default:
-      /* If we have a name for the token, print it out.  Otherwise, we
-	 simply give the numeric code.  */
-      if (token->type < ARRAY_SIZE(token_names))
-	fputs (token_names[token->type], stream);
-      else
-	fprintf (stream, "[%d]", token->type);
-      break;
-    }
+		default:
+			/* If we have a name for the token, print it out.  Otherwise, we
+			   simply give the numeric code.  */
+			if (token->type < ARRAY_SIZE(token_names))
+				fputs (token_names[token->type], stream);
+			else
+				fprintf (stream, "[%d]", token->type);
+			break;
+	}
 }
 
 DEBUG_FUNCTION void
 debug (scpel_token &ref)
 {
-  scpel_lexer_print_token (stderr, &ref);
-  fprintf (stderr, "\n");
+	scpel_lexer_print_token (stderr, &ref);
+	fprintf (stderr, "\n");
 }
 
 DEBUG_FUNCTION void
 debug (scpel_token *ptr)
 {
-  if (ptr)
-    debug (*ptr);
-  else
-    fprintf (stderr, "<nil>\n");
+	if (ptr)
+		debug (*ptr);
+	else
+		fprintf (stderr, "<nil>\n");
 }
 
 
@@ -1439,12 +1320,11 @@ debug (scpel_token *ptr)
 static void
 scpel_lexer_start_debugging (scpel_lexer* lexer)
 {
-  if (!LEXER_DEBUGGING_ENABLED_P)
-    fatal_error (input_location,
-		 "%<LEXER_DEBUGGING_ENABLED_P%> is not set to true");
+	if (!LEXER_DEBUGGING_ENABLED_P)
+		fatal_error (input_location, "%<LEXER_DEBUGGING_ENABLED_P%> is not set to true");
 
-  lexer->debugging_p = true;
-  scpel_lexer_debug_stream = stderr;
+	lexer->debugging_p = true;
+	scpel_lexer_debug_stream = stderr;
 }
 
 /* Stop emitting debugging information.  */
@@ -1452,12 +1332,11 @@ scpel_lexer_start_debugging (scpel_lexer* lexer)
 static void
 scpel_lexer_stop_debugging (scpel_lexer* lexer)
 {
-  if (!LEXER_DEBUGGING_ENABLED_P)
-    fatal_error (input_location,
-		 "%<LEXER_DEBUGGING_ENABLED_P%> is not set to true");
+	if (!LEXER_DEBUGGING_ENABLED_P)
+		fatal_error (input_location, "%<LEXER_DEBUGGING_ENABLED_P%> is not set to true");
 
-  lexer->debugging_p = false;
-  scpel_lexer_debug_stream = NULL;
+	lexer->debugging_p = false;
+	scpel_lexer_debug_stream = NULL;
 }
 
 /* Create a new scpel_token_cache, representing a range of tokens.  */
@@ -1465,10 +1344,10 @@ scpel_lexer_stop_debugging (scpel_lexer* lexer)
 static scpel_token_cache *
 scpel_token_cache_new (scpel_token *first, scpel_token *last)
 {
-  scpel_token_cache *cache = ggc_alloc<scpel_token_cache> ();
-  cache->first = first;
-  cache->last = last;
-  return cache;
+	scpel_token_cache *cache = ggc_alloc<scpel_token_cache> ();
+	cache->first = first;
+	cache->last = last;
+	return cache;
 }
 
 /* Diagnose if #pragma omp declare simd isn't followed immediately
@@ -1477,13 +1356,12 @@ scpel_token_cache_new (scpel_token *first, scpel_token *last)
 static inline void
 scpel_ensure_no_omp_declare_simd (scpel_parser *parser)
 {
-  if (parser->omp_declare_simd && !parser->omp_declare_simd->error_seen)
-    {
-      error ("%<#pragma omp declare %s%> not immediately followed by "
-	     "function declaration or definition",
-	     parser->omp_declare_simd->variant_p ? "variant" : "simd");
-      parser->omp_declare_simd = NULL;
-    }
+	if (parser->omp_declare_simd && !parser->omp_declare_simd->error_seen) {
+		error ("%<#pragma omp declare %s%> not immediately followed by "
+				"function declaration or definition",
+				parser->omp_declare_simd->variant_p ? "variant" : "simd");
+		parser->omp_declare_simd = NULL;
+	}
 }
 
 /* Finalize #pragma omp declare simd clauses after FNDECL has been parsed,
@@ -1510,16 +1388,15 @@ scpel_finalize_omp_declare_simd (scpel_parser *parser, tree fndecl)
 static inline void
 scpel_finalize_omp_declare_simd (scpel_parser *parser, scpel_omp_declare_simd_data *data)
 {
-  if (parser->omp_declare_simd != data)
-    return;
+	if (parser->omp_declare_simd != data)
+		return;
 
-  if (!parser->omp_declare_simd->error_seen
-      && !parser->omp_declare_simd->fndecl_seen)
-    error_at (parser->omp_declare_simd->loc,
-	      "%<declare %s%> directive not immediately followed by "
-	      "function declaration or definition",
-	      parser->omp_declare_simd->variant_p ? "variant" : "simd");
-  parser->omp_declare_simd = NULL;
+	if (!parser->omp_declare_simd->error_seen && !parser->omp_declare_simd->fndecl_seen)
+	error_at (parser->omp_declare_simd->loc,
+			"%<declare %s%> directive not immediately followed by "
+			"function declaration or definition",
+			parser->omp_declare_simd->variant_p ? "variant" : "simd");
+	parser->omp_declare_simd = NULL;
 }
 
 /* Diagnose if #pragma acc routine isn't followed immediately by function
@@ -1528,13 +1405,12 @@ scpel_finalize_omp_declare_simd (scpel_parser *parser, scpel_omp_declare_simd_da
 static inline void
 scpel_ensure_no_oacc_routine (scpel_parser *parser)
 {
-  if (parser->oacc_routine && !parser->oacc_routine->error_seen)
-    {
-      error_at (parser->oacc_routine->loc,
-		"%<#pragma acc routine%> not immediately followed by "
-		"function declaration or definition");
-      parser->oacc_routine = NULL;
-    }
+	if (parser->oacc_routine && !parser->oacc_routine->error_seen) {
+		error_at (parser->oacc_routine->loc,
+			"%<#pragma acc routine%> not immediately followed by "
+			"function declaration or definition");
+		parser->oacc_routine = NULL;
+	}
 }
 
 /* Decl-specifiers.  */
@@ -1544,7 +1420,7 @@ scpel_ensure_no_oacc_routine (scpel_parser *parser)
 static void
 clear_decl_specs (scpel_decl_specifier_seq *decl_specs)
 {
-  memset (decl_specs, 0, sizeof (scpel_decl_specifier_seq));
+	memset (decl_specs, 0, sizeof (scpel_decl_specifier_seq));
 }
 
 /* Declarators.  */
@@ -1578,7 +1454,7 @@ static struct obstack declarator_obstack;
 static inline void *
 alloc_declarator (size_t bytes)
 {
-  return obstack_alloc (&declarator_obstack, bytes);
+	return obstack_alloc (&declarator_obstack, bytes);
 }
 
 /* Allocate a declarator of the indicated KIND.  Clear fields that are
@@ -1587,19 +1463,19 @@ alloc_declarator (size_t bytes)
 static scpel_declarator *
 make_declarator (scpel_declarator_kind kind)
 {
-  scpel_declarator *declarator;
+	scpel_declarator *declarator;
 
-  declarator = (scpel_declarator *) alloc_declarator (sizeof (scpel_declarator));
-  declarator->kind = kind;
-  declarator->parenthesized = UNKNOWN_LOCATION;
-  declarator->attributes = NULL_TREE;
-  declarator->std_attributes = NULL_TREE;
-  declarator->declarator = NULL;
-  declarator->parameter_pack_p = false;
-  declarator->id_loc = UNKNOWN_LOCATION;
-  declarator->init_loc = UNKNOWN_LOCATION;
+	declarator = (scpel_declarator *) alloc_declarator (sizeof (scpel_declarator));
+	declarator->kind = kind;
+	declarator->parenthesized = UNKNOWN_LOCATION;
+	declarator->attributes = NULL_TREE;
+	declarator->std_attributes = NULL_TREE;
+	declarator->declarator = NULL;
+	declarator->parameter_pack_p = false;
+	declarator->id_loc = UNKNOWN_LOCATION;
+	declarator->init_loc = UNKNOWN_LOCATION;
 
-  return declarator;
+	return declarator;
 }
 
 /* Make a declarator for a generalized identifier.  If
@@ -1612,7 +1488,7 @@ static scpel_declarator *
 make_id_declarator (tree qualifying_scope, tree unqualified_name,
 		    special_function_kind sfk, location_t id_location)
 {
-  scpel_declarator *declarator;
+	scpel_declarator *declarator;
 
   /* It is valid to write:
 
@@ -1624,20 +1500,20 @@ make_id_declarator (tree qualifying_scope, tree unqualified_name,
      legal; as of 2002-09-15 the committee is considering that
      question.  EDG 3.0 allows that syntax.  Therefore, we do as
      well.  */
-  if (qualifying_scope && TYPE_P (qualifying_scope))
-    qualifying_scope = TYPE_MAIN_VARIANT (qualifying_scope);
+	if (qualifying_scope && TYPE_P (qualifying_scope))
+		qualifying_scope = TYPE_MAIN_VARIANT (qualifying_scope);
 
-  gcc_assert (identifier_p (unqualified_name)
-	      || TREE_CODE (unqualified_name) == BIT_NOT_EXPR
-	      || TREE_CODE (unqualified_name) == TEMPLATE_ID_EXPR);
+	gcc_assert (identifier_p (unqualified_name)
+		|| TREE_CODE (unqualified_name) == BIT_NOT_EXPR
+		|| TREE_CODE (unqualified_name) == TEMPLATE_ID_EXPR);
 
-  declarator = make_declarator (cdk_id);
-  declarator->u.id.qualifying_scope = qualifying_scope;
-  declarator->u.id.unqualified_name = unqualified_name;
-  declarator->u.id.sfk = sfk;
-  declarator->id_loc = id_location;
+	declarator = make_declarator (cdk_id);
+	declarator->u.id.qualifying_scope = qualifying_scope;
+	declarator->u.id.unqualified_name = unqualified_name;
+	declarator->u.id.sfk = sfk;
+	declarator->id_loc = id_location;
 
-  return declarator;
+	return declarator;
 }
 
 /* Make a declarator for a pointer to TARGET.  CV_QUALIFIERS is a list
@@ -1649,24 +1525,22 @@ scpel_declarator *
 make_pointer_declarator (scpel_cv_quals cv_qualifiers, scpel_declarator *target,
 			 tree attributes)
 {
-  scpel_declarator *declarator;
+	scpel_declarator *declarator;
 
-  declarator = make_declarator (cdk_pointer);
-  declarator->declarator = target;
-  declarator->u.pointer.qualifiers = cv_qualifiers;
-  declarator->u.pointer.class_type = NULL_TREE;
-  if (target)
-    {
-      declarator->id_loc = target->id_loc;
-      declarator->parameter_pack_p = target->parameter_pack_p;
-      target->parameter_pack_p = false;
-    }
-  else
-    declarator->parameter_pack_p = false;
+	declarator = make_declarator (cdk_pointer);
+	declarator->declarator = target;
+	declarator->u.pointer.qualifiers = cv_qualifiers;
+	declarator->u.pointer.class_type = NULL_TREE;
+	if (target) {
+		declarator->id_loc = target->id_loc;
+		declarator->parameter_pack_p = target->parameter_pack_p;
+		target->parameter_pack_p = false;
+	} else
+		declarator->parameter_pack_p = false;
 
-  declarator->std_attributes = attributes;
+	declarator->std_attributes = attributes;
 
-  return declarator;
+	return declarator;
 }
 
 /* Like make_pointer_declarator -- but for references.  ATTRIBUTES
@@ -1677,24 +1551,22 @@ scpel_declarator *
 make_reference_declarator (scpel_cv_quals cv_qualifiers, scpel_declarator *target,
 			   bool rvalue_ref, tree attributes)
 {
-  scpel_declarator *declarator;
+	scpel_declarator *declarator;
 
-  declarator = make_declarator (cdk_reference);
-  declarator->declarator = target;
-  declarator->u.reference.qualifiers = cv_qualifiers;
-  declarator->u.reference.rvalue_ref = rvalue_ref;
-  if (target)
-    {
-      declarator->id_loc = target->id_loc;
-      declarator->parameter_pack_p = target->parameter_pack_p;
-      target->parameter_pack_p = false;
-    }
-  else
-    declarator->parameter_pack_p = false;
+	declarator = make_declarator (cdk_reference);
+	declarator->declarator = target;
+	declarator->u.reference.qualifiers = cv_qualifiers;
+	declarator->u.reference.rvalue_ref = rvalue_ref;
+	if (target) {
+		declarator->id_loc = target->id_loc;
+		declarator->parameter_pack_p = target->parameter_pack_p;
+		target->parameter_pack_p = false;
+	} else
+		declarator->parameter_pack_p = false;
 
-  declarator->std_attributes = attributes;
+	declarator->std_attributes = attributes;
 
-  return declarator;
+	return declarator;
 }
 
 /* Like make_pointer_declarator -- but for a pointer to a non-static
@@ -1706,24 +1578,22 @@ make_ptrmem_declarator (scpel_cv_quals cv_qualifiers, tree class_type,
 			scpel_declarator *pointee,
 			tree attributes)
 {
-  scpel_declarator *declarator;
+	scpel_declarator *declarator;
 
-  declarator = make_declarator (cdk_ptrmem);
-  declarator->declarator = pointee;
-  declarator->u.pointer.qualifiers = cv_qualifiers;
-  declarator->u.pointer.class_type = class_type;
+	declarator = make_declarator (cdk_ptrmem);
+	declarator->declarator = pointee;
+	declarator->u.pointer.qualifiers = cv_qualifiers;
+	declarator->u.pointer.class_type = class_type;
 
-  if (pointee)
-    {
-      declarator->parameter_pack_p = pointee->parameter_pack_p;
-      pointee->parameter_pack_p = false;
-    }
-  else
-    declarator->parameter_pack_p = false;
+	if (pointee) {
+		declarator->parameter_pack_p = pointee->parameter_pack_p;
+		pointee->parameter_pack_p = false;
+	} else
+		declarator->parameter_pack_p = false;
 
-  declarator->std_attributes = attributes;
+	declarator->std_attributes = attributes;
 
-  return declarator;
+	return declarator;
 }
 
 /* Make a declarator for the function given by TARGET, with the
@@ -1745,31 +1615,29 @@ make_call_declarator (scpel_declarator *target,
 		      tree std_attrs,
 		      location_t parens_loc)
 {
-  scpel_declarator *declarator;
+	scpel_declarator *declarator;
 
-  declarator = make_declarator (cdk_function);
-  declarator->declarator = target;
-  declarator->u.function.parameters = parms;
-  declarator->u.function.qualifiers = cv_qualifiers;
-  declarator->u.function.virt_specifiers = virt_specifiers;
-  declarator->u.function.ref_qualifier = ref_qualifier;
-  declarator->u.function.tx_qualifier = tx_qualifier;
-  declarator->u.function.exception_specification = exception_specification;
-  declarator->u.function.late_return_type = late_return_type;
-  declarator->u.function.requires_clause = requires_clause;
-  declarator->u.function.parens_loc = parens_loc;
-  if (target)
-    {
-      declarator->id_loc = target->id_loc;
-      declarator->parameter_pack_p = target->parameter_pack_p;
-      target->parameter_pack_p = false;
-    }
-  else
-    declarator->parameter_pack_p = false;
+	declarator = make_declarator (cdk_function);
+	declarator->declarator = target;
+	declarator->u.function.parameters = parms;
+	declarator->u.function.qualifiers = cv_qualifiers;
+	declarator->u.function.virt_specifiers = virt_specifiers;
+	declarator->u.function.ref_qualifier = ref_qualifier;
+	declarator->u.function.tx_qualifier = tx_qualifier;
+	declarator->u.function.exception_specification = exception_specification;
+	declarator->u.function.late_return_type = late_return_type;
+	declarator->u.function.requires_clause = requires_clause;
+	declarator->u.function.parens_loc = parens_loc;
+	if (target) {
+		declarator->id_loc = target->id_loc;
+		declarator->parameter_pack_p = target->parameter_pack_p;
+		target->parameter_pack_p = false;
+	} else
+		declarator->parameter_pack_p = false;
 
-  declarator->std_attributes = std_attrs;
+	declarator->std_attributes = std_attrs;
 
-  return declarator;
+	return declarator;
 }
 
 /* Make a declarator for an array of BOUNDS elements, each of which is
@@ -1778,21 +1646,20 @@ make_call_declarator (scpel_declarator *target,
 scpel_declarator *
 make_array_declarator (scpel_declarator *element, tree bounds)
 {
-  scpel_declarator *declarator;
+	scpel_declarator *declarator;
 
-  declarator = make_declarator (cdk_array);
-  declarator->declarator = element;
-  declarator->u.array.bounds = bounds;
-  if (element)
-    {
-      declarator->id_loc = element->id_loc;
-      declarator->parameter_pack_p = element->parameter_pack_p;
-      element->parameter_pack_p = false;
-    }
-  else
-    declarator->parameter_pack_p = false;
+	declarator = make_declarator (cdk_array);
+	declarator->declarator = element;
+	declarator->u.array.bounds = bounds;
+	
+	if (element) {
+		declarator->id_loc = element->id_loc;
+		declarator->parameter_pack_p = element->parameter_pack_p;
+		element->parameter_pack_p = false;
+	} else
+		declarator->parameter_pack_p = false;
 
-  return declarator;
+	return declarator;
 }
 
 /* Determine whether the declarator we've seen so far can be a
@@ -1800,35 +1667,33 @@ make_array_declarator (scpel_declarator *element, tree bounds)
 static bool
 declarator_can_be_parameter_pack (scpel_declarator *declarator)
 {
-  if (declarator && declarator->parameter_pack_p)
-    /* We already saw an ellipsis.  */
-    return false;
+	if (declarator && declarator->parameter_pack_p)
+		/* We already saw an ellipsis.  */
+		return false;
 
-  /* Search for a declarator name, or any other declarator that goes
-     after the point where the ellipsis could appear in a parameter
-     pack. If we find any of these, then this declarator cannot be
-     made into a parameter pack.  */
-  bool found = false;
-  while (declarator && !found)
-    {
-      switch ((int)declarator->kind)
-	{
-	case cdk_id:
-	case cdk_array:
-	case cdk_decomp:
-	  found = true;
-	  break;
+	/* Search for a declarator name, or any other declarator that goes
+	   after the point where the ellipsis could appear in a parameter
+	   pack. If we find any of these, then this declarator cannot be
+	   made into a parameter pack.  */
+	bool found = false;
+	while (declarator && !found) {
+		switch ((int)declarator->kind) {
+			case cdk_id:
+			case cdk_array:
+			case cdk_decomp:
+				found = true;
+				break;
 
-	case cdk_error:
-	  return true;
+			case cdk_error:
+				return true;
 
-	default:
-	  declarator = declarator->declarator;
-	  break;
+			default:
+				declarator = declarator->declarator;
+				break;
+		}
 	}
-    }
 
-  return !found;
+	return !found;
 }
 
 scpel_parameter_declarator *no_parameters;
@@ -1843,21 +1708,20 @@ make_parameter_declarator (scpel_decl_specifier_seq *decl_specifiers,
 			   location_t loc,
 			   bool template_parameter_pack_p = false)
 {
-  scpel_parameter_declarator *parameter;
+	scpel_parameter_declarator *parameter;
 
-  parameter = ((scpel_parameter_declarator *)
-	       alloc_declarator (sizeof (scpel_parameter_declarator)));
-  parameter->next = NULL;
-  if (decl_specifiers)
-    parameter->decl_specifiers = *decl_specifiers;
-  else
-    clear_decl_specs (&parameter->decl_specifiers);
-  parameter->declarator = declarator;
-  parameter->default_argument = default_argument;
-  parameter->template_parameter_pack_p = template_parameter_pack_p;
-  parameter->loc = loc;
+	parameter = ((scpel_parameter_declarator *) alloc_declarator (sizeof (scpel_parameter_declarator)));
+	parameter->next = NULL;
+	if (decl_specifiers)
+		parameter->decl_specifiers = *decl_specifiers;
+	else
+		clear_decl_specs (&parameter->decl_specifiers);
+	parameter->declarator = declarator;
+	parameter->default_argument = default_argument;
+	parameter->template_parameter_pack_p = template_parameter_pack_p;
+	parameter->loc = loc;
 
-  return parameter;
+	return parameter;
 }
 
 /* Returns true iff DECLARATOR  is a declaration for a function.  */
@@ -1904,7 +1768,6 @@ function_declarator_p (const scpel_declarator *declarator)
 
    Methodology
    -----------
-
    The parser is of the standard recursive-descent variety.  Upcoming
    tokens in the token stream are examined in order to determine which
    production to use when parsing a non-terminal.  Some Scpel constructs
@@ -1924,7 +1787,6 @@ function_declarator_p (const scpel_declarator *declarator)
 
    Future Improvements
    -------------------
-
    The performance of the parser could probably be improved substantially.
    We could often eliminate the need to parse tentatively by looking ahead
    a little bit.  In some places, this approach might not entirely eliminate
@@ -1934,31 +1796,30 @@ function_declarator_p (const scpel_declarator *declarator)
 /* Flags that are passed to some parsing functions.  These values can
    be bitwise-ored together.  */
 
-enum
-{
-  /* No flags.  */
-  CP_PARSER_FLAGS_NONE = 0x0,
-  /* The construct is optional.  If it is not present, then no error
-     should be issued.  */
-  CP_PARSER_FLAGS_OPTIONAL = 0x1,
-  /* When parsing a type-specifier, treat user-defined type-names
-     as non-type identifiers.  */
-  CP_PARSER_FLAGS_NO_USER_DEFINED_TYPES = 0x2,
-  /* When parsing a type-specifier, do not try to parse a class-specifier
-     or enum-specifier.  */
-  CP_PARSER_FLAGS_NO_TYPE_DEFINITIONS = 0x4,
-  /* When parsing a decl-specifier-seq, only allow type-specifier or
-     constexpr.  */
-  CP_PARSER_FLAGS_ONLY_TYPE_OR_CONSTEXPR = 0x8,
-  /* When parsing a decl-specifier-seq, only allow mutable, constexpr or
-     for C++20 consteval or for C++23 static.  */
-  CP_PARSER_FLAGS_ONLY_MUTABLE_OR_CONSTEXPR = 0x10,
-  /* When parsing a decl-specifier-seq, allow missing typename.  */
-  CP_PARSER_FLAGS_TYPENAME_OPTIONAL = 0x20,
-  /* When parsing of the noexcept-specifier should be delayed.  */
-  CP_PARSER_FLAGS_DELAY_NOEXCEPT = 0x40,
-  /* When parsing a consteval declarator.  */
-  CP_PARSER_FLAGS_CONSTEVAL = 0x80
+enum {
+	/* No flags.  */
+	CP_PARSER_FLAGS_NONE = 0x0,
+	/* The construct is optional.  If it is not present, then no error
+	   should be issued.  */
+	CP_PARSER_FLAGS_OPTIONAL = 0x1,
+	/* When parsing a type-specifier, treat user-defined type-names
+	   as non-type identifiers.  */
+	CP_PARSER_FLAGS_NO_USER_DEFINED_TYPES = 0x2,
+	/* When parsing a type-specifier, do not try to parse a class-specifier
+	   or enum-specifier.  */
+	CP_PARSER_FLAGS_NO_TYPE_DEFINITIONS = 0x4,
+	/* When parsing a decl-specifier-seq, only allow type-specifier or
+	   constexpr.  */
+	CP_PARSER_FLAGS_ONLY_TYPE_OR_CONSTEXPR = 0x8,
+	/* When parsing a decl-specifier-seq, only allow mutable, constexpr or
+	   for C++20 consteval or for C++23 static.  */
+	CP_PARSER_FLAGS_ONLY_MUTABLE_OR_CONSTEXPR = 0x10,
+	/* When parsing a decl-specifier-seq, allow missing typename.  */
+	CP_PARSER_FLAGS_TYPENAME_OPTIONAL = 0x20,
+	/* When parsing of the noexcept-specifier should be delayed.  */
+	CP_PARSER_FLAGS_DELAY_NOEXCEPT = 0x40,
+	/* When parsing a consteval declarator.  */
+	CP_PARSER_FLAGS_CONSTEVAL = 0x80
 };
 
 /* This type is used for parameters and variables which hold
@@ -1967,67 +1828,63 @@ typedef int scpel_parser_flags;
 
 /* The different kinds of declarators we want to parse.  */
 
-enum scpel_parser_declarator_kind
-{
-  /* We want an abstract declarator.  */
-  CP_PARSER_DECLARATOR_ABSTRACT,
-  /* We want a named declarator.  */
-  CP_PARSER_DECLARATOR_NAMED,
-  /* We don't mind, but the name must be an unqualified-id.  */
-  CP_PARSER_DECLARATOR_EITHER
+enum scpel_parser_declarator_kind {
+	/* We want an abstract declarator.  */
+	CP_PARSER_DECLARATOR_ABSTRACT,
+	/* We want a named declarator.  */
+	CP_PARSER_DECLARATOR_NAMED,
+	/* We don't mind, but the name must be an unqualified-id.  */
+	CP_PARSER_DECLARATOR_EITHER
 };
 
 /* The precedence values used to parse binary expressions.  The minimum value
    of PREC must be 1, because zero is reserved to quickly discriminate
    binary operators from other tokens.  */
 
-enum scpel_parser_prec
-{
-  PREC_NOT_OPERATOR,
-  PREC_LOGICAL_OR_EXPRESSION,
-  PREC_LOGICAL_AND_EXPRESSION,
-  PREC_INCLUSIVE_OR_EXPRESSION,
-  PREC_EXCLUSIVE_OR_EXPRESSION,
-  PREC_AND_EXPRESSION,
-  PREC_EQUALITY_EXPRESSION,
-  PREC_RELATIONAL_EXPRESSION,
-  PREC_SPACESHIP_EXPRESSION,
-  PREC_SHIFT_EXPRESSION,
-  PREC_ADDITIVE_EXPRESSION,
-  PREC_MULTIPLICATIVE_EXPRESSION,
-  PREC_PM_EXPRESSION,
-  NUM_PREC_VALUES = PREC_PM_EXPRESSION
+enum scpel_parser_prec {
+	PREC_NOT_OPERATOR,
+	PREC_LOGICAL_OR_EXPRESSION,
+	PREC_LOGICAL_AND_EXPRESSION,
+	PREC_INCLUSIVE_OR_EXPRESSION,
+	PREC_EXCLUSIVE_OR_EXPRESSION,
+	PREC_AND_EXPRESSION,
+	PREC_EQUALITY_EXPRESSION,
+	PREC_RELATIONAL_EXPRESSION,
+	PREC_SPACESHIP_EXPRESSION,
+	PREC_SHIFT_EXPRESSION,
+	PREC_ADDITIVE_EXPRESSION,
+	PREC_MULTIPLICATIVE_EXPRESSION,
+	PREC_PM_EXPRESSION,
+	NUM_PREC_VALUES = PREC_PM_EXPRESSION
 };
 
 /* A mapping from a token type to a corresponding tree node type, with a
    precedence value.  */
 
-struct scpel_parser_binary_operations_map_node
-{
-  /* The token type.  */
-  enum cpp_ttype token_type;
-  /* The corresponding tree code.  */
-  enum tree_code tree_type;
-  /* The precedence of this operator.  */
-  enum scpel_parser_prec prec;
+struct scpel_parser_binary_operations_map_node {
+	/* The token type.  */
+	enum cpp_ttype token_type;
+	/* The corresponding tree code.  */
+	enum tree_code tree_type;
+	/* The precedence of this operator.  */
+	enum scpel_parser_prec prec;
 };
 
-struct scpel_parser_expression_stack_entry
-{
-  /* Left hand side of the binary operation we are currently
-     parsing.  */
-  scpel_expr lhs;
-  /* Original tree code for left hand side, if it was a binary
-     expression itself (used for -Wparentheses).  */
-  enum tree_code lhs_type;
-  /* Tree code for the binary operation we are parsing.  */
-  enum tree_code tree_type;
-  /* Precedence of the binary operation we are parsing.  */
-  enum scpel_parser_prec prec;
-  /* Location of the binary operation we are parsing.  */
-  location_t loc;
-  /* Flags from the operator token.  */
-  unsigned char flags;
+struct scpel_parser_expression_stack_entry {
+	/* Left hand side of the binary operation we are currently
+	   parsing.  */
+	scpel_expr lhs;
+	/* Original tree code for left hand side, if it was a binary
+	   expression itself (used for -Wparentheses).  */
+	enum tree_code lhs_type;
+	/* Tree code for the binary operation we are parsing.  */
+	enum tree_code tree_type;
+	/* Precedence of the binary operation we are parsing.  */
+	enum scpel_parser_prec prec;
+	/* Location of the binary operation we are parsing.  */
+	location_t loc;
+	/* Flags from the operator token.  */
+	unsigned char flags;
 };
 
 /* The stack for storing partial expressions.  We only need NUM_PREC_VALUES

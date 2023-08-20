@@ -645,7 +645,8 @@ c_base_headers = \
 	${c_base_srcdir}/ctime \
 	${c_base_srcdir}/cuchar \
 	${c_base_srcdir}/cwchar \
-	${c_base_srcdir}/cwctype
+	${c_base_srcdir}/cwctype \
+	${c_base_srcdir}/ai
 endif GLIBCXX_HOSTED
 
 # "C" compatibility headers.
