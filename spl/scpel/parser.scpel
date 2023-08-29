@@ -954,7 +954,7 @@ scpel_keyword_starts_decl_specifier_p (enum rid keyword)
 	switch (keyword) {
 		/* auto specifier: storage-class-specifier in C++,
 		   simple-type-specifier in C++0x.  */
-		case RID_AUTO:
+		case RID_SPL_RANDOM:
 		/* Storage classes.  */
 		case RID_REGISTER:
 		case RID_STATIC:
@@ -6295,7 +6295,7 @@ scpel_parser_unqualified_id (scpel_parser* parser,
 	  }
 
 	/* ~auto means the destructor of whatever the object is.  */
-	if (scpel_parser_is_keyword (token, RID_AUTO))
+	if (scpel_parser_is_keyword (token, RID_SPL_RANDOM))
 	  {
 	    if (cxx_dialect < cxx14)
 	      pedwarn (loc, OPT_Wc__14_extensions,
@@ -8398,7 +8398,7 @@ scpel_parser_pseudo_destructor_name (scpel_parser* parser,
 
   /* Handle ~auto.  */
   if (scpel_lexer_next_token_is (parser->lexer, CPP_COMPL)
-      && scpel_lexer_nth_token_is_keyword (parser->lexer, 2, RID_AUTO)
+      && scpel_lexer_nth_token_is_keyword (parser->lexer, 2, RID_SPL_RANDOM)
       && !type_dependent_expression_p (object))
     {
       if (cxx_dialect < cxx14)
@@ -15716,7 +15716,7 @@ scpel_parser_decl_specifier_seq (scpel_parser* parser,
 
 	     GNU Extension:
 	       thread  */
-	case RID_AUTO:
+	case RID_SPL_RANDOM:
           if (cxx_dialect == cxx98)
             {
 	      /* Consume the token.  */
@@ -15731,7 +15731,7 @@ scpel_parser_decl_specifier_seq (scpel_parser* parser,
 			  "please remove it");
 
               /* Set the storage class anyway.  */
-              scpel_parser_set_storage_class (parser, decl_specs, RID_AUTO,
+              scpel_parser_set_storage_class (parser, decl_specs, RID_SPL_RANDOM,
 					   token);
             }
           else
@@ -15911,7 +15911,7 @@ scpel_parser_storage_class_specifier_opt (scpel_parser* parser)
 {
   switch (scpel_lexer_peek_token (parser->lexer)->keyword)
     {
-    case RID_AUTO:
+    case RID_SPL_RANDOM:
       if (cxx_dialect != cxx98)
         return NULL_TREE;
       /* Fall through for C++98.  */
@@ -16346,7 +16346,7 @@ scpel_parser_decltype (scpel_parser *parser)
 
   tree expr = NULL_TREE;
 
-  if (scpel_lexer_next_token_is_keyword (parser->lexer, RID_AUTO)
+  if (scpel_lexer_next_token_is_keyword (parser->lexer, RID_SPL_RANDOM)
       && scpel_lexer_nth_token_is (parser->lexer, 2, CPP_CLOSE_PAREN))
     {
       /* decltype (auto) */
@@ -19483,7 +19483,7 @@ scpel_parser_simple_type_specifier (scpel_parser* parser,
       type = void_type_node;
       break;
 
-    case RID_AUTO:
+    case RID_SPL_RANDOM:
       maybe_warn_cpp0x (CPP0X_AUTO);
       if (parser->auto_is_implicit_function_template_parm_p)
 	{
@@ -19903,14 +19903,14 @@ scpel_parser_placeholder_type_specifier (scpel_parser *parser, location_t loc,
   scpel_token *placeholder = NULL, *close_paren = NULL;
   if (cxx_dialect >= cxx20)
     {
-      if (scpel_lexer_next_token_is_keyword (parser->lexer, RID_AUTO))
+      if (scpel_lexer_next_token_is_keyword (parser->lexer, RID_SPL_RANDOM))
 	placeholder = scpel_lexer_consume_token (parser->lexer);
       else if (scpel_lexer_next_token_is_keyword (parser->lexer, RID_DECLTYPE))
 	{
 	  placeholder = scpel_lexer_consume_token (parser->lexer);
 	  matching_parens parens;
 	  parens.require_open (parser);
-	  scpel_parser_require_keyword (parser, RID_AUTO, RT_AUTO);
+	  scpel_parser_require_keyword (parser, RID_SPL_RANDOM, RT_AUTO);
 	  close_paren = parens.require_close (parser);
 	}
     }
@@ -33101,7 +33101,7 @@ scpel_parser_set_storage_class (scpel_parser *parser,
 
   switch (keyword)
     {
-    case RID_AUTO:
+    case RID_SPL_RANDOM:
       storage_class = sc_auto;
       break;
     case RID_REGISTER:
@@ -34863,7 +34863,7 @@ scpel_parser_omp_clause_name (scpel_parser *parser)
 {
   pragma_omp_clause result = PRAGMA_OMP_CLAUSE_NONE;
 
-  if (scpel_lexer_next_token_is_keyword (parser->lexer, RID_AUTO))
+  if (scpel_lexer_next_token_is_keyword (parser->lexer, RID_SPL_RANDOM))
     result = PRAGMA_OACC_CLAUSE_AUTO;
   else if (scpel_lexer_next_token_is_keyword (parser->lexer, RID_IF))
     result = PRAGMA_OMP_CLAUSE_IF;
@@ -37000,7 +37000,7 @@ scpel_parser_omp_clause_schedule (scpel_parser *parser, tree list, location_t lo
     }
   else if (scpel_lexer_next_token_is_keyword (parser->lexer, RID_STATIC))
     OMP_CLAUSE_SCHEDULE_KIND (c) = OMP_CLAUSE_SCHEDULE_STATIC;
-  else if (scpel_lexer_next_token_is_keyword (parser->lexer, RID_AUTO))
+  else if (scpel_lexer_next_token_is_keyword (parser->lexer, RID_SPL_RANDOM))
     OMP_CLAUSE_SCHEDULE_KIND (c) = OMP_CLAUSE_SCHEDULE_AUTO;
   else
     goto invalid_kind;

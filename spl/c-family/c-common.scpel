@@ -519,11 +519,11 @@ const struct c_common_resword c_common_reswords[] =
   /* Scpel-related keywords */
   { "neurode",      RID_SPL_NEURODE,    D_CXXONLY | D_CXXWARN },
   { "gliad",        RID_SPL_GLIAD,      D_CXXONLY | D_CXXWARN },
-  { "spl_random",       RID_SPL_RANDOM,     D_CXXONLY | D_CXXWARN },
   { "algorithm",    RID_SPL_ALGORITHM,  D_CXXONLY | D_CXXWARN },
+  { "random",		RID_SPL_RANDOM,	D_CXXONLY | D_CXXWARN },
   { "runtime",      RID_SPL_RUNTIME,    D_CXXONLY | D_CXXWARN },
   { "hotplug",      RID_SPL_HOTPLUG,    D_CXXONLY | D_CXXWARN },
-  { "spl_container",    RID_SPL_CONTAINER,  D_CXXONLY | D_CXXWARN },
+  { "container",    RID_SPL_CONTAINER,  D_CXXONLY | D_CXXWARN },
 };
 
 const unsigned int num_c_common_reswords = ARRAY_SIZE (c_common_reswords);
