@@ -327,8 +327,7 @@ debug (vec<scpel_token, va_gc> *ptr)
    description for T.  */
 
 static void
-scpel_debug_print_tree_if_set (FILE *file, const char *desc, tree t)
-{
+scpel_debug_print_tree_if_set (FILE *file, const char *desc, tree t) {
 	if (t) {
 		fprintf (file, "%s: ", desc);
 		print_node_brief (file, "", t, 0);
