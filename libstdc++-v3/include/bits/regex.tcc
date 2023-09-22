@@ -28,7 +28,7 @@
  *  Do not attempt to use it directly. @headername{regex}
  */
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -122,7 +122,7 @@ namespace __detail
     regex_traits<_Ch_type>::
     lookup_collatename(_Fwd_iter __first, _Fwd_iter __last) const
     {
-      typedef sys::ctype<char_type> __ctype_type;
+      typedef std::ctype<char_type> __ctype_type;
       const __ctype_type& __fctyp(use_facet<__ctype_type>(_M_locale));
 
       static const char* __collatenames[] =
@@ -278,7 +278,7 @@ namespace __detail
     regex_traits<_Ch_type>::
     lookup_classname(_Fwd_iter __first, _Fwd_iter __last, bool __icase) const
     {
-      typedef sys::ctype<char_type> __ctype_type;
+      typedef std::ctype<char_type> __ctype_type;
       const __ctype_type& __fctyp(use_facet<__ctype_type>(_M_locale));
 
       // Mappings from class name to class mask.
@@ -322,7 +322,7 @@ namespace __detail
     regex_traits<_Ch_type>::
     isctype(_Ch_type __c, char_class_type __f) const
     {
-      typedef sys::ctype<char_type> __ctype_type;
+      typedef std::ctype<char_type> __ctype_type;
       const __ctype_type& __fctyp(use_facet<__ctype_type>(_M_locale));
 
       return __fctyp.is(__f._M_base, __c)
@@ -336,12 +336,12 @@ namespace __detail
     regex_traits<_Ch_type>::
     value(_Ch_type __ch, int __radix) const
     {
-      sys::basic_istringstream<char_type> __is(string_type(1, __ch));
+      std::basic_istringstream<char_type> __is(string_type(1, __ch));
       long __v;
       if (__radix == 8)
-	__is >> sys::oct;
+	__is >> std::oct;
       else if (__radix == 16)
-	__is >> sys::hex;
+	__is >> std::hex;
       __is >> __v;
       return __is.fail() ? -1 : __v;
     }
@@ -357,7 +357,7 @@ namespace __detail
     {
       __glibcxx_assert( ready() );
       regex_traits<char_type> __traits;
-      typedef sys::ctype<char_type> __ctype_type;
+      typedef std::ctype<char_type> __ctype_type;
       const __ctype_type&
 	__fctyp(use_facet<__ctype_type>(__traits.getloc()));
 
@@ -365,7 +365,7 @@ namespace __detail
 	{
 	  auto& __sub = (*this)[__idx];
 	  if (__sub.matched)
-	    __out = sys::copy(__sub.first, __sub.second, __out);
+	    __out = std::copy(__sub.first, __sub.second, __out);
 	};
 
       if (__flags & regex_constants::format_sed)
@@ -401,11 +401,11 @@ namespace __detail
 	{
 	  while (1)
 	    {
-	      auto __next = sys::find(__fmt_first, __fmt_last, '$');
+	      auto __next = std::find(__fmt_first, __fmt_last, '$');
 	      if (__next == __fmt_last)
 		break;
 
-	      __out = sys::copy(__fmt_first, __next, __out);
+	      __out = std::copy(__fmt_first, __next, __out);
 
 	      auto __eat = [&](char __ch) -> bool
 		{
@@ -427,13 +427,13 @@ namespace __detail
 		{
 		  auto& __sub = _M_prefix();
 		  if (__sub.matched)
-		    __out = sys::copy(__sub.first, __sub.second, __out);
+		    __out = std::copy(__sub.first, __sub.second, __out);
 		}
 	      else if (__eat('\''))
 		{
 		  auto& __sub = _M_suffix();
 		  if (__sub.matched)
-		    __out = sys::copy(__sub.first, __sub.second, __out);
+		    __out = std::copy(__sub.first, __sub.second, __out);
 		}
 	      else if (__fctyp.is(__ctype_type::digit, *__next))
 		{
@@ -451,7 +451,7 @@ namespace __detail
 		*__out++ = '$';
 	      __fmt_first = __next;
 	    }
-	  __out = sys::copy(__fmt_first, __fmt_last, __out);
+	  __out = std::copy(__fmt_first, __fmt_last, __out);
 	}
       return __out;
     }
@@ -470,7 +470,7 @@ namespace __detail
       if (__i == __end)
 	{
 	  if (!(__flags & regex_constants::format_no_copy))
-	    __out = sys::copy(__first, __last, __out);
+	    __out = std::copy(__first, __last, __out);
 	}
       else
 	{
@@ -478,7 +478,7 @@ namespace __detail
 	  for (; __i != __end; ++__i)
 	    {
 	      if (!(__flags & regex_constants::format_no_copy))
-		__out = sys::copy(__i->prefix().first, __i->prefix().second,
+		__out = std::copy(__i->prefix().first, __i->prefix().second,
 				  __out);
 	      __out = __i->format(__out, __fmt, __fmt + __len, __flags);
 	      __last = __i->suffix();
@@ -486,7 +486,7 @@ namespace __detail
 		break;
 	    }
 	  if (!(__flags & regex_constants::format_no_copy))
-	    __out = sys::copy(__last.first, __last.second, __out);
+	    __out = std::copy(__last.first, __last.second, __out);
 	}
       return __out;
     }

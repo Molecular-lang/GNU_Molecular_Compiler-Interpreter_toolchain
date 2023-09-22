@@ -48,7 +48,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _RealType>
     struct __math_constants
     {
-      static_assert(sys::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealType>::value,
 		    "template argument not a floating point type");
 
       // Constant @f$ \pi @f$.

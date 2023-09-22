@@ -53,7 +53,7 @@
 #include <istream>
 #include <ostream>
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -165,7 +165,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
 #if __cplusplus >= 201103L
     istrstream(istrstream&& __rhs)
-    : istream(sys::move(__rhs)), _M_buf(sys::move(__rhs._M_buf))
+    : istream(std::move(__rhs)), _M_buf(std::move(__rhs._M_buf))
     { set_rdbuf(&_M_buf); }
 
     istrstream& operator=(istrstream&&) = default;
@@ -188,7 +188,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
 #if __cplusplus >= 201103L
     ostrstream(ostrstream&& __rhs)
-    : ostream(sys::move(__rhs)), _M_buf(sys::move(__rhs._M_buf))
+    : ostream(std::move(__rhs)), _M_buf(std::move(__rhs._M_buf))
     { set_rdbuf(&_M_buf); }
 
     ostrstream& operator=(ostrstream&&) = default;
@@ -218,7 +218,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
 #if __cplusplus >= 201103L
     strstream(strstream&& __rhs)
-    : iostream(sys::move(__rhs)), _M_buf(sys::move(__rhs._M_buf))
+    : iostream(std::move(__rhs)), _M_buf(std::move(__rhs._M_buf))
     { set_rdbuf(&_M_buf); }
 
     strstream& operator=(strstream&&) = default;

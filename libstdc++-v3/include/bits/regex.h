@@ -268,7 +268,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
 	  // TODO : this is not entirely correct.
 	  // This function requires extra support from the platform.
 	  //
-	  // Read http://spl.gnu.org/ml/libstdc++/2013-09/msg00117.html and
+	  // Read http://gcc.gnu.org/ml/libstdc++/2013-09/msg00117.html and
 	  // http://www.open-std.org/Jtc1/sc22/wg21/docs/papers/2003/n1429.htm
 	  // for details.
 	  typedef std::ctype<char_type> __ctype_type;
@@ -2740,6 +2740,9 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
       typedef const value_type*		  pointer;
       typedef const value_type&		  reference;
       typedef std::forward_iterator_tag	  iterator_category;
+#if __cplusplus > 201703L
+      typedef std::input_iterator_tag	  iterator_concept;
+#endif
 
       /**
        * @brief Provides a singular iterator, useful for indicating
@@ -2869,6 +2872,9 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
       typedef const value_type*			pointer;
       typedef const value_type&			reference;
       typedef std::forward_iterator_tag		iterator_category;
+#if __cplusplus > 201703L
+      typedef std::input_iterator_tag		iterator_concept;
+#endif
 
     public:
       /**

@@ -28,15 +28,15 @@
  *  Do not attempt to use it directly. @headername{regex}
  */
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
 namespace __detail
 {
 #ifdef _GLIBCXX_DEBUG
-  inline sys::ostream&
-  _State_base::_M_print(sys::ostream& __ostr) const
+  inline std::ostream&
+  _State_base::_M_print(std::ostream& __ostr) const
   {
     switch (_M_opcode)
     {
@@ -67,8 +67,8 @@ namespace __detail
   }
 
   // Prints graphviz dot commands for state.
-  inline sys::ostream&
-  _State_base::_M_dot(sys::ostream& __ostr, _StateIdT __id) const
+  inline std::ostream&
+  _State_base::_M_dot(std::ostream& __ostr, _StateIdT __id) const
   {
     switch (_M_opcode)
     {
@@ -132,8 +132,8 @@ namespace __detail
   }
 
   template<typename _TraitsT>
-    sys::ostream&
-    _NFA<_TraitsT>::_M_dot(sys::ostream& __ostr) const
+    std::ostream&
+    _NFA<_TraitsT>::_M_dot(std::ostream& __ostr) const
     {
       __ostr << "digraph _Nfa {\n"
 		"  rankdir=LR;\n";
@@ -170,7 +170,7 @@ namespace __detail
       this->_M_has_backref = true;
       _StateT __tmp(_S_opcode_backref);
       __tmp._M_backref_index = __index;
-      return _M_insert_state(sys::move(__tmp));
+      return _M_insert_state(std::move(__tmp));
     }
 
   template<typename _TraitsT>
@@ -194,8 +194,8 @@ namespace __detail
     _StateSeq<_TraitsT>
     _StateSeq<_TraitsT>::_M_clone()
     {
-      _GLIBCXX_SYS_C::map<_StateIdT, _StateIdT> __m;
-      sys::stack<_StateIdT, _GLIBCXX_SYS_C::deque<_StateIdT>> __stack;
+      _GLIBCXX_STD_C::map<_StateIdT, _StateIdT> __m;
+      std::stack<_StateIdT, _GLIBCXX_STD_C::deque<_StateIdT>> __stack;
       __stack.push(_M_start);
       while (!__stack.empty())
 	{
@@ -203,7 +203,7 @@ namespace __detail
 	  __stack.pop();
 	  auto __dup = _M_nfa[__u];
 	  // _M_insert_state() never return -1
-	  auto __id = _M_nfa._M_insert_state(sys::move(__dup));
+	  auto __id = _M_nfa._M_insert_state(std::move(__dup));
 	  __m[__u] = __id;
 	  if (__dup._M_has_alt())
 	    if (__dup._M_alt != _S_invalid_state_id

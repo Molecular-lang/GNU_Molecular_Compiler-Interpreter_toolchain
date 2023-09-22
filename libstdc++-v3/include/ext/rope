@@ -89,8 +89,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _ForwardIterator, typename _Tp>
     inline void
     _Destroy_const(_ForwardIterator __first,
-		   _ForwardIterator __last, sys::allocator<_Tp>)
-    { sys::_Destroy(__first, __last); }
+		   _ForwardIterator __last, std::allocator<_Tp>)
+    { std::_Destroy(__first, __last); }
 
   // The _S_eos function is used for those functions that
   // convert to/from C-like strings to detect the end of the string.
@@ -151,7 +151,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       virtual ~char_producer() { }
 
       virtual void
-      operator()(sys::size_t __start_pos, sys::size_t __len,
+      operator()(std::size_t __start_pos, std::size_t __len,
 		 _CharT* __buffer) = 0;
       // Buffer should really be an arbitrary output iterator.
       // That way we could flatten directly into an ostream, etc.
@@ -173,20 +173,20 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   // behave a little like basic_ostringstream<sequence::value_type> and a
   // little like containers.
 
-// Ignore warnings about sys::iterator.
+// Ignore warnings about std::iterator.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
-  template<class _Sequence, sys::size_t _Buf_sz = 100>
+  template<class _Sequence, std::size_t _Buf_sz = 100>
     class sequence_buffer
-    : public sys::iterator<sys::output_iterator_tag, void, void, void, void>
+    : public std::iterator<std::output_iterator_tag, void, void, void, void>
     {
     public:
       typedef typename _Sequence::value_type value_type;
     protected:
       _Sequence* _M_prefix;
       value_type _M_buffer[_Buf_sz];
-      sys::size_t _M_buf_count;
+      std::size_t _M_buf_count;
     public:
 
       void
@@ -206,7 +206,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       {
 	_M_prefix = __x._M_prefix;
 	_M_buf_count = __x._M_buf_count;
-	sys::copy(__x._M_buffer, __x._M_buffer + __x._M_buf_count, _M_buffer);
+	std::copy(__x._M_buffer, __x._M_buffer + __x._M_buf_count, _M_buffer);
       }
       
       // Non-const "copy" modifies the parameter - yuck
@@ -235,7 +235,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       {
 	_M_prefix = __x._M_prefix;
 	_M_buf_count = __x._M_buf_count;
-	sys::copy(__x._M_buffer, __x._M_buffer + __x._M_buf_count, _M_buffer);
+	std::copy(__x._M_buffer, __x._M_buffer + __x._M_buf_count, _M_buffer);
 	return *this;
       }
 
@@ -261,12 +261,12 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       }
       
       void
-      append(value_type* __s, sys::size_t __len)
+      append(value_type* __s, std::size_t __len)
       {
 	if (__len + _M_buf_count <= _Buf_sz)
 	  {
-	    sys::size_t __i = _M_buf_count;
-	    for (sys::size_t __j = 0; __j < __len; __i++, __j++)
+	    std::size_t __i = _M_buf_count;
+	    for (std::size_t __j = 0; __j < __len; __i++, __j++)
 	      _M_buffer[__i] = __s[__j];
 	    _M_buf_count += __len;
 	  }
@@ -280,7 +280,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       }
 
       sequence_buffer&
-      write(value_type* __s, sys::size_t __len)
+      write(value_type* __s, std::size_t __len)
       {
 	append(__s, __len);
 	return *this;
@@ -327,13 +327,13 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       virtual ~_Rope_char_consumer() { }
   
       virtual bool
-      operator()(const _CharT* __buffer, sys::size_t __len) = 0;
+      operator()(const _CharT* __buffer, std::size_t __len) = 0;
     };
   
   // First a lot of forward declarations.  The standard seems to require
   // much stricter "declaration before use" than many of the implementations
   // that preceded it.
-  template<class _CharT, class _Alloc = sys::allocator<_CharT> >
+  template<class _CharT, class _Alloc = std::allocator<_CharT> >
     class rope;
   
   template<class _CharT, class _Alloc>
@@ -368,16 +368,16 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<class _CharT, class _Alloc>
     _Rope_const_iterator<_CharT, _Alloc>
     operator-(const _Rope_const_iterator<_CharT, _Alloc>& __x,
-	      sys::ptrdiff_t __n);
+	      std::ptrdiff_t __n);
 
   template<class _CharT, class _Alloc>
     _Rope_const_iterator<_CharT, _Alloc>
     operator+(const _Rope_const_iterator<_CharT, _Alloc>& __x,
-	      sys::ptrdiff_t __n);
+	      std::ptrdiff_t __n);
 
   template<class _CharT, class _Alloc>
     _Rope_const_iterator<_CharT, _Alloc>
-    operator+(sys::ptrdiff_t __n,
+    operator+(std::ptrdiff_t __n,
 	      const _Rope_const_iterator<_CharT, _Alloc>& __x);
 
   template<class _CharT, class _Alloc>
@@ -391,21 +391,21 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	      const _Rope_const_iterator<_CharT, _Alloc>& __y);
   
   template<class _CharT, class _Alloc>
-    sys::ptrdiff_t
+    std::ptrdiff_t
     operator-(const _Rope_const_iterator<_CharT, _Alloc>& __x,
 	      const _Rope_const_iterator<_CharT, _Alloc>& __y);
 
   template<class _CharT, class _Alloc>
     _Rope_iterator<_CharT, _Alloc>
-    operator-(const _Rope_iterator<_CharT, _Alloc>& __x, sys::ptrdiff_t __n);
+    operator-(const _Rope_iterator<_CharT, _Alloc>& __x, std::ptrdiff_t __n);
 
   template<class _CharT, class _Alloc>
     _Rope_iterator<_CharT, _Alloc>
-    operator+(const _Rope_iterator<_CharT, _Alloc>& __x, sys::ptrdiff_t __n);
+    operator+(const _Rope_iterator<_CharT, _Alloc>& __x, std::ptrdiff_t __n);
 
   template<class _CharT, class _Alloc>
     _Rope_iterator<_CharT, _Alloc>
-    operator+(sys::ptrdiff_t __n, const _Rope_iterator<_CharT, _Alloc>& __x);
+    operator+(std::ptrdiff_t __n, const _Rope_iterator<_CharT, _Alloc>& __x);
 
   template<class _CharT, class _Alloc>
     bool
@@ -418,7 +418,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	      const _Rope_iterator<_CharT, _Alloc>& __y);
 
   template<class _CharT, class _Alloc>
-    sys::ptrdiff_t
+    std::ptrdiff_t
     operator-(const _Rope_iterator<_CharT, _Alloc>& __x,
 	      const _Rope_iterator<_CharT, _Alloc>& __y);
 
@@ -438,14 +438,14 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   // Some helpers, so we can use power on ropes.
   // See below for why this isn't local to the implementation.
 
-// Ignore warnings about sys::binary_function.
+// Ignore warnings about std::binary_function.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   // This uses a nonstandard refcount convention.
   // The result has refcount 0.
   template<class _CharT, class _Alloc>
     struct _Rope_Concat_fn
-    : public sys::binary_function<rope<_CharT, _Alloc>, rope<_CharT, _Alloc>,
+    : public std::binary_function<rope<_CharT, _Alloc>, rope<_CharT, _Alloc>,
 				  rope<_CharT, _Alloc> >
     {
       rope<_CharT, _Alloc>
@@ -467,7 +467,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   struct _Refcount_Base
   {
     // The type _RC_t
-    typedef sys::size_t _RC_t;
+    typedef std::size_t _RC_t;
     
     // The data member _M_ref_count
     _RC_t _M_ref_count;
@@ -485,7 +485,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #ifdef __GTHREAD_MUTEX_INIT_FUNCTION
       __GTHREAD_MUTEX_INIT_FUNCTION (&_M_ref_count_lock);
 #else
-#error __GTHREAD_MUTEX_INIT or __GTHREAD_MUTEX_INIT_FUNCTION should be defined by gthr.h abstraction layer, report problem to libstdc++@spl.gnu.org.
+#error __GTHREAD_MUTEX_INIT or __GTHREAD_MUTEX_INIT_FUNCTION should be defined by gthr.h abstraction layer, report problem to libstdc++@gcc.gnu.org.
 #endif
 #endif
     }
@@ -562,7 +562,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     struct _Rope_rep_base
     : public _Alloc
     {
-      typedef sys::size_t size_type;
+      typedef std::size_t size_type;
       typedef _Alloc allocator_type;
 
       allocator_type
@@ -618,7 +618,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
                         /* the same memory as the data field.       */
       typedef typename _Rope_rep_base<_CharT, _Alloc>::allocator_type
         allocator_type;
-      typedef sys::size_t size_type;
+      typedef std::size_t size_type;
 
       using _Rope_rep_base<_CharT, _Alloc>::get_allocator;
       using _Rope_rep_base<_CharT, _Alloc>::_M_get_allocator;
@@ -704,7 +704,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     struct _Rope_RopeLeaf
     : public _Rope_RopeRep<_CharT, _Alloc>
     {
-      typedef sys::size_t size_type;
+      typedef std::size_t size_type;
     public:
       // Apparently needed by VC++
       // The data fields of leaves are allocated with some
@@ -782,7 +782,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 			      _Rope_RopeRep<_CharT, _Alloc>* __r,
 			      const allocator_type& __a)
 	: _Rope_RopeRep<_CharT, _Alloc>(__detail::_S_concat,
-				      sys::max(__l->_M_depth,
+				      std::max(__l->_M_depth,
 					       __r->_M_depth) + 1,
 				      false,
 				      __l->_M_size + __r->_M_size, __a),
@@ -827,7 +827,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     typedef typename _Rope_rep_base<_CharT, _Alloc>::allocator_type
       allocator_type;
 
-      _Rope_RopeFunction(char_producer<_CharT>* __f, sys::size_t __size,
+      _Rope_RopeFunction(char_producer<_CharT>* __f, std::size_t __size,
                         bool __d, const allocator_type& __a)
       : _Rope_RopeRep<_CharT, _Alloc>(__detail::_S_function, 0, true, __size, __a)
 	, _M_fn(__f)
@@ -869,7 +869,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     : public _Rope_RopeFunction<_CharT, _Alloc>,
       public char_producer<_CharT>
     {
-      typedef sys::size_t size_type;
+      typedef std::size_t size_type;
     public:
       // XXX this whole class should be rewritten.
       _Rope_RopeRep<_CharT,_Alloc>* _M_base;      // not 0
@@ -984,12 +984,12 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #endif
       typedef _Rope_RopeRep<_CharT, _Alloc> _RopeRep;
       typedef rope<_CharT, _Alloc> _My_rope;
-      sys::size_t _M_pos;
+      std::size_t _M_pos;
       _CharT _M_current;
       bool _M_current_valid;
       _My_rope* _M_root;     // The whole rope.
     public:
-      _Rope_char_ref_proxy(_My_rope* __r, sys::size_t __p)
+      _Rope_char_ref_proxy(_My_rope* __r, std::size_t __p)
       :  _M_pos(__p), _M_current(), _M_current_valid(false), _M_root(__r) { }
 
       _Rope_char_ref_proxy(const _Rope_char_ref_proxy& __x)
@@ -1000,7 +1000,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       // expression.  We claim that's not possible without calling
       // a copy constructor or generating reference to a proxy
       // reference.  We declare the latter to have undefined semantics.
-      _Rope_char_ref_proxy(_My_rope* __r, sys::size_t __p, _CharT __c)
+      _Rope_char_ref_proxy(_My_rope* __r, std::size_t __p, _CharT __c)
       : _M_pos(__p), _M_current(__c), _M_current_valid(true), _M_root(__r) { }
 
       inline operator _CharT () const;
@@ -1030,7 +1030,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     {
       // XXX this class should be rewritten.
       friend class _Rope_char_ref_proxy<_CharT, _Alloc>;
-      sys::size_t _M_pos;
+      std::size_t _M_pos;
       rope<_CharT,_Alloc>* _M_root;     // The whole rope.
     public:
       _Rope_char_ptr_proxy(const _Rope_char_ref_proxy<_CharT,_Alloc>& __x)
@@ -1070,12 +1070,12 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   // Iterators are assumed to be thread private.  Ropes can
   // be shared.
   
-// Ignore warnings about sys::iterator
+// Ignore warnings about std::iterator
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   template<class _CharT, class _Alloc>
     class _Rope_iterator_base
-    : public sys::iterator<sys::random_access_iterator_tag, _CharT>
+    : public std::iterator<std::random_access_iterator_tag, _CharT>
     {
       friend class rope<_CharT, _Alloc>;
     public:
@@ -1085,9 +1085,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     protected:
       enum { _S_path_cache_len = 4 }; // Must be <= 9.
       enum { _S_iterator_buf_len = 15 };
-      sys::size_t _M_current_pos;
+      std::size_t _M_current_pos;
       _RopeRep* _M_root;     // The whole rope.
-      sys::size_t _M_leaf_pos; // Starting position for current leaf
+      std::size_t _M_leaf_pos; // Starting position for current leaf
       __GC_CONST _CharT* _M_buf_start;
                              // Buffer possibly
                              // containing current char.
@@ -1128,13 +1128,13 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
                                         // cache is valid for previous posn.
       _Rope_iterator_base() { }
 
-      _Rope_iterator_base(_RopeRep* __root, sys::size_t __pos)
+      _Rope_iterator_base(_RopeRep* __root, std::size_t __pos)
       : _M_current_pos(__pos), _M_root(__root), _M_buf_ptr(0) { }
 
-      void _M_incr(sys::size_t __n);
-      void _M_decr(sys::size_t __n);
+      void _M_incr(std::size_t __n);
+      void _M_decr(std::size_t __n);
     public:
-      sys::size_t
+      std::size_t
       index() const
       { return _M_current_pos; }
     
@@ -1163,7 +1163,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     protected:
       typedef _Rope_RopeRep<_CharT, _Alloc> _RopeRep;
       // The one from the base class may not be directly visible.
-      _Rope_const_iterator(const _RopeRep* __root, sys::size_t __pos)
+      _Rope_const_iterator(const _RopeRep* __root, std::size_t __pos)
       : _Rope_iterator_base<_CharT, _Alloc>(const_cast<_RopeRep*>(__root),
 					    __pos)
                    // Only nonconst iterators modify root ref count
@@ -1182,7 +1182,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
       _Rope_const_iterator(const _Rope_iterator<_CharT,_Alloc>& __x);
     
-      _Rope_const_iterator(const rope<_CharT, _Alloc>& __r, sys::size_t __pos)
+      _Rope_const_iterator(const rope<_CharT, _Alloc>& __r, std::size_t __pos)
       : _Rope_iterator_base<_CharT,_Alloc>(__r._M_tree_ptr, __pos) { }
 
       _Rope_const_iterator&
@@ -1231,7 +1231,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       }
 
       _Rope_const_iterator&
-      operator+=(sys::ptrdiff_t __n)
+      operator+=(std::ptrdiff_t __n)
       {
         if (__n >= 0)
 	  this->_M_incr(__n);
@@ -1248,7 +1248,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       }
 
       _Rope_const_iterator&
-      operator-=(sys::ptrdiff_t __n)
+      operator-=(std::ptrdiff_t __n)
       {
         if (__n >= 0)
 	  this->_M_decr(__n);
@@ -1260,7 +1260,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       _Rope_const_iterator
       operator++(int)
       {
-	sys::size_t __old_pos = this->_M_current_pos;
+	std::size_t __old_pos = this->_M_current_pos;
         this->_M_incr(1);
         return _Rope_const_iterator<_CharT,_Alloc>(this->_M_root, __old_pos);
         // This makes a subsequent dereference expensive.
@@ -1271,7 +1271,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       _Rope_const_iterator
       operator--(int)
       {
-	sys::size_t __old_pos = this->_M_current_pos;
+	std::size_t __old_pos = this->_M_current_pos;
         this->_M_decr(1);
         return _Rope_const_iterator<_CharT,_Alloc>(this->_M_root, __old_pos);
       }
@@ -1279,20 +1279,20 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       template<class _CharT2, class _Alloc2>
         friend _Rope_const_iterator<_CharT2, _Alloc2>
         operator-(const _Rope_const_iterator<_CharT2, _Alloc2>& __x,
-		  sys::ptrdiff_t __n);
+		  std::ptrdiff_t __n);
 
       template<class _CharT2, class _Alloc2>
         friend _Rope_const_iterator<_CharT2, _Alloc2>
         operator+(const _Rope_const_iterator<_CharT2, _Alloc2>& __x,
-		  sys::ptrdiff_t __n);
+		  std::ptrdiff_t __n);
 
       template<class _CharT2, class _Alloc2>
         friend _Rope_const_iterator<_CharT2, _Alloc2>
-        operator+(sys::ptrdiff_t __n,
+        operator+(std::ptrdiff_t __n,
 		  const _Rope_const_iterator<_CharT2, _Alloc2>& __x);
 
       reference
-      operator[](sys::size_t __n)
+      operator[](std::size_t __n)
       { return rope<_CharT, _Alloc>::_S_fetch(this->_M_root,
 					      this->_M_current_pos + __n); }
 
@@ -1307,7 +1307,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 		  const _Rope_const_iterator<_CharT2, _Alloc2>& __y);
 
       template<class _CharT2, class _Alloc2>
-        friend sys::ptrdiff_t
+        friend std::ptrdiff_t
         operator-(const _Rope_const_iterator<_CharT2, _Alloc2>& __x,
 		  const _Rope_const_iterator<_CharT2, _Alloc2>& __y);
     };
@@ -1327,7 +1327,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       // Root is included in the reference count.  This is necessary
       // so that we can detect changes reliably.  Unfortunately, it
       // requires careful bookkeeping for the nonGC case.
-      _Rope_iterator(rope<_CharT, _Alloc>* __r, sys::size_t __pos)
+      _Rope_iterator(rope<_CharT, _Alloc>* __r, std::size_t __pos)
       : _Rope_iterator_base<_CharT, _Alloc>(__r->_M_tree_ptr, __pos),
         _M_root_rope(__r)
       { _RopeRep::_S_ref(this->_M_root);
@@ -1356,7 +1356,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
         _RopeRep::_S_ref(this->_M_root);
       }
 
-      _Rope_iterator(rope<_CharT, _Alloc>& __r, sys::size_t __pos);
+      _Rope_iterator(rope<_CharT, _Alloc>& __r, std::size_t __pos);
 
       ~_Rope_iterator()
       { _RopeRep::_S_unref(this->_M_root); }
@@ -1411,7 +1411,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       }
 
       _Rope_iterator&
-      operator+=(sys::ptrdiff_t __n)
+      operator+=(std::ptrdiff_t __n)
       {
         if (__n >= 0)
 	  this->_M_incr(__n);
@@ -1428,7 +1428,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       }
 
       _Rope_iterator&
-      operator-=(sys::ptrdiff_t __n)
+      operator-=(std::ptrdiff_t __n)
       {
         if (__n >= 0)
 	  this->_M_decr(__n);
@@ -1440,7 +1440,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       _Rope_iterator
       operator++(int)
       {
-	sys::size_t __old_pos = this->_M_current_pos;
+	std::size_t __old_pos = this->_M_current_pos;
         this->_M_incr(1);
         return _Rope_iterator<_CharT,_Alloc>(_M_root_rope, __old_pos);
       }
@@ -1448,13 +1448,13 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       _Rope_iterator
       operator--(int)
       {
-	sys::size_t __old_pos = this->_M_current_pos;
+	std::size_t __old_pos = this->_M_current_pos;
         this->_M_decr(1);
         return _Rope_iterator<_CharT,_Alloc>(_M_root_rope, __old_pos);
       }
 
       reference
-      operator[](sys::ptrdiff_t __n)
+      operator[](std::ptrdiff_t __n)
       { return _Rope_char_ref_proxy<_CharT, _Alloc>(_M_root_rope,
 						    this->_M_current_pos
 						    + __n); }
@@ -1470,23 +1470,23 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 		  const _Rope_iterator<_CharT2, _Alloc2>& __y);
 
       template<class _CharT2, class _Alloc2>
-        friend sys::ptrdiff_t
+        friend std::ptrdiff_t
         operator-(const _Rope_iterator<_CharT2, _Alloc2>& __x,
 		  const _Rope_iterator<_CharT2, _Alloc2>& __y);
 
       template<class _CharT2, class _Alloc2>
         friend _Rope_iterator<_CharT2, _Alloc2>
         operator-(const _Rope_iterator<_CharT2, _Alloc2>& __x,
-		  sys::ptrdiff_t __n);
+		  std::ptrdiff_t __n);
 
       template<class _CharT2, class _Alloc2>
         friend _Rope_iterator<_CharT2, _Alloc2>
         operator+(const _Rope_iterator<_CharT2, _Alloc2>& __x,
-		  sys::ptrdiff_t __n);
+		  std::ptrdiff_t __n);
 
       template<class _CharT2, class _Alloc2>
         friend _Rope_iterator<_CharT2, _Alloc2>
-        operator+(sys::ptrdiff_t __n,
+        operator+(std::ptrdiff_t __n,
 		  const _Rope_iterator<_CharT2, _Alloc2>& __x);
     };
 
@@ -1523,9 +1523,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #define __ROPE_DEFINE_ALLOC(_Tp, __name) \
         typedef typename \
           __alloc_traits<_Alloc>::template rebind<_Tp>::other __name##Alloc; \
-        static _Tp* __name##_allocate(sys::size_t __n) \
+        static _Tp* __name##_allocate(std::size_t __n) \
           { return __name##Alloc().allocate(__n); } \
-        static void __name##_deallocate(_Tp *__p, sys::size_t __n) \
+        static void __name##_deallocate(_Tp *__p, std::size_t __n) \
           { __name##Alloc().deallocate(__p, __n); }
       __ROPE_DEFINE_ALLOCS(_Alloc)
 #undef __ROPE_DEFINE_ALLOC
@@ -1547,8 +1547,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     {
     public:
       typedef _CharT value_type;
-      typedef sys::ptrdiff_t difference_type;
-      typedef sys::size_t size_type;
+      typedef std::ptrdiff_t difference_type;
+      typedef std::size_t size_type;
       typedef _CharT const_reference;
       typedef const _CharT* const_pointer;
       typedef _Rope_iterator<_CharT, _Alloc> iterator;
@@ -2100,7 +2100,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	//  but it's harder to make guarantees.
       }
 
-      typedef sys::reverse_iterator<const_iterator> const_reverse_iterator;
+      typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
       const_reverse_iterator
       rbegin() const
@@ -2613,7 +2613,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       {
 	size_type __result_pos;
 	const_iterator __result =
-	  sys::search(const_begin() + __pos, const_end(),
+	  std::search(const_begin() + __pos, const_end(),
 		      __s, __s + _S_char_ptr_len(__s));
 	__result_pos = __result.index();
 #ifndef __STL_OLD_ROPE_SEMANTICS
@@ -2631,7 +2631,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       mutable_end()
       { return(iterator(this, size())); }
 
-      typedef sys::reverse_iterator<iterator> reverse_iterator;
+      typedef std::reverse_iterator<iterator> reverse_iterator;
       
       reverse_iterator
       mutable_rbegin()
@@ -2747,31 +2747,31 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     { return !(__x < __y); }
 
   template <class _CharT, class _Alloc>
-    inline sys::ptrdiff_t
+    inline std::ptrdiff_t
     operator-(const _Rope_const_iterator<_CharT, _Alloc>& __x,
 	      const _Rope_const_iterator<_CharT, _Alloc>& __y)
     {
-      return (sys::ptrdiff_t)__x._M_current_pos
-	- (sys::ptrdiff_t)__y._M_current_pos;
+      return (std::ptrdiff_t)__x._M_current_pos
+	- (std::ptrdiff_t)__y._M_current_pos;
     }
 
   template <class _CharT, class _Alloc>
     inline _Rope_const_iterator<_CharT, _Alloc>
     operator-(const _Rope_const_iterator<_CharT, _Alloc>& __x,
-	      sys::ptrdiff_t __n)
+	      std::ptrdiff_t __n)
     { return _Rope_const_iterator<_CharT, _Alloc>(__x._M_root,
 						  __x._M_current_pos - __n); }
 
   template <class _CharT, class _Alloc>
     inline _Rope_const_iterator<_CharT, _Alloc>
     operator+(const _Rope_const_iterator<_CharT, _Alloc>& __x,
-	      sys::ptrdiff_t __n)
+	      std::ptrdiff_t __n)
     { return _Rope_const_iterator<_CharT, _Alloc>(__x._M_root,
 						  __x._M_current_pos + __n); }
 
   template <class _CharT, class _Alloc>
     inline _Rope_const_iterator<_CharT, _Alloc>
-    operator+(sys::ptrdiff_t __n,
+    operator+(std::ptrdiff_t __n,
 	      const _Rope_const_iterator<_CharT, _Alloc>& __x)
   { return _Rope_const_iterator<_CharT, _Alloc>(__x._M_root,
 						__x._M_current_pos + __n); }
@@ -2814,28 +2814,28 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     { return !(__x < __y); }
 
   template <class _CharT, class _Alloc>
-    inline sys::ptrdiff_t
+    inline std::ptrdiff_t
     operator-(const _Rope_iterator<_CharT, _Alloc>& __x,
 	      const _Rope_iterator<_CharT, _Alloc>& __y)
-    { return ((sys::ptrdiff_t)__x._M_current_pos
-	      - (sys::ptrdiff_t)__y._M_current_pos); }
+    { return ((std::ptrdiff_t)__x._M_current_pos
+	      - (std::ptrdiff_t)__y._M_current_pos); }
 
   template <class _CharT, class _Alloc>
     inline _Rope_iterator<_CharT, _Alloc>
     operator-(const _Rope_iterator<_CharT, _Alloc>& __x,
-	      sys::ptrdiff_t __n)
+	      std::ptrdiff_t __n)
     { return _Rope_iterator<_CharT, _Alloc>(__x._M_root_rope,
 					    __x._M_current_pos - __n); }
 
   template <class _CharT, class _Alloc>
     inline _Rope_iterator<_CharT, _Alloc>
-    operator+(const _Rope_iterator<_CharT, _Alloc>& __x, sys::ptrdiff_t __n)
+    operator+(const _Rope_iterator<_CharT, _Alloc>& __x, std::ptrdiff_t __n)
     { return _Rope_iterator<_CharT, _Alloc>(__x._M_root_rope,
 					    __x._M_current_pos + __n); }
 
   template <class _CharT, class _Alloc>
     inline _Rope_iterator<_CharT, _Alloc>
-    operator+(sys::ptrdiff_t __n, const _Rope_iterator<_CharT, _Alloc>& __x)
+    operator+(std::ptrdiff_t __n, const _Rope_iterator<_CharT, _Alloc>& __x)
     { return _Rope_iterator<_CharT, _Alloc>(__x._M_root_rope,
 					    __x._M_current_pos + __n); }
 
@@ -2866,7 +2866,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	      const _CharT* __right)
     {
       typedef rope<_CharT, _Alloc> rope_type;
-      sys::size_t __rlen = rope_type::_S_char_ptr_len(__right);
+      std::size_t __rlen = rope_type::_S_char_ptr_len(__right);
       _Alloc __a = __left.get_allocator();
       return rope_type(rope_type::_S_concat_char_iter(__left._M_tree_ptr,
 						      __right, __rlen, __a));
@@ -2948,19 +2948,19 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     { return !(__x == __y); }
 
   template<class _CharT, class _Traits, class _Alloc>
-    sys::basic_ostream<_CharT, _Traits>&
-    operator<<(sys::basic_ostream<_CharT, _Traits>& __o,
+    std::basic_ostream<_CharT, _Traits>&
+    operator<<(std::basic_ostream<_CharT, _Traits>& __o,
 	       const rope<_CharT, _Alloc>& __r);
 
   typedef rope<char> crope;
   typedef rope<wchar_t> wrope;
 
   inline crope::reference
-  __mutable_reference_at(crope& __c, sys::size_t __i)
+  __mutable_reference_at(crope& __c, std::size_t __i)
   { return __c.mutable_reference_at(__i); }
 
   inline wrope::reference
-  __mutable_reference_at(wrope& __c, sys::size_t __i)
+  __mutable_reference_at(wrope& __c, std::size_t __i)
   { return __c.mutable_reference_at(__i); }
 
   template <class _CharT, class _Alloc>
@@ -2972,7 +2972,7 @@ _GLIBCXX_END_NAMESPACE_VERSION
 } // namespace
 
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 { 
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -3007,7 +3007,7 @@ namespace tr1
 } // namespace tr1
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 # include <ext/ropeimpl.h>
 

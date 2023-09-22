@@ -66,7 +66,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	   uint32_t __parity3, uint32_t __parity4>
     class simd_fast_mersenne_twister_engine
     {
-      static_assert(sys::is_unsigned<_UIntType>::value, "template argument "
+      static_assert(std::is_unsigned<_UIntType>::value, "template argument "
 		    "substituting _UIntType not an unsigned integral type");
       static_assert(__sr1 < 32, "first right shift too large");
       static_assert(__sr2 < 16, "second right shift too large");
@@ -81,7 +81,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       static constexpr size_t _M_nstate = __m / 128 + 1;
       static constexpr size_t _M_nstate32 = _M_nstate * 4;
 
-      static_assert(sys::is_unsigned<_UIntType>::value, "template argument "
+      static_assert(std::is_unsigned<_UIntType>::value, "template argument "
 		    "substituting _UIntType not an unsigned integral type");
       static_assert(__pos1 < _M_nstate, "POS1 not smaller than state size");
       static_assert(16 % sizeof(_UIntType) == 0,
@@ -89,7 +89,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
       template<typename _Sseq>
 	using _If_seed_seq
-	  = sys::__detail::_If_seed_seq_for<_Sseq,
+	  = std::__detail::_If_seed_seq_for<_Sseq,
 					    simd_fast_mersenne_twister_engine,
 					    result_type>;
 
@@ -126,7 +126,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
       static constexpr result_type
       max()
-      { return sys::numeric_limits<result_type>::max(); }
+      { return std::numeric_limits<result_type>::max(); }
 
       void
       discard(unsigned long long __z);
@@ -165,8 +165,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	       uint32_t __parity1_2, uint32_t __parity2_2,
 	       uint32_t __parity3_2, uint32_t __parity4_2,
 	       typename _CharT, typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>& __os,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 		   const __gnu_cxx::simd_fast_mersenne_twister_engine
 		   <_UIntType_2,
 		   __m_2, __pos1_2, __sl1_2, __sl2_2, __sr1_2, __sr2_2,
@@ -181,8 +181,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	       uint32_t __parity1_2, uint32_t __parity2_2,
 	       uint32_t __parity3_2, uint32_t __parity4_2,
 	       typename _CharT, typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>& __is,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>& __is,
 		   __gnu_cxx::simd_fast_mersenne_twister_engine<_UIntType_2,
 		   __m_2, __pos1_2, __sl1_2, __sl2_2, __sr1_2, __sr2_2,
 		   __msk1_2, __msk2_2, __msk3_2, __msk4_2,
@@ -415,7 +415,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _RealType = double>
     class beta_distribution
     {
-      static_assert(sys::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealType>::value,
 		    "template argument not a floating point type");
 
     public:
@@ -589,8 +589,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>& __os,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 		   const __gnu_cxx::beta_distribution<_RealType1>& __x);
 
       /**
@@ -603,8 +603,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * @returns The input stream with @p __x extracted or in an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>& __is,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>& __is,
 		   __gnu_cxx::beta_distribution<_RealType1>& __x);
 
     private:
@@ -644,16 +644,16 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    * vectors of dimension @f$k@f$ and @f$\Sigma@f$ is the covariance
    * matrix (which must be positive-definite).
    */
-  template<sys::size_t _Dimen, typename _RealType = double>
+  template<std::size_t _Dimen, typename _RealType = double>
     class normal_mv_distribution
     {
-      static_assert(sys::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealType>::value,
 		    "template argument not a floating point type");
       static_assert(_Dimen != 0, "dimension is zero");
 
     public:
       /** The type of the range of the distribution. */
-      typedef sys::array<_RealType, _Dimen> result_type;
+      typedef std::array<_RealType, _Dimen> result_type;
       /** Parameter type. */
       class param_type
       {
@@ -665,11 +665,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
 	param_type()
 	{
-	  sys::fill(_M_mean.begin(), _M_mean.end(), _RealType(0));
+	  std::fill(_M_mean.begin(), _M_mean.end(), _RealType(0));
 	  auto __it = _M_t.begin();
 	  for (size_t __i = 0; __i < _Dimen; ++__i)
 	    {
-	      sys::fill_n(__it, __i, _RealType(0));
+	      std::fill_n(__it, __i, _RealType(0));
 	      __it += __i;
 	      *__it++ = _RealType(1);
 	    }
@@ -685,9 +685,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 				      _ForwardIterator1>)
 	  __glibcxx_function_requires(_ForwardIteratorConcept<
 				      _ForwardIterator2>)
-	  _GLIBCXX_DEBUG_ASSERT(sys::distance(__meanbegin, __meanend)
+	  _GLIBCXX_DEBUG_ASSERT(std::distance(__meanbegin, __meanend)
 				<= _Dimen);
-	  const auto __dist = sys::distance(__varcovbegin, __varcovend);
+	  const auto __dist = std::distance(__varcovbegin, __varcovend);
 	  _GLIBCXX_DEBUG_ASSERT(__dist == _Dimen * _Dimen
 				|| __dist == _Dimen * (_Dimen + 1) / 2
 				|| __dist == _Dimen);
@@ -704,8 +704,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	    }
 	}
 
-	param_type(sys::initializer_list<_RealType> __mean,
-		   sys::initializer_list<_RealType> __varcov)
+	param_type(std::initializer_list<_RealType> __mean,
+		   std::initializer_list<_RealType> __varcov)
 	{
 	  _GLIBCXX_DEBUG_ASSERT(__mean.size() <= _Dimen);
 	  _GLIBCXX_DEBUG_ASSERT(__varcov.size() == _Dimen * _Dimen
@@ -726,11 +726,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	    }
 	}
 
-	sys::array<_RealType, _Dimen>
+	std::array<_RealType, _Dimen>
 	mean() const
 	{ return _M_mean; }
 
-	sys::array<_RealType, _M_t_size>
+	std::array<_RealType, _M_t_size>
 	varcov() const
 	{ return _M_t; }
 
@@ -767,17 +767,17 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	// we need means to restore it as-is when reading it back in.
 	template<size_t _Dimen1, typename _RealType1,
 		 typename _CharT, typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>& __is,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>& __is,
 		   __gnu_cxx::normal_mv_distribution<_Dimen1, _RealType1>&
 		   __x);
-	param_type(sys::array<_RealType, _Dimen> const &__mean,
-		   sys::array<_RealType, _M_t_size> const &__varcov)
+	param_type(std::array<_RealType, _Dimen> const &__mean,
+		   std::array<_RealType, _M_t_size> const &__varcov)
 	  : _M_mean (__mean), _M_t (__varcov)
 	{}
 
-	sys::array<_RealType, _Dimen> _M_mean;
-	sys::array<_RealType, _M_t_size> _M_t;
+	std::array<_RealType, _Dimen> _M_mean;
+	std::array<_RealType, _M_t_size> _M_t;
       };
 
     public:
@@ -794,8 +794,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	  _M_nd()
 	{ }
 
-      normal_mv_distribution(sys::initializer_list<_RealType> __mean,
-			     sys::initializer_list<_RealType> __varcov)
+      normal_mv_distribution(std::initializer_list<_RealType> __mean,
+			     std::initializer_list<_RealType> __varcov)
       : _M_param(__mean, __varcov), _M_nd()
       { }
 
@@ -822,7 +822,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * @brief Returns the compact form of the variance/covariance
        * matrix of the distribution.
        */
-      sys::array<_RealType, _Dimen * (_Dimen + 1) / 2>
+      std::array<_RealType, _Dimen * (_Dimen + 1) / 2>
       varcov() const
       { return _M_param.varcov(); }
 
@@ -847,7 +847,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       result_type
       min() const
       { result_type __res;
-	__res.fill(sys::numeric_limits<_RealType>::lowest());
+	__res.fill(std::numeric_limits<_RealType>::lowest());
 	return __res; }
 
       /**
@@ -856,7 +856,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       result_type
       max() const
       { result_type __res;
-	__res.fill(sys::numeric_limits<_RealType>::max());
+	__res.fill(std::numeric_limits<_RealType>::max());
 	return __res; }
 
       /**
@@ -913,8 +913,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        */
       template<size_t _Dimen1, typename _RealType1,
 	       typename _CharT, typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>& __os,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 		   const
 		   __gnu_cxx::normal_mv_distribution<_Dimen1, _RealType1>&
 		   __x);
@@ -931,8 +931,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        */
       template<size_t _Dimen1, typename _RealType1,
 	       typename _CharT, typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>& __is,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>& __is,
 		   __gnu_cxx::normal_mv_distribution<_Dimen1, _RealType1>&
 		   __x);
 
@@ -945,7 +945,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 			const param_type& __p);
 
       param_type _M_param;
-      sys::normal_distribution<_RealType> _M_nd;
+      std::normal_distribution<_RealType> _M_nd;
   };
 
 #if __cpp_impl_three_way_comparison < 201907L
@@ -987,7 +987,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     class
     rice_distribution
     {
-      static_assert(sys::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealType>::value,
 		    "template argument not a floating point type");
     public:
       /** The type of the range of the distribution. */
@@ -1105,7 +1105,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        */
       result_type
       max() const
-      { return sys::numeric_limits<result_type>::max(); }
+      { return std::numeric_limits<result_type>::max(); }
 
       /**
        * @brief Generating functions.
@@ -1117,9 +1117,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	  result_type __x = this->_M_ndx(__urng);
 	  result_type __y = this->_M_ndy(__urng);
 #if _GLIBCXX_USE_C99_MATH_FUNCS
-	  return sys::hypot(__x, __y);
+	  return std::hypot(__x, __y);
 #else
-	  return sys::sqrt(__x * __x + __y * __y);
+	  return std::sqrt(__x * __x + __y * __y);
 #endif
 	}
 
@@ -1128,14 +1128,14 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	operator()(_UniformRandomNumberGenerator& __urng,
 		   const param_type& __p)
 	{
-	  typename sys::normal_distribution<result_type>::param_type
+	  typename std::normal_distribution<result_type>::param_type
 	    __px(__p.nu(), __p.sigma()), __py(result_type(0), __p.sigma());
 	  result_type __x = this->_M_ndx(__px, __urng);
 	  result_type __y = this->_M_ndy(__py, __urng);
 #if _GLIBCXX_USE_C99_MATH_FUNCS
-	  return sys::hypot(__x, __y);
+	  return std::hypot(__x, __y);
 #else
-	  return sys::sqrt(__x * __x + __y * __y);
+	  return std::sqrt(__x * __x + __y * __y);
 #endif
 	}
 
@@ -1184,8 +1184,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>&,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>&,
 		   const rice_distribution<_RealType1>&);
 
       /**
@@ -1199,8 +1199,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * @returns The input stream with @p __x extracted or in an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>&,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>&,
 		   rice_distribution<_RealType1>&);
 
     private:
@@ -1213,8 +1213,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
       param_type _M_param;
 
-      sys::normal_distribution<result_type> _M_ndx;
-      sys::normal_distribution<result_type> _M_ndy;
+      std::normal_distribution<result_type> _M_ndx;
+      std::normal_distribution<result_type> _M_ndy;
     };
 
 #if __cpp_impl_three_way_comparison < 201907L
@@ -1243,7 +1243,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     class
     nakagami_distribution
     {
-      static_assert(sys::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealType>::value,
 		    "template argument not a floating point type");
 
     public:
@@ -1357,7 +1357,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        */
       result_type
       max() const
-      { return sys::numeric_limits<result_type>::max(); }
+      { return std::numeric_limits<result_type>::max(); }
 
       /**
        * @brief Generating functions.
@@ -1365,16 +1365,16 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       template<typename _UniformRandomNumberGenerator>
 	result_type
 	operator()(_UniformRandomNumberGenerator& __urng)
-	{ return sys::sqrt(this->_M_gd(__urng)); }
+	{ return std::sqrt(this->_M_gd(__urng)); }
 
       template<typename _UniformRandomNumberGenerator>
 	result_type
 	operator()(_UniformRandomNumberGenerator& __urng,
 		   const param_type& __p)
 	{
-	  typename sys::gamma_distribution<result_type>::param_type
+	  typename std::gamma_distribution<result_type>::param_type
 	    __pg(__p.mu(), __p.omega() / __p.mu());
-	  return sys::sqrt(this->_M_gd(__pg, __urng));
+	  return std::sqrt(this->_M_gd(__pg, __urng));
 	}
 
       template<typename _ForwardIterator,
@@ -1421,8 +1421,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>&,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>&,
 		   const nakagami_distribution<_RealType1>&);
 
       /**
@@ -1436,8 +1436,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * @returns The input stream with @p __x extracted or in an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>&,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>&,
 		   nakagami_distribution<_RealType1>&);
 
     private:
@@ -1450,7 +1450,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
       param_type _M_param;
 
-      sys::gamma_distribution<result_type> _M_gd;
+      std::gamma_distribution<result_type> _M_gd;
     };
 
 #if __cpp_impl_three_way_comparison < 201907L
@@ -1491,7 +1491,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     class
     pareto_distribution
     {
-      static_assert(sys::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealType>::value,
 		    "template argument not a floating point type");
 
     public:
@@ -1607,7 +1607,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        */
       result_type
       max() const
-      { return sys::numeric_limits<result_type>::max(); }
+      { return std::numeric_limits<result_type>::max(); }
 
       /**
        * @brief Generating functions.
@@ -1616,7 +1616,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	result_type
 	operator()(_UniformRandomNumberGenerator& __urng)
 	{
-	  return this->mu() * sys::pow(this->_M_ud(__urng),
+	  return this->mu() * std::pow(this->_M_ud(__urng),
 				       -result_type(1) / this->alpha());
 	}
 
@@ -1625,7 +1625,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	operator()(_UniformRandomNumberGenerator& __urng,
 		   const param_type& __p)
 	{
-	  return __p.mu() * sys::pow(this->_M_ud(__urng),
+	  return __p.mu() * std::pow(this->_M_ud(__urng),
 					   -result_type(1) / __p.alpha());
 	}
 
@@ -1673,8 +1673,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>&,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>&,
 		   const pareto_distribution<_RealType1>&);
 
       /**
@@ -1688,8 +1688,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * @returns The input stream with @p __x extracted or in an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>&,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>&,
 		   pareto_distribution<_RealType1>&);
 
     private:
@@ -1702,7 +1702,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
       param_type _M_param;
 
-      sys::uniform_real_distribution<result_type> _M_ud;
+      std::uniform_real_distribution<result_type> _M_ud;
     };
 
 #if __cpp_impl_three_way_comparison < 201907L
@@ -1741,7 +1741,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     class
     k_distribution
     {
-      static_assert(sys::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealType>::value,
 		    "template argument not a floating point type");
 
     public:
@@ -1876,7 +1876,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        */
       result_type
       max() const
-      { return sys::numeric_limits<result_type>::max(); }
+      { return std::numeric_limits<result_type>::max(); }
 
       /**
        * @brief Generating functions.
@@ -1934,8 +1934,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>&,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>&,
 		   const k_distribution<_RealType1>&);
 
       /**
@@ -1949,8 +1949,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * @returns The input stream with @p __x extracted or in an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>&,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>&,
 		   k_distribution<_RealType1>&);
 
     private:
@@ -1963,8 +1963,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
       param_type _M_param;
 
-      sys::gamma_distribution<result_type> _M_gd1;
-      sys::gamma_distribution<result_type> _M_gd2;
+      std::gamma_distribution<result_type> _M_gd1;
+      std::gamma_distribution<result_type> _M_gd2;
     };
 
 #if __cpp_impl_three_way_comparison < 201907L
@@ -1998,7 +1998,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     class
     arcsine_distribution
     {
-      static_assert(sys::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealType>::value,
 		    "template argument not a floating point type");
 
     public:
@@ -2120,7 +2120,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	result_type
 	operator()(_UniformRandomNumberGenerator& __urng)
 	{
-	  result_type __x = sys::sin(this->_M_ud(__urng));
+	  result_type __x = std::sin(this->_M_ud(__urng));
 	  return (__x * (this->b() - this->a())
 		  + this->a() + this->b()) / result_type(2);
 	}
@@ -2130,7 +2130,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	operator()(_UniformRandomNumberGenerator& __urng,
 		   const param_type& __p)
 	{
-	  result_type __x = sys::sin(this->_M_ud(__urng));
+	  result_type __x = std::sin(this->_M_ud(__urng));
 	  return (__x * (__p.b() - __p.a())
 		  + __p.a() + __p.b()) / result_type(2);
 	}
@@ -2179,8 +2179,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>&,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>&,
 		   const arcsine_distribution<_RealType1>&);
 
       /**
@@ -2194,8 +2194,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * @returns The input stream with @p __x extracted or in an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>&,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>&,
 		   arcsine_distribution<_RealType1>&);
 
     private:
@@ -2208,7 +2208,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
       param_type _M_param;
 
-      sys::uniform_real_distribution<result_type> _M_ud;
+      std::uniform_real_distribution<result_type> _M_ud;
     };
 
 #if __cpp_impl_three_way_comparison < 201907L
@@ -2248,7 +2248,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     class
     hoyt_distribution
     {
-      static_assert(sys::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealType>::value,
 		    "template argument not a floating point type");
 
     public:
@@ -2367,7 +2367,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        */
       result_type
       max() const
-      { return sys::numeric_limits<result_type>::max(); }
+      { return std::numeric_limits<result_type>::max(); }
 
       /**
        * @brief Generating functions.
@@ -2426,8 +2426,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>&,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>&,
 		   const hoyt_distribution<_RealType1>&);
 
       /**
@@ -2441,8 +2441,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * @returns The input stream with @p __x extracted or in an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>&,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>&,
 		   hoyt_distribution<_RealType1>&);
 
     private:
@@ -2456,7 +2456,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       param_type _M_param;
 
       __gnu_cxx::arcsine_distribution<result_type> _M_ad;
-      sys::exponential_distribution<result_type> _M_ed;
+      std::exponential_distribution<result_type> _M_ed;
     };
 
 #if __cpp_impl_three_way_comparison < 201907L
@@ -2492,7 +2492,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _RealType = double>
     class triangular_distribution
     {
-      static_assert(sys::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealType>::value,
 		    "template argument not a floating point type");
 
     public:
@@ -2644,13 +2644,13 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	operator()(_UniformRandomNumberGenerator& __urng,
 		   const param_type& __p)
 	{
-	  sys::__detail::_Adaptor<_UniformRandomNumberGenerator, result_type>
+	  std::__detail::_Adaptor<_UniformRandomNumberGenerator, result_type>
 	    __aurng(__urng);
 	  result_type __rnd = __aurng();
 	  if (__rnd <= __p._M_r_ab)
-	    return __p.a() + sys::sqrt(__rnd * __p._M_f_ab_ac);
+	    return __p.a() + std::sqrt(__rnd * __p._M_f_ab_ac);
 	  else
-	    return __p.c() - sys::sqrt((result_type(1) - __rnd)
+	    return __p.c() - std::sqrt((result_type(1) - __rnd)
 				       * __p._M_f_bc_ac);
 	}
 
@@ -2697,8 +2697,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>& __os,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 		   const __gnu_cxx::triangular_distribution<_RealType1>& __x);
 
       /**
@@ -2711,8 +2711,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * @returns The input stream with @p __x extracted or in an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>& __is,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>& __is,
 		   __gnu_cxx::triangular_distribution<_RealType1>& __x);
 
     private:
@@ -2762,7 +2762,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _RealType = double>
     class von_mises_distribution
     {
-      static_assert(sys::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealType>::value,
 		    "template argument not a floating point type");
 
     public:
@@ -2784,9 +2784,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	  __glibcxx_assert(_M_mu >= -__pi && _M_mu <= __pi);
 	  __glibcxx_assert(_M_kappa >= _RealType(0));
 
-	  auto __tau = sys::sqrt(_RealType(4) * _M_kappa * _M_kappa
+	  auto __tau = std::sqrt(_RealType(4) * _M_kappa * _M_kappa
 				 + _RealType(1)) + _RealType(1);
-	  auto __rho = ((__tau - sys::sqrt(_RealType(2) * __tau))
+	  auto __rho = ((__tau - std::sqrt(_RealType(2) * __tau))
 			/ (_RealType(2) * _M_kappa));
 	  _M_r = (_RealType(1) + __rho * __rho) / (_RealType(2) * __rho);
 	}
@@ -2942,8 +2942,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>& __os,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 		   const __gnu_cxx::von_mises_distribution<_RealType1>& __x);
 
       /**
@@ -2956,8 +2956,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * @returns The input stream with @p __x extracted or in an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>& __is,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>& __is,
 		   __gnu_cxx::von_mises_distribution<_RealType1>& __x);
 
     private:
@@ -3008,7 +3008,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _UIntType = unsigned int>
     class hypergeometric_distribution
     {
-      static_assert(sys::is_unsigned<_UIntType>::value, "template argument "
+      static_assert(std::is_unsigned<_UIntType>::value, "template argument "
 		    "substituting _UIntType not an unsigned integral type");
 
     public:
@@ -3141,8 +3141,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       result_type
       min() const
       {
-	using _IntType = typename sys::make_signed<result_type>::type;
-	return static_cast<result_type>(sys::max(static_cast<_IntType>(0),
+	using _IntType = typename std::make_signed<result_type>::type;
+	return static_cast<result_type>(std::max(static_cast<_IntType>(0),
 				static_cast<_IntType>(this->total_draws()
 						- this->unsuccessful_size())));
       }
@@ -3152,7 +3152,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        */
       result_type
       max() const
-      { return sys::min(this->successful_size(), this->total_draws()); }
+      { return std::min(this->successful_size(), this->total_draws()); }
 
       /**
        * @brief Generating functions.
@@ -3211,8 +3211,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * an error state.
        */
       template<typename _UIntType1, typename _CharT, typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>& __os,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 		   const __gnu_cxx::hypergeometric_distribution<_UIntType1>&
 		   __x);
 
@@ -3228,8 +3228,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        *          state.
        */
       template<typename _UIntType1, typename _CharT, typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>& __is,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>& __is,
 		   __gnu_cxx::hypergeometric_distribution<_UIntType1>& __x);
 
     private:
@@ -3281,7 +3281,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     class
     logistic_distribution
     {
-      static_assert(sys::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealType>::value,
 		    "template argument not a floating point type");
 
     public:
@@ -3383,14 +3383,14 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        */
       result_type
       min() const
-      { return -sys::numeric_limits<result_type>::max(); }
+      { return -std::numeric_limits<result_type>::max(); }
 
       /**
        * @brief Returns the least upper bound value of the distribution.
        */
       result_type
       max() const
-      { return sys::numeric_limits<result_type>::max(); }
+      { return std::numeric_limits<result_type>::max(); }
 
       /**
        * @brief Generating functions.
@@ -3449,8 +3449,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>&,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>&,
 		   const logistic_distribution<_RealType1>&);
 
       /**
@@ -3464,8 +3464,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        * @returns The input stream with @p __x extracted or in an error state.
        */
       template<typename _RealType1, typename _CharT, typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>&,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>&,
 		   logistic_distribution<_RealType1>&);
 
     private:
@@ -3496,16 +3496,16 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    * The method used in the generation function is attributed by Donald Knuth
    * to G. W. Brown, Modern Mathematics for the Engineer (1956).
    */
-  template<sys::size_t _Dimen, typename _RealType = double>
+  template<std::size_t _Dimen, typename _RealType = double>
     class uniform_on_sphere_distribution
     {
-      static_assert(sys::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealType>::value,
 		    "template argument not a floating point type");
       static_assert(_Dimen != 0, "dimension is zero");
 
     public:
       /** The type of the range of the distribution. */
-      typedef sys::array<_RealType, _Dimen> result_type;
+      typedef std::array<_RealType, _Dimen> result_type;
 
       /** Parameter type. */
       struct param_type
@@ -3639,8 +3639,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        */
       template<size_t _Dimen1, typename _RealType1, typename _CharT,
 	       typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>& __os,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 		   const __gnu_cxx::uniform_on_sphere_distribution<_Dimen1,
 								   _RealType1>&
 		   __x);
@@ -3656,10 +3656,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        *
        * @returns The input stream with @p __x extracted or in an error state.
        */
-      template<sys::size_t _Dimen1, typename _RealType1, typename _CharT,
+      template<std::size_t _Dimen1, typename _RealType1, typename _CharT,
 	       typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>& __is,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>& __is,
 		   __gnu_cxx::uniform_on_sphere_distribution<_Dimen1,
 							     _RealType1>& __x);
 
@@ -3672,14 +3672,14 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 			const param_type& __p);
 
       param_type _M_param;
-      sys::normal_distribution<_RealType> _M_nd;
+      std::normal_distribution<_RealType> _M_nd;
     };
 
 #if __cpp_impl_three_way_comparison < 201907L
   /**
    * @brief Return true if two uniform on sphere distributions are different.
    */
-  template<sys::size_t _Dimen, typename _RealType>
+  template<std::size_t _Dimen, typename _RealType>
     inline bool
     operator!=(const __gnu_cxx::uniform_on_sphere_distribution<_Dimen,
 	       _RealType>& __d1,
@@ -3691,16 +3691,16 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   /**
    * @brief A distribution for random coordinates inside a unit sphere.
    */
-  template<sys::size_t _Dimen, typename _RealType = double>
+  template<std::size_t _Dimen, typename _RealType = double>
     class uniform_inside_sphere_distribution
     {
-      static_assert(sys::is_floating_point<_RealType>::value,
+      static_assert(std::is_floating_point<_RealType>::value,
 		    "template argument not a floating point type");
       static_assert(_Dimen != 0, "dimension is zero");
 
     public:
       /** The type of the range of the distribution. */
-      using result_type = sys::array<_RealType, _Dimen>;
+      using result_type = std::array<_RealType, _Dimen>;
 
       /** Parameter type. */
       struct param_type
@@ -3868,8 +3868,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        */
       template<size_t _Dimen1, typename _RealType1, typename _CharT,
 	       typename _Traits>
-	friend sys::basic_ostream<_CharT, _Traits>&
-	operator<<(sys::basic_ostream<_CharT, _Traits>& __os,
+	friend std::basic_ostream<_CharT, _Traits>&
+	operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 		   const __gnu_cxx::uniform_inside_sphere_distribution<_Dimen1,
 								   _RealType1>&
 		   );
@@ -3885,10 +3885,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        *
        * @returns The input stream with @p __x extracted or in an error state.
        */
-      template<sys::size_t _Dimen1, typename _RealType1, typename _CharT,
+      template<std::size_t _Dimen1, typename _RealType1, typename _CharT,
 	       typename _Traits>
-	friend sys::basic_istream<_CharT, _Traits>&
-	operator>>(sys::basic_istream<_CharT, _Traits>& __is,
+	friend std::basic_istream<_CharT, _Traits>&
+	operator>>(std::basic_istream<_CharT, _Traits>& __is,
 		   __gnu_cxx::uniform_inside_sphere_distribution<_Dimen1,
 								 _RealType1>&);
 
@@ -3908,7 +3908,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   /**
    * @brief Return true if two uniform on sphere distributions are different.
    */
-  template<sys::size_t _Dimen, typename _RealType>
+  template<std::size_t _Dimen, typename _RealType>
     inline bool
     operator!=(const __gnu_cxx::uniform_inside_sphere_distribution<_Dimen,
 	       _RealType>& __d1,

@@ -32,7 +32,7 @@
 
 #pragma GCC system_header
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -64,7 +64,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     {
       // _GLIBCXX_RESOLVE_LIB_DEFECTS
       // 292. effects of a.copyfmt (a)
-      if (this != sys::__addressof(__rhs))
+      if (this != std::__addressof(__rhs))
 	{
 	  // Per 27.1.1, do not call imbue, yet must trash all caches
 	  // associated with imbue()
@@ -156,9 +156,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     void
     basic_ios<_CharT, _Traits>::_M_cache_locale(const locale& __loc)
     {
-      _M_ctype = sys::__try_use_facet<__ctype_type>(__loc);
-      _M_num_put = sys::__try_use_facet<__num_put_type>(__loc);
-      _M_num_get = sys::__try_use_facet<__num_get_type>(__loc);
+      _M_ctype = std::__try_use_facet<__ctype_type>(__loc);
+      _M_num_put = std::__try_use_facet<__num_put_type>(__loc);
+      _M_num_get = std::__try_use_facet<__num_get_type>(__loc);
     }
 
   // Inhibit implicit instantiations for required instantiations,
@@ -172,6 +172,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #endif
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 #endif

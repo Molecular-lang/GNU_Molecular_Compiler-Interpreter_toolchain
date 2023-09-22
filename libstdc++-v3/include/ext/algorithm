@@ -70,10 +70,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   // copy_n (not part of the C++ standard)
 
   template<typename _InputIterator, typename _Size, typename _OutputIterator>
-    sys::pair<_InputIterator, _OutputIterator>
+    std::pair<_InputIterator, _OutputIterator>
     __copy_n(_InputIterator __first, _Size __count,
 	     _OutputIterator __result,
-	     sys::input_iterator_tag)
+	     std::input_iterator_tag)
     {
       for ( ; __count > 0; --__count)
 	{
@@ -81,17 +81,17 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	  ++__first;
 	  ++__result;
 	}
-      return sys::pair<_InputIterator, _OutputIterator>(__first, __result);
+      return std::pair<_InputIterator, _OutputIterator>(__first, __result);
     }
 
   template<typename _RAIterator, typename _Size, typename _OutputIterator>
-    inline sys::pair<_RAIterator, _OutputIterator>
+    inline std::pair<_RAIterator, _OutputIterator>
     __copy_n(_RAIterator __first, _Size __count,
 	     _OutputIterator __result,
-	     sys::random_access_iterator_tag)
+	     std::random_access_iterator_tag)
     {
       _RAIterator __last = __first + __count;
-      return sys::pair<_RAIterator, _OutputIterator>(__last, sys::copy(__first,
+      return std::pair<_RAIterator, _OutputIterator>(__last, std::copy(__first,
 								  __last,
 								  __result));
     }
@@ -101,7 +101,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *  @param  __first  An input iterator.
    *  @param  __count  The number of elements to copy.
    *  @param  __result An output iterator.
-   *  @return   A sys::pair composed of first+count and result+count.
+   *  @return   A std::pair composed of first+count and result+count.
    *
    *  This is an SGI extension.
    *  This inline function will boil down to a call to @c memmove whenever
@@ -111,16 +111,16 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *  @ingroup SGIextensions
   */
   template<typename _InputIterator, typename _Size, typename _OutputIterator>
-    inline sys::pair<_InputIterator, _OutputIterator>
+    inline std::pair<_InputIterator, _OutputIterator>
     copy_n(_InputIterator __first, _Size __count, _OutputIterator __result)
     {
       // concept requirements
       __glibcxx_function_requires(_InputIteratorConcept<_InputIterator>)
       __glibcxx_function_requires(_OutputIteratorConcept<_OutputIterator,
-	    typename sys::iterator_traits<_InputIterator>::value_type>)
+	    typename std::iterator_traits<_InputIterator>::value_type>)
 
       return __gnu_cxx::__copy_n(__first, __count, __result,
-				 sys::__iterator_category(__first));
+				 std::__iterator_category(__first));
     }
 
   template<typename _InputIterator1, typename _InputIterator2>
@@ -151,10 +151,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 				 const unsigned char* __first2,
 				 const unsigned char* __last2)
   {
-    const sys::ptrdiff_t __len1 = __last1 - __first1;
-    const sys::ptrdiff_t __len2 = __last2 - __first2;
+    const std::ptrdiff_t __len1 = __last1 - __first1;
+    const std::ptrdiff_t __len2 = __last2 - __first2;
     const int __result = __builtin_memcmp(__first1, __first2,
-					  (sys::min)(__len1, __len2));
+					  (std::min)(__len1, __len2));
     return __result != 0 ? __result
 			 : (__len1 == __len2 ? 0 : (__len1 < __len2 ? -1 : 1));
   }
@@ -202,9 +202,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       __glibcxx_function_requires(_InputIteratorConcept<_InputIterator1>)
       __glibcxx_function_requires(_InputIteratorConcept<_InputIterator2>)
       __glibcxx_function_requires(_LessThanComparableConcept<
-	    typename sys::iterator_traits<_InputIterator1>::value_type>)
+	    typename std::iterator_traits<_InputIterator1>::value_type>)
       __glibcxx_function_requires(_LessThanComparableConcept<
-	    typename sys::iterator_traits<_InputIterator2>::value_type>)
+	    typename std::iterator_traits<_InputIterator2>::value_type>)
       __glibcxx_requires_valid_range(__first1, __last1);
       __glibcxx_requires_valid_range(__first2, __last2);
 
@@ -223,7 +223,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       // concept requirements
       __glibcxx_function_requires(_InputIteratorConcept<_InputIterator>)
       __glibcxx_function_requires(_EqualityComparableConcept<
-	    typename sys::iterator_traits<_InputIterator>::value_type >)
+	    typename std::iterator_traits<_InputIterator>::value_type >)
       __glibcxx_function_requires(_EqualityComparableConcept<_Tp>)
       __glibcxx_requires_valid_range(__first, __last);
 
@@ -241,7 +241,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       // concept requirements
       __glibcxx_function_requires(_InputIteratorConcept<_InputIterator>)
       __glibcxx_function_requires(_UnaryPredicateConcept<_Predicate,
-	    typename sys::iterator_traits<_InputIterator>::value_type>)
+	    typename std::iterator_traits<_InputIterator>::value_type>)
       __glibcxx_requires_valid_range(__first, __last);
 
       for ( ; __first != __last; ++__first)
@@ -265,15 +265,15 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       // concept requirements
       __glibcxx_function_requires(_ForwardIteratorConcept<_ForwardIterator>)
       __glibcxx_function_requires(_OutputIteratorConcept<_OutputIterator,
-		typename sys::iterator_traits<_ForwardIterator>::value_type>)
+		typename std::iterator_traits<_ForwardIterator>::value_type>)
       __glibcxx_requires_valid_range(__first, __last);
 
-      _Distance __remaining = sys::distance(__first, __last);
-      _Distance __m = (sys::min)(__n, __remaining);
+      _Distance __remaining = std::distance(__first, __last);
+      _Distance __m = (std::min)(__n, __remaining);
 
       while (__m > 0)
 	{
-	  if ((sys::rand() % __remaining) < __m)
+	  if ((std::rand() % __remaining) < __m)
 	    {
 	      *__out = *__first;
 	      ++__out;
@@ -300,13 +300,13 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       // concept requirements
       __glibcxx_function_requires(_ForwardIteratorConcept<_ForwardIterator>)
       __glibcxx_function_requires(_OutputIteratorConcept<_OutputIterator,
-		typename sys::iterator_traits<_ForwardIterator>::value_type>)
+		typename std::iterator_traits<_ForwardIterator>::value_type>)
       __glibcxx_function_requires(_UnaryFunctionConcept<
 		_RandomNumberGenerator, _Distance, _Distance>)
       __glibcxx_requires_valid_range(__first, __last);
 
-      _Distance __remaining = sys::distance(__first, __last);
-      _Distance __m = (sys::min)(__n, __remaining);
+      _Distance __remaining = std::distance(__first, __last);
+      _Distance __m = (std::min)(__n, __remaining);
 
       while (__m > 0)
 	{
@@ -337,7 +337,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       while (__first != __last)
 	{
 	  ++__t;
-	  _Distance __M = sys::rand() % (__t);
+	  _Distance __M = std::rand() % (__t);
 	  if (__M < __n)
 	    __out[__M] = *__first;
 	  ++__first;
@@ -421,7 +421,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     }
 
 #if __cplusplus >= 201103L
-  using sys::is_heap;
+  using std::is_heap;
 #else
   /**
    *  This is an SGI extension.
@@ -436,10 +436,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       __glibcxx_function_requires(_RandomAccessIteratorConcept<
 				  _RandomAccessIterator>)
       __glibcxx_function_requires(_LessThanComparableConcept<
-	    typename sys::iterator_traits<_RandomAccessIterator>::value_type>)
+	    typename std::iterator_traits<_RandomAccessIterator>::value_type>)
       __glibcxx_requires_valid_range(__first, __last);
 
-      return sys::__is_heap(__first, __last - __first);
+      return std::__is_heap(__first, __last - __first);
     }
 
   /**
@@ -456,16 +456,16 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       __glibcxx_function_requires(_RandomAccessIteratorConcept<
 				  _RandomAccessIterator>)
       __glibcxx_function_requires(_BinaryPredicateConcept<_StrictWeakOrdering,
-	    typename sys::iterator_traits<_RandomAccessIterator>::value_type,
-	    typename sys::iterator_traits<_RandomAccessIterator>::value_type>)
+	    typename std::iterator_traits<_RandomAccessIterator>::value_type,
+	    typename std::iterator_traits<_RandomAccessIterator>::value_type>)
       __glibcxx_requires_valid_range(__first, __last);
 
-      return sys::__is_heap(__first, __comp, __last - __first);
+      return std::__is_heap(__first, __comp, __last - __first);
     }
 #endif
 
 #if __cplusplus >= 201103L
-  using sys::is_sorted;
+  using std::is_sorted;
 #else
   // is_sorted, a predicated testing whether a range is sorted in
   // nondescending order.  This is an extension, not part of the C++
@@ -483,7 +483,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       // concept requirements
       __glibcxx_function_requires(_ForwardIteratorConcept<_ForwardIterator>)
       __glibcxx_function_requires(_LessThanComparableConcept<
-	    typename sys::iterator_traits<_ForwardIterator>::value_type>)
+	    typename std::iterator_traits<_ForwardIterator>::value_type>)
       __glibcxx_requires_valid_range(__first, __last);
 
       if (__first == __last)
@@ -509,8 +509,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       // concept requirements
       __glibcxx_function_requires(_ForwardIteratorConcept<_ForwardIterator>)
       __glibcxx_function_requires(_BinaryPredicateConcept<_StrictWeakOrdering,
-	    typename sys::iterator_traits<_ForwardIterator>::value_type,
-	    typename sys::iterator_traits<_ForwardIterator>::value_type>)
+	    typename std::iterator_traits<_ForwardIterator>::value_type,
+	    typename std::iterator_traits<_ForwardIterator>::value_type>)
       __glibcxx_requires_valid_range(__first, __last);
 
       if (__first == __last)

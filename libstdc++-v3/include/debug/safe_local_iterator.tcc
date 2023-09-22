@@ -76,7 +76,7 @@ namespace __gnu_debug
     bool
     _Safe_local_iterator<_Iterator, _Sequence>::
     _M_valid_range(const _Safe_local_iterator& __rhs,
-		sys::pair<difference_type, _Distance_precision>& __dist) const
+		std::pair<difference_type, _Distance_precision>& __dist) const
     {
       if (!_M_can_compare(__rhs))
 	return false;

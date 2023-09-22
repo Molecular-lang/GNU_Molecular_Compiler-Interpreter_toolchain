@@ -35,7 +35,7 @@ extern "C" {
  * XTENSA_CONFIG_INSTANCE_LIST.
  * Add XTENSA_CONFIG_V<N>_ENTRY_LIST to the XTENSA_CONFIG_ENTRY_LIST.
  *
- * On the user side (gcc/spl-utils/...) add definition for the function
+ * On the user side (gcc/binutils/...) add definition for the function
  * xtensa_get_config_v<N> (void).
  */
 
@@ -120,8 +120,6 @@ struct xtensa_config_v4
   int xchal_unaligned_load_hw;
   int xchal_unaligned_store_hw;
 };
-
-typedef struct xtensa_isa_internal_struct xtensa_isa_internal;
 
 extern const void *xtensa_load_config (const char *name,
 				       const void *no_plugin_def,

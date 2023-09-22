@@ -42,9 +42,9 @@ GCC_CET_HOST_FLAGS(CET_HOST_FLAGS)
 AC_SUBST(CET_HOST_FLAGS)
 
 if test x"$host_subdir" = x.; then
-   gcc_build_dir=../spl
+   gcc_build_dir=../gcc
 else
-   gcc_build_dir=../../$host_subdir/spl
+   gcc_build_dir=../../$host_subdir/gcc
 fi
 AC_SUBST(gcc_build_dir)
 

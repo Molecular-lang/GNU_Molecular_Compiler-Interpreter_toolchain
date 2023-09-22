@@ -73,7 +73,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _InputIterator, typename _Distance>
     inline void
     __distance(_InputIterator __first, _InputIterator __last,
-	       _Distance& __n, sys::input_iterator_tag)
+	       _Distance& __n, std::input_iterator_tag)
     {
       // concept requirements
       __glibcxx_function_requires(_InputIteratorConcept<_InputIterator>)
@@ -87,7 +87,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _RandomAccessIterator, typename _Distance>
     inline void
     __distance(_RandomAccessIterator __first, _RandomAccessIterator __last,
-	       _Distance& __n, sys::random_access_iterator_tag)
+	       _Distance& __n, std::random_access_iterator_tag)
     {
       // concept requirements
       __glibcxx_function_requires(_RandomAccessIteratorConcept<
@@ -106,7 +106,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
              _Distance& __n)
     {
       // concept requirements -- taken care of in __distance
-      __distance(__first, __last, __n, sys::__iterator_category(__first));
+      __distance(__first, __last, __n, std::__iterator_category(__first));
     }
 
 _GLIBCXX_END_NAMESPACE_VERSION

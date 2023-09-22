@@ -32,7 +32,7 @@
 #ifndef _VALARRAY_ARRAY_TCC
 #define _VALARRAY_ARRAY_TCC 1
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 

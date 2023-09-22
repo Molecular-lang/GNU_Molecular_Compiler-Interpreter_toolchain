@@ -88,7 +88,7 @@ htab_eq htab_eq_pointer = eq_pointer;
    all the time.  All of these inverses (are implied to) have bit 32 set.
 
    For the record, here's the function that computed the table; it's a 
-   vastly simplified version of the function of the same name from spl.  */
+   vastly simplified version of the function of the same name from gcc.  */
 
 #if 0
 unsigned int
@@ -805,11 +805,11 @@ htab_collisions (htab_t htab)
 
 /* Hash P as a null-terminated string.
 
-   Copied from spl/hashtable.c.  Zack had the following to say with respect
+   Copied from gcc/hashtable.c.  Zack had the following to say with respect
    to applicability, though note that unlike hashtable.c, this hash table
    implementation re-hashes rather than chain buckets.
 
-   http://spl.gnu.org/ml/spl-patches/2001-08/msg01021.html
+   http://gcc.gnu.org/ml/gcc-patches/2001-08/msg01021.html
    From: Zack Weinberg <zackw@panix.com>
    Date: Fri, 17 Aug 2001 02:15:56 -0400
 

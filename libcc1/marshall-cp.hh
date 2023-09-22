@@ -21,7 +21,7 @@ along with GCC; see the file COPYING3.  If not see
 #define CC1_PLUGIN_MARSHALL_CXX_HH
 
 #include "marshall.hh"
-#include "spl-cp-interface.h"
+#include "gcc-cp-interface.h"
 #include "deleter.hh"
 
 namespace cc1_plugin

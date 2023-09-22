@@ -52,10 +52,10 @@
 #define setjmp(env) setjmp (env)
 #endif
 
-namespace sys
+namespace std
 {
   using ::jmp_buf;
   using ::longjmp;
-} // namespace sys
+} // namespace std
 
 #endif

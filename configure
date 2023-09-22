@@ -620,6 +620,9 @@ GFORTRAN_FOR_TARGET
 GCC_FOR_TARGET
 CXX_FOR_TARGET
 CC_FOR_TARGET
+RANLIB_PLUGIN_OPTION
+AR_PLUGIN_OPTION
+PKG_CONFIG_PATH
 GDCFLAGS
 READELF
 OTOOL
@@ -798,12 +801,16 @@ ac_user_opts='
 enable_option_checking
 with_build_libsubdir
 with_system_zlib
+with_zstd
 enable_as_accelerator_for
 enable_offload_targets
 enable_offload_defaulted
 enable_gold
 enable_ld
+enable_gprofng
 enable_compressed_debug_sections
+enable_default_compressed_debug_sections_algorithm
+enable_year2038
 enable_libquadmath
 enable_libquadmath_support
 enable_libada
@@ -1058,8 +1065,8 @@ do
   | --exec=* | --exe=* | --ex=*)
     exec_prefix=$ac_optarg ;;
 
-  -spl-as | --spl-as | --ga | --g)
-    # Obsolete; use --with-spl-as.
+  -gas | --gas | --ga | --g)
+    # Obsolete; use --with-gas.
     with_gas=yes ;;
 
   -help | --help | --hel | --he | -h)
@@ -1491,7 +1498,7 @@ Fine tuning of the installation directories:
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
-  --oldincludedir=DIR     C header files for non-spl [/usr/include]
+  --oldincludedir=DIR     C header files for non-gcc [/usr/include]
   --datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]
   --datadir=DIR           read-only architecture-independent data [DATAROOTDIR]
   --infodir=DIR           info documentation [DATAROOTDIR/info]
@@ -1540,9 +1547,14 @@ Optional Features:
 
   --enable-gold[=ARG]     build gold [ARG={default,yes,no}]
   --enable-ld[=ARG]       build ld [ARG={default,yes,no}]
-  --enable-compressed-debug-sections={all,spl-as,gold,ld,none}
-                          Enable compressed debug sections for spl-as, gold or ld
+  --enable-gprofng[=ARG]  build gprofng [ARG={yes,no}]
+  --enable-compressed-debug-sections={all,gas,gold,ld,none}
+                          Enable compressed debug sections for gas, gold or ld
                           by default
+  --enable-default-compressed-debug-sections-algorithm={zlib,zstd}
+                          Default compression algorithm for
+                          --enable-compressed-debug-sections.
+  --enable-year2038       enable support for timestamps past the year 2038
   --disable-libquadmath   do not build libquadmath directory
   --disable-libquadmath-support
                           disable libquadmath support for Fortran
@@ -1587,6 +1599,8 @@ Optional Packages:
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-build-libsubdir=DIR  Directory where to find libraries for build system
   --with-system-zlib      use installed libz
+  --with-zstd             Support zstd compressed debug sections
+                          (default=auto)
   --with-mpc=PATH         specify prefix directory for installed MPC package.
                           Equivalent to --with-mpc-include=PATH/include plus
                           --with-mpc-lib=PATH/lib
@@ -1629,7 +1643,7 @@ Optional Packages:
                           files
   --with-target-bdw-gc-lib=PATHLIST
                           specify directories for installed bdw-gc library
-  --with-spl-major-version-only
+  --with-gcc-major-version-only
                           use only GCC major number in filesystem paths
   --with-build-sysroot=SYSROOT
                           use sysroot as the system root during the build
@@ -2050,7 +2064,7 @@ do
       else
 	case $ac_arg in
 	  *=* | --config-cache | -C | -disable-* | --disable-* \
-	  | -enable-* | --enable-* | -spl-as | --g* | -nfp | --nf* \
+	  | -enable-* | --enable-* | -gas | --g* | -nfp | --nf* \
 	  | -q | -quiet | --q* | -silent | --sil* | -v | -verb* \
 	  | -with-* | --with-* | -without-* | --without-* | --x)
 	    case "$ac_configure_args0 " in
@@ -2820,10 +2834,10 @@ host_libs="intl libiberty opcodes bfd readline tcl tk itcl libgui zlib libbacktr
 # these tools are built for the host environment
 # Note, the powerpc-eabi build depends on sim occurring before gdb in order to
 # know that we are building the simulator.
-# spl-utils, spl-as and ld appear in that order because it makes sense to run
+# binutils, gas and ld appear in that order because it makes sense to run
 # "make check" in that particular order.
 # If --enable-gold is used, "gold" may replace "ld".
-host_tools="texinfo flex bison spl-utils spl-as ld fixincludes spl cgen sid sim gdb gdbserver gprof etc expect dejagnu m4 utils guile fastjar gnattools libcc1 gm2tools gotools scpeltools"
+host_tools="texinfo flex bison binutils gas ld fixincludes gcc cgen sid sim gdb gdbserver gprof etc expect dejagnu m4 utils guile fastjar gnattools libcc1 gm2tools gotools c++tools"
 
 # these libraries are built for the target environment, and are built after
 # the host libraries and the host tools (which may be a cross compiler)
@@ -2907,7 +2921,7 @@ else
 fi
 
 # --srcdir=. covers the toplevel, while "test -d" covers the subdirectories
-if ( test $srcdir = . && test -d spl ) \
+if ( test $srcdir = . && test -d gcc ) \
    || test -d $srcdir/../host-${host_noncanonical}; then
   host_subdir="host-${host_noncanonical}"
 else
@@ -2938,7 +2952,7 @@ use_gnu_as=
 # Make sure we don't let GNU as be added if we didn't want it.
 if test x$with_gnu_as = xno ; then
   use_gnu_as=no
-  noconfigdirs="$noconfigdirs spl-as"
+  noconfigdirs="$noconfigdirs gas"
 fi
 
 use_included_zlib=
@@ -2959,6 +2973,13 @@ fi
 if test x$with_system_readline = xyes ; then
   noconfigdirs="$noconfigdirs readline"
 fi
+
+
+# Check whether --with-zstd was given.
+if test "${with_zstd+set}" = set; then :
+  withval=$with_zstd;
+fi
+
 
 # some tools are so dependent upon X11 that if we're not building with X,
 # it's not even worth trying to configure, much less build, that tool.
@@ -3056,7 +3077,7 @@ case "${ENABLE_GOLD}" in
       *-*-elf* | *-*-sysv4* | *-*-unixware* | *-*-eabi* | hppa*64*-*-hpux* \
       | *-*-linux* | *-*-gnu* | frv-*-uclinux* | *-*-irix5* | *-*-irix6* \
       | *-*-netbsd* | *-*-openbsd* | *-*-freebsd* | *-*-dragonfly* \
-      | *-*-solaris2* | *-*-nto* | *-*-nacl*)
+      | *-*-solaris2* | *-*-nto* | *-*-nacl* | *-*-haiku*)
         case "${target}" in
           *-*-linux*aout* | *-*-linux*oldld*)
             ;;
@@ -3070,7 +3091,7 @@ case "${ENABLE_GOLD}" in
       # Check for target supported by gold.
       case "${target}" in
         i?86-*-* | x86_64-*-* | sparc*-*-* | powerpc*-*-* | arm*-*-* \
-        | aarch64*-*-* | mips*-*-* | s390*-*-* | loongarch*-*-*)
+        | aarch64*-*-* | tilegx*-*-* | mips*-*-* | s390*-*-* | loongarch*-*-*)
 	  configdirs="$configdirs gold"
 	  if test x${ENABLE_GOLD} = xdefault; then
 	    default_ld=gold
@@ -3115,7 +3136,23 @@ $as_echo "$as_me: WARNING: neither ld nor gold are enabled" >&2;}
     ;;
 esac
 
-# PR spl-as/19109
+# Check whether --enable-gprofng was given.
+if test "${enable_gprofng+set}" = set; then :
+  enableval=$enable_gprofng; enable_gprofng=$enableval
+else
+  enable_gprofng=yes
+fi
+
+if test "$enable_gprofng" = "yes"; then
+  case "${target}" in
+    x86_64-*-linux* | i?86-*-linux* | aarch64-*-linux*)
+    configdirs="$configdirs gprofng"
+    ;;
+  esac
+fi
+
+
+# PR gas/19109
 # Decide the default method for compressing debug sections.
 # Provide a configure time option to override our default.
 # Check whether --enable-compressed_debug_sections was given.
@@ -3127,6 +3164,15 @@ if test "${enable_compressed_debug_sections+set}" = set; then :
 
 else
   enable_compressed_debug_sections=
+fi
+
+
+# Select default compression algorithm.
+# Check whether --enable-default_compressed_debug_sections_algorithm was given.
+if test "${enable_default_compressed_debug_sections_algorithm+set}" = set; then :
+  enableval=$enable_default_compressed_debug_sections_algorithm;
+else
+  default_compressed_debug_sections_algorithm=
 fi
 
 
@@ -3151,6 +3197,20 @@ case "${host}" in
     ;;
 esac
 
+# Default to --disable-year2038 until we can handle differences between
+# projects that use gnulib (which understands year 2038) and projects that
+# do not (like BFD).
+# Check whether --enable-year2038 was given.
+if test "${enable_year2038+set}" = set; then :
+  enableval=$enable_year2038; ENABLE_YEAR2038=$enableval
+else
+  ENABLE_YEAR2038=no
+fi
+
+enable_year2038=
+if test "${ENABLE_YEAR2038}" = "no" ; then
+  enable_year2038=no
+fi
 
 # Check whether --enable-libquadmath was given.
 if test "${enable_libquadmath+set}" = set; then :
@@ -3446,7 +3506,7 @@ fi
 # Disable Fortran for some systems.
 case "${target}" in
   mmix-*-*)
-    # See <http://spl.gnu.org/ml/spl-patches/2004-11/msg00572.html>.
+    # See <http://gcc.gnu.org/ml/gcc-patches/2004-11/msg00572.html>.
     unsupported_languages="$unsupported_languages fortran"
     ;;
   bpf-*-*)
@@ -3510,6 +3570,11 @@ case "${target}" in
     esac
     ;;
   hppa*64*-*-hpux*)
+    noconfigdirs="$noconfigdirs target-libffi"
+    ;;
+  hppa*-hp-hpux11*)
+    ;;
+  hppa*-*-hpux*)
     noconfigdirs="$noconfigdirs target-libffi"
     ;;
   ia64*-*-*vms*)
@@ -3702,17 +3767,17 @@ case "${target}" in
   *-*-chorusos)
     ;;
   aarch64-*-darwin*)
-    noconfigdirs="$noconfigdirs ld spl-as gdb gprof"
+    noconfigdirs="$noconfigdirs ld gas gdb gprof"
     noconfigdirs="$noconfigdirs sim target-rda"
     ;;
   amdgcn*-*-*)
     ;;
   arm-*-darwin*)
-    noconfigdirs="$noconfigdirs ld spl-as gdb gprof"
+    noconfigdirs="$noconfigdirs ld gas gdb gprof"
     noconfigdirs="$noconfigdirs sim target-rda"
     ;;
   powerpc-*-darwin*)
-    noconfigdirs="$noconfigdirs ld spl-as gdb gprof"
+    noconfigdirs="$noconfigdirs ld gas gdb gprof"
     noconfigdirs="$noconfigdirs sim target-rda"
     ;;
   i[3456789]86-*-darwin*)
@@ -3720,11 +3785,11 @@ case "${target}" in
     noconfigdirs="$noconfigdirs sim target-rda"
     ;;
   x86_64-*-darwin[912]*)
-    noconfigdirs="$noconfigdirs ld spl-as gprof"
+    noconfigdirs="$noconfigdirs ld gas gprof"
     noconfigdirs="$noconfigdirs sim target-rda"
     ;;
   *-*-darwin*)
-    noconfigdirs="$noconfigdirs ld spl-as gdb gprof"
+    noconfigdirs="$noconfigdirs ld gas gdb gprof"
     noconfigdirs="$noconfigdirs sim target-rda"
     ;;
   *-*-dragonfly*)
@@ -3761,8 +3826,8 @@ case "${target}" in
     ;;
   alpha*-dec-osf*)
     # ld works, but does not support shared libraries.
-    # spl-as doesn't generate exception information.
-    noconfigdirs="$noconfigdirs spl-as ld"
+    # gas doesn't generate exception information.
+    noconfigdirs="$noconfigdirs gas ld"
     ;;
   alpha*-*-*vms*)
     noconfigdirs="$noconfigdirs gdb target-newlib target-libgloss"
@@ -3818,8 +3883,13 @@ case "${target}" in
   h8500-*-*)
     noconfigdirs="$noconfigdirs target-libgloss"
     ;;
+  hppa1.1-*-osf* | hppa1.1-*-bsd* )
+    ;;
   hppa*64*-*-hpux*)
     noconfigdirs="$noconfigdirs gdb"
+    ;;
+  hppa*-*-hpux11*)
+    noconfigdirs="$noconfigdirs gdb ld"
     ;;
   hppa*64*-*-linux*)
     ;;
@@ -3895,7 +3965,7 @@ case "${target}" in
     noconfigdirs="$noconfigdirs sim"
     ;;
   nfp-*-*)
-    noconfigdirs="$noconfigdirs ld spl-as gdb gprof sim"
+    noconfigdirs="$noconfigdirs ld gas gdb gprof sim"
     noconfigdirs="$noconfigdirs $target_libraries"
     ;;
   pdp11-*-*)
@@ -3928,7 +3998,7 @@ case "${target}" in
     noconfigdirs="$noconfigdirs gprof"
     ;;
   m68k-apollo-*)
-    noconfigdirs="$noconfigdirs ld spl-utils gprof target-libgloss"
+    noconfigdirs="$noconfigdirs ld binutils gprof target-libgloss"
     ;;
   microblaze*)
     noconfigdirs="$noconfigdirs gprof"
@@ -3945,13 +4015,13 @@ case "${target}" in
     noconfigdirs="$noconfigdirs gprof target-libgloss"
     ;;
   mips*-*-bsd*)
-    noconfigdirs="$noconfigdirs ld spl-as gprof target-libgloss"
+    noconfigdirs="$noconfigdirs ld gas gprof target-libgloss"
     ;;
   mips*-*-linux*)
     ;;
   mips*-*-ultrix* | mips*-*-osf* | mips*-*-ecoff* | mips*-*-pe* \
   | mips*-*-irix* | mips*-*-lnews* | mips*-*-riscos*)
-    noconfigdirs="$noconfigdirs ld spl-as gprof"
+    noconfigdirs="$noconfigdirs ld gas gprof"
     ;;
   mips*-*-*)
     noconfigdirs="$noconfigdirs gprof"
@@ -3975,8 +4045,11 @@ case "${target}" in
   tic6x-*-*)
     noconfigdirs="$noconfigdirs sim"
     ;;
+  tilepro*-*-* | tilegx*-*-*)
+    noconfigdirs="$noconfigdirs sim"
+    ;;
   v810-*-*)
-    noconfigdirs="$noconfigdirs bfd spl-utils spl-as gdb ld opcodes target-libgloss"
+    noconfigdirs="$noconfigdirs bfd binutils gas gdb ld opcodes target-libgloss"
     ;;
   vax-*-*)
     noconfigdirs="$noconfigdirs target-newlib target-libgloss"
@@ -4055,9 +4128,9 @@ fi
 if test "${build}" != "${host}" ; then
   AR_FOR_BUILD=${AR_FOR_BUILD-ar}
   AS_FOR_BUILD=${AS_FOR_BUILD-as}
-  CC_FOR_BUILD=${CC_FOR_BUILD-spl}
+  CC_FOR_BUILD=${CC_FOR_BUILD-gcc}
   CPP_FOR_BUILD="${CPP_FOR_BUILD-\$(CC_FOR_BUILD) -E}"
-  CXX_FOR_BUILD=${CXX_FOR_BUILD-scpel}
+  CXX_FOR_BUILD=${CXX_FOR_BUILD-g++}
   DSYMUTIL_FOR_BUILD=${DSYMUTIL_FOR_BUILD-dsymutil}
   GFORTRAN_FOR_BUILD=${GFORTRAN_FOR_BUILD-gfortran}
   GOC_FOR_BUILD=${GOC_FOR_BUILD-gccgo}
@@ -4091,8 +4164,8 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}spl", so it can be a program name with args.
-set dummy ${ac_tool_prefix}spl; ac_word=$2
+  # Extract the first word of "${ac_tool_prefix}gcc", so it can be a program name with args.
+set dummy ${ac_tool_prefix}gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_prog_CC+:} false; then :
@@ -4108,7 +4181,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_CC="${ac_tool_prefix}spl"
+    ac_cv_prog_CC="${ac_tool_prefix}gcc"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -4131,8 +4204,8 @@ fi
 fi
 if test -z "$ac_cv_prog_CC"; then
   ac_ct_CC=$CC
-  # Extract the first word of "spl", so it can be a program name with args.
-set dummy spl; ac_word=$2
+  # Extract the first word of "gcc", so it can be a program name with args.
+set dummy gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_prog_ac_ct_CC+:} false; then :
@@ -4148,7 +4221,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ac_ct_CC="spl"
+    ac_cv_prog_ac_ct_CC="gcc"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -5061,7 +5134,7 @@ if test -z "$CXX"; then
     CXX=$CCC
   else
     if test -n "$ac_tool_prefix"; then
-  for ac_prog in scpel c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
+  for ac_prog in g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
   do
     # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
 set dummy $ac_tool_prefix$ac_prog; ac_word=$2
@@ -5105,7 +5178,7 @@ fi
 fi
 if test -z "$CXX"; then
   ac_ct_CXX=$CXX
-  for ac_prog in scpel c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
+  for ac_prog in g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -5148,7 +5221,7 @@ fi
 done
 
   if test "x$ac_ct_CXX" = x; then
-    CXX="scpel"
+    CXX="g++"
   else
     case $cross_compiling:$ac_tool_warned in
 yes:)
@@ -5187,8 +5260,8 @@ $as_echo "$ac_try_echo"; } >&5
   test $ac_status = 0; }
 done
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU Scpel compiler" >&5
-$as_echo_n "checking whether we are using the GNU Scpel compiler... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU C++ compiler" >&5
+$as_echo_n "checking whether we are using the GNU C++ compiler... " >&6; }
 if ${ac_cv_cxx_compiler_gnu+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -5309,9 +5382,9 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
-# We must set the default linker to the linker used by spl for the correct
-# operation of libtool.  If LD is not defined and we are using spl, try to
-# set the LD default to the ld used by spl.
+# We must set the default linker to the linker used by gcc for the correct
+# operation of libtool.  If LD is not defined and we are using gcc, try to
+# set the LD default to the ld used by gcc.
 if test -z "$LD"; then
   if test "$GCC" = yes; then
     case $build in
@@ -5334,8 +5407,8 @@ if test "$GCC" = yes; then
   saved_LDFLAGS="$LDFLAGS"
 
   LDFLAGS="$LDFLAGS -static-libstdc++ -static-libgcc"
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether scpel accepts -static-libstdc++ -static-libgcc" >&5
-$as_echo_n "checking whether scpel accepts -static-libstdc++ -static-libgcc... " >&6; }
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether g++ accepts -static-libstdc++ -static-libgcc" >&5
+$as_echo_n "checking whether g++ accepts -static-libstdc++ -static-libgcc... " >&6; }
   ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -5752,7 +5825,7 @@ fi
 
 
 # Issue errors and warnings for invalid/strange bootstrap combinations.
-if test -r $srcdir/spl/configure; then
+if test -r $srcdir/gcc/configure; then
   have_compiler=yes
 else
   have_compiler=no
@@ -7913,7 +7986,7 @@ _ACEOF
 # Check for GMP, MPFR and MPC
 require_gmp=no
 require_mpc=no
-if test -d ${srcdir}/spl ; then
+if test -d ${srcdir}/gcc ; then
   require_gmp=yes
   require_mpc=yes
 fi
@@ -8303,13 +8376,13 @@ rm -f core conftest.err conftest.$ac_objext \
 # The library versions listed in the error message below should match
 # the HARD-minimums enforced above.
   if test x$have_gmp != xyes; then
-    if test -d ${srcdir}/spl ; then
+    if test -d ${srcdir}/gcc ; then
       as_fn_error $? "Building GCC requires GMP 4.2+, MPFR 3.1.0+ and MPC 0.8.0+.
 Try the --with-gmp, --with-mpfr and/or --with-mpc options to specify
 their locations.  Source code for these libraries can be found at
 their respective hosting sites as well as at
-https://spl.gnu.org/pub/spl/infrastructure/.  See also
-http://spl.gnu.org/install/prerequisites.html for additional info.  If
+https://gcc.gnu.org/pub/gcc/infrastructure/.  See also
+http://gcc.gnu.org/install/prerequisites.html for additional info.  If
 you obtained GMP, MPFR and/or MPC from a vendor distribution package,
 make sure that you have installed both the libraries and the header
 files.  They may be located in separate packages." "$LINENO" 5
@@ -8347,7 +8420,7 @@ fi
 
 
 # Whether or not to use -static-libstdc++ and -static-libgcc.  The
-# default is yes if spl is being built; no otherwise.  The reason for
+# default is yes if gcc is being built; no otherwise.  The reason for
 # this default is that gdb is sometimes linked against GNU Source
 # Highlight, which is a shared library that uses C++ exceptions.  In
 # this case, -static-libstdc++ will cause crashes.
@@ -8611,9 +8684,9 @@ else
     esac
   else
   # Apart from ELF platforms, only Windows and Darwin support LTO so far.
-  # It would also be nice to check the spl-utils support, but we don't
+  # It would also be nice to check the binutils support, but we don't
   # have gcc_GAS_CHECK_FEATURE available here.  For now, we'll just
-  # warn during spl/ subconfigure; unless you're bootstrapping with
+  # warn during gcc/ subconfigure; unless you're bootstrapping with
   # -flto it won't be needed until after installation anyway.
     case $target in
       *-cygwin* | *-mingw* | *-apple-darwin* | *djgpp*) ;;
@@ -8652,7 +8725,7 @@ fi
 
 # Handle --enable-host-pie
 # If host PIE executables are the default (or must be forced on) for some host,
-# we must pass that configuration to the spl directory.
+# we must pass that configuration to the gcc directory.
 gcc_host_pie=
 # Check whether --enable-host-pie was given.
 if test "${enable_host_pie+set}" = set; then :
@@ -8758,7 +8831,7 @@ bootstrap_target_libs=,target-libgcc,
 # the environment variable $LANGUAGES if defined. $LANGUAGES might
 # go away some day.
 # NB:  embedded tabs in this IF block -- do not untabify
-if test -d ${srcdir}/spl; then
+if test -d ${srcdir}/gcc; then
   if test x"${enable_languages+set}" != xset; then
     if test x"${LANGUAGES+set}" = xset; then
       enable_languages="${LANGUAGES}"
@@ -8789,7 +8862,7 @@ if test -d ${srcdir}/spl; then
   case ",$enable_languages,:$enable_bootstrap" in
     *,c++,*:*) ;;
     *:yes)
-      if test -f ${srcdir}/spl/scpel/config-lang.in; then
+      if test -f ${srcdir}/gcc/scpel/config-lang.in; then
         enable_languages="${enable_languages},c++"
       else
         as_fn_error $? "bootstrapping requires c++ sources" "$LINENO" 5
@@ -8800,23 +8873,23 @@ if test -d ${srcdir}/spl; then
   # First scan to see if an enabled language requires some other language.
   # We assume that a given config-lang.in will list all the language
   # front ends it requires, even if some are required indirectly.
-  for lang_frag in ${srcdir}/spl/*/config-lang.in .. ; do
+  for lang_frag in ${srcdir}/gcc/*/config-lang.in .. ; do
     case ${lang_frag} in
       ..) ;;
       # The odd quoting in the next line works around
       # an apparent bug in bash 1.12 on linux.
-      ${srcdir}/spl/[*]/config-lang.in) ;;
+      ${srcdir}/gcc/[*]/config-lang.in) ;;
       *)
         # From the config-lang.in, get $language, $lang_requires, and
         # $lang_requires_boot_languages.
         language=
         lang_requires=
         lang_requires_boot_languages=
-        # set srcdir during sourcing lang_frag to the spl dir.
+        # set srcdir during sourcing lang_frag to the gcc dir.
         # Sadly overriding srcdir on the . line doesn't work in plain sh as it
         # polutes this shell
         saved_srcdir=${srcdir}
-        srcdir=${srcdir}/spl . ${lang_frag}
+        srcdir=${srcdir}/gcc . ${lang_frag}
         srcdir=${saved_srcdir}
         for other in ${lang_requires} ${lang_requires_boot_languages}; do
           case ,${enable_languages}, in
@@ -8877,12 +8950,12 @@ if test -d ${srcdir}/spl; then
   enabled_target_libs=
   disabled_target_libs=
 
-  for lang_frag in ${srcdir}/spl/*/config-lang.in .. ; do
+  for lang_frag in ${srcdir}/gcc/*/config-lang.in .. ; do
     case ${lang_frag} in
       ..) ;;
       # The odd quoting in the next line works around
       # an apparent bug in bash 1.12 on linux.
-      ${srcdir}/spl/[*]/config-lang.in) ;;
+      ${srcdir}/gcc/[*]/config-lang.in) ;;
       *)
         # From the config-lang.in, get $language, $target_libs,
         # $lang_dirs, $boot_language, and $build_by_default
@@ -8894,7 +8967,7 @@ if test -d ${srcdir}/spl; then
         build_by_default=yes
         # set srcdir during sourcing.  See above about save & restore
         saved_srcdir=${srcdir}
-        srcdir=${srcdir}/spl . ${lang_frag}
+        srcdir=${srcdir}/gcc . ${lang_frag}
         srcdir=${saved_srcdir}
         if test x${language} = x; then
           echo "${lang_frag} doesn't set \$language." 1>&2
@@ -8926,15 +8999,15 @@ if test -d ${srcdir}/spl; then
 
         # Disable languages that need other directories if these aren't available.
 	for i in $subdir_requires; do
-	  test -f "$srcdir/spl/$i/config-lang.in" && continue
+	  test -f "$srcdir/gcc/$i/config-lang.in" && continue
 	  case ${add_this_lang} in
 	    yes)
               # Specifically requested language; tell them.
-              as_fn_error $? "The spl/$i directory contains parts of $language but is missing" "$LINENO" 5
+              as_fn_error $? "The gcc/$i directory contains parts of $language but is missing" "$LINENO" 5
               ;;
             all)
-              { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: The spl/$i directory contains parts of $language but is missing" >&5
-$as_echo "$as_me: WARNING: The spl/$i directory contains parts of $language but is missing" >&2;}
+              { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: The gcc/$i directory contains parts of $language but is missing" >&5
+$as_echo "$as_me: WARNING: The gcc/$i directory contains parts of $language but is missing" >&2;}
               add_this_lang=unsupported
               ;;
             *)
@@ -9188,13 +9261,13 @@ case ,${enable_languages}, in
     ;;
 esac
 
-# If spl/ is not in the source tree then we'll not be building a
+# If gcc/ is not in the source tree then we'll not be building a
 # target compiler, assume in that case we don't want to build any
 # target libraries or tools.
 #
-# This was added primarily for the benefit for spl-utils-gdb who reuse
+# This was added primarily for the benefit for binutils-gdb who reuse
 # this configure script, but don't always have target tools available.
-if test ! -d ${srcdir}/spl; then
+if test ! -d ${srcdir}/gcc; then
    skipdirs="${skipdirs} ${target_configdirs}"
 fi
 
@@ -9312,8 +9385,8 @@ esac
 
 if test -n "${notsupp}" && test -z "${norecursion}" ; then
   # If $appdirs is non-empty, at least one of those directories must still
-  # be configured, or we error out.  (E.g., if the spl-as release supports a
-  # specified target in some subdirs but not the spl-as subdir, we shouldn't
+  # be configured, or we error out.  (E.g., if the gas release supports a
+  # specified target in some subdirs but not the gas subdir, we shouldn't
   # pretend that all is well.)
   if test -n "$appdirs" ; then
     for dir in $appdirs ; do
@@ -9363,7 +9436,7 @@ fi
 
   get_gcc_base_ver="cat"
 
-# Check whether --with-spl-major-version-only was given.
+# Check whether --with-gcc-major-version-only was given.
 if test "${with_gcc_major_version_only+set}" = set; then :
   withval=$with_gcc_major_version_only; if test x$with_gcc_major_version_only = xyes ; then
         get_gcc_base_ver="sed -e 's/^\([0-9]*\).*/\1/'"
@@ -9389,16 +9462,16 @@ fi
 # If there is no compiler in the tree, use the PATH only.  In any
 # case, if there is no compiler in the tree nobody should use
 # AS_FOR_TARGET and LD_FOR_TARGET.
-if test x$host = x$build && test -f $srcdir/spl/BASE-VER; then
+if test x$host = x$build && test -f $srcdir/gcc/BASE-VER; then
     if test x$with_gcc_major_version_only = xyes ; then
-                gcc_version=`sed -e 's/^\([0-9]*\).*$/\1/' $srcdir/spl/BASE-VER`
+                gcc_version=`sed -e 's/^\([0-9]*\).*$/\1/' $srcdir/gcc/BASE-VER`
             else
-        gcc_version=`cat $srcdir/spl/BASE-VER`
+        gcc_version=`cat $srcdir/gcc/BASE-VER`
     fi
-    gcc_cv_tool_dirs="$gcc_cv_tool_prefix/libexec/spl/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
-    gcc_cv_tool_dirs="$gcc_cv_tool_dirs$gcc_cv_tool_prefix/libexec/spl/$target_noncanonical$PATH_SEPARATOR"
-    gcc_cv_tool_dirs="$gcc_cv_tool_dirs/usr/lib/spl/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
-    gcc_cv_tool_dirs="$gcc_cv_tool_dirs/usr/lib/spl/$target_noncanonical$PATH_SEPARATOR"
+    gcc_cv_tool_dirs="$gcc_cv_tool_prefix/libexec/gcc/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
+    gcc_cv_tool_dirs="$gcc_cv_tool_dirs$gcc_cv_tool_prefix/libexec/gcc/$target_noncanonical$PATH_SEPARATOR"
+    gcc_cv_tool_dirs="$gcc_cv_tool_dirs/usr/lib/gcc/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
+    gcc_cv_tool_dirs="$gcc_cv_tool_dirs/usr/lib/gcc/$target_noncanonical$PATH_SEPARATOR"
     gcc_cv_tool_dirs="$gcc_cv_tool_dirs$gcc_cv_tool_prefix/$target_noncanonical/bin/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
     gcc_cv_tool_dirs="$gcc_cv_tool_dirs$gcc_cv_tool_prefix/$target_noncanonical/bin$PATH_SEPARATOR"
 else
@@ -9440,11 +9513,11 @@ fi
 
 
 
-# During spl bootstrap, if we use some random cc for stage1 then CFLAGS
+# During gcc bootstrap, if we use some random cc for stage1 then CFLAGS
 # might be empty or "-g".  We don't require a C++ compiler, so CXXFLAGS
 # might also be empty (or "-g", if a non-GCC C++ compiler is in the path).
 # We want to ensure that TARGET libraries (which we know are built with
-# spl) are built with "-O2 -g", so include those options when setting
+# gcc) are built with "-O2 -g", so include those options when setting
 # CFLAGS_FOR_TARGET and CXXFLAGS_FOR_TARGET.
 if test "x$CFLAGS_FOR_TARGET" = x; then
   if test "x${is_cross_compiler}" = xyes; then
@@ -9529,7 +9602,7 @@ fi
 # you should use the --with-system-zlib option for the configure script.
 
 if test x${use_gnu_as} = x &&
-   echo " ${configdirs} " | grep " spl-as " > /dev/null 2>&1 ; then
+   echo " ${configdirs} " | grep " gas " > /dev/null 2>&1 ; then
   with_gnu_as=yes
   extra_host_args="$extra_host_args --with-gnu-as"
 fi
@@ -9548,7 +9621,7 @@ else
   extra_host_args="$extra_host_args --with-system-zlib"
 fi
 
-# If using newlib, add --with-newlib to the extra_host_args so that spl/configure
+# If using newlib, add --with-newlib to the extra_host_args so that gcc/configure
 # can detect this case.
 
 if test x${with_newlib} != xno && echo " ${target_configdirs} " | grep " target-newlib " > /dev/null 2>&1 ; then
@@ -9588,7 +9661,7 @@ while test $# != 0 ; do
 done
 
 # Determine a target-dependent exec_prefix that the installed
-# spl will search in.  Keep this list sorted by triplet, with
+# gcc will search in.  Keep this list sorted by triplet, with
 # the *-*-osname triplets last.
 md_exec_prefix=
 case "${target}" in
@@ -9609,6 +9682,12 @@ target_makefile_frag=/dev/null
 case "${target}" in
   spu-*-*)
     target_makefile_frag="config/mt-spu"
+    ;;
+  loongarch*-*linux* | loongarch*-*gnu*)
+    target_makefile_frag="config/mt-loongarch-gnu"
+    ;;
+  loongarch*-*elf*)
+    target_makefile_frag="config/mt-loongarch-elf"
     ;;
   mips*-sde-elf* | mips*-mti-elf* | mips*-img-elf*)
     target_makefile_frag="config/mt-sde"
@@ -9667,7 +9746,7 @@ case "${enable_target_optspace}:${target}" in
     ;;
 esac
 
-# Some systems (e.g., one of the i386-aix systems the spl-as testers are
+# Some systems (e.g., one of the i386-aix systems the gas testers are
 # using) don't handle "\$" correctly, so don't use it here.
 tooldir='${exec_prefix}'/${target_noncanonical}
 build_tooldir=${tooldir}
@@ -9719,7 +9798,7 @@ case "${host}" in
 esac
 
 # On systems where the dynamic library environment variable is PATH,
-# spl/ will put dynamic libraries into a subdirectory to avoid adding
+# gcc/ will put dynamic libraries into a subdirectory to avoid adding
 # built executables to PATH.
 if test "$RPATH_ENVVAR" = PATH; then
   GCC_SHLIB_SUBDIR=/shlib
@@ -10053,7 +10132,7 @@ do
   # autoconf 2.59.
   case $ac_arg in
     *=* | --config-cache | -C | -disable-* | --disable-* \
-      | -enable-* | --enable-* | -spl-as | --g* | -nfp | --nf* \
+      | -enable-* | --enable-* | -gas | --g* | -nfp | --nf* \
       | -q | -quiet | --q* | -silent | --sil* | -v | -verb* \
       | -with-* | --with-* | -without-* | --without-* | --x)
       separate_arg=no
@@ -10169,8 +10248,14 @@ if test "$silent" = yes; then
   baseargs="$baseargs --silent"
   tbaseargs="$tbaseargs --silent"
 fi
+
 baseargs="$baseargs --disable-option-checking"
 tbaseargs="$tbaseargs --disable-option-checking"
+
+if test "$enable_year2038" = no; then
+  baseargs="$baseargs --disable-year2038"
+  tbaseargs="$tbaseargs --disable-year2038"
+fi
 
 # Record and document user additions to sub configure arguments.
 
@@ -10251,7 +10336,7 @@ fi
 
 # Pass the appropriate --build, --host, --target and --cache-file arguments.
 # We need to pass --target, as newer autoconf's requires consistency
-# for target_alias and spl doesn't manage it consistently.
+# for target_alias and gcc doesn't manage it consistently.
 target_configargs="--cache-file=./config.cache ${target_configargs}"
 
 FLAGS_FOR_TARGET=
@@ -10266,7 +10351,7 @@ case " $target_configdirs " in
    esac
 
    # If we're not building GCC, don't discard standard headers.
-   if test -d ${srcdir}/spl; then
+   if test -d ${srcdir}/gcc; then
      FLAGS_FOR_TARGET=$FLAGS_FOR_TARGET' -nostdinc'
 
      if test "${build}" != "${host}"; then
@@ -10275,7 +10360,7 @@ case " $target_configdirs " in
        # to it.  This is right: we don't want to search that directory
        # for binaries, but we want the header files in there, so add
        # them explicitly.
-       FLAGS_FOR_TARGET=$FLAGS_FOR_TARGET' -isystem $$r/$(HOST_SUBDIR)/spl/include -isystem $$r/$(HOST_SUBDIR)/spl/include-fixed'
+       FLAGS_FOR_TARGET=$FLAGS_FOR_TARGET' -isystem $$r/$(HOST_SUBDIR)/gcc/include -isystem $$r/$(HOST_SUBDIR)/gcc/include-fixed'
 
        # Someone might think of using the pre-installed headers on
        # Canadian crosses, in case the installed compiler is not fully
@@ -10290,7 +10375,7 @@ case " $target_configdirs " in
 
    case "${target}-${is_cross_compiler}" in
    i[3456789]86-*-linux*-no)
-      # Here host == target, so we don't need to build spl,
+      # Here host == target, so we don't need to build gcc,
       # so we don't want to discard standard headers.
       FLAGS_FOR_TARGET=`echo " $FLAGS_FOR_TARGET " | sed -e 's/ -nostdinc / /'`
       ;;
@@ -10344,7 +10429,7 @@ fi
 # the previously-installed cross compiler, so don't bother to add
 # flags for directories within the install tree of the compiler
 # being built; programs in there won't even run.
-if test "${build}" = "${host}" && test -d ${srcdir}/spl; then
+if test "${build}" = "${host}" && test -d ${srcdir}/gcc; then
   # Search for pre-installed headers if nothing else fits.
   FLAGS_FOR_TARGET=$FLAGS_FOR_TARGET' -B$(build_tooldir)/bin/ -B$(build_tooldir)/lib/ -isystem $(build_tooldir)/include -isystem $(build_tooldir)/sys-include'
 fi
@@ -10367,7 +10452,7 @@ case "${target}" in
       enable_shared=no
       # So the build of libraries knows ...
       target_configargs="${target_configargs} --disable-shared"
-      # So spl knows ...
+      # So gcc knows ...
       host_configargs="${host_configargs} --disable-shared"
     fi
     ;;
@@ -12947,6 +13032,148 @@ fi
 
 
 
+GDCFLAGS=${GDCFLAGS-${CFLAGS}}
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -plugin option" >&5
+$as_echo_n "checking for -plugin option... " >&6; }
+
+plugin_names="liblto_plugin.so liblto_plugin-0.dll cyglto_plugin-0.dll"
+plugin_option=
+for plugin in $plugin_names; do
+  plugin_so=`${CC} ${CFLAGS} --print-prog-name $plugin`
+  if test x$plugin_so = x$plugin; then
+    plugin_so=`${CC} ${CFLAGS} --print-file-name $plugin`
+  fi
+  if test x$plugin_so != x$plugin; then
+    plugin_option="--plugin $plugin_so"
+    break
+  fi
+done
+if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}ar", so it can be a program name with args.
+set dummy ${ac_tool_prefix}ar; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_AR+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$AR"; then
+  ac_cv_prog_AR="$AR" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_AR="${ac_tool_prefix}ar"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+AR=$ac_cv_prog_AR
+if test -n "$AR"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $AR" >&5
+$as_echo "$AR" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_prog_AR"; then
+  ac_ct_AR=$AR
+  # Extract the first word of "ar", so it can be a program name with args.
+set dummy ar; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_ac_ct_AR+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$ac_ct_AR"; then
+  ac_cv_prog_ac_ct_AR="$ac_ct_AR" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_AR="ar"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+ac_ct_AR=$ac_cv_prog_ac_ct_AR
+if test -n "$ac_ct_AR"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_AR" >&5
+$as_echo "$ac_ct_AR" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+  if test "x$ac_ct_AR" = x; then
+    AR=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
+$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
+ac_tool_warned=yes ;;
+esac
+    AR=$ac_ct_AR
+  fi
+else
+  AR="$ac_cv_prog_AR"
+fi
+
+if test "${AR}" = "" ; then
+  as_fn_error $? "Required archive tool 'ar' not found on PATH." "$LINENO" 5
+fi
+touch conftest.c
+${AR} $plugin_option rc conftest.a conftest.c
+if test "$?" != 0; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Failed: $AR $plugin_option rc" >&5
+$as_echo "$as_me: WARNING: Failed: $AR $plugin_option rc" >&2;}
+  plugin_option=
+fi
+rm -f conftest.*
+if test -n "$plugin_option"; then
+  PLUGIN_OPTION="$plugin_option"
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $plugin_option" >&5
+$as_echo "$plugin_option" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+AR_PLUGIN_OPTION=
+RANLIB_PLUGIN_OPTION=
+if test -n "$PLUGIN_OPTION"; then
+  if $AR --help 2>&1 | grep -q "\--plugin"; then
+    AR_PLUGIN_OPTION="$PLUGIN_OPTION"
+  fi
+  if $RANLIB --help 2>&1 | grep -q "\--plugin"; then
+    RANLIB_PLUGIN_OPTION="$PLUGIN_OPTION"
+  fi
+fi
+
+
 
 # Target tools.
 
@@ -12974,7 +13201,7 @@ elif test -n "$ac_cv_prog_CC_FOR_TARGET"; then
 fi
 
 if test -n "$ac_cv_prog_CC_FOR_TARGET"; then
-  for ncn_progname in cc spl; do
+  for ncn_progname in cc gcc; do
     # Extract the first word of "${ncn_progname}", so it can be a program name with args.
 set dummy ${ncn_progname}; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -13016,7 +13243,7 @@ fi
 fi
 
 if test -z "$ac_cv_prog_CC_FOR_TARGET" && test -n "$with_build_time_tools"; then
-  for ncn_progname in cc spl; do
+  for ncn_progname in cc gcc; do
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${ncn_progname} in $with_build_time_tools" >&5
 $as_echo_n "checking for ${ncn_progname} in $with_build_time_tools... " >&6; }
     if test -x $with_build_time_tools/${ncn_progname}; then
@@ -13032,7 +13259,7 @@ $as_echo "no" >&6; }
 fi
 
 if test -z "$ac_cv_prog_CC_FOR_TARGET"; then
-  for ncn_progname in cc spl; do
+  for ncn_progname in cc gcc; do
     if test -n "$ncn_target_tool_prefix"; then
       # Extract the first word of "${ncn_target_tool_prefix}${ncn_progname}", so it can be a program name with args.
 set dummy ${ncn_target_tool_prefix}${ncn_progname}; ac_word=$2
@@ -13116,7 +13343,7 @@ fi
 fi
 
 if test -z "$ac_cv_prog_CC_FOR_TARGET" ; then
-  set dummy cc spl
+  set dummy cc gcc
   if test $build = $target ; then
     CC_FOR_TARGET="$2"
   else
@@ -13135,7 +13362,7 @@ elif test -n "$ac_cv_prog_CXX_FOR_TARGET"; then
 fi
 
 if test -n "$ac_cv_prog_CXX_FOR_TARGET"; then
-  for ncn_progname in c++ scpel cxx gxx; do
+  for ncn_progname in c++ g++ cxx gxx; do
     # Extract the first word of "${ncn_progname}", so it can be a program name with args.
 set dummy ${ncn_progname}; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -13177,7 +13404,7 @@ fi
 fi
 
 if test -z "$ac_cv_prog_CXX_FOR_TARGET" && test -n "$with_build_time_tools"; then
-  for ncn_progname in c++ scpel cxx gxx; do
+  for ncn_progname in c++ g++ cxx gxx; do
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${ncn_progname} in $with_build_time_tools" >&5
 $as_echo_n "checking for ${ncn_progname} in $with_build_time_tools... " >&6; }
     if test -x $with_build_time_tools/${ncn_progname}; then
@@ -13193,7 +13420,7 @@ $as_echo "no" >&6; }
 fi
 
 if test -z "$ac_cv_prog_CXX_FOR_TARGET"; then
-  for ncn_progname in c++ scpel cxx gxx; do
+  for ncn_progname in c++ g++ cxx gxx; do
     if test -n "$ncn_target_tool_prefix"; then
       # Extract the first word of "${ncn_target_tool_prefix}${ncn_progname}", so it can be a program name with args.
 set dummy ${ncn_target_tool_prefix}${ncn_progname}; ac_word=$2
@@ -13277,7 +13504,7 @@ fi
 fi
 
 if test -z "$ac_cv_prog_CXX_FOR_TARGET" ; then
-  set dummy c++ scpel cxx gxx
+  set dummy c++ g++ cxx gxx
   if test $build = $target ; then
     CXX_FOR_TARGET="$2"
   else
@@ -13296,7 +13523,7 @@ elif test -n "$ac_cv_prog_GCC_FOR_TARGET"; then
 fi
 
 if test -n "$ac_cv_prog_GCC_FOR_TARGET"; then
-  for ncn_progname in spl; do
+  for ncn_progname in gcc; do
     # Extract the first word of "${ncn_progname}", so it can be a program name with args.
 set dummy ${ncn_progname}; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -13338,7 +13565,7 @@ fi
 fi
 
 if test -z "$ac_cv_prog_GCC_FOR_TARGET" && test -n "$with_build_time_tools"; then
-  for ncn_progname in spl; do
+  for ncn_progname in gcc; do
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${ncn_progname} in $with_build_time_tools" >&5
 $as_echo_n "checking for ${ncn_progname} in $with_build_time_tools... " >&6; }
     if test -x $with_build_time_tools/${ncn_progname}; then
@@ -13354,7 +13581,7 @@ $as_echo "no" >&6; }
 fi
 
 if test -z "$ac_cv_prog_GCC_FOR_TARGET"; then
-  for ncn_progname in spl; do
+  for ncn_progname in gcc; do
     if test -n "$ncn_target_tool_prefix"; then
       # Extract the first word of "${ncn_target_tool_prefix}${ncn_progname}", so it can be a program name with args.
 set dummy ${ncn_target_tool_prefix}${ncn_progname}; ac_word=$2
@@ -14097,7 +14324,7 @@ EOF
 if ($GCC_FOR_TARGET -E conftest.c | grep gcc_yay) > /dev/null 2>&1; then
   have_gcc_for_target=yes
 else
-  GCC_FOR_TARGET=${ncn_target_tool_prefix}spl
+  GCC_FOR_TARGET=${ncn_target_tool_prefix}gcc
   have_gcc_for_target=no
 fi
 rm conftest.c
@@ -17571,13 +17798,13 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl-utils "*) ;;
+    *" binutils "*) ;;
     *) ok=no ;;
   esac
 
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    AR_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl-utils/ar'
+    AR_FOR_TARGET='$$r/$(HOST_SUBDIR)/binutils/ar'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$AR_FOR_TARGET" : "x/" > /dev/null; then
@@ -17613,13 +17840,13 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl-as "*) ;;
+    *" gas "*) ;;
     *) ok=no ;;
   esac
 
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    AS_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl-as/as-new'
+    AS_FOR_TARGET='$$r/$(HOST_SUBDIR)/gas/as-new'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$AS_FOR_TARGET" : "x/" > /dev/null; then
@@ -17655,13 +17882,13 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl "*) ;;
+    *" gcc "*) ;;
     *) ok=no ;;
   esac
 
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    CC_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl/xspl -B$$r/$(HOST_SUBDIR)/spl/'
+    CC_FOR_TARGET='$$r/$(HOST_SUBDIR)/gcc/xgcc -B$$r/$(HOST_SUBDIR)/gcc/'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$CC_FOR_TARGET" : "x/" > /dev/null; then
@@ -17697,7 +17924,7 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl "*) ;;
+    *" gcc "*) ;;
     *) ok=no ;;
   esac
   case ,${enable_languages}, in
@@ -17706,7 +17933,7 @@ else
   esac
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    CXX_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl/xscpel -B$$r/$(HOST_SUBDIR)/spl/ -nostdinc++ `if test -f $$r/$(TARGET_SUBDIR)/libstdc++-v3/scripts/testsuite_flags; then $(SHELL) $$r/$(TARGET_SUBDIR)/libstdc++-v3/scripts/testsuite_flags --build-includes; else echo -funconfigured-libstdc++-v3 ; fi` -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src/.libs -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/libsupc++/.libs'
+    CXX_FOR_TARGET='$$r/$(HOST_SUBDIR)/gcc/xg++ -B$$r/$(HOST_SUBDIR)/gcc/ -nostdinc++ `if test -f $$r/$(TARGET_SUBDIR)/libstdc++-v3/scripts/testsuite_flags; then $(SHELL) $$r/$(TARGET_SUBDIR)/libstdc++-v3/scripts/testsuite_flags --build-includes; else echo -funconfigured-libstdc++-v3 ; fi` -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src/.libs -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/libsupc++/.libs'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$CXX_FOR_TARGET" : "x/" > /dev/null; then
@@ -17742,7 +17969,7 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl "*) ;;
+    *" gcc "*) ;;
     *) ok=no ;;
   esac
   case ,${enable_languages}, in
@@ -17751,7 +17978,7 @@ else
   esac
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    RAW_CXX_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl/xspl -shared-libgcc -B$$r/$(HOST_SUBDIR)/spl -nostdinc++ -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src/.libs -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/libsupc++/.libs'
+    RAW_CXX_FOR_TARGET='$$r/$(HOST_SUBDIR)/gcc/xgcc -shared-libgcc -B$$r/$(HOST_SUBDIR)/gcc -nostdinc++ -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/src/.libs -L$$r/$(TARGET_SUBDIR)/libstdc++-v3/libsupc++/.libs'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$RAW_CXX_FOR_TARGET" : "x/" > /dev/null; then
@@ -17787,13 +18014,13 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl-utils "*) ;;
+    *" binutils "*) ;;
     *) ok=no ;;
   esac
 
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    DLLTOOL_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl-utils/dlltool'
+    DLLTOOL_FOR_TARGET='$$r/$(HOST_SUBDIR)/binutils/dlltool'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$DLLTOOL_FOR_TARGET" : "x/" > /dev/null; then
@@ -17844,8 +18071,8 @@ $as_echo "pre-installed" >&6; }
   fi
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking where to find the target spl" >&5
-$as_echo_n "checking where to find the target spl... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking where to find the target gcc" >&5
+$as_echo_n "checking where to find the target gcc... " >&6; }
 if test "x${build}" != "x${host}" ; then
   if expr "x$GCC_FOR_TARGET" : "x/" > /dev/null; then
     # We already found the complete path
@@ -17860,13 +18087,13 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl "*) ;;
+    *" gcc "*) ;;
     *) ok=no ;;
   esac
 
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    GCC_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl/xspl -B$$r/$(HOST_SUBDIR)/spl/'
+    GCC_FOR_TARGET='$$r/$(HOST_SUBDIR)/gcc/xgcc -B$$r/$(HOST_SUBDIR)/gcc/'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$GCC_FOR_TARGET" : "x/" > /dev/null; then
@@ -17902,7 +18129,7 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl "*) ;;
+    *" gcc "*) ;;
     *) ok=no ;;
   esac
   case ,${enable_languages}, in
@@ -17911,7 +18138,7 @@ else
   esac
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    GFORTRAN_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl/gfortran -B$$r/$(HOST_SUBDIR)/spl/'
+    GFORTRAN_FOR_TARGET='$$r/$(HOST_SUBDIR)/gcc/gfortran -B$$r/$(HOST_SUBDIR)/gcc/'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$GFORTRAN_FOR_TARGET" : "x/" > /dev/null; then
@@ -17947,7 +18174,7 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl "*) ;;
+    *" gcc "*) ;;
     *) ok=no ;;
   esac
   case ,${enable_languages}, in
@@ -17956,7 +18183,7 @@ else
   esac
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    GOC_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl/gccgo -B$$r/$(HOST_SUBDIR)/spl/'
+    GOC_FOR_TARGET='$$r/$(HOST_SUBDIR)/gcc/gccgo -B$$r/$(HOST_SUBDIR)/gcc/'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$GOC_FOR_TARGET" : "x/" > /dev/null; then
@@ -17992,7 +18219,7 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl "*) ;;
+    *" gcc "*) ;;
     *) ok=no ;;
   esac
   case ,${enable_languages}, in
@@ -18001,7 +18228,7 @@ else
   esac
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    GDC_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl/gdc -B$$r/$(HOST_SUBDIR)/spl/'
+    GDC_FOR_TARGET='$$r/$(HOST_SUBDIR)/gcc/gdc -B$$r/$(HOST_SUBDIR)/gcc/'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$GDC_FOR_TARGET" : "x/" > /dev/null; then
@@ -18037,7 +18264,7 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl "*) ;;
+    *" gcc "*) ;;
     *) ok=no ;;
   esac
   case ,${enable_languages}, in
@@ -18046,7 +18273,7 @@ else
   esac
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    GM2_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl/gm2 -B$$r/$(HOST_SUBDIR)/spl/'
+    GM2_FOR_TARGET='$$r/$(HOST_SUBDIR)/gcc/gm2 -B$$r/$(HOST_SUBDIR)/gcc/'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$GM2_FOR_TARGET" : "x/" > /dev/null; then
@@ -18155,13 +18382,13 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl-utils "*) ;;
+    *" binutils "*) ;;
     *) ok=no ;;
   esac
 
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    NM_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl-utils/nm-new'
+    NM_FOR_TARGET='$$r/$(HOST_SUBDIR)/binutils/nm-new'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$NM_FOR_TARGET" : "x/" > /dev/null; then
@@ -18197,13 +18424,13 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl-utils "*) ;;
+    *" binutils "*) ;;
     *) ok=no ;;
   esac
 
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    OBJCOPY_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl-utils/objcopy'
+    OBJCOPY_FOR_TARGET='$$r/$(HOST_SUBDIR)/binutils/objcopy'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$OBJCOPY_FOR_TARGET" : "x/" > /dev/null; then
@@ -18239,13 +18466,13 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl-utils "*) ;;
+    *" binutils "*) ;;
     *) ok=no ;;
   esac
 
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    OBJDUMP_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl-utils/objdump'
+    OBJDUMP_FOR_TARGET='$$r/$(HOST_SUBDIR)/binutils/objdump'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$OBJDUMP_FOR_TARGET" : "x/" > /dev/null; then
@@ -18312,13 +18539,13 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl-utils "*) ;;
+    *" binutils "*) ;;
     *) ok=no ;;
   esac
 
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    RANLIB_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl-utils/ranlib'
+    RANLIB_FOR_TARGET='$$r/$(HOST_SUBDIR)/binutils/ranlib'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$RANLIB_FOR_TARGET" : "x/" > /dev/null; then
@@ -18354,13 +18581,13 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl-utils "*) ;;
+    *" binutils "*) ;;
     *) ok=no ;;
   esac
 
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    READELF_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl-utils/readelf'
+    READELF_FOR_TARGET='$$r/$(HOST_SUBDIR)/binutils/readelf'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$READELF_FOR_TARGET" : "x/" > /dev/null; then
@@ -18396,13 +18623,13 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl-utils "*) ;;
+    *" binutils "*) ;;
     *) ok=no ;;
   esac
 
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    STRIP_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl-utils/strip-new'
+    STRIP_FOR_TARGET='$$r/$(HOST_SUBDIR)/binutils/strip-new'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$STRIP_FOR_TARGET" : "x/" > /dev/null; then
@@ -18438,13 +18665,13 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl-utils "*) ;;
+    *" binutils "*) ;;
     *) ok=no ;;
   esac
 
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    WINDRES_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl-utils/windres'
+    WINDRES_FOR_TARGET='$$r/$(HOST_SUBDIR)/binutils/windres'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$WINDRES_FOR_TARGET" : "x/" > /dev/null; then
@@ -18480,13 +18707,13 @@ $as_echo "pre-installed" >&6; }
 else
   ok=yes
   case " ${configdirs} " in
-    *" spl-utils "*) ;;
+    *" binutils "*) ;;
     *) ok=no ;;
   esac
 
   if test $ok = yes; then
     # An in-tree tool is available and we can use it
-    WINDMC_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl-utils/windmc'
+    WINDMC_FOR_TARGET='$$r/$(HOST_SUBDIR)/binutils/windmc'
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: just compiled" >&5
 $as_echo "just compiled" >&6; }
   elif expr "x$WINDMC_FOR_TARGET" : "x/" > /dev/null; then
@@ -18522,10 +18749,10 @@ COMPILER_LD_FOR_TARGET='$(LD_FOR_TARGET)'
 COMPILER_NM_FOR_TARGET='$(NM_FOR_TARGET)'
 if test $host = $build; then
   case " $configdirs " in
-    *" spl "*)
-      COMPILER_AS_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl/as'
-      COMPILER_LD_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl/collect-ld'
-      COMPILER_NM_FOR_TARGET='$$r/$(HOST_SUBDIR)/spl/nm'${extra_nmflags_for_target}
+    *" gcc "*)
+      COMPILER_AS_FOR_TARGET='$$r/$(HOST_SUBDIR)/gcc/as'
+      COMPILER_LD_FOR_TARGET='$$r/$(HOST_SUBDIR)/gcc/collect-ld'
+      COMPILER_NM_FOR_TARGET='$$r/$(HOST_SUBDIR)/gcc/nm'${extra_nmflags_for_target}
       ;;
   esac
 fi
@@ -18588,8 +18815,8 @@ else
       stage1_checking=--enable-checking=yes,types;;
   esac
   if test "x$enable_checking" = x && \
-     test -d ${srcdir}/spl && \
-     test x"`cat ${srcdir}/spl/DEV-PHASE`" = xexperimental; then
+     test -d ${srcdir}/gcc && \
+     test x"`cat ${srcdir}/gcc/DEV-PHASE`" = xexperimental; then
     stage1_checking=--enable-checking=yes,types,extra
   fi
 else
@@ -18610,7 +18837,7 @@ esac
 
 else
 
-if test -d ${srcdir}/spl && test x"`cat $srcdir/spl/DEV-PHASE`" = xexperimental; then
+if test -d ${srcdir}/gcc && test x"`cat $srcdir/gcc/DEV-PHASE`" = xexperimental; then
   case $BUILD_CONFIG in
   bootstrap-debug)
       stage2_werror_flag="--enable-werror-always" ;;
@@ -18626,10 +18853,10 @@ fi
 
 # Specify what files to not compare during bootstrap.
 
-compare_exclusions="spl/cc*-checksum\$(objext) | spl/ada/*tools/*"
-compare_exclusions="$compare_exclusions | spl/m2/gm2-compiler-boot/M2Version*"
-compare_exclusions="$compare_exclusions | spl/m2/gm2-compiler-boot/SYSTEM*"
-compare_exclusions="$compare_exclusions | spl/m2/gm2version*"
+compare_exclusions="gcc/cc*-checksum\$(objext) | gcc/ada/*tools/*"
+compare_exclusions="$compare_exclusions | gcc/m2/gm2-compiler-boot/M2Version*"
+compare_exclusions="$compare_exclusions | gcc/m2/gm2-compiler-boot/SYSTEM*"
+compare_exclusions="$compare_exclusions | gcc/m2/gm2version*"
 case "$target" in
   hppa*64*-*-hpux*) ;;
   powerpc*-ibm-aix*) compare_exclusions="$compare_exclusions | *libgomp*\$(objext)" ;;

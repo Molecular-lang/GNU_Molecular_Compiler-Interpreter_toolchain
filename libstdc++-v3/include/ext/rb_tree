@@ -75,11 +75,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *  @doctodo
    */
   template <class _Key, class _Value, class _KeyOfValue, class _Compare,
-	    class _Alloc = sys::allocator<_Value> >
+	    class _Alloc = std::allocator<_Value> >
     struct rb_tree
-    : public sys::_Rb_tree<_Key, _Value, _KeyOfValue, _Compare, _Alloc>
+    : public std::_Rb_tree<_Key, _Value, _KeyOfValue, _Compare, _Alloc>
     {
-      typedef sys::_Rb_tree<_Key, _Value, _KeyOfValue, _Compare, _Alloc> _Base;
+      typedef std::_Rb_tree<_Key, _Value, _KeyOfValue, _Compare, _Alloc> _Base;
       typedef typename _Base::allocator_type allocator_type;
 
       rb_tree(const _Compare& __comp = _Compare(),

@@ -32,28 +32,28 @@
 #pragma GCC system_header
 
 #include <bits/c++config.h>
-namespace sys _GLIBCXX_VISIBILITY(default) { namespace __debug {
+namespace std _GLIBCXX_VISIBILITY(default) { namespace __debug {
   template<typename _Tp, typename _Allocator> class list;
-} } // namespace sys::__debug
+} } // namespace std::__debug
 
 #include <list>
 #include <debug/safe_sequence.h>
 #include <debug/safe_container.h>
 #include <debug/safe_iterator.h>
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 namespace __debug
 {
-  /// Class sys::list with safety/checking/debug instrumentation.
-  template<typename _Tp, typename _Allocator = sys::allocator<_Tp> >
+  /// Class std::list with safety/checking/debug instrumentation.
+  template<typename _Tp, typename _Allocator = std::allocator<_Tp> >
     class list
     : public __gnu_debug::_Safe_container<
 	list<_Tp, _Allocator>, _Allocator,
 	__gnu_debug::_Safe_node_sequence>,
-      public _GLIBCXX_SYS_C::list<_Tp, _Allocator>
+      public _GLIBCXX_STD_C::list<_Tp, _Allocator>
     {
-      typedef _GLIBCXX_SYS_C::list<_Tp, _Allocator>		_Base;
+      typedef _GLIBCXX_STD_C::list<_Tp, _Allocator>		_Base;
       typedef __gnu_debug::_Safe_container<
 	list, _Allocator, __gnu_debug::_Safe_node_sequence>	_Safe;
 
@@ -91,8 +91,8 @@ namespace __debug
       typedef _Allocator				allocator_type;
       typedef typename _Base::pointer			pointer;
       typedef typename _Base::const_pointer		const_pointer;
-      typedef sys::reverse_iterator<iterator>		reverse_iterator;
-      typedef sys::reverse_iterator<const_iterator>	const_reverse_iterator;
+      typedef std::reverse_iterator<iterator>		reverse_iterator;
+      typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
 
       // 23.2.2.1 construct/copy/destroy:
 
@@ -120,10 +120,10 @@ namespace __debug
 
       list(list&& __x, const __type_identity_t<allocator_type>& __a)
 	noexcept(
-	  sys::is_nothrow_constructible<_Base,
+	  std::is_nothrow_constructible<_Base,
 	    _Base, const allocator_type&>::value )
-      : _Safe(sys::move(__x), __a),
-	_Base(sys::move(__x), __a) { }
+      : _Safe(std::move(__x), __a),
+	_Base(std::move(__x), __a) { }
 #endif
 
       explicit
@@ -147,7 +147,7 @@ namespace __debug
 
 #if __cplusplus >= 201103L
       template<class _InputIterator,
-	       typename = sys::_RequireInputIter<_InputIterator>>
+	       typename = std::_RequireInputIter<_InputIterator>>
 #else
       template<class _InputIterator>
 #endif
@@ -186,7 +186,7 @@ namespace __debug
 
 #if __cplusplus >= 201103L
       template<class _InputIterator,
-	       typename = sys::_RequireInputIter<_InputIterator>>
+	       typename = std::_RequireInputIter<_InputIterator>>
 #else
       template<class _InputIterator>
 #endif
@@ -428,7 +428,7 @@ namespace __debug
 	{
 	  __glibcxx_check_insert(__position);
 	  return  { _Base::emplace(__position.base(),
-				   sys::forward<_Args>(__args)...), this };
+				   std::forward<_Args>(__args)...), this };
 	}
 #endif
 
@@ -446,7 +446,7 @@ namespace __debug
 #if __cplusplus >= 201103L
       iterator
       insert(const_iterator __position, _Tp&& __x)
-      { return emplace(__position, sys::move(__x)); }
+      { return emplace(__position, std::move(__x)); }
 
       iterator
       insert(const_iterator __p, initializer_list<value_type> __l)
@@ -474,7 +474,7 @@ namespace __debug
 
 #if __cplusplus >= 201103L
       template<class _InputIterator,
-	       typename = sys::_RequireInputIter<_InputIterator>>
+	       typename = std::_RequireInputIter<_InputIterator>>
 	iterator
 	insert(const_iterator __position, _InputIterator __first,
 	       _InputIterator __last)
@@ -579,7 +579,7 @@ namespace __debug
       splice(iterator __position, list& __x)
 #endif
       {
-	_GLIBCXX_DEBUG_VERIFY(sys::__addressof(__x) != this,
+	_GLIBCXX_DEBUG_VERIFY(std::__addressof(__x) != this,
 			      _M_message(__gnu_debug::__msg_self_splice)
 			      ._M_sequence(*this, "this"));
 	this->_M_transfer_from_if(__x, _Not_equal(__x._M_base().end()));
@@ -589,7 +589,7 @@ namespace __debug
 #if __cplusplus >= 201103L
       void
       splice(const_iterator __position, list& __x) noexcept
-      { splice(__position, sys::move(__x)); }
+      { splice(__position, std::move(__x)); }
 #endif
 
       void
@@ -607,7 +607,7 @@ namespace __debug
 	_GLIBCXX_DEBUG_VERIFY(__i._M_dereferenceable(),
 			      _M_message(__gnu_debug::__msg_splice_bad)
 			      ._M_iterator(__i, "__i"));
-	_GLIBCXX_DEBUG_VERIFY(__i._M_attached_to(sys::__addressof(__x)),
+	_GLIBCXX_DEBUG_VERIFY(__i._M_attached_to(std::__addressof(__x)),
 			      _M_message(__gnu_debug::__msg_splice_other)
 			      ._M_iterator(__i, "__i")._M_sequence(__x, "__x"));
 
@@ -621,7 +621,7 @@ namespace __debug
 #if __cplusplus >= 201103L
       void
       splice(const_iterator __position, list& __x, const_iterator __i) noexcept
-      { splice(__position, sys::move(__x), __i); }
+      { splice(__position, std::move(__x), __i); }
 #endif
 
       void
@@ -635,7 +635,7 @@ namespace __debug
       {
 	__glibcxx_check_insert(__position);
 	__glibcxx_check_valid_range(__first, __last);
-	_GLIBCXX_DEBUG_VERIFY(__first._M_attached_to(sys::__addressof(__x)),
+	_GLIBCXX_DEBUG_VERIFY(__first._M_attached_to(std::__addressof(__x)),
 			      _M_message(__gnu_debug::__msg_splice_other)
 			      ._M_sequence(__x, "x")
 			      ._M_iterator(__first, "first"));
@@ -650,7 +650,7 @@ namespace __debug
 				  _M_message(__gnu_debug::__msg_valid_range)
 				  ._M_iterator(__first, "first")
 				  ._M_iterator(__last, "last"));
-	    _GLIBCXX_DEBUG_VERIFY(sys::__addressof(__x) != this
+	    _GLIBCXX_DEBUG_VERIFY(std::__addressof(__x) != this
 				  || __tmp != __position.base(),
 				_M_message(__gnu_debug::__msg_splice_overlap)
 				  ._M_iterator(__tmp, "position")
@@ -670,7 +670,7 @@ namespace __debug
       void
       splice(const_iterator __position, list& __x,
 	     const_iterator __first, const_iterator __last) noexcept
-      { splice(__position, sys::move(__x), __first, __last); }
+      { splice(__position, std::move(__x), __first, __last); }
 #endif
 
     private:
@@ -846,7 +846,7 @@ namespace __debug
       {
 	// _GLIBCXX_RESOLVE_LIB_DEFECTS
 	// 300. list::merge() specification incomplete
-	if (this != sys::__addressof(__x))
+	if (this != std::__addressof(__x))
 	  {
 	    __glibcxx_check_sorted(_Base::begin(), _Base::end());
 	    __glibcxx_check_sorted(__x.begin().base(), __x.end().base());
@@ -858,7 +858,7 @@ namespace __debug
 #if __cplusplus >= 201103L
       void
       merge(list& __x)
-      { merge(sys::move(__x)); }
+      { merge(std::move(__x)); }
 #endif
 
       template<class _Compare>
@@ -871,7 +871,7 @@ namespace __debug
 	{
 	  // _GLIBCXX_RESOLVE_LIB_DEFECTS
 	  // 300. list::merge() specification incomplete
-	  if (this != sys::__addressof(__x))
+	  if (this != std::__addressof(__x))
 	    {
 	      __glibcxx_check_sorted_pred(_Base::begin(), _Base::end(),
 					  __comp);
@@ -886,7 +886,7 @@ namespace __debug
       template<typename _Compare>
 	void
 	merge(list& __x, _Compare __comp)
-	{ merge(sys::move(__x), __comp); }
+	{ merge(std::move(__x), __comp); }
 #endif
 
       void
@@ -970,29 +970,29 @@ namespace __debug
     { __lhs.swap(__rhs); }
 
 } // namespace __debug
-} // namespace sys
+} // namespace std
 
 namespace __gnu_debug
 {
 #ifndef _GLIBCXX_USE_CXX11_ABI
   // If not using C++11 list::size() is not in O(1) so we do not use it.
   template<typename _Tp, typename _Alloc>
-    struct _Sequence_traits<sys::__debug::list<_Tp, _Alloc> >
+    struct _Sequence_traits<std::__debug::list<_Tp, _Alloc> >
     {
-      typedef typename sys::__debug::list<_Tp, _Alloc>::iterator _It;
+      typedef typename std::__debug::list<_Tp, _Alloc>::iterator _It;
 
       static typename _Distance_traits<_It>::__type
-      _S_size(const sys::__debug::list<_Tp, _Alloc>& __seq)
+      _S_size(const std::__debug::list<_Tp, _Alloc>& __seq)
       {
 	return __seq.empty()
-	  ? sys::make_pair(0, __dp_exact) : sys::make_pair(1, __dp_sign);
+	  ? std::make_pair(0, __dp_exact) : std::make_pair(1, __dp_sign);
       }
     };
 #endif
 
 #ifndef _GLIBCXX_DEBUG_PEDANTIC
   template<class _Tp, class _Alloc>
-    struct _Insert_range_from_self_is_safe<sys::__debug::list<_Tp, _Alloc> >
+    struct _Insert_range_from_self_is_safe<std::__debug::list<_Tp, _Alloc> >
     { enum { __value = 1 }; };
 #endif
 }

@@ -55,7 +55,7 @@
 // All dummy nodes will be eliminated at the end of compilation.
 */
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -69,7 +69,7 @@ namespace __detail
       _M_scanner(__b, __e, _M_flags, __loc),
       _M_nfa(make_shared<_RegexT>(__loc, _M_flags)),
       _M_traits(_M_nfa->_M_traits),
-      _M_ctype(sys::use_facet<_CtypeT>(__loc))
+      _M_ctype(std::use_facet<_CtypeT>(__loc))
     {
       _StateSeqT __r(*_M_nfa, _M_nfa->_M_start());
       __r._M_append(_M_nfa->_M_insert_subexpr_begin());
@@ -257,7 +257,7 @@ namespace __detail
 	      // _M_alt is the "match more" branch, and _M_next is the
 	      // "match less" one. Switch _M_alt and _M_next of all created
 	      // nodes. This is a hack but IMO works well.
-	      sys::stack<_StateIdT> __stack;
+	      std::stack<_StateIdT> __stack;
 	      for (long __i = 0; __i < __n; ++__i)
 		{
 		  auto __tmp = __r._M_clone();
@@ -271,7 +271,7 @@ namespace __detail
 		{
 		  auto& __tmp = (*_M_nfa)[__stack.top()];
 		  __stack.pop();
-		  sys::swap(__tmp._M_next, __tmp._M_alt);
+		  std::swap(__tmp._M_next, __tmp._M_alt);
 		}
 	    }
 	  _M_stack.push(__e);
@@ -400,7 +400,7 @@ namespace __detail
       __matcher._M_add_character_class(_M_value, false);
       __matcher._M_ready();
       _M_stack.push(_StateSeqT(*_M_nfa,
-	_M_nfa->_M_insert_matcher(sys::move(__matcher))));
+	_M_nfa->_M_insert_matcher(std::move(__matcher))));
     }
 
   template<typename _TraitsT>
@@ -423,7 +423,7 @@ namespace __detail
       __matcher._M_ready();
       _M_stack.push(_StateSeqT(
 		      *_M_nfa,
-		      _M_nfa->_M_insert_matcher(sys::move(__matcher))));
+		      _M_nfa->_M_insert_matcher(std::move(__matcher))));
     }
 
   template<typename _TraitsT>
@@ -587,7 +587,7 @@ namespace __detail
       for (_CharT __c : _M_value)
 	if (__builtin_mul_overflow(__v, __radix, &__v)
 	    || __builtin_add_overflow(__v, _M_traits.value(__c, __radix), &__v))
-	    sys::__throw_regex_error(regex_constants::error_backref,
+	    std::__throw_regex_error(regex_constants::error_backref,
 				     "invalid back reference");
       return __v;
     }
@@ -599,7 +599,7 @@ namespace __detail
     {
       return [this, __ch]
       {
-	if (sys::binary_search(_M_char_set.begin(), _M_char_set.end(),
+	if (std::binary_search(_M_char_set.begin(), _M_char_set.end(),
 			       _M_translator._M_translate(__ch)))
 	  return true;
 	auto __s = _M_translator._M_transform(__ch);
@@ -608,7 +608,7 @@ namespace __detail
 	    return true;
 	if (_M_traits.isctype(__ch, _M_class_set))
 	  return true;
-	if (sys::find(_M_equiv_set.begin(), _M_equiv_set.end(),
+	if (std::find(_M_equiv_set.begin(), _M_equiv_set.end(),
 		      _M_traits.transform_primary(&__ch, &__ch+1))
 	    != _M_equiv_set.end())
 	  return true;

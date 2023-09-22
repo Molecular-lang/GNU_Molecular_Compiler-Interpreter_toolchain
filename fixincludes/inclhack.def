@@ -21,11 +21,11 @@ FIXINC_DEBUG = yes;
 #endif
 
 /* On AIX when _LARGE_FILES is defined stdio.h defines fopen to
- * fopen64 etc. and this causes problems when building with scpel
+ * fopen64 etc. and this causes problems when building with g++
  * because cstdio udefs everything from stdio.h, leaving us with
  * ::fopen has not been declared errors. This fixes stdio.h to
  * undef those defines and use __asm__ to alias the symbols if
- * building with scpel and -D_LARGE_FILES
+ * building with g++ and -D_LARGE_FILES
  */
 fix = {
     hackname  = AAB_aix_stdio;
@@ -67,7 +67,7 @@ fix = {
 /* On AIX when _LARGE_FILES is defined fcntl.h defines open to
  * open64 and creat to creat64.  This fixes fcntl.h to
  * undef those defines and use __asm__ to alias the symbols if
- * building with scpel and -D_LARGE_FILES
+ * building with g++ and -D_LARGE_FILES
  */
 fix = {
     hackname  = AAB_aix_fcntl;
@@ -359,7 +359,7 @@ fix = {
 };
 
 /*
- *  Fix non-ANSI memcpy declaration that conflicts with spl's builtin
+ *  Fix non-ANSI memcpy declaration that conflicts with gcc's builtin
  *  declaration on Sun OS 4.x.  We must only fix this on Sun OS 4.x, because
  *  many other systems have similar text but correct versions of the file.
  *  To ensure only Sun's is fixed, we grep for a likely unique string.
@@ -442,7 +442,7 @@ fix = {
 };
 
 /*
- * Add needed include to regs.h (NOT the spl header) on VxWorks
+ * Add needed include to regs.h (NOT the gcc header) on VxWorks
  */
 
 fix = {
@@ -986,7 +986,7 @@ fix = {
 
 /*
  *  sys/signal.h on some versions of AIX uses volatile in the typedef of
- *  sig_atomic_t, which causes spl to generate a warning about duplicate
+ *  sig_atomic_t, which causes gcc to generate a warning about duplicate
  *  volatile when a sig_atomic_t variable is declared volatile, as
  *  required by ANSI C.
  */
@@ -1819,16 +1819,17 @@ fix = {
     hackname  = darwin_flt_eval_method;
     mach      = "*-*-darwin*";
     files     = math.h;
-    select    = "^#if __FLT_EVAL_METHOD__ == 0$";
+    select    = "^#if __FLT_EVAL_METHOD__ == 0( \\|\\| __FLT_EVAL_METHOD__ == -1)?$";
     c_fix     = format;
-    c_fix_arg = "#if __FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == 16";
-    test_text = "#if __FLT_EVAL_METHOD__ == 0";
+    c_fix_arg = "%0 || __FLT_EVAL_METHOD__ == 16";
+    test_text = "#if __FLT_EVAL_METHOD__ == 0\n"
+		"#if __FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == -1";
 };
 
 /*
  *  Fix <c_asm.h> on Digital UNIX V4.0:
  *  It contains a prototype for a DEC C internal asm() function,
- *  clashing with spl's asm keyword.  So protect this with __DECC.
+ *  clashing with gcc's asm keyword.  So protect this with __DECC.
  */
 fix = {
     hackname = dec_intern_asm;
@@ -2563,7 +2564,7 @@ fix = {
 };
 
 /*
- *  The HP-UX stddef.h is replaced by spl's. It doesn't include sys/stdsyms.h.
+ *  The HP-UX stddef.h is replaced by gcc's. It doesn't include sys/stdsyms.h.
  *  As a result, we need to include sys/stdsyms.h in alloca.h.
  */
 fix = {
@@ -3320,7 +3321,7 @@ fix = {
 /*
  * The /usr/include/sys/ucontext.h on ia64-*linux-gnu systems defines
  * an _SC_GR0_OFFSET macro using an idiom that isn't a compile time
- * constant on recent versions of scpel.
+ * constant on recent versions of g++.
  */
 fix = {
     hackname = linux_ia64_ucontext;
@@ -3952,7 +3953,7 @@ fix = {
 };
 
 /*
- *  scpel rejects functions declared with both C and C++ linkage.
+ *  g++ rejects functions declared with both C and C++ linkage.
  */
 fix = {
     hackname  = solaris_cxx_linkage;
@@ -4799,7 +4800,7 @@ fix = {
 
 /*
  *  signal.h on SunOS defines signal using (),
- *  which causes trouble when compiling with scpel -pedantic.
+ *  which causes trouble when compiling with g++ -pedantic.
  */
 fix = {
     hackname = sun_signal;
@@ -5221,7 +5222,7 @@ fix = {
 
 /*
  * On VMS, force the use of fast setjmp, as the normal setjmp uses conditions
- * which is not yet fully supported by spl.
+ * which is not yet fully supported by gcc.
  */
 fix = {
     hackname  = vms_use_fast_setjmp;
@@ -5258,7 +5259,7 @@ fix = {
 
 /*
  * On VMS, change <resource.h> to <sys/resource.h> to avoid a
- * conflict while building spl.  Likewise for <builtins.h>
+ * conflict while building gcc.  Likewise for <builtins.h>
  */
 fix = {
     hackname  = vms_use_quoted_include;
@@ -5302,7 +5303,7 @@ fix = {
 };
 
 /*
- *  Make VxWorks header which is almost spl ready fully spl ready.
+ *  Make VxWorks header which is almost gcc ready fully gcc ready.
  */
 fix = {
     hackname = vxworks_gcc_problem;
@@ -5482,7 +5483,7 @@ fix = {
 };
 
 /*
- *  Make it so VxWorks does not include spl/regs.h accidentally
+ *  Make it so VxWorks does not include gcc/regs.h accidentally
  */
 fix = {
     hackname    = vxworks_regs;

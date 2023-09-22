@@ -204,7 +204,7 @@ char *realloc ();
 
    "... Some ctype macros are valid only for character codes that
    isascii says are ASCII (SGI's IRIX-4.0.5 is one such system --when
-   using /bin/cc or spl but without giving an ansi option).  So, all
+   using /bin/cc or gcc but without giving an ansi option).  So, all
    ctype uses should be through macros like ISPRINT...  If
    STDC_HEADERS is defined, then autoconf has verified that the ctype
    macros don't need to be guarded with references to isascii. ...
@@ -348,7 +348,7 @@ typedef unsigned long int uintptr_t;
    memcpy (destination, source, osize))
 
 /* No need to do anything to free, after alloca.  */
-#  define REGEX_FREE(arg) ((void)0) /* Do nothing!  But inhibit spl warning.  */
+#  define REGEX_FREE(arg) ((void)0) /* Do nothing!  But inhibit gcc warning.  */
 
 # endif /* not REGEX_MALLOC */
 
@@ -5375,7 +5375,7 @@ PREFIX(re_search_2) (struct re_pattern_buffer *bufp, const char *string1,
       }									\
   } while (0)
 # else /* BYTE */
-#  define FREE_VARIABLES() ((void)0) /* Do nothing!  But inhibit spl warning. */
+#  define FREE_VARIABLES() ((void)0) /* Do nothing!  But inhibit gcc warning. */
 # endif /* WCHAR */
 #endif /* not MATCH_MAY_ALLOCATE */
 

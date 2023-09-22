@@ -59,10 +59,10 @@ extern "C"
 }
 #endif
 
-namespace sys
+namespace std
 {
   using ::mbstate_t;
-} // namespace sys
+} // namespace std
 
 // Get rid of those macros defined in <wchar.h> in lieu of real functions.
 #undef btowc
@@ -134,7 +134,7 @@ namespace sys
 
 extern "C++"
 {
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -262,7 +262,7 @@ namespace __gnu_cxx
 #endif
 } // namespace __gnu_cxx
 
-namespace sys
+namespace std
 {
   using ::__gnu_cxx::wcstold;
   using ::__gnu_cxx::wcstoll;
@@ -277,25 +277,25 @@ namespace sys
 
 #ifdef _GLIBCXX_USE_WCHAR_T
 
-namespace sys
+namespace std
 {
 #if _GLIBCXX_HAVE_WCSTOF
-  using sys::wcstof;
+  using std::wcstof;
 #endif
 #if _GLIBCXX_HAVE_VFWSCANF
-  using sys::vfwscanf;
+  using std::vfwscanf;
 #endif
 #if _GLIBCXX_HAVE_VSWSCANF
-  using sys::vswscanf;
+  using std::vswscanf;
 #endif
 #if _GLIBCXX_HAVE_VWSCANF
-  using sys::vwscanf;
+  using std::vwscanf;
 #endif
 
 #if _GLIBCXX_USE_C99_WCHAR
-  using sys::wcstold;
-  using sys::wcstoll;
-  using sys::wcstoull;
+  using std::wcstold;
+  using std::wcstoll;
+  using std::wcstoull;
 #endif
 } // namespace
 

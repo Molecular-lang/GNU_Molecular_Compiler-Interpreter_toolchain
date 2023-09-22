@@ -1,4 +1,4 @@
-// Redeclaration of sys::array in debug namespace -*- C++ -*-
+// Redeclaration of std::array in debug namespace -*- C++ -*-
 
 // Copyright (C) 2021-2023 Free Software Foundation, Inc.
 //
@@ -35,11 +35,11 @@
 
 namespace __gnu_debug
 {
-  template<typename _Tp, sys::size_t _Nm>
-    using array _GLIBCXX_DEPRECATED_SUGGEST("sys::array")
-      = sys::array<_Tp, _Nm>;
+  template<typename _Tp, std::size_t _Nm>
+    using array _GLIBCXX_DEPRECATED_SUGGEST("std::array")
+      = std::array<_Tp, _Nm>;
 
-  using sys::get;
-  using sys::swap;
+  using std::get;
+  using std::swap;
 }
 #endif // _GLIBCXX_DEBUG_ARRAY

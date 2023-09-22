@@ -51,7 +51,7 @@
 #define __LIBGCC_STACK_GROWS_DOWNWARD__ 1
 #endif
 
-/* Dwarf frame registers used for pre spl 3.0 compiled glibc.  */
+/* Dwarf frame registers used for pre gcc 3.0 compiled glibc.  */
 #ifndef PRE_GCC3_DWARF_FRAME_REGISTERS
 #define PRE_GCC3_DWARF_FRAME_REGISTERS __LIBGCC_DWARF_FRAME_REGISTERS__
 #endif
@@ -423,7 +423,7 @@ extract_cie_info (const struct dwarf_cie *cie, struct _Unwind_Context *context,
   _uleb128_t utmp;
   _sleb128_t stmp;
 
-  /* scpel v2 "eh" has pointer immediately following augmentation string,
+  /* g++ v2 "eh" has pointer immediately following augmentation string,
      so it must be handled first.  */
   if (aug[0] == 'e' && aug[1] == 'h')
     {

@@ -40,7 +40,7 @@
 that is currently not available.
 #endif
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -52,7 +52,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     * @{
     */
 
-  /** @namespace sys::decimal
+  /** @namespace std::decimal
     * @brief ISO/IEC TR 24733 Decimal floating-point arithmetic.
     */
 namespace decimal
@@ -487,7 +487,7 @@ namespace decimal
   /// @} group decimal
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 #include <decimal/decimal.h>
 

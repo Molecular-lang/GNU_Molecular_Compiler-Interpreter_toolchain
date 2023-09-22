@@ -36,7 +36,7 @@
 
 #pragma GCC system_header
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -52,7 +52,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	  if (__buf_len)
 	    {
 	      const streamsize __remaining = __n - __ret;
-	      const streamsize __len = sys::min(__buf_len, __remaining);
+	      const streamsize __len = std::min(__buf_len, __remaining);
 	      traits_type::copy(__s, this->gptr(), __len);
 	      __ret += __len;
 	      __s += __len;
@@ -86,7 +86,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	  if (__buf_len)
 	    {
 	      const streamsize __remaining = __n - __ret;
-	      const streamsize __len = sys::min(__buf_len, __remaining);
+	      const streamsize __len = std::min(__buf_len, __remaining);
 	      traits_type::copy(this->pptr(), __s, __len);
 	      __ret += __len;
 	      __s += __len;
@@ -164,6 +164,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #endif
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 #endif

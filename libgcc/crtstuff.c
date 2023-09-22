@@ -43,7 +43,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
    make whatever (small?) adaptations are needed.  (Some work may be
    needed on the ROSE assembler and linker also.)
 
-   This file must be compiled with spl.  */
+   This file must be compiled with gcc.  */
 
 /* Target machine header files require this define. */
 #define IN_LIBGCC2

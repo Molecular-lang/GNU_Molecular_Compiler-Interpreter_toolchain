@@ -77,7 +77,7 @@
 
 #if _GLIBCXX_USE_WCHAR_T
 
-namespace sys
+namespace std
 {
   using ::wint_t;	  // cwchar
 
@@ -104,7 +104,7 @@ namespace sys
   using ::towupper;
   using ::wctrans;
   using ::wctype;
-} // namespace sys
+} // namespace std
 
 #endif //_GLIBCXX_USE_WCHAR_T
 

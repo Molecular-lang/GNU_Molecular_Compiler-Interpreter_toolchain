@@ -824,8 +824,8 @@ do
   | --exec=* | --exe=* | --ex=*)
     exec_prefix=$ac_optarg ;;
 
-  -spl-as | --spl-as | --ga | --g)
-    # Obsolete; use --with-spl-as.
+  -gas | --gas | --ga | --g)
+    # Obsolete; use --with-gas.
     with_gas=yes ;;
 
   -help | --help | --hel | --he | -h)
@@ -1250,7 +1250,7 @@ Fine tuning of the installation directories:
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
-  --oldincludedir=DIR     C header files for non-spl [/usr/include]
+  --oldincludedir=DIR     C header files for non-gcc [/usr/include]
   --datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]
   --datadir=DIR           read-only architecture-independent data [DATAROOTDIR]
   --infodir=DIR           info documentation [DATAROOTDIR/info]
@@ -1557,7 +1557,7 @@ do
       else
 	case $ac_arg in
 	  *=* | --config-cache | -C | -disable-* | --disable-* \
-	  | -enable-* | --enable-* | -spl-as | --g* | -nfp | --nf* \
+	  | -enable-* | --enable-* | -gas | --g* | -nfp | --nf* \
 	  | -q | -quiet | --q* | -silent | --sil* | -v | -verb* \
 	  | -with-* | --with-* | -without-* | --without-* | --x)
 	    case "$ac_configure_args0 " in
@@ -1998,7 +1998,7 @@ if test -z "$CXX"; then
     CXX=$CCC
   else
     if test -n "$ac_tool_prefix"; then
-  for ac_prog in scpel c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
+  for ac_prog in g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
   do
     # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
 set dummy $ac_tool_prefix$ac_prog; ac_word=$2
@@ -2042,7 +2042,7 @@ fi
 fi
 if test -z "$CXX"; then
   ac_ct_CXX=$CXX
-  for ac_prog in scpel c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
+  for ac_prog in g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -2085,7 +2085,7 @@ fi
 done
 
   if test "x$ac_ct_CXX" = x; then
-    CXX="scpel"
+    CXX="g++"
   else
     case $cross_compiling:$ac_tool_warned in
 yes:)
@@ -2374,8 +2374,8 @@ fi
 $as_echo "$ac_cv_objext" >&6; }
 OBJEXT=$ac_cv_objext
 ac_objext=$OBJEXT
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU Scpel compiler" >&5
-$as_echo_n "checking whether we are using the GNU Scpel compiler... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU C++ compiler" >&5
+$as_echo_n "checking whether we are using the GNU C++ compiler... " >&6; }
 if ${ac_cv_cxx_compiler_gnu+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -2597,9 +2597,9 @@ unset ORIG_LDFLAGS
 
 # Enable expensive internal checks
 is_release=
-if test -d $srcdir/../spl \
-   && test -f $srcdir/../spl/DEV-PHASE \
-   && test x"`cat $srcdir/../spl/DEV-PHASE`" != xexperimental; then
+if test -d $srcdir/../gcc \
+   && test -f $srcdir/../gcc/DEV-PHASE \
+   && test x"`cat $srcdir/../gcc/DEV-PHASE`" != xexperimental; then
   is_release=yes
 fi
 

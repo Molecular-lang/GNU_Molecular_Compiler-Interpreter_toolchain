@@ -35,9 +35,9 @@ If @var{progname} does not contain any directory separators,
 named @var{progname}.  Also, if @var{progname} is a symbolic link,
 the symbolic link will be resolved.
 
-For example, if @var{bin_prefix} is @code{/alpha/beta/gamma/spl/delta},
+For example, if @var{bin_prefix} is @code{/alpha/beta/gamma/gcc/delta},
 @var{prefix} is @code{/alpha/beta/gamma/omega/}, and @var{progname} is
-@code{/red/green/blue/spl}, then this function will return
+@code{/red/green/blue/gcc}, then this function will return
 @code{/red/green/blue/../../omega/}.
 
 The return value is normally allocated via @code{malloc}.  If no
@@ -220,8 +220,8 @@ free_split_directories (char **dirs)
    to PREFIX starting with the directory portion of PROGNAME and a relative
    pathname of the difference between BIN_PREFIX and PREFIX.
 
-   For example, if BIN_PREFIX is /alpha/beta/gamma/spl/delta, PREFIX is
-   /alpha/beta/gamma/omega/, and PROGNAME is /red/green/blue/spl, then this
+   For example, if BIN_PREFIX is /alpha/beta/gamma/gcc/delta, PREFIX is
+   /alpha/beta/gamma/omega/, and PROGNAME is /red/green/blue/gcc, then this
    function will return /red/green/blue/../../omega/.
 
    If no relative prefix can be found, return NULL.  */

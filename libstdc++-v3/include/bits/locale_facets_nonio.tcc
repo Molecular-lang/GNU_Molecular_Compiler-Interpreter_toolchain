@@ -32,7 +32,7 @@
 
 #pragma GCC system_header
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -326,7 +326,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL_OR_CXX11
 		// Add the ending grouping.
 		__grouping_tmp += static_cast<char>(__testdecfound ? __last_pos
 						                   : __n);
-		if (!sys::__verify_grouping(__lc->_M_grouping,
+		if (!std::__verify_grouping(__lc->_M_grouping,
 					    __lc->_M_grouping_size,
 					    __grouping_tmp))
 		  __err |= ios_base::failbit;
@@ -360,7 +360,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL_OR_CXX11
       string __str;
       __beg = __intl ? _M_extract<true>(__beg, __end, __io, __err, __str)
                      : _M_extract<false>(__beg, __end, __io, __err, __str);
-      sys::__convert_to_v(__str.c_str(), __units, __err, _S_get_c_locale());
+      std::__convert_to_v(__str.c_str(), __units, __err, _S_get_c_locale());
       return __beg;
     }
 #endif
@@ -374,7 +374,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL_OR_CXX11
       string __str;
       __beg = __intl ? _M_extract<true>(__beg, __end, __io, __err, __str)
 	             : _M_extract<false>(__beg, __end, __io, __err, __str);
-      sys::__convert_to_v(__str.c_str(), __units, __err, _S_get_c_locale());
+      std::__convert_to_v(__str.c_str(), __units, __err, _S_get_c_locale());
       return __beg;
     }
 
@@ -412,7 +412,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL_OR_CXX11
       string __str;
       __beg = __intl ? _M_extract<true>(__beg, __end, __io, __err, __str)
 	             : _M_extract<false>(__beg, __end, __io, __err, __str);
-      sys::__convert_to_v(__str.c_str(), __units, __err, _S_get_c_locale());
+      std::__convert_to_v(__str.c_str(), __units, __err, _S_get_c_locale());
       return __beg;
     }
 #endif
@@ -479,7 +479,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL_OR_CXX11
 		  {
 		    __value.assign(2 * __paddec, char_type());
 		    _CharT* __vend =
-		      sys::__add_grouping(&__value[0], __lc->_M_thousands_sep,
+		      std::__add_grouping(&__value[0], __lc->_M_thousands_sep,
 					  __lc->_M_grouping,
 					  __lc->_M_grouping_size,
 					  __beg, __beg + __paddec);
@@ -571,7 +571,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL_OR_CXX11
 	      }
 	    
 	    // Write resulting, fully-formatted string to output iterator.
-	    __s = sys::__write(__s, __res.data(), __len);
+	    __s = std::__write(__s, __res.data(), __len);
 	  }
 	__io.width(0);
 	return __s;    
@@ -601,14 +601,14 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL_OR_CXX11
       char* __cs = static_cast<char*>(__builtin_alloca(__cs_size));
       // _GLIBCXX_RESOLVE_LIB_DEFECTS
       // 328. Bad sprintf format modifier in money_put<>::do_put()
-      int __len = sys::__convert_from_v(_S_get_c_locale(), __cs, __cs_size,
+      int __len = std::__convert_from_v(_S_get_c_locale(), __cs, __cs_size,
 					"%.*Lf", 0, __units);
       // If the buffer was not large enough, try again with the correct size.
       if (__len >= __cs_size)
 	{
 	  __cs_size = __len + 1;
 	  __cs = static_cast<char*>(__builtin_alloca(__cs_size));
-	  __len = sys::__convert_from_v(_S_get_c_locale(), __cs, __cs_size,
+	  __len = std::__convert_from_v(_S_get_c_locale(), __cs, __cs_size,
 					"%.*Lf", 0, __units);
 	}
 #else
@@ -616,7 +616,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL_OR_CXX11
       const int __cs_size =
 	__gnu_cxx::__numeric_traits<long double>::__max_exponent10 + 3;
       char* __cs = static_cast<char*>(__builtin_alloca(__cs_size));
-      int __len = sys::__convert_from_v(_S_get_c_locale(), __cs, 0, "%.*Lf", 
+      int __len = std::__convert_from_v(_S_get_c_locale(), __cs, 0, "%.*Lf", 
 					0, __units);
 #endif
       string_type __digits(__len, char_type());
@@ -1123,7 +1123,7 @@ _GLIBCXX_END_NAMESPACE_LDBL_OR_CXX11
 	  // Find smallest matching string.
 	  size_t __minlen = __lengths[0];
 	  for (size_t __i2 = 1; __i2 < __nmatches; ++__i2)
-	    __minlen = sys::min(__minlen, __lengths[__i2]);
+	    __minlen = std::min(__minlen, __lengths[__i2]);
 	  ++__pos;
 	  ++__beg;
 	  if (__pos == __minlen)
@@ -1165,7 +1165,7 @@ _GLIBCXX_END_NAMESPACE_LDBL_OR_CXX11
 		{
 		  __minlen = __lengths[0];
 		  for (size_t __i5 = 1; __i5 < __nmatches; ++__i5)
-		    __minlen = sys::min(__minlen, __lengths[__i5]);
+		    __minlen = std::min(__minlen, __lengths[__i5]);
 		}
 	      else
 		{
@@ -1670,7 +1670,7 @@ _GLIBCXX_END_NAMESPACE_LDBL_OR_CXX11
       __tp._M_put(__res, __maxlen, __fmt, __tm);
 
       // Write resulting, fully-formatted string to output iterator.
-      return sys::__write(__s, __res, char_traits<char_type>::length(__res));
+      return std::__write(__s, __res, char_traits<char_type>::length(__res));
     }
 
 
@@ -1893,6 +1893,6 @@ _GLIBCXX_END_NAMESPACE_LDBL_OR_CXX11
 #endif
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 #endif

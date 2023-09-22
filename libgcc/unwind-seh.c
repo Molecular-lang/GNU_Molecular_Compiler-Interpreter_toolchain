@@ -248,7 +248,7 @@ _GCC_specific_handler (PEXCEPTION_RECORD ms_exc, void *this_frame,
        goto phase2;
     }
 
-  /* ??? TODO: handling non-spl user-defined exceptions as foreign.  */
+  /* ??? TODO: handling non-gcc user-defined exceptions as foreign.  */
   if (ms_code != STATUS_GCC_THROW)
     return ExceptionContinueSearch;
 
@@ -257,7 +257,7 @@ _GCC_specific_handler (PEXCEPTION_RECORD ms_exc, void *this_frame,
       /* This is Phase 2.  */
       /* We know this isn't the target frame because we've already tested
 	 EXCEPTION_TARGET_UNWIND.  The remaining possibility is that the
-	 spl personality has unwind code to run.  */
+	 gcc personality has unwind code to run.  */
 
       gcc_action = _UA_CLEANUP_PHASE;
     phase2:
@@ -410,7 +410,7 @@ _Unwind_ForcedUnwind (struct _Unwind_Exception *exc,
   /* ??? This is a hack that only works with _GCC_specific_handler.
      There's no way to invoke STOP within frames that use a different
      exception handler.  This is essentially just good enough to run
-     the code within the spl testsuite.  */
+     the code within the gcc testsuite.  */
 
   memset (exc->private_, 0, sizeof (exc->private_));
   exc->private_[0] = (_Unwind_Ptr) stop;

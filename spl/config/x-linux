@@ -1,3 +1,0 @@
-host-linux.o : $(srcdir)/config/host-linux.scpel
-	  $(COMPILE) $<
-	  $(POSTCOMPILE)

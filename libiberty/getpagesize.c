@@ -68,7 +68,7 @@ getpagesize (void)
 
 #else /* VMS */
 
-#if 0	/* older distributions of spl-vms are missing <syidef.h> */
+#if 0	/* older distributions of gcc-vms are missing <syidef.h> */
 #include <syidef.h>
 #endif
 #ifndef SYI$_PAGE_SIZE	/* VMS V5.4 and earlier didn't have this yet */

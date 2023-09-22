@@ -43,7 +43,7 @@ namespace __gnu_debug
       // No need to consider before_begin as this function is only used in
       // _M_can_advance which won't be used for forward_list iterators.
       if (_M_is_begin())
-	return sys::make_pair(0, __dp_exact);
+	return std::make_pair(0, __dp_exact);
 
       if (_M_is_end())
 	return _SeqTraits::_S_size(*_M_get_sequence());
@@ -52,7 +52,7 @@ namespace __gnu_debug
 	= __get_distance(_M_get_sequence()->_M_base().begin(), base());
 
       if (__res.second == __dp_equality)
-	return sys::make_pair(1, __dp_sign);
+	return std::make_pair(1, __dp_sign);
 
       return __res;
     }
@@ -70,13 +70,13 @@ namespace __gnu_debug
 	return _SeqTraits::_S_size(*_M_get_sequence());
 
       if (_M_is_end())
-	return sys::make_pair(0, __dp_exact);
+	return std::make_pair(0, __dp_exact);
 
       typename _Distance_traits<_Iterator>::__type __res
 	= __get_distance(base(), _M_get_sequence()->_M_base().end());
 
       if (__res.second == __dp_equality)
-	return sys::make_pair(1, __dp_sign);
+	return std::make_pair(1, __dp_sign);
 
       return __res;
     }
@@ -92,7 +92,7 @@ namespace __gnu_debug
       if (__n == 0)
 	return true;
 
-      sys::pair<difference_type, _Distance_precision> __dist = __n < 0
+      std::pair<difference_type, _Distance_precision> __dist = __n < 0
 	? _M_get_distance_from_begin()
 	: _M_get_distance_to_end();
 
@@ -108,7 +108,7 @@ namespace __gnu_debug
     template<typename _Diff>
       bool
       _Safe_iterator<_Iterator, _Sequence, _Category>::
-      _M_can_advance(const sys::pair<_Diff, _Distance_precision>& __dist,
+      _M_can_advance(const std::pair<_Diff, _Distance_precision>& __dist,
 		     int __way) const
       {
 	return __dist.second == __dp_exact
@@ -134,22 +134,22 @@ namespace __gnu_debug
       if (this->_M_is_before_begin())
 	{
 	  if (__rhs._M_is_begin())
-	    return sys::make_pair(1, __dp_exact);
+	    return std::make_pair(1, __dp_exact);
 
 	  return __seq_dist.second == __dp_exact
-	    ? sys::make_pair(__seq_dist.first + 1, __dp_exact)
+	    ? std::make_pair(__seq_dist.first + 1, __dp_exact)
 	    : __seq_dist;
 	}
 
       if (this->_M_is_begin())
 	{
 	  if (__rhs._M_is_before_begin())
-	    return sys::make_pair(-1, __dp_exact);
+	    return std::make_pair(-1, __dp_exact);
 
 	  if (__rhs._M_is_end())
 	    return __seq_dist;
 
-	  return sys::make_pair(__seq_dist.first,
+	  return std::make_pair(__seq_dist.first,
 				__seq_dist.second == __dp_exact
 				? __dp_sign_max_size : __seq_dist.second);
 	}
@@ -158,40 +158,40 @@ namespace __gnu_debug
 	{
 	  if (__rhs._M_is_before_begin())
 	    return __seq_dist.second == __dp_exact
-	      ? sys::make_pair(-__seq_dist.first - 1, __dp_exact)
-	      : sys::make_pair(-__seq_dist.first, __dp_sign);
+	      ? std::make_pair(-__seq_dist.first - 1, __dp_exact)
+	      : std::make_pair(-__seq_dist.first, __dp_sign);
 
 	  if (__rhs._M_is_begin())
-	    return sys::make_pair(-__seq_dist.first, __seq_dist.second);
+	    return std::make_pair(-__seq_dist.first, __seq_dist.second);
 
-	  return sys::make_pair(-__seq_dist.first,
+	  return std::make_pair(-__seq_dist.first,
 				__seq_dist.second == __dp_exact
 				? __dp_sign_max_size : __seq_dist.second);
 	}
 
       if (__rhs._M_is_before_begin())
 	return __seq_dist.second == __dp_exact
-	  ? sys::make_pair(__seq_dist.first - 1, __dp_exact)
-	  : sys::make_pair(-__seq_dist.first, __dp_sign);
+	  ? std::make_pair(__seq_dist.first - 1, __dp_exact)
+	  : std::make_pair(-__seq_dist.first, __dp_sign);
 
       if (__rhs._M_is_begin())
-	return sys::make_pair(-__seq_dist.first,
+	return std::make_pair(-__seq_dist.first,
 			      __seq_dist.second == __dp_exact
 			      ? __dp_sign_max_size : __seq_dist.second);
 
       if (__rhs._M_is_end())
-	return sys::make_pair(__seq_dist.first,
+	return std::make_pair(__seq_dist.first,
 			      __seq_dist.second == __dp_exact
 			      ? __dp_sign_max_size : __seq_dist.second);
 
-      return sys::make_pair(1, __dp_equality);
+      return std::make_pair(1, __dp_equality);
     }
 
   template<typename _Iterator, typename _Sequence, typename _Category>
     bool
     _Safe_iterator<_Iterator, _Sequence, _Category>::
     _M_valid_range(const _Safe_iterator& __rhs,
-		   sys::pair<difference_type, _Distance_precision>& __dist,
+		   std::pair<difference_type, _Distance_precision>& __dist,
 		   bool __check_dereferenceable) const
     {
       if (_M_singular() || __rhs._M_singular() || !_M_can_compare(__rhs))
@@ -213,9 +213,9 @@ namespace __gnu_debug
 
   template<typename _Iterator, typename _Sequence>
     bool
-    _Safe_iterator<_Iterator, _Sequence, sys::random_access_iterator_tag>::
+    _Safe_iterator<_Iterator, _Sequence, std::random_access_iterator_tag>::
     _M_valid_range(const _Safe_iterator& __rhs,
-		   sys::pair<difference_type,
+		   std::pair<difference_type,
 			     _Distance_precision>& __dist) const
     {
       if (this->_M_singular() || __rhs._M_singular()
@@ -223,7 +223,7 @@ namespace __gnu_debug
 	return false;
 
       /* Determine iterators order */
-      __dist = sys::make_pair(__rhs.base() - this->base(), __dp_exact);
+      __dist = std::make_pair(__rhs.base() - this->base(), __dp_exact);
 
       // If range is not empty first iterator must be dereferenceable.
       return __dist.first == 0
@@ -231,14 +231,14 @@ namespace __gnu_debug
     }
 } // namespace __gnu_debug
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
   template<typename _Ite, typename _Seq>
     _Ite
     __niter_base(const ::__gnu_debug::_Safe_iterator<_Ite, _Seq,
-		 sys::random_access_iterator_tag>& __it)
+		 std::random_access_iterator_tag>& __it)
     { return __it.base(); }
 
   template<bool _IsMove,
@@ -254,10 +254,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       __glibcxx_check_can_increment_dist(__result, __dist, 1);
 
       if (__dist.second > ::__gnu_debug::__dp_equality)
-	return sys::__copy_move_a<_IsMove>(__first.base(), __last.base(),
+	return std::__copy_move_a<_IsMove>(__first.base(), __last.base(),
 					   __result);
 
-      return sys::__copy_move_a1<_IsMove>(__first, __last, __result);
+      return std::__copy_move_a1<_IsMove>(__first, __last, __result);
     }
 
   template<bool _IsMove,
@@ -273,10 +273,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       if (__dist.second > ::__gnu_debug::__dp_sign
 	  && __result._M_can_advance(__dist.first, true))
 	return ::__gnu_debug::_Safe_iterator<_Ite, _Seq, _Cat>(
-		sys::__copy_move_a<_IsMove>(__first, __last, __result.base()),
+		std::__copy_move_a<_IsMove>(__first, __last, __result.base()),
 		__result._M_sequence);
 
-      return sys::__copy_move_a1<_IsMove>(__first, __last, __result);
+      return std::__copy_move_a1<_IsMove>(__first, __last, __result);
     }
 
   template<bool _IsMove,
@@ -297,15 +297,15 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	  if (__dist.second > ::__gnu_debug::__dp_sign
 	      && __result._M_can_advance(__dist.first, true))
 	    return ::__gnu_debug::_Safe_iterator<_OIte, _OSeq, _OCat>(
-	      sys::__copy_move_a<_IsMove>(__first.base(), __last.base(),
+	      std::__copy_move_a<_IsMove>(__first.base(), __last.base(),
 					  __result.base()),
 	      __result._M_sequence);
 
-	  return sys::__copy_move_a<_IsMove>(__first.base(), __last.base(),
+	  return std::__copy_move_a<_IsMove>(__first.base(), __last.base(),
 					     __result);
 	}
 
-      return sys::__copy_move_a1<_IsMove>(__first, __last, __result);
+      return std::__copy_move_a1<_IsMove>(__first, __last, __result);
     }
 
   template<bool _IsMove,
@@ -321,10 +321,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       __glibcxx_check_can_increment_dist(__result, __dist, -1);
 
       if (__dist.second > ::__gnu_debug::__dp_equality)
-	return sys::__copy_move_backward_a<_IsMove>(
+	return std::__copy_move_backward_a<_IsMove>(
 		__first.base(), __last.base(), __result);
 
-      return sys::__copy_move_backward_a1<_IsMove>(__first, __last, __result);
+      return std::__copy_move_backward_a1<_IsMove>(__first, __last, __result);
     }
 
   template<bool _IsMove,
@@ -340,11 +340,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       if (__dist.second > ::__gnu_debug::__dp_sign
 	  && __result._M_can_advance(-__dist.first, true))
 	return ::__gnu_debug::_Safe_iterator<_Ite, _Seq, _Cat>(
-		sys::__copy_move_backward_a<_IsMove>(__first, __last,
+		std::__copy_move_backward_a<_IsMove>(__first, __last,
 						     __result.base()),
 		__result._M_sequence);
 
-      return sys::__copy_move_backward_a1<_IsMove>(__first, __last, __result);
+      return std::__copy_move_backward_a1<_IsMove>(__first, __last, __result);
     }
 
   template<bool _IsMove,
@@ -365,15 +365,15 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	  if (__dist.second > ::__gnu_debug::__dp_sign
 	      && __result._M_can_advance(-__dist.first, true))
 	    return ::__gnu_debug::_Safe_iterator<_OIte, _OSeq, _OCat>(
-	      sys::__copy_move_backward_a<_IsMove>(__first.base(), __last.base(),
+	      std::__copy_move_backward_a<_IsMove>(__first.base(), __last.base(),
 						   __result.base()),
 	      __result._M_sequence);
 
-	  return sys::__copy_move_backward_a<_IsMove>(
+	  return std::__copy_move_backward_a<_IsMove>(
 	    __first.base(), __last.base(), __result);
 	}
 
-      return sys::__copy_move_backward_a1<_IsMove>(__first, __last, __result);
+      return std::__copy_move_backward_a1<_IsMove>(__first, __last, __result);
     }
 
   template<typename _Ite, typename _Seq, typename _Cat, typename _Tp>
@@ -386,9 +386,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       __glibcxx_check_valid_range2(__first, __last, __dist);
 
       if (__dist.second > ::__gnu_debug::__dp_equality)
-	sys::__fill_a(__first.base(), __last.base(), __value);
+	std::__fill_a(__first.base(), __last.base(), __value);
 
-      sys::__fill_a1(__first, __last, __value);
+      std::__fill_a1(__first, __last, __value);
     }
 
   template<typename _Ite, typename _Seq, typename _Cat, typename _Size,
@@ -396,7 +396,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     ::__gnu_debug::_Safe_iterator<_Ite, _Seq, _Cat>
     __fill_n_a(const ::__gnu_debug::_Safe_iterator<_Ite, _Seq, _Cat>& __first,
 	       _Size __n, const _Tp& __value,
-	       sys::input_iterator_tag)
+	       std::input_iterator_tag)
     {
 #if __cplusplus >= 201103L
       static_assert(is_integral<_Size>{}, "fill_n must pass integral size");
@@ -408,10 +408,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       __glibcxx_check_can_increment(__first, __n);
       if (__first._M_can_advance(__n, true))
 	return ::__gnu_debug::_Safe_iterator<_Ite, _Seq, _Cat>(
-		sys::__fill_n_a(__first.base(), __n, __value, _Cat()),
+		std::__fill_n_a(__first.base(), __n, __value, _Cat()),
 		__first._M_sequence);
 
-      return sys::__fill_n_a1(__first, __n, __value);
+      return std::__fill_n_a1(__first, __n, __value);
     }
 
   template<typename _II1, typename _Seq1, typename _Cat1, typename _II2>
@@ -426,9 +426,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       __glibcxx_check_can_increment_dist(__first2, __dist, 1);
 
       if (__dist.second > ::__gnu_debug::__dp_equality)
-	return sys::__equal_aux(__first1.base(), __last1.base(), __first2);
+	return std::__equal_aux(__first1.base(), __last1.base(), __first2);
 
-      return sys::__equal_aux1(__first1, __last1, __first2);
+      return std::__equal_aux1(__first1, __last1, __first2);
     }
 
   template<typename _II1, typename _II2, typename _Seq2, typename _Cat2>
@@ -442,9 +442,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
       if (__dist.second > ::__gnu_debug::__dp_sign
 	  && __first2._M_can_advance(__dist.first, true))
-	return sys::__equal_aux(__first1, __last1, __first2.base());
+	return std::__equal_aux(__first1, __last1, __first2.base());
 
-      return sys::__equal_aux1(__first1, __last1, __first2);
+      return std::__equal_aux1(__first1, __last1, __first2);
     }
 
   template<typename _II1, typename _Seq1, typename _Cat1,
@@ -463,9 +463,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	{
 	  if (__dist.second > ::__gnu_debug::__dp_sign &&
 	      __first2._M_can_advance(__dist.first, true))
-	    return sys::__equal_aux(__first1.base(), __last1.base(),
+	    return std::__equal_aux(__first1.base(), __last1.base(),
 				    __first2.base());
-	  return sys::__equal_aux(__first1.base(), __last1.base(), __first2);
+	  return std::__equal_aux(__first1.base(), __last1.base(), __first2);
 	}
 
       return __equal_aux1(__first1, __last1, __first2);
@@ -484,10 +484,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       __glibcxx_check_valid_range(__first2, __last2);
 
       if (__dist1.second > ::__gnu_debug::__dp_equality)
-	return sys::__lexicographical_compare_aux(__first1.base(),
+	return std::__lexicographical_compare_aux(__first1.base(),
 						  __last1.base(),
 						  __first2, __last2);
-      return sys::__lexicographical_compare_aux1(__first1, __last1,
+      return std::__lexicographical_compare_aux1(__first1, __last1,
 						 __first2, __last2);
     }
 
@@ -504,10 +504,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       __glibcxx_check_valid_range2(__first2, __last2, __dist2);
 
       if (__dist2.second > ::__gnu_debug::__dp_equality)
-	return sys::__lexicographical_compare_aux(__first1, __last1,
+	return std::__lexicographical_compare_aux(__first1, __last1,
 						  __first2.base(),
 						  __last2.base());
-      return sys::__lexicographical_compare_aux1(__first1, __last1,
+      return std::__lexicographical_compare_aux1(__first1, __last1,
 						 __first2, __last2);
     }
 
@@ -528,24 +528,24 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       if (__dist1.second > ::__gnu_debug::__dp_equality)
 	{
 	  if (__dist2.second > ::__gnu_debug::__dp_equality)
-	    return sys::__lexicographical_compare_aux(__first1.base(),
+	    return std::__lexicographical_compare_aux(__first1.base(),
 						      __last1.base(),
 						      __first2.base(),
 						      __last2.base());
-	  return sys::__lexicographical_compare_aux(__first1.base(),
+	  return std::__lexicographical_compare_aux(__first1.base(),
 						    __last1.base(),
 						    __first2, __last2);
 	}
 
       if (__dist2.second > ::__gnu_debug::__dp_equality)
-	return sys::__lexicographical_compare_aux(__first1, __last1,
+	return std::__lexicographical_compare_aux(__first1, __last1,
 						  __first2.base(),
 						  __last2.base());
-      return sys::__lexicographical_compare_aux1(__first1, __last1,
+      return std::__lexicographical_compare_aux1(__first1, __last1,
 						 __first2, __last2);
     }
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 #endif

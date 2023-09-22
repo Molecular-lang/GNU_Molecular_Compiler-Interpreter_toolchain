@@ -1,4 +1,4 @@
-## Makefile for the include subdirectory of the GNU Scpel Standard library.
+## Makefile for the include subdirectory of the GNU C++ Standard library.
 ##
 ## Copyright (C) 2001-2023 Free Software Foundation, Inc.
 ##
@@ -23,14 +23,90 @@
 include $(top_srcdir)/fragment.am
 
 # Standard C++ includes.
-std_srcdir =
-std_builddir =
-std_freestanding =
+std_srcdir = ${glibcxx_srcdir}/include/std
+std_builddir = .
+std_freestanding = \
+	${std_srcdir}/algorithm \
+	${std_srcdir}/array \
+	${std_srcdir}/atomic \
+	${std_srcdir}/bit \
+	${std_srcdir}/bitset \
+	${std_srcdir}/concepts \
+	${std_srcdir}/coroutine \
+	${std_srcdir}/expected \
+	${std_srcdir}/functional \
+	${std_srcdir}/iterator \
+	${std_srcdir}/limits \
+	${std_srcdir}/memory \
+	${std_srcdir}/numbers \
+	${std_srcdir}/numeric \
+	${std_srcdir}/optional \
+	${std_srcdir}/ranges \
+	${std_srcdir}/ratio \
+	${std_srcdir}/scoped_allocator \
+	${std_srcdir}/source_location \
+	${std_srcdir}/span \
+	${std_srcdir}/string_view \
+	${std_srcdir}/tuple \
+	${std_srcdir}/type_traits \
+	${std_srcdir}/typeindex \
+	${std_srcdir}/utility \
+	${std_srcdir}/variant \
+	${std_srcdir}/version
 
 if !GLIBCXX_HOSTED
-std_headers =
+std_headers = ${std_freestanding}
 else GLIBCXX_HOSTED
-std_headers =
+std_headers = \
+	${std_freestanding} \
+	${std_srcdir}/any \
+	${std_srcdir}/barrier \
+	${std_srcdir}/charconv \
+	${std_srcdir}/chrono \
+	${std_srcdir}/codecvt \
+	${std_srcdir}/complex \
+	${std_srcdir}/condition_variable \
+	${std_srcdir}/deque \
+	${std_srcdir}/execution \
+	${std_srcdir}/filesystem \
+	${std_srcdir}/format \
+	${std_srcdir}/forward_list \
+	${std_srcdir}/fstream \
+	${std_srcdir}/future \
+	${std_srcdir}/iomanip \
+	${std_srcdir}/ios \
+	${std_srcdir}/iosfwd \
+	${std_srcdir}/iostream \
+	${std_srcdir}/istream \
+	${std_srcdir}/latch \
+	${std_srcdir}/list \
+	${std_srcdir}/locale \
+	${std_srcdir}/map \
+	${std_srcdir}/memory_resource \
+	${std_srcdir}/mutex \
+	${std_srcdir}/ostream \
+	${std_srcdir}/queue \
+	${std_srcdir}/random \
+	${std_srcdir}/regex \
+	${std_srcdir}/semaphore \
+	${std_srcdir}/set \
+	${std_srcdir}/shared_mutex \
+	${std_srcdir}/spanstream \
+	${std_srcdir}/sstream \
+	${std_srcdir}/syncstream \
+	${std_srcdir}/stack \
+	${std_srcdir}/stacktrace \
+	${std_srcdir}/stdexcept \
+	${std_srcdir}/stdfloat \
+	${std_srcdir}/stop_token \
+	${std_srcdir}/streambuf \
+	${std_srcdir}/string \
+	${std_srcdir}/system_error \
+	${std_srcdir}/thread \
+	${std_srcdir}/unordered_map \
+	${std_srcdir}/unordered_set \
+	${std_srcdir}/valarray \
+	${std_srcdir}/vector
 endif GLIBCXX_HOSTED
 
 bits_srcdir = ${glibcxx_srcdir}/include/bits
@@ -78,6 +154,7 @@ bits_freestanding = \
 	${bits_srcdir}/stl_raw_storage_iter.h \
 	${bits_srcdir}/stl_relops.h \
 	${bits_srcdir}/stl_uninitialized.h \
+	${bits_srcdir}/version.h \
 	${bits_srcdir}/string_view.tcc \
 	${bits_srcdir}/uniform_int_dist.h \
 	${bits_srcdir}/unique_ptr.h \
@@ -195,13 +272,43 @@ endif GLIBCXX_HOSTED
 bits_host_headers = \
 	${glibcxx_srcdir}/${CPU_OPT_BITS_RANDOM}
 
-bits_sup_srcdir =
-bits_sup_headers =
+bits_sup_srcdir = ${glibcxx_srcdir}/libsupc++
+bits_sup_headers = \
+	${bits_sup_srcdir}/atomic_lockfree_defines.h \
+	${bits_sup_srcdir}/cxxabi_forced.h \
+	${bits_sup_srcdir}/cxxabi_init_exception.h \
+	${bits_sup_srcdir}/exception.h \
+	${bits_sup_srcdir}/exception_defines.h \
+	${bits_sup_srcdir}/exception_ptr.h \
+	${bits_sup_srcdir}/hash_bytes.h \
+	${bits_sup_srcdir}/nested_exception.h
 
 # C++17 Parallel Algorithm Includes.
-pstl_srcdir =
-pstl_builddir =
-pstl_headers =
+pstl_srcdir = ${glibcxx_srcdir}/include/pstl
+pstl_builddir = ./pstl
+pstl_headers = \
+	${pstl_srcdir}/algorithm_fwd.h \
+	${pstl_srcdir}/algorithm_impl.h \
+	${pstl_srcdir}/execution_defs.h \
+	${pstl_srcdir}/execution_impl.h \
+	${pstl_srcdir}/glue_algorithm_defs.h \
+	${pstl_srcdir}/glue_algorithm_impl.h \
+	${pstl_srcdir}/glue_execution_defs.h \
+	${pstl_srcdir}/glue_memory_defs.h \
+	${pstl_srcdir}/glue_memory_impl.h \
+	${pstl_srcdir}/glue_numeric_defs.h \
+	${pstl_srcdir}/glue_numeric_impl.h \
+	${pstl_srcdir}/memory_impl.h \
+	${pstl_srcdir}/numeric_fwd.h \
+	${pstl_srcdir}/numeric_impl.h \
+	${pstl_srcdir}/parallel_backend.h \
+	${pstl_srcdir}/parallel_backend_tbb.h \
+	${pstl_srcdir}/parallel_backend_serial.h \
+	${pstl_srcdir}/parallel_backend_utils.h \
+	${pstl_srcdir}/parallel_impl.h \
+	${pstl_srcdir}/pstl_config.h \
+	${pstl_srcdir}/unseq_backend_simd.h \
+	${pstl_srcdir}/utils.h
 
 backward_srcdir = ${glibcxx_srcdir}/include/backward
 backward_builddir = ./backward
@@ -574,13 +681,81 @@ ext_compat_headers = \
 ext_host_headers = \
 	${glibcxx_srcdir}/${CPU_OPT_EXT_RANDOM}
 
-tr1_srcdir =
-tr1_builddir =
-tr1_headers =
+tr1_srcdir = ${glibcxx_srcdir}/include/tr1
+tr1_builddir = ./tr1
+tr1_headers = \
+	${tr1_srcdir}/array \
+	${tr1_srcdir}/bessel_function.tcc \
+	${tr1_srcdir}/beta_function.tcc \
+	${tr1_srcdir}/ccomplex \
+	${tr1_srcdir}/cctype \
+	${tr1_srcdir}/cfenv \
+	${tr1_srcdir}/cfloat \
+	${tr1_srcdir}/cinttypes \
+	${tr1_srcdir}/climits \
+	${tr1_srcdir}/cmath \
+	${tr1_srcdir}/complex \
+	${tr1_srcdir}/complex.h \
+	${tr1_srcdir}/cstdarg \
+	${tr1_srcdir}/cstdbool \
+	${tr1_srcdir}/cstdint \
+	${tr1_srcdir}/cstdio \
+	${tr1_srcdir}/cstdlib \
+	${tr1_srcdir}/ctgmath \
+	${tr1_srcdir}/ctime \
+	${tr1_srcdir}/ctype.h \
+	${tr1_srcdir}/cwchar \
+	${tr1_srcdir}/cwctype \
+	${tr1_srcdir}/ell_integral.tcc \
+	${tr1_srcdir}/exp_integral.tcc \
+	${tr1_srcdir}/fenv.h \
+	${tr1_srcdir}/float.h \
+	${tr1_srcdir}/functional \
+	${tr1_srcdir}/functional_hash.h \
+	${tr1_srcdir}/gamma.tcc \
+	${tr1_srcdir}/hypergeometric.tcc \
+	${tr1_srcdir}/hashtable.h \
+	${tr1_srcdir}/hashtable_policy.h \
+	${tr1_srcdir}/inttypes.h \
+	${tr1_srcdir}/limits.h \
+	${tr1_srcdir}/math.h \
+	${tr1_srcdir}/memory \
+	${tr1_srcdir}/modified_bessel_func.tcc \
+	${tr1_srcdir}/poly_hermite.tcc \
+	${tr1_srcdir}/poly_laguerre.tcc \
+	${tr1_srcdir}/legendre_function.tcc \
+	${tr1_srcdir}/random \
+	${tr1_srcdir}/random.h \
+	${tr1_srcdir}/random.tcc \
+	${tr1_srcdir}/regex \
+	${tr1_srcdir}/riemann_zeta.tcc \
+	${tr1_srcdir}/shared_ptr.h \
+	${tr1_srcdir}/special_function_util.h \
+	${tr1_srcdir}/stdarg.h \
+	${tr1_srcdir}/stdbool.h \
+	${tr1_srcdir}/stdint.h \
+	${tr1_srcdir}/stdio.h \
+	${tr1_srcdir}/stdlib.h \
+	${tr1_srcdir}/tgmath.h \
+	${tr1_srcdir}/tuple \
+	${tr1_srcdir}/type_traits \
+	${tr1_srcdir}/unordered_map \
+	${tr1_srcdir}/unordered_map.h \
+	${tr1_srcdir}/unordered_set \
+	${tr1_srcdir}/unordered_set.h \
+	${tr1_srcdir}/utility \
+	${tr1_srcdir}/wchar.h \
+	${tr1_srcdir}/wctype.h
 
-tr2_srcdir =
-tr2_builddir =
-tr2_headers =
+tr2_srcdir = ${glibcxx_srcdir}/include/tr2
+tr2_builddir = ./tr2
+tr2_headers = \
+	${tr2_srcdir}/bool_set \
+	${tr2_srcdir}/bool_set.tcc \
+	${tr2_srcdir}/dynamic_bitset \
+	${tr2_srcdir}/dynamic_bitset.tcc \
+	${tr2_srcdir}/ratio \
+	${tr2_srcdir}/type_traits
 
 decimal_srcdir = ${glibcxx_srcdir}/include/decimal
 decimal_builddir = ./decimal
@@ -589,13 +764,72 @@ decimal_headers = \
 	${decimal_srcdir}/decimal.h
 
 # Post-C++11 TS's
-experimental_srcdir =
-experimental_builddir =
-experimental_headers =
+experimental_srcdir = ${glibcxx_srcdir}/include/experimental
+experimental_builddir = ./experimental
+experimental_headers = \
+	${experimental_srcdir}/algorithm \
+	${experimental_srcdir}/any \
+	${experimental_srcdir}/array \
+	${experimental_srcdir}/buffer \
+	${experimental_srcdir}/chrono \
+	${experimental_srcdir}/contract \
+	${experimental_srcdir}/deque \
+	${experimental_srcdir}/executor \
+	${experimental_srcdir}/forward_list \
+	${experimental_srcdir}/functional \
+	${experimental_srcdir}/internet \
+	${experimental_srcdir}/io_context \
+	${experimental_srcdir}/iterator \
+	${experimental_srcdir}/list \
+	${experimental_srcdir}/map \
+	${experimental_srcdir}/memory \
+	${experimental_srcdir}/memory_resource \
+	${experimental_srcdir}/net \
+	${experimental_srcdir}/netfwd \
+	${experimental_srcdir}/numeric \
+	${experimental_srcdir}/optional \
+	${experimental_srcdir}/propagate_const \
+	${experimental_srcdir}/random \
+	${experimental_srcdir}/ratio \
+	${experimental_srcdir}/regex \
+	${experimental_srcdir}/scope \
+	${experimental_srcdir}/set \
+	${experimental_srcdir}/simd \
+	${experimental_srcdir}/socket \
+	${experimental_srcdir}/source_location \
+	${experimental_srcdir}/string \
+	${experimental_srcdir}/string_view \
+	${experimental_srcdir}/synchronized_value \
+	${experimental_srcdir}/system_error \
+	${experimental_srcdir}/timer \
+	${experimental_srcdir}/tuple \
+	${experimental_srcdir}/type_traits \
+	${experimental_srcdir}/unordered_map \
+	${experimental_srcdir}/unordered_set \
+	${experimental_srcdir}/utility \
+	${experimental_srcdir}/vector \
+	${experimental_filesystem_headers}
 
-experimental_bits_srcdir =
-experimental_bits_builddir =
-experimental_bits_headers =
+experimental_bits_srcdir = ${glibcxx_srcdir}/include/experimental/bits
+experimental_bits_builddir = ./experimental/bits
+experimental_bits_headers = \
+	${experimental_bits_srcdir}/lfts_config.h \
+	${experimental_bits_srcdir}/net.h \
+	${experimental_bits_srcdir}/numeric_traits.h \
+	${experimental_bits_srcdir}/shared_ptr.h \
+	${experimental_bits_srcdir}/simd.h \
+	${experimental_bits_srcdir}/simd_builtin.h \
+	${experimental_bits_srcdir}/simd_converter.h \
+	${experimental_bits_srcdir}/simd_detail.h \
+	${experimental_bits_srcdir}/simd_fixed_size.h \
+	${experimental_bits_srcdir}/simd_math.h \
+	${experimental_bits_srcdir}/simd_neon.h \
+	${experimental_bits_srcdir}/simd_ppc.h \
+	${experimental_bits_srcdir}/simd_scalar.h \
+	${experimental_bits_srcdir}/simd_x86.h \
+	${experimental_bits_srcdir}/simd_x86_conversions.h \
+	${experimental_bits_srcdir}/string_view.tcc \
+	${experimental_bits_filesystem_headers}
 
 if ENABLE_FILESYSTEM_TS
 experimental_filesystem_headers = \
@@ -645,13 +879,12 @@ c_base_headers = \
 	${c_base_srcdir}/ctime \
 	${c_base_srcdir}/cuchar \
 	${c_base_srcdir}/cwchar \
-	${c_base_srcdir}/cwctype \
-	${c_base_srcdir}/ai
+	${c_base_srcdir}/cwctype
 endif GLIBCXX_HOSTED
 
 # "C" compatibility headers.
-c_compatibility_srcdir =
-c_compatibility_builddir =
+c_compatibility_srcdir = ${glibcxx_srcdir}/include/c_compatibility
+c_compatibility_builddir = .
 
 if GLIBCXX_C_HEADERS_C_STD
 c_compatibility_headers =
@@ -741,9 +974,52 @@ debug_headers = \
 endif GLIBCXX_HOSTED
 
 # Parallel mode headers
-parallel_srcdir =
-parallel_builddir =
-parallel_headers =
+parallel_srcdir = ${glibcxx_srcdir}/include/parallel
+parallel_builddir = ./parallel
+parallel_headers = \
+	${parallel_srcdir}/algo.h \
+	${parallel_srcdir}/algobase.h \
+	${parallel_srcdir}/algorithm \
+	${parallel_srcdir}/algorithmfwd.h \
+	${parallel_srcdir}/balanced_quicksort.h \
+	${parallel_srcdir}/base.h \
+	${parallel_srcdir}/basic_iterator.h \
+	${parallel_srcdir}/checkers.h \
+	${parallel_srcdir}/compatibility.h \
+	${parallel_srcdir}/compiletime_settings.h \
+	${parallel_srcdir}/equally_split.h \
+	${parallel_srcdir}/features.h \
+	${parallel_srcdir}/find.h \
+	${parallel_srcdir}/find_selectors.h \
+	${parallel_srcdir}/for_each.h \
+	${parallel_srcdir}/for_each_selectors.h \
+	${parallel_srcdir}/iterator.h \
+	${parallel_srcdir}/list_partition.h \
+	${parallel_srcdir}/losertree.h \
+	${parallel_srcdir}/merge.h \
+	${parallel_srcdir}/multiseq_selection.h \
+	${parallel_srcdir}/multiway_merge.h \
+	${parallel_srcdir}/multiway_mergesort.h \
+	${parallel_srcdir}/numeric \
+	${parallel_srcdir}/numericfwd.h \
+	${parallel_srcdir}/omp_loop.h \
+	${parallel_srcdir}/omp_loop_static.h \
+	${parallel_srcdir}/par_loop.h \
+	${parallel_srcdir}/parallel.h \
+	${parallel_srcdir}/partial_sum.h \
+	${parallel_srcdir}/partition.h \
+	${parallel_srcdir}/queue.h \
+	${parallel_srcdir}/quicksort.h \
+	${parallel_srcdir}/random_number.h \
+	${parallel_srcdir}/random_shuffle.h \
+	${parallel_srcdir}/search.h \
+	${parallel_srcdir}/set_operations.h \
+	${parallel_srcdir}/settings.h \
+	${parallel_srcdir}/sort.h \
+	${parallel_srcdir}/tags.h \
+	${parallel_srcdir}/types.h \
+	${parallel_srcdir}/unique_copy.h \
+	${parallel_srcdir}/workstealing.h
 
 # Some "C" header schemes require the "C" compatibility headers.
 # For --enable-cheaders=c_std
@@ -763,7 +1039,10 @@ host_headers = \
 	${glibcxx_srcdir}/$(ATOMIC_WORD_SRCDIR)/atomic_word.h \
 	${glibcxx_srcdir}/$(ABI_TWEAKS_SRCDIR)/cxxabi_tweaks.h \
 	${glibcxx_srcdir}/$(CPU_DEFINES_SRCDIR)/cpu_defines.h \
-	${glibcxx_srcdir}/$(ERROR_CONSTANTS_SRCDIR)/error_constants.h
+	${glibcxx_srcdir}/$(ERROR_CONSTANTS_SRCDIR)/error_constants.h \
+	${glibcxx_srcdir}/include/precompiled/stdc++.h \
+	${glibcxx_srcdir}/include/precompiled/stdtr1c++.h \
+	${glibcxx_srcdir}/include/precompiled/extc++.h
 
 # Non-installed host_header files.
 COMPATIBILITY_H = config/abi/compatibility.h
@@ -788,7 +1067,7 @@ thread_host_headers = \
 	${host_builddir}/gthr-default.h
 
 
-pch1_source =
+pch1_source = ${glibcxx_srcdir}/include/precompiled/stdc++.h
 pch1_output_builddir = ${host_builddir}/stdc++.h.gch
 pch1_output_anchor = ${host_builddir}/stdc++.h
 pch1_output_installdir = ${host_installdir}/stdc++.h.gch
@@ -796,13 +1075,13 @@ pch1a_output = ${pch1_output_builddir}/O2ggnu++0x.gch
 pch1b_output = ${pch1_output_builddir}/O2g.gch
 pch1_output = ${pch1a_output} ${pch1b_output}
 
-pch2_source =
+pch2_source = ${glibcxx_srcdir}/include/precompiled/stdtr1c++.h
 pch2_output_builddir = ${host_builddir}/stdtr1c++.h.gch
 pch2_output_anchor = ${host_builddir}/stdtr1c++.h
 pch2_output_installdir = ${host_installdir}/stdtr1c++.h.gch
 pch2_output = ${pch2_output_builddir}/O2g.gch
 
-pch3_source =
+pch3_source = ${glibcxx_srcdir}/include/precompiled/extc++.h
 pch3_output_builddir = ${host_builddir}/extc++.h.gch
 pch3_output_anchor = ${host_builddir}/extc++.h
 pch3_output_installdir = ${host_installdir}/extc++.h.gch
@@ -824,8 +1103,10 @@ endif
 # List of all timestamp files.  By keeping only one copy of this list, both
 # CLEANFILES and all-local are kept up-to-date.
 allstamped = \
-	stamp-bits stamp-c_base \
-	stamp-backward stamp-ext stamp-pb stamp-decimal stamp-debug stamp-host
+	stamp-std stamp-bits stamp-bits-sup stamp-pstl stamp-c_base stamp-c_compatibility \
+	stamp-backward stamp-ext stamp-pb stamp-tr1 stamp-tr2 stamp-decimal \
+	stamp-experimental stamp-experimental-bits stamp-debug stamp-parallel \
+	stamp-host
 
 # List of all files that are created by explicit building, editing, or
 # catenation.
@@ -833,7 +1114,8 @@ allcreated = \
 	${host_builddir}/c++config.h \
 	${host_builddir}/largefile-config.h \
 	${thread_host_headers} \
-	${pch_build}
+	${pch_build} \
+	${bits_srcdir}/version.h
 
 # Here are the rules for building the headers
 all-local: ${allstamped} ${allcreated}
@@ -842,16 +1124,24 @@ all-local: ${allstamped} ${allcreated}
 # systems with broken mkdir.  Call mkdir unconditionally because
 # it is just as cheap to avoid going through the shell.
 # Ignore errors from $(LN_S) because the links may already exist.
-stamp-std:
+stamp-std: ${std_headers}
+	@-mkdir -p ${std_builddir}
+	@-cd ${std_builddir} && $(LN_S) $? . 2>/dev/null
+	@$(STAMP) stamp-std
 
 stamp-bits: ${bits_headers}
 	@-mkdir -p ${bits_builddir}
 	@-cd ${bits_builddir} && $(LN_S) $? . 2>/dev/null
 	@$(STAMP) stamp-bits
 
-stamp-bits-sup:
+stamp-bits-sup: stamp-bits ${bits_sup_headers}
+	@-cd ${bits_builddir} && $(LN_S) ${bits_sup_headers} . 2>/dev/null
+	@$(STAMP) stamp-bits-sup
 
-stamp-pstl:
+stamp-pstl: ${pstl_headers}
+	@-mkdir -p ${pstl_builddir}
+	@-cd ${pstl_builddir} && $(LN_S) $? . 2>/dev/null
+	@$(STAMP) stamp-pstl
 
 stamp-c_base: ${c_base_headers}
 	@-mkdir -p ${c_base_builddir}
@@ -863,7 +1153,12 @@ stamp-c_base_extra: ${c_base_headers_extra}
 	@-cd ${bits_builddir} && $(LN_S) $? . 2>/dev/null
 	@$(STAMP) stamp-c_base_extra
 
-stamp-c_compatibility:
+stamp-c_compatibility: ${c_compatibility_headers_extra}
+	@-mkdir -p ${c_compatibility_builddir}
+	@-if [ ! -z "${c_compatibility_headers_extra}" ]; then \
+	  cd ${c_compatibility_builddir} && $(LN_S) $? . 2>/dev/null ;\
+	fi
+	@$(STAMP) stamp-c_compatibility
 
 stamp-backward: ${backward_headers}
 	@-mkdir -p ${backward_builddir}
@@ -926,25 +1221,40 @@ stamp-pb:
 	fi
 	$(STAMP) stamp-pb
 
-stamp-tr1:
+stamp-tr1: ${tr1_headers}
+	@-mkdir -p ${tr1_builddir}
+	@-cd ${tr1_builddir} && $(LN_S) $? . 2>/dev/null
+	@$(STAMP) stamp-tr1
 
-stamp-tr2:
+stamp-tr2: ${tr2_headers}
+	@-mkdir -p ${tr2_builddir}
+	@-cd ${tr2_builddir} && $(LN_S) $? . 2>/dev/null
+	@$(STAMP) stamp-tr2
 
 stamp-decimal: ${decimal_headers}
 	@-mkdir -p ${decimal_builddir}
 	@-cd ${decimal_builddir} && $(LN_S) $? . 2>/dev/null
 	@$(STAMP) stamp-decimal
 
-stamp-experimental:
+stamp-experimental: ${experimental_headers}
+	@-mkdir -p ${experimental_builddir}
+	@-cd ${experimental_builddir} && $(LN_S) $? . 2>/dev/null
+	@$(STAMP) stamp-experimental
 
-stamp-experimental-bits:
+stamp-experimental-bits: ${experimental_bits_headers}
+	@-mkdir -p ${experimental_bits_builddir}
+	@-cd ${experimental_bits_builddir} && $(LN_S) $? . 2>/dev/null
+	@$(STAMP) stamp-experimental-bits
 
 stamp-debug: ${debug_headers}
 	@-mkdir -p ${debug_builddir}
 	@-cd ${debug_builddir} && $(LN_S) $? . 2>/dev/null
 	@$(STAMP) stamp-debug
 
-stamp-parallel:
+stamp-parallel: ${parallel_headers}
+	@-mkdir -p ${parallel_builddir}
+	@-cd ${parallel_builddir} && $(LN_S) $? . 2>/dev/null
+	@$(STAMP) stamp-parallel
 
 stamp-${host_alias}:
 	@-mkdir -p ${host_builddir}
@@ -1041,7 +1351,7 @@ ${host_builddir}/c++config.h: ${CONFIG_HEADER} \
 			      ${glibcxx_srcdir}/include/bits/c++config \
 			      ${host_builddir}/largefile-config.h \
 			      stamp-${host_alias} \
-			      ${toplevel_srcdir}/spl/DATESTAMP \
+			      ${toplevel_srcdir}/gcc/DATESTAMP \
 			      stamp-namespace-version \
 			      stamp-visibility \
 			      stamp-extern-template \
@@ -1049,8 +1359,8 @@ ${host_builddir}/c++config.h: ${CONFIG_HEADER} \
 			      stamp-cxx11-abi \
 			      stamp-allocator-new \
 			      stamp-float128
-	@date=`cat ${toplevel_srcdir}/spl/DATESTAMP` ;\
-	release=`sed 's/^\([0-9]*\).*$$/\1/' ${toplevel_srcdir}/spl/BASE-VER` ;\
+	@date=`cat ${toplevel_srcdir}/gcc/DATESTAMP` ;\
+	release=`sed 's/^\([0-9]*\).*$$/\1/' ${toplevel_srcdir}/gcc/BASE-VER` ;\
 	ns_version=`cat stamp-namespace-version` ;\
 	visibility=`cat stamp-visibility` ;\
 	externtemplate=`cat stamp-extern-template` ;\
@@ -1154,6 +1464,12 @@ ${pch2_output}: ${pch2_source} ${pch1_output}
 ${pch3_output}: ${pch3_source} ${pch2_output}
 	-mkdir -p ${pch3_output_builddir}
 	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 -g ${pch3_source} -o $@
+
+# AutoGen <bits/version.h>.
+.PHONY: update-version
+update-version:
+	cd ${bits_srcdir} && \
+	autogen version.def
 
 # The real deal.
 install-data-local: install-headers
@@ -1269,6 +1585,6 @@ $(experimental_headers): ; @:
 $(experimental_bits_headers): ; @:
 
 if INCLUDE_DIR_NOTPARALLEL
-# See https://spl.gnu.org/bugzilla/show_bug.cgi?id=81797
+# See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81797
 .NOTPARALLEL:
 endif

@@ -55,7 +55,7 @@
 #undef localtime
 #undef strftime
 
-namespace sys
+namespace std
 {
   using ::clock_t;
   using ::time_t;
@@ -74,11 +74,11 @@ namespace sys
 
 #if __cplusplus >= 201703L && defined(_GLIBCXX_HAVE_TIMESPEC_GET)
 #undef timespec_get
-namespace sys
+namespace std
 {
   using ::timespec;
   using ::timespec_get;
-} // namespace sys
+} // namespace std
 #endif
 
 #endif

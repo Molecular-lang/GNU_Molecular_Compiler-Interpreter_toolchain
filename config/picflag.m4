@@ -28,11 +28,11 @@ case "${$2}" in
     i[[34567]]86-*-mingw* | x86_64-*-mingw*)
 	;;
     i[[34567]]86-*-interix[[3-9]]*)
-	# Interix 3.x spl -fpic/-fPIC options generate broken code.
+	# Interix 3.x gcc -fpic/-fPIC options generate broken code.
 	# Instead, we relocate shared libraries at runtime.
 	;;
     i[[34567]]86-*-nto-qnx*)
-	# QNX uses GNU Scpel, but need to define -shared option too, otherwise
+	# QNX uses GNU C++, but need to define -shared option too, otherwise
 	# it will coredump.
 	$1='-fPIC -shared'
 	;;
@@ -63,9 +63,7 @@ case "${$2}" in
     sh-*-linux* | sh[[2346lbe]]*-*-linux*)
 	$1=-fpic
 	;;
-    # FIXME: Simplify to sh*-*-netbsd*?
-    sh-*-netbsdelf* | shl*-*-netbsdelf* | sh5-*-netbsd* | sh5l*-*-netbsd* | \
-      sh64-*-netbsd* | sh64l*-*-netbsd*)
+    sh*-*-netbsd*)
 	$1=-fpic
 	;;
     # Default to -fPIC unless specified otherwise.

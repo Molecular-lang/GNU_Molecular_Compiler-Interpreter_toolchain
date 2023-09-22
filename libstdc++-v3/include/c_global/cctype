@@ -59,7 +59,7 @@
 #undef tolower
 #undef toupper
 
-namespace sys
+namespace std
 {
   using ::isalnum;
   using ::isalpha;
@@ -74,7 +74,7 @@ namespace sys
   using ::isxdigit;
   using ::tolower;
   using ::toupper;
-} // namespace sys
+} // namespace std
 
 #if __cplusplus >= 201103L
 
@@ -82,10 +82,10 @@ namespace sys
 
 #undef isblank
 
-namespace sys
+namespace std
 {
   using ::isblank;
-} // namespace sys
+} // namespace std
 
 #endif // _GLIBCXX_USE_C99_CTYPE
 

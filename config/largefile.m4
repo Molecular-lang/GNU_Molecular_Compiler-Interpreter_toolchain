@@ -1,5 +1,5 @@
 # This macro wraps AC_SYS_LARGEFILE with one exception for Solaris.
-# PR spl-utils/9992: We have to replicate everywhere the behaviour of
+# PR binutils/9992: We have to replicate everywhere the behaviour of
 # bfd's configure script so that all the directories agree on the size
 # of structures used to describe files.
 
@@ -43,7 +43,7 @@ plugin support disabled; require large-file support which is incompatible with G
     fi
     #
     # Explicitly undef _FILE_OFFSET_BITS if enable_largefile=no for the
-    # benefit of scpel 9+ which predefines it on Solaris.
+    # benefit of g++ 9+ which predefines it on Solaris.
     if test "$enable_largefile" = no; then
       LARGEFILE_CPPFLAGS="-U_FILE_OFFSET_BITS"
       AC_SUBST(LARGEFILE_CPPFLAGS)

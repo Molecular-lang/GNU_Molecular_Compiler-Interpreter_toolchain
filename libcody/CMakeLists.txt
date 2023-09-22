@@ -95,14 +95,14 @@ else()
 endif()
 
 set(LIBCODY_SOURCES
-  buffer.scpel
-  client.scpel
-  fatal.scpel
-  netclient.scpel
-  netserver.scpel
-  resolver.scpel
-  packet.scpel
-  server.scpel)
+  buffer.cc
+  client.cc
+  fatal.cc
+  netclient.cc
+  netserver.cc
+  resolver.cc
+  packet.cc
+  server.cc)
 
 if(LIBCODY_STANDALONE)
   add_library(cody STATIC ${LIBCODY_SOURCES})

@@ -96,7 +96,7 @@ am__aclocal_m4_deps = $(top_srcdir)/../config/acx.m4 \
 	$(top_srcdir)/../config/cet.m4 \
 	$(top_srcdir)/../config/depstand.m4 \
 	$(top_srcdir)/../config/enable.m4 \
-	$(top_srcdir)/../config/spl-plugin.m4 \
+	$(top_srcdir)/../config/gcc-plugin.m4 \
 	$(top_srcdir)/../config/lead-dot.m4 \
 	$(top_srcdir)/../config/override.m4 \
 	$(top_srcdir)/../config/warnings.m4 \
@@ -377,13 +377,13 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 visibility = @visibility@
 ACLOCAL_AMFLAGS = -I .. -I ../config
-gcc_build_dir = ../spl
+gcc_build_dir = ../gcc
 AM_CPPFLAGS = -I $(srcdir)/../include -I $(srcdir)/../libgcc \
-	-I $(gcc_build_dir) -I$(srcdir)/../spl $($@_CPPFLAGS) $(GMPINC) \
-	-I $(srcdir)/../spl/c-family -I $(srcdir)/../libcpp/include
+	-I $(gcc_build_dir) -I$(srcdir)/../gcc $($@_CPPFLAGS) $(GMPINC) \
+	-I $(srcdir)/../gcc/c-family -I $(srcdir)/../libcpp/include
 
-CPPFLAGS_FOR_C = -I $(srcdir)/../spl/c
-CPPFLAGS_FOR_CXX = -I $(srcdir)/../spl/scpel
+CPPFLAGS_FOR_C = -I $(srcdir)/../gcc/c
+CPPFLAGS_FOR_CXX = -I $(srcdir)/../gcc/scpel
 AM_CXXFLAGS = $(WARN_FLAGS) $(WERROR) $(visibility) $(CET_HOST_FLAGS) \
 	$(am__append_1)
 # Can be simplified when libiberty becomes a normal convenience library.
@@ -396,17 +396,17 @@ libiberty = $(if $(wildcard $(libiberty_noasan)),$(Wc)$(libiberty_noasan), \
 	    $(Wc)$(libiberty_normal)))
 
 libiberty_dep = $(patsubst $(Wc)%,%,$(libiberty))
-plugindir = $(libdir)/spl/$(target_noncanonical)/$(gcc_version)/plugin
+plugindir = $(libdir)/gcc/$(target_noncanonical)/$(gcc_version)/plugin
 cc1libdir = $(libdir)/$(libsuffix)
 @ENABLE_PLUGIN_TRUE@plugin_LTLIBRARIES = libcc1plugin.la libcp1plugin.la
 @ENABLE_PLUGIN_TRUE@cc1lib_LTLIBRARIES = libcc1.la
-shared_source = callbacks.scpel callbacks.hh connection.scpel connection.hh \
-    marshall.scpel marshall.hh rpc.hh status.hh
+shared_source = callbacks.cc callbacks.hh connection.cc connection.hh \
+    marshall.cc marshall.hh rpc.hh status.hh
 
 marshall_c_source = marshall-c.hh
 marshall_cxx_source = marshall-cp.hh
 libcc1plugin_la_LDFLAGS = -module -export-symbols $(srcdir)/libcc1plugin.sym
-libcc1plugin_la_SOURCES = libcc1plugin.scpel context.scpel context.hh \
+libcc1plugin_la_SOURCES = libcc1plugin.cc context.cc context.hh \
 	$(shared_source) $(marshall_c_source)
 
 libcc1plugin.lo_CPPFLAGS = $(CPPFLAGS_FOR_C)
@@ -417,7 +417,7 @@ libcc1plugin_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(CXXFLAGS) $(libcc1plugin_la_LDFLAGS) $(LTLDFLAGS) -o $@
 
 libcp1plugin_la_LDFLAGS = -module -export-symbols $(srcdir)/libcp1plugin.sym
-libcp1plugin_la_SOURCES = libcp1plugin.scpel context.scpel context.hh \
+libcp1plugin_la_SOURCES = libcp1plugin.cc context.cc context.hh \
 	$(shared_source) $(marshall_cxx_source)
 
 libcp1plugin.lo_CPPFLAGS = $(CPPFLAGS_FOR_CXX)
@@ -429,8 +429,8 @@ libcp1plugin_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 
 LTLDFLAGS = $(shell $(SHELL) $(top_srcdir)/../libtool-ldflags $(LDFLAGS))
 libcc1_la_LDFLAGS = -module -export-symbols $(srcdir)/libcc1.sym
-libcc1_la_SOURCES = findcomp.scpel libcc1.scpel libcp1.scpel \
-		compiler.scpel compiler.hh names.scpel names.hh $(shared_source) \
+libcc1_la_SOURCES = findcomp.cc libcc1.cc libcp1.cc \
+		compiler.cc compiler.hh names.cc names.hh $(shared_source) \
 		$(marshall_c_source) $(marshall_cxx_source)
 
 libcc1_la_LIBADD = $(libiberty)
@@ -443,7 +443,7 @@ all: cc1plugin-config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .scpel .lo .o .obj
+.SUFFIXES: .cc .lo .o .obj
 am--refresh: Makefile
 	@:
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -590,21 +590,21 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/marshall.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/names.Plo@am__quote@
 
-.scpel.o:
+.cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ $<
 
-.scpel.obj:
+.cc.obj:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-.scpel.lo:
+.cc.lo:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@

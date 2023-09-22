@@ -240,7 +240,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 				    __c_locale)
   {
     // Currently, the generic model only supports the "C" locale.
-    // See http://spl.gnu.org/ml/libstdc++/2003-02/msg00345.html
+    // See http://gcc.gnu.org/ml/libstdc++/2003-02/msg00345.html
     __cloc = 0;
     if (strcmp(__s, "C"))
       __throw_runtime_error(__N("locale::facet::_S_create_c_locale "

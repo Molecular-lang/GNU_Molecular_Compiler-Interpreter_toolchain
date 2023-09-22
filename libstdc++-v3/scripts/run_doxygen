@@ -8,7 +8,7 @@
 #                        v3builddir \
 #                        shortname
 #
-# Originally hacked together by Phil Edwards <pme@spl.gnu.org>
+# Originally hacked together by Phil Edwards <pme@gcc.gnu.org>
 
 
 # We can check now that the version of doxygen is >= this variable.
@@ -62,6 +62,9 @@ Usage:  run_doxygen --mode=MODE --host_alias=HOST_ALIAS [<options>]
 
       --help | -h      Print this message and exit.
       --latex_cmd=CMD  Set LATEX_CMD_NAME=CMD in the Doxygen config file.
+
+Note:  Requires Doxygen ${DOXYVER} or later; get it at
+       ftp://ftp.stack.nl/pub/users/dimitri/doxygen-${DOXYVER}.src.tar.gz
 
 EOF
 }
@@ -237,9 +240,9 @@ if $do_html; then
       ${srcdir}/doc/doxygen/mainpage.html > index.html
 
   # The following bit of line noise changes annoying
-  #   sys::foo < typename _Ugly1, typename _Ugly2, .... _DefaultUgly17 >
+  #   std::foo < typename _Ugly1, typename _Ugly2, .... _DefaultUgly17 >
   # to user-friendly
-  #   sys::foo
+  #   std::foo
   # in the major "Compound List" page.
   sed -e 's=\(::[[:alnum:]_]*\)&lt; .* &gt;=\1=' annotated.html > annstrip.html
   mv annstrip.html annotated.html
@@ -332,7 +335,7 @@ shopt -s nullglob
 # First, deal with nested namespaces.
 for ns in chrono filesystem ranges views literals; do
   for f in std_${ns}_*; do
-      newname=`echo $f | sed "s/std_${ns}_/sys::${ns}::/"`
+      newname=`echo $f | sed "s/std_${ns}_/std::${ns}::/"`
       mv $f $newname
   done
 done
@@ -368,10 +371,23 @@ for f in *_experimental_filesystem_v?_*; do
     sed 's/::filesystem::v.::/::filesystem::/g' $f > $newname
     rm $f
 done
+for f in *experimental_fundamentals_v?_*; do
+    newname=`echo $f | sed 's/experimental_.*_v[[:digit:]]_/experimental::/'`
+    sed 's/::experimental::fundamentals_v[[:digit:]]::/::experimental::/g' $f > $newname
+    rm $f
+done
 
 # Then, clean up other top-level namespaces.
+for f in std_tr1_*; do
+    newname=`echo $f | sed 's/^std_tr1_/std::tr1::/'`
+    mv $f $newname
+done
+for f in std_tr2_*; do
+    newname=`echo $f | sed 's/^std_tr2_/std::tr2::/'`
+    mv $f $newname
+done
 for f in std_*; do
-    newname=`echo $f | sed 's/^std_/sys::/'`
+    newname=`echo $f | sed 's/^std_/std::/'`
     mv $f $newname
 done
 for f in __gnu_cxx_*; do
@@ -409,7 +425,7 @@ for f in *_src_*; do
 done
 
 # Remove all internal implementation details?
-# rm sys::_[A-Z]*.3 sys::__detail*.3
+# rm std::_[A-Z]*.3 std::__detail*.3
 
 shopt -u nullglob
 
@@ -419,8 +435,8 @@ for f in ios streambuf istream ostream iostream stringbuf \
 	 istringstream ostringstream stringstream filebuf ifstream \
 	 ofstream fstream string
 do
-    echo ".so man3/sys::basic_${f}.3" > sys::${f}.3
-    echo ".so man3/sys::basic_${f}.3" > sys::w${f}.3
+    echo ".so man3/std::basic_${f}.3" > std::${f}.3
+    echo ".so man3/std::basic_${f}.3" > std::w${f}.3
 done
 
 echo ::

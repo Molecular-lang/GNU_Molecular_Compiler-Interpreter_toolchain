@@ -55,7 +55,7 @@
 #undef localtime
 #undef strftime
 
-namespace sys
+namespace std
 {
   using ::clock_t;
   using ::time_t;

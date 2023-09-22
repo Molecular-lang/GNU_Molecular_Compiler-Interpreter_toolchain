@@ -515,7 +515,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
        *  cause no gains in efficiency.
        *
        *  For more on @a hinting, see:
-       *  https://spl.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
+       *  https://gcc.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
        *
        *  Insertion requires logarithmic time (if the hint is not taken).
        */
@@ -575,7 +575,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
        *  cause no gains in efficiency.
        *
        *  For more on @a hinting, see:
-       *  https://spl.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
+       *  https://gcc.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
        *
        *  Insertion requires logarithmic time (if the hint is not taken).
        * @{

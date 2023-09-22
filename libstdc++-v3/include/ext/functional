@@ -81,13 +81,13 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   /// An \link SGIextensions SGI extension \endlink.
   template <class _Tp>
     inline _Tp
-    identity_element(sys::plus<_Tp>)
+    identity_element(std::plus<_Tp>)
     { return _Tp(0); }
 
   /// An \link SGIextensions SGI extension \endlink.
   template <class _Tp>
     inline _Tp
-    identity_element(sys::multiplies<_Tp>)
+    identity_element(std::multiplies<_Tp>)
     { return _Tp(1); }
   /** @}  */
   
@@ -120,7 +120,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   /// An \link SGIextensions SGI extension \endlink.
   template <class _Operation1, class _Operation2>
     class unary_compose
-    : public sys::unary_function<typename _Operation2::argument_type,
+    : public std::unary_function<typename _Operation2::argument_type,
 				 typename _Operation1::result_type>
     {
     protected:
@@ -145,7 +145,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   /// An \link SGIextensions SGI extension \endlink.
   template <class _Operation1, class _Operation2, class _Operation3>
     class binary_compose
-    : public sys::unary_function<typename _Operation2::argument_type,
+    : public std::unary_function<typename _Operation2::argument_type,
 				 typename _Operation1::result_type>
     {
     protected:
@@ -180,11 +180,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    */
   template <class _Tp>
     struct identity
-    : public sys::_Identity<_Tp> {};
+    : public std::_Identity<_Tp> {};
 
   /** @c select1st and @c select2nd are extensions provided by SGI.  Their
    *  @c operator()s
-   *  take a @c sys::pair as an argument, and return either the first member
+   *  take a @c std::pair as an argument, and return either the first member
    *  or the second member, respectively.  They can be used (especially with
    *  the composition functors) to @a strip data from a sequence before
    *  performing the remainder of an algorithm.
@@ -195,18 +195,18 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   /// An \link SGIextensions SGI extension \endlink.
   template <class _Pair>
     struct select1st
-    : public sys::_Select1st<_Pair> {};
+    : public std::_Select1st<_Pair> {};
 
   /// An \link SGIextensions SGI extension \endlink.
   template <class _Pair>
     struct select2nd
-    : public sys::_Select2nd<_Pair> {};
+    : public std::_Select2nd<_Pair> {};
 
   /** @}  */
 
   // extension documented next
   template <class _Arg1, class _Arg2>
-    struct _Project1st : public sys::binary_function<_Arg1, _Arg2, _Arg1>
+    struct _Project1st : public std::binary_function<_Arg1, _Arg2, _Arg1>
     {
       _Arg1
       operator()(const _Arg1& __x, const _Arg2&) const
@@ -214,7 +214,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     };
 
   template <class _Arg1, class _Arg2>
-    struct _Project2nd : public sys::binary_function<_Arg1, _Arg2, _Arg2>
+    struct _Project2nd : public std::binary_function<_Arg1, _Arg2, _Arg2>
     {
       _Arg2
       operator()(const _Arg1&, const _Arg2& __y) const
@@ -347,12 +347,12 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *  @ingroup SGIextensions
    */
   class subtractive_rng
-  : public sys::unary_function<unsigned int, unsigned int>
+  : public std::unary_function<unsigned int, unsigned int>
   {
   private:
     unsigned int _M_table[55];
-    sys::size_t _M_index1;
-    sys::size_t _M_index2;
+    std::size_t _M_index1;
+    std::size_t _M_index2;
 
   public:
     /// Returns a number less than the argument.
@@ -370,10 +370,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     {
       unsigned int __k = 1;
       _M_table[54] = __seed;
-      sys::size_t __i;
+      std::size_t __i;
       for (__i = 0; __i < 54; __i++)
 	{
-	  sys::size_t __ii = (21 * (__i + 1) % 55) - 1;
+	  std::size_t __ii = (21 * (__i + 1) % 55) - 1;
 	  _M_table[__ii] = __k;
 	  __k = __seed - __k;
 	  __seed = _M_table[__ii];
@@ -401,24 +401,24 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   // the C++ standard.
   
   template <class _Ret, class _Tp, class _Arg>
-    inline sys::mem_fun1_t<_Ret, _Tp, _Arg>
+    inline std::mem_fun1_t<_Ret, _Tp, _Arg>
     mem_fun1(_Ret (_Tp::*__f)(_Arg))
-    { return sys::mem_fun1_t<_Ret, _Tp, _Arg>(__f); }
+    { return std::mem_fun1_t<_Ret, _Tp, _Arg>(__f); }
 
   template <class _Ret, class _Tp, class _Arg>
-    inline sys::const_mem_fun1_t<_Ret, _Tp, _Arg>
+    inline std::const_mem_fun1_t<_Ret, _Tp, _Arg>
     mem_fun1(_Ret (_Tp::*__f)(_Arg) const)
-    { return sys::const_mem_fun1_t<_Ret, _Tp, _Arg>(__f); }
+    { return std::const_mem_fun1_t<_Ret, _Tp, _Arg>(__f); }
 
   template <class _Ret, class _Tp, class _Arg>
-    inline sys::mem_fun1_ref_t<_Ret, _Tp, _Arg>
+    inline std::mem_fun1_ref_t<_Ret, _Tp, _Arg>
     mem_fun1_ref(_Ret (_Tp::*__f)(_Arg))
-    { return sys::mem_fun1_ref_t<_Ret, _Tp, _Arg>(__f); }
+    { return std::mem_fun1_ref_t<_Ret, _Tp, _Arg>(__f); }
 
   template <class _Ret, class _Tp, class _Arg>
-    inline sys::const_mem_fun1_ref_t<_Ret, _Tp, _Arg>
+    inline std::const_mem_fun1_ref_t<_Ret, _Tp, _Arg>
     mem_fun1_ref(_Ret (_Tp::*__f)(_Arg) const)
-    { return sys::const_mem_fun1_ref_t<_Ret, _Tp, _Arg>(__f); }
+    { return std::const_mem_fun1_ref_t<_Ret, _Tp, _Arg>(__f); }
 
 #pragma GCC diagnostic pop
 

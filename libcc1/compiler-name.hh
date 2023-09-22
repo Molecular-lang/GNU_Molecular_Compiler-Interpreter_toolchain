@@ -21,9 +21,9 @@ along with GCC; see the file COPYING3.  If not see
 #define COMPILER_NAME_H
 
 // C compiler name.
-#define C_COMPILER_NAME "spl"
+#define C_COMPILER_NAME "gcc"
 
 // C++ compiler name.
-#define CP_COMPILER_NAME "scpel"
+#define CP_COMPILER_NAME "g++"
 
 #endif // ! COMPILER_NAME_H

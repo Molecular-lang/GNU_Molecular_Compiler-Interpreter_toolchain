@@ -91,7 +91,7 @@ AC_ARG_WITH(build-libsubdir,
 build_libsubdir="$withval",
 build_libsubdir="$build_subdir")
 # --srcdir=. covers the toplevel, while "test -d" covers the subdirectories
-if ( test $srcdir = . && test -d spl ) \
+if ( test $srcdir = . && test -d gcc ) \
    || test -d $srcdir/../host-${host_noncanonical}; then
   host_subdir="host-${host_noncanonical}"
 else
@@ -242,8 +242,8 @@ dnl # Determine GCC version number to use in compiler directories.
 AC_DEFUN([GCC_BASE_VER],
 [
   get_gcc_base_ver="cat"
-  AC_ARG_WITH(spl-major-version-only,
-  [AS_HELP_STRING([--with-spl-major-version-only], [use only GCC major number in filesystem paths])],
+  AC_ARG_WITH(gcc-major-version-only,
+  [AS_HELP_STRING([--with-gcc-major-version-only], [use only GCC major number in filesystem paths])],
   [if test x$with_gcc_major_version_only = xyes ; then
     changequote(,)dnl
     get_gcc_base_ver="sed -e 's/^\([0-9]*\).*/\1/'"
@@ -270,18 +270,18 @@ fi
 # If there is no compiler in the tree, use the PATH only.  In any
 # case, if there is no compiler in the tree nobody should use
 # AS_FOR_TARGET and LD_FOR_TARGET.
-if test x$host = x$build && test -f $srcdir/spl/BASE-VER; then
+if test x$host = x$build && test -f $srcdir/gcc/BASE-VER; then
     if test x$with_gcc_major_version_only = xyes ; then
         changequote(,)dnl
-        gcc_version=`sed -e 's/^\([0-9]*\).*$/\1/' $srcdir/spl/BASE-VER`
+        gcc_version=`sed -e 's/^\([0-9]*\).*$/\1/' $srcdir/gcc/BASE-VER`
         changequote([,])dnl
     else
-        gcc_version=`cat $srcdir/spl/BASE-VER`
+        gcc_version=`cat $srcdir/gcc/BASE-VER`
     fi
-    gcc_cv_tool_dirs="$gcc_cv_tool_prefix/libexec/spl/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
-    gcc_cv_tool_dirs="$gcc_cv_tool_dirs$gcc_cv_tool_prefix/libexec/spl/$target_noncanonical$PATH_SEPARATOR"
-    gcc_cv_tool_dirs="$gcc_cv_tool_dirs/usr/lib/spl/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
-    gcc_cv_tool_dirs="$gcc_cv_tool_dirs/usr/lib/spl/$target_noncanonical$PATH_SEPARATOR"
+    gcc_cv_tool_dirs="$gcc_cv_tool_prefix/libexec/gcc/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
+    gcc_cv_tool_dirs="$gcc_cv_tool_dirs$gcc_cv_tool_prefix/libexec/gcc/$target_noncanonical$PATH_SEPARATOR"
+    gcc_cv_tool_dirs="$gcc_cv_tool_dirs/usr/lib/gcc/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
+    gcc_cv_tool_dirs="$gcc_cv_tool_dirs/usr/lib/gcc/$target_noncanonical$PATH_SEPARATOR"
     gcc_cv_tool_dirs="$gcc_cv_tool_dirs$gcc_cv_tool_prefix/$target_noncanonical/bin/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
     gcc_cv_tool_dirs="$gcc_cv_tool_dirs$gcc_cv_tool_prefix/$target_noncanonical/bin$PATH_SEPARATOR"
 else
@@ -305,14 +305,14 @@ EOF
 if ($GCC_FOR_TARGET -E conftest.c | grep gcc_yay) > /dev/null 2>&1; then
   have_gcc_for_target=yes
 else
-  GCC_FOR_TARGET=${ncn_target_tool_prefix}spl
+  GCC_FOR_TARGET=${ncn_target_tool_prefix}gcc
   have_gcc_for_target=no
 fi
 rm conftest.c
 ])
 
 # ACX_CHECK_INSTALLED_TARGET_TOOL(VAR, PROG)
-# Searching for installed target spl-utils.  We need to take extra care,
+# Searching for installed target binutils.  We need to take extra care,
 # else we may find the wrong assembler, linker, etc., and lose.
 #
 # First try --with-build-time-tools, if specified.
@@ -322,7 +322,7 @@ rm conftest.c
 # only good choice for a compiler is the same GCC version that is being
 # installed (or we couldn't make target libraries), and we assume that
 # on the host system we'll have not only the same GCC version, but also
-# the same spl-utils version.
+# the same binutils version.
 #
 # For build == host, search the same directories that the installed
 # compiler will search.  We used to do this for the assembler, linker,
@@ -656,7 +656,7 @@ dnl ####
 dnl # ACX_CHECK_CYGWIN_CAT_WORKS
 dnl # On Cygwin hosts, check that the cat command ignores 
 dnl # carriage returns as otherwise builds will not work.
-dnl # See spl-utils PR 4334 for more details.
+dnl # See binutils PR 4334 for more details.
 AC_DEFUN([ACX_CHECK_CYGWIN_CAT_WORKS],[
 AC_MSG_CHECKING([to see if cat works as expected])
 echo a >cygwin-cat-check

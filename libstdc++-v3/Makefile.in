@@ -119,7 +119,8 @@ DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 CONFIG_HEADER = config.h
-CONFIG_CLEAN_FILES = scripts/testsuite_flags scripts/extract_symvers 
+CONFIG_CLEAN_FILES = scripts/testsuite_flags scripts/extract_symvers \
+	doc/xsl/customization.xsl
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -178,7 +179,7 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 CSCOPE = cscope
-DIST_SUBDIRS = include
+DIST_SUBDIRS = include libsupc++ src doc po testsuite python
 ABI_TWEAKS_SRCDIR = @ABI_TWEAKS_SRCDIR@
 ACLOCAL = @ACLOCAL@
 ALLOCATOR_H = @ALLOCATOR_H@
@@ -394,7 +395,7 @@ toplevel_builddir = @toplevel_builddir@
 toplevel_srcdir = @toplevel_srcdir@
 
 # May be used by various substitution variables.
-gcc_version := $(shell @get_gcc_base_ver@ $(top_srcdir)/../spl/BASE-VER)
+gcc_version := $(shell @get_gcc_base_ver@ $(top_srcdir)/../gcc/BASE-VER)
 MAINT_CHARSET = latin1
 mkinstalldirs = $(SHELL) $(toplevel_srcdir)/mkinstalldirs
 PWD_COMMAND = $${PWDCMD-pwd}
@@ -419,8 +420,8 @@ WARN_CXXFLAGS = \
 
 # -I/-D flags to pass when compiling.
 AM_CPPFLAGS = $(GLIBCXX_INCLUDES) $(CPPFLAGS)
-@GLIBCXX_HOSTED_TRUE@hosted_source =
-SUBDIRS = include $(hosted_source)
+@GLIBCXX_HOSTED_TRUE@hosted_source = doc po testsuite python
+SUBDIRS = include libsupc++ src $(hosted_source)
 ACLOCAL_AMFLAGS = -I . -I .. -I ../config
 @BUILD_XML_FALSE@STAMP_XML = 
 
@@ -552,6 +553,8 @@ distclean-hdr:
 scripts/testsuite_flags: $(top_builddir)/config.status $(top_srcdir)/scripts/testsuite_flags.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 scripts/extract_symvers: $(top_builddir)/config.status $(top_srcdir)/scripts/extract_symvers.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+doc/xsl/customization.xsl: $(top_builddir)/config.status $(top_srcdir)/doc/xsl/customization.xsl.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 
 mostlyclean-libtool:
@@ -774,9 +777,11 @@ uninstall-am:
 
 # Testsuite/check forwarding targets.
 check-%:
+	cd testsuite && $(MAKE) $@
 
 # Documentation forwarding targets.
 doc-%:
+	cd doc && $(MAKE) $@
 
 # Documentation primary rules.
 #

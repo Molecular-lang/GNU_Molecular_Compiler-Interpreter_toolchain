@@ -1,4 +1,4 @@
-## Makefile for the toplevel directory of the GNU Scpel Standard library.
+## Makefile for the toplevel directory of the GNU C++ Standard library.
 ##
 ## Copyright (C) 1997-2023 Free Software Foundation, Inc.
 ##
@@ -24,19 +24,21 @@ include $(top_srcdir)/fragment.am
 
 if GLIBCXX_HOSTED
 ## Note that python must come after src.
-  hosted_source =
+  hosted_source = doc po testsuite python
 endif
 
 ## Keep this list sync'd with acinclude.m4:GLIBCXX_CONFIGURE.
-SUBDIRS = include $(hosted_source)
+SUBDIRS = include libsupc++ src $(hosted_source)
 
 ACLOCAL_AMFLAGS = -I . -I .. -I ../config
 
 # Testsuite/check forwarding targets.
 check-%:
+	cd testsuite && $(MAKE) $@
 
 # Documentation forwarding targets.
 doc-%:
+	cd doc && $(MAKE) $@
 
 # Documentation conditionals for output.
 if BUILD_XML

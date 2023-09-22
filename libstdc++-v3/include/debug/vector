@@ -32,9 +32,9 @@
 #pragma GCC system_header
 
 #include <bits/c++config.h>
-namespace sys _GLIBCXX_VISIBILITY(default) { namespace __debug {
+namespace std _GLIBCXX_VISIBILITY(default) { namespace __debug {
   template<typename _Tp, typename _Allocator> class vector;
-} } // namespace sys::__debug
+} } // namespace std::__debug
 
 #include <vector>
 #include <debug/safe_sequence.h>
@@ -107,22 +107,22 @@ namespace __gnu_debug
     };
 }
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 namespace __debug
 {
-  /// Class sys::vector with safety/checking/debug instrumentation.
+  /// Class std::vector with safety/checking/debug instrumentation.
   template<typename _Tp,
-	   typename _Allocator = sys::allocator<_Tp> >
+	   typename _Allocator = std::allocator<_Tp> >
     class vector
     : public __gnu_debug::_Safe_container<
 	vector<_Tp, _Allocator>, _Allocator, __gnu_debug::_Safe_sequence>,
-      public _GLIBCXX_SYS_C::vector<_Tp, _Allocator>,
+      public _GLIBCXX_STD_C::vector<_Tp, _Allocator>,
       public __gnu_debug::_Safe_vector<
 	vector<_Tp, _Allocator>,
-	_GLIBCXX_SYS_C::vector<_Tp, _Allocator> >
+	_GLIBCXX_STD_C::vector<_Tp, _Allocator> >
     {
-      typedef _GLIBCXX_SYS_C::vector<_Tp, _Allocator>		_Base;
+      typedef _GLIBCXX_STD_C::vector<_Tp, _Allocator>		_Base;
       typedef __gnu_debug::_Safe_container<
 	vector, _Allocator, __gnu_debug::_Safe_sequence>	_Safe;
       typedef __gnu_debug::_Safe_vector<vector, _Base>		_Safe_vector;
@@ -160,8 +160,8 @@ namespace __debug
       typedef _Allocator				allocator_type;
       typedef typename _Base::pointer			pointer;
       typedef typename _Base::const_pointer		const_pointer;
-      typedef sys::reverse_iterator<iterator>		reverse_iterator;
-      typedef sys::reverse_iterator<const_iterator>	const_reverse_iterator;
+      typedef std::reverse_iterator<iterator>		reverse_iterator;
+      typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
 
       // 23.2.4.1 construct/copy/destroy:
 
@@ -193,7 +193,7 @@ namespace __debug
 
 #if __cplusplus >= 201103L
       template<class _InputIterator,
-	       typename = sys::_RequireInputIter<_InputIterator>>
+	       typename = std::_RequireInputIter<_InputIterator>>
 #else
       template<class _InputIterator>
 #endif
@@ -217,11 +217,11 @@ namespace __debug
 
       vector(vector&& __x, const __type_identity_t<allocator_type>& __a)
       noexcept(
-	sys::is_nothrow_constructible<_Base,
+	std::is_nothrow_constructible<_Base,
 	  _Base, const allocator_type&>::value )
-      : _Safe(sys::move(__x), __a),
-	_Base(sys::move(__x), __a),
-	_Safe_vector(sys::move(__x)) { }
+      : _Safe(std::move(__x), __a),
+	_Base(std::move(__x), __a),
+	_Safe_vector(std::move(__x)) { }
 
       vector(initializer_list<value_type> __l,
 	     const allocator_type& __a = allocator_type())
@@ -253,7 +253,7 @@ namespace __debug
 
 #if __cplusplus >= 201103L
       template<typename _InputIterator,
-	       typename = sys::_RequireInputIter<_InputIterator>>
+	       typename = std::_RequireInputIter<_InputIterator>>
 #else
       template<typename _InputIterator>
 #endif
@@ -502,10 +502,10 @@ namespace __debug
 
 #if __cplusplus >= 201103L
       template<typename _Up = _Tp>
-	typename __gnu_cxx::__enable_if<!sys::__are_same<_Up, bool>::__value,
+	typename __gnu_cxx::__enable_if<!std::__are_same<_Up, bool>::__value,
 					void>::__type
 	push_back(_Tp&& __x)
-	{ emplace_back(sys::move(__x)); }
+	{ emplace_back(std::move(__x)); }
 
       template<typename... _Args>
 #if __cplusplus > 201402L
@@ -516,7 +516,7 @@ namespace __debug
 	emplace_back(_Args&&... __args)
 	{
 	  bool __realloc = this->_M_requires_reallocation(this->size() + 1);
-	  _Base::emplace_back(sys::forward<_Args>(__args)...);
+	  _Base::emplace_back(std::forward<_Args>(__args)...);
 	  if (__realloc)
 	    this->_M_invalidate_all();
 	  this->_M_update_guaranteed_capacity();
@@ -543,7 +543,7 @@ namespace __debug
 	  bool __realloc = this->_M_requires_reallocation(this->size() + 1);
 	  difference_type __offset = __position.base() - _Base::cbegin();
 	  _Base_iterator __res = _Base::emplace(__position.base(),
-						sys::forward<_Args>(__args)...);
+						std::forward<_Args>(__args)...);
 	  if (__realloc)
 	    this->_M_invalidate_all();
 	  else
@@ -574,10 +574,10 @@ namespace __debug
 
 #if __cplusplus >= 201103L
       template<typename _Up = _Tp>
-	typename __gnu_cxx::__enable_if<!sys::__are_same<_Up, bool>::__value,
+	typename __gnu_cxx::__enable_if<!std::__are_same<_Up, bool>::__value,
 					iterator>::__type
 	insert(const_iterator __position, _Tp&& __x)
-	{ return emplace(__position, sys::move(__x)); }
+	{ return emplace(__position, std::move(__x)); }
 
       iterator
       insert(const_iterator __position, initializer_list<value_type> __l)
@@ -617,7 +617,7 @@ namespace __debug
 
 #if __cplusplus >= 201103L
       template<class _InputIterator,
-	       typename = sys::_RequireInputIter<_InputIterator>>
+	       typename = std::_RequireInputIter<_InputIterator>>
 	iterator
 	insert(const_iterator __position,
 	       _InputIterator __first, _InputIterator __last)
@@ -720,7 +720,7 @@ namespace __debug
       {
 	_Safe::_M_swap(__x);
 	_Base::swap(__x);
-	sys::swap(this->_M_guaranteed_capacity, __x._M_guaranteed_capacity);
+	std::swap(this->_M_guaranteed_capacity, __x._M_guaranteed_capacity);
       }
 
       void
@@ -815,14 +815,14 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
 #if __cplusplus >= 201103L
   // DR 1182.
-  /// sys::hash specialization for vector<bool>.
+  /// std::hash specialization for vector<bool>.
   template<typename _Alloc>
     struct hash<__debug::vector<bool, _Alloc>>
     : public __hash_base<size_t, __debug::vector<bool, _Alloc>>
     {
       size_t
       operator()(const __debug::vector<bool, _Alloc>& __b) const noexcept
-      { return sys::hash<_GLIBCXX_SYS_C::vector<bool, _Alloc>>()(__b); }
+      { return std::hash<_GLIBCXX_STD_C::vector<bool, _Alloc>>()(__b); }
     };
 #endif
 
@@ -835,24 +835,24 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     // vector into a variant, but only if move assignment cannot throw.
     template<typename _Tp, typename _Alloc>
       struct _Never_valueless_alt<__debug::vector<_Tp, _Alloc>>
-      : sys::is_nothrow_move_assignable<__debug::vector<_Tp, _Alloc>>
+      : std::is_nothrow_move_assignable<__debug::vector<_Tp, _Alloc>>
       { };
   }  // namespace __detail::__variant
 #endif // C++17
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 namespace __gnu_debug
 {
   template<typename _Tp, typename _Alloc>
-    struct _Is_contiguous_sequence<sys::__debug::vector<_Tp, _Alloc> >
-    : sys::__true_type
+    struct _Is_contiguous_sequence<std::__debug::vector<_Tp, _Alloc> >
+    : std::__true_type
     { };
 
   template<typename _Alloc>
-    struct _Is_contiguous_sequence<sys::__debug::vector<bool, _Alloc> >
-    : sys::__false_type
+    struct _Is_contiguous_sequence<std::__debug::vector<bool, _Alloc> >
+    : std::__false_type
     { };
 }
 

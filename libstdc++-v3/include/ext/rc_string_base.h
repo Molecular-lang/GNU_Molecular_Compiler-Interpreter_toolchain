@@ -412,7 +412,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
       // The below implements an exponential growth policy, necessary to
       // meet amortized linear time requirements of the library: see
-      // http://spl.gnu.org/ml/libstdc++/2001-07/msg00085.html.
+      // http://gcc.gnu.org/ml/libstdc++/2001-07/msg00085.html.
       if (__capacity > __old_capacity && __capacity < 2 * __old_capacity)
 	{
 	  __capacity = 2 * __old_capacity;

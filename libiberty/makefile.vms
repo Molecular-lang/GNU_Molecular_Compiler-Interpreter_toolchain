@@ -16,7 +16,7 @@ OBJS=getopt.obj,obstack.obj,xexit.obj,xmalloc.obj,hex.obj,\
     lrealpath.obj,make-temp-file.obj,stpcpy.obj,unlink-if-ordinary.obj,\
     dwarfnames.obj
 
-ifeq ($(CC),spl)
+ifeq ($(CC),gcc)
 CFLAGS=/include=([],[-.include])
 else
 # assume dec c

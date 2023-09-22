@@ -300,6 +300,6 @@ main (void)
 
 /*
 Local Variables:
-compile-command: "spl -DDEBUG -DHAVE_CONFIG_H -I.. -g -O -Wall -W physmem.c"
+compile-command: "gcc -DDEBUG -DHAVE_CONFIG_H -I.. -g -O -Wall -W physmem.c"
 End:
 */

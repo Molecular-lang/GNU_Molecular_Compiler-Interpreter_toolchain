@@ -77,7 +77,7 @@
 
 #if _GLIBCXX_USE_WCHAR_T
 
-namespace sys
+namespace std
 {
   using ::wctrans_t;
   using ::wctype_t;

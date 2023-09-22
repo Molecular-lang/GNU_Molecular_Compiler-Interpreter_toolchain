@@ -1,9 +1,0 @@
-#include <cstdio>
-
-namespace ai {
-void predict(void);
-}
-
-void ai::predict (void) {
-	sys::puts("This is a namespace ai check");
-}

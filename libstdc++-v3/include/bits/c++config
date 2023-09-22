@@ -246,7 +246,7 @@
 #endif
 
 // Macro for extern template, ie controlling template linkage via use
-// of extern keyword on template declaration. As documented in the scpel
+// of extern keyword on template declaration. As documented in the g++
 // manual, it inhibits all implicit instantiations and is used
 // throughout the library to avoid multiple weak definitions for
 // required types that are already explicitly instantiated in the
@@ -260,7 +260,7 @@
 /*
   Outline of libstdc++ namespaces.
 
-  namespace sys
+  namespace std
   {
     namespace __debug { }
     namespace __parallel { }
@@ -303,9 +303,9 @@
   }
 
   For full details see:
-  http://spl.gnu.org/onlinedocs/libstdc++/latest-doxygen/namespaces.html
+  http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/namespaces.html
 */
-namespace sys
+namespace std
 {
   typedef __SIZE_TYPE__ 	size_t;
   typedef __PTRDIFF_TYPE__	ptrdiff_t;
@@ -316,7 +316,7 @@ namespace sys
 
 #pragma GCC visibility push(default)
   // This allows the library to terminate without including all of <exception>
-  // and without making the declaration of sys::terminate visible to users.
+  // and without making the declaration of std::terminate visible to users.
   extern "C++" __attribute__ ((__noreturn__, __always_inline__))
   inline void __terminate() _GLIBCXX_USE_NOEXCEPT
   {
@@ -338,7 +338,7 @@ namespace sys
 #endif
 
 #if _GLIBCXX_USE_CXX11_ABI
-namespace sys
+namespace std
 {
   inline namespace __cxx11 __attribute__((__abi_tag__ ("cxx11"))) { }
 }
@@ -368,7 +368,7 @@ namespace __gnu_cxx
 # define _GLIBCXX_BEGIN_INLINE_ABI_NAMESPACE(X)
 # define _GLIBCXX_END_INLINE_ABI_NAMESPACE(X)
 
-namespace sys
+namespace std
 {
 inline _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #if __cplusplus >= 201402L
@@ -394,7 +394,7 @@ _GLIBCXX_END_NAMESPACE_VERSION
 // Unused.
 # define _GLIBCXX_BEGIN_NAMESPACE_VERSION
 # define _GLIBCXX_END_NAMESPACE_VERSION
-// Used to version individual components, e.g. sys::_V2::error_category.
+// Used to version individual components, e.g. std::_V2::error_category.
 # define _GLIBCXX_BEGIN_INLINE_ABI_NAMESPACE(X) inline namespace X {
 # define _GLIBCXX_END_INLINE_ABI_NAMESPACE(X)   } // inline namespace X
 #endif
@@ -408,7 +408,7 @@ _GLIBCXX_END_NAMESPACE_VERSION
 
 // Inline namespaces for special modes: debug, parallel.
 #if defined(_GLIBCXX_DEBUG) || defined(_GLIBCXX_PARALLEL)
-namespace sys
+namespace std
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -426,6 +426,11 @@ _GLIBCXX_END_NAMESPACE_VERSION
 # ifdef _GLIBCXX_DEBUG
   inline namespace __debug { }
 # endif
+
+  // Inline namespaces for parallel mode.
+# ifdef _GLIBCXX_PARALLEL
+  inline namespace __parallel { }
+# endif
 }
 
 // Check for invalid usage and unsupported mixed-mode use.
@@ -440,10 +445,10 @@ _GLIBCXX_END_NAMESPACE_VERSION
 # endif
 #endif
 
-// Macros for namespace scope. Either namespace sys:: or the name
+// Macros for namespace scope. Either namespace std:: or the name
 // of some nested namespace within it corresponding to the active mode.
-// _GLIBCXX_SYS_A
-// _GLIBCXX_SYS_C
+// _GLIBCXX_STD_A
+// _GLIBCXX_STD_C
 //
 // Macros for opening/closing conditional namespaces.
 // _GLIBCXX_BEGIN_NAMESPACE_ALGO
@@ -451,23 +456,23 @@ _GLIBCXX_END_NAMESPACE_VERSION
 // _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 // _GLIBCXX_END_NAMESPACE_CONTAINER
 #if defined(_GLIBCXX_DEBUG)
-# define _GLIBCXX_SYS_C __cxx1998
+# define _GLIBCXX_STD_C __cxx1998
 # define _GLIBCXX_BEGIN_NAMESPACE_CONTAINER \
-	 namespace _GLIBCXX_SYS_C {
+	 namespace _GLIBCXX_STD_C {
 # define _GLIBCXX_END_NAMESPACE_CONTAINER }
 #else
-# define _GLIBCXX_SYS_C sys
+# define _GLIBCXX_STD_C std
 # define _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 # define _GLIBCXX_END_NAMESPACE_CONTAINER
 #endif
 
 #ifdef _GLIBCXX_PARALLEL
-# define _GLIBCXX_SYS_A __cxx1998
+# define _GLIBCXX_STD_A __cxx1998
 # define _GLIBCXX_BEGIN_NAMESPACE_ALGO \
-	 namespace _GLIBCXX_SYS_A {
+	 namespace _GLIBCXX_STD_A {
 # define _GLIBCXX_END_NAMESPACE_ALGO }
 #else
-# define _GLIBCXX_SYS_A sys
+# define _GLIBCXX_STD_A std
 # define _GLIBCXX_BEGIN_NAMESPACE_ALGO
 # define _GLIBCXX_END_NAMESPACE_ALGO
 #endif
@@ -485,7 +490,7 @@ _GLIBCXX_END_NAMESPACE_VERSION
 // Inline namespaces for long double 128 modes.
 #if defined _GLIBCXX_LONG_DOUBLE_ALT128_COMPAT \
   && defined __LONG_DOUBLE_IEEE128__
-namespace sys
+namespace std
 {
   // Namespaces for 128-bit IEEE long double format on 64-bit POWER LE.
   inline namespace __gnu_cxx_ieee128 { }
@@ -501,7 +506,7 @@ namespace sys
 #else // _GLIBCXX_LONG_DOUBLE_ALT128_COMPAT && IEEE128
 
 #if defined _GLIBCXX_LONG_DOUBLE_COMPAT && defined __LONG_DOUBLE_128__
-namespace sys
+namespace std
 {
   inline namespace __gnu_cxx_ldbl128 { }
 }
@@ -526,10 +531,10 @@ namespace sys
 
 #endif // _GLIBCXX_LONG_DOUBLE_ALT128_COMPAT && IEEE128
 
-namespace sys
+namespace std
 {
 #pragma GCC visibility push(default)
-  // Internal version of sys::is_constant_evaluated().
+  // Internal version of std::is_constant_evaluated().
   // This can be used without checking if the compiler supports the feature.
   // The macro _GLIBCXX_HAVE_IS_CONSTANT_EVALUATED can be used to check if
   // the compiler support is present to make this function work as expected.
@@ -554,7 +559,7 @@ namespace sys
 # define _GLIBCXX_ASSERTIONS 1
 #endif
 
-// Disable sys::string explicit instantiation declarations in order to assert.
+// Disable std::string explicit instantiation declarations in order to assert.
 #ifdef _GLIBCXX_ASSERTIONS
 # undef _GLIBCXX_EXTERN_TEMPLATE
 # define _GLIBCXX_EXTERN_TEMPLATE -1
@@ -563,7 +568,7 @@ namespace sys
 
 #if _GLIBCXX_HAVE_IS_CONSTANT_EVALUATED
 # define __glibcxx_constexpr_assert(cond) \
-  if (sys::__is_constant_evaluated() && !bool(cond))	\
+  if (std::__is_constant_evaluated() && !bool(cond))	\
     __builtin_unreachable() /* precondition violation detected! */
 #else
 # define __glibcxx_constexpr_assert(unevaluated)
@@ -575,7 +580,7 @@ namespace sys
 #if defined(_GLIBCXX_ASSERTIONS) \
   || defined(_GLIBCXX_PARALLEL) || defined(_GLIBCXX_PARALLEL_ASSERTIONS)
 # ifdef _GLIBCXX_VERBOSE_ASSERT
-namespace sys
+namespace std
 {
 #pragma GCC visibility push(default)
   // Avoid the use of assert, because we're trying to keep the <cassert>
@@ -591,7 +596,7 @@ namespace sys
   if (__builtin_expect(!bool(_Condition), false))			\
   {									\
     __glibcxx_constexpr_assert(false);					\
-    sys::__glibcxx_assert_fail(__FILE__, __LINE__, __PRETTY_FUNCTION__,	\
+    std::__glibcxx_assert_fail(__FILE__, __LINE__, __PRETTY_FUNCTION__,	\
 			       #_Condition);				\
   }
 # else // ! VERBOSE_ASSERT
@@ -714,10 +719,10 @@ namespace sys
 #endif
 
 #if __cplusplus > 201402L
-// In C++17 mathematical special functions are in namespace sys.
+// In C++17 mathematical special functions are in namespace std.
 # define _GLIBCXX_USE_STD_SPEC_FUNCS 1
 #elif __cplusplus >= 201103L && __STDCPP_WANT_MATH_SPEC_FUNCS__ != 0
-// For C++11 and C++14 they are in namespace sys when requested.
+// For C++11 and C++14 they are in namespace std when requested.
 # define _GLIBCXX_USE_STD_SPEC_FUNCS 1
 #endif
 
@@ -817,10 +822,10 @@ namespace sys
 # define _GLIBCXX_LDOUBLE_IS_IEEE_BINARY128 1
 #endif
 
-#ifdef __STDCPP_BFLOAT16_T__
+#if defined __cplusplus && defined __BFLT16_DIG__
 namespace __gnu_cxx
 {
-  using __bfloat16_t = decltype(0.0bf16);
+  typedef __decltype(0.0bf16) __bfloat16_t;
 }
 #endif
 
@@ -849,7 +854,43 @@ namespace __gnu_cxx
 # define _GLIBCXX_HAVE_BUILTIN_LAUNDER 1
 #endif
 
-#undef _GLIBCXX_HAS_BUILTIN
+// Returns 1 if _GLIBCXX_DO_NOT_USE_BUILTIN_TRAITS is not defined and the
+// compiler has a corresponding built-in type trait, 0 otherwise.
+// _GLIBCXX_DO_NOT_USE_BUILTIN_TRAITS can be defined to disable the use of
+// built-in traits.
+#ifndef _GLIBCXX_DO_NOT_USE_BUILTIN_TRAITS
+# define _GLIBCXX_USE_BUILTIN_TRAIT(BT) _GLIBCXX_HAS_BUILTIN(BT)
+#else
+# define _GLIBCXX_USE_BUILTIN_TRAIT(BT) 0
+#endif
 
 // Mark code that should be ignored by the compiler, but seen by Doxygen.
 #define _GLIBCXX_DOXYGEN_ONLY(X)
+
+// PSTL configuration
+
+#if __cplusplus >= 201703L
+// This header is not installed for freestanding:
+#if __has_include(<pstl/pstl_config.h>)
+// Preserved here so we have some idea which version of upstream we've pulled in
+// #define PSTL_VERSION 9000
+
+// For now this defaults to being based on the presence of Thread Building Blocks
+# ifndef _GLIBCXX_USE_TBB_PAR_BACKEND
+#  define _GLIBCXX_USE_TBB_PAR_BACKEND __has_include(<tbb/tbb.h>)
+# endif
+// This section will need some rework when a new (default) backend type is added
+# if _GLIBCXX_USE_TBB_PAR_BACKEND
+#  define _PSTL_PAR_BACKEND_TBB
+# else
+#  define _PSTL_PAR_BACKEND_SERIAL
+# endif
+
+# define _PSTL_ASSERT(_Condition) __glibcxx_assert(_Condition)
+# define _PSTL_ASSERT_MSG(_Condition, _Message) __glibcxx_assert(_Condition)
+
+#include <pstl/pstl_config.h>
+#endif // __has_include
+#endif // C++17
+
+// End of prewritten config; the settings discovered at configure time follow.

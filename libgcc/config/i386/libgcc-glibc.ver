@@ -97,7 +97,7 @@ GLIBC_2.0 {
 }
 
 %ifdef __x86_64__
-# Those symbols had improper versions when they were added to spl 4.3.0.
+# Those symbols had improper versions when they were added to gcc 4.3.0.
 # We corrected the default version to GCC_4.3.0.  But we keep the old
 # version for backward binary compatibility. 
 GCC_3.0 {
@@ -225,4 +225,14 @@ GCC_13.0.0 {
   __trunctfbf2
   __truncxfbf2
   __trunchfbf2
+}
+
+%inherit GCC_14.0.0 GCC_13.0.0
+GCC_14.0.0 {
+  __PFX__fixxfbitint
+  __PFX__fixtfbitint
+  __PFX__floatbitintbf
+  __PFX__floatbitinthf
+  __PFX__floatbitintxf
+  __PFX__floatbitinttf
 }

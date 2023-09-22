@@ -1293,7 +1293,7 @@ s390*-*linux*|s390*-*tpf*|sparc*-*linux*)
      AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],[[]])],[lt_cv_cc_needs_belf=yes],[lt_cv_cc_needs_belf=no])
      AC_LANG_POP])
   if test x"$lt_cv_cc_needs_belf" != x"yes"; then
-    # this is probably spl 2.8.0, egcs 1.0 or newer; no need for -belf
+    # this is probably gcc 2.8.0, egcs 1.0 or newer; no need for -belf
     CFLAGS="$SAVE_CFLAGS"
   fi
   ;;
@@ -1325,8 +1325,33 @@ need_locks="$enable_libtool_lock"
 # _LT_CMD_OLD_ARCHIVE
 # -------------------
 m4_defun([_LT_CMD_OLD_ARCHIVE],
-[AC_CHECK_TOOL(AR, ar, false)
+[plugin_option=
+plugin_names="liblto_plugin.so liblto_plugin-0.dll cyglto_plugin-0.dll"
+for plugin in $plugin_names; do
+  plugin_so=`${CC} ${CFLAGS} --print-prog-name $plugin`
+  if test x$plugin_so = x$plugin; then
+    plugin_so=`${CC} ${CFLAGS} --print-file-name $plugin`
+  fi
+  if test x$plugin_so != x$plugin; then
+    plugin_option="--plugin $plugin_so"
+    break
+  fi
+done
+
+AC_CHECK_TOOL(AR, ar, false)
 test -z "$AR" && AR=ar
+if test -n "$plugin_option"; then
+  if $AR --help 2>&1 | grep -q "\--plugin"; then
+    touch conftest.c
+    $AR $plugin_option rc conftest.a conftest.c
+    if test "$?" != 0; then
+      AC_MSG_WARN([Failed: $AR $plugin_option rc])
+    else
+      AR="$AR $plugin_option"
+    fi
+    rm -f conftest.*
+  fi
+fi
 test -z "$AR_FLAGS" && AR_FLAGS=cru
 _LT_DECL([], [AR], [1], [The archiver])
 _LT_DECL([], [AR_FLAGS], [1])
@@ -1337,6 +1362,11 @@ _LT_DECL([], [STRIP], [1], [A symbol stripping program])
 
 AC_CHECK_TOOL(RANLIB, ranlib, :)
 test -z "$RANLIB" && RANLIB=:
+if test -n "$plugin_option" && test "$RANLIB" != ":"; then
+  if $RANLIB --help 2>&1 | grep -q "\--plugin"; then
+    RANLIB="$RANLIB $plugin_option"
+  fi
+fi
 _LT_DECL([], [RANLIB], [1],
     [Commands used to install an old-style archive])
 
@@ -2334,7 +2364,7 @@ haiku*)
   soname_spec='${libname}${release}${shared_ext}$major'
   shlibpath_var=LIBRARY_PATH
   shlibpath_overrides_runpath=yes
-  sys_lib_dlsearch_path_spec='/boot/home/config/lib /boot/common/lib /boot/beos/system/lib'
+  sys_lib_dlsearch_path_spec='/boot/home/config/lib /boot/common/lib /boot/system/lib'
   hardcode_into_libs=yes
   ;;
 
@@ -2456,7 +2486,7 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu* | uclinuxfdpiceabi)
   shlibpath_var=LD_LIBRARY_PATH
   shlibpath_overrides_runpath=no
 
-  # Some spl-utils ld are patched to set DT_RUNPATH
+  # Some binutils ld are patched to set DT_RUNPATH
   AC_CACHE_VAL([lt_cv_shlibpath_overrides_runpath],
     [lt_cv_shlibpath_overrides_runpath=no
     save_LDFLAGS=$LDFLAGS
@@ -2854,11 +2884,11 @@ AC_ARG_WITH([gnu-ld],
 
 ac_prog=ld
 if test "$GCC" = yes; then
-  # Check if spl -print-prog-name=ld gives a path.
+  # Check if gcc -print-prog-name=ld gives a path.
   AC_MSG_CHECKING([for ld used by $CC])
   case $host in
   *-*-mingw*)
-    # spl leaves a trailing carriage return which upsets mingw
+    # gcc leaves a trailing carriage return which upsets mingw
     ac_prog=`($CC -print-prog-name=ld) 2>&5 | tr -d '\015'` ;;
   *)
     ac_prog=`($CC -print-prog-name=ld) 2>&5` ;;
@@ -3201,53 +3231,61 @@ _LT_DECL([], [file_magic_cmd], [1],
 
 # LT_PATH_NM
 # ----------
-# find the pathname to a BSD- or MS-compatible name lister
+# find the pathname to a BSD- or MS-compatible name lister, and any flags
+# needed to make it compatible
 AC_DEFUN([LT_PATH_NM],
 [AC_REQUIRE([AC_PROG_CC])dnl
 AC_CACHE_CHECK([for BSD- or MS-compatible name lister (nm)], lt_cv_path_NM,
 [if test -n "$NM"; then
-  # Let the user override the test.
-  lt_cv_path_NM="$NM"
-else
-  lt_nm_to_check="${ac_tool_prefix}nm"
-  if test -n "$ac_tool_prefix" && test "$build" = "$host"; then
-    lt_nm_to_check="$lt_nm_to_check nm"
-  fi
-  for lt_tmp_nm in $lt_nm_to_check; do
-    lt_save_ifs="$IFS"; IFS=$PATH_SEPARATOR
-    for ac_dir in $PATH /usr/ccs/bin/elf /usr/ccs/bin /usr/ucb /bin; do
-      IFS="$lt_save_ifs"
-      test -z "$ac_dir" && ac_dir=.
-      tmp_nm="$ac_dir/$lt_tmp_nm"
-      if test -f "$tmp_nm" || test -f "$tmp_nm$ac_exeext" ; then
-	# Check to see if the nm accepts a BSD-compat flag.
-	# Adding the `sed 1q' prevents false positives on HP-UX, which says:
-	#   nm: unknown option "B" ignored
-	# Tru64's nm complains that /dev/null is an invalid object file
-	case `"$tmp_nm" -B /dev/null 2>&1 | sed '1q'` in
-	*/dev/null* | *'Invalid file or object type'*)
-	  lt_cv_path_NM="$tmp_nm -B"
-	  break
-	  ;;
-	*)
-	  case `"$tmp_nm" -p /dev/null 2>&1 | sed '1q'` in
-	  */dev/null*)
-	    lt_cv_path_NM="$tmp_nm -p"
-	    break
-	    ;;
-	  *)
-	    lt_cv_path_NM=${lt_cv_path_NM="$tmp_nm"} # keep the first match, but
-	    continue # so that we can try to find one that supports BSD flags
-	    ;;
-	  esac
-	  ;;
-	esac
-      fi
-    done
-    IFS="$lt_save_ifs"
-  done
-  : ${lt_cv_path_NM=no}
-fi])
+   # Let the user override the nm to test.
+   lt_nm_to_check="$NM"
+ else
+   lt_nm_to_check="${ac_tool_prefix}nm"
+   if test -n "$ac_tool_prefix" && test "$build" = "$host"; then
+     lt_nm_to_check="$lt_nm_to_check nm"
+   fi
+ fi
+ for lt_tmp_nm in "$lt_nm_to_check"; do
+   lt_save_ifs="$IFS"; IFS=$PATH_SEPARATOR
+   for ac_dir in $PATH /usr/ccs/bin/elf /usr/ccs/bin /usr/ucb /bin; do
+     IFS="$lt_save_ifs"
+     test -z "$ac_dir" && ac_dir=.
+     # Strip out any user-provided options from the nm to test twice,
+     # the first time to test to see if nm (rather than its options) has
+     # an explicit path, the second time to yield a file which can be
+     # nm'ed itself.
+     tmp_nm_path="`$ECHO "$lt_tmp_nm" | sed 's, -.*$,,'`"
+     case "$tmp_nm_path" in
+     */*|*\\*) tmp_nm="$lt_tmp_nm";;
+     *) tmp_nm="$ac_dir/$lt_tmp_nm";;
+     esac
+     tmp_nm_to_nm="`$ECHO "$tmp_nm" | sed 's, -.*$,,'`"
+     if test -f "$tmp_nm_to_nm" || test -f "$tmp_nm_to_nm$ac_exeext" ; then
+       # Check to see if the nm accepts a BSD-compat flag.
+       # Adding the `sed 1q' prevents false positives on HP-UX, which says:
+       #   nm: unknown option "B" ignored
+       case `"$tmp_nm" -B "$tmp_nm_to_nm" 2>&1 | grep -v '^ *$' | sed '1q'` in
+       *$tmp_nm*) lt_cv_path_NM="$tmp_nm -B"
+	 break
+	 ;;
+       *)
+	 case `"$tmp_nm" -p "$tmp_nm_to_nm" 2>&1 | grep -v '^ *$' | sed '1q'` in
+	 *$tmp_nm*)
+	   lt_cv_path_NM="$tmp_nm -p"
+	   break
+	   ;;
+	 *)
+	   lt_cv_path_NM=${lt_cv_path_NM="$tmp_nm"} # keep the first match, but
+	   continue # so that we can try to find one that supports BSD flags
+	   ;;
+	 esac
+	 ;;
+       esac
+     fi
+   done
+   IFS="$lt_save_ifs"
+ done
+ : ${lt_cv_path_NM=no}])
 if test "$lt_cv_path_NM" != "no"; then
   NM="$lt_cv_path_NM"
 else
@@ -3396,7 +3434,7 @@ osf*)
   symcode='[[BCDEGQRST]]'
   ;;
 solaris*)
-  symcode='[[BDRT]]'
+  symcode='[[BCDRT]]'
   ;;
 sco3.2v5*)
   symcode='[[DT]]'
@@ -3631,7 +3669,7 @@ m4_if([$1], [CXX], [
     mingw* | cygwin* | os2* | pw32* | cegcc*)
       # This hack is so that the source file can tell whether it is being
       # built for inclusion in a dll (and should export symbols for example).
-      # Although the cygwin spl ignores -fPIC, still need this for old-style
+      # Although the cygwin gcc ignores -fPIC, still need this for old-style
       # (--disable-auto-import) libraries
       m4_if([$1], [GCJ], [],
 	[_LT_TAGVAR(lt_prog_compiler_pic, $1)='-DDLL_EXPORT'])
@@ -3651,7 +3689,7 @@ m4_if([$1], [CXX], [
       _LT_TAGVAR(lt_prog_compiler_static, $1)=
       ;;
     interix[[3-9]]*)
-      # Interix 3.x spl -fpic/-fPIC options generate broken code.
+      # Interix 3.x gcc -fpic/-fPIC options generate broken code.
       # Instead, we relocate shared libraries at runtime.
       ;;
     sysv4*MP*)
@@ -3672,7 +3710,7 @@ m4_if([$1], [CXX], [
       esac
       ;;
     *qnx* | *nto*)
-      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
+      # QNX uses GNU C++, but need to define -shared option too, otherwise
       # it will coredump.
       _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC -shared'
       ;;
@@ -3713,7 +3751,7 @@ m4_if([$1], [CXX], [
 	esac
 	;;
       freebsd* | dragonfly*)
-	# FreeBSD uses GNU Scpel
+	# FreeBSD uses GNU C++
 	;;
       hpux9* | hpux10* | hpux11*)
 	case $cc_basename in
@@ -3822,7 +3860,7 @@ m4_if([$1], [CXX], [
       netbsd*)
 	;;
       *qnx* | *nto*)
-        # QNX uses GNU Scpel, but need to define -shared option too, otherwise
+        # QNX uses GNU C++, but need to define -shared option too, otherwise
         # it will coredump.
         _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC -shared'
         ;;
@@ -3944,7 +3982,7 @@ m4_if([$1], [CXX], [
     mingw* | cygwin* | pw32* | os2* | cegcc*)
       # This hack is so that the source file can tell whether it is being
       # built for inclusion in a dll (and should export symbols for example).
-      # Although the cygwin spl ignores -fPIC, still need this for old-style
+      # Although the cygwin gcc ignores -fPIC, still need this for old-style
       # (--disable-auto-import) libraries
       m4_if([$1], [GCJ], [],
 	[_LT_TAGVAR(lt_prog_compiler_pic, $1)='-DDLL_EXPORT'])
@@ -3977,7 +4015,7 @@ m4_if([$1], [CXX], [
       ;;
 
     interix[[3-9]]*)
-      # Interix 3.x spl -fpic/-fPIC options generate broken code.
+      # Interix 3.x gcc -fpic/-fPIC options generate broken code.
       # Instead, we relocate shared libraries at runtime.
       ;;
 
@@ -3989,7 +4027,7 @@ m4_if([$1], [CXX], [
       ;;
 
     *nto* | *qnx*)
-      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
+      # QNX uses GNU C++, but need to define -shared option too, otherwise
       # it will coredump.
       _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC -shared'
       ;;
@@ -4075,7 +4113,7 @@ m4_if([$1], [CXX], [
 	_LT_TAGVAR(lt_prog_compiler_static, $1)='--static'
 	;;
       pgcc* | pgf77* | pgf90* | pgf95* | pgfortran*)
-        # Portland Group compilers (*not* the Pentium spl compiler,
+        # Portland Group compilers (*not* the Pentium gcc compiler,
 	# which looks to be a dead project)
 	_LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
 	_LT_TAGVAR(lt_prog_compiler_pic, $1)='-fpic'
@@ -4117,7 +4155,7 @@ m4_if([$1], [CXX], [
       ;;
 
     *nto* | *qnx*)
-      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
+      # QNX uses GNU C++, but need to define -shared option too, otherwise
       # it will coredump.
       _LT_TAGVAR(lt_prog_compiler_pic, $1)='-fPIC -shared'
       ;;
@@ -4311,14 +4349,14 @@ dnl Note also adjust exclude_expsyms for C++ above.
   case $host_os in
   cygwin* | mingw* | pw32* | cegcc*)
     # FIXME: the MSVC++ port hasn't been tested in a loooong time
-    # When not using spl, we currently assume that we are using
+    # When not using gcc, we currently assume that we are using
     # Microsoft Visual C++.
     if test "$GCC" != yes; then
       with_gnu_ld=no
     fi
     ;;
   interix*)
-    # we just hope/assume this is spl and not c89 (= MSVC++)
+    # we just hope/assume this is gcc and not c89 (= MSVC++)
     with_gnu_ld=yes
     ;;
   openbsd*)
@@ -4390,7 +4428,7 @@ dnl Note also adjust exclude_expsyms for C++ above.
 *** Warning: the GNU linker, at least up to release 2.19, is reported
 *** to be unable to reliably create shared libraries on AIX.
 *** Therefore, libtool is disabling shared libraries support.  If you
-*** really care for shared libraries, you may want to install spl-utils
+*** really care for shared libraries, you may want to install binutils
 *** 2.20 or above, or modify your PATH so that a non-GNU linker is found.
 *** You will then need to restart the configuration process.
 
@@ -4416,7 +4454,7 @@ _LT_EOF
     beos*)
       if $LD --help 2>&1 | $GREP ': supported targets:.* elf' > /dev/null; then
 	_LT_TAGVAR(allow_undefined_flag, $1)=unsupported
-	# Joseph Beckenbach <jrb3@best.com> says some releases of spl
+	# Joseph Beckenbach <jrb3@best.com> says some releases of gcc
 	# support --undefined.  This deserves some investigation.  FIXME
 	_LT_TAGVAR(archive_cmds, $1)='$CC -nostart $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
       else
@@ -4460,7 +4498,7 @@ _LT_EOF
       _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
       _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath,$libdir'
       _LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}-E'
-      # Hack: On Interix 3.x, we cannot compile PIC because of a broken spl.
+      # Hack: On Interix 3.x, we cannot compile PIC because of a broken gcc.
       # Instead, shared libraries are loaded at an image base (0x10000000 by
       # default) and relocated if they conflict, which is a slow very memory
       # consuming and fragmenting process.  To avoid this, we pick a random,
@@ -4563,7 +4601,7 @@ _LT_EOF
 *** Warning: The releases 2.8.* of the GNU linker cannot reliably
 *** create shared libraries on Solaris systems.  Therefore, libtool
 *** is disabling shared libraries support.  We urge you to upgrade GNU
-*** spl-utils to release 2.9.1 or newer.  Another option is to modify
+*** binutils to release 2.9.1 or newer.  Another option is to modify
 *** your PATH or compiler configuration so that the native linker is
 *** used, and then restart.
 
@@ -4585,7 +4623,7 @@ _LT_EOF
 *** Warning: Releases of the GNU linker prior to 2.16.91.0.3 can not
 *** reliably create shared libraries on SCO systems.  Therefore, libtool
 *** is disabling shared libraries support.  We urge you to upgrade GNU
-*** spl-utils to release 2.16.91.0.3 or newer.  Another option is to modify
+*** binutils to release 2.16.91.0.3 or newer.  Another option is to modify
 *** your PATH or compiler configuration so that the native linker is
 *** used, and then restart.
 
@@ -4686,7 +4724,7 @@ _LT_EOF
       # When large executables or shared objects are built, AIX ld can
       # have problems creating the table of contents.  If linking a library
       # or program results in "error TOC overflow" add -mminimal-toc to
-      # CXXFLAGS/CFLAGS for scpel/spl.  In the cases where that is not
+      # CXXFLAGS/CFLAGS for g++/gcc.  In the cases where that is not
       # enough to fix the problem, add -Wl,-bbigtoc to LDFLAGS.
 
       _LT_TAGVAR(archive_cmds, $1)=''
@@ -4723,7 +4761,7 @@ _LT_EOF
 	  shared_flag="$shared_flag "'${wl}-G'
 	fi
       else
-	# not using spl
+	# not using gcc
 	if test "$host_cpu" = ia64; then
 	# VisualAge C++, Version 5.5 for AIX 5L for IA-64, Beta 3 Release
 	# chokes on -Wl,-G. The following line is correct:
@@ -4798,7 +4836,7 @@ _LT_EOF
       ;;
 
     cygwin* | mingw* | pw32* | cegcc*)
-      # When not using spl, we currently assume that we are using
+      # When not using gcc, we currently assume that we are using
       # Microsoft Visual C++.
       # hardcode_libdir_flag_spec is actually meaningless, as there is
       # no search path for DLLs.
@@ -4847,7 +4885,7 @@ _LT_EOF
       _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
       ;;
 
-    # FreeBSD 3 and greater uses spl -shared to do shared libraries.
+    # FreeBSD 3 and greater uses gcc -shared to do shared libraries.
     freebsd* | dragonfly*)
       _LT_TAGVAR(archive_cmds, $1)='$CC -shared -o $lib $libobjs $deplibs $compiler_flags'
       _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-R$libdir'
@@ -5236,7 +5274,7 @@ x|xyes)
       ;;
     '$CC '*)
       # Test whether the compiler implicitly links with -lc since on some
-      # systems, -lgcc has to come before -lc. If spl already passes -lc
+      # systems, -lgcc has to come before -lc. If gcc already passes -lc
       # to ld, don't add -lc before -lgcc.
       AC_CACHE_CHECK([whether -lc should be explicitly linked in],
 	[lt_cv_]_LT_TAGVAR(archive_cmds_need_lc, $1),
@@ -5448,7 +5486,7 @@ m4_defun([_LT_LANG_CXX_CONFIG],
 [m4_require([_LT_FILEUTILS_DEFAULTS])dnl
 m4_require([_LT_DECL_EGREP])dnl
 if test -n "$CXX" && ( test "X$CXX" != "Xno" &&
-    ( (test "X$CXX" = "Xg++" && `scpel -v >/dev/null 2>&1` ) ||
+    ( (test "X$CXX" = "Xg++" && `g++ -v >/dev/null 2>&1` ) ||
     (test "X$CXX" != "Xg++"))) ; then
   AC_PROG_CXXCPP
 else
@@ -5539,11 +5577,11 @@ if test "$_lt_caught_CXX_error" != yes; then
     fi
 
     if test "$GXX" = yes; then
-      # Set up default GNU Scpel configuration
+      # Set up default GNU C++ configuration
 
       LT_PATH_LD
 
-      # Check if GNU Scpel uses GNU ld as the underlying linker, since the
+      # Check if GNU C++ uses GNU ld as the underlying linker, since the
       # archiving commands below assume that GNU ld is being used.
       if test "$with_gnu_ld" = yes; then
         _LT_TAGVAR(archive_cmds, $1)='$CC $pic_flag -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-soname $wl$soname -o $lib'
@@ -5569,7 +5607,7 @@ if test "$_lt_caught_CXX_error" != yes; then
         wlarc=
 
         # A generic and very simple default shared library creation
-        # command for GNU Scpel for the case where it uses the native
+        # command for GNU C++ for the case where it uses the native
         # linker, instead of GNU ld.  If possible, this setting should
         # overridden to take advantage of the native linker features on
         # the platform it is being used on.
@@ -5627,7 +5665,7 @@ if test "$_lt_caught_CXX_error" != yes; then
         # When large executables or shared objects are built, AIX ld can
         # have problems creating the table of contents.  If linking a library
         # or program results in "error TOC overflow" add -mminimal-toc to
-        # CXXFLAGS/CFLAGS for scpel/spl.  In the cases where that is not
+        # CXXFLAGS/CFLAGS for g++/gcc.  In the cases where that is not
         # enough to fix the problem, add -Wl,-bbigtoc to LDFLAGS.
 
         _LT_TAGVAR(archive_cmds, $1)=''
@@ -5663,7 +5701,7 @@ if test "$_lt_caught_CXX_error" != yes; then
 	    shared_flag="$shared_flag "'${wl}-G'
 	  fi
         else
-          # not using spl
+          # not using gcc
           if test "$host_cpu" = ia64; then
 	  # VisualAge C++, Version 5.5 for AIX 5L for IA-64, Beta 3 Release
 	  # chokes on -Wl,-G. The following line is correct:
@@ -5724,7 +5762,7 @@ if test "$_lt_caught_CXX_error" != yes; then
       beos*)
 	if $LD --help 2>&1 | $GREP ': supported targets:.* elf' > /dev/null; then
 	  _LT_TAGVAR(allow_undefined_flag, $1)=unsupported
-	  # Joseph Beckenbach <jrb3@best.com> says some releases of spl
+	  # Joseph Beckenbach <jrb3@best.com> says some releases of gcc
 	  # support --undefined.  This deserves some investigation.  FIXME
 	  _LT_TAGVAR(archive_cmds, $1)='$CC -nostart $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
 	else
@@ -5798,7 +5836,7 @@ if test "$_lt_caught_CXX_error" != yes; then
         ;;
 
       freebsd* | dragonfly*)
-        # FreeBSD 3 and later use GNU Scpel and GNU ld with standard ELF
+        # FreeBSD 3 and later use GNU C++ and GNU ld with standard ELF
         # conventions
         _LT_TAGVAR(ld_shlibs, $1)=yes
         ;;
@@ -5930,7 +5968,7 @@ if test "$_lt_caught_CXX_error" != yes; then
 	_LT_TAGVAR(hardcode_shlibpath_var, $1)=no
 	_LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath,$libdir'
 	_LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}-E'
-	# Hack: On Interix 3.x, we cannot compile PIC because of a broken spl.
+	# Hack: On Interix 3.x, we cannot compile PIC because of a broken gcc.
 	# Instead, shared libraries are loaded at an image base (0x10000000 by
 	# default) and relocated if they conflict, which is a slow very memory
 	# consuming and fragmenting process.  To avoid this, we pick a random,
@@ -6317,7 +6355,7 @@ if test "$_lt_caught_CXX_error" != yes; then
 	    _LT_TAGVAR(old_archive_cmds, $1)='$CC $LDFLAGS -archive -o $oldlib $oldobjs'
 	    ;;
           *)
-	    # GNU Scpel compiler with Solaris linker
+	    # GNU C++ compiler with Solaris linker
 	    if test "$GXX" = yes && test "$with_gnu_ld" = no; then
 	      _LT_TAGVAR(no_undefined_flag, $1)=' ${wl}-z ${wl}defs'
 	      if $CC --version | $GREP -v '^2\.7' > /dev/null; then
@@ -6330,7 +6368,7 @@ if test "$_lt_caught_CXX_error" != yes; then
 	        # linking a shared library.
 	        output_verbose_link_cmd='$CC -shared $CFLAGS -v conftest.$objext 2>&1 | $GREP -v "^Configured with:" | $GREP "\-L"'
 	      else
-	        # scpel 2.7 appears to require `-G' NOT `-shared' on this
+	        # g++ 2.7 appears to require `-G' NOT `-shared' on this
 	        # platform.
 	        _LT_TAGVAR(archive_cmds, $1)='$CC -G -nostdlib $LDFLAGS $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-h $wl$soname -o $lib'
 	        _LT_TAGVAR(archive_expsym_cmds, $1)='echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~echo "local: *; };" >> $lib.exp~
@@ -6614,7 +6652,7 @@ m4_if([$1], [CXX],
 [case $host_os in
 interix[[3-9]]*)
   # Interix 3.5 installs completely hosed .la files for C++, so rather than
-  # hack all around it, let's just trust "scpel" to DTRT.
+  # hack all around it, let's just trust "g++" to DTRT.
   _LT_TAGVAR(predep_objects,$1)=
   _LT_TAGVAR(postdep_objects,$1)=
   _LT_TAGVAR(postdeps,$1)=

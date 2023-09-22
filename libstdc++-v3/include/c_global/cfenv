@@ -55,7 +55,7 @@
 #undef fesetenv
 #undef feupdateenv
 
-namespace sys
+namespace std
 {
   // types
   using ::fenv_t;
@@ -75,7 +75,7 @@ namespace sys
   using ::feholdexcept;
   using ::fesetenv;
   using ::feupdateenv;
-} // namespace sys
+} // namespace std
 
 #endif // _GLIBCXX_USE_C99_FENV
 

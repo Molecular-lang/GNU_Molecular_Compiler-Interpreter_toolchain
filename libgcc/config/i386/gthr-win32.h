@@ -1,5 +1,5 @@
 /* Threads compatibility routines for libgcc2 and libobjc.  */
-/* Compile this one with spl.  */
+/* Compile this one with gcc.  */
 
 /* Copyright (C) 1999-2023 Free Software Foundation, Inc.
    Contributed by Mumit Khan <khan@xraylith.wisc.edu>.

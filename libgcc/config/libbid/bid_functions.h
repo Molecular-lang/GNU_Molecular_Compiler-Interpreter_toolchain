@@ -25,8 +25,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #define _BID_FUNCTIONS_H
 
 #ifdef IN_LIBGCC2
-// When we are built as the part of the spl runtime library, libgcc,
-// we will use spl types defined in bid_gcc_intrinsics.h.
+// When we are built as the part of the gcc runtime library, libgcc,
+// we will use gcc types defined in bid_gcc_intrinsics.h.
 #include "bid_gcc_intrinsics.h"
 
 #define ALIGN(n) __attribute__ ((aligned(n)))

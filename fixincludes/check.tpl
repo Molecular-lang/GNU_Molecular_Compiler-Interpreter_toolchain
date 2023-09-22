@@ -6,7 +6,7 @@
 =]#!/bin/sh
 
 set -e
-TESTDIR=
+TESTDIR=tests
 TESTBASE=`cd $1;${PWDCMD-pwd}`
 
 [ -d ${TESTDIR} ] || mkdir ${TESTDIR}

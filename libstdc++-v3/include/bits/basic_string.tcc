@@ -43,7 +43,7 @@
 
 #include <bits/cxxabi_forced.h>
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -59,7 +59,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     basic_string<_CharT, _Traits, _Alloc>::
     swap(basic_string& __s) _GLIBCXX_NOEXCEPT
     {
-      if (this == sys::__addressof(__s))
+      if (this == std::__addressof(__s))
 	return;
 
       _Alloc_traits::_S_on_swap(_M_get_allocator(), __s._M_get_allocator());
@@ -137,11 +137,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       // _GLIBCXX_RESOLVE_LIB_DEFECTS
       // 83.  String::npos vs. string::max_size()
       if (__capacity > max_size())
-	sys::__throw_length_error(__N("basic_string::_M_create"));
+	std::__throw_length_error(__N("basic_string::_M_create"));
 
       // The below implements an exponential growth policy, necessary to
       // meet amortized linear time requirements of the library: see
-      // http://spl.gnu.org/ml/libstdc++/2001-07/msg00085.html.
+      // http://gcc.gnu.org/ml/libstdc++/2001-07/msg00085.html.
       if (__capacity > __old_capacity && __capacity < 2 * __old_capacity)
 	{
 	  __capacity = 2 * __old_capacity;
@@ -165,7 +165,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       void
       basic_string<_CharT, _Traits, _Alloc>::
       _M_construct(_InIterator __beg, _InIterator __end,
-		   sys::input_iterator_tag)
+		   std::input_iterator_tag)
       {
 	size_type __len = 0;
 	size_type __capacity = size_type(_S_local_capacity);
@@ -216,9 +216,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       void
       basic_string<_CharT, _Traits, _Alloc>::
       _M_construct(_InIterator __beg, _InIterator __end,
-		   sys::forward_iterator_tag)
+		   std::forward_iterator_tag)
       {
-	size_type __dnew = static_cast<size_type>(sys::distance(__beg, __end));
+	size_type __dnew = static_cast<size_type>(std::distance(__beg, __end));
 
 	if (__dnew > size_type(_S_local_capacity))
 	  {
@@ -273,7 +273,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     basic_string<_CharT, _Traits, _Alloc>::
     _M_assign(const basic_string& __str)
     {
-      if (this != sys::__addressof(__str))
+      if (this != std::__addressof(__str))
 	{
 	  const size_type __rsize = __str.length();
 	  const size_type __capacity = capacity();
@@ -429,7 +429,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       basic_string<_CharT, _Traits, _Alloc>::
       _M_replace_dispatch(const_iterator __i1, const_iterator __i2,
 			  _InputIterator __k1, _InputIterator __k2,
-			  sys::__false_type)
+			  std::__false_type)
       {
 	// _GLIBCXX_RESOLVE_LIB_DEFECTS
 	// 2788. unintentionally require a default constructible allocator
@@ -518,7 +518,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
 	  const size_type __how_much = __old_size - __pos - __len1;
 #if __cpp_lib_is_constant_evaluated
-	  if (sys::is_constant_evaluated())
+	  if (std::is_constant_evaluated())
 	    {
 	      auto __newp = _S_allocate(_M_get_allocator(), __new_size);
 	      _S_copy(__newp, this->_M_data(), __pos);
@@ -561,43 +561,52 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       return __n;
     }
 
-#if __cplusplus > 202002L
+#ifdef __cpp_lib_string_resize_and_overwrite // C++ >= 23
   template<typename _CharT, typename _Traits, typename _Alloc>
   template<typename _Operation>
+    [[__gnu__::__always_inline__]]
     constexpr void
     basic_string<_CharT, _Traits, _Alloc>::
-    resize_and_overwrite(size_type __n, _Operation __op)
-    {
-      const size_type __capacity = capacity();
-      _CharT* __p;
-      if (__n > __capacity)
-	{
-	  __p = _M_create(__n, __capacity);
-	  this->_S_copy(__p, _M_data(), length()); // exclude trailing null
-#if __cpp_lib_is_constant_evaluated
-	  if (sys::is_constant_evaluated())
-	    traits_type::assign(__p + length(), __n - length(), _CharT());
+    __resize_and_overwrite(const size_type __n, _Operation __op)
+    { resize_and_overwrite<_Operation&>(__n, __op); }
 #endif
-	  _M_dispose();
-	  _M_data(__p);
-	  _M_capacity(__n);
-	}
-      else
-	__p = _M_data();
+
+#if __cplusplus >= 201103L
+  template<typename _CharT, typename _Traits, typename _Alloc>
+  template<typename _Operation>
+    _GLIBCXX20_CONSTEXPR void
+    basic_string<_CharT, _Traits, _Alloc>::
+#ifdef __cpp_lib_string_resize_and_overwrite // C++ >= 23
+    resize_and_overwrite(const size_type __n, _Operation __op)
+#else
+    __resize_and_overwrite(const size_type __n, _Operation __op)
+#endif
+    {
+      reserve(__n);
+      _CharT* const __p = _M_data();
+#if __cpp_lib_is_constant_evaluated
+      if (std::__is_constant_evaluated() && __n > size())
+	traits_type::assign(__p + size(), __n - size(), _CharT());
+#endif
       struct _Terminator {
-	constexpr ~_Terminator() { _M_this->_M_set_length(_M_r); }
+	_GLIBCXX20_CONSTEXPR ~_Terminator() { _M_this->_M_set_length(_M_r); }
 	basic_string* _M_this;
 	size_type _M_r;
       };
-      _Terminator __term{this};
-      auto __r = sys::move(__op)(auto(__p), auto(__n));
+      _Terminator __term{this, 0};
+      auto __r = std::move(__op)(__p + 0, __n + 0);
+#ifdef __cpp_lib_concepts
       static_assert(ranges::__detail::__is_integer_like<decltype(__r)>);
+#else
+      static_assert(__gnu_cxx::__is_integer_nonstrict<decltype(__r)>::__value,
+		    "resize_and_overwrite operation must return an integer");
+#endif
       _GLIBCXX_DEBUG_ASSERT(__r >= 0 && __r <= __n);
       __term._M_r = size_type(__r);
       if (__term._M_r > __n)
 	__builtin_unreachable();
     }
-#endif // C++23
+#endif // C++11
 
 #endif  // _GLIBCXX_USE_CXX11_ABI
    
@@ -673,7 +682,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       const size_type __size = this->size();
       if (__n <= __size)
 	{
-	  __pos = sys::min(size_type(__size - __n), __pos);
+	  __pos = std::min(size_type(__size - __n), __pos);
 	  const _CharT* __data = _M_data();
 	  do
 	    {
@@ -958,7 +967,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   // src/c++17/string-inst.cc only instantiate the members required for C++17
   // and earlier standards (so not C++20's starts_with and ends_with).
   // Suppress the explicit instantiation declarations for C++20, so C++20
-  // code will implicitly instantiate sys::string and sys::wstring as needed.
+  // code will implicitly instantiate std::string and std::wstring as needed.
 # if __cplusplus <= 201703L && _GLIBCXX_EXTERN_TEMPLATE > 0
   extern template class basic_string<char>;
 # elif ! _GLIBCXX_USE_CXX11_ABI
@@ -1015,6 +1024,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #endif // _GLIBCXX_EXTERN_TEMPLATE
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 #endif

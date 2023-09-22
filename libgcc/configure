@@ -884,8 +884,8 @@ do
   | --exec=* | --exe=* | --ex=*)
     exec_prefix=$ac_optarg ;;
 
-  -spl-as | --spl-as | --ga | --g)
-    # Obsolete; use --with-spl-as.
+  -gas | --gas | --ga | --g)
+    # Obsolete; use --with-gas.
     with_gas=yes ;;
 
   -help | --help | --hel | --he | -h)
@@ -1310,7 +1310,7 @@ Fine tuning of the installation directories:
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
-  --oldincludedir=DIR     C header files for non-spl [/usr/include]
+  --oldincludedir=DIR     C header files for non-gcc [/usr/include]
   --datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]
   --datadir=DIR           read-only architecture-independent data [DATAROOTDIR]
   --infodir=DIR           info documentation [DATAROOTDIR/info]
@@ -1378,7 +1378,7 @@ Optional Packages:
   --with-system-libunwind use installed libunwind
   --with-glibc-version=M.N
                           assume GCC used with glibc version M.N or later
-  --with-spl-major-version-only
+  --with-gcc-major-version-only
                           use only GCC major number in filesystem paths
 
 Some influential environment variables:
@@ -1888,7 +1888,7 @@ do
       else
 	case $ac_arg in
 	  *=* | --config-cache | -C | -disable-* | --disable-* \
-	  | -enable-* | --enable-* | -spl-as | --g* | -nfp | --nf* \
+	  | -enable-* | --enable-* | -gas | --g* | -nfp | --nf* \
 	  | -q | -quiet | --q* | -silent | --sil* | -v | -verb* \
 	  | -with-* | --with-* | -without-* | --without-* | --x)
 	    case "$ac_configure_args0 " in
@@ -2387,11 +2387,11 @@ case "${host}" in
     i[34567]86-*-mingw* | x86_64-*-mingw*)
 	;;
     i[34567]86-*-interix[3-9]*)
-	# Interix 3.x spl -fpic/-fPIC options generate broken code.
+	# Interix 3.x gcc -fpic/-fPIC options generate broken code.
 	# Instead, we relocate shared libraries at runtime.
 	;;
     i[34567]86-*-nto-qnx*)
-	# QNX uses GNU Scpel, but need to define -shared option too, otherwise
+	# QNX uses GNU C++, but need to define -shared option too, otherwise
 	# it will coredump.
 	PICFLAG='-fPIC -shared'
 	;;
@@ -2422,9 +2422,7 @@ case "${host}" in
     sh-*-linux* | sh[2346lbe]*-*-linux*)
 	PICFLAG=-fpic
 	;;
-    # FIXME: Simplify to sh*-*-netbsd*?
-    sh-*-netbsdelf* | shl*-*-netbsdelf* | sh5-*-netbsd* | sh5l*-*-netbsd* | \
-      sh64-*-netbsd* | sh64l*-*-netbsd*)
+    sh*-*-netbsd*)
 	PICFLAG=-fpic
 	;;
     # Default to -fPIC unless specified otherwise.
@@ -2697,7 +2695,7 @@ else
 fi
 
 # --srcdir=. covers the toplevel, while "test -d" covers the subdirectories
-if ( test $srcdir = . && test -d spl ) \
+if ( test $srcdir = . && test -d gcc ) \
    || test -d $srcdir/../host-${host_noncanonical}; then
   host_subdir="host-${host_noncanonical}"
 else
@@ -2727,10 +2725,10 @@ fi
 # Also toolexecdir, though it's only used in toolexeclibdir
 case ${version_specific_libs} in
   yes)
-    # Need the spl compiler version to know where to install libraries
+    # Need the gcc compiler version to know where to install libraries
     # and header files if --enable-version-specific-runtime-libs option
     # is selected.
-    toolexecdir='$(libdir)/spl/$(target_noncanonical)'
+    toolexecdir='$(libdir)/gcc/$(target_noncanonical)'
     toolexeclibdir='$(toolexecdir)/$(gcc_version)$(MULTISUBDIR)'
     ;;
   no)
@@ -2747,7 +2745,7 @@ case ${version_specific_libs} in
 	  ;;
       esac
     else
-      toolexecdir='$(libdir)/spl-lib/$(target_noncanonical)'
+      toolexecdir='$(libdir)/gcc-lib/$(target_noncanonical)'
       toolexeclibdir='$(libdir)'
     fi
     multi_os_directory=`$CC -print-multi-os-directory`
@@ -3239,8 +3237,8 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}spl", so it can be a program name with args.
-set dummy ${ac_tool_prefix}spl; ac_word=$2
+  # Extract the first word of "${ac_tool_prefix}gcc", so it can be a program name with args.
+set dummy ${ac_tool_prefix}gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_prog_CC+:} false; then :
@@ -3256,7 +3254,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_CC="${ac_tool_prefix}spl"
+    ac_cv_prog_CC="${ac_tool_prefix}gcc"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -3279,8 +3277,8 @@ fi
 fi
 if test -z "$ac_cv_prog_CC"; then
   ac_ct_CC=$CC
-  # Extract the first word of "spl", so it can be a program name with args.
-set dummy spl; ac_word=$2
+  # Extract the first word of "gcc", so it can be a program name with args.
+set dummy gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_prog_ac_ct_CC+:} false; then :
@@ -3296,7 +3294,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ac_ct_CC="spl"
+    ac_cv_prog_ac_ct_CC="gcc"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -4072,7 +4070,7 @@ else
       ac_preproc_ok=false
 for ac_c_preproc_warn_flag in '' yes
 do
-  # Use a header file that comes with spl, so configuring glibc
+  # Use a header file that comes with gcc, so configuring glibc
   # with a fresh cross-compiler works.
   # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
   # <limits.h> exists even on freestanding compilers.
@@ -4131,7 +4129,7 @@ $as_echo "$CPP" >&6; }
 ac_preproc_ok=false
 for ac_c_preproc_warn_flag in '' yes
 do
-  # Use a header file that comes with spl, so configuring glibc
+  # Use a header file that comes with gcc, so configuring glibc
   # with a fresh cross-compiler works.
   # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
   # <limits.h> exists even on freestanding compilers.
@@ -4835,7 +4833,7 @@ fixed_point=$libgcc_cv_fixed_point
 
 # For platforms with the unwind ABI which includes an unwind library,
 # libunwind, we can choose to use the system libunwind.
-# config.spl also contains tests of with_system_libunwind.
+# config.gcc also contains tests of with_system_libunwind.
 
 
 # Check whether --with-system-libunwind was given.
@@ -5032,7 +5030,7 @@ if ${acl_cv_prog_gnu_ld+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   # I'd rather use --version here, but apparently some GNU ld's only accept -v.
-if $LD -v 2>&1 </dev/null | egrep '(GNU|with BFD)' 1>&5; then
+if $LD -v 2>&1 </dev/null | $EGREP '(GNU|with BFD)' 1>&5; then
   acl_cv_prog_gnu_ld=yes
 else
   acl_cv_prog_gnu_ld=no
@@ -5463,7 +5461,7 @@ fi
 
 # See if we have thread-local storage.  We can only test assembler
 # since link-time and run-time tests require the newly built
-# spl, which can't be used to build executable due to that libgcc
+# gcc, which can't be used to build executable due to that libgcc
 # is yet to be built here.
 
    # Check whether --enable-tls was given.
@@ -5708,7 +5706,7 @@ esac
 
   get_gcc_base_ver="cat"
 
-# Check whether --with-spl-major-version-only was given.
+# Check whether --with-gcc-major-version-only was given.
 if test "${with_gcc_major_version_only+set}" = set; then :
   withval=$with_gcc_major_version_only; if test x$with_gcc_major_version_only = xyes ; then
         get_gcc_base_ver="sed -e 's/^\([0-9]*\).*/\1/'"

@@ -1177,7 +1177,7 @@ func_source ()
 # if one wasn't chosen via the "--tag" command line option.
 # Only attempt this if the compiler in the base compile
 # command doesn't match the default compiler.
-# arg is usually of the form 'spl ...'
+# arg is usually of the form 'gcc ...'
 func_infer_tag ()
 {
     $opt_debug
@@ -4975,7 +4975,7 @@ func_mode_link ()
       # -q* pass through compiler args for the IBM compiler
       # -m*, -t[45]*, -txscale* pass through architecture-specific
       # compiler args for GCC
-      # -F/path gives path to uninstalled frameworks, spl on darwin
+      # -F/path gives path to uninstalled frameworks, gcc on darwin
       # -p, -pg, --coverage, -fprofile-* pass through profiling flag for GCC
       # @file GCC response files
       # -tp=* Portland pgcc target processor selection
@@ -6055,7 +6055,7 @@ func_mode_link ()
 		echo "*** However, this would only work if libtool was able to extract symbol"
 		echo "*** lists from a program, using \`nm' or equivalent, but libtool could"
 		echo "*** not find such a program.  So, this module is probably useless."
-		echo "*** \`nm' from GNU spl-utils and a full rebuild may help."
+		echo "*** \`nm' from GNU binutils and a full rebuild may help."
 	      fi
 	      if test "$build_old_libs" = no; then
 		build_libtool_libs=module
@@ -7020,7 +7020,7 @@ EOF
 	      echo "*** However, this would only work if libtool was able to extract symbol"
 	      echo "*** lists from a program, using \`nm' or equivalent, but libtool could"
 	      echo "*** not find such a program.  So, this module is probably useless."
-	      echo "*** \`nm' from GNU spl-utils and a full rebuild may help."
+	      echo "*** \`nm' from GNU binutils and a full rebuild may help."
 	    fi
 	    if test "$build_old_libs" = no; then
 	      oldlibs="$output_objdir/$libname.$libext"

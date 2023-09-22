@@ -1,4 +1,4 @@
-/* Internal demangler interface for scpel V3 ABI.
+/* Internal demangler interface for g++ V3 ABI.
    Copyright (C) 2003-2023 Free Software Foundation, Inc.
    Written by Ian Lance Taylor <ian@wasabisystems.com>.
 

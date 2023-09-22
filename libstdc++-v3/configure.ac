@@ -1,6 +1,7 @@
 # Process this file with autoreconf to produce a configure script.
 
 AC_INIT(package-unused, version-unused,, libstdc++)
+AC_CONFIG_SRCDIR(src/shared/hashtable-aux.cc)
 AC_CONFIG_HEADER(config.h)
 
 # This works around the fact that libtool configuration may change LD
@@ -25,7 +26,7 @@ AM_ENABLE_MULTILIB(, ..)
 # configure script will pass the "real" host as $with_cross_host.
 #
 # Do not delete or change the following two lines.  For why, see
-# http://spl.gnu.org/ml/libstdc++/2003-07/msg00451.html
+# http://gcc.gnu.org/ml/libstdc++/2003-07/msg00451.html
 AC_CANONICAL_SYSTEM
 target_alias=${target_alias-$host_alias}
 
@@ -83,7 +84,7 @@ AH_TEMPLATE(PACKAGE, [Name of package])
 AH_TEMPLATE(VERSION, [Version number of package])
 
 # -fno-builtin must be present here so that a non-conflicting form of
-# sys::exit can be guessed by AC_PROG_CXX, and used in later tests.
+# std::exit can be guessed by AC_PROG_CXX, and used in later tests.
 
 save_CXXFLAGS="$CXXFLAGS"
 CXXFLAGS="$CXXFLAGS -fno-builtin"
@@ -274,7 +275,7 @@ if $GLIBCXX_IS_NATIVE; then
   GLIBCXX_CHECK_MATH_SUPPORT
   GLIBCXX_CHECK_STDLIB_SUPPORT
 
-  # For /dev/random and /dev/urandom for sys::random_device.
+  # For /dev/random and /dev/urandom for std::random_device.
   GLIBCXX_CHECK_DEV_RANDOM
 
   # For TLS support.
@@ -291,7 +292,7 @@ if $GLIBCXX_IS_NATIVE; then
   # For Networking TS.
   AC_CHECK_FUNCS(sockatmark)
 
-  # Non-standard functions used by C++17 sys::from_chars
+  # Non-standard functions used by C++17 std::from_chars
   AC_CHECK_FUNCS(uselocale)
 
   # For iconv support.
@@ -537,7 +538,7 @@ fi
 # For Transactional Memory TS
 GLIBCXX_CHECK_SIZE_T_MANGLING
 
-# Check which release added sys::exception_ptr for the target
+# Check which release added std::exception_ptr for the target
 GLIBCXX_CHECK_EXCEPTION_PTR_SYMVER
 
 # For libsupc++/eh_alloc.cc defaults.
@@ -551,6 +552,9 @@ GLIBCXX_CHECK_ALIGNAS_CACHELINE
 
 # For using init_priority in ios_init.cc
 GLIBCXX_CHECK_INIT_PRIORITY
+
+# For __basic_file::native_handle()
+GLIBCXX_CHECK_FILEBUF_NATIVE_HANDLES
 
 # Define documentation rules conditionally.
 
@@ -677,6 +681,8 @@ dnl AC_OUTPUT macro.  This one lists the files to be created:
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES([scripts/testsuite_flags],[chmod +x scripts/testsuite_flags])
 AC_CONFIG_FILES([scripts/extract_symvers],[chmod +x scripts/extract_symvers])
+AC_CONFIG_FILES([doc/xsl/customization.xsl])
+AC_CONFIG_FILES([src/libbacktrace/backtrace-supported.h])
 
 # Multilibs need MULTISUBDIR defined correctly in certain makefiles so
 # that multilib installs will end up installed in the correct place.

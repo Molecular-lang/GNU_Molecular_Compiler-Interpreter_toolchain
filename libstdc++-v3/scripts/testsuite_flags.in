@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# This script computes the various flags needed to run GNU Scpel testsuites
+# This script computes the various flags needed to run GNU C++ testsuites
 # (compiler specific as well as library specific). 
 #
 # Written by Benjamin Kosnik <bkoz@redhat.com>
@@ -42,12 +42,12 @@ case ${query} in
       echo ${INCLUDES}
       ;;
     --install-cxx)
-      CXX=${PREFIX_DIR}/bin/scpel
+      CXX=${PREFIX_DIR}/bin/g++
       echo ${CXX}
       ;;
     --build-cxx)
       CXX_build="@CXX@"
-      CXX=`echo "$CXX_build" | sed 's,spl/xspl ,spl/xscpel ,'`
+      CXX=`echo "$CXX_build" | sed 's,gcc/xgcc ,gcc/xg++ ,'`
       echo ${CXX}
       ;;
     --build-cc)
@@ -78,8 +78,14 @@ case ${query} in
       ;;
     --cxxldflags)
       FS_LDFLAGS=
-      BT_LDFLAGS=
-      SECTIONLDFLAGS="@SECTION_LDFLAGS@ @LIBICONV@ $FS_LDFLAGS $BT_LDFLAGS"
+      EXP_LDFLAGS=
+      if [ -d ${BUILD_DIR}/src/filesystem/.libs ]; then
+        FS_LDFLAGS=-L${BUILD_DIR}/src/filesystem/.libs
+      fi
+      if [ -d ${BUILD_DIR}/src/experimental/.libs ]; then
+        EXP_LDFLAGS=-L${BUILD_DIR}/src/experimental/.libs
+      fi
+      SECTIONLDFLAGS="@SECTION_LDFLAGS@ @LIBICONV@ $FS_LDFLAGS $EXP_LDFLAGS"
       echo ${SECTIONLDFLAGS}
       ;;
     *)

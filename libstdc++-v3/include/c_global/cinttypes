@@ -52,7 +52,7 @@
 
 #ifdef _GLIBCXX_USE_C99_INTTYPES
 
-namespace sys
+namespace std
 {
   // types
   using ::imaxdiv_t;
@@ -72,7 +72,7 @@ namespace sys
   using ::wcstoimax;
   using ::wcstoumax;
 #endif
-} // namespace sys
+} // namespace std
 
 #endif // _GLIBCXX_USE_C99_INTTYPES
 

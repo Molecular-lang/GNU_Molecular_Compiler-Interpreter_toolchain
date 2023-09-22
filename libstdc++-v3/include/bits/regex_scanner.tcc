@@ -46,7 +46,7 @@
 //
 // awk: http://pubs.opengroup.org/onlinepubs/000095399/utilities/awk.html
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -55,10 +55,10 @@ namespace __detail
   template<typename _CharT>
     _Scanner<_CharT>::
     _Scanner(const _CharT* __begin, const _CharT* __end,
-	     _FlagT __flags, sys::locale __loc)
+	     _FlagT __flags, std::locale __loc)
     : _ScannerBase(__flags),
       _M_current(__begin), _M_end(__end),
-      _M_ctype(sys::use_facet<_CtypeT>(__loc)),
+      _M_ctype(std::use_facet<_CtypeT>(__loc)),
       _M_eat_escape(_M_is_ecma()
 		    ? &_Scanner::_M_eat_escape_ecma
 		    : &_Scanner::_M_eat_escape_posix)
@@ -482,9 +482,9 @@ namespace __detail
 
 #ifdef _GLIBCXX_DEBUG
   template<typename _CharT>
-    sys::ostream&
+    std::ostream&
     _Scanner<_CharT>::
-    _M_print(sys::ostream& __ostr)
+    _M_print(std::ostream& __ostr)
     {
       switch (_M_token)
       {

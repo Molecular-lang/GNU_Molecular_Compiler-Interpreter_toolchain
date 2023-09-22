@@ -58,7 +58,7 @@
 
 #include <bits/stl_algobase.h>
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
@@ -75,15 +75,15 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	  for (__cur = this->_M_impl._M_start._M_node;
 	       __cur < this->_M_impl._M_finish._M_node;
 	       ++__cur)
-	    sys::__uninitialized_default_a(*__cur, *__cur + _S_buffer_size(),
+	    std::__uninitialized_default_a(*__cur, *__cur + _S_buffer_size(),
 					   _M_get_Tp_allocator());
-	  sys::__uninitialized_default_a(this->_M_impl._M_finish._M_first,
+	  std::__uninitialized_default_a(this->_M_impl._M_finish._M_first,
 					 this->_M_impl._M_finish._M_cur,
 					 _M_get_Tp_allocator());
 	}
       __catch(...)
 	{
-	  sys::_Destroy(this->_M_impl._M_start, iterator(*__cur, __cur),
+	  std::_Destroy(this->_M_impl._M_start, iterator(*__cur, __cur),
 			_M_get_Tp_allocator());
 	  __throw_exception_again;
 	}
@@ -95,7 +95,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
     deque<_Tp, _Alloc>::
     operator=(const deque& __x)
     {
-      if (sys::__addressof(__x) != this)
+      if (std::__addressof(__x) != this)
 	{
 #if __cplusplus >= 201103L
 	  if (_Alloc_traits::_S_propagate_on_copy_assign())
@@ -106,24 +106,24 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 		  // Replacement allocator cannot free existing storage,
 		  // so deallocate everything and take copy of __x's data.
 		  _M_replace_map(__x, __x.get_allocator());
-		  sys::__alloc_on_copy(_M_get_Tp_allocator(),
+		  std::__alloc_on_copy(_M_get_Tp_allocator(),
 				       __x._M_get_Tp_allocator());
 		  return *this;
 		}
-	      sys::__alloc_on_copy(_M_get_Tp_allocator(),
+	      std::__alloc_on_copy(_M_get_Tp_allocator(),
 				   __x._M_get_Tp_allocator());
 	    }
 #endif
 	  const size_type __len = size();
 	  if (__len >= __x.size())
-	    _M_erase_at_end(sys::copy(__x.begin(), __x.end(),
+	    _M_erase_at_end(std::copy(__x.begin(), __x.end(),
 				      this->_M_impl._M_start));
 	  else
 	    {
 	      const_iterator __mid = __x.begin() + difference_type(__len);
-	      sys::copy(__x.begin(), __mid, this->_M_impl._M_start);
+	      std::copy(__x.begin(), __mid, this->_M_impl._M_start);
 	      _M_range_insert_aux(this->_M_impl._M_finish, __mid, __x.end(),
-				  sys::random_access_iterator_tag());
+				  std::random_access_iterator_tag());
 	    }
 	}
       return *this;
@@ -144,11 +144,11 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	  {
 	    _Alloc_traits::construct(this->_M_impl,
 				     this->_M_impl._M_start._M_cur - 1,
-				     sys::forward<_Args>(__args)...);
+				     std::forward<_Args>(__args)...);
 	    --this->_M_impl._M_start._M_cur;
 	  }
 	else
-	  _M_push_front_aux(sys::forward<_Args>(__args)...);
+	  _M_push_front_aux(std::forward<_Args>(__args)...);
 #if __cplusplus > 201402L
 	return front();
 #endif
@@ -169,11 +169,11 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	  {
 	    _Alloc_traits::construct(this->_M_impl,
 				     this->_M_impl._M_finish._M_cur,
-				     sys::forward<_Args>(__args)...);
+				     std::forward<_Args>(__args)...);
 	    ++this->_M_impl._M_finish._M_cur;
 	  }
 	else
-	  _M_push_back_aux(sys::forward<_Args>(__args)...);
+	  _M_push_back_aux(std::forward<_Args>(__args)...);
 #if __cplusplus > 201402L
 	return back();
 #endif
@@ -189,19 +189,19 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       {
 	if (__position._M_cur == this->_M_impl._M_start._M_cur)
 	  {
-	    emplace_front(sys::forward<_Args>(__args)...);
+	    emplace_front(std::forward<_Args>(__args)...);
 	    return this->_M_impl._M_start;
 	  }
 	else if (__position._M_cur == this->_M_impl._M_finish._M_cur)
 	  {
-	    emplace_back(sys::forward<_Args>(__args)...);
+	    emplace_back(std::forward<_Args>(__args)...);
 	    iterator __tmp = this->_M_impl._M_finish;
 	    --__tmp;
 	    return __tmp;
 	  }
 	else
 	  return _M_insert_aux(__position._M_const_cast(),
-			       sys::forward<_Args>(__args)...);
+			       std::forward<_Args>(__args)...);
       }
 #endif
 
@@ -290,7 +290,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       void
       deque<_Tp, _Alloc>::
       _M_assign_aux(_InputIterator __first, _InputIterator __last,
-		    sys::input_iterator_tag)
+		    std::input_iterator_tag)
       {
 	iterator __cur = begin();
 	for (; __first != __last && __cur != end(); ++__cur, (void)++__first)
@@ -299,7 +299,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	  _M_erase_at_end(__cur);
 	else
 	  _M_range_insert_aux(end(), __first, __last,
-			      sys::__iterator_category(__first));
+			      std::__iterator_category(__first));
       }
 
   template <typename _Tp, typename _Alloc>
@@ -312,7 +312,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	  iterator __new_start = _M_reserve_elements_at_front(__n);
 	  __try
 	    {
-	      sys::__uninitialized_fill_a(__new_start, this->_M_impl._M_start,
+	      std::__uninitialized_fill_a(__new_start, this->_M_impl._M_start,
 					  __x, _M_get_Tp_allocator());
 	      this->_M_impl._M_start = __new_start;
 	    }
@@ -328,7 +328,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	  iterator __new_finish = _M_reserve_elements_at_back(__n);
 	  __try
 	    {
-	      sys::__uninitialized_fill_a(this->_M_impl._M_finish,
+	      std::__uninitialized_fill_a(this->_M_impl._M_finish,
 					  __new_finish, __x,
 					  _M_get_Tp_allocator());
 	      this->_M_impl._M_finish = __new_finish;
@@ -355,7 +355,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	  iterator __new_finish = _M_reserve_elements_at_back(__n);
 	  __try
 	    {
-	      sys::__uninitialized_default_a(this->_M_impl._M_finish,
+	      std::__uninitialized_default_a(this->_M_impl._M_finish,
 					     __new_finish,
 					     _M_get_Tp_allocator());
 	      this->_M_impl._M_finish = __new_finish;
@@ -384,7 +384,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       if (__front_capacity + __back_capacity < _S_buffer_size())
 	return false;
 
-      return sys::__shrink_to_fit_aux<deque>::_S_do_it(*this);
+      return std::__shrink_to_fit_aux<deque>::_S_do_it(*this);
     }
 #endif
 
@@ -399,15 +399,15 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	  for (__cur = this->_M_impl._M_start._M_node;
 	       __cur < this->_M_impl._M_finish._M_node;
 	       ++__cur)
-	    sys::__uninitialized_fill_a(*__cur, *__cur + _S_buffer_size(),
+	    std::__uninitialized_fill_a(*__cur, *__cur + _S_buffer_size(),
 					__value, _M_get_Tp_allocator());
-	  sys::__uninitialized_fill_a(this->_M_impl._M_finish._M_first,
+	  std::__uninitialized_fill_a(this->_M_impl._M_finish._M_first,
 				      this->_M_impl._M_finish._M_cur,
 				      __value, _M_get_Tp_allocator());
 	}
       __catch(...)
 	{
-	  sys::_Destroy(this->_M_impl._M_start, iterator(*__cur, __cur),
+	  std::_Destroy(this->_M_impl._M_start, iterator(*__cur, __cur),
 			_M_get_Tp_allocator());
 	  __throw_exception_again;
 	}
@@ -418,7 +418,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       void
       deque<_Tp, _Alloc>::
       _M_range_initialize(_InputIterator __first, _InputIterator __last,
-			  sys::input_iterator_tag)
+			  std::input_iterator_tag)
       {
 	this->_M_initialize_map(0);
 	__try
@@ -442,9 +442,9 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       void
       deque<_Tp, _Alloc>::
       _M_range_initialize(_ForwardIterator __first, _ForwardIterator __last,
-			  sys::forward_iterator_tag)
+			  std::forward_iterator_tag)
       {
-	const size_type __n = sys::distance(__first, __last);
+	const size_type __n = std::distance(__first, __last);
 	this->_M_initialize_map(_S_check_init_len(__n, _M_get_Tp_allocator()));
 
 	_Map_pointer __cur_node;
@@ -458,18 +458,18 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 		  __builtin_unreachable(); // See PR 100516
 
 		_ForwardIterator __mid = __first;
-		sys::advance(__mid, _S_buffer_size());
-		sys::__uninitialized_copy_a(__first, __mid, *__cur_node,
+		std::advance(__mid, _S_buffer_size());
+		std::__uninitialized_copy_a(__first, __mid, *__cur_node,
 					    _M_get_Tp_allocator());
 		__first = __mid;
 	      }
-	    sys::__uninitialized_copy_a(__first, __last,
+	    std::__uninitialized_copy_a(__first, __last,
 					this->_M_impl._M_finish._M_first,
 					_M_get_Tp_allocator());
 	  }
 	__catch(...)
 	  {
-	    sys::_Destroy(this->_M_impl._M_start,
+	    std::_Destroy(this->_M_impl._M_start,
 			  iterator(*__cur_node, __cur_node),
 			  _M_get_Tp_allocator());
 	    __throw_exception_again;
@@ -491,7 +491,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       {
 	if (size() == max_size())
 	  __throw_length_error(
-	      __N("cannot create sys::deque larger than max_size()"));
+	      __N("cannot create std::deque larger than max_size()"));
 
 	_M_reserve_map_at_back();
 	*(this->_M_impl._M_finish._M_node + 1) = this->_M_allocate_node();
@@ -500,7 +500,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 #if __cplusplus >= 201103L
 	    _Alloc_traits::construct(this->_M_impl,
 				     this->_M_impl._M_finish._M_cur,
-				     sys::forward<_Args>(__args)...);
+				     std::forward<_Args>(__args)...);
 #else
 	    this->_M_impl.construct(this->_M_impl._M_finish._M_cur, __t);
 #endif
@@ -530,7 +530,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       {
 	if (size() == max_size())
 	  __throw_length_error(
-	      __N("cannot create sys::deque larger than max_size()"));
+	      __N("cannot create std::deque larger than max_size()"));
 
 	_M_reserve_map_at_front();
 	*(this->_M_impl._M_start._M_node - 1) = this->_M_allocate_node();
@@ -542,7 +542,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 #if __cplusplus >= 201103L
 	    _Alloc_traits::construct(this->_M_impl,
 				     this->_M_impl._M_start._M_cur,
-				     sys::forward<_Args>(__args)...);
+				     std::forward<_Args>(__args)...);
 #else
 	    this->_M_impl.construct(this->_M_impl._M_start._M_cur, __t);
 #endif
@@ -589,8 +589,8 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       deque<_Tp, _Alloc>::
       _M_range_insert_aux(iterator __pos,
 			  _InputIterator __first, _InputIterator __last,
-			  sys::input_iterator_tag)
-      { sys::copy(__first, __last, sys::inserter(*this, __pos)); }
+			  std::input_iterator_tag)
+      { std::copy(__first, __last, std::inserter(*this, __pos)); }
 
   template <typename _Tp, typename _Alloc>
     template <typename _ForwardIterator>
@@ -598,15 +598,15 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       deque<_Tp, _Alloc>::
       _M_range_insert_aux(iterator __pos,
 			  _ForwardIterator __first, _ForwardIterator __last,
-			  sys::forward_iterator_tag)
+			  std::forward_iterator_tag)
       {
-	const size_type __n = sys::distance(__first, __last);
+	const size_type __n = std::distance(__first, __last);
 	if (__pos._M_cur == this->_M_impl._M_start._M_cur)
 	  {
 	    iterator __new_start = _M_reserve_elements_at_front(__n);
 	    __try
 	      {
-		sys::__uninitialized_copy_a(__first, __last, __new_start,
+		std::__uninitialized_copy_a(__first, __last, __new_start,
 					    _M_get_Tp_allocator());
 		this->_M_impl._M_start = __new_start;
 	      }
@@ -622,7 +622,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	    iterator __new_finish = _M_reserve_elements_at_back(__n);
 	    __try
 	      {
-		sys::__uninitialized_copy_a(__first, __last,
+		std::__uninitialized_copy_a(__first, __last,
 					    this->_M_impl._M_finish,
 					    _M_get_Tp_allocator());
 		this->_M_impl._M_finish = __new_finish;
@@ -645,7 +645,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       deque<_Tp, _Alloc>::
       _M_insert_aux(iterator __pos, _Args&&... __args)
       {
-	value_type __x_copy(sys::forward<_Args>(__args)...); // XXX copy
+	value_type __x_copy(std::forward<_Args>(__args)...); // XXX copy
 #else
     typename deque<_Tp, _Alloc>::iterator
       deque<_Tp, _Alloc>::
@@ -699,22 +699,22 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 		{
 		  iterator __start_n = (this->_M_impl._M_start
 					+ difference_type(__n));
-		  sys::__uninitialized_move_a(this->_M_impl._M_start,
+		  std::__uninitialized_move_a(this->_M_impl._M_start,
 					      __start_n, __new_start,
 					      _M_get_Tp_allocator());
 		  this->_M_impl._M_start = __new_start;
 		  _GLIBCXX_MOVE3(__start_n, __pos, __old_start);
-		  sys::fill(__pos - difference_type(__n), __pos, __x_copy);
+		  std::fill(__pos - difference_type(__n), __pos, __x_copy);
 		}
 	      else
 		{
-		  sys::__uninitialized_move_fill(this->_M_impl._M_start,
+		  std::__uninitialized_move_fill(this->_M_impl._M_start,
 						 __pos, __new_start,
 						 this->_M_impl._M_start,
 						 __x_copy,
 						 _M_get_Tp_allocator());
 		  this->_M_impl._M_start = __new_start;
-		  sys::fill(__old_start, __pos, __x_copy);
+		  std::fill(__old_start, __pos, __x_copy);
 		}
 	    }
 	  __catch(...)
@@ -737,23 +737,23 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 		{
 		  iterator __finish_n = (this->_M_impl._M_finish
 					 - difference_type(__n));
-		  sys::__uninitialized_move_a(__finish_n,
+		  std::__uninitialized_move_a(__finish_n,
 					      this->_M_impl._M_finish,
 					      this->_M_impl._M_finish,
 					      _M_get_Tp_allocator());
 		  this->_M_impl._M_finish = __new_finish;
 		  _GLIBCXX_MOVE_BACKWARD3(__pos, __finish_n, __old_finish);
-		  sys::fill(__pos, __pos + difference_type(__n), __x_copy);
+		  std::fill(__pos, __pos + difference_type(__n), __x_copy);
 		}
 	      else
 		{
-		  sys::__uninitialized_fill_move(this->_M_impl._M_finish,
+		  std::__uninitialized_fill_move(this->_M_impl._M_finish,
 						 __pos + difference_type(__n),
 						 __x_copy, __pos,
 						 this->_M_impl._M_finish,
 						 _M_get_Tp_allocator());
 		  this->_M_impl._M_finish = __new_finish;
-		  sys::fill(__pos, __old_finish, __x_copy);
+		  std::fill(__pos, __old_finish, __x_copy);
 		}
 	    }
 	  __catch(...)
@@ -786,23 +786,23 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 		  {
 		    iterator __start_n = (this->_M_impl._M_start
 					  + difference_type(__n));
-		    sys::__uninitialized_move_a(this->_M_impl._M_start,
+		    std::__uninitialized_move_a(this->_M_impl._M_start,
 						__start_n, __new_start,
 						_M_get_Tp_allocator());
 		    this->_M_impl._M_start = __new_start;
 		    _GLIBCXX_MOVE3(__start_n, __pos, __old_start);
-		    sys::copy(__first, __last, __pos - difference_type(__n));
+		    std::copy(__first, __last, __pos - difference_type(__n));
 		  }
 		else
 		  {
 		    _ForwardIterator __mid = __first;
-		    sys::advance(__mid, difference_type(__n) - __elemsbefore);
-		    sys::__uninitialized_move_copy(this->_M_impl._M_start,
+		    std::advance(__mid, difference_type(__n) - __elemsbefore);
+		    std::__uninitialized_move_copy(this->_M_impl._M_start,
 						   __pos, __first, __mid,
 						   __new_start,
 						   _M_get_Tp_allocator());
 		    this->_M_impl._M_start = __new_start;
-		    sys::copy(__mid, __last, __old_start);
+		    std::copy(__mid, __last, __old_start);
 		  }
 	      }
 	    __catch(...)
@@ -825,24 +825,24 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 		{
 		  iterator __finish_n = (this->_M_impl._M_finish
 					 - difference_type(__n));
-		  sys::__uninitialized_move_a(__finish_n,
+		  std::__uninitialized_move_a(__finish_n,
 					      this->_M_impl._M_finish,
 					      this->_M_impl._M_finish,
 					      _M_get_Tp_allocator());
 		  this->_M_impl._M_finish = __new_finish;
 		  _GLIBCXX_MOVE_BACKWARD3(__pos, __finish_n, __old_finish);
-		  sys::copy(__first, __last, __pos);
+		  std::copy(__first, __last, __pos);
 		}
 	      else
 		{
 		  _ForwardIterator __mid = __first;
-		  sys::advance(__mid, __elemsafter);
-		  sys::__uninitialized_copy_move(__mid, __last, __pos,
+		  std::advance(__mid, __elemsafter);
+		  std::__uninitialized_copy_move(__mid, __last, __pos,
 						 this->_M_impl._M_finish,
 						 this->_M_impl._M_finish,
 						 _M_get_Tp_allocator());
 		  this->_M_impl._M_finish = __new_finish;
-		  sys::copy(__first, __mid, __pos);
+		  std::copy(__first, __mid, __pos);
 		}
 	    }
 	  __catch(...)
@@ -861,18 +861,18 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
      {
        for (_Map_pointer __node = __first._M_node + 1;
 	    __node < __last._M_node; ++__node)
-	 sys::_Destroy(*__node, *__node + _S_buffer_size(),
+	 std::_Destroy(*__node, *__node + _S_buffer_size(),
 		       _M_get_Tp_allocator());
 
        if (__first._M_node != __last._M_node)
 	 {
-	   sys::_Destroy(__first._M_cur, __first._M_last,
+	   std::_Destroy(__first._M_cur, __first._M_last,
 			 _M_get_Tp_allocator());
-	   sys::_Destroy(__last._M_first, __last._M_cur,
+	   std::_Destroy(__last._M_first, __last._M_cur,
 			 _M_get_Tp_allocator());
 	 }
        else
-	 sys::_Destroy(__first._M_cur, __last._M_cur,
+	 std::_Destroy(__first._M_cur, __last._M_cur,
 		       _M_get_Tp_allocator());
      }
 
@@ -942,24 +942,24 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 					 - __new_num_nodes) / 2
 			 + (__add_at_front ? __nodes_to_add : 0);
 	  if (__new_nstart < this->_M_impl._M_start._M_node)
-	    sys::copy(this->_M_impl._M_start._M_node,
+	    std::copy(this->_M_impl._M_start._M_node,
 		      this->_M_impl._M_finish._M_node + 1,
 		      __new_nstart);
 	  else
-	    sys::copy_backward(this->_M_impl._M_start._M_node,
+	    std::copy_backward(this->_M_impl._M_start._M_node,
 			       this->_M_impl._M_finish._M_node + 1,
 			       __new_nstart + __old_num_nodes);
 	}
       else
 	{
 	  size_type __new_map_size = this->_M_impl._M_map_size
-				     + sys::max(this->_M_impl._M_map_size,
+				     + std::max(this->_M_impl._M_map_size,
 						__nodes_to_add) + 2;
 
 	  _Map_pointer __new_map = this->_M_allocate_map(__new_map_size);
 	  __new_nstart = __new_map + (__new_map_size - __new_num_nodes) / 2
 			 + (__add_at_front ? __nodes_to_add : 0);
-	  sys::copy(this->_M_impl._M_start._M_node,
+	  std::copy(this->_M_impl._M_start._M_node,
 		    this->_M_impl._M_finish._M_node + 1,
 		    __new_nstart);
 	  _M_deallocate_map(this->_M_impl._M_map, this->_M_impl._M_map_size);
@@ -978,86 +978,86 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
   // optimization".
   template<typename _Tp, typename _VTp>
     void
-    __fill_a1(const _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Tp&, _Tp*>& __first,
-	      const _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Tp&, _Tp*>& __last,
+    __fill_a1(const _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Tp&, _Tp*>& __first,
+	      const _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Tp&, _Tp*>& __last,
 	      const _VTp& __value)
     {
-      typedef _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Tp&, _Tp*> _Iter;
+      typedef _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Tp&, _Tp*> _Iter;
       if (__first._M_node != __last._M_node)
 	{
-	  sys::__fill_a1(__first._M_cur, __first._M_last, __value);
+	  std::__fill_a1(__first._M_cur, __first._M_last, __value);
 
 	  for (typename _Iter::_Map_pointer __node = __first._M_node + 1;
 	       __node < __last._M_node; ++__node)
-	    sys::__fill_a1(*__node, *__node + _Iter::_S_buffer_size(), __value);
+	    std::__fill_a1(*__node, *__node + _Iter::_S_buffer_size(), __value);
 
-	  sys::__fill_a1(__last._M_first, __last._M_cur, __value);
+	  std::__fill_a1(__last._M_first, __last._M_cur, __value);
 	}
       else
-	sys::__fill_a1(__first._M_cur, __last._M_cur, __value);
+	std::__fill_a1(__first._M_cur, __last._M_cur, __value);
     }
 
   template<bool _IsMove,
 	   typename _Tp, typename _Ref, typename _Ptr, typename _OI>
     _OI
-    __copy_move_dit(_GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
-		    _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
+    __copy_move_dit(_GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
+		    _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
 		    _OI __result)
     {
-      typedef _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
+      typedef _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
       if (__first._M_node != __last._M_node)
 	{
 	  __result
-	    = sys::__copy_move_a1<_IsMove>(__first._M_cur, __first._M_last,
+	    = std::__copy_move_a1<_IsMove>(__first._M_cur, __first._M_last,
 					   __result);
 
 	  for (typename _Iter::_Map_pointer __node = __first._M_node + 1;
 	       __node != __last._M_node; ++__node)
 	    __result
-	      = sys::__copy_move_a1<_IsMove>(*__node,
+	      = std::__copy_move_a1<_IsMove>(*__node,
 					     *__node + _Iter::_S_buffer_size(),
 					     __result);
 
-	  return sys::__copy_move_a1<_IsMove>(__last._M_first, __last._M_cur,
+	  return std::__copy_move_a1<_IsMove>(__last._M_first, __last._M_cur,
 					      __result);
 	}
 
-      return sys::__copy_move_a1<_IsMove>(__first._M_cur, __last._M_cur,
+      return std::__copy_move_a1<_IsMove>(__first._M_cur, __last._M_cur,
 					  __result);
     }
 
   template<bool _IsMove,
 	   typename _Tp, typename _Ref, typename _Ptr, typename _OI>
     _OI
-    __copy_move_a1(_GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
-		   _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
+    __copy_move_a1(_GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
+		   _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
 		   _OI __result)
     { return __copy_move_dit<_IsMove>(__first, __last, __result); }
 
   template<bool _IsMove,
 	   typename _ITp, typename _IRef, typename _IPtr, typename _OTp>
-    _GLIBCXX_SYS_C::_Deque_iterator<_OTp, _OTp&, _OTp*>
-    __copy_move_a1(_GLIBCXX_SYS_C::_Deque_iterator<_ITp, _IRef, _IPtr> __first,
-		   _GLIBCXX_SYS_C::_Deque_iterator<_ITp, _IRef, _IPtr> __last,
-		   _GLIBCXX_SYS_C::_Deque_iterator<_OTp, _OTp&, _OTp*> __result)
+    _GLIBCXX_STD_C::_Deque_iterator<_OTp, _OTp&, _OTp*>
+    __copy_move_a1(_GLIBCXX_STD_C::_Deque_iterator<_ITp, _IRef, _IPtr> __first,
+		   _GLIBCXX_STD_C::_Deque_iterator<_ITp, _IRef, _IPtr> __last,
+		   _GLIBCXX_STD_C::_Deque_iterator<_OTp, _OTp&, _OTp*> __result)
     { return __copy_move_dit<_IsMove>(__first, __last, __result); }
 
   template<bool _IsMove, typename _II, typename _Tp>
     typename __gnu_cxx::__enable_if<
       __is_random_access_iter<_II>::__value,
-      _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Tp&, _Tp*> >::__type
+      _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Tp&, _Tp*> >::__type
     __copy_move_a1(_II __first, _II __last,
-		   _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Tp&, _Tp*> __result)
+		   _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Tp&, _Tp*> __result)
     {
-      typedef _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Tp&, _Tp*> _Iter;
+      typedef _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Tp&, _Tp*> _Iter;
       typedef typename _Iter::difference_type difference_type;
 
       difference_type __len = __last - __first;
       while (__len > 0)
 	{
 	  const difference_type __clen
-	    = sys::min(__len, __result._M_last - __result._M_cur);
-	  sys::__copy_move_a1<_IsMove>(__first, __first + __clen,
+	    = std::min(__len, __result._M_last - __result._M_cur);
+	  std::__copy_move_a1<_IsMove>(__first, __first + __clen,
 				       __result._M_cur);
 
 	  __first += __clen;
@@ -1071,20 +1071,20 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
   template<bool _IsMove, typename _CharT>
     typename __gnu_cxx::__enable_if<
       __is_char<_CharT>::__value,
-      _GLIBCXX_SYS_C::_Deque_iterator<_CharT, _CharT&, _CharT*> >::__type
+      _GLIBCXX_STD_C::_Deque_iterator<_CharT, _CharT&, _CharT*> >::__type
     __copy_move_a2(
 	istreambuf_iterator<_CharT, char_traits<_CharT> > __first,
 	istreambuf_iterator<_CharT, char_traits<_CharT> > __last,
-	_GLIBCXX_SYS_C::_Deque_iterator<_CharT, _CharT&, _CharT*> __result)
+	_GLIBCXX_STD_C::_Deque_iterator<_CharT, _CharT&, _CharT*> __result)
     {
       if (__first == __last)
 	return __result;
 
       for (;;)
 	{
-	  const sys::ptrdiff_t __len = __result._M_last - __result._M_cur;
-	  const sys::ptrdiff_t __nb
-	    = sys::__copy_n_a(__first, __len, __result._M_cur, false)
+	  const std::ptrdiff_t __len = __result._M_last - __result._M_cur;
+	  const std::ptrdiff_t __nb
+	    = std::__copy_n_a(__first, __len, __result._M_cur, false)
 	    - __result._M_cur;
 	  __result += __nb;
 
@@ -1098,10 +1098,10 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
   template<typename _CharT, typename _Size>
     typename __gnu_cxx::__enable_if<
       __is_char<_CharT>::__value,
-      _GLIBCXX_SYS_C::_Deque_iterator<_CharT, _CharT&, _CharT*> >::__type
+      _GLIBCXX_STD_C::_Deque_iterator<_CharT, _CharT&, _CharT*> >::__type
     __copy_n_a(
       istreambuf_iterator<_CharT, char_traits<_CharT> > __it, _Size __size,
-      _GLIBCXX_SYS_C::_Deque_iterator<_CharT, _CharT&, _CharT*> __result,
+      _GLIBCXX_STD_C::_Deque_iterator<_CharT, _CharT&, _CharT*> __result,
       bool __strict)
     {
       if (__size == 0)
@@ -1110,8 +1110,8 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
       do
 	{
 	  const _Size __len
-	    = sys::min<_Size>(__result._M_last - __result._M_cur, __size);
-	  sys::__copy_n_a(__it, __len, __result._M_cur, __strict);
+	    = std::min<_Size>(__result._M_last - __result._M_cur, __size);
+	  std::__copy_n_a(__it, __len, __result._M_cur, __strict);
 	  __result += __len;
 	  __size -= __len;
 	}
@@ -1123,26 +1123,26 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
 	   typename _Tp, typename _Ref, typename _Ptr, typename _OI>
     _OI
     __copy_move_backward_dit(
-		_GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
-		_GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
+		_GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
+		_GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
 		_OI __result)
     {
-      typedef _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
+      typedef _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
       if (__first._M_node != __last._M_node)
 	{
-	  __result = sys::__copy_move_backward_a1<_IsMove>(
+	  __result = std::__copy_move_backward_a1<_IsMove>(
 		__last._M_first, __last._M_cur, __result);
 
 	  for (typename _Iter::_Map_pointer __node = __last._M_node - 1;
 	       __node != __first._M_node; --__node)
-	    __result = sys::__copy_move_backward_a1<_IsMove>(
+	    __result = std::__copy_move_backward_a1<_IsMove>(
 		*__node, *__node + _Iter::_S_buffer_size(), __result);
 
-	  return sys::__copy_move_backward_a1<_IsMove>(
+	  return std::__copy_move_backward_a1<_IsMove>(
 			__first._M_cur, __first._M_last, __result);
 	}
 
-      return sys::__copy_move_backward_a1<_IsMove>(
+      return std::__copy_move_backward_a1<_IsMove>(
 		__first._M_cur, __last._M_cur, __result);
     }
 
@@ -1150,28 +1150,28 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
 	   typename _Tp, typename _Ref, typename _Ptr, typename _OI>
     _OI
     __copy_move_backward_a1(
-		_GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
-		_GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
+		_GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
+		_GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
 		_OI __result)
     { return __copy_move_backward_dit<_IsMove>(__first, __last, __result); }
 
   template<bool _IsMove,
 	   typename _ITp, typename _IRef, typename _IPtr, typename _OTp>
-    _GLIBCXX_SYS_C::_Deque_iterator<_OTp, _OTp&, _OTp*>
+    _GLIBCXX_STD_C::_Deque_iterator<_OTp, _OTp&, _OTp*>
     __copy_move_backward_a1(
-		_GLIBCXX_SYS_C::_Deque_iterator<_ITp, _IRef, _IPtr> __first,
-		_GLIBCXX_SYS_C::_Deque_iterator<_ITp, _IRef, _IPtr> __last,
-		_GLIBCXX_SYS_C::_Deque_iterator<_OTp, _OTp&, _OTp*> __result)
+		_GLIBCXX_STD_C::_Deque_iterator<_ITp, _IRef, _IPtr> __first,
+		_GLIBCXX_STD_C::_Deque_iterator<_ITp, _IRef, _IPtr> __last,
+		_GLIBCXX_STD_C::_Deque_iterator<_OTp, _OTp&, _OTp*> __result)
     { return __copy_move_backward_dit<_IsMove>(__first, __last, __result); }
 
   template<bool _IsMove, typename _II, typename _Tp>
     typename __gnu_cxx::__enable_if<
       __is_random_access_iter<_II>::__value,
-      _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Tp&, _Tp*> >::__type
+      _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Tp&, _Tp*> >::__type
     __copy_move_backward_a1(_II __first, _II __last,
-		_GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Tp&, _Tp*> __result)
+		_GLIBCXX_STD_C::_Deque_iterator<_Tp, _Tp&, _Tp*> __result)
     {
-      typedef _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Tp&, _Tp*> _Iter;
+      typedef _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Tp&, _Tp*> _Iter;
       typedef typename _Iter::difference_type difference_type;
 
       difference_type __len = __last - __first;
@@ -1185,8 +1185,8 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
 	      __rend = *(__result._M_node - 1) + __rlen;
 	    }
 
-	  const difference_type __clen = sys::min(__len, __rlen);
-	  sys::__copy_move_backward_a1<_IsMove>(__last - __clen, __last, __rend);
+	  const difference_type __clen = std::min(__len, __rlen);
+	  std::__copy_move_backward_a1<_IsMove>(__last - __clen, __last, __rend);
 
 	  __last -= __clen;
 	  __result -= __clen;
@@ -1199,61 +1199,61 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
   template<typename _Tp, typename _Ref, typename _Ptr, typename _II>
     bool
     __equal_dit(
-	const _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr>& __first1,
-	const _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr>& __last1,
+	const _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr>& __first1,
+	const _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr>& __last1,
 	_II __first2)
     {
-      typedef _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
+      typedef _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
       if (__first1._M_node != __last1._M_node)
 	{
-	  if (!sys::__equal_aux1(__first1._M_cur, __first1._M_last, __first2))
+	  if (!std::__equal_aux1(__first1._M_cur, __first1._M_last, __first2))
 	    return false;
 
 	  __first2 += __first1._M_last - __first1._M_cur;
 	  for (typename _Iter::_Map_pointer __node = __first1._M_node + 1;
 	       __node != __last1._M_node;
 	       __first2 += _Iter::_S_buffer_size(), ++__node)
-	    if (!sys::__equal_aux1(*__node, *__node + _Iter::_S_buffer_size(),
+	    if (!std::__equal_aux1(*__node, *__node + _Iter::_S_buffer_size(),
 				  __first2))
 	      return false;
 
-	  return sys::__equal_aux1(__last1._M_first, __last1._M_cur, __first2);
+	  return std::__equal_aux1(__last1._M_first, __last1._M_cur, __first2);
 	}
 
-      return sys::__equal_aux1(__first1._M_cur, __last1._M_cur, __first2);
+      return std::__equal_aux1(__first1._M_cur, __last1._M_cur, __first2);
     }
 
   template<typename _Tp, typename _Ref, typename _Ptr, typename _II>
     typename __gnu_cxx::__enable_if<
       __is_random_access_iter<_II>::__value, bool>::__type
-    __equal_aux1(_GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> __first1,
-		 _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> __last1,
+    __equal_aux1(_GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> __first1,
+		 _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> __last1,
 		 _II __first2)
-    { return sys::__equal_dit(__first1, __last1, __first2); }
+    { return std::__equal_dit(__first1, __last1, __first2); }
 
   template<typename _Tp1, typename _Ref1, typename _Ptr1,
 	   typename _Tp2, typename _Ref2, typename _Ptr2>
     bool
-    __equal_aux1(_GLIBCXX_SYS_C::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __first1,
-		 _GLIBCXX_SYS_C::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __last1,
-		 _GLIBCXX_SYS_C::_Deque_iterator<_Tp2, _Ref2, _Ptr2> __first2)
-    { return sys::__equal_dit(__first1, __last1, __first2); }
+    __equal_aux1(_GLIBCXX_STD_C::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __first1,
+		 _GLIBCXX_STD_C::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __last1,
+		 _GLIBCXX_STD_C::_Deque_iterator<_Tp2, _Ref2, _Ptr2> __first2)
+    { return std::__equal_dit(__first1, __last1, __first2); }
 
   template<typename _II, typename _Tp, typename _Ref, typename _Ptr>
     typename __gnu_cxx::__enable_if<
       __is_random_access_iter<_II>::__value, bool>::__type
     __equal_aux1(_II __first1, _II __last1,
-		_GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> __first2)
+		_GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> __first2)
     {
-      typedef _GLIBCXX_SYS_C::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
+      typedef _GLIBCXX_STD_C::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
       typedef typename _Iter::difference_type difference_type;
 
       difference_type __len = __last1 - __first1;
       while (__len > 0)
 	{
 	  const difference_type __clen
-	    = sys::min(__len, __first2._M_last - __first2._M_cur);
-	  if (!sys::__equal_aux1(__first1, __first1 + __clen, __first2._M_cur))
+	    = std::min(__len, __first2._M_last - __first2._M_cur);
+	  if (!std::__equal_aux1(__first1, __first1 + __clen, __first2._M_cur))
 	    return false;
 
 	  __first1 += __clen;
@@ -1267,8 +1267,8 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
   template<typename _Tp1, typename _Ref, typename _Ptr, typename _Tp2>
     int
     __lex_cmp_dit(
-	_GLIBCXX_SYS_C::_Deque_iterator<_Tp1, _Ref, _Ptr> __first1,
-	_GLIBCXX_SYS_C::_Deque_iterator<_Tp1, _Ref, _Ptr> __last1,
+	_GLIBCXX_STD_C::_Deque_iterator<_Tp1, _Ref, _Ptr> __first1,
+	_GLIBCXX_STD_C::_Deque_iterator<_Tp1, _Ref, _Ptr> __last1,
 	const _Tp2* __first2, const _Tp2* __last2)
     {
       const bool __simple =
@@ -1282,13 +1282,13 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
 	 && !is_volatile_v<_Tp2>
 #endif
 	 );
-      typedef sys::__lexicographical_compare<__simple> _Lc;
+      typedef std::__lexicographical_compare<__simple> _Lc;
 
       while (__first1._M_node != __last1._M_node)
 	{
 	  const ptrdiff_t __len1 = __first1._M_last - __first1._M_cur;
 	  const ptrdiff_t __len2 = __last2 - __first2;
-	  const ptrdiff_t __len = sys::min(__len1, __len2);
+	  const ptrdiff_t __len = std::min(__len1, __len2);
 	  // if __len1 > __len2 this will return a positive value:
 	  if (int __ret = _Lc::__3way(__first1._M_cur, __first1._M_last,
 				      __first2, __first2 + __len))
@@ -1305,27 +1305,27 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
 	   typename _Tp2>
     inline bool
     __lexicographical_compare_aux1(
-	_GLIBCXX_SYS_C::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __first1,
-	_GLIBCXX_SYS_C::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __last1,
+	_GLIBCXX_STD_C::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __first1,
+	_GLIBCXX_STD_C::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __last1,
 	_Tp2* __first2, _Tp2* __last2)
-    { return sys::__lex_cmp_dit(__first1, __last1, __first2, __last2) < 0; }
+    { return std::__lex_cmp_dit(__first1, __last1, __first2, __last2) < 0; }
 
   template<typename _Tp1,
 	   typename _Tp2, typename _Ref2, typename _Ptr2>
     inline  bool
     __lexicographical_compare_aux1(_Tp1* __first1, _Tp1* __last1,
-	_GLIBCXX_SYS_C::_Deque_iterator<_Tp2, _Ref2, _Ptr2> __first2,
-	_GLIBCXX_SYS_C::_Deque_iterator<_Tp2, _Ref2, _Ptr2> __last2)
-    { return sys::__lex_cmp_dit(__first2, __last2, __first1, __last1) > 0; }
+	_GLIBCXX_STD_C::_Deque_iterator<_Tp2, _Ref2, _Ptr2> __first2,
+	_GLIBCXX_STD_C::_Deque_iterator<_Tp2, _Ref2, _Ptr2> __last2)
+    { return std::__lex_cmp_dit(__first2, __last2, __first1, __last1) > 0; }
 
   template<typename _Tp1, typename _Ref1, typename _Ptr1,
 	   typename _Tp2, typename _Ref2, typename _Ptr2>
     inline bool
     __lexicographical_compare_aux1(
-		_GLIBCXX_SYS_C::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __first1,
-		_GLIBCXX_SYS_C::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __last1,
-		_GLIBCXX_SYS_C::_Deque_iterator<_Tp2, _Ref2, _Ptr2> __first2,
-		_GLIBCXX_SYS_C::_Deque_iterator<_Tp2, _Ref2, _Ptr2> __last2)
+		_GLIBCXX_STD_C::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __first1,
+		_GLIBCXX_STD_C::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __last1,
+		_GLIBCXX_STD_C::_Deque_iterator<_Tp2, _Ref2, _Ptr2> __first2,
+		_GLIBCXX_STD_C::_Deque_iterator<_Tp2, _Ref2, _Ptr2> __last2)
     {
       const bool __simple =
 	(__is_memcmp_ordered_with<_Tp1, _Tp2>::__value
@@ -1339,7 +1339,7 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
 	 && !is_volatile_v<_Tp2>
 #endif
 	 );
-      typedef sys::__lexicographical_compare<__simple> _Lc;
+      typedef std::__lexicographical_compare<__simple> _Lc;
 
       while (__first1 != __last1)
 	{
@@ -1351,7 +1351,7 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
 	  const ptrdiff_t __len1 = __first1._M_node == __last1._M_node
 	    ? __last1._M_cur - __first1._M_cur
 	    : __first1._M_last - __first1._M_cur;
-	  const ptrdiff_t __len = sys::min(__len1, __len2);
+	  const ptrdiff_t __len = std::min(__len1, __len2);
 	  if (int __ret = _Lc::__3way(__first1._M_cur, __first1._M_cur + __len,
 				      __first2._M_cur, __first2._M_cur + __len))
 	    return __ret < 0;
@@ -1364,6 +1364,6 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
     }
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 #endif

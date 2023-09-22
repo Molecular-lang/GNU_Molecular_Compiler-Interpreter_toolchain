@@ -26,7 +26,7 @@ else
 	echo "};" ) > $@
 endif
 
-# Copy libgcc-unwind.map to the place where spl will look for it at build-time.
+# Copy libgcc-unwind.map to the place where gcc will look for it at build-time.
 install-libgcc-unwind-map-forbuild: libgcc-unwind.map
 	dest=$(gcc_objdir)/tmp$$$$-$<; \
 	cp $< $$dest; \

@@ -59,7 +59,7 @@
 #undef tolower
 #undef toupper
 
-namespace sys
+namespace std
 {
   using ::isalnum;
   using ::isalpha;
@@ -74,6 +74,6 @@ namespace sys
   using ::isxdigit;
   using ::tolower;
   using ::toupper;
-} // namespace sys
+} // namespace std
 
 #endif

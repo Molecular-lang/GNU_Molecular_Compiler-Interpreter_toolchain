@@ -1,4 +1,4 @@
-/* Demangler for scpel V3 ABI.
+/* Demangler for g++ V3 ABI.
    Copyright (C) 2003-2023 Free Software Foundation, Inc.
    Written by Ian Lance Taylor <ian@wasabisystems.com>.
 
@@ -28,7 +28,7 @@
    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA. 
 */
 
-/* This code implements a demangler for the scpel V3 ABI.  The ABI is
+/* This code implements a demangler for the g++ V3 ABI.  The ABI is
    described on this web page:
        https://itanium-cxx-abi.github.io/cxx-abi/abi.html#mangling
 
@@ -1036,6 +1036,7 @@ d_make_comp (struct d_info *di, enum demangle_component_type type,
     case DEMANGLE_COMPONENT_TEMPLATE_NON_TYPE_PARM:
     case DEMANGLE_COMPONENT_TEMPLATE_TEMPLATE_PARM:
     case DEMANGLE_COMPONENT_TEMPLATE_PACK_PARM:
+    case DEMANGLE_COMPONENT_FRIEND:
       if (left == NULL)
 	return NULL;
       break;
@@ -1681,6 +1682,7 @@ d_maybe_module_name (struct d_info *di, struct demangle_component **name)
 /* <unqualified-name> ::= [<module-name>] <operator-name> [<abi-tags>]
                       ::= [<module-name>] <ctor-dtor-name> [<abi-tags>]
                       ::= [<module-name>] <source-name> [<abi-tags>]
+		      ::= [<module-name>] F <source-name> [<abi-tags>]
 		      ::= [<module-name>] <local-source-name>  [<abi-tags>]
                       ::= [<module-name>] DC <source-name>+ E [<abi-tags>]
     <local-source-name>	::= L <source-name> <discriminator> [<abi-tags>]
@@ -1692,11 +1694,18 @@ d_unqualified_name (struct d_info *di, struct demangle_component *scope,
 {
   struct demangle_component *ret;
   char peek;
+  int member_like_friend = 0;
 
   if (!d_maybe_module_name (di, &module))
     return NULL;
 
   peek = d_peek_char (di);
+  if (peek == 'F')
+    {
+      member_like_friend = 1;
+      d_advance (di, 1);
+      peek = d_peek_char (di);
+    }
   if (IS_DIGIT (peek))
     ret = d_source_name (di);
   else if (IS_LOWER (peek))
@@ -1773,6 +1782,8 @@ d_unqualified_name (struct d_info *di, struct demangle_component *scope,
     ret = d_make_comp (di, DEMANGLE_COMPONENT_MODULE_ENTITY, ret, module);
   if (d_peek_char (di) == 'B')
     ret = d_abi_tags (di, ret);
+  if (member_like_friend)
+    ret = d_make_comp (di, DEMANGLE_COMPONENT_FRIEND, ret, NULL);
   if (scope)
     ret = d_make_comp (di, DEMANGLE_COMPONENT_QUAL_NAME, scope, ret);
 
@@ -1865,7 +1876,7 @@ d_identifier (struct d_info *di, int len)
       && d_peek_char (di) == '$')
     d_advance (di, 1);
 
-  /* Look for something which looks like a spl encoding of an
+  /* Look for something which looks like a gcc encoding of an
      anonymous namespace, and replace it with a more user friendly
      name.  */
   if (len >= (int) ANONYMOUS_NAMESPACE_PREFIX_LEN + 2
@@ -2134,7 +2145,7 @@ d_java_resource (struct d_info *di)
                   ::= GV <(object) name>
                   ::= T <call-offset> <(base) encoding>
                   ::= Tc <call-offset> <call-offset> <(base) encoding>
-   Also scpel extensions:
+   Also g++ extensions:
                   ::= TC <type> <(offset) number> _ <(base) type>
                   ::= TF <type>
                   ::= TJ <type>
@@ -2519,7 +2530,7 @@ cplus_demangle_type (struct d_info *di)
      should be handled in the same way, but we have no way to tell
      which vendor qualifiers are order-insensitive and which are
      order-sensitive.  So we just assume that they are all
-     order-sensitive.  scpel 3.4 supports only one vendor qualifier,
+     order-sensitive.  g++ 3.4 supports only one vendor qualifier,
      __vector, and it treats it as order-sensitive when mangling
      names.  */
 
@@ -3755,9 +3766,9 @@ d_expr_primary (struct d_info *di)
 	 collect it as a string.  Note that it's possible to have a
 	 floating point literal here.  The ABI specifies that the
 	 format of such literals is machine independent.  That's fine,
-	 but what's not fine is that versions of scpel up to 3.2 with
+	 but what's not fine is that versions of g++ up to 3.2 with
 	 -fabi-version=1 used upper case letters in the hex constant,
-	 and dumped out spl's internal representation.  That makes it
+	 and dumped out gcc's internal representation.  That makes it
 	 hard to tell where the constant ends, and hard to dump the
 	 constant in any readable form anyhow.  We don't attempt to
 	 handle these cases.  */
@@ -3854,7 +3865,7 @@ d_local_name (struct d_info *di)
                    ::= __ <number> _ # when number >= 10
 
    <discriminator> ::= _ <number>    # when number >=10
-   is also accepted to support spl versions that wrongly mangled that way.
+   is also accepted to support gcc versions that wrongly mangled that way.
 
    We demangle the discriminator, but we don't print it out.  FIXME:
    We should print it out in verbose mode.  */
@@ -4459,6 +4470,7 @@ d_count_templates_scopes (struct d_print_info *dpi,
     case DEMANGLE_COMPONENT_GLOBAL_CONSTRUCTORS:
     case DEMANGLE_COMPONENT_GLOBAL_DESTRUCTORS:
     case DEMANGLE_COMPONENT_MODULE_ENTITY:
+    case DEMANGLE_COMPONENT_FRIEND:
       d_count_templates_scopes (dpi, d_left (dc));
       break;
 
@@ -5281,7 +5293,7 @@ d_print_comp_inner (struct d_print_info *dpi, int options,
 	}
       else if (dpi->lambda_tpl_parms)
 	{
-	  /* Show the template parm index, as that's how scpel displays
+	  /* Show the template parm index, as that's how g++ displays
 	     these, and future proofs us against potential
 	     '[]<typename T> (T *a, T *b) {...}'.  */
 	  d_append_buffer (dpi, "auto:", 5);
@@ -6197,6 +6209,11 @@ d_print_comp_inner (struct d_print_info *dpi, int options,
       d_append_char (dpi, ']');
       return;
 
+    case DEMANGLE_COMPONENT_FRIEND:
+      d_print_comp (dpi, options, d_left (dc));
+      d_append_string (dpi, "[friend]");
+      return;
+
     case DEMANGLE_COMPONENT_TEMPLATE_HEAD:
       {
 	d_append_char (dpi, '<');
@@ -6699,7 +6716,7 @@ cplus_demangle_init_info (const char *mangled, int options, size_t len,
   di->recursion_level = 0;
 }
 
-/* Internal implementation for the demangler.  If MANGLED is a scpel v3 ABI
+/* Internal implementation for the demangler.  If MANGLED is a g++ v3 ABI
    mangled name, return strings in repeated callback giving the demangled
    name.  OPTIONS is the usual libiberty demangler options.  On success,
    this returns 1.  On failure, returns 0.  */
@@ -6814,7 +6831,7 @@ d_demangle_callback (const char *mangled, int options,
   return status;
 }
 
-/* Entry point for the demangler.  If MANGLED is a scpel v3 ABI mangled
+/* Entry point for the demangler.  If MANGLED is a g++ v3 ABI mangled
    name, return a buffer allocated with malloc holding the demangled
    name.  OPTIONS is the usual libiberty demangler options.  On
    success, this sets *PALC to the allocated size of the returned
@@ -6977,7 +6994,7 @@ __gcclibcxx_demangle_callback (const char *mangled_name,
 
 #else /* ! (IN_LIBGCC2 || IN_GLIBCPP_V3) */
 
-/* Entry point for libiberty demangler.  If MANGLED is a scpel v3 ABI
+/* Entry point for libiberty demangler.  If MANGLED is a g++ v3 ABI
    mangled name, return a buffer allocated with malloc holding the
    demangled name.  Otherwise, return NULL.  */
 
@@ -7097,7 +7114,7 @@ is_ctor_or_dtor (const char *mangled,
   return ret;
 }
 
-/* Return whether NAME is the mangled form of a scpel V3 ABI constructor
+/* Return whether NAME is the mangled form of a g++ V3 ABI constructor
    name.  A non-zero return indicates the type of constructor.  */
 
 enum gnu_v3_ctor_kinds
@@ -7112,7 +7129,7 @@ is_gnu_v3_mangled_ctor (const char *name)
 }
 
 
-/* Return whether NAME is the mangled form of a scpel V3 ABI destructor
+/* Return whether NAME is the mangled form of a g++ V3 ABI destructor
    name.  A non-zero return indicates the type of destructor.  */
 
 enum gnu_v3_dtor_kinds

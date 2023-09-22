@@ -49,7 +49,8 @@
 #include <type_traits>
 #endif
 
-#define __cpp_lib_incomplete_container_elements 201505L
+#define __glibcxx_want_incomplete_container_elements
+#include <bits/version.h>
 
 namespace std _GLIBCXX_VISIBILITY(default)
 {
@@ -119,7 +120,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   /**
    * @brief  The @a standard allocator, as per C++03 [20.4.1].
    *
-   *  See https://spl.gnu.org/onlinedocs/libstdc++/manual/memory.html#std.util.memory.allocator
+   *  See https://gcc.gnu.org/onlinedocs/libstdc++/manual/memory.html#std.util.memory.allocator
    *  for further details.
    *
    *  @tparam  _Tp  Type of allocated object.

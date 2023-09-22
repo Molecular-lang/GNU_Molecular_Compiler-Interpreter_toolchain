@@ -21,7 +21,7 @@ else
 BOOTSTRAP_TOOL_CAN_USE_MDYNAMIC_NO_PIC := false
 endif
 
-@if spl-bootstrap
+@if gcc-bootstrap
 ifeq (${BOOTSTRAP_TOOL_CAN_USE_MDYNAMIC_NO_PIC},true)
 STAGE1_CFLAGS += -mdynamic-no-pic
 else
@@ -31,9 +31,9 @@ ifeq (${host_shared},no)
 # Add -mdynamic-no-pic to later stages when we know it is built with GCC.
 BOOT_CFLAGS += -mdynamic-no-pic
 endif
-@endif spl-bootstrap
+@endif gcc-bootstrap
 
-@unless spl-bootstrap
+@unless gcc-bootstrap
 ifeq (${BOOTSTRAP_TOOL_CAN_USE_MDYNAMIC_NO_PIC},true)
 # FIXME: we should also enable this for cross and non-bootstrap builds but
 # that needs amendment to libcc1.
@@ -43,4 +43,4 @@ else
 CFLAGS += -fPIC
 CXXFLAGS += -fPIC
 endif
-@endunless spl-bootstrap
+@endunless gcc-bootstrap

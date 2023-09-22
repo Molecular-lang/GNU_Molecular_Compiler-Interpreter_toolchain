@@ -47,11 +47,11 @@
 // Get rid of those macros defined in <signal.h> in lieu of real functions.
 #undef raise
 
-namespace sys
+namespace std
 {
   using ::sig_atomic_t;
   using ::signal;
   using ::raise;
-} // namespace sys
+} // namespace std
 
 #endif

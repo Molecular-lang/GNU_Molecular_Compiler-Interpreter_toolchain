@@ -36,7 +36,7 @@
 
 #pragma GCC system_header
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -81,7 +81,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     operator()(const basic_string<_CharT, _Traits, _Alloc>& __s1,
 	       const basic_string<_CharT, _Traits, _Alloc>& __s2) const
     {
-      typedef sys::collate<_CharT> __collate_type;
+      typedef std::collate<_CharT> __collate_type;
       const __collate_type& __collate = use_facet<__collate_type>(*this);
       return (__collate.compare(__s1.data(), __s1.data() + __s1.length(),
 				__s2.data(), __s2.data() + __s2.length()) < 0);
@@ -96,45 +96,45 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
       // We know these standard facets are always installed in every locale
       // so dynamic_cast always succeeds, just use static_cast instead.
-#define _GLIBCXX_SYS_FACET(...) \
+#define _GLIBCXX_STD_FACET(...) \
       if _GLIBCXX17_CONSTEXPR (__is_same(_Facet, __VA_ARGS__)) \
 	return static_cast<const _Facet*>(__facets[__i])
 
-      _GLIBCXX_SYS_FACET(ctype<char>);
-      _GLIBCXX_SYS_FACET(num_get<char>);
-      _GLIBCXX_SYS_FACET(num_put<char>);
-      _GLIBCXX_SYS_FACET(codecvt<char, char, mbstate_t>);
-      _GLIBCXX_SYS_FACET(collate<char>);
-      _GLIBCXX_SYS_FACET(moneypunct<char>);
-      _GLIBCXX_SYS_FACET(moneypunct<char, true>);
-      _GLIBCXX_SYS_FACET(money_get<char>);
-      _GLIBCXX_SYS_FACET(money_put<char>);
-      _GLIBCXX_SYS_FACET(numpunct<char>);
-      _GLIBCXX_SYS_FACET(time_get<char>);
-      _GLIBCXX_SYS_FACET(time_put<char>);
-      _GLIBCXX_SYS_FACET(messages<char>);
+      _GLIBCXX_STD_FACET(ctype<char>);
+      _GLIBCXX_STD_FACET(num_get<char>);
+      _GLIBCXX_STD_FACET(num_put<char>);
+      _GLIBCXX_STD_FACET(codecvt<char, char, mbstate_t>);
+      _GLIBCXX_STD_FACET(collate<char>);
+      _GLIBCXX_STD_FACET(moneypunct<char>);
+      _GLIBCXX_STD_FACET(moneypunct<char, true>);
+      _GLIBCXX_STD_FACET(money_get<char>);
+      _GLIBCXX_STD_FACET(money_put<char>);
+      _GLIBCXX_STD_FACET(numpunct<char>);
+      _GLIBCXX_STD_FACET(time_get<char>);
+      _GLIBCXX_STD_FACET(time_put<char>);
+      _GLIBCXX_STD_FACET(messages<char>);
 
 #ifdef _GLIBCXX_USE_WCHAR_T
-      _GLIBCXX_SYS_FACET(ctype<wchar_t>);
-      _GLIBCXX_SYS_FACET(num_get<wchar_t>);
-      _GLIBCXX_SYS_FACET(num_put<wchar_t>);
-      _GLIBCXX_SYS_FACET(codecvt<wchar_t, char, mbstate_t>);
-      _GLIBCXX_SYS_FACET(collate<wchar_t>);
-      _GLIBCXX_SYS_FACET(moneypunct<wchar_t>);
-      _GLIBCXX_SYS_FACET(moneypunct<wchar_t, true>);
-      _GLIBCXX_SYS_FACET(money_get<wchar_t>);
-      _GLIBCXX_SYS_FACET(money_put<wchar_t>);
-      _GLIBCXX_SYS_FACET(numpunct<wchar_t>);
-      _GLIBCXX_SYS_FACET(time_get<wchar_t>);
-      _GLIBCXX_SYS_FACET(time_put<wchar_t>);
-      _GLIBCXX_SYS_FACET(messages<wchar_t>);
+      _GLIBCXX_STD_FACET(ctype<wchar_t>);
+      _GLIBCXX_STD_FACET(num_get<wchar_t>);
+      _GLIBCXX_STD_FACET(num_put<wchar_t>);
+      _GLIBCXX_STD_FACET(codecvt<wchar_t, char, mbstate_t>);
+      _GLIBCXX_STD_FACET(collate<wchar_t>);
+      _GLIBCXX_STD_FACET(moneypunct<wchar_t>);
+      _GLIBCXX_STD_FACET(moneypunct<wchar_t, true>);
+      _GLIBCXX_STD_FACET(money_get<wchar_t>);
+      _GLIBCXX_STD_FACET(money_put<wchar_t>);
+      _GLIBCXX_STD_FACET(numpunct<wchar_t>);
+      _GLIBCXX_STD_FACET(time_get<wchar_t>);
+      _GLIBCXX_STD_FACET(time_put<wchar_t>);
+      _GLIBCXX_STD_FACET(messages<wchar_t>);
 #endif
 #if __cplusplus >= 201103L
-      _GLIBCXX_SYS_FACET(codecvt<char16_t, char, mbstate_t>);
-      _GLIBCXX_SYS_FACET(codecvt<char32_t, char, mbstate_t>);
+      _GLIBCXX_STD_FACET(codecvt<char16_t, char, mbstate_t>);
+      _GLIBCXX_STD_FACET(codecvt<char32_t, char, mbstate_t>);
 #endif
 
-#undef _GLIBCXX_SYS_FACET
+#undef _GLIBCXX_STD_FACET
 
       if (__i >= __loc._M_impl->_M_facets_size || !__facets[__i])
 	return 0;
@@ -168,7 +168,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #else
       (void) static_cast<const _Facet*>(static_cast<const locale::facet*>(0));
 #endif
-      return sys::__try_use_facet<_Facet>(__loc) != 0;
+      return std::__try_use_facet<_Facet>(__loc) != 0;
     }
 
   /**
@@ -177,13 +177,13 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *
    *  use_facet looks for and returns a reference to a facet of type Facet
    *  where Facet is the template parameter.  If has_facet(locale) is true,
-   *  there is a suitable facet to return.  It throws sys::bad_cast if the
+   *  there is a suitable facet to return.  It throws std::bad_cast if the
    *  locale doesn't contain a facet of type Facet.
    *
    *  @tparam  _Facet  The facet type to access.
    *  @param  __loc  The locale to use.
    *  @return  Reference to facet of type Facet.
-   *  @throw  sys::bad_cast if @p __loc doesn't contain a facet of type _Facet.
+   *  @throw  std::bad_cast if @p __loc doesn't contain a facet of type _Facet.
   */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdangling-reference"
@@ -197,7 +197,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #else
       (void) static_cast<const _Facet*>(static_cast<const locale::facet*>(0));
 #endif
-      if (const _Facet* __f = sys::__try_use_facet<_Facet>(__loc))
+      if (const _Facet* __f = std::__try_use_facet<_Facet>(__loc))
 	return *__f;
       __throw_bad_cast();
     }
@@ -362,6 +362,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #endif
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 #endif

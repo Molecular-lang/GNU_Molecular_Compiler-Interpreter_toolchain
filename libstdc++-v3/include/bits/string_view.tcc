@@ -38,7 +38,7 @@
 
 #if __cplusplus >= 201703L
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -100,7 +100,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
       if (__n <= this->_M_len)
 	{
-	  __pos = sys::min(size_type(this->_M_len - __n), __pos);
+	  __pos = std::min(size_type(this->_M_len - __n), __pos);
 	  do
 	    {
 	      if (traits_type::compare(this->_M_str + __pos, __str, __n) == 0)
@@ -234,7 +234,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     }
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 #endif // __cplusplus <= 201402L
 

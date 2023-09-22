@@ -44,7 +44,7 @@
 #ifndef _SLIST
 #define _SLIST 1
 
-#include <bits/requires_hosted.h> // sys::allocator
+#include <bits/requires_hosted.h> // std::allocator
 
 #include <algorithm>
 #include <bits/allocator.h>
@@ -133,10 +133,10 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     return __result;
   }
 
-  inline sys::size_t
+  inline std::size_t
   __slist_size(_Slist_node_base* __node)
   {
-    sys::size_t __result = 0;
+    std::size_t __result = 0;
     for (; __node != 0; __node = __node->_M_next)
       ++__result;
     return __result;
@@ -150,9 +150,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
   struct _Slist_iterator_base
   {
-    typedef sys::size_t                    size_type;
-    typedef sys::ptrdiff_t                 difference_type;
-    typedef sys::forward_iterator_tag iterator_category;
+    typedef std::size_t                    size_type;
+    typedef std::ptrdiff_t                 difference_type;
+    typedef std::forward_iterator_tag iterator_category;
 
     _Slist_node_base* _M_node;
     
@@ -285,7 +285,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *  @ingroup SGIextensions
    *  @doctodo
    */
-  template <class _Tp, class _Alloc = sys::allocator<_Tp> >
+  template <class _Tp, class _Alloc = std::allocator<_Tp> >
     class slist : private _Slist_base<_Tp,_Alloc>
     {
       // concept requirements
@@ -300,8 +300,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       typedef const value_type* const_pointer;
       typedef value_type&       reference;
       typedef const value_type& const_reference;
-      typedef sys::size_t            size_type;
-      typedef sys::ptrdiff_t         difference_type;
+      typedef std::size_t            size_type;
+      typedef std::ptrdiff_t         difference_type;
       
       typedef _Slist_iterator<_Tp, _Tp&, _Tp*>             iterator;
       typedef _Slist_iterator<_Tp, const _Tp&, const _Tp*> const_iterator;
@@ -404,19 +404,19 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
         void
         assign(_InputIterator __first, _InputIterator __last)
         {
-	  typedef typename sys::__is_integer<_InputIterator>::__type _Integral;
+	  typedef typename std::__is_integer<_InputIterator>::__type _Integral;
 	  _M_assign_dispatch(__first, __last, _Integral());
 	}
 
       template <class _Integer>
       void
-      _M_assign_dispatch(_Integer __n, _Integer __val, sys::__true_type)
+      _M_assign_dispatch(_Integer __n, _Integer __val, std::__true_type)
       { _M_fill_assign((size_type) __n, (_Tp) __val); }
 
       template <class _InputIterator>
       void
       _M_assign_dispatch(_InputIterator __first, _InputIterator __last,
-			 sys::__false_type);
+			 std::__false_type);
 
     public:
 
@@ -465,7 +465,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
       void
       swap(slist& __x)
-      { sys::swap(this->_M_head._M_next, __x._M_head._M_next); }
+      { std::swap(this->_M_head._M_next, __x._M_head._M_next); }
 
     public:
 
@@ -528,21 +528,21 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
         _M_insert_after_range(_Node_base* __pos,
 			      _InIterator __first, _InIterator __last)
         {
-	  typedef typename sys::__is_integer<_InIterator>::__type _Integral;
+	  typedef typename std::__is_integer<_InIterator>::__type _Integral;
 	  _M_insert_after_range(__pos, __first, __last, _Integral());
 	}
 
       template <class _Integer>
         void
         _M_insert_after_range(_Node_base* __pos, _Integer __n, _Integer __x,
-			      sys::__true_type)
+			      std::__true_type)
         { _M_insert_after_fill(__pos, __n, __x); }
 
       template <class _InIterator>
         void
         _M_insert_after_range(_Node_base* __pos,
 			      _InIterator __first, _InIterator __last,
-			      sys::__false_type)
+			      std::__false_type)
         {
 	  while (__first != __last)
 	    {
@@ -773,7 +773,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       void
       slist<_Tp, _Alloc>::_M_assign_dispatch(_InputIterator __first,
 					     _InputIterator __last,
-					     sys::__false_type)
+					     std::__false_type)
       {
 	_Node_base* __prev = &this->_M_head;
 	_Node* __node = (_Node*) this->_M_head._M_next;
@@ -812,7 +812,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template <class _Tp, class _Alloc>
     inline bool
     operator<(const slist<_Tp, _Alloc>& _SL1, const slist<_Tp, _Alloc>& _SL2)
-    { return sys::lexicographical_compare(_SL1.begin(), _SL1.end(),
+    { return std::lexicographical_compare(_SL1.begin(), _SL1.end(),
 					  _SL2.begin(), _SL2.end()); }
 
   template <class _Tp, class _Alloc>
@@ -1027,7 +1027,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 _GLIBCXX_END_NAMESPACE_VERSION
 } // namespace
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 

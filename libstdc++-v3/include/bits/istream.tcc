@@ -38,7 +38,7 @@
 
 #include <bits/cxxabi_forced.h>
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -740,7 +740,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	      // Cannot compare int_type with streamsize generically.
 	      const streamsize __num = this->rdbuf()->in_avail();
 	      if (__num > 0)
-		_M_gcount = this->rdbuf()->sgetn(__s, sys::min(__num, __n));
+		_M_gcount = this->rdbuf()->sgetn(__s, std::min(__num, __n));
 	      else if (__num == -1)
 		__err |= ios_base::eofbit;
 	    }
@@ -1075,7 +1075,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       typedef ctype<_CharT>				__ctype_type;
 
       // _GLIBCXX_RESOLVE_LIB_DEFECTS
-      // 451. behavior of sys::ws
+      // 451. behavior of std::ws
       typename __istream_type::sentry __cerb(__in, true);
       if (__cerb)
 	{
@@ -1164,6 +1164,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #endif
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 #endif

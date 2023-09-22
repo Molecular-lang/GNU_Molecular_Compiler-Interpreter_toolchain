@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT(cpplib, [ ], spl-bugs@spl.gnu.org, cpplib)
+AC_INIT(cpplib, [ ], gcc-bugs@gcc.gnu.org, cpplib)
 AC_CONFIG_SRCDIR(ucnid.h)
 AC_CONFIG_MACRO_DIR(../config)
 AC_CANONICAL_SYSTEM
@@ -36,7 +36,7 @@ ACX_PROG_CC_WARNING_OPTS([-Wstrict-prototypes -Wmissing-prototypes \
 			  -Wold-style-definition -Wc++-compat], [c_warn])
 ACX_PROG_CC_WARNING_ALMOST_PEDANTIC([-Wno-long-long])
 
-# Disable exceptions and RTTI if building with scpel
+# Disable exceptions and RTTI if building with g++
 ACX_PROG_CC_WARNING_OPTS(
        m4_quote(m4_do([-fno-exceptions -fno-rtti])), [noexception_flags])
 
@@ -106,7 +106,7 @@ fi
 AC_CHECK_SIZEOF(ino_t)
 AC_CHECK_SIZEOF(dev_t)
 
-# scpel on Solaris 10+ defines _XOPEN_SOURCE=600, which exposes a different
+# g++ on Solaris 10+ defines _XOPEN_SOURCE=600, which exposes a different
 # iconv() prototype.
 AC_LANG_PUSH([C++])
 AM_ICONV
@@ -137,8 +137,8 @@ AC_SUBST(MAINT)
 
 # Enable expensive internal checks
 is_release=
-if test -f $srcdir/../spl/DEV-PHASE \
-   && test x"`cat $srcdir/../spl/DEV-PHASE`" != xexperimental; then
+if test -f $srcdir/../gcc/DEV-PHASE \
+   && test x"`cat $srcdir/../gcc/DEV-PHASE`" != xexperimental; then
   is_release=yes
 fi
 

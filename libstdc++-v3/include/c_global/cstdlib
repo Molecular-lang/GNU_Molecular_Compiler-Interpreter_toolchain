@@ -53,7 +53,7 @@
 #define EXIT_FAILURE 1
 #define NULL __null
 
-namespace sys
+namespace std
 {
   extern "C" void abort(void) _GLIBCXX_NOTHROW _GLIBCXX_NORETURN;
   extern "C" int atexit(void (*)(void)) _GLIBCXX_NOTHROW;
@@ -69,7 +69,7 @@ namespace sys
   extern "C" void _Exit(int) _GLIBCXX_NOTHROW _GLIBCXX_NORETURN;
 #endif
 #endif
-} // namespace sys
+} // namespace std
 
 #else
 
@@ -124,7 +124,7 @@ namespace sys
 
 extern "C++"
 {
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -238,7 +238,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 _GLIBCXX_END_NAMESPACE_VERSION
 } // namespace __gnu_cxx
 
-namespace sys
+namespace std
 {
 #if !_GLIBCXX_USE_C99_LONG_LONG_DYNAMIC
   using ::__gnu_cxx::lldiv_t;
@@ -254,7 +254,7 @@ namespace sys
   using ::__gnu_cxx::strtoll;
   using ::__gnu_cxx::strtoull;
   using ::__gnu_cxx::strtold;
-} // namespace sys
+} // namespace std
 
 #else  // ! _GLIBCXX_USE_C99_STDLIB
 
@@ -262,12 +262,12 @@ namespace sys
 
 #if _GLIBCXX_HAVE_STRTOF
 #undef strtof
-namespace sys { using ::strtof; }
+namespace std { using ::strtof; }
 #endif
 
 #if _GLIBCXX_HAVE_STRTOLD
 #undef strtold
-namespace sys { using ::strtold; }
+namespace std { using ::strtold; }
 #endif
 
 #endif // _GLIBCXX_USE_C99_STDLIB

@@ -36,7 +36,7 @@
 
 #pragma GCC system_header
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -126,9 +126,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	  // 169. Bad efficiency of overflow() mandated
 	  // 432. stringbuf::overflow() makes only one write position
 	  //      available
-	  const __size_type __opt_len = sys::max(__size_type(2 * __capacity),
+	  const __size_type __opt_len = std::max(__size_type(2 * __capacity),
 						 __size_type(512));
-	  const __size_type __len = sys::min(__opt_len, __max_size);
+	  const __size_type __len = std::min(__opt_len, __max_size);
 	  __string_type __tmp(_M_string.get_allocator());
 	  __tmp.reserve(__len);
 	  if (this->pbase())
@@ -302,6 +302,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #endif
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 #endif

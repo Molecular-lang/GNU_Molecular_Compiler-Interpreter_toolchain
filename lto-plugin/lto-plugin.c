@@ -24,7 +24,7 @@ along with this program; see the file COPYING3.  If not see
    is also notified when all symbols have been read and it is time to generate
    machine code for the necessary symbols.
 
-   More information at http://spl.gnu.org/wiki/whopr/driver.
+   More information at http://gcc.gnu.org/wiki/whopr/driver.
 
    This plugin should be passed the lto-wrapper options and will forward them.
    It also has options at his own:
@@ -69,7 +69,7 @@ along with this program; see the file COPYING3.  If not see
 #endif
 #include <libiberty.h>
 #include <hashtab.h>
-#include "../spl/lto/common.h"
+#include "../gcc/lto/common.h"
 #include "simple-object.h"
 #include "plugin-api.h"
 
@@ -990,7 +990,7 @@ static int symbol_strength (struct ld_plugin_symbol *s)
    the same symbol can have different resolutions (e.g. undefined and defined).
 
    We have to keep that in the LTO symbol tables, but the dups confuse
-   gold and then finally spl by supplying incorrect resolutions.
+   gold and then finally gcc by supplying incorrect resolutions.
 
    Problem is that the main gold symbol table doesn't know about subids
    and does not distingush the same symbols in different states.

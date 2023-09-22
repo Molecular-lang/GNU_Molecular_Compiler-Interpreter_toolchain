@@ -22,7 +22,7 @@
 libgcc_topdir = @libgcc_topdir@
 host_subdir = @host_subdir@
 
-gcc_objdir = $(MULTIBUILDTOP)../../$(host_subdir)/spl
+gcc_objdir = $(MULTIBUILDTOP)../../$(host_subdir)/gcc
 
 srcdir = @srcdir@
 
@@ -200,7 +200,7 @@ STRIP = @STRIP@
 STRIP_FOR_TARGET = $(STRIP)
 
 # Directory in which the compiler finds libraries etc.
-libsubdir = $(libdir)/spl/$(real_host_noncanonical)/$(version)@accel_dir_suffix@
+libsubdir = $(libdir)/gcc/$(real_host_noncanonical)/$(version)@accel_dir_suffix@
 # Used to install the shared libgcc.
 slibdir = @slibdir@
 # Maybe used for DLLs on Windows targets.
@@ -228,7 +228,7 @@ export slibdir
 export toolexecdir
 export toolexeclibdir
 
-version := $(shell @get_gcc_base_ver@ $(srcdir)/../spl/BASE-VER)
+version := $(shell @get_gcc_base_ver@ $(srcdir)/../gcc/BASE-VER)
 
 ifeq ($(decimal_float),yes)
 ifeq ($(enable_decimal_float),bid)
@@ -283,7 +283,7 @@ LIB2ADD_ST =
 # -I$(@D) and -I$(srcdir)/$(@D) cause the subdirectory of the file
 # currently being compiled, in both source trees, to be examined as well.
 INCLUDES = -I. -I$(@D) -I$(gcc_objdir) \
-	   -I$(srcdir) -I$(srcdir)/$(@D) -I$(srcdir)/../spl \
+	   -I$(srcdir) -I$(srcdir)/$(@D) -I$(srcdir)/../gcc \
 	   -I$(srcdir)/../include $(DECNUMINC)
 
 # Forcibly remove any profiling-related flags.  There is no point
@@ -446,7 +446,7 @@ lib2funcs = _muldi3 _negdi2 _lshrdi3 _ashldi3 _ashrdi3 _cmpdi2 _ucmpdi2	   \
 	    _paritysi2 _paritydi2 _powisf2 _powidf2 _powixf2 _powitf2	   \
 	    _mulhc3 _mulsc3 _muldc3 _mulxc3 _multc3 _divhc3 _divsc3	   \
 	    _divdc3 _divxc3 _divtc3 _bswapsi2 _bswapdi2 _clrsbsi2	   \
-	    _clrsbdi2
+	    _clrsbdi2 _mulbitint3
 
 # The floating-point conversion routines that involve a single-word integer.
 # XX stands for the integer mode.
@@ -466,7 +466,8 @@ endif
 # These might cause a divide overflow trap and so are compiled with
 # unwinder info.
 LIB2_DIVMOD_FUNCS = _divdi3 _moddi3 _divmoddi4 \
-		    _udivdi3 _umoddi3 _udivmoddi4 _udiv_w_sdiv
+		    _udivdi3 _umoddi3 _udivmoddi4 _udiv_w_sdiv \
+		    _divmodbitint4
 
 # Remove any objects from lib2funcs and LIB2_DIVMOD_FUNCS that are
 # defined as optimized assembly code in LIB1ASMFUNCS or as C code
@@ -1090,7 +1091,7 @@ endif
 libgcc-extra-parts: $(EXTRA_PARTS)
 
 	# Early copyback; see "all" above for the rationale.  The
-	# early copy is necessary so that the spl -B options find
+	# early copy is necessary so that the gcc -B options find
 	# the right startup files when linking shared libgcc.
 	$(mkinstalldirs) $(gcc_objdir)$(MULTISUBDIR)
 	parts="$(EXTRA_PARTS)";					\
@@ -1110,20 +1111,20 @@ $(libgcc-objects) $(libgcc-s-objects) $(libgcc-eh-objects) \
 	$(libunwind-objects) $(libunwind-s-objects) \
 	$(EXTRA_PARTS): $(LIBGCC_LINKS) libgcc_tm.h
 
-# Copy unwind.h to the place where spl will look for it at build-time
+# Copy unwind.h to the place where gcc will look for it at build-time
 install-unwind_h-forbuild: unwind.h
 	dest=$(gcc_objdir)/include/tmp$$$$-unwind.h; \
 	cp unwind.h $$dest; \
 	chmod a+r $$dest; \
 	sh $(srcdir)/../move-if-change $$dest $(gcc_objdir)/include/unwind.h
 
-# Copy unwind.h to the place where spl will look at run-time, once installed
+# Copy unwind.h to the place where gcc will look at run-time, once installed
 #
 # This is redundant with the internal copy above when using a regular toplevel
-# "install" target, because spl's install will copy to the destination as well.
+# "install" target, because gcc's install will copy to the destination as well.
 #
-# This is however useful for "install-no-fixincludes" case, when only the spl
-# internal headers are copied by spl's install.
+# This is however useful for "install-no-fixincludes" case, when only the gcc
+# internal headers are copied by gcc's install.
 install-unwind_h:
 	$(mkinstalldirs) $(DESTDIR)$(libsubdir)/include
 	$(INSTALL_DATA) unwind.h $(DESTDIR)$(libsubdir)/include

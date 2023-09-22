@@ -123,16 +123,16 @@ namespace __gnu_debug
 #define __glibcxx_check_string_constructor(_Str) \
   __check_string(_Str, __FILE__, __LINE__, __PRETTY_FUNCTION__)
 
-  /// Class sys::basic_string with safety/checking/debug instrumentation.
-  template<typename _CharT, typename _Traits = sys::char_traits<_CharT>,
-	   typename _Allocator = sys::allocator<_CharT> >
+  /// Class std::basic_string with safety/checking/debug instrumentation.
+  template<typename _CharT, typename _Traits = std::char_traits<_CharT>,
+	   typename _Allocator = std::allocator<_CharT> >
     class basic_string
       : public __gnu_debug::_Safe_container<
 	  basic_string<_CharT, _Traits, _Allocator>,
 	  _Allocator, _Safe_sequence, bool(_GLIBCXX_USE_CXX11_ABI)>,
-	public sys::basic_string<_CharT, _Traits, _Allocator>
+	public std::basic_string<_CharT, _Traits, _Allocator>
     {
-      typedef sys::basic_string<_CharT, _Traits, _Allocator>	_Base;
+      typedef std::basic_string<_CharT, _Traits, _Allocator>	_Base;
       typedef __gnu_debug::_Safe_container<
 	basic_string, _Allocator, _Safe_sequence, bool(_GLIBCXX_USE_CXX11_ABI)>
       _Safe;
@@ -161,8 +161,8 @@ namespace __gnu_debug
       typedef __gnu_debug::_Safe_iterator<
 	typename _Base::const_iterator, basic_string>	const_iterator;
 
-      typedef sys::reverse_iterator<iterator>		reverse_iterator;
-      typedef sys::reverse_iterator<const_iterator>	const_reverse_iterator;
+      typedef std::reverse_iterator<iterator>		reverse_iterator;
+      typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
 
       using _Base::npos;
 
@@ -184,7 +184,7 @@ namespace __gnu_debug
       basic_string(const basic_string&) = default;
       basic_string(basic_string&&) = default;
 
-      basic_string(sys::initializer_list<_CharT> __l,
+      basic_string(std::initializer_list<_CharT> __l,
 		   const _Allocator& __a = _Allocator())
       : _Base(__l, __a)
       { }
@@ -194,16 +194,16 @@ namespace __gnu_debug
 
       basic_string(basic_string&& __s, const _Allocator& __a)
       noexcept(
-	sys::is_nothrow_constructible<_Base, _Base, const _Allocator&>::value )
-      : _Safe(sys::move(__s), __a),
-	_Base(sys::move(__s), __a)
+	std::is_nothrow_constructible<_Base, _Base, const _Allocator&>::value )
+      : _Safe(std::move(__s), __a),
+	_Base(std::move(__s), __a)
       { }
 
       ~basic_string() = default;
 
       // Provides conversion from a normal-mode string to a debug-mode string
       basic_string(_Base&& __base) noexcept
-      : _Base(sys::move(__base)) { }
+      : _Base(std::move(__base)) { }
 #endif // C++11
 
       // Provides conversion from a normal-mode string to a debug-mode string
@@ -263,7 +263,7 @@ namespace __gnu_debug
 
 #if __cplusplus >= 201103L
       basic_string&
-      operator=(sys::initializer_list<_CharT> __l)
+      operator=(std::initializer_list<_CharT> __l)
       {
 	_Base::operator=(__l);
 	this->_M_invalidate_all();
@@ -430,7 +430,7 @@ namespace __gnu_debug
 
 #if __cplusplus >= 201103L
       basic_string&
-      operator+=(sys::initializer_list<_CharT> __l)
+      operator+=(std::initializer_list<_CharT> __l)
       {
 	_Base::operator+=(__l);
 	this->_M_invalidate_all();
@@ -517,9 +517,9 @@ namespace __gnu_debug
 #if __cplusplus >= 201103L
       basic_string&
       assign(basic_string&& __x)
-      noexcept(noexcept(sys::declval<_Base&>().assign(sys::move(__x))))
+      noexcept(noexcept(std::declval<_Base&>().assign(std::move(__x))))
       {
-	_Base::assign(sys::move(__x));
+	_Base::assign(std::move(__x));
 	this->_M_invalidate_all();
 	return *this;
       }
@@ -578,7 +578,7 @@ namespace __gnu_debug
 
 #if __cplusplus >= 201103L
       basic_string&
-      assign(sys::initializer_list<_CharT> __l)
+      assign(std::initializer_list<_CharT> __l)
       {
 	_Base::assign(__l);
 	this->_M_invalidate_all();
@@ -696,7 +696,7 @@ namespace __gnu_debug
 
 #if __cplusplus >= 201103L
       iterator
-      insert(const_iterator __p, sys::initializer_list<_CharT> __l)
+      insert(const_iterator __p, std::initializer_list<_CharT> __l)
       {
 	__glibcxx_check_insert(__p);
 #if _GLIBCXX_USE_CXX11_ABI
@@ -860,7 +860,7 @@ namespace __gnu_debug
 #if __cplusplus >= 201103L
       basic_string&
       replace(__const_iterator __i1, __const_iterator __i2,
-	      sys::initializer_list<_CharT> __l)
+	      std::initializer_list<_CharT> __l)
       {
 	__glibcxx_check_erase_range(__i1, __i2);
 	_Base::replace(__i1.base(), __i2.base(), __l);
@@ -878,7 +878,7 @@ namespace __gnu_debug
 
       void
       swap(basic_string& __x)
-	_GLIBCXX_NOEXCEPT_IF(sys::__is_nothrow_swappable<_Base>::value)
+	_GLIBCXX_NOEXCEPT_IF(std::__is_nothrow_swappable<_Base>::value)
       {
 	_Safe::_M_swap(__x);
 	_Base::swap(__x);
@@ -1251,27 +1251,27 @@ namespace __gnu_debug
     { __lhs.swap(__rhs); }
 
   template<typename _CharT, typename _Traits, typename _Allocator>
-    sys::basic_ostream<_CharT, _Traits>&
-    operator<<(sys::basic_ostream<_CharT, _Traits>& __os,
+    std::basic_ostream<_CharT, _Traits>&
+    operator<<(std::basic_ostream<_CharT, _Traits>& __os,
 	       const basic_string<_CharT, _Traits, _Allocator>& __str)
     { return __os << __str._M_base(); }
 
   template<typename _CharT, typename _Traits, typename _Allocator>
-    sys::basic_istream<_CharT,_Traits>&
-    operator>>(sys::basic_istream<_CharT,_Traits>& __is,
+    std::basic_istream<_CharT,_Traits>&
+    operator>>(std::basic_istream<_CharT,_Traits>& __is,
 	       basic_string<_CharT,_Traits,_Allocator>& __str)
     {
-      sys::basic_istream<_CharT,_Traits>& __res = __is >> __str._M_base();
+      std::basic_istream<_CharT,_Traits>& __res = __is >> __str._M_base();
       __str._M_invalidate_all();
       return __res;
     }
 
   template<typename _CharT, typename _Traits, typename _Allocator>
-    sys::basic_istream<_CharT,_Traits>&
-    getline(sys::basic_istream<_CharT,_Traits>& __is,
+    std::basic_istream<_CharT,_Traits>&
+    getline(std::basic_istream<_CharT,_Traits>& __is,
 	    basic_string<_CharT,_Traits,_Allocator>& __str, _CharT __delim)
     {
-      sys::basic_istream<_CharT,_Traits>& __res = getline(__is,
+      std::basic_istream<_CharT,_Traits>& __res = getline(__is,
 							  __str._M_base(),
 							__delim);
       __str._M_invalidate_all();
@@ -1279,11 +1279,11 @@ namespace __gnu_debug
     }
 
   template<typename _CharT, typename _Traits, typename _Allocator>
-    sys::basic_istream<_CharT,_Traits>&
-    getline(sys::basic_istream<_CharT,_Traits>& __is,
+    std::basic_istream<_CharT,_Traits>&
+    getline(std::basic_istream<_CharT,_Traits>& __is,
 	    basic_string<_CharT,_Traits,_Allocator>& __str)
     {
-      sys::basic_istream<_CharT,_Traits>& __res = getline(__is,
+      std::basic_istream<_CharT,_Traits>& __res = getline(__is,
 							  __str._M_base());
       __str._M_invalidate_all();
       return __res;
@@ -1314,19 +1314,19 @@ namespace __gnu_debug
 } // namespace __gnu_debug
 
 #if __cplusplus >= 201103L
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
-  /// sys::hash specialization for __gnu_debug::basic_string.
+  /// std::hash specialization for __gnu_debug::basic_string.
   template<typename _CharT>
     struct hash<__gnu_debug::basic_string<_CharT>>
-    : public hash<sys::basic_string<_CharT>>
+    : public hash<std::basic_string<_CharT>>
     { };
 
   template<typename _CharT>
     struct __is_fast_hash<hash<__gnu_debug::basic_string<_CharT>>>
-    : __is_fast_hash<hash<sys::basic_string<_CharT>>>
+    : __is_fast_hash<hash<std::basic_string<_CharT>>>
     { };
 
 _GLIBCXX_END_NAMESPACE_VERSION

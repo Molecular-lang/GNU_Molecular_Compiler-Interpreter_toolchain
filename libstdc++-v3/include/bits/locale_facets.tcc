@@ -32,7 +32,7 @@
 
 #pragma GCC system_header
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -358,7 +358,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
 	  if (!__found_dec && !__found_sci)
 	    __found_grouping += static_cast<char>(__sep_pos);
 
-          if (!sys::__verify_grouping(__lc->_M_grouping, 
+          if (!std::__verify_grouping(__lc->_M_grouping, 
 				      __lc->_M_grouping_size,
 				      __found_grouping))
 	    __err = ios_base::failbit;
@@ -557,7 +557,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
 	    // Add the ending grouping.
 	    __found_grouping += static_cast<char>(__sep_pos);
 
-	    if (!sys::__verify_grouping(__lc->_M_grouping,
+	    if (!std::__verify_grouping(__lc->_M_grouping,
 					__lc->_M_grouping_size,
 					__found_grouping))
 	      __err = ios_base::failbit;
@@ -694,7 +694,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
       string __xtrc;
       __xtrc.reserve(32);
       __beg = _M_extract_float(__beg, __end, __io, __err, __xtrc);
-      sys::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
+      std::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
       if (__beg == __end)
 	__err |= ios_base::eofbit;
       return __beg;
@@ -709,7 +709,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
       string __xtrc;
       __xtrc.reserve(32);
       __beg = _M_extract_float(__beg, __end, __io, __err, __xtrc);
-      sys::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
+      std::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
       if (__beg == __end)
 	__err |= ios_base::eofbit;
       return __beg;
@@ -725,7 +725,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
       string __xtrc;
       __xtrc.reserve(32);
       __beg = _M_extract_float(__beg, __end, __io, __err, __xtrc);
-      sys::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
+      std::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
       if (__beg == __end)
 	__err |= ios_base::eofbit;
       return __beg;
@@ -741,7 +741,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
       string __xtrc;
       __xtrc.reserve(32);
       __beg = _M_extract_float(__beg, __end, __io, __err, __xtrc);
-      sys::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
+      std::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
       if (__beg == __end)
 	__err |= ios_base::eofbit;
       return __beg;
@@ -783,7 +783,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
       string __xtrc;
       __xtrc.reserve(32);
       __beg = _M_extract_float(__beg, __end, __io, __err, __xtrc);
-      sys::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
+      std::__convert_to_v(__xtrc.c_str(), __v, __err, _S_get_c_locale());
       if (__beg == __end)
 	__err |= ios_base::eofbit;
       return __beg;
@@ -857,7 +857,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
     _M_group_int(const char* __grouping, size_t __grouping_size, _CharT __sep,
 		 ios_base&, _CharT* __new, _CharT* __cs, int& __len) const
     {
-      _CharT* __p = sys::__add_grouping(__new, __sep, __grouping,
+      _CharT* __p = std::__add_grouping(__new, __sep, __grouping,
 					__grouping_size, __cs, __cs + __len);
       __len = __p - __new;
     }
@@ -948,7 +948,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
 
 	// [22.2.2.2.2] Stage 4.
 	// Write resulting, fully-formatted string to output iterator.
-	return sys::__write(__s, __cs, __len);
+	return std::__write(__s, __cs, __len);
       }
 
   template<typename _CharT, typename _OutIter>
@@ -962,7 +962,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
       // 282. What types does numpunct grouping refer to?
       // Add grouping, if necessary.
       const int __declen = __p ? __p - __cs : __len;
-      _CharT* __p2 = sys::__add_grouping(__new, __sep, __grouping,
+      _CharT* __p2 = std::__add_grouping(__new, __sep, __grouping,
 					 __grouping_size,
 					 __cs, __cs + __declen);
 
@@ -1020,10 +1020,10 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
 	int __cs_size = __max_digits * 3;
 	char* __cs = static_cast<char*>(__builtin_alloca(__cs_size));
 	if (__use_prec)
-	  __len = sys::__convert_from_v(_S_get_c_locale(), __cs, __cs_size,
+	  __len = std::__convert_from_v(_S_get_c_locale(), __cs, __cs_size,
 					__fbuf, __prec, __v);
 	else
-	  __len = sys::__convert_from_v(_S_get_c_locale(), __cs, __cs_size,
+	  __len = std::__convert_from_v(_S_get_c_locale(), __cs, __cs_size,
 					__fbuf, __v);
 
 	// If the buffer was not large enough, try again with the correct size.
@@ -1032,10 +1032,10 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
 	    __cs_size = __len + 1;
 	    __cs = static_cast<char*>(__builtin_alloca(__cs_size));
 	    if (__use_prec)
-	      __len = sys::__convert_from_v(_S_get_c_locale(), __cs, __cs_size,
+	      __len = std::__convert_from_v(_S_get_c_locale(), __cs, __cs_size,
 					    __fbuf, __prec, __v);
 	    else
-	      __len = sys::__convert_from_v(_S_get_c_locale(), __cs, __cs_size,
+	      __len = std::__convert_from_v(_S_get_c_locale(), __cs, __cs_size,
 					    __fbuf, __v);
 	  }
 #else
@@ -1053,7 +1053,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
 	const int __cs_size = __fixed ? __max_exp + __prec + 4
 	                              : __max_digits * 2 + __prec;
 	char* __cs = static_cast<char*>(__builtin_alloca(__cs_size));
-	__len = sys::__convert_from_v(_S_get_c_locale(), __cs, 0, __fbuf, 
+	__len = std::__convert_from_v(_S_get_c_locale(), __cs, 0, __fbuf, 
 				      __prec, __v);
 #endif
 
@@ -1115,7 +1115,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
 	
 	// [22.2.2.2.2] Stage 4.
 	// Write resulting, fully-formatted string to output iterator.
-	return sys::__write(__s, __ws, __len);
+	return std::__write(__s, __ws, __len);
       }
   
   template<typename _CharT, typename _OutIter>
@@ -1154,18 +1154,18 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
 
 	      if ((__flags & ios_base::adjustfield) == ios_base::left)
 		{
-		  __s = sys::__write(__s, __name, __len);
-		  __s = sys::__write(__s, __ps, __plen);
+		  __s = std::__write(__s, __name, __len);
+		  __s = std::__write(__s, __ps, __plen);
 		}
 	      else
 		{
-		  __s = sys::__write(__s, __ps, __plen);
-		  __s = sys::__write(__s, __name, __len);
+		  __s = std::__write(__s, __ps, __plen);
+		  __s = std::__write(__s, __name, __len);
 		}
 	      return __s;
 	    }
 	  __io.width(0);
-	  __s = sys::__write(__s, __name, __len);
+	  __s = std::__write(__s, __name, __len);
 	}
       return __s;
     }

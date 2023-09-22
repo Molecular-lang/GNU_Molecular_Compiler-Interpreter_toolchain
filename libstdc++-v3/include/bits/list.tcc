@@ -56,7 +56,7 @@
 #ifndef _LIST_TCC
 #define _LIST_TCC 1
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
@@ -89,7 +89,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       list<_Tp, _Alloc>::
       emplace(const_iterator __position, _Args&&... __args)
       {
-	_Node* __tmp = _M_create_node(sys::forward<_Args>(__args)...);
+	_Node* __tmp = _M_create_node(std::forward<_Args>(__args)...);
 	__tmp->_M_hook(__position._M_const_cast()._M_node);
 	this->_M_inc_size(1);
 	return iterator(__tmp);
@@ -165,7 +165,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
   // Equivalent to the following, but performed optimally:
   // if (__new_size < size()) {
   //   __new_size = 0;
-  //   return sys::next(begin(), __new_size);
+  //   return std::next(begin(), __new_size);
   // } else {
   //   __newsize -= size();
   //   return end();
@@ -183,13 +183,13 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	  if (__new_size <= __len / 2)
 	    {
 	      __i = begin();
-	      sys::advance(__i, __new_size);
+	      std::advance(__i, __new_size);
 	    }
 	  else
 	    {
 	      __i = end();
 	      ptrdiff_t __num_erase = __len - __new_size;
-	      sys::advance(__i, -__num_erase);
+	      std::advance(__i, -__num_erase);
 	    }
 	  __new_size = 0;
 	  return __i;
@@ -267,7 +267,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
     list<_Tp, _Alloc>::
     operator=(const list& __x)
     {
-      if (this != sys::__addressof(__x))
+      if (this != std::__addressof(__x))
 	{
 #if __cplusplus >= 201103L
 	  if (_Node_alloc_traits::_S_propagate_on_copy_assign())
@@ -280,7 +280,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 		  // replacement allocator cannot free existing storage
 		  clear();
 		}
-	      sys::__alloc_on_copy(__this_alloc, __that_alloc);
+	      std::__alloc_on_copy(__this_alloc, __that_alloc);
             }
 #endif
 	  _M_assign_dispatch(__x.begin(), __x.end(), __false_type());
@@ -408,7 +408,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
     {
       // _GLIBCXX_RESOLVE_LIB_DEFECTS
       // 300. list::merge() specification incomplete
-      if (this != sys::__addressof(__x))
+      if (this != std::__addressof(__x))
 	{
 	  _M_check_equal_allocators(__x);
 
@@ -448,7 +448,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       {
 	// _GLIBCXX_RESOLVE_LIB_DEFECTS
 	// 300. list::merge() specification incomplete
-	if (this != sys::__addressof(__x))
+	if (this != std::__addressof(__x))
 	  {
 	    _M_check_equal_allocators(__x);
 
@@ -654,7 +654,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	    {
 	      // Move all nodes back into *this.
 	      __carry._M_put_all(end()._M_node);
-	      for (int __i = 0; __i < sizeof(__tmp)/sizeof(__tmp[0]); ++__i)
+	      for (size_t __i = 0; __i < sizeof(__tmp)/sizeof(__tmp[0]); ++__i)
 		__tmp[__i]._M_put_all(end()._M_node);
 	      __throw_exception_again;
 	    }
@@ -663,7 +663,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 
 _GLIBCXX_END_NAMESPACE_CONTAINER
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 #endif /* _LIST_TCC */
 

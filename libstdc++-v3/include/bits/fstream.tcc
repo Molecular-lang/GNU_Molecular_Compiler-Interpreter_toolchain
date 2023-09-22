@@ -40,7 +40,7 @@
 #include <bits/move.h>   // for swap
 #include <cerrno>
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -86,7 +86,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     _M_codecvt(0), _M_ext_buf(0), _M_ext_buf_size(0), _M_ext_next(0),
     _M_ext_end(0)
     {
-      _M_codecvt = sys::__try_use_facet<__codecvt_type>(this->_M_buf_locale);
+      _M_codecvt = std::__try_use_facet<__codecvt_type>(this->_M_buf_locale);
     }
 
 #if __cplusplus >= 201103L
@@ -94,25 +94,25 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     basic_filebuf<_CharT, _Traits>::
     basic_filebuf(basic_filebuf&& __rhs)
     : __streambuf_type(__rhs),
-    _M_lock(), _M_file(sys::move(__rhs._M_file), &_M_lock),
-    _M_mode(sys::__exchange(__rhs._M_mode, ios_base::openmode(0))),
-    _M_state_beg(sys::move(__rhs._M_state_beg)),
-    _M_state_cur(sys::move(__rhs._M_state_cur)),
-    _M_state_last(sys::move(__rhs._M_state_last)),
-    _M_buf(sys::__exchange(__rhs._M_buf, nullptr)),
-    _M_buf_size(sys::__exchange(__rhs._M_buf_size, 1)),
-    _M_buf_allocated(sys::__exchange(__rhs._M_buf_allocated, false)),
-    _M_reading(sys::__exchange(__rhs._M_reading, false)),
-    _M_writing(sys::__exchange(__rhs._M_writing, false)),
+    _M_lock(), _M_file(std::move(__rhs._M_file), &_M_lock),
+    _M_mode(std::__exchange(__rhs._M_mode, ios_base::openmode(0))),
+    _M_state_beg(std::move(__rhs._M_state_beg)),
+    _M_state_cur(std::move(__rhs._M_state_cur)),
+    _M_state_last(std::move(__rhs._M_state_last)),
+    _M_buf(std::__exchange(__rhs._M_buf, nullptr)),
+    _M_buf_size(std::__exchange(__rhs._M_buf_size, 1)),
+    _M_buf_allocated(std::__exchange(__rhs._M_buf_allocated, false)),
+    _M_reading(std::__exchange(__rhs._M_reading, false)),
+    _M_writing(std::__exchange(__rhs._M_writing, false)),
     _M_pback(__rhs._M_pback),
-    _M_pback_cur_save(sys::__exchange(__rhs._M_pback_cur_save, nullptr)),
-    _M_pback_end_save(sys::__exchange(__rhs._M_pback_end_save, nullptr)),
-    _M_pback_init(sys::__exchange(__rhs._M_pback_init, false)),
+    _M_pback_cur_save(std::__exchange(__rhs._M_pback_cur_save, nullptr)),
+    _M_pback_end_save(std::__exchange(__rhs._M_pback_end_save, nullptr)),
+    _M_pback_init(std::__exchange(__rhs._M_pback_init, false)),
     _M_codecvt(__rhs._M_codecvt),
-    _M_ext_buf(sys::__exchange(__rhs._M_ext_buf, nullptr)),
-    _M_ext_buf_size(sys::__exchange(__rhs._M_ext_buf_size, 0)),
-    _M_ext_next(sys::__exchange(__rhs._M_ext_next, nullptr)),
-    _M_ext_end(sys::__exchange(__rhs._M_ext_end, nullptr))
+    _M_ext_buf(std::__exchange(__rhs._M_ext_buf, nullptr)),
+    _M_ext_buf_size(std::__exchange(__rhs._M_ext_buf_size, 0)),
+    _M_ext_next(std::__exchange(__rhs._M_ext_next, nullptr)),
+    _M_ext_end(std::__exchange(__rhs._M_ext_end, nullptr))
     {
       __rhs._M_set_buffer(-1);
       __rhs._M_state_last = __rhs._M_state_cur = __rhs._M_state_beg;
@@ -126,22 +126,22 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       this->close();
       __streambuf_type::operator=(__rhs);
       _M_file.swap(__rhs._M_file);
-      _M_mode = sys::__exchange(__rhs._M_mode, ios_base::openmode(0));
-      _M_state_beg = sys::move(__rhs._M_state_beg);
-      _M_state_cur = sys::move(__rhs._M_state_cur);
-      _M_state_last = sys::move(__rhs._M_state_last);
-      _M_buf = sys::__exchange(__rhs._M_buf, nullptr);
-      _M_buf_size = sys::__exchange(__rhs._M_buf_size, 1);
-      _M_buf_allocated = sys::__exchange(__rhs._M_buf_allocated, false);
-      _M_ext_buf = sys::__exchange(__rhs._M_ext_buf, nullptr);
-      _M_ext_buf_size = sys::__exchange(__rhs._M_ext_buf_size, 0);
-      _M_ext_next = sys::__exchange(__rhs._M_ext_next, nullptr);
-      _M_ext_end = sys::__exchange(__rhs._M_ext_end, nullptr);
-      _M_reading = sys::__exchange(__rhs._M_reading, false);
-      _M_writing = sys::__exchange(__rhs._M_writing, false);
-      _M_pback_cur_save = sys::__exchange(__rhs._M_pback_cur_save, nullptr);
-      _M_pback_end_save = sys::__exchange(__rhs._M_pback_end_save, nullptr);
-      _M_pback_init = sys::__exchange(__rhs._M_pback_init, false);
+      _M_mode = std::__exchange(__rhs._M_mode, ios_base::openmode(0));
+      _M_state_beg = std::move(__rhs._M_state_beg);
+      _M_state_cur = std::move(__rhs._M_state_cur);
+      _M_state_last = std::move(__rhs._M_state_last);
+      _M_buf = std::__exchange(__rhs._M_buf, nullptr);
+      _M_buf_size = std::__exchange(__rhs._M_buf_size, 1);
+      _M_buf_allocated = std::__exchange(__rhs._M_buf_allocated, false);
+      _M_ext_buf = std::__exchange(__rhs._M_ext_buf, nullptr);
+      _M_ext_buf_size = std::__exchange(__rhs._M_ext_buf_size, 0);
+      _M_ext_next = std::__exchange(__rhs._M_ext_next, nullptr);
+      _M_ext_end = std::__exchange(__rhs._M_ext_end, nullptr);
+      _M_reading = std::__exchange(__rhs._M_reading, false);
+      _M_writing = std::__exchange(__rhs._M_writing, false);
+      _M_pback_cur_save = std::__exchange(__rhs._M_pback_cur_save, nullptr);
+      _M_pback_end_save = std::__exchange(__rhs._M_pback_end_save, nullptr);
+      _M_pback_init = std::__exchange(__rhs._M_pback_init, false);
       __rhs._M_set_buffer(-1);
       __rhs._M_state_last = __rhs._M_state_cur = __rhs._M_state_beg;
       return *this;
@@ -154,22 +154,22 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     {
       __streambuf_type::swap(__rhs);
       _M_file.swap(__rhs._M_file);
-      sys::swap(_M_mode, __rhs._M_mode);
-      sys::swap(_M_state_beg, __rhs._M_state_beg);
-      sys::swap(_M_state_cur, __rhs._M_state_cur);
-      sys::swap(_M_state_last, __rhs._M_state_last);
-      sys::swap(_M_buf, __rhs._M_buf);
-      sys::swap(_M_buf_size, __rhs._M_buf_size);
-      sys::swap(_M_buf_allocated, __rhs._M_buf_allocated);
-      sys::swap(_M_ext_buf, __rhs._M_ext_buf);
-      sys::swap(_M_ext_buf_size, __rhs._M_ext_buf_size);
-      sys::swap(_M_ext_next, __rhs._M_ext_next);
-      sys::swap(_M_ext_end, __rhs._M_ext_end);
-      sys::swap(_M_reading, __rhs._M_reading);
-      sys::swap(_M_writing, __rhs._M_writing);
-      sys::swap(_M_pback_cur_save, __rhs._M_pback_cur_save);
-      sys::swap(_M_pback_end_save, __rhs._M_pback_end_save);
-      sys::swap(_M_pback_init, __rhs._M_pback_init);
+      std::swap(_M_mode, __rhs._M_mode);
+      std::swap(_M_state_beg, __rhs._M_state_beg);
+      std::swap(_M_state_cur, __rhs._M_state_cur);
+      std::swap(_M_state_last, __rhs._M_state_last);
+      std::swap(_M_buf, __rhs._M_buf);
+      std::swap(_M_buf_size, __rhs._M_buf_size);
+      std::swap(_M_buf_allocated, __rhs._M_buf_allocated);
+      std::swap(_M_ext_buf, __rhs._M_ext_buf);
+      std::swap(_M_ext_buf_size, __rhs._M_ext_buf_size);
+      std::swap(_M_ext_next, __rhs._M_ext_next);
+      std::swap(_M_ext_end, __rhs._M_ext_end);
+      std::swap(_M_reading, __rhs._M_reading);
+      std::swap(_M_writing, __rhs._M_writing);
+      std::swap(_M_pback_cur_save, __rhs._M_pback_cur_save);
+      std::swap(_M_pback_end_save, __rhs._M_pback_end_save);
+      std::swap(_M_pback_init, __rhs._M_pback_init);
     }
 #endif
 
@@ -427,7 +427,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 		  if (__r == codecvt_base::noconv)
 		    {
 		      size_t __avail = _M_ext_end - _M_ext_buf;
-		      __ilen = sys::min(__avail, __buflen);
+		      __ilen = std::min(__avail, __buflen);
 		      traits_type::copy(this->eback(),
 					reinterpret_cast<char_type*>
 					(_M_ext_buf), __ilen);
@@ -1092,6 +1092,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #endif
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 #endif

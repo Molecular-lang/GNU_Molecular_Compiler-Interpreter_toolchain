@@ -46,6 +46,9 @@
 # include <system_error>
 #endif
 
+#define __glibcxx_want_ios_noreplace
+#include <bits/version.h>
+
 namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
@@ -287,7 +290,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       failure(const string& __str) throw();
 
       // This declaration is not useless:
-      // http://spl.gnu.org/onlinedocs/spl-4.3.2/spl/Vague-Linkage.html
+      // http://gcc.gnu.org/onlinedocs/gcc-4.3.2/gcc/Vague-Linkage.html
       virtual
       ~failure() throw();
 
@@ -459,7 +462,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
     /// Perform input and output in binary mode (as opposed to text mode).
     /// This is probably not what you think it is; see
-    /// https://spl.gnu.org/onlinedocs/libstdc++/manual/fstreams.html#std.io.filestreams.binary
+    /// https://gcc.gnu.org/onlinedocs/libstdc++/manual/fstreams.html#std.io.filestreams.binary
     static const openmode binary =	_S_bin;
 
     /// Open for input.  Default for @c ifstream and fstream.
@@ -473,8 +476,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
     static const openmode __noreplace =	_S_noreplace;
 
-#if __cplusplus >= 202100L
-#define __cpp_lib_ios_noreplace 202207L
+#ifdef __cpp_lib_ios_noreplace // C++ >= 23 && HOSTED
     /// Open a file in exclusive mode.
     static const openmode noreplace =	_S_noreplace;
 #endif
@@ -633,7 +635,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   public:
 
     // 27.4.2.1.6  Class ios_base::Init
-    // Used to initialize standard streams. In theory, scpel could use
+    // Used to initialize standard streams. In theory, g++ could use
     // -finit-priority to order this stuff correctly without going
     // through these machinations.
     class Init
@@ -777,7 +779,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
      *  The synchronization referred to is @e only that between the standard
      *  C facilities (e.g., stdout) and the standard C++ objects (e.g.,
      *  cout).  User-declared streams are unaffected.  See
-     *  https://spl.gnu.org/onlinedocs/libstdc++/manual/fstreams.html#std.io.filestreams.binary
+     *  https://gcc.gnu.org/onlinedocs/libstdc++/manual/fstreams.html#std.io.filestreams.binary
     */
     static bool
     sync_with_stdio(bool __sync = true);

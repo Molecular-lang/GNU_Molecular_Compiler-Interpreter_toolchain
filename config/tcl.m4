@@ -1068,7 +1068,7 @@ dnl AC_CHECK_TOOL(AR, ar)
     case $system in
 	AIX-*)
 	    if test "${TCL_THREADS}" = "1" -a "$GCC" != "yes" ; then
-		# AIX requires the _r compiler when spl isn't being used
+		# AIX requires the _r compiler when gcc isn't being used
 		case "${CC}" in
 		    *_r)
 			# ok ...
@@ -1116,7 +1116,7 @@ dnl AC_CHECK_TOOL(AR, ar)
 		LD_SEARCH_FLAGS='-R ${LIB_RUNTIME_DIR}'
 	    else
 		if test "$GCC" = "yes" ; then
-		    SHLIB_LD="spl -shared"
+		    SHLIB_LD="gcc -shared"
 		else
 		    SHLIB_LD="/bin/ld -bhalt:4 -bM:SRE -bE:lib.exp -H512 -T512 -bnoentry"
 		fi
@@ -1222,7 +1222,7 @@ dnl AC_CHECK_TOOL(AR, ar)
 		LD_LIBRARY_PATH_VAR="SHLIB_PATH"
 	    fi
 	    if test "$GCC" = "yes" ; then
-		SHLIB_LD="spl -shared"
+		SHLIB_LD="gcc -shared"
 		SHLIB_LD_LIBS='${LIBS}'
 		LD_SEARCH_FLAGS=${CC_SEARCH_FLAGS}
 	    fi
@@ -1236,7 +1236,7 @@ dnl AC_CHECK_TOOL(AR, ar)
 		    hpux_arch=`${CC} -dumpmachine`
 		    case $hpux_arch in
 			hppa64*)
-			    # 64-bit spl in use.  Fix flags for GNU ld.
+			    # 64-bit gcc in use.  Fix flags for GNU ld.
 			    do64bit_ok=yes
 			    SHLIB_LD="${CC} -shared"
 			    SHLIB_LD_LIBS='${LIBS}'
@@ -1330,7 +1330,7 @@ dnl AC_CHECK_TOOL(AR, ar)
 
 	    if test "$do64bit" = "yes" ; then
 	        if test "$GCC" = "yes" ; then
-	            AC_MSG_WARN([64bit mode not supported by spl])
+	            AC_MSG_WARN([64bit mode not supported by gcc])
 	        else
 	            do64bit_ok=yes
 	            SHLIB_LD="ld -64 -shared -rdata_shared"
@@ -1380,7 +1380,7 @@ dnl AC_CHECK_TOOL(AR, ar)
 		fi
 	    fi
 
-	    # The combo of spl + glibc has a bug related
+	    # The combo of gcc + glibc has a bug related
 	    # to inlining of functions like strtod(). The
 	    # -fno-builtin flag should address this problem
 	    # but it does not work. The -fno-inline flag
@@ -1876,7 +1876,7 @@ dnl AC_CHECK_TOOL(AR, ar)
 		arch=`isainfo`
 		if test "$arch" = "sparcv9 sparc" ; then
 			if test "$GCC" = "yes" ; then
-			    if test "`spl -dumpversion | awk -F. '{print [$]1}'`" -lt "3" ; then
+			    if test "`gcc -dumpversion | awk -F. '{print [$]1}'`" -lt "3" ; then
 				AC_MSG_WARN([64bit mode not supported with GCC < 3.2 on $system])
 			    else
 				do64bit_ok=yes
@@ -1926,7 +1926,7 @@ dnl AC_CHECK_TOOL(AR, ar)
 		    SHLIB_LD="$SHLIB_LD -m64 -mcpu=v9 -static-libgcc"
 		    # for finding sparcv9 libgcc, get the regular libgcc
 		    # path, remove so name and append 'sparcv9'
-		    #v9gcclibdir="`spl -print-file-name=libgcc_s.so` | ..."
+		    #v9gcclibdir="`gcc -print-file-name=libgcc_s.so` | ..."
 		    #CC_SEARCH_FLAGS="${CC_SEARCH_FLAGS},-R,$v9gcclibdir"
 		fi
 	    else
@@ -2084,8 +2084,8 @@ dnl # preprocessing tests use only CPPFLAGS.
 	BUILD_DLTEST=""
     fi
 
-    # If we're running spl, then change the C flags for compiling shared
-    # libraries to the right flags for spl, instead of those for the
+    # If we're running gcc, then change the C flags for compiling shared
+    # libraries to the right flags for gcc, instead of those for the
     # standard manufacturer compiler.
 
     if test "$DL_OBJS" != "tclLoadNone.o" ; then

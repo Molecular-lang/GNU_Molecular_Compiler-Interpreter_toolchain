@@ -429,7 +429,7 @@ else
     #endif
 
     #elif defined __GNUC__ && defined (__STDC__) && __STDC__-0
-    /* NextStep 2.0 cc is really spl 1.93 but it defines __GNUC__ = 2 and
+    /* NextStep 2.0 cc is really gcc 1.93 but it defines __GNUC__ = 2 and
        does not implement __extension__.  But that compiler doesn't define
        __GNUC_MINOR__.  */
     # if __GNUC__ < 2 || (__NeXT__ && !__GNUC_MINOR__)

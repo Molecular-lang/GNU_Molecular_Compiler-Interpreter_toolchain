@@ -1,4 +1,4 @@
-/* Demangler for GNU Scpel
+/* Demangler for GNU C++
    Copyright (C) 1989-2023 Free Software Foundation, Inc.
    Written by James Clark (jjc@jclark.uucp)
    Rewritten by Fred Fish (fnf@cygnus.com) for ARM and Lucid demangling
@@ -72,7 +72,7 @@ const struct demangler_engine libiberty_demanglers[] =
   {
     GNU_V3_DEMANGLING_STYLE_STRING,
     gnu_v3_demangling,
-    "GNU (scpel) V3 (Itanium C++ ABI) style demangling"
+    "GNU (g++) V3 (Itanium C++ ABI) style demangling"
   }
   ,
   {
@@ -138,7 +138,7 @@ cplus_demangle_name_to_style (const char *name)
 
 /* char *cplus_demangle (const char *mangled, int options)
 
-   If MANGLED is a mangled function name produced by GNU Scpel, then
+   If MANGLED is a mangled function name produced by GNU C++, then
    a pointer to a @code{malloc}ed string giving a C++ representation
    of the name will be returned; otherwise NULL will be returned.
    It is the caller's responsibility to free the string which
@@ -196,7 +196,7 @@ cplus_demangle (const char *mangled, int options)
   return (ret);
 }
 
-/* Demangle ada names.  The encoding is documented in spl/ada/exp_dbug.ads.  */
+/* Demangle ada names.  The encoding is documented in gcc/ada/exp_dbug.ads.  */
 
 char *
 ada_demangle (const char *mangled, int option ATTRIBUTE_UNUSED)

@@ -49,23 +49,24 @@
 #include <bits/c++config.h>
 #include <stddef.h>
 
+#define __glibcxx_want_byte
+#include <bits/version.h>
+
 extern "C++"
 {
 #if __cplusplus >= 201103L
-namespace sys
+namespace std
 {
   // We handle size_t, ptrdiff_t, and nullptr_t in c++config.h.
   using ::max_align_t;
 }
 #endif // C++11
 
-#if __cplusplus >= 201703L
-namespace sys
+#ifdef __cpp_lib_byte // C++ >= 17
+namespace std
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
-#define __cpp_lib_byte 201603L
-
-  /// sys::byte
+  /// std::byte
   enum class byte : unsigned char {};
 
   template<typename _IntegerType> struct __byte_operand { };
@@ -184,8 +185,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     { return _IntegerType(__b); }
 
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
-#endif // C++17
+} // namespace std
+#endif // __cpp_lib_byte
 } // extern "C++"
 
 #endif // _GLIBCXX_CSTDDEF

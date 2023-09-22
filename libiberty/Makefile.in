@@ -50,13 +50,13 @@ mkinstalldirs = $(SHELL) $(libiberty_topdir)/mkinstalldirs
 # Some compilers can't handle cc -c blah.c -o foo/blah.o.
 OUTPUT_OPTION = @OUTPUT_OPTION@
 
-AR = @AR@
+AR = @AR@ @AR_PLUGIN_OPTION@
 AR_FLAGS = rc
 
 CC = @CC@
 CFLAGS = @CFLAGS@
 CPPFLAGS = @CPPFLAGS@
-RANLIB = @RANLIB@
+RANLIB = @RANLIB@ @RANLIB_PLUGIN_OPTION@
 MAKEINFO = @MAKEINFO@
 PERL = @PERL@
 
@@ -98,7 +98,7 @@ FLAGS_TO_PASS = \
 	"tooldir=$(tooldir)"
 
 # Subdirectories to recurse into. We need to override this during cleaning
-SUBDIRS =
+SUBDIRS = testsuite
 
 # FIXME: add @BUILD_INFO@ once we're sure it works for everyone.
 all: stamp-picdir stamp-noasandir $(TARGETLIB) required-list all-subdir
@@ -434,11 +434,11 @@ ETAGS = @ETAGS@
 etags tags TAGS: etags-subdir
 	cd $(srcdir) && $(ETAGS) $(CFILES)
 
-# The standalone demangler (c++filt) has been moved to spl-utils.
+# The standalone demangler (c++filt) has been moved to binutils.
 # But make this target work anyway for demangler hacking.
 demangle: $(ALL) $(srcdir)/cp-demangle.c
 	@echo "The standalone demangler, now named c++filt, is now"
-	@echo "a part of spl-utils."
+	@echo "a part of binutils."
 	$(CC) @DEFS@ $(CFLAGS) $(CPPFLAGS) -I. -I$(INCDIR) $(HDEFINES) \
 	  $(srcdir)/cp-demangle.c -DSTANDALONE_DEMANGLER $(TARGETLIB) -o $@
 
@@ -482,6 +482,7 @@ distclean: distclean-subdir
 	@$(MULTICLEAN) multi-clean DO=distclean
 	-rm -f *~ Makefile config.cache config.status xhost-mkfrag TAGS multilib.out
 	-rm -f config.log
+	-rmdir testsuite 2>/dev/null
 maintainer-clean realclean: maintainer-clean-subdir
 	$(MAKE) SUBDIRS="" distclean
 
@@ -506,6 +507,7 @@ aclocal_deps = \
 	$(srcdir)/../config/acx.m4 \
 	$(srcdir)/../config/cet.m4 \
 	$(srcdir)/../config/enable.m4 \
+	$(srcdir)/../config/gcc-plugin.m4 \
 	$(srcdir)/../config/no-executables.m4 \
 	$(srcdir)/../config/override.m4 \
 	$(srcdir)/../config/picflag.m4 \

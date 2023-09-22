@@ -35,14 +35,14 @@
 # include <bits/c++0x_warning.h>
 #else
 # include <bits/c++config.h>
-namespace sys _GLIBCXX_VISIBILITY(default) { namespace __debug {
+namespace std _GLIBCXX_VISIBILITY(default) { namespace __debug {
   template<typename _Key, typename _Tp, typename _Hash, typename _Pred,
 	   typename _Allocator>
     class unordered_map;
   template<typename _Key, typename _Tp, typename _Hash, typename _Pred,
 	   typename _Allocator>
     class unordered_multimap;
-} } // namespace sys::__debug
+} } // namespace std::__debug
 
 # include <unordered_map>
 
@@ -51,22 +51,22 @@ namespace sys _GLIBCXX_VISIBILITY(default) { namespace __debug {
 #include <debug/safe_iterator.h>
 #include <debug/safe_local_iterator.h>
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 namespace __debug
 {
-  /// Class sys::unordered_map with safety/checking/debug instrumentation.
+  /// Class std::unordered_map with safety/checking/debug instrumentation.
   template<typename _Key, typename _Tp,
-	   typename _Hash = sys::hash<_Key>,
-	   typename _Pred = sys::equal_to<_Key>,
-	   typename _Alloc = sys::allocator<sys::pair<const _Key, _Tp> > >
+	   typename _Hash = std::hash<_Key>,
+	   typename _Pred = std::equal_to<_Key>,
+	   typename _Alloc = std::allocator<std::pair<const _Key, _Tp> > >
     class unordered_map
     : public __gnu_debug::_Safe_container<
 	unordered_map<_Key, _Tp, _Hash, _Pred, _Alloc>, _Alloc,
 	__gnu_debug::_Safe_unordered_container>,
-      public _GLIBCXX_SYS_C::unordered_map<_Key, _Tp, _Hash, _Pred, _Alloc>
+      public _GLIBCXX_STD_C::unordered_map<_Key, _Tp, _Hash, _Pred, _Alloc>
     {
-      typedef _GLIBCXX_SYS_C::unordered_map<_Key, _Tp, _Hash,
+      typedef _GLIBCXX_STD_C::unordered_map<_Key, _Tp, _Hash,
 					    _Pred, _Alloc>		_Base;
       typedef __gnu_debug::_Safe_container<unordered_map,
 		   _Alloc, __gnu_debug::_Safe_unordered_container>	_Safe;
@@ -150,9 +150,9 @@ namespace __debug
 
       unordered_map(unordered_map&& __umap,
 		    const allocator_type& __a)
-      noexcept( noexcept(_Base(sys::move(__umap), __a)) )
-      : _Safe(sys::move(__umap), __a),
-	_Base(sys::move(__umap), __a) { }
+      noexcept( noexcept(_Base(std::move(__umap), __a)) )
+      : _Safe(std::move(__umap), __a),
+	_Base(std::move(__umap), __a) { }
 
       unordered_map(initializer_list<value_type> __l,
 		    size_type __n = 0,
@@ -327,11 +327,11 @@ namespace __debug
       }
 
       template<typename... _Args>
-	sys::pair<iterator, bool>
+	std::pair<iterator, bool>
 	emplace(_Args&&... __args)
 	{
 	  size_type __bucket_count = this->bucket_count();
-	  auto __res = _Base::emplace(sys::forward<_Args>(__args)...);
+	  auto __res = _Base::emplace(std::forward<_Args>(__args)...);
 	  _M_check_rehashed(__bucket_count);
 	  return { { __res.first, this }, __res.second };
 	}
@@ -343,12 +343,12 @@ namespace __debug
 	  __glibcxx_check_insert(__hint);
 	  size_type __bucket_count = this->bucket_count();
 	  auto __it = _Base::emplace_hint(__hint.base(),
-					  sys::forward<_Args>(__args)...);
+					  std::forward<_Args>(__args)...);
 	  _M_check_rehashed(__bucket_count);
 	  return { __it, this };
 	}
 
-      sys::pair<iterator, bool>
+      std::pair<iterator, bool>
       insert(const value_type& __obj)
       {
 	size_type __bucket_count = this->bucket_count();
@@ -359,23 +359,23 @@ namespace __debug
 
       // _GLIBCXX_RESOLVE_LIB_DEFECTS
       // 2354. Unnecessary copying when inserting into maps with braced-init
-      sys::pair<iterator, bool>
+      std::pair<iterator, bool>
       insert(value_type&& __x)
       {
 	size_type __bucket_count = this->bucket_count();
-	auto __res = _Base::insert(sys::move(__x));
+	auto __res = _Base::insert(std::move(__x));
 	_M_check_rehashed(__bucket_count);
 	return { { __res.first, this }, __res.second };
       }
 
       template<typename _Pair, typename = typename
-	       sys::enable_if<sys::is_constructible<value_type,
+	       std::enable_if<std::is_constructible<value_type,
 						    _Pair&&>::value>::type>
-	sys::pair<iterator, bool>
+	std::pair<iterator, bool>
 	insert(_Pair&& __obj)
 	{
 	  size_type __bucket_count = this->bucket_count();
-	  auto __res = _Base::insert(sys::forward<_Pair>(__obj));
+	  auto __res = _Base::insert(std::forward<_Pair>(__obj));
 	  _M_check_rehashed(__bucket_count);
 	  return { { __res.first, this }, __res.second };
 	}
@@ -397,26 +397,26 @@ namespace __debug
       {
 	__glibcxx_check_insert(__hint);
 	size_type __bucket_count = this->bucket_count();
-	auto __it = _Base::insert(__hint.base(), sys::move(__x));
+	auto __it = _Base::insert(__hint.base(), std::move(__x));
 	_M_check_rehashed(__bucket_count);
 	return { __it, this };
       }
 
       template<typename _Pair, typename = typename
-	       sys::enable_if<sys::is_constructible<value_type,
+	       std::enable_if<std::is_constructible<value_type,
 						    _Pair&&>::value>::type>
 	iterator
 	insert(const_iterator __hint, _Pair&& __obj)
 	{
 	  __glibcxx_check_insert(__hint);
 	  size_type __bucket_count = this->bucket_count();
-	  auto __it = _Base::insert(__hint.base(), sys::forward<_Pair>(__obj));
+	  auto __it = _Base::insert(__hint.base(), std::forward<_Pair>(__obj));
 	  _M_check_rehashed(__bucket_count);
 	  return { __it, this };
 	}
 
       void
-      insert(sys::initializer_list<value_type> __l)
+      insert(std::initializer_list<value_type> __l)
       {
 	size_type __bucket_count = this->bucket_count();
 	_Base::insert(__l);
@@ -446,7 +446,7 @@ namespace __debug
 	try_emplace(const key_type& __k, _Args&&... __args)
 	{
 	  auto __res = _Base::try_emplace(__k,
-					  sys::forward<_Args>(__args)...);
+					  std::forward<_Args>(__args)...);
 	  return { { __res.first, this }, __res.second };
 	}
 
@@ -454,8 +454,8 @@ namespace __debug
 	pair<iterator, bool>
 	try_emplace(key_type&& __k, _Args&&... __args)
 	{
-	  auto __res = _Base::try_emplace(sys::move(__k),
-					  sys::forward<_Args>(__args)...);
+	  auto __res = _Base::try_emplace(std::move(__k),
+					  std::forward<_Args>(__args)...);
 	  return { { __res.first, this }, __res.second };
 	}
 
@@ -466,7 +466,7 @@ namespace __debug
 	{
 	  __glibcxx_check_insert(__hint);
 	  return { _Base::try_emplace(__hint.base(), __k,
-				      sys::forward<_Args>(__args)...),
+				      std::forward<_Args>(__args)...),
 		   this };
 	}
 
@@ -475,8 +475,8 @@ namespace __debug
 	try_emplace(const_iterator __hint, key_type&& __k, _Args&&... __args)
 	{
 	  __glibcxx_check_insert(__hint);
-	  return { _Base::try_emplace(__hint.base(), sys::move(__k),
-				      sys::forward<_Args>(__args)...),
+	  return { _Base::try_emplace(__hint.base(), std::move(__k),
+				      std::forward<_Args>(__args)...),
 		   this };
 	}
 
@@ -485,7 +485,7 @@ namespace __debug
 	insert_or_assign(const key_type& __k, _Obj&& __obj)
 	{
 	  auto __res = _Base::insert_or_assign(__k,
-					       sys::forward<_Obj>(__obj));
+					       std::forward<_Obj>(__obj));
 	  return { { __res.first, this }, __res.second };
 	}
 
@@ -493,8 +493,8 @@ namespace __debug
 	pair<iterator, bool>
 	insert_or_assign(key_type&& __k, _Obj&& __obj)
 	{
-	  auto __res = _Base::insert_or_assign(sys::move(__k),
-					       sys::forward<_Obj>(__obj));
+	  auto __res = _Base::insert_or_assign(std::move(__k),
+					       std::forward<_Obj>(__obj));
 	  return { { __res.first, this }, __res.second };
 	}
 
@@ -505,7 +505,7 @@ namespace __debug
 	{
 	  __glibcxx_check_insert(__hint);
 	  return { _Base::insert_or_assign(__hint.base(), __k,
-					   sys::forward<_Obj>(__obj)),
+					   std::forward<_Obj>(__obj)),
 		   this };
 	}
 
@@ -514,8 +514,8 @@ namespace __debug
 	insert_or_assign(const_iterator __hint, key_type&& __k, _Obj&& __obj)
 	{
 	  __glibcxx_check_insert(__hint);
-	  return { _Base::insert_or_assign(__hint.base(), sys::move(__k),
-					   sys::forward<_Obj>(__obj)),
+	  return { _Base::insert_or_assign(__hint.base(), std::move(__k),
+					   std::forward<_Obj>(__obj)),
 		   this };
 	}
 #endif // C++17
@@ -543,16 +543,16 @@ namespace __debug
       insert_return_type
       insert(node_type&& __nh)
       {
-	auto __ret = _Base::insert(sys::move(__nh));
+	auto __ret = _Base::insert(std::move(__nh));
 	return
-	  { { __ret.position, this }, __ret.inserted, sys::move(__ret.node) };
+	  { { __ret.position, this }, __ret.inserted, std::move(__ret.node) };
       }
 
       iterator
       insert(const_iterator __hint, node_type&& __nh)
       {
 	__glibcxx_check_insert(__hint);
-	return { _Base::insert(__hint.base(), sys::move(__nh)), this };
+	return { _Base::insert(__hint.base(), std::move(__nh)), this };
       }
 
       template<typename _H2, typename _P2>
@@ -560,7 +560,7 @@ namespace __debug
 	merge(unordered_map<_Key, _Tp, _H2, _P2, _Alloc>& __source)
 	{
 	  auto __guard
-	    = _Safe::_S_uc_guard(sys::__detail::_Select1st{}, __source);
+	    = _Safe::_S_uc_guard(std::__detail::_Select1st{}, __source);
 	  _Base::merge(__source);
 	}
 
@@ -574,7 +574,7 @@ namespace __debug
 	merge(unordered_multimap<_Key, _Tp, _H2, _P2, _Alloc>& __source)
 	{
 	  auto __guard
-	    = _Safe::_S_umc_guard(sys::__detail::_Select1st{}, __source);
+	    = _Safe::_S_umc_guard(std::__detail::_Select1st{}, __source);
 	  _Base::merge(__source);
 	}
 
@@ -593,8 +593,8 @@ namespace __debug
 
 #if __cplusplus > 201703L
       template<typename _Kt,
-	       typename = sys::__has_is_transparent_t<_Hash, _Kt>,
-	       typename = sys::__has_is_transparent_t<_Pred, _Kt>>
+	       typename = std::__has_is_transparent_t<_Hash, _Kt>,
+	       typename = std::__has_is_transparent_t<_Pred, _Kt>>
 	iterator
 	find(const _Kt& __k)
 	{ return { _Base::find(__k), this }; }
@@ -606,8 +606,8 @@ namespace __debug
 
 #if __cplusplus > 201703L
       template<typename _Kt,
-	       typename = sys::__has_is_transparent_t<_Hash, _Kt>,
-	       typename = sys::__has_is_transparent_t<_Pred, _Kt>>
+	       typename = std::__has_is_transparent_t<_Hash, _Kt>,
+	       typename = std::__has_is_transparent_t<_Pred, _Kt>>
 	const_iterator
 	find(const _Kt& __k) const
 	{ return { _Base::find(__k), this }; }
@@ -618,7 +618,7 @@ namespace __debug
       using _Base::contains;
 #endif
 
-      sys::pair<iterator, iterator>
+      std::pair<iterator, iterator>
       equal_range(const key_type& __key)
       {
 	auto __res = _Base::equal_range(__key);
@@ -627,9 +627,9 @@ namespace __debug
 
 #if __cplusplus > 201703L
       template<typename _Kt,
-	       typename = sys::__has_is_transparent_t<_Hash, _Kt>,
-	       typename = sys::__has_is_transparent_t<_Pred, _Kt>>
-	sys::pair<iterator, iterator>
+	       typename = std::__has_is_transparent_t<_Hash, _Kt>,
+	       typename = std::__has_is_transparent_t<_Pred, _Kt>>
+	std::pair<iterator, iterator>
 	equal_range(const _Kt& __k)
 	{
 	  auto __res = _Base::equal_range(__k);
@@ -637,7 +637,7 @@ namespace __debug
 	}
 #endif
 
-      sys::pair<const_iterator, const_iterator>
+      std::pair<const_iterator, const_iterator>
       equal_range(const key_type& __key) const
       {
 	auto __res = _Base::equal_range(__key);
@@ -646,9 +646,9 @@ namespace __debug
 
 #if __cplusplus > 201703L
       template<typename _Kt,
-	       typename = sys::__has_is_transparent_t<_Hash, _Kt>,
-	       typename = sys::__has_is_transparent_t<_Pred, _Kt>>
-	sys::pair<const_iterator, const_iterator>
+	       typename = std::__has_is_transparent_t<_Hash, _Kt>,
+	       typename = std::__has_is_transparent_t<_Pred, _Kt>>
+	std::pair<const_iterator, const_iterator>
 	equal_range(const _Kt& __k) const
 	{
 	  auto __res = _Base::equal_range(__k);
@@ -865,19 +865,19 @@ namespace __debug
     { return !(__x == __y); }
 #endif
 
-  /// Class sys::unordered_multimap with safety/checking/debug instrumentation.
+  /// Class std::unordered_multimap with safety/checking/debug instrumentation.
   template<typename _Key, typename _Tp,
-	   typename _Hash = sys::hash<_Key>,
-	   typename _Pred = sys::equal_to<_Key>,
-	   typename _Alloc = sys::allocator<sys::pair<const _Key, _Tp> > >
+	   typename _Hash = std::hash<_Key>,
+	   typename _Pred = std::equal_to<_Key>,
+	   typename _Alloc = std::allocator<std::pair<const _Key, _Tp> > >
     class unordered_multimap
       : public __gnu_debug::_Safe_container<
 	unordered_multimap<_Key, _Tp, _Hash, _Pred, _Alloc>, _Alloc,
 	__gnu_debug::_Safe_unordered_container>,
-	public _GLIBCXX_SYS_C::unordered_multimap<
+	public _GLIBCXX_STD_C::unordered_multimap<
 	_Key, _Tp, _Hash, _Pred, _Alloc>
     {
-      typedef _GLIBCXX_SYS_C::unordered_multimap<_Key, _Tp, _Hash,
+      typedef _GLIBCXX_STD_C::unordered_multimap<_Key, _Tp, _Hash,
 						 _Pred, _Alloc>		_Base;
       typedef __gnu_debug::_Safe_container<unordered_multimap,
 	_Alloc, __gnu_debug::_Safe_unordered_container>			_Safe;
@@ -960,9 +960,9 @@ namespace __debug
 
       unordered_multimap(unordered_multimap&& __umap,
 			 const allocator_type& __a)
-      noexcept( noexcept(_Base(sys::move(__umap), __a)) )
-      : _Safe(sys::move(__umap), __a),
-	_Base(sys::move(__umap), __a) { }
+      noexcept( noexcept(_Base(std::move(__umap), __a)) )
+      : _Safe(std::move(__umap), __a),
+	_Base(std::move(__umap), __a) { }
 
       unordered_multimap(initializer_list<value_type> __l,
 			 size_type __n = 0,
@@ -1136,7 +1136,7 @@ namespace __debug
 	emplace(_Args&&... __args)
 	{
 	  size_type __bucket_count = this->bucket_count();
-	  auto __it = _Base::emplace(sys::forward<_Args>(__args)...);
+	  auto __it = _Base::emplace(std::forward<_Args>(__args)...);
 	  _M_check_rehashed(__bucket_count);
 	  return { __it, this };
 	}
@@ -1148,7 +1148,7 @@ namespace __debug
 	  __glibcxx_check_insert(__hint);
 	  size_type __bucket_count = this->bucket_count();
 	  auto __it = _Base::emplace_hint(__hint.base(),
-					  sys::forward<_Args>(__args)...);
+					  std::forward<_Args>(__args)...);
 	  _M_check_rehashed(__bucket_count);
 	  return { __it, this };
 	}
@@ -1168,7 +1168,7 @@ namespace __debug
       insert(value_type&& __x)
       {
 	size_type __bucket_count = this->bucket_count();
-	auto __it = _Base::insert(sys::move(__x));
+	auto __it = _Base::insert(std::move(__x));
 	_M_check_rehashed(__bucket_count);
 	return { __it, this };
       }
@@ -1190,38 +1190,38 @@ namespace __debug
       {
 	__glibcxx_check_insert(__hint);
 	size_type __bucket_count = this->bucket_count();
-	auto __it = _Base::insert(__hint.base(), sys::move(__x));
+	auto __it = _Base::insert(__hint.base(), std::move(__x));
 	_M_check_rehashed(__bucket_count);
 	return { __it, this };
       }
 
       template<typename _Pair, typename = typename
-	       sys::enable_if<sys::is_constructible<value_type,
+	       std::enable_if<std::is_constructible<value_type,
 						    _Pair&&>::value>::type>
 	iterator
 	insert(_Pair&& __obj)
 	{
 	  size_type __bucket_count = this->bucket_count();
-	  auto __it = _Base::insert(sys::forward<_Pair>(__obj));
+	  auto __it = _Base::insert(std::forward<_Pair>(__obj));
 	  _M_check_rehashed(__bucket_count);
 	  return { __it, this };
 	}
 
       template<typename _Pair, typename = typename
-	       sys::enable_if<sys::is_constructible<value_type,
+	       std::enable_if<std::is_constructible<value_type,
 						    _Pair&&>::value>::type>
 	iterator
 	insert(const_iterator __hint, _Pair&& __obj)
 	{
 	  __glibcxx_check_insert(__hint);
 	  size_type __bucket_count = this->bucket_count();
-	  auto __it = _Base::insert(__hint.base(), sys::forward<_Pair>(__obj));
+	  auto __it = _Base::insert(__hint.base(), std::forward<_Pair>(__obj));
 	  _M_check_rehashed(__bucket_count);
 	  return { __it, this };
 	}
 
       void
-      insert(sys::initializer_list<value_type> __l)
+      insert(std::initializer_list<value_type> __l)
       { _Base::insert(__l); }
 
       template<typename _InputIterator>
@@ -1262,13 +1262,13 @@ namespace __debug
 
       iterator
       insert(node_type&& __nh)
-      { return { _Base::insert(sys::move(__nh)), this }; }
+      { return { _Base::insert(std::move(__nh)), this }; }
 
       iterator
       insert(const_iterator __hint, node_type&& __nh)
       {
 	__glibcxx_check_insert(__hint);
-	return { _Base::insert(__hint.base(), sys::move(__nh)), this };
+	return { _Base::insert(__hint.base(), std::move(__nh)), this };
       }
 
       template<typename _H2, typename _P2>
@@ -1276,7 +1276,7 @@ namespace __debug
 	merge(unordered_multimap<_Key, _Tp, _H2, _P2, _Alloc>& __source)
 	{
 	  auto __guard
-	    = _Safe::_S_umc_guard(sys::__detail::_Select1st{}, __source);
+	    = _Safe::_S_umc_guard(std::__detail::_Select1st{}, __source);
 	  _Base::merge(__source);
 	}
 
@@ -1290,7 +1290,7 @@ namespace __debug
 	merge(unordered_map<_Key, _Tp, _H2, _P2, _Alloc>& __source)
 	{
 	  auto __guard
-	    = _Safe::_S_uc_guard(sys::__detail::_Select1st{}, __source);
+	    = _Safe::_S_uc_guard(std::__detail::_Select1st{}, __source);
 	  _Base::merge(__source);
 	}
 
@@ -1309,8 +1309,8 @@ namespace __debug
 
 #if __cplusplus > 201703L
       template<typename _Kt,
-	       typename = sys::__has_is_transparent_t<_Hash, _Kt>,
-	       typename = sys::__has_is_transparent_t<_Pred, _Kt>>
+	       typename = std::__has_is_transparent_t<_Hash, _Kt>,
+	       typename = std::__has_is_transparent_t<_Pred, _Kt>>
 	iterator
 	find(const _Kt& __k)
 	{ return { _Base::find(__k), this }; }
@@ -1322,8 +1322,8 @@ namespace __debug
 
 #if __cplusplus > 201703L
       template<typename _Kt,
-	       typename = sys::__has_is_transparent_t<_Hash, _Kt>,
-	       typename = sys::__has_is_transparent_t<_Pred, _Kt>>
+	       typename = std::__has_is_transparent_t<_Hash, _Kt>,
+	       typename = std::__has_is_transparent_t<_Pred, _Kt>>
 	const_iterator
 	find(const _Kt& __k) const
 	{ return { _Base::find(__k), this }; }
@@ -1334,7 +1334,7 @@ namespace __debug
       using _Base::contains;
 #endif
 
-      sys::pair<iterator, iterator>
+      std::pair<iterator, iterator>
       equal_range(const key_type& __key)
       {
 	auto __res = _Base::equal_range(__key);
@@ -1343,9 +1343,9 @@ namespace __debug
 
 #if __cplusplus > 201703L
       template<typename _Kt,
-	       typename = sys::__has_is_transparent_t<_Hash, _Kt>,
-	       typename = sys::__has_is_transparent_t<_Pred, _Kt>>
-	sys::pair<iterator, iterator>
+	       typename = std::__has_is_transparent_t<_Hash, _Kt>,
+	       typename = std::__has_is_transparent_t<_Pred, _Kt>>
+	std::pair<iterator, iterator>
 	equal_range(const _Kt& __k)
 	{
 	  auto __res = _Base::equal_range(__k);
@@ -1353,7 +1353,7 @@ namespace __debug
 	}
 #endif
 
-      sys::pair<const_iterator, const_iterator>
+      std::pair<const_iterator, const_iterator>
       equal_range(const key_type& __key) const
       {
 	auto __res = _Base::equal_range(__key);
@@ -1362,9 +1362,9 @@ namespace __debug
 
 #if __cplusplus > 201703L
       template<typename _Kt,
-	       typename = sys::__has_is_transparent_t<_Hash, _Kt>,
-	       typename = sys::__has_is_transparent_t<_Pred, _Kt>>
-	sys::pair<const_iterator, const_iterator>
+	       typename = std::__has_is_transparent_t<_Hash, _Kt>,
+	       typename = std::__has_is_transparent_t<_Pred, _Kt>>
+	std::pair<const_iterator, const_iterator>
 	equal_range(const _Kt& __k) const
 	{
 	  auto __res = _Base::equal_range(__k);
@@ -1583,7 +1583,7 @@ namespace __debug
 #endif
 
 } // namespace __debug
-} // namespace sys
+} // namespace std
 
 #endif // C++11
 

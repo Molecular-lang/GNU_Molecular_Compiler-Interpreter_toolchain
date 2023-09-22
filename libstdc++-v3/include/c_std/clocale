@@ -48,11 +48,11 @@
 #undef setlocale
 #undef localeconv
 
-namespace sys
+namespace std
 {
   using ::lconv;
   using ::setlocale;
   using ::localeconv;
-} // namespace sys
+} // namespace std
 
 #endif

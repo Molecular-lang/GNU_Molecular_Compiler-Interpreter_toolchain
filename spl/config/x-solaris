@@ -1,3 +1,0 @@
-host-solaris.o: $(srcdir)/config/host-solaris.scpel
-	$(COMPILE) $<
-	$(POSTCOMPILE)

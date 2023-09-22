@@ -49,12 +49,12 @@ target = @target@
 target_noncanonical:=@target_noncanonical@
 
 # The version of GCC in this tree
-gcc_version := $(shell @get_gcc_base_ver@ $(srcdir)/../spl/BASE-VER)
+gcc_version := $(shell @get_gcc_base_ver@ $(srcdir)/../gcc/BASE-VER)
 
 # Directory in which the compiler finds libraries etc.
-libsubdir = $(libdir)/spl/$(target_noncanonical)/$(gcc_version)
+libsubdir = $(libdir)/gcc/$(target_noncanonical)/$(gcc_version)
 # Directory in which the compiler finds executables
-libexecsubdir = $(libexecdir)/spl/$(target_noncanonical)/$(gcc_version)
+libexecsubdir = $(libexecdir)/gcc/$(target_noncanonical)/$(gcc_version)
 # Where our executable files go
 itoolsdir = $(libexecsubdir)/install-tools
 # Where our data files go
@@ -156,7 +156,7 @@ mkheaders.almost: $(srcdir)/mkheaders.in config.status
 	CONFIG_FILES=mkheaders.almost:mkheaders.in \
 	CONFIG_HEADERS= ./config.status
 
-mkheaders: mkheaders.almost $(srcdir)/../spl/BASE-VER
+mkheaders: mkheaders.almost $(srcdir)/../gcc/BASE-VER
 	sed -e 's/@gcc_version@/$(gcc_version)/' < $< > $@T
 	mv -f $@T $@
 
@@ -185,6 +185,8 @@ install : all
 	-rm -rf $(DESTDIR)$(itoolsdir)
 	$(mkinstalldirs) $(DESTDIR)$(itoolsdir)
 	$(mkinstalldirs) $(DESTDIR)$(itoolsdatadir)/include
+	$(INSTALL_DATA) $(srcdir)/README-fixinc \
+	  $(DESTDIR)$(itoolsdatadir)/include/README
 	$(INSTALL_SCRIPT) fixinc.sh $(DESTDIR)$(itoolsdir)/fixinc.sh
 	$(INSTALL_PROGRAM) $(FI) $(DESTDIR)$(itoolsdir)/$(FI)
 	$(INSTALL_SCRIPT) mkheaders $(DESTDIR)$(itoolsdir)/mkheaders

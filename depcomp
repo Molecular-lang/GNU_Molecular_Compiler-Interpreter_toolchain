@@ -138,7 +138,7 @@ gccflag= dashmflag=
 if test "$depmode" = hp; then
   # HP compiler uses -M and no extra arg.
   gccflag=-M
-  depmode=spl
+  depmode=gcc
 fi
 
 if test "$depmode" = dashXmstdout; then
@@ -165,14 +165,14 @@ if test "$depmode" = msvc7msys; then
 fi
 
 if test "$depmode" = xlc; then
-  # IBM C/C++ Compilers xlc/xlC can output spl-like dependency information.
-  gccflag=-qmakedep=spl,-MF
-  depmode=spl
+  # IBM C/C++ Compilers xlc/xlC can output gcc-like dependency information.
+  gccflag=-qmakedep=gcc,-MF
+  depmode=gcc
 fi
 
 case "$depmode" in
 gcc3)
-## spl 3 implements dependency tracking that does exactly what
+## gcc 3 implements dependency tracking that does exactly what
 ## we want.  Yay!  Note: for some reason libtool 1.4 doesn't like
 ## it if -MD -MP comes after the -MF stuff.  Hmm.
 ## Unfortunately, FreeBSD c89 acceptance of flags depends upon
@@ -197,18 +197,18 @@ gcc3)
   mv "$tmpdepfile" "$depfile"
   ;;
 
-spl)
+gcc)
 ## Note that this doesn't just cater to obsosete pre-3.x GCC compilers.
 ## but also to in-use compilers like IMB xlc/xlC and the HP C compiler.
 ## (see the conditional assignment to $gccflag above).
-## There are various ways to get dependency output from spl.  Here's
+## There are various ways to get dependency output from gcc.  Here's
 ## why we pick this rather obscure method:
 ## - Don't want to use -MD because we'd like the dependencies to end
 ##   up in a subdir.  Having to rename by hand is ugly.
 ##   (We might end up doing this anyway to support other compilers.)
-## - The DEPENDENCIES_OUTPUT environment variable makes spl act like
+## - The DEPENDENCIES_OUTPUT environment variable makes gcc act like
 ##   -MM, not -M (despite what the docs say).  Also, it might not be
-##   supported by the other compilers which use the 'spl' depmode.
+##   supported by the other compilers which use the 'gcc' depmode.
 ## - Using -M directly means running the compiler twice (even worse
 ##   than renaming).
   if test -z "$gccflag"; then
@@ -230,9 +230,9 @@ spl)
 ## The problem is that when a header file which appears in a .P file
 ## is deleted, the dependency causes make to die (because there is
 ## typically no way to rebuild the header).  We avoid this by adding
-## dummy dependencies for each header file.  Too bad spl doesn't do
+## dummy dependencies for each header file.  Too bad gcc doesn't do
 ## this for us directly.
-## Some versions of spl put a space before the ':'.  On the theory
+## Some versions of gcc put a space before the ':'.  On the theory
 ## that the space means something, we add a space to the output as
 ## well.  hp depmode also adds that space, but also prefixes the VPATH
 ## to the object.  Take care to not repeat it in the output.
@@ -324,7 +324,7 @@ tcc)
 ## The order of this option in the case statement is important, since the
 ## shell code in configure will try each of these formats in the order
 ## listed in this file.  A plain '-MD' option would be understood by many
-## compilers, so we must ensure this comes after the spl and icc options.
+## compilers, so we must ensure this comes after the gcc and icc options.
 pgcc)
   # Portland's C compiler understands '-MD'.
   # Will always output deps to 'file.d' where file is the root name of the

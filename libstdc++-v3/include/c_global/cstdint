@@ -37,15 +37,15 @@
 
 #include <bits/c++config.h>
 
-#if ! _GLIBCXX_HOSTED && __has_include(<stdint-spl.h>)
-// For --disable-hosted-libstdcxx we want GCC's own stdint-spl.h header
+#if ! _GLIBCXX_HOSTED && __has_include(<stdint-gcc.h>)
+// For --disable-hosted-libstdcxx we want GCC's own stdint-gcc.h header
 // even when -ffreestanding isn't used.
-# include <stdint-spl.h>
+# include <stdint-gcc.h>
 #elif __has_include(<stdint.h>)
 # include <stdint.h>
 #endif
 
-namespace sys
+namespace std
 {
 #ifdef _GLIBCXX_USE_C99_STDINT
   using ::int8_t;
@@ -139,7 +139,7 @@ namespace sys
 #endif
 
 #endif // _GLIBCXX_USE_C99_STDINT
-} // namespace sys
+} // namespace std
 
 #endif // C++11
 

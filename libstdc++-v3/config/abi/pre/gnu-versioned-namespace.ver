@@ -26,28 +26,28 @@ GLIBCXX_8.0 {
     # Names inside the 'extern' block are demangled names.
     extern "C++"
     {
-      sys::*;
-      sys::__8::*;
+      std::*;
+      std::__8::*;
     };
 
     # operator new(size_t)
     _Znw[jmy];
-    # operator new(size_t, sys::nothrow_t const&)
+    # operator new(size_t, std::nothrow_t const&)
     _Znw[jmy]RKSt9nothrow_t;
 
     # operator delete(void*)
     _ZdlPv;
-    # operator delete(void*, sys::nothrow_t const&)
+    # operator delete(void*, std::nothrow_t const&)
     _ZdlPvRKSt9nothrow_t;
 
     # operator new[](size_t)
     _Zna[jmy];
-    # operator new[](size_t, sys::nothrow_t const&)
+    # operator new[](size_t, std::nothrow_t const&)
     _Zna[jmy]RKSt9nothrow_t;
 
     # operator delete[](void*)
     _ZdaPv;
-    # operator delete[](void*, sys::nothrow_t const&)
+    # operator delete[](void*, std::nothrow_t const&)
     _ZdaPvRKSt9nothrow_t;
 
     # function-scope static objects requires a guard variable.
@@ -79,14 +79,14 @@ GLIBCXX_8.0 {
     # thread/mutex/condition_variable/future
     __once_proxy;
 
-    # sys::__convert_to_v
+    # std::__convert_to_v
     _ZNSt3__814__convert_to_v*;
 
-    # sys::__copy_streambufs
+    # std::__copy_streambufs
     _ZNSt3__817__copy_streambufsI*;
     _ZNSt3__821__copy_streambufs_eofI*;
 
-    # sys::__istream_extract(wistream&, wchar_t*, streamsize)
+    # std::__istream_extract(wistream&, wchar_t*, streamsize)
     _ZNSt3__817__istream_extractIwNS_11char_traitsIwEEEEvRNS_13basic_istreamIT_T0_EEPS4_[ilx];
 
     # __gnu_cxx::__atomic_add
@@ -164,6 +164,7 @@ CXXABI_2.0 {
     __cxa_begin_catch;
     __cxa_begin_cleanup;
     __cxa_call_unexpected;
+    __cxa_call_terminate;
     __cxa_current_exception_type;
     __cxa_deleted_virtual;
     __cxa_demangle;
@@ -197,7 +198,7 @@ CXXABI_2.0 {
     __gxx_personality_sj0;
     __dynamic_cast;
 
-    # sys::exception_ptr
+    # std::exception_ptr
     _ZNSt15__exception_ptr13exception_ptrC1Ev;
     _ZNSt15__exception_ptr13exception_ptrC2Ev;
     _ZNSt15__exception_ptr13exception_ptrC1EPv;
@@ -218,12 +219,12 @@ CXXABI_2.0 {
     _ZSt17current_exceptionv;
     _ZSt17rethrow_exceptionNSt15__exception_ptr13exception_ptrE;
 
-    # sys::nested_exception
+    # std::nested_exception
     _ZNSt16nested_exceptionD*;
     _ZTISt16nested_exception;
     _ZTVSt16nested_exception;
 
-    # sys::bad_function_call.
+    # std::bad_function_call.
     _ZNSt17bad_function_callD*;
     _ZTISt17bad_function_call;
     _ZTSSt17bad_function_call;
@@ -339,9 +340,9 @@ CXXABI_2.0 {
     _ZTVN10__cxxabiv120__si_class_type_infoE;
     _ZTVN10__cxxabiv121__vmi_class_type_infoE;
 
-    # operator delete(void*, sys::size_t)
+    # operator delete(void*, std::size_t)
     _ZdlPv[jmy];
-    # operator delete[](void*, sys::size_t)
+    # operator delete[](void*, std::size_t)
     _ZdaPv[jmy];
 
     # __gnu_cxx::__freeres()

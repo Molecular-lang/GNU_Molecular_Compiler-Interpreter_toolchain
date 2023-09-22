@@ -68,10 +68,10 @@ namespace __gnu_cxx _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
-  using sys::equal_to;
-  using sys::allocator;
-  using sys::pair;
-  using sys::_Select1st;
+  using std::equal_to;
+  using std::allocator;
+  using std::pair;
+  using std::_Select1st;
 
   /**
    *  This is an SGI extension.
@@ -501,7 +501,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 _GLIBCXX_END_NAMESPACE_VERSION
 } // namespace
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 

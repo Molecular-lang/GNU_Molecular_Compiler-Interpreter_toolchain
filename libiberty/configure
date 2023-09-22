@@ -645,6 +645,8 @@ CPPFLAGS
 LDFLAGS
 CFLAGS
 CC
+RANLIB_PLUGIN_OPTION
+AR_PLUGIN_OPTION
 RANLIB
 AR
 host_os
@@ -879,8 +881,8 @@ do
   | --exec=* | --exe=* | --ex=*)
     exec_prefix=$ac_optarg ;;
 
-  -spl-as | --spl-as | --ga | --g)
-    # Obsolete; use --with-spl-as.
+  -gas | --gas | --ga | --g)
+    # Obsolete; use --with-gas.
     with_gas=yes ;;
 
   -help | --help | --hel | --he | -h)
@@ -1305,7 +1307,7 @@ Fine tuning of the installation directories:
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
-  --oldincludedir=DIR     C header files for non-spl [/usr/include]
+  --oldincludedir=DIR     C header files for non-gcc [/usr/include]
   --datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]
   --datadir=DIR           read-only architecture-independent data [DATAROOTDIR]
   --infodir=DIR           info documentation [DATAROOTDIR/info]
@@ -2189,7 +2191,7 @@ do
       else
 	case $ac_arg in
 	  *=* | --config-cache | -C | -disable-* | --disable-* \
-	  | -enable-* | --enable-* | -spl-as | --g* | -nfp | --nf* \
+	  | -enable-* | --enable-* | -gas | --g* | -nfp | --nf* \
 	  | -q | -quiet | --q* | -silent | --sil* | -v | -verb* \
 	  | -with-* | --with-* | -without-* | --without-* | --x)
 	    case "$ac_configure_args0 " in
@@ -2936,6 +2938,144 @@ else
 fi
 
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -plugin option" >&5
+$as_echo_n "checking for -plugin option... " >&6; }
+
+plugin_names="liblto_plugin.so liblto_plugin-0.dll cyglto_plugin-0.dll"
+plugin_option=
+for plugin in $plugin_names; do
+  plugin_so=`${CC} ${CFLAGS} --print-prog-name $plugin`
+  if test x$plugin_so = x$plugin; then
+    plugin_so=`${CC} ${CFLAGS} --print-file-name $plugin`
+  fi
+  if test x$plugin_so != x$plugin; then
+    plugin_option="--plugin $plugin_so"
+    break
+  fi
+done
+if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}ar", so it can be a program name with args.
+set dummy ${ac_tool_prefix}ar; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_AR+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$AR"; then
+  ac_cv_prog_AR="$AR" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_AR="${ac_tool_prefix}ar"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+AR=$ac_cv_prog_AR
+if test -n "$AR"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $AR" >&5
+$as_echo "$AR" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_prog_AR"; then
+  ac_ct_AR=$AR
+  # Extract the first word of "ar", so it can be a program name with args.
+set dummy ar; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_ac_ct_AR+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$ac_ct_AR"; then
+  ac_cv_prog_ac_ct_AR="$ac_ct_AR" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_AR="ar"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+ac_ct_AR=$ac_cv_prog_ac_ct_AR
+if test -n "$ac_ct_AR"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_AR" >&5
+$as_echo "$ac_ct_AR" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+  if test "x$ac_ct_AR" = x; then
+    AR=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
+$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
+ac_tool_warned=yes ;;
+esac
+    AR=$ac_ct_AR
+  fi
+else
+  AR="$ac_cv_prog_AR"
+fi
+
+if test "${AR}" = "" ; then
+  as_fn_error $? "Required archive tool 'ar' not found on PATH." "$LINENO" 5
+fi
+touch conftest.c
+${AR} $plugin_option rc conftest.a conftest.c
+if test "$?" != 0; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Failed: $AR $plugin_option rc" >&5
+$as_echo "$as_me: WARNING: Failed: $AR $plugin_option rc" >&2;}
+  plugin_option=
+fi
+rm -f conftest.*
+if test -n "$plugin_option"; then
+  PLUGIN_OPTION="$plugin_option"
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $plugin_option" >&5
+$as_echo "$plugin_option" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+if test -n "$PLUGIN_OPTION"; then
+  if $AR --help 2>&1 | grep -q "\--plugin"; then
+    AR_PLUGIN_OPTION="$PLUGIN_OPTION"
+
+  fi
+  if $RANLIB --help 2>&1 | grep -q "\--plugin"; then
+    RANLIB_PLUGIN_OPTION="$PLUGIN_OPTION"
+
+  fi
+fi
+
 # Add --enable-multilib to configure.
 # Default to --enable-multilib
 # Check whether --enable-multilib was given.
@@ -2993,8 +3133,8 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}spl", so it can be a program name with args.
-set dummy ${ac_tool_prefix}spl; ac_word=$2
+  # Extract the first word of "${ac_tool_prefix}gcc", so it can be a program name with args.
+set dummy ${ac_tool_prefix}gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_prog_CC+:} false; then :
@@ -3010,7 +3150,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_CC="${ac_tool_prefix}spl"
+    ac_cv_prog_CC="${ac_tool_prefix}gcc"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -3033,8 +3173,8 @@ fi
 fi
 if test -z "$ac_cv_prog_CC"; then
   ac_ct_CC=$CC
-  # Extract the first word of "spl", so it can be a program name with args.
-set dummy spl; ac_word=$2
+  # Extract the first word of "gcc", so it can be a program name with args.
+set dummy gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_prog_ac_ct_CC+:} false; then :
@@ -3050,7 +3190,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ac_ct_CC="spl"
+    ac_cv_prog_ac_ct_CC="gcc"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -3827,7 +3967,7 @@ else
       ac_preproc_ok=false
 for ac_c_preproc_warn_flag in '' yes
 do
-  # Use a header file that comes with spl, so configuring glibc
+  # Use a header file that comes with gcc, so configuring glibc
   # with a fresh cross-compiler works.
   # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
   # <limits.h> exists even on freestanding compilers.
@@ -3886,7 +4026,7 @@ $as_echo "$CPP" >&6; }
 ac_preproc_ok=false
 for ac_c_preproc_warn_flag in '' yes
 do
-  # Use a header file that comes with spl, so configuring glibc
+  # Use a header file that comes with gcc, so configuring glibc
   # with a fresh cross-compiler works.
   # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
   # <limits.h> exists even on freestanding compilers.
@@ -4479,7 +4619,7 @@ save_CFLAGS="$CFLAGS"
 for real_option in -W -Wall -Wwrite-strings -Wc++-compat \
 			  -Wstrict-prototypes \
 			  -Wshadow=local; do
-  # Do the check with the no- prefix removed since spl silently
+  # Do the check with the no- prefix removed since gcc silently
   # accepts any -Wno-* option on purpose
   case $real_option in
     -Wno-*) option=-W`expr x$real_option : 'x-Wno-\(.*\)'` ;;
@@ -4534,7 +4674,7 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 # Do the check with the no- prefix removed from the warning options
-# since spl silently accepts any -Wno-* option on purpose
+# since gcc silently accepts any -Wno-* option on purpose
 if test "$GCC" = yes; then :
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC supports -pedantic " >&5
 $as_echo_n "checking whether $CC supports -pedantic ... " >&6; }
@@ -5193,11 +5333,11 @@ case "${host}" in
     i[34567]86-*-mingw* | x86_64-*-mingw*)
 	;;
     i[34567]86-*-interix[3-9]*)
-	# Interix 3.x spl -fpic/-fPIC options generate broken code.
+	# Interix 3.x gcc -fpic/-fPIC options generate broken code.
 	# Instead, we relocate shared libraries at runtime.
 	;;
     i[34567]86-*-nto-qnx*)
-	# QNX uses GNU Scpel, but need to define -shared option too, otherwise
+	# QNX uses GNU C++, but need to define -shared option too, otherwise
 	# it will coredump.
 	PICFLAG='-fPIC -shared'
 	;;
@@ -5228,9 +5368,7 @@ case "${host}" in
     sh-*-linux* | sh[2346lbe]*-*-linux*)
 	PICFLAG=-fpic
 	;;
-    # FIXME: Simplify to sh*-*-netbsd*?
-    sh-*-netbsdelf* | shl*-*-netbsdelf* | sh5-*-netbsd* | sh5l*-*-netbsd* | \
-      sh64-*-netbsd* | sh64l*-*-netbsd*)
+    sh*-*-netbsd*)
 	PICFLAG=-fpic
 	;;
     # Default to -fPIC unless specified otherwise.
@@ -6920,7 +7058,7 @@ $ac_includes_default
 /* On some sparc systems, changes by the child to local and incoming
    argument registers are propagated back to the parent.  The compiler
    is told about this with #include <vfork.h>, but some compilers
-   (e.g. spl -O) don't grok <vfork.h>.  Test for this by using a
+   (e.g. gcc -O) don't grok <vfork.h>.  Test for this by using a
    static variable whose address is put into a register that is
    clobbered by the vfork.  */
 static void
@@ -6959,7 +7097,7 @@ main ()
     /* Here is another test for sparc vfork register problems.  This
        test uses lots of local variables, at least as many local
        variables as main has allocated so far including compiler
-       temporaries.  4 locals are enough for spl 1.40.3 on a Solaris
+       temporaries.  4 locals are enough for gcc 1.40.3 on a Solaris
        4.1.3 sparc, but we use 8 to be safe.  A buggy compiler should
        reuse the register of parent for one of the local variables,
        since it will think that parent can't possibly be used any more
@@ -7735,7 +7873,7 @@ LIBOBJS="$L"
 
 
 # We need multilib support, but only if configuring for the target.
-ac_config_files="$ac_config_files Makefile"
+ac_config_files="$ac_config_files Makefile testsuite/Makefile"
 
 ac_config_commands="$ac_config_commands default"
 
@@ -8450,6 +8588,7 @@ do
   case $ac_config_target in
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h:config.in" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "testsuite/Makefile") CONFIG_FILES="$CONFIG_FILES testsuite/Makefile" ;;
     "default") CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

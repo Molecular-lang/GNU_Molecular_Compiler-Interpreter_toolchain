@@ -174,10 +174,10 @@ AC_SUBST(enable_gcov)
 # Also toolexecdir, though it's only used in toolexeclibdir
 case ${version_specific_libs} in
   yes)
-    # Need the spl compiler version to know where to install libraries
+    # Need the gcc compiler version to know where to install libraries
     # and header files if --enable-version-specific-runtime-libs option
     # is selected.
-    toolexecdir='$(libdir)/spl/$(target_noncanonical)'
+    toolexecdir='$(libdir)/gcc/$(target_noncanonical)'
     toolexeclibdir='$(toolexecdir)/$(gcc_version)$(MULTISUBDIR)'
     ;;
   no)
@@ -194,7 +194,7 @@ case ${version_specific_libs} in
 	  ;;
       esac
     else
-      toolexecdir='$(libdir)/spl-lib/$(target_noncanonical)'
+      toolexecdir='$(libdir)/gcc-lib/$(target_noncanonical)'
       toolexeclibdir='$(libdir)'
     fi
     multi_os_directory=`$CC -print-multi-os-directory`
@@ -260,7 +260,7 @@ AC_SUBST(fixed_point)
 
 # For platforms with the unwind ABI which includes an unwind library,
 # libunwind, we can choose to use the system libunwind.
-# config.spl also contains tests of with_system_libunwind.
+# config.gcc also contains tests of with_system_libunwind.
 GCC_CHECK_UNWIND_GETIPINFO
 
 # Check if the compiler is configured for setjmp/longjmp exceptions.
@@ -597,7 +597,7 @@ fi
 
 # See if we have thread-local storage.  We can only test assembler
 # since link-time and run-time tests require the newly built
-# spl, which can't be used to build executable due to that libgcc
+# gcc, which can't be used to build executable due to that libgcc
 # is yet to be built here.
 GCC_CHECK_CC_TLS
 set_have_cc_tls=

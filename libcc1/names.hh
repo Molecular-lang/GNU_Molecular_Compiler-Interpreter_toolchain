@@ -40,17 +40,17 @@ namespace cc1_plugin
   namespace c
   {
   // This code defines global string constants, one for each method in
-  // spl-c-fe.def.  This is needed so that they can be used as
+  // gcc-c-fe.def.  This is needed so that they can be used as
   // template arguments elsewhere.
-#include "spl-c-fe.def"
+#include "gcc-c-fe.def"
   }
 
   namespace cp
   {
   // This code defines global string constants, one for each method in
-  // spl-cp-fe.def.  This is needed so that they can be used as
+  // gcc-cp-fe.def.  This is needed so that they can be used as
   // template arguments elsewhere.
-#include "spl-cp-fe.def"
+#include "gcc-cp-fe.def"
   }
 
 #undef GCC_METHOD0

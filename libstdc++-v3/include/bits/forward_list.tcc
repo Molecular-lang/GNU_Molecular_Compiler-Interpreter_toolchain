@@ -30,7 +30,7 @@
 #ifndef _FORWARD_LIST_TCC
 #define _FORWARD_LIST_TCC 1
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
@@ -38,10 +38,10 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
   template<typename _Tp, typename _Alloc>
     _Fwd_list_base<_Tp, _Alloc>::
     _Fwd_list_base(_Fwd_list_base&& __lst, _Node_alloc_type&& __a)
-    : _M_impl(sys::move(__a))
+    : _M_impl(std::move(__a))
     {
       if (__lst._M_get_Node_allocator() == _M_get_Node_allocator())
-	this->_M_impl._M_head = sys::move(__lst._M_impl._M_head);
+	this->_M_impl._M_head = std::move(__lst._M_impl._M_head);
     }
 
   template<typename _Tp, typename _Alloc>
@@ -52,7 +52,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       {
 	_Fwd_list_node_base* __to
 	  = const_cast<_Fwd_list_node_base*>(__pos._M_node);
-	_Node* __thing = _M_create_node(sys::forward<_Args>(__args)...);
+	_Node* __thing = _M_create_node(std::forward<_Args>(__args)...);
 	__thing->_M_next = __to->_M_next;
 	__to->_M_next = __thing;
 	return __to->_M_next;
@@ -139,7 +139,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
     forward_list<_Tp, _Alloc>::
     operator=(const forward_list& __list)
     {
-      if (sys::__addressof(__list) != this)
+      if (std::__addressof(__list) != this)
 	{
 	  if (_Node_alloc_traits::_S_propagate_on_copy_assign())
 	    {
@@ -151,7 +151,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 		  // replacement allocator cannot free existing storage
 		  clear();
 		}
-	      sys::__alloc_on_copy(__this_alloc, __that_alloc);
+	      std::__alloc_on_copy(__this_alloc, __that_alloc);
 	    }
 	  assign(__list.cbegin(), __list.cend());
 	}
@@ -369,7 +369,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       {
 	// _GLIBCXX_RESOLVE_LIB_DEFECTS
 	// 3088. forward_list::merge behavior unclear when passed *this
-	if (sys::__addressof(__list) == this)
+	if (std::__addressof(__list) == this)
 	  return;
 
 	_Node_base* __node = &this->_M_impl._M_head;
@@ -385,7 +385,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	  }
 
 	if (__list._M_impl._M_head._M_next)
-	  *__node = sys::move(__list._M_impl._M_head);
+	  *__node = std::move(__list._M_impl._M_head);
       }
 
   template<typename _Tp, typename _Alloc>
@@ -512,6 +512,6 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 
 _GLIBCXX_END_NAMESPACE_CONTAINER
 _GLIBCXX_END_NAMESPACE_VERSION
-} // namespace sys
+} // namespace std
 
 #endif /* _FORWARD_LIST_TCC */

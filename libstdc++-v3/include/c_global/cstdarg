@@ -50,9 +50,9 @@
 #define va_end(ap) va_end (ap)
 #endif
 
-namespace sys
+namespace std
 {
   using ::va_list;
-} // namespace sys
+} // namespace std
 
 #endif

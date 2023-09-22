@@ -1,5 +1,5 @@
 dnl ----------------------------------------------------------------------
-dnl This whole bit snagged from spl
+dnl This whole bit snagged from gcc
 
 dnl
 dnl mmap(2) blacklisting.  Some platforms provide the mmap library routine

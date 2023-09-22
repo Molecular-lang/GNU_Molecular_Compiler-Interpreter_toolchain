@@ -85,7 +85,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       __versa_string<_CharT, _Traits, _Alloc, _Base>::
       _M_replace_dispatch(const_iterator __i1, const_iterator __i2,
 			  _InputIterator __k1, _InputIterator __k2,
-			  sys::__false_type)
+			  std::__false_type)
       {
 	const __versa_string __s(__k1, __k2);
 	const size_type __n1 = __i2 - __i1;
@@ -318,7 +318,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       const size_type __size = this->size();
       if (__n <= __size)
 	{
-	  __pos = sys::min(size_type(__size - __n), __pos);
+	  __pos = std::min(size_type(__size - __n), __pos);
 	  const _CharT* __data = this->_M_data();
 	  do
 	    {
@@ -464,7 +464,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       _M_check(__pos, "__versa_string::compare");
       __n = _M_limit(__pos, __n);
       const size_type __osize = __str.size();
-      const size_type __len = sys::min(__n, __osize);
+      const size_type __len = std::min(__n, __osize);
       int __r = traits_type::compare(this->_M_data() + __pos,
 				     __str.data(), __len);
       if (!__r)
@@ -483,7 +483,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       __str._M_check(__pos2, "__versa_string::compare");
       __n1 = _M_limit(__pos1, __n1);
       __n2 = __str._M_limit(__pos2, __n2);
-      const size_type __len = sys::min(__n1, __n2);
+      const size_type __len = std::min(__n1, __n2);
       int __r = traits_type::compare(this->_M_data() + __pos1,
 				     __str.data() + __pos2, __len);
       if (!__r)
@@ -500,7 +500,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       __glibcxx_requires_string(__s);
       const size_type __size = this->size();
       const size_type __osize = traits_type::length(__s);
-      const size_type __len = sys::min(__size, __osize);
+      const size_type __len = std::min(__size, __osize);
       int __r = traits_type::compare(this->_M_data(), __s, __len);
       if (!__r)
 	__r = this->_S_compare(__size, __osize);
@@ -517,7 +517,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       _M_check(__pos, "__versa_string::compare");
       __n1 = _M_limit(__pos, __n1);
       const size_type __osize = traits_type::length(__s);
-      const size_type __len = sys::min(__n1, __osize);
+      const size_type __len = std::min(__n1, __osize);
       int __r = traits_type::compare(this->_M_data() + __pos, __s, __len);
       if (!__r)
 	__r = this->_S_compare(__n1, __osize);
@@ -534,7 +534,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       __glibcxx_requires_string_len(__s, __n2);
       _M_check(__pos, "__versa_string::compare");
       __n1 = _M_limit(__pos, __n1);
-      const size_type __len = sys::min(__n1, __n2);
+      const size_type __len = std::min(__n1, __n2);
       int __r = traits_type::compare(this->_M_data() + __pos, __s, __len);
       if (!__r)
 	__r = this->_S_compare(__n1, __n2);
@@ -544,7 +544,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 _GLIBCXX_END_NAMESPACE_VERSION
 } // namespace
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 

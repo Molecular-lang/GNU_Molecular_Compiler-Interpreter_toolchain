@@ -28,7 +28,7 @@
  *  Do not attempt to use it directly. @headername{regex}
  */
 
-namespace sys _GLIBCXX_VISIBILITY(default)
+namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
@@ -122,12 +122,12 @@ namespace __detail
 	  _M_has_sol = false;
 	  if (_M_states._M_match_queue.empty())
 	    break;
-	  sys::fill_n(_M_states._M_visited_states, _M_nfa.size(), false);
-	  auto __old_queue = sys::move(_M_states._M_match_queue);
+	  std::fill_n(_M_states._M_visited_states, _M_nfa.size(), false);
+	  auto __old_queue = std::move(_M_states._M_match_queue);
 	  auto __alloc = _M_cur_results.get_allocator();
 	  for (auto& __task : __old_queue)
 	    {
-	      _M_cur_results = _ResultsVec(sys::move(__task.second), __alloc);
+	      _M_cur_results = _ResultsVec(std::move(__task.second), __alloc);
 	      _M_dfs(__match_mode, __task.first);
 	    }
 	  if (__match_mode == _Match_mode::_Prefix)
@@ -339,7 +339,7 @@ namespace __detail
   template<typename _BiIter, typename _TraitsT>
     struct _Backref_matcher
     {
-      _Backref_matcher(bool __icase, const _TraitsT& __traits)
+      _Backref_matcher(bool /* __icase */, const _TraitsT& __traits)
       : _M_traits(__traits) { }
 
       bool
@@ -355,9 +355,9 @@ namespace __detail
     };
 
   template<typename _BiIter, typename _CharT>
-    struct _Backref_matcher<_BiIter, sys::regex_traits<_CharT>>
+    struct _Backref_matcher<_BiIter, std::regex_traits<_CharT>>
     {
-      using _TraitsT = sys::regex_traits<_CharT>;
+      using _TraitsT = std::regex_traits<_CharT>;
       _Backref_matcher(bool __icase, const _TraitsT& __traits)
       : _M_icase(__icase), _M_traits(__traits) { }
 
@@ -367,11 +367,11 @@ namespace __detail
 	       _BiIter __actual_end)
       {
 	if (!_M_icase)
-	  return _GLIBCXX_SYS_A::__equal4(__expected_begin, __expected_end,
+	  return _GLIBCXX_STD_A::__equal4(__expected_begin, __expected_end,
 			       __actual_begin, __actual_end);
-	typedef sys::ctype<_CharT> __ctype_type;
+	typedef std::ctype<_CharT> __ctype_type;
 	const auto& __fctyp = use_facet<__ctype_type>(_M_traits.getloc());
-	return _GLIBCXX_SYS_A::__equal4(__expected_begin, __expected_end,
+	return _GLIBCXX_STD_A::__equal4(__expected_begin, __expected_end,
 			     __actual_begin, __actual_end,
 			     [this, &__fctyp](_CharT __lhs, _CharT __rhs)
 			     {
@@ -451,9 +451,9 @@ namespace __detail
 		  // to be larger, because POSIX regex is always greedy.
 		  // TODO: This could be slow.
 		  if (*_M_states._M_get_sol_pos() == _BiIter()
-		      || sys::distance(_M_begin,
+		      || std::distance(_M_begin,
 				       *_M_states._M_get_sol_pos())
-			 < sys::distance(_M_begin, _M_current))
+			 < std::distance(_M_begin, _M_current))
 		    {
 		      *_M_states._M_get_sol_pos() = _M_current;
 		      _M_results = _M_cur_results;
@@ -555,7 +555,7 @@ namespace __detail
 	  || (_M_flags & regex_constants::match_prev_avail))
 	{
 	  auto __prev = _M_current;
-	  if (_M_is_word(*sys::prev(__prev)))
+	  if (_M_is_word(*std::prev(__prev)))
 	    __left_is_word = true;
 	}
       bool __right_is_word =

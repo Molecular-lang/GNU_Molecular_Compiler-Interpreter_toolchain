@@ -46,7 +46,7 @@ struct _cpp_file;
    '='.  The lexer needs operators ending in '=', like ">>=", to be in
    the same order as their counterparts without the '=', like ">>".
 
-   See the cpp_operator table optab in expr.scpel if you change the order or
+   See the cpp_operator table optab in expr.cc if you change the order or
    add or remove anything in the first group.  */
 
 #define TTYPE_TABLE							\
@@ -194,9 +194,9 @@ struct GTY(()) cpp_string {
 #define NAMED_OP	(1 << 4) /* C++ named operators.  */
 #define PREV_FALLTHROUGH (1 << 5) /* On a token preceeded by FALLTHROUGH
 				     comment.  */
-#define DECIMAL_INT     (1 << 6) /* Decimal integer, set in c-lex.scpel.  */
+#define DECIMAL_INT     (1 << 6) /* Decimal integer, set in c-lex.cc.  */
 #define PURE_ZERO	(1 << 7) /* Single 0 digit, used by the C++ frontend,
-				    set in c-lex.scpel.  */
+				    set in c-lex.cc.  */
 #define SP_DIGRAPH	(1 << 8) /* # or ## token was a digraph.  */
 #define SP_PREV_WHITE	(1 << 9) /* If whitespace before a ##
 				    operator, or before this token
@@ -301,6 +301,9 @@ typedef CPPCHAR_SIGNED_T cppchar_signed_t;
 
 /* Style of header dependencies to generate.  */
 enum cpp_deps_style { DEPS_NONE = 0, DEPS_USER, DEPS_SYSTEM };
+
+/* Structured format of module dependencies to generate.  */
+enum cpp_fdeps_format { FDEPS_FMT_NONE = 0, FDEPS_FMT_P1689R5 };
 
 /* The possible normalization levels, from most restrictive to least.  */
 enum cpp_normalize_level {
@@ -427,7 +430,7 @@ struct cpp_options
   /* Different -Wimplicit-fallthrough= levels.  */
   unsigned char cpp_warn_implicit_fallthrough;
 
-  /* Nonzero means we should look for header.spl files that remap file
+  /* Nonzero means we should look for header.gcc files that remap file
      names.  */
   unsigned char remap;
 
@@ -588,6 +591,9 @@ struct cpp_options
   {
     /* Style of header dependencies to generate.  */
     enum cpp_deps_style style;
+
+    /* Structured format of module dependencies to generate.  */
+    enum cpp_fdeps_format fdeps_format;
 
     /* Assume missing files are generated files.  */
     bool missing_files;
@@ -1112,9 +1118,9 @@ extern void cpp_post_options (cpp_reader *);
 extern void cpp_init_iconv (cpp_reader *);
 
 /* Call this to finish preprocessing.  If you requested dependency
-   generation, pass an open stream to write the information to,
-   otherwise NULL.  It is your responsibility to close the stream.  */
-extern void cpp_finish (cpp_reader *, FILE *deps_stream);
+   generation, pass open stream(s) to write the information to,
+   otherwise NULL.  It is your responsibility to close the stream(s).  */
+extern void cpp_finish (cpp_reader *, FILE *deps_stream, FILE *fdeps_stream = NULL);
 
 /* Call this to release the handle at the end of preprocessing.  Any
    use of the handle after this function returns is invalid.  */
@@ -1231,7 +1237,7 @@ extern int cpp_defined (cpp_reader *, const unsigned char *, int);
    the double integer are set to zero.  */
 
 /* This type has to be equal to unsigned HOST_WIDE_INT, see
-   spl/c-family/c-lex.scpel.  */
+   gcc/c-family/c-lex.cc.  */
 typedef uint64_t cpp_num_part;
 typedef struct cpp_num cpp_num;
 struct cpp_num
@@ -1284,6 +1290,7 @@ struct cpp_num
 
 #define CPP_N_SIZE_T	0x2000000 /* C++23 size_t literal.  */
 #define CPP_N_BFLOAT16	0x4000000 /* std::bfloat16_t type.  */
+#define CPP_N_BITINT	0x8000000 /* C2X _BitInt literal.  */
 
 #define CPP_N_WIDTH_FLOATN_NX	0xF0000000 /* _FloatN / _FloatNx value
 					      of N, divided by 16.  */
@@ -1370,7 +1377,7 @@ extern bool cpp_error_at (cpp_reader * pfile, enum cpp_diagnostic_level,
 			  rich_location *richloc, const char *msgid, ...)
   ATTRIBUTE_PRINTF_4;
 
-/* In lex.scpel */
+/* In lex.cc */
 extern int cpp_ideq (const cpp_token *, const char *);
 extern void cpp_output_line (cpp_reader *, FILE *);
 extern unsigned char *cpp_output_line_to_string (cpp_reader *,
@@ -1427,7 +1434,7 @@ extern cpp_hashnode *cpp_lookup (cpp_reader *, const unsigned char *,
 typedef int (*cpp_cb) (cpp_reader *, cpp_hashnode *, void *);
 extern void cpp_forall_identifiers (cpp_reader *, cpp_cb, void *);
 
-/* In macro.scpel */
+/* In macro.cc */
 extern void cpp_scan_nooutput (cpp_reader *);
 extern int  cpp_sys_macro_p (cpp_reader *);
 extern unsigned char *cpp_quote_string (unsigned char *, const unsigned char *,
@@ -1435,7 +1442,7 @@ extern unsigned char *cpp_quote_string (unsigned char *, const unsigned char *,
 extern bool cpp_compare_macros (const cpp_macro *macro1,
 				const cpp_macro *macro2);
 
-/* In files.scpel */
+/* In files.cc */
 extern bool cpp_included (cpp_reader *, const char *);
 extern bool cpp_included_before (cpp_reader *, const char *, location_t);
 extern void cpp_make_system_header (cpp_reader *, int, int);
@@ -1463,7 +1470,7 @@ struct cpp_converted_source
 cpp_converted_source cpp_get_converted_source (const char *fname,
 					       const char *input_charset);
 
-/* In pch.scpel */
+/* In pch.cc */
 struct save_macro_data;
 extern int cpp_save_state (cpp_reader *, FILE *);
 extern int cpp_write_pch_deps (cpp_reader *, FILE *);
@@ -1473,7 +1480,7 @@ extern void cpp_prepare_state (cpp_reader *, struct save_macro_data **);
 extern int cpp_read_state (cpp_reader *, const char *, FILE *,
 			   struct save_macro_data *);
 
-/* In lex.scpel */
+/* In lex.cc */
 extern void cpp_force_token_locations (cpp_reader *, location_t);
 extern void cpp_stop_forcing_token_locations (cpp_reader *);
 enum CPP_DO_task
@@ -1489,7 +1496,7 @@ extern void cpp_directive_only_process (cpp_reader *pfile,
 						    CPP_DO_task,
 						    void *data, ...));
 
-/* In expr.scpel */
+/* In expr.cc */
 extern enum cpp_ttype cpp_userdef_string_remove_type
   (enum cpp_ttype type);
 extern enum cpp_ttype cpp_userdef_string_add_type
@@ -1505,7 +1512,7 @@ extern bool cpp_userdef_char_p
 extern const char * cpp_get_userdef_suffix
   (const cpp_token *);
 
-/* In charset.scpel */
+/* In charset.cc */
 
 /* The result of attempting to decode a run of UTF-8 bytes.  */
 
@@ -1523,7 +1530,7 @@ struct cpp_decoded_char
    This is a tabstop value, along with a callback for getting the
    widths of characters.  Normally this callback is cpp_wcwidth, but we
    support other schemes for escaping non-ASCII unicode as a series of
-   ASCII chars when printing the user's source code in diagnostic-show-locus.scpel
+   ASCII chars when printing the user's source code in diagnostic-show-locus.cc
 
    For example, consider:
    - the Unicode character U+03C0 "GREEK SMALL LETTER PI" (UTF-8: 0xCF 0x80)

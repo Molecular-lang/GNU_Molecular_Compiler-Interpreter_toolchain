@@ -954,8 +954,8 @@ do
   | --exec=* | --exe=* | --ex=*)
     exec_prefix=$ac_optarg ;;
 
-  -spl-as | --spl-as | --ga | --g)
-    # Obsolete; use --with-spl-as.
+  -gas | --gas | --ga | --g)
+    # Obsolete; use --with-gas.
     with_gas=yes ;;
 
   -help | --help | --hel | --he | -h)
@@ -1380,7 +1380,7 @@ Fine tuning of the installation directories:
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
-  --oldincludedir=DIR     C header files for non-spl [/usr/include]
+  --oldincludedir=DIR     C header files for non-gcc [/usr/include]
   --datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]
   --datadir=DIR           read-only architecture-independent data [DATAROOTDIR]
   --infodir=DIR           info documentation [DATAROOTDIR/info]
@@ -1441,7 +1441,7 @@ Optional Packages:
   --with-build-libsubdir=DIR  Directory where to find libraries for build system
   --with-libiberty=PATH   specify the directory where to find libiberty
                           [../libiberty]
-  --with-spl-major-version-only
+  --with-gcc-major-version-only
                           use only GCC major number in filesystem paths
   --with-pic              try to use only PIC/non-PIC objects [default=use
                           both]
@@ -2101,7 +2101,7 @@ do
       else
 	case $ac_arg in
 	  *=* | --config-cache | -C | -disable-* | --disable-* \
-	  | -enable-* | --enable-* | -spl-as | --g* | -nfp | --nf* \
+	  | -enable-* | --enable-* | -gas | --g* | -nfp | --nf* \
 	  | -q | -quiet | --q* | -silent | --sil* | -v | -verb* \
 	  | -with-* | --with-* | -without-* | --without-* | --x)
 	    case "$ac_configure_args0 " in
@@ -2545,7 +2545,7 @@ else
 fi
 
 # --srcdir=. covers the toplevel, while "test -d" covers the subdirectories
-if ( test $srcdir = . && test -d spl ) \
+if ( test $srcdir = . && test -d gcc ) \
    || test -d $srcdir/../host-${host_noncanonical}; then
   host_subdir="host-${host_noncanonical}"
 else
@@ -3234,8 +3234,8 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}spl", so it can be a program name with args.
-set dummy ${ac_tool_prefix}spl; ac_word=$2
+  # Extract the first word of "${ac_tool_prefix}gcc", so it can be a program name with args.
+set dummy ${ac_tool_prefix}gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_prog_CC+:} false; then :
@@ -3251,7 +3251,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_CC="${ac_tool_prefix}spl"
+    ac_cv_prog_CC="${ac_tool_prefix}gcc"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -3274,8 +3274,8 @@ fi
 fi
 if test -z "$ac_cv_prog_CC"; then
   ac_ct_CC=$CC
-  # Extract the first word of "spl", so it can be a program name with args.
-set dummy spl; ac_word=$2
+  # Extract the first word of "gcc", so it can be a program name with args.
+set dummy gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_prog_ac_ct_CC+:} false; then :
@@ -3291,7 +3291,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ac_ct_CC="spl"
+    ac_cv_prog_ac_ct_CC="gcc"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -4086,7 +4086,7 @@ else
   if test -z "$AMDEP_TRUE" && test -f "$am_depcomp"; then
   # We make a subdir and do the tests there.  Otherwise we can end up
   # making bogus files that we don't know about and never remove.  For
-  # instance it was reported that on HP-UX the spl test will end up
+  # instance it was reported that on HP-UX the gcc test will end up
   # making a dummy file named 'D' -- because '-MD' means "put the output
   # in D".
   rm -rf conftest.dir
@@ -4136,7 +4136,7 @@ else
     am__obj=sub/conftest.${OBJEXT-o}
     am__minus_obj="-o $am__obj"
     case $depmode in
-    spl)
+    gcc)
       # This depmode causes a compiler race in universal mode.
       test "$am__universal" = false || continue
       ;;
@@ -4226,7 +4226,7 @@ else
       ac_preproc_ok=false
 for ac_c_preproc_warn_flag in '' yes
 do
-  # Use a header file that comes with spl, so configuring glibc
+  # Use a header file that comes with gcc, so configuring glibc
   # with a fresh cross-compiler works.
   # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
   # <limits.h> exists even on freestanding compilers.
@@ -4285,7 +4285,7 @@ $as_echo "$CPP" >&6; }
 ac_preproc_ok=false
 for ac_c_preproc_warn_flag in '' yes
 do
-  # Use a header file that comes with spl, so configuring glibc
+  # Use a header file that comes with gcc, so configuring glibc
   # with a fresh cross-compiler works.
   # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
   # <limits.h> exists even on freestanding compilers.
@@ -4669,8 +4669,8 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}spl", so it can be a program name with args.
-set dummy ${ac_tool_prefix}spl; ac_word=$2
+  # Extract the first word of "${ac_tool_prefix}gcc", so it can be a program name with args.
+set dummy ${ac_tool_prefix}gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_prog_CC+:} false; then :
@@ -4686,7 +4686,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_CC="${ac_tool_prefix}spl"
+    ac_cv_prog_CC="${ac_tool_prefix}gcc"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -4709,8 +4709,8 @@ fi
 fi
 if test -z "$ac_cv_prog_CC"; then
   ac_ct_CC=$CC
-  # Extract the first word of "spl", so it can be a program name with args.
-set dummy spl; ac_word=$2
+  # Extract the first word of "gcc", so it can be a program name with args.
+set dummy gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_prog_ac_ct_CC+:} false; then :
@@ -4726,7 +4726,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ac_ct_CC="spl"
+    ac_cv_prog_ac_ct_CC="gcc"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -5271,7 +5271,7 @@ else
   if test -z "$AMDEP_TRUE" && test -f "$am_depcomp"; then
   # We make a subdir and do the tests there.  Otherwise we can end up
   # making bogus files that we don't know about and never remove.  For
-  # instance it was reported that on HP-UX the spl test will end up
+  # instance it was reported that on HP-UX the gcc test will end up
   # making a dummy file named 'D' -- because '-MD' means "put the output
   # in D".
   rm -rf conftest.dir
@@ -5321,7 +5321,7 @@ else
     am__obj=sub/conftest.${OBJEXT-o}
     am__minus_obj="-o $am__obj"
     case $depmode in
-    spl)
+    gcc)
       # This depmode causes a compiler race in universal mode.
       test "$am__universal" = false || continue
       ;;
@@ -5598,7 +5598,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 ac_lto_plugin_warn_cflags=
 save_CFLAGS="$CFLAGS"
 for real_option in -Wall; do
-  # Do the check with the no- prefix removed since spl silently
+  # Do the check with the no- prefix removed since gcc silently
   # accepts any -Wno-* option on purpose
   case $real_option in
     -Wno-*) option=-W`expr x$real_option : 'x-Wno-\(.*\)'` ;;
@@ -5902,9 +5902,9 @@ LDFLAGS="$cet_save_LDFLAGS"
 
 
 if test x"$host_subdir" = x.; then
-   gcc_build_dir=../spl
+   gcc_build_dir=../gcc
 else
-   gcc_build_dir=../../$host_subdir/spl
+   gcc_build_dir=../../$host_subdir/gcc
 fi
 
 
@@ -5922,7 +5922,7 @@ fi
 
   get_gcc_base_ver="cat"
 
-# Check whether --with-spl-major-version-only was given.
+# Check whether --with-gcc-major-version-only was given.
 if test "${with_gcc_major_version_only+set}" = set; then :
   withval=$with_gcc_major_version_only; if test x$with_gcc_major_version_only = xyes ; then
         get_gcc_base_ver="sed -e 's/^\([0-9]*\).*/\1/'"
@@ -6327,12 +6327,12 @@ fi
 
 ac_prog=ld
 if test "$GCC" = yes; then
-  # Check if spl -print-prog-name=ld gives a path.
+  # Check if gcc -print-prog-name=ld gives a path.
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ld used by $CC" >&5
 $as_echo_n "checking for ld used by $CC... " >&6; }
   case $host in
   *-*-mingw*)
-    # spl leaves a trailing carriage return which upsets mingw
+    # gcc leaves a trailing carriage return which upsets mingw
     ac_prog=`($CC -print-prog-name=ld) 2>&5 | tr -d '\015'` ;;
   *)
     ac_prog=`($CC -print-prog-name=ld) 2>&5` ;;
@@ -6435,48 +6435,55 @@ if ${lt_cv_path_NM+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -n "$NM"; then
-  # Let the user override the test.
-  lt_cv_path_NM="$NM"
-else
-  lt_nm_to_check="${ac_tool_prefix}nm"
-  if test -n "$ac_tool_prefix" && test "$build" = "$host"; then
-    lt_nm_to_check="$lt_nm_to_check nm"
-  fi
-  for lt_tmp_nm in $lt_nm_to_check; do
-    lt_save_ifs="$IFS"; IFS=$PATH_SEPARATOR
-    for ac_dir in $PATH /usr/ccs/bin/elf /usr/ccs/bin /usr/ucb /bin; do
-      IFS="$lt_save_ifs"
-      test -z "$ac_dir" && ac_dir=.
-      tmp_nm="$ac_dir/$lt_tmp_nm"
-      if test -f "$tmp_nm" || test -f "$tmp_nm$ac_exeext" ; then
-	# Check to see if the nm accepts a BSD-compat flag.
-	# Adding the `sed 1q' prevents false positives on HP-UX, which says:
-	#   nm: unknown option "B" ignored
-	# Tru64's nm complains that /dev/null is an invalid object file
-	case `"$tmp_nm" -B /dev/null 2>&1 | sed '1q'` in
-	*/dev/null* | *'Invalid file or object type'*)
-	  lt_cv_path_NM="$tmp_nm -B"
-	  break
-	  ;;
-	*)
-	  case `"$tmp_nm" -p /dev/null 2>&1 | sed '1q'` in
-	  */dev/null*)
-	    lt_cv_path_NM="$tmp_nm -p"
-	    break
-	    ;;
-	  *)
-	    lt_cv_path_NM=${lt_cv_path_NM="$tmp_nm"} # keep the first match, but
-	    continue # so that we can try to find one that supports BSD flags
-	    ;;
-	  esac
-	  ;;
-	esac
-      fi
-    done
-    IFS="$lt_save_ifs"
-  done
-  : ${lt_cv_path_NM=no}
-fi
+   # Let the user override the nm to test.
+   lt_nm_to_check="$NM"
+ else
+   lt_nm_to_check="${ac_tool_prefix}nm"
+   if test -n "$ac_tool_prefix" && test "$build" = "$host"; then
+     lt_nm_to_check="$lt_nm_to_check nm"
+   fi
+ fi
+ for lt_tmp_nm in "$lt_nm_to_check"; do
+   lt_save_ifs="$IFS"; IFS=$PATH_SEPARATOR
+   for ac_dir in $PATH /usr/ccs/bin/elf /usr/ccs/bin /usr/ucb /bin; do
+     IFS="$lt_save_ifs"
+     test -z "$ac_dir" && ac_dir=.
+     # Strip out any user-provided options from the nm to test twice,
+     # the first time to test to see if nm (rather than its options) has
+     # an explicit path, the second time to yield a file which can be
+     # nm'ed itself.
+     tmp_nm_path="`$ECHO "$lt_tmp_nm" | sed 's, -.*$,,'`"
+     case "$tmp_nm_path" in
+     */*|*\\*) tmp_nm="$lt_tmp_nm";;
+     *) tmp_nm="$ac_dir/$lt_tmp_nm";;
+     esac
+     tmp_nm_to_nm="`$ECHO "$tmp_nm" | sed 's, -.*$,,'`"
+     if test -f "$tmp_nm_to_nm" || test -f "$tmp_nm_to_nm$ac_exeext" ; then
+       # Check to see if the nm accepts a BSD-compat flag.
+       # Adding the `sed 1q' prevents false positives on HP-UX, which says:
+       #   nm: unknown option "B" ignored
+       case `"$tmp_nm" -B "$tmp_nm_to_nm" 2>&1 | grep -v '^ *$' | sed '1q'` in
+       *$tmp_nm*) lt_cv_path_NM="$tmp_nm -B"
+	 break
+	 ;;
+       *)
+	 case `"$tmp_nm" -p "$tmp_nm_to_nm" 2>&1 | grep -v '^ *$' | sed '1q'` in
+	 *$tmp_nm*)
+	   lt_cv_path_NM="$tmp_nm -p"
+	   break
+	   ;;
+	 *)
+	   lt_cv_path_NM=${lt_cv_path_NM="$tmp_nm"} # keep the first match, but
+	   continue # so that we can try to find one that supports BSD flags
+	   ;;
+	 esac
+	 ;;
+       esac
+     fi
+   done
+   IFS="$lt_save_ifs"
+ done
+ : ${lt_cv_path_NM=no}
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $lt_cv_path_NM" >&5
 $as_echo "$lt_cv_path_NM" >&6; }
@@ -7198,6 +7205,19 @@ test -z "$deplibs_check_method" && deplibs_check_method=unknown
 
 
 
+plugin_option=
+plugin_names="liblto_plugin.so liblto_plugin-0.dll cyglto_plugin-0.dll"
+for plugin in $plugin_names; do
+  plugin_so=`${CC} ${CFLAGS} --print-prog-name $plugin`
+  if test x$plugin_so = x$plugin; then
+    plugin_so=`${CC} ${CFLAGS} --print-file-name $plugin`
+  fi
+  if test x$plugin_so != x$plugin; then
+    plugin_option="--plugin $plugin_so"
+    break
+  fi
+done
+
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}ar", so it can be a program name with args.
 set dummy ${ac_tool_prefix}ar; ac_word=$2
@@ -7291,6 +7311,19 @@ else
 fi
 
 test -z "$AR" && AR=ar
+if test -n "$plugin_option"; then
+  if $AR --help 2>&1 | grep -q "\--plugin"; then
+    touch conftest.c
+    $AR $plugin_option rc conftest.a conftest.c
+    if test "$?" != 0; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Failed: $AR $plugin_option rc" >&5
+$as_echo "$as_me: WARNING: Failed: $AR $plugin_option rc" >&2;}
+    else
+      AR="$AR $plugin_option"
+    fi
+    rm -f conftest.*
+  fi
+fi
 test -z "$AR_FLAGS" && AR_FLAGS=cru
 
 
@@ -7495,6 +7528,11 @@ else
 fi
 
 test -z "$RANLIB" && RANLIB=:
+if test -n "$plugin_option" && test "$RANLIB" != ":"; then
+  if $RANLIB --help 2>&1 | grep -q "\--plugin"; then
+    RANLIB="$RANLIB $plugin_option"
+  fi
+fi
 
 
 
@@ -7609,7 +7647,7 @@ osf*)
   symcode='[BCDEGQRST]'
   ;;
 solaris*)
-  symcode='[BDRT]'
+  symcode='[BCDRT]'
   ;;
 sco3.2v5*)
   symcode='[DT]'
@@ -7997,7 +8035,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $lt_cv_cc_needs_belf" >&5
 $as_echo "$lt_cv_cc_needs_belf" >&6; }
   if test x"$lt_cv_cc_needs_belf" != x"yes"; then
-    # this is probably spl 2.8.0, egcs 1.0 or newer; no need for -belf
+    # this is probably gcc 2.8.0, egcs 1.0 or newer; no need for -belf
     CFLAGS="$SAVE_CFLAGS"
   fi
   ;;
@@ -9214,7 +9252,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
     mingw* | cygwin* | pw32* | os2* | cegcc*)
       # This hack is so that the source file can tell whether it is being
       # built for inclusion in a dll (and should export symbols for example).
-      # Although the cygwin spl ignores -fPIC, still need this for old-style
+      # Although the cygwin gcc ignores -fPIC, still need this for old-style
       # (--disable-auto-import) libraries
       lt_prog_compiler_pic='-DDLL_EXPORT'
       ;;
@@ -9246,7 +9284,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       ;;
 
     interix[3-9]*)
-      # Interix 3.x spl -fpic/-fPIC options generate broken code.
+      # Interix 3.x gcc -fpic/-fPIC options generate broken code.
       # Instead, we relocate shared libraries at runtime.
       ;;
 
@@ -9258,7 +9296,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       ;;
 
     *nto* | *qnx*)
-      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
+      # QNX uses GNU C++, but need to define -shared option too, otherwise
       # it will coredump.
       lt_prog_compiler_pic='-fPIC -shared'
       ;;
@@ -9343,7 +9381,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
 	lt_prog_compiler_static='--static'
 	;;
       pgcc* | pgf77* | pgf90* | pgf95* | pgfortran*)
-        # Portland Group compilers (*not* the Pentium spl compiler,
+        # Portland Group compilers (*not* the Pentium gcc compiler,
 	# which looks to be a dead project)
 	lt_prog_compiler_wl='-Wl,'
 	lt_prog_compiler_pic='-fpic'
@@ -9385,7 +9423,7 @@ $as_echo_n "checking for $compiler option to produce PIC... " >&6; }
       ;;
 
     *nto* | *qnx*)
-      # QNX uses GNU Scpel, but need to define -shared option too, otherwise
+      # QNX uses GNU C++, but need to define -shared option too, otherwise
       # it will coredump.
       lt_prog_compiler_pic='-fPIC -shared'
       ;;
@@ -9757,14 +9795,14 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
   case $host_os in
   cygwin* | mingw* | pw32* | cegcc*)
     # FIXME: the MSVC++ port hasn't been tested in a loooong time
-    # When not using spl, we currently assume that we are using
+    # When not using gcc, we currently assume that we are using
     # Microsoft Visual C++.
     if test "$GCC" != yes; then
       with_gnu_ld=no
     fi
     ;;
   interix*)
-    # we just hope/assume this is spl and not c89 (= MSVC++)
+    # we just hope/assume this is gcc and not c89 (= MSVC++)
     with_gnu_ld=yes
     ;;
   openbsd*)
@@ -9836,7 +9874,7 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
 *** Warning: the GNU linker, at least up to release 2.19, is reported
 *** to be unable to reliably create shared libraries on AIX.
 *** Therefore, libtool is disabling shared libraries support.  If you
-*** really care for shared libraries, you may want to install spl-utils
+*** really care for shared libraries, you may want to install binutils
 *** 2.20 or above, or modify your PATH so that a non-GNU linker is found.
 *** You will then need to restart the configuration process.
 
@@ -9862,7 +9900,7 @@ _LT_EOF
     beos*)
       if $LD --help 2>&1 | $GREP ': supported targets:.* elf' > /dev/null; then
 	allow_undefined_flag=unsupported
-	# Joseph Beckenbach <jrb3@best.com> says some releases of spl
+	# Joseph Beckenbach <jrb3@best.com> says some releases of gcc
 	# support --undefined.  This deserves some investigation.  FIXME
 	archive_cmds='$CC -nostart $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
       else
@@ -9906,7 +9944,7 @@ _LT_EOF
       hardcode_shlibpath_var=no
       hardcode_libdir_flag_spec='${wl}-rpath,$libdir'
       export_dynamic_flag_spec='${wl}-E'
-      # Hack: On Interix 3.x, we cannot compile PIC because of a broken spl.
+      # Hack: On Interix 3.x, we cannot compile PIC because of a broken gcc.
       # Instead, shared libraries are loaded at an image base (0x10000000 by
       # default) and relocated if they conflict, which is a slow very memory
       # consuming and fragmenting process.  To avoid this, we pick a random,
@@ -10009,7 +10047,7 @@ _LT_EOF
 *** Warning: The releases 2.8.* of the GNU linker cannot reliably
 *** create shared libraries on Solaris systems.  Therefore, libtool
 *** is disabling shared libraries support.  We urge you to upgrade GNU
-*** spl-utils to release 2.9.1 or newer.  Another option is to modify
+*** binutils to release 2.9.1 or newer.  Another option is to modify
 *** your PATH or compiler configuration so that the native linker is
 *** used, and then restart.
 
@@ -10031,7 +10069,7 @@ _LT_EOF
 *** Warning: Releases of the GNU linker prior to 2.16.91.0.3 can not
 *** reliably create shared libraries on SCO systems.  Therefore, libtool
 *** is disabling shared libraries support.  We urge you to upgrade GNU
-*** spl-utils to release 2.16.91.0.3 or newer.  Another option is to modify
+*** binutils to release 2.16.91.0.3 or newer.  Another option is to modify
 *** your PATH or compiler configuration so that the native linker is
 *** used, and then restart.
 
@@ -10132,7 +10170,7 @@ _LT_EOF
       # When large executables or shared objects are built, AIX ld can
       # have problems creating the table of contents.  If linking a library
       # or program results in "error TOC overflow" add -mminimal-toc to
-      # CXXFLAGS/CFLAGS for scpel/spl.  In the cases where that is not
+      # CXXFLAGS/CFLAGS for g++/gcc.  In the cases where that is not
       # enough to fix the problem, add -Wl,-bbigtoc to LDFLAGS.
 
       archive_cmds=''
@@ -10169,7 +10207,7 @@ _LT_EOF
 	  shared_flag="$shared_flag "'${wl}-G'
 	fi
       else
-	# not using spl
+	# not using gcc
 	if test "$host_cpu" = ia64; then
 	# VisualAge C++, Version 5.5 for AIX 5L for IA-64, Beta 3 Release
 	# chokes on -Wl,-G. The following line is correct:
@@ -10302,7 +10340,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
       ;;
 
     cygwin* | mingw* | pw32* | cegcc*)
-      # When not using spl, we currently assume that we are using
+      # When not using gcc, we currently assume that we are using
       # Microsoft Visual C++.
       # hardcode_libdir_flag_spec is actually meaningless, as there is
       # no search path for DLLs.
@@ -10378,7 +10416,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
       hardcode_shlibpath_var=no
       ;;
 
-    # FreeBSD 3 and greater uses spl -shared to do shared libraries.
+    # FreeBSD 3 and greater uses gcc -shared to do shared libraries.
     freebsd* | dragonfly*)
       archive_cmds='$CC -shared -o $lib $libobjs $deplibs $compiler_flags'
       hardcode_libdir_flag_spec='-R$libdir'
@@ -10816,7 +10854,7 @@ x|xyes)
       ;;
     '$CC '*)
       # Test whether the compiler implicitly links with -lc since on some
-      # systems, -lgcc has to come before -lc. If spl already passes -lc
+      # systems, -lgcc has to come before -lc. If gcc already passes -lc
       # to ld, don't add -lc before -lgcc.
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether -lc should be explicitly linked in" >&5
 $as_echo_n "checking whether -lc should be explicitly linked in... " >&6; }
@@ -11330,7 +11368,7 @@ haiku*)
   soname_spec='${libname}${release}${shared_ext}$major'
   shlibpath_var=LIBRARY_PATH
   shlibpath_overrides_runpath=yes
-  sys_lib_dlsearch_path_spec='/boot/home/config/lib /boot/common/lib /boot/beos/system/lib'
+  sys_lib_dlsearch_path_spec='/boot/home/config/lib /boot/common/lib /boot/system/lib'
   hardcode_into_libs=yes
   ;;
 
@@ -11452,7 +11490,7 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu* | uclinuxfdpiceabi)
   shlibpath_var=LD_LIBRARY_PATH
   shlibpath_overrides_runpath=no
 
-  # Some spl-utils ld are patched to set DT_RUNPATH
+  # Some binutils ld are patched to set DT_RUNPATH
   if ${lt_cv_shlibpath_overrides_runpath+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -12150,7 +12188,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 12153 "configure"
+#line 12191 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12256,7 +12294,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 12259 "configure"
+#line 12297 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H

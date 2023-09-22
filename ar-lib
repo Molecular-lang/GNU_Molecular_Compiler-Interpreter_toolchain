@@ -81,7 +81,7 @@ func_file_conv ()
 # for each of them.
 # When interpreting the content of the @FILE, do NOT use func_file_conv,
 # since the user would need to supply preconverted file names to
-# spl-utils ar, at least for MinGW.
+# binutils ar, at least for MinGW.
 func_at_file ()
 {
   operation=$2
