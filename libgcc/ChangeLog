@@ -1,4 +1,4 @@
-2023-09-20  Pekka Seppänen  <pexu@gcc.mail.kapsi.fi>
+2023-09-20  Pekka Seppänen  <pexu@scpel_compiler.mail.kapsi.fi>
 
 	* config/aarch64/aarch64-unwind.h (aarch64_cie_signed_with_b_key):
 	Use const unsigned type and a builtin.
@@ -210,7 +210,7 @@
 	* config/v850/lib1funcs.S (___muldi3): Remove unnecessary
 	stack manipulations.
 
-2023-04-05  John David Anglin  <danglin@gcc.gnu.org>
+2023-04-05  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	PR target/109374
 	* config/pa/milli64.S (RETURN_COLUMN): Define.
@@ -320,7 +320,7 @@
 	Check current return address signing state.
 	(aarch64_frob_update_contex): Remove.
 
-2023-01-13  John David Anglin  <danglin@gcc.gnu.org>
+2023-01-13  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config.host (hppa*64*-*-linux*): Adjust tmake_file to use
 	pa/t-pa64-linux.
@@ -414,7 +414,7 @@
 
 	* config/t-slibgcc-darwin (install-darwin-libgcc-stubs): Skip the
 	install of libgcc_s.1.dylib when the installation is into the build
-	gcc directory.
+	scpel_compiler directory.
 
 2022-12-23  Eric Botcazou  <ebotcazou@adacore.com>
 
@@ -683,7 +683,7 @@
 2022-10-02  Olivier Hainque  <hainque@adacore.com>
 
 	* config/t-vxworks (LIBGCC2_INCLUDE): Augment comment.  Move
-	-I options for gcc/include and gcc/include-fixed at the end
+	-I options for scpel_compiler/include and scpel_compiler/include-fixed at the end
 	and make them -isystem.
 
 2022-10-02  Olivier Hainque  <hainque@adacore.com>
@@ -1088,7 +1088,7 @@
 	* unwind-dw2-fde-dip.c (_Unwind_Find_FDE): Call _dl_find_object
 	if available.
 
-2022-01-02  John David Anglin  <danglin@gcc.gnu.org>
+2022-01-02  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/linux-atomic.c (_ASM_EFAULT): Define.
 	(__kernel_cmpxchg): Nullify illegal iitlbp instruction if error
@@ -1204,7 +1204,7 @@
 	* config.host (powerpc-wrs-vxworks): Do not add crtbegin.o and
 	crtend.o to extra_parts.
 
-2021-11-27  John David Anglin  <danglin@gcc.gnu.org>
+2021-11-27  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/t-dimode (lib2difuncs): Fix typo.
 
@@ -1272,7 +1272,7 @@
 	* config/darwin10-unwind-find-enc-func.c: Include libgcc_tm.h.
 	* config/i386/darwin-lib.h: Declare Darwin10 crt function.
 
-2021-11-05  John David Anglin  <danglin@gcc.gnu.org>
+2021-11-05  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	PR libgomp/96661
 	* config.host (hppa*64*-*-linux*): Revise tmake_file.
@@ -1282,7 +1282,7 @@
 	* config/pa/t-dimode: New.
 	* config/pa/t-softfp-sfdftf: New.
 
-2021-10-27  John David Anglin  <danglin@gcc.gnu.org>
+2021-10-27  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config.host (hppa*64*-*-linux*): Don't add pa/t-linux to
 	tmake_file.
@@ -1430,7 +1430,7 @@
 	* config/i386/value-unwind.h: Likewise.
 	* config/pa/pa64-hpux-lib.h: Likewise.
 
-2021-08-26  David Edelsohn  <dje.gcc@gmail.com>
+2021-08-26  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* config/rs6000/ibm-ldouble.c (ldouble_qadd_internal): Rename from
 	__gcc_qadd.
@@ -1449,7 +1449,7 @@
 	* config/arm/cmse_nonsecure_call.S (__gnu_cmse_nonsecure_call):
 	Add vlldm erratum work-around.
 
-2021-08-21  John David Anglin  <danglin@gcc.gnu.org>
+2021-08-21  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config.host: Remove extra_parts from hppa[12]*-*-hpux11* case.
 
@@ -2090,7 +2090,7 @@
 	* libgcov-driver-system.c: Create gcov folders with 0777
 	so that it respects a system umask.
 
-2020-07-14  David Edelsohn  <dje.gcc@gmail.com>
+2020-07-14  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* config/rs6000/t-slibgcc-aix: Set BITS from compiler cpp macro.
 
@@ -2157,13 +2157,13 @@
 	(__cpu_indicator_init): Call cpu_indicator_init.
 	* config/i386/cpuinfo.h: Removed.
 
-2020-06-23  David Edelsohn  <dje.gcc@gmail.com>
+2020-06-23  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* Makefile.in: Remove uses of empty.mk. Use -include.
 	* config/avr/t-avr: Use -include.
 	* empty.mk: Delete.
 
-2020-06-21  David Edelsohn  <dje.gcc@gmail.com>
+2020-06-21  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* config.host (extra_parts): Add crtcxa_64 and crtdbase_64.
 	* config/rs6000/t-aix-cxa: Explicitly compile 32 bit with -maix32
@@ -2582,7 +2582,7 @@
 
 	* config/cris/arit.c (DS): Apply attribute __fallthrough__.
 
-2020-01-18  John David Anglin  <danglin@gcc.gnu.org>
+2020-01-18  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	PR libgcc/92988
 	* crtstuff.c (__do_global_dtors_aux): Only call __cxa_finalize if
@@ -2591,7 +2591,7 @@
 2020-01-16  Mihail-Calin Ionescu  <mihail.ionescu@arm.com>
 	    Thomas Preud'homme  <thomas.preudhomme@arm.com>
 
-	* config/arm/t-arm: Check return value of gcc rather than lack of
+	* config/arm/t-arm: Check return value of scpel_compiler rather than lack of
 	output.
 
 2020-01-14  Georg-Johann Lay  <avr@gjlay.de>
@@ -2689,7 +2689,7 @@
 	* config.host: Add t-gthr-noweak on *-*-musl*.
 	* config/t-gthr-noweak: New file.
 
-2019-11-17  John David Anglin  <danglin@gcc.gnu.org>
+2019-11-17  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/linux-atomic.c (__kernel_cmpxchg): Change argument 1 to
 	volatile void *.  Remove trap check.
@@ -2798,7 +2798,7 @@
 	the target output object format is not ELF.
 	s/defined(USE_TM_CLONE_REGISTRY)/USE_TM_CLONE_REGISTRY.
 
-2019-11-03  Oleg Endo  <olegendo@gcc.gnu.org>
+2019-11-03  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	PR libgcc/78804
 	* fp-bit.h: Remove FLOAT_BIT_ORDER_MISMATCH.
@@ -2822,7 +2822,7 @@
 	Fix whitespace.
 	* config/msp430/lib2mul.c: Add comment.
 
-2019-10-15  John David Anglin  <danglin@gcc.gnu.org>
+2019-10-15  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/fptr.c (_dl_read_access_allowed): Change argument to
 	unsigned int.  Adjust callers.
@@ -2830,7 +2830,7 @@
 	unsigned int *.  Load relocation offset before function pointer.
 	Add barrier to ensure ordering.
 
-2019-10-12  John David Anglin  <danglin@gcc.gnu.org>
+2019-10-12  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/lib2funcs.S (__gcc_plt_call): Load branch target to %r21.
 	Load PIC register after branch target.  Fix white space.
@@ -2839,7 +2839,7 @@
 	clobber function pointer when it points to function descriptor.
 	Use nullification instead of branch in LINUX implementation.
 
-2019-10-03  John David Anglin  <danglin@gcc.gnu.org>
+2019-10-03  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/fptr.c: Disable -Warray-bounds warning.
 
@@ -3217,7 +3217,7 @@
 	rather than .data/.bss so it can be accessed via gp-relative
 	addressing.
 
-2019-06-05  David Edelsohn  <dje.gcc@gmail.com>
+2019-06-05  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* config/rs6000/aix-unwind.h (LR_REGNO): Rename to R_LR.
 	(CR2_REGNO): Rename to R_CR2.
@@ -3252,7 +3252,7 @@
 	Remove Solaris 9 and 10 support.
 	(sparc_is_sighandler): Likewise.
 
-2019-05-26  John David Anglin  <danglin@gcc.gnu.org>
+2019-05-26  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/linux-unwind.h (pa32_fallback_frame_state): Add cast.
 
@@ -3396,14 +3396,14 @@
 	parameter and corresponding code.
 	(ARM_FUNC_START): Likewise in both definitions.
 	Also update footer comment about condition that need to match with
-	gcc/config/arm/elf.h to also include libgcc/config/arm/t-arm.
+	scpel_compiler/config/arm/elf.h to also include libgcc/config/arm/t-arm.
 	* config/arm/ieee754-df.S (muldf3): Also build it if L_arm_muldf3 is
 	defined.  Weakly define it in this case.
 	* config/arm/ieee754-sf.S (mulsf3): Likewise with L_arm_mulsf3.
 	* config/arm/t-elf (LIB1ASMFUNCS): Build _arm_muldf3.o and
 	_arm_mulsf3.o before muldiv versions if targeting Thumb-1 only. Add
 	comment to keep condition in sync with the one in
-	libgcc/config/arm/lib1funcs.S and gcc/config/arm/elf.h.
+	libgcc/config/arm/lib1funcs.S and scpel_compiler/config/arm/elf.h.
 
 2018-12-18  Wei Xiao  <wei3.xiao@intel.com>
 
@@ -3711,7 +3711,7 @@
 	* config/nds32/isr-library/save_usr_regs.inc: Ditto.
 	* config/nds32/isr-library/vec_vid*.S: Consider 4-byte vector size.
 
-2018-08-11  John David Anglin  <danglin@gcc.gnu.org>
+2018-08-11  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/linux-atomic.c: Update comment.
 	(FETCH_AND_OP_2, OP_AND_FETCH_2, FETCH_AND_OP_WORD, OP_AND_FETCH_WORD,
@@ -3796,7 +3796,7 @@
 2018-06-07  Olivier Hainque  <hainque@adacore.com>
 
 	* config/t-vxworks (LIBGCC_INCLUDES): Add
-	-I$(MULTIBUILDTOP)../../gcc/include.
+	-I$(MULTIBUILDTOP)../../scpel_compiler/include.
 	* config/t-vxworks7: Likewise. Reformat a bit to match
 	the t-vxworks layout.
 
@@ -3905,7 +3905,7 @@
 
 	* config.host (x86_64-*-rtems*): Build crti.o and crtn.o.
 
-2018-04-27  Andreas Tobler  <andreast@gcc.gnu.org>
+2018-04-27  Andreas Tobler  <andreast@scpel_compiler.gnu.org>
 	    Maryse Levavasseur <maryse.levavasseur@stormshield.eu>
 
 	PR libgcc/84292
@@ -4029,7 +4029,7 @@
 	* config/i386/cpuinfo.h (processor_subtypes): Split up icelake on
 	icelake client and icelake server.
 
-2018-03-06  John David Anglin  <danglin@gcc.gnu.org>
+2018-03-06  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/fptr.c (_dl_read_access_allowed): New.
 	(__canonicalize_funcptr_for_compare): Use it.
@@ -4139,7 +4139,7 @@
 	* config/rl78/umaxdi3.S: New assembly file.
 	* config/rl78/t-rl78: Added umaxdi3.S to LIB2ADD.
 
-2018-01-21  John David Anglin  <danglin@gcc.gnu.org>
+2018-01-21  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	PR lto/83452
 	* config/pa/stublib.c (L_gnu_lto_v1): New stub definition.
@@ -4351,7 +4351,7 @@
 	* config/mips/sfp-machine.h (FP_HANDLE_EXCEPTIONS): Same.
 	* config/rs6000/sfp-machine.h (FP_HANDLE_EXCEPTIONS): Same.
 
-2017-11-04  Andreas Tobler  <andreast@gcc.gnu.org>
+2017-11-04  Andreas Tobler  <andreast@scpel_compiler.gnu.org>
 
 	PR libgcc/82635
 	* config/i386/freebsd-unwind.h (MD_FALLBACK_FRAME_STATE_FOR): Use a
@@ -4588,7 +4588,7 @@
 
 2017-06-07  Tony Reix  <tony.reix@atos.net>
 	    Matthieu Sarter  <matthieu.sarter.external@atos.net>
-	    David Edelsohn  <dje.gcc@gmail.com>
+	    David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* config/rs6000/aix-unwind.h (MD_FALLBACK_FRAME_STATE_FOR): Define
 	unconditionally.
@@ -4610,7 +4610,7 @@
 	PR libgcc/80037
 	* config/alpha/t-alpha (CRTSTUFF_T_CFLAGS): New.
 
-2017-05-17  Andreas Tobler  <andreast@gcc.gnu.org>
+2017-05-17  Andreas Tobler  <andreast@scpel_compiler.gnu.org>
 
 	* config/arm/unwind-arm.h: Make _Unwind_GetIP, _Unwind_GetIPInfo and
 	_Unwind_SetIP available as functions for arm*-*-freebsd*.
@@ -4638,7 +4638,7 @@
 	* config/i386/savms64f.S: New file.
 	* config/i386/t-msabi: New file.
 
-2017-05-09  Andreas Tobler  <andreast@gcc.gnu.org>
+2017-05-09  Andreas Tobler  <andreast@scpel_compiler.gnu.org>
 
 	* config.host: Use the generic FreeBSD t-slibgcc-elf-ver for
 	arm*-*-freebsd* instead of the t-slibgcc-libgcc.
@@ -4866,7 +4866,7 @@
 	* config/arc/crti.S (_init): Declare symbol as function.
 	(_fini): Likewise.
 
-2016-12-03  Thomas Koenig  <tkoenig@gcc.gnu.org>
+2016-12-03  Thomas Koenig  <tkoenig@scpel_compiler.gnu.org>
 
 	PR fortran/78379
 	* config/i386/cpuinfo.c:  Move denums for processor vendors,
@@ -4888,11 +4888,11 @@
 
 2016-11-28  Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 
-	PR gcc/74748
+	PR scpel_compiler/74748
 	* libgcc/config/bfin/libgcc-glibc.ver, libgcc/config/bfin/t-linux:
 	use generic linker version information on Blackfin.
 
-	PR gcc/74748
+	PR scpel_compiler/74748
 	* libgcc/mkmap-symver.awk: add support for skip_underscore
 
 2016-11-27  Iain Sandoe  <iain@codesourcery.com>
@@ -5008,7 +5008,7 @@
 	PR libgcc/78064
 	* unwind-c.c: Include auto-target.h.
 
-2016-10-19  John David Anglin  <danglin@gcc.gnu.org>
+2016-10-19  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/pa64-hpux-lib.h: New file.
 	(EH_FRAME_SECTION_NAME): Rename to __LIBGCC_EH_FRAME_SECTION_NAME__.
@@ -5052,7 +5052,7 @@
 	* config.host (ia64*-*-elf*, ia64*-*-freebsd*, ia64-hp-*vms*): Use
 	soft-fp.
 
-2016-10-10  Andreas Tobler  <andreast@gcc.gnu.org>
+2016-10-10  Andreas Tobler  <andreast@scpel_compiler.gnu.org>
 
 	* config.host: Add support for aarch64-*-freebsd*.
 
@@ -5342,12 +5342,12 @@
 	__ARM_ARCH_6M__ in guard for checking whether it is defined.
 	(final includes): Test for NOT_ISA_TARGET_32BIT rather than
 	__ARM_ARCH_6M__ and add comment to indicate the connection between
-	this condition and the one in gcc/config/arm/elf.h.
+	this condition and the one in scpel_compiler/config/arm/elf.h.
 	* config/arm/libunwind.S: Test for __ARM_ARCH_ISA_THUMB and
 	__ARM_ARCH_ISA_ARM rather than __ARM_ARCH_6M__.
 	* config/arm/t-softfp: Likewise.
 
-2016-07-06  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-07-06  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* libgcc2.c (SYMBOL__MAIN): Remove checks for
 	CTOR_LISTS_DEFINED_EXTERNALLY.
@@ -5365,7 +5365,7 @@
 
 	* config.host: Add suport for arm*-*-phoenix* targets.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config.host: Remove support for mep-*.
 	* config/mep/lib1funcs.S: Remove.
@@ -5373,33 +5373,33 @@
 	* config/mep/t-mep: Remove.
 	* config/mep/tramp.c: Remove.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config.host: Remove support for avr-rtems.
 	* config/avr/t-rtems: Remove.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config.host: Remove m32r-rtems support.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config.host: Remove h8300-rtems support.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config.host: Remove support for knetbsd.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config.host: Remove support for openbsd 2 and 3.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config.host: Remove interix support.
 	* config/i386/t-interix: Remove.
 
-2016-06-18  John David Anglin  <danglin@gcc.gnu.org>
+2016-06-18  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/fptr.c (__canonicalize_funcptr_for_compare): Don't set
 	least-significant bit in function pointer for fixup.
@@ -5447,12 +5447,12 @@
 	targets so the same extra_parts are built.  Also have tmake_file add
 	on to its value rather than override.
 
-2016-04-30  Oleg Endo  <olegendo@gcc.gnu.org>
+2016-04-30  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	* config.host: Remove SH5 support.
 	* configure: Likewise.
 
-2016-04-29  Oleg Endo  <olegendo@gcc.gnu.org>
+2016-04-29  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	* config/sh/crt1.S: Remove SH5 support.
 	* config/sh/crti.S: Likewise.
@@ -5579,7 +5579,7 @@
 	* config/i386/morestack.S (__stack_split_initialize): Align
 	stack.
 
-2016-02-03  Andreas Tobler  <andreast@gcc.gnu.org>
+2016-02-03  Andreas Tobler  <andreast@scpel_compiler.gnu.org>
 
 	PR bootstrap/69611
 	* config/rs6000/sfp-machine.h: Guard __sfp_exceptions with
@@ -5790,7 +5790,7 @@
 	* unwind-generic.h (_Unwind_GetTextRelBase): Call __builtin_abort
 	instead of abort to avoid dependency on stdlib.h.
 
-2015-12-09  John David Anglin  <danglin@gcc.gnu.org>
+2015-12-09  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/fptr.c (__canonicalize_funcptr_for_compare): Remove code
 	to initialize call to __dl_fixup once.
@@ -5810,7 +5810,7 @@
 	__mspabi_divul function.
 	(__mspabi_divllu): New stub function.
 
-2015-12-01  John David Anglin  <danglin@gcc.gnu.org>
+2015-12-01  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/fptr.c (__canonicalize_funcptr_for_compare): Initialize
 	fixup values if saved GOT address doesn't match runtime address.
@@ -5840,7 +5840,7 @@
 	* config/nvptx/reduction.c: New.
 	* config/nvptx/t-nvptx (LIB2ADD): Add it.
 
-2015-11-15  David Edelsohn  <dje.gcc@gmail.com>
+2015-11-15  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* config/rs6000/on_exit.c: New file.
 	* config/rs6000/t-aix-cxa (LIB2ADDEH): Build on_exit.c.
@@ -5868,7 +5868,7 @@
 	value.
 	* config/ia64/crtend.S: Likewise.
 
-2015-11-07  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2015-11-07  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config/visium/lib2funcs.c (__set_trampoline_parity): Use
 	__CHAR_BIT__ instead of BITS_PER_UNIT.
@@ -5879,7 +5879,7 @@
 	* libgcc2.h: Likewise.
 	* libgcov.h: Likewise.
 
-2015-11-07  David Edelsohn  <dje.gcc@gmail.com>
+2015-11-07  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* config/rs6000/atexit.c: New file.
 	* config/rs6000/t-aix-cxa (LIB2ADDEH): Build atexit.c.
@@ -6045,7 +6045,7 @@
 	Use system CRTs if present.
 	Remove default CRT case.
 
-2015-09-23  John David Anglin  <danglin@gcc.gnu.org>
+2015-09-23  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/linux-atomic.c (__kernel_cmpxchg2): Reorder error checks.
 	(__sync_fetch_and_##OP##_##WIDTH): Change result to match type of
@@ -6084,7 +6084,7 @@
 	code.
 
 2015-09-18  Andrew Dixie  <andrewd@gentrack.com>
-	    David Edelsohn  <dje.gcc@gmail.com>
+	    David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* config.host (powerpc-ibm-aix*): Add crtdbase.o to extra_parts.
 	* config/rs6000/crtdbase.S: New file.
@@ -6095,7 +6095,7 @@
 	* config/xtensa/linux-unwind.h (xtensa_fallback_frame_state):
 	Add support for call0 ABI.
 
-2015-09-13  John David Anglin  <danglin@gcc.gnu.org>
+2015-09-13  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/fptr.c (SIGN_EXTEND): Cast -1 to unsigned.
 
@@ -6228,7 +6228,7 @@
 
 	* config/i386/t-dragonfly: New.
 
-2015-07-01  John David Anglin  <danglin@gcc.gnu.org>
+2015-07-01  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/linux-atomic.c (__kernel_cmpxchg): Reorder arguments to
 	better match light-weight syscall argument order.
@@ -6327,7 +6327,7 @@
 2015-04-28  Uros Bizjak  <ubizjak@gmail.com>
 
 	* config/frv/elf-lib.h: New file.
-	(CRT_GET_RFIB_DATA): Move definition from gcc/config/frv/frv.h.
+	(CRT_GET_RFIB_DATA): Move definition from scpel_compiler/config/frv/frv.h.
 	* libgcc/config.host (frv-*elf, frv-*-*linux*): Add frv/elf-lib.h
 	to tm_file.
 
@@ -6450,7 +6450,7 @@
 	* config/rl78/fpmath-sf.S (__rl78_int_pack_a_r8): Fix edge case
 	rounding up the fraction.
 
-2015-01-31  John David Anglin  <danglin@gcc.gnu.org>
+2015-01-31  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/linux-atomic.c (__kernel_cmpxchg2): Change declaration of
 	oldval and newval to const void *.  Fix typo.
@@ -6526,7 +6526,7 @@
 2015-01-23  Uros Bizjak  <ubizjak@gmail.com>
 
 	* config/i386/elf-lib.h: New file.
-	(CRT_GET_RFIB_DATA): Move definition from gcc/config/i386/gnu-user.h.
+	(CRT_GET_RFIB_DATA): Move definition from scpel_compiler/config/i386/gnu-user.h.
 	Wrap definition in #ifdef __i386__.
 	* libgcc/config.host (i[34567]86-*-linux*, i[34567]86-*-kfreebsd*-gnu)
 	(i[34567]86-*-knetbsd*-gnu, i[34567]86-*-gnu*)
@@ -6545,7 +6545,7 @@
 	Update rt_sigframe format and address for current Nios II
 	Linux conventions.
 
-2015-01-09  Andreas Tobler  <andreast@gcc.gnu.org>
+2015-01-09  Andreas Tobler  <andreast@scpel_compiler.gnu.org>
 
 	* config.host (arm*-*-freebsd*): Add new configuration for
 	arm*-*-freebsd*.
@@ -6568,7 +6568,7 @@
 	* config.host: Support mipsisa32r6 and mipsisa64r6.
 	* config/mips/mips16.S: Do not build for R6.
 
-2014-12-17  Oleg Endo  <olegendo@gcc.gnu.org>
+2014-12-17  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	* config/sh/crt.h: New.
 	* config/sh/crti.S: Use GLOBAL macro from crt.h for _init and _fini
@@ -6594,7 +6594,7 @@
 	* unwind-dw2.c (DWARF_REG_TO_UNWIND_COLUMN): Remove default def,
 	now provided by defaults.h.
 
-2014-11-30  Oleg Endo  <olegendo@gcc.gnu.org>
+2014-11-30  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	PR target/55351
 	* config/sh/lib1funcs.S: Check value of __SHMEDIA__ instead of checking
@@ -6615,13 +6615,13 @@
 
 	* crtstuff.c (__do_glbal_ctors_1): Add missing semicolon.
 
-2014-11-24  John David Anglin  <danglin@gcc.gnu.org>
+2014-11-24  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/linux-atomic.c (ABORT_INSTRUCTION): Use __builtin_trap()
 	instead.
 
 2014-11-21  Guy Martin  <gmsoft@tuxicoman.be>
-	    John David Anglin  <danglin@gcc.gnu.org>
+	    John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/linux-atomic.c (__kernel_cmpxchg2): New.
 	(FETCH_AND_OP_2): New.  Use for subword and double word operations.
@@ -6715,7 +6715,7 @@
 	t-softfp-excl.  For e500v2, use t-hardfp-sfdf, rs6000/t-e500v2-fp
 	and t-hardfp; do not use t-softfp-sfdf and t-softfp-excl.
 
-2014-10-26  John David Anglin  <danglin@gcc.gnu.org>
+2014-10-26  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/linux-unwind.h (pa32_read_access_ok): New function.
 	(pa32_fallback_frame_state): Use pa32_read_access_ok to check if
@@ -7250,7 +7250,7 @@
 	(gcov_list): Make non-static in GCOV_TOOL.
 	* libgcov.h (GCOV_TOOL_LINKAGE): Remove unused #define.
 
-2014-07-17  John David Anglin  <danglin@gcc.gnu.org>
+2014-07-17  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/pa/linux-atomic.c (__sync_lock_release_4): New.
 	(SYNC_LOCK_RELEASE): Update to use __kernel_cmpxchg for release.
@@ -7896,7 +7896,7 @@
 	TARGET_HAS_NO_HW_DIVIDE is defined, for processors without any
 	divide instructions.
 
-2013-11-25  Oleg Endo  <olegendo@gcc.gnu.org>
+2013-11-25  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	* config/sh/crt1.S (start): Don't do VBR_SETUP for SH2E.
 
@@ -7905,7 +7905,7 @@
 	* config/t-softfp (soft-fp-objects-base): New variable.
 	(soft-fp-objects): Use it.
 
-2013-11-23  David Edelson  <dje.gcc@gmail.com>
+2013-11-23  David Edelson  <dje.scpel_compiler@gmail.com>
 	    Andrew Dixie  <andrewd@gentrack.com>
 
 	PR target/33704
@@ -7987,7 +7987,7 @@
 	(__gcc_deregister_frame): Decrement load-count of
 	LIBGCC_SONAME DLL.
 
-2013-11-08  Bernhard Reutner-Fischer  <aldot@gcc.gnu.org>
+2013-11-08  Bernhard Reutner-Fischer  <aldot@scpel_compiler.gnu.org>
 
 	* configure.ac (libgcc_cv_dfp): Extend check to probe fenv.h
 	availability.
@@ -8135,7 +8135,7 @@
 	* sync.c: Remove static aliases and define each function directly
 	under its real name.
 
-2013-10-02  John David Anglin  <danglin@gcc.gnu.org>
+2013-10-02  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config.host (hppa*64*-*-linux*): Define extra_parts.
 	(hppa*-*-linux*): Likewise.
@@ -8439,7 +8439,7 @@
 	* config/mips/lib2funcs.c: New file.
 	* config/mips/t-mips (LIB2ADD_ST): Add it.
 
-2013-06-09  Oleg Endo  <olegendo@gcc.gnu.org>
+2013-06-09  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	PR target/6526
 	* config/sh/lib1funcs.S (sdivsi3_i4, udivsi3_i4): Do not change bits
@@ -8570,7 +8570,7 @@
 	-Waggressive-array-optimizations warnings for DW_CFA_GNU_window_save
 	on targets with DWARF_FRAME_REGISTERS < 32.
 
-2013-03-13  Oleg Endo  <olegendo@gcc.gnu.org>
+2013-03-13  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	PR target/49880
 	* config/sh/lib1funcs.S (sdivsi3_i4, udivsi3_i4): Enable for SH2A.
@@ -8581,7 +8581,7 @@
 	* config/i386/cpuinfo.c (get_intel_cpu): Fix cpuid codes for
 	sandybridge processors.
 
-2013-03-06  Oleg Endo  <olegendo@gcc.gnu.org>
+2013-03-06  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	PR target/56529
 	* config/sh/lib1funcs.S (udivsi3_i4i, sdivsi3_i4i): Add __SH2A__ to
@@ -8672,7 +8672,7 @@
 
 	Update copyright years.
 
-2013-02-01  David Edelsohn  <dje.gcc@gmail.com>
+2013-02-01  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	PR target/54601
 	* config.host (powerpc-ibm-aix[56789]): Add t-aix-cxa to tmake_file.
@@ -8749,7 +8749,7 @@
 	* config/v850/lib1funcs.S: Only provide CALLT support functions if
 	the CALLT instruction is supported.
 
-2012-12-20  Jonathan Wakely  <jwakely.gcc@gmail.com>
+2012-12-20  Jonathan Wakely  <jwakely.scpel_compiler@gmail.com>
 
 	* gthr.h (__gthread_cond_timedwait_recursive): Do not require.
 	* gthr-posix.h (__gthread_cond_timedwait_recursive): Remove.
@@ -8982,20 +8982,20 @@
 	(USE_PT_GNU_EH_FRAME): Define for OpenBSD.
 	(ElfW): Likewise.
 
-2012-10-05  Jonathan Wakely  <jwakely.gcc@gmail.com>
+2012-10-05  Jonathan Wakely  <jwakely.scpel_compiler@gmail.com>
 
 	PR other/53889
 	* config/i386/gthr-win32.h (__gthread_recursive_mutex_destroy):
 	Fix parameter names.
 
-2012-10-04  Oleg Endo  <olegendo@gcc.gnu.org>
+2012-10-04  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	PR target/33135
 	* config/sh/t-sh (HOST_LIBGCC2_CFLAGS): Delete.
 	* config/sh/t-netbsd (HOST_LIBGCC2_CFLAGS): Delete.
 	* config/sh/t-linux (HOST_LIBGCC2_CFLAGS): Remove mieee option.
 
-2012-10-03  Oleg Endo  <olegendo@gcc.gnu.org>
+2012-10-03  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	PR target/50457
 	* config/sh/linux-atomic.S: Delete.
@@ -9003,7 +9003,7 @@
 	* config/sh/t-linux (LIB2ADD): Replace linux-atomic.S with
 	linux-atomic.c.  Add cflags to disable warnings.
 
-2012-10-02  Jonathan Wakely  <jwakely.gcc@gmail.com>
+2012-10-02  Jonathan Wakely  <jwakely.scpel_compiler@gmail.com>
 
 	PR other/53889
 	* gthr.h (__gthread_recursive_mutex_destroy): Document new required
@@ -9043,7 +9043,7 @@
 	Add: _ssadd*, _sssub*, _ssneg*, _ssabs* for signed fixed modes.
 	Add: _usadd*, _ussub*, _usneg* for unsigned fixed modes.
 
-2012-09-10  Oleg Endo  <olegendo@gcc.gnu.org>
+2012-09-10  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	PR target/54089
 	* config/sh/lib1funcs.S (ashlsi3): Reimplement as ashlsi3_r0.
@@ -9103,7 +9103,7 @@
 	(__mulqihi3,__umulqihi3,__mulhi3): Rewrite non-MUL variants.
 	(__mulhisi3,__umulhisi3,__mulsi3): Rewrite non-MUL variants.
 	(__umulhisi3): Speed up MUL variant if there is enough flash.
-	* config/avr/avr-lib.h (TA, UTA): Adjust according to gcc's
+	* config/avr/avr-lib.h (TA, UTA): Adjust according to scpel_compiler's
 	avr-modes.def.
 	* config/avr/t-avr (LIB1ASMFUNCS): Add: _fractqqsf, _fractuqqsf,
 	_fracthqsf, _fractuhqsf, _fracthasf, _fractuhasf, _fractsasf,
@@ -9157,7 +9157,7 @@
 	* config/m68k/linux-atomic.c (__sync_lock_test_and_set_1): Fix
 	type.
 
-2012-08-16  David Edelsohn  <dje.gcc@gmail.com>
+2012-08-16  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* config.host (*-*-aix*): Move rs6000/t-ibm-ldouble after
 	rs6000/t-slibgcc-aix.
@@ -9177,7 +9177,7 @@
 
 2012-08-03  Jonathan Yong  <jon_y@users.sourceforge.net>
 
-	* Makefile.in (version): set to BASE-VER file from gcc directory.
+	* Makefile.in (version): set to BASE-VER file from scpel_compiler directory.
 
 2012-08-01  Nick Clifton  <nickc@redhat.com>
 
@@ -9191,7 +9191,7 @@
 	* config/stormy16/clrsbhi2.c: New file:
 	* config/stormy16/t-stormy16 (LIB2ADD): Add clrsbhi2.c.
 
-2012-07-22  Steven Bosscher  <steven@gcc.gnu.org>
+2012-07-22  Steven Bosscher  <steven@scpel_compiler.gnu.org>
 
 	* libgcov.c (__gcov_ior_profiler): Benign comment fix.
 
@@ -9208,7 +9208,7 @@
 	* config/i386/t-seh-eh: New file.
 	* config.host (x86_64-*-mingw*): Default to seh.
 
-2012-07-14  Steven Bosscher  <steven@gcc.gnu.org>
+2012-07-14  Steven Bosscher  <steven@scpel_compiler.gnu.org>
 
 	* config/t-darwin (crt3.0): Remove work-around for fixed PR26840.
 
@@ -9340,7 +9340,7 @@
 	(install-unwind_h-forbuild): New target.
 	(all): Use it instead of the former install-unwind_h.
 	(install-unwind_h): Reinstate, copy to user install destination
-	for include files, not to the internal gcc object directory one.
+	for include files, not to the internal scpel_compiler object directory one.
 	(install-leaf): Depend on it.
 
 2012-05-15  Olivier Hainque  <hainque@adacore.com>
@@ -9688,18 +9688,18 @@
 
 	* config/mips/mips16.S (CALL_STUB_RET): Add CFI information.
 
-2012-02-15  Iain Sandoe  <iains@gcc.gnu.org>
+2012-02-15  Iain Sandoe  <iains@scpel_compiler.gnu.org>
 
 	PR libitm/52220
 	* config/darwin-crt-tm.c: Correct typo.
 
-2012-02-15  Iain Sandoe  <iains@gcc.gnu.org>
+2012-02-15  Iain Sandoe  <iains@scpel_compiler.gnu.org>
 	    Patrick Marlier  <patrick.marlier@gmail.com>
 
 	PR libitm/52220
 	* config/darwin-crt-tm.c: Generate dummy functions.
 
-2012-02-15  Iain Sandoe  <iains@gcc.gnu.org>
+2012-02-15  Iain Sandoe  <iains@scpel_compiler.gnu.org>
 	    Patrick Marlier  <patrick.marlier@gmail.com>
 
 	PR libitm/52042
@@ -9741,7 +9741,7 @@
 	* config/tilepro/t-crtstuff: New file.
 	* config/tilepro/t-tilepro: New file.
 
-2012-02-07  Jonathan Wakely  <jwakely.gcc@gmail.com>
+2012-02-07  Jonathan Wakely  <jwakely.scpel_compiler@gmail.com>
 
 	PR libstdc++/51296
 	PR libstdc++/51906
@@ -9831,7 +9831,7 @@
 	* configure: Regenerate.
 	* config/s390/t-crtstuff: Remove -fPIC.
 
-2012-01-02  Jonathan Wakely  <jwakely.gcc@gmail.com>
+2012-01-02  Jonathan Wakely  <jwakely.scpel_compiler@gmail.com>
 
 	PR bootstrap/51006
 	* enable-execute-stack-mprotect.c (getpagesize): Do not define
@@ -9897,7 +9897,7 @@
 	* config.host (mips*-sde-elf*, mipsisa64sr71k-*-elf*): Add to
 	tmake_file rather replacing it.
 
-2011-12-15  Iain Sandoe  <iains@gcc.gnu.org>
+2011-12-15  Iain Sandoe  <iains@scpel_compiler.gnu.org>
 
 	* config/rs6000/darwin-world.S (toplevel): Make it clear that this
 	function is not used for PPC64.
@@ -9938,7 +9938,7 @@
 
 2011-12-06  Georg-Johann Lay  <avr@gjlay.de>
 
-	Forward-port from gcc-4_6-branch r181936 2011-12-02.
+	Forward-port from scpel_compiler-4_6-branch r181936 2011-12-02.
 
 	PR target/51345
 	PR target/51002
@@ -9946,7 +9946,7 @@
 	__epilogue_restores__, __divdi3_moddi3): Enclose parts using
 	__SP_H__ in !defined (__AVR_HAVE_8BIT_SP__).  Add FIXME comments.
 
-2011-12-04  Iain Sandoe  <iains@gcc.gnu.org>
+2011-12-04  Iain Sandoe  <iains@scpel_compiler.gnu.org>
 
 	* config/rs6000/t-darwin64 (LIB2ADD): Add fp and gp save routines.
 
@@ -10003,11 +10003,11 @@
 	(__splitstack_releasecontext): New function.
 	* libgcc-std.ver.in: Add new functions to GCC_4.7.0.
 
-2011-11-27  Iain Sandoe  <iains@gcc.gnu.org>
+2011-11-27  Iain Sandoe  <iains@scpel_compiler.gnu.org>
 
 	* config/darwin-crt-tm.c: Correct comments, use correct licence.
 
-2011-11-27  Iain Sandoe  <iains@gcc.gnu.org>
+2011-11-27  Iain Sandoe  <iains@scpel_compiler.gnu.org>
 
 	* config/darwin-crt-tm.c: Remove dummy _ITM_ functions.
 
@@ -10026,7 +10026,7 @@
 	(__do_global_dtors_aux, frame_dummy): Use them.
 	(__do_global_dtors, __do_global_ctors_1): Likewise.
 
-2011-11-22  Iain Sandoe  <iains@gcc.gnu.org>
+2011-11-22  Iain Sandoe  <iains@scpel_compiler.gnu.org>
 
 	* config/darwin-crt-tm.c: New file.
 	* config.host (darwin): Build crttms.o crttme.o to provide
@@ -10290,7 +10290,7 @@
 
 	* config/ia64/fde-vms.c: Do not include md-unwind-support.h
 
-2011-11-04  Kaz Kojima  <kkojima@gcc.gnu.org>
+2011-11-04  Kaz Kojima  <kkojima@scpel_compiler.gnu.org>
 
 	* config/sh/t-sh: Use $(gcc_compile) instead of $(compile).
 
@@ -10772,7 +10772,7 @@
 	(crtbeginT.o): Use $(objext).
 	[!CUSTOM_CRTIN] (crti$(objext), crtn$(objext)): New rules.
 	(libgcc-extra-parts): Don't compare EXTRA_PARTS, GCC_EXTRA_PARTS.
-	(gcc-extra-parts): Remove.
+	(scpel_compiler-extra-parts): Remove.
 	* config.host (*-*-freebsd*): Add t-crtstuff-pic to tmake_file.
 	Set extra_parts.
 	(*-*-linux*, frv-*-*linux*, *-*-kfreebsd*-gnu, *-*-knetbsd*-gnu,
@@ -11323,7 +11323,7 @@
 2011-08-05  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 
 	* config/t-softfp: Remove.
-	* soft-fp: Moved from ../gcc/config.
+	* soft-fp: Moved from ../scpel_compiler/config.
 	* soft-fp/README: Remove t-softfp reference.
 	* soft-fp/t-softfp: Move to config/t-softfp.
 	(softfp_machine_header): Remove.
@@ -11674,7 +11674,7 @@
 
 	* config/t-crtfm (crtfastmath.o): Use $(srcdir) to refer to
 	crtfastmath.c.
-	Add -frandom-seed=gcc-crtfastmath.
+	Add -frandom-seed=scpel_compiler-crtfastmath.
 	* config/alpha/t-crtfm: Remove.
 	* config/i386/t-crtfm: Use $(srcdir) to refer to crtfastmath.c.
 	* config/ia64/t-ia64 (crtfastmath.o): Remove.
@@ -11852,35 +11852,35 @@
 
 	* config.host (hppa*-*-linux*): Correct md_unwind_header name.
 
-2011-06-04  Kaz Kojima  <kkojima@gcc.gnu.org>
+2011-06-04  Kaz Kojima  <kkojima@scpel_compiler.gnu.org>
 
 	* config.host (sh*-*-linux*): Fix typo.
 
 2011-06-03  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 
-	* config/alpha/linux-unwind.h: Move from ../gcc/config/alpha.
-	* config/alpha/osf5-unwind.h: Move from ../gcc/config/alpha.
-	* config/alpha/vms-unwind.h: Move from ../gcc/config/alpha.
-	* config/bfin/linux-unwind.h: Move from ../gcc/config/bfin.
-	* config/i386/linux-unwind.h: Move from ../gcc/config/i386.
-	* config/i386/sol2-unwind.h: Move from ../gcc/config/i386.
-	* config/i386/w32-unwind.h: Move from ../gcc/config/i386.
+	* config/alpha/linux-unwind.h: Move from ../scpel_compiler/config/alpha.
+	* config/alpha/osf5-unwind.h: Move from ../scpel_compiler/config/alpha.
+	* config/alpha/vms-unwind.h: Move from ../scpel_compiler/config/alpha.
+	* config/bfin/linux-unwind.h: Move from ../scpel_compiler/config/bfin.
+	* config/i386/linux-unwind.h: Move from ../scpel_compiler/config/i386.
+	* config/i386/sol2-unwind.h: Move from ../scpel_compiler/config/i386.
+	* config/i386/w32-unwind.h: Move from ../scpel_compiler/config/i386.
 	Wrap in !__MINGW64__.
-	* config/ia64/linux-unwind.h: Move from ../gcc/config/ia64.
-	* config/ia64/vms-unwind.h: Move from ../gcc/config/ia64.
-	* config/m68k/linux-unwind.h: Move from ../gcc/config/m68k.
-	* config/mips/linux-unwind.h: Move from ../gcc/config/mips.
-	* config/pa/hpux-unwind.h: Move from ../gcc/config/pa.
-	* config/pa/linux-unwind.h: Move from ../gcc/config/pa.
-	* config/rs6000/darwin-unwind.h: Move from ../gcc/config/rs6000.
+	* config/ia64/linux-unwind.h: Move from ../scpel_compiler/config/ia64.
+	* config/ia64/vms-unwind.h: Move from ../scpel_compiler/config/ia64.
+	* config/m68k/linux-unwind.h: Move from ../scpel_compiler/config/m68k.
+	* config/mips/linux-unwind.h: Move from ../scpel_compiler/config/mips.
+	* config/pa/hpux-unwind.h: Move from ../scpel_compiler/config/pa.
+	* config/pa/linux-unwind.h: Move from ../scpel_compiler/config/pa.
+	* config/rs6000/darwin-unwind.h: Move from ../scpel_compiler/config/rs6000.
 	Wrap in !__LP64__.
-	* config/rs6000/linux-unwind.h: Move from ../gcc/config/rs6000.
-	* config/s390/linux-unwind.h: Move from ../gcc/config/s390.
-	* config/s390/tpf-unwind.h: Move from ../gcc/config/s390.
-	* config/sh/linux-unwind.h: Move from ../gcc/config/sh.
-	* config/sparc/linux-unwind.h: Move from ../gcc/config/sparc.
-	* config/sparc/sol2-unwind.h: Move from ../gcc/config/sparc.
-	* config/xtensa/linux-unwind.h: Move from ../gcc/config/xtensa.
+	* config/rs6000/linux-unwind.h: Move from ../scpel_compiler/config/rs6000.
+	* config/s390/linux-unwind.h: Move from ../scpel_compiler/config/s390.
+	* config/s390/tpf-unwind.h: Move from ../scpel_compiler/config/s390.
+	* config/sh/linux-unwind.h: Move from ../scpel_compiler/config/sh.
+	* config/sparc/linux-unwind.h: Move from ../scpel_compiler/config/sparc.
+	* config/sparc/sol2-unwind.h: Move from ../scpel_compiler/config/sparc.
+	* config/xtensa/linux-unwind.h: Move from ../scpel_compiler/config/xtensa.
 	* config/no-unwind.h: New file.
 	* config.host (md_unwind_header): Document.
 	Define.
@@ -11905,9 +11905,9 @@
 
 	* config.host (mips-sgi-irix[56]*): Restrict to mips-sgi-irix6.5*.
 	Set tmake_file, extra_parts.
-	* config/mips/irix-crti.S: Move from ../gcc/config/mips/irix-crti.asm.
+	* config/mips/irix-crti.S: Move from ../scpel_compiler/config/mips/irix-crti.asm.
 	Remove O32 support.
-	* config/mips/irix-crtn.S: Move from ../gcc/config/mips/irix-crtn.asm.
+	* config/mips/irix-crtn.S: Move from ../scpel_compiler/config/mips/irix-crtn.asm.
 	Remove O32 support.
 	* config/mips/t-irix6: New file.
 	* config/mips/t-slibgcc-irix: New file.
@@ -11962,14 +11962,14 @@
 	(sparc*-*-solaris2*): ... this.
 	New case.
 	(sparc64-*-elf*): Handle it.
-	* config/gmon-sol2.c: Move from ../gcc/config/sparc.
-	Merge ../gcc/config/i386/gmon-sol2.c.
-	* config/i386/sol2-c1.S: Move from ../gcc/config/i386/sol2-c1.asm.
+	* config/gmon-sol2.c: Move from ../scpel_compiler/config/sparc.
+	Merge ../scpel_compiler/config/i386/gmon-sol2.c.
+	* config/i386/sol2-c1.S: Move from ../scpel_compiler/config/i386/sol2-c1.asm.
 	Use C comments.
-	Merge ../gcc/config/i386/sol2-gc1.asm.
-	* config/i386/sol2-ci.S: Move from ../gcc/config/i386/sol2-ci.asm.
+	Merge ../scpel_compiler/config/i386/sol2-gc1.asm.
+	* config/i386/sol2-ci.S: Move from ../scpel_compiler/config/i386/sol2-ci.asm.
 	Use C comments.
-	* config/i386/sol2-cn.S: Move from ../gcc/config/i386/sol2-cn.asm.
+	* config/i386/sol2-cn.S: Move from ../scpel_compiler/config/i386/sol2-cn.asm.
 	Use C comments.
 	* config/i386/t-crtfm (crtfastmath.o): Use $<.
 	* config/i386/t-crtstuff: New file.
@@ -11978,9 +11978,9 @@
 	$(T)crti.o, $(T)crtn.o): Remove.
 	(gcrt1.o): New rule.
 	(TARGET_LIBGCC2_CFLAGS): Remove.
-	* config/sparc/sol2-c1.S: Move from ../gcc/config/sparc/sol2-c1.asm.
-	* config/sparc/sol2-ci.S: Move from ../gcc/config/sparc/sol2-ci.asm.
-	* config/sparc/sol2-cn.S: Move from ../gcc/config/sparc/sol2-cn.asm.
+	* config/sparc/sol2-c1.S: Move from ../scpel_compiler/config/sparc/sol2-c1.asm.
+	* config/sparc/sol2-ci.S: Move from ../scpel_compiler/config/sparc/sol2-ci.asm.
+	* config/sparc/sol2-cn.S: Move from ../scpel_compiler/config/sparc/sol2-cn.asm.
 	* config/sparc/t-sol2: New file.
 	* config/sparc/t-crtfm: Move to ...
 	* config/t-crtfm: ... this.
@@ -12128,7 +12128,7 @@
 2010-09-28  Ian Lance Taylor  <iant@google.com>
 
 	* configure.ac: Adjust CFI test to test assembler directly rather
-	than checking gcc preprocessor macro.
+	than checking scpel_compiler preprocessor macro.
 	* configure: Rebuild.
 
 2010-09-27  Ian Lance Taylor  <iant@google.com>
@@ -12149,11 +12149,11 @@
 	* config.host (i[34567]86-*-linux* and friends): Add t-stack and
 	i386/t-stack-i386 to tmake_file.
 
-2010-09-21  Iain Sandoe  <iains@gcc.gnu.org>
+2010-09-21  Iain Sandoe  <iains@scpel_compiler.gnu.org>
 
 	* Makefile.in (libgcc-extra-parts):  Check for static archives and
 	invoke ranlib after installing them.
-	(gcc-extra-parts): Likewise.
+	(scpel_compiler-extra-parts): Likewise.
 	(install-leaf): Likewise.
 
 2010-09-14  H.J. Lu  <hongjiu.lu@intel.com>
@@ -12187,7 +12187,7 @@
 	for 64bit targets.
 
 2010-09-03  Uros Bizjak  <ubizjak@gmail.com>
-	    Iain Sandoe  <iains@gcc.gnu.org>
+	    Iain Sandoe  <iains@scpel_compiler.gnu.org>
 
 	PR target/45476
 	* Makefile.in (sifuncs, difuncs, tifuncs): Filter out
@@ -12361,7 +12361,7 @@
 
 	* configure.ac (AC_PREREQ): Bump to 2.64.
 
-2009-08-22  Kaz Kojima  <kkojima@gcc.gnu.org>
+2009-08-22  Kaz Kojima  <kkojima@scpel_compiler.gnu.org>
 
 	* config/sh/t-linux (HOST_LIBGCC2_CFLAGS): Add -mieee.
 
@@ -12415,7 +12415,7 @@
 	* config.host: Add moxie support.
 	* config/moxie/t-moxie: New file.
 
-2009-05-29  David Billinghurst  <billingd@gcc.gnu.org>
+2009-05-29  David Billinghurst  <billingd@scpel_compiler.gnu.org>
 
 	* config.host: Add i386/${host_address}/t-fprules-softfp and
 	t-softfp to tmake_file for i[34567]86-*-cygwin*.
@@ -12662,9 +12662,9 @@
 	i386/t-crtstuff if linker supports ZERO terminator unwind entries.
 	* configure: Regenerate.
 	* config.host (i[34567]86-*-solaris2*): Move i386/t-sol2 in
-	tmake_file here from gcc/config.gcc.
-	Move extra_parts here from gcc/config.gcc.
-	* config/i386/t-sol2: Move here from gcc/config/i386.
+	tmake_file here from scpel_compiler/config.gcc.
+	Move extra_parts here from scpel_compiler/config.gcc.
+	* config/i386/t-sol2: Move here from scpel_compiler/config/i386.
 	Use gcc_srcdir instead of srcdir.
 
 2008-11-18  Adam Nemet  <anemet@caviumnetworks.com>
@@ -12764,7 +12764,7 @@
 	* config/i386/32/t-fprules-softfp: New.
 	* config/i386/32/tf-signs.c: Likewise.
 
-	* config/i386/64/sfp-machine.h: New. Moved from gcc.
+	* config/i386/64/sfp-machine.h: New. Moved from scpel_compiler.
 
 2008-07-02  H.J. Lu  <hongjiu.lu@intel.com>
 	    Uros Bizjak  <ubizjak@gmail.com>
@@ -12781,7 +12781,7 @@
 	* configure.ac: sinclude override.m4.
 	* configure: Regenerate.
 
-2008-06-11  Bernhard Fischer  <aldot@gcc.gnu.org>
+2008-06-11  Bernhard Fischer  <aldot@scpel_compiler.gnu.org>
 
 	* configure: Regenerate.
 
@@ -13021,7 +13021,7 @@
 	PR target/30519
 	* config.host (alpha*-*-linux*): Set extra_parts.
 
-2007-01-09  Kaz Kojima  <kkojima@gcc.gnu.org>
+2007-01-09  Kaz Kojima  <kkojima@scpel_compiler.gnu.org>
 
 	* config/sh/t-linux: New.
 	* config.host (sh*-*-linux*): Set tmake_file.

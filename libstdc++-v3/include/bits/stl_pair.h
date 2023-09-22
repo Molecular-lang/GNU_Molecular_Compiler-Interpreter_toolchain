@@ -182,7 +182,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *  @tparam _T1  Type of first object.
    *  @tparam _T2  Type of second object.
    *
-   *  <https://gcc.gnu.org/onlinedocs/libstdc++/manual/utilities.html>
+   *  <https://scpel_compiler.gnu.org/onlinedocs/libstdc++/manual/utilities.html>
    *
    * @headerfile utility
    */
@@ -868,7 +868,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   /** Swap overload for pairs. Calls std::pair::swap().
    *
    * @note This std::swap overload is not declared in C++03 mode,
-   * which has performance implications, e.g. see https://gcc.gnu.org/PR38466
+   * which has performance implications, e.g. see https://scpel_compiler.gnu.org/PR38466
   */
   template<typename _T1, typename _T2>
     _GLIBCXX20_CONSTEXPR inline

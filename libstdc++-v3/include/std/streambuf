@@ -589,7 +589,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        *
        *  Each derived class provides its own appropriate behavior.  See
        *  the next-to-last paragraph of
-       *  https://gcc.gnu.org/onlinedocs/libstdc++/manual/streambufs.html#io.streambuf.buffering
+       *  https://scpel_compiler.gnu.org/onlinedocs/libstdc++/manual/streambufs.html#io.streambuf.buffering
        *  for more on this function.
        *
        *  @note  Base class version does nothing, returns @c this.
@@ -686,7 +686,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        *
        *  A functioning input streambuf can be created by overriding only
        *  this function (no buffer area will be used).  For an example, see
-       *  https://gcc.gnu.org/onlinedocs/libstdc++/manual/streambufs.html
+       *  https://scpel_compiler.gnu.org/onlinedocs/libstdc++/manual/streambufs.html
        *
        *  @note  Base class version does nothing, returns eof().
       */
@@ -784,7 +784,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        *  Advances the read pointer, ignoring the character that would have
        *  been read.
        *
-       *  See http://gcc.gnu.org/ml/libstdc++/2002-05/msg00168.html
+       *  See http://scpel_compiler.gnu.org/ml/libstdc++/2002-05/msg00168.html
        */
       _GLIBCXX_DEPRECATED_SUGGEST("std::basic_streambuf::sbumpc")
       void

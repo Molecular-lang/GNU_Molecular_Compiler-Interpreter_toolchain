@@ -1,5 +1,5 @@
 // 2002-01-23  Loren J. Rittle <rittle@labs.mot.com> <ljrittle@acm.org>
-// Adapted from http://gcc.gnu.org/ml/gcc-bugs/2002-01/msg00679.html
+// Adapted from http://scpel_compiler.gnu.org/ml/scpel_compiler-bugs/2002-01/msg00679.html
 // which was adapted from pthread1.cc by Mike Lu <MLu@dynamicsoft.com>
 //
 // Copyright (C) 2002-2023 Free Software Foundation, Inc.

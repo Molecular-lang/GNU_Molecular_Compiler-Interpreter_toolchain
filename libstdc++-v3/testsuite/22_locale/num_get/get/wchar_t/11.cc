@@ -35,7 +35,7 @@ struct Punct2: std::numpunct<wchar_t>
   wchar_t do_decimal_point() const { return L'2'; }
 };
 
-// http://gcc.gnu.org/ml/libstdc++/2003-12/msg00201.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2003-12/msg00201.html
 void test01()
 {
   using namespace std;

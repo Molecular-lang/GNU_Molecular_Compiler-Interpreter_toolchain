@@ -55,7 +55,7 @@ operator delete(void* p) throw()
     std::free(p);
 }
 
-// http://gcc.gnu.org/ml/libstdc++/2004-10/msg00098.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2004-10/msg00098.html
 void test01()
 {
   using __gnu_cxx::__pool_alloc;

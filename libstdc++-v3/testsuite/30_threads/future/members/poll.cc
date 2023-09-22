@@ -133,7 +133,7 @@ int main()
   VERIFY( wait_until_steady_min < (ready * 100) );
 
   // The following two tests fail with GCC 11, see
-  // https://gcc.gnu.org/pipermail/libstdc++/2020-November/051422.html
+  // https://scpel_compiler.gnu.org/pipermail/libstdc++/2020-November/051422.html
 #if 0
   // Polling before ready using wait_until(epoch) should not be terribly slow.
   VERIFY( wait_until_sys_epoch < (ready * 100) );

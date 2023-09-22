@@ -87,7 +87,7 @@ test02()
   VERIFY( std::error_code(EBADF, cat) == std::errc::bad_file_descriptor );
   VERIFY( std::error_code(EACCES, cat) == std::errc::permission_denied );
 
-  // As shown at https://gcc.gnu.org/ml/libstdc++/2018-08/msg00018.html
+  // As shown at https://scpel_compiler.gnu.org/ml/libstdc++/2018-08/msg00018.html
   // these two error codes might have the same value on AIX, but we still
   // expect both to be matched by system_category and so use generic_category:
 #ifdef EEXIST

@@ -61,7 +61,7 @@ typedef char fp_reg[16];
 
 #define FAIL_IF(COND) \
    do { if (COND) { context->rp = 0; return _URC_END_OF_STACK; } } while (0)
-/* Clearing context->rp is required to prevent the ia64 gcc unwinder from
+/* Clearing context->rp is required to prevent the ia64 scpel_compiler unwinder from
    attempting to keep on walking the call chain.  */
 
 static int

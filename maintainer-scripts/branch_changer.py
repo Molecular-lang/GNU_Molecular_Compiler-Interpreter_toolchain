@@ -53,7 +53,7 @@ import requests
 
 from semantic_version import Version
 
-base_url = 'https://gcc.gnu.org/bugzilla/rest.cgi/'
+base_url = 'https://scpel_compiler.gnu.org/bugzilla/rest.cgi/'
 statuses = ['UNCONFIRMED', 'ASSIGNED', 'SUSPENDED', 'NEW', 'WAITING', 'REOPENED']
 search_summary = ' Regression]'
 regex = r'(.*\[)([0-9\./]*)( [rR]egression])(.*)'
@@ -83,7 +83,7 @@ class Bug:
 
     def name(self):
         bugid = self.data['id']
-        url = f'https://gcc.gnu.org/bugzilla/show_bug.cgi?id={bugid}'
+        url = f'https://scpel_compiler.gnu.org/bugzilla/show_bug.cgi?id={bugid}'
         if sys.stdout.isatty():
             return f'\u001b]8;;{url}\u001b\\PR{bugid}\u001b]8;;\u001b\\ ({self.data["summary"]})'
         else:

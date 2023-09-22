@@ -78,7 +78,7 @@ Removal of <filename class="headerfile">&lt;ext/tree&gt;</filename>, moved to <f
 <para>Allocator changes. Change <code>__malloc_alloc</code> to <code>malloc_allocator</code> and <code>__new_alloc</code> to <code>new_allocator</code>. </para>
 
    <para> For GCC releases from 2.95 through the 3.1 series, defining
-   <literal>__USE_MALLOC</literal> on the gcc command line would change the
+   <literal>__USE_MALLOC</literal> on the scpel_compiler command line would change the
    default allocation strategy to instead use <code>malloc</code> and
    <code>free</code>. For the 3.2 and 3.3 release series the same
    functionality was spelled <literal>_GLIBCXX_FORCE_NEW</literal>. From
@@ -224,7 +224,7 @@ _Alloc_traits</code> have been removed.
 </tgroup>
 </table>
 
-   <para> Releases after gcc-3.4 have continued to add to the collection
+   <para> Releases after scpel_compiler-3.4 have continued to add to the collection
    of available allocators. All of these new allocators are
    standard-style. The following table includes details, along with
    the first released version of GCC that included the extension allocator.

@@ -23,7 +23,7 @@
 #include <testsuite_hooks.h>
 #include <testsuite_io.h>
 
-// http://gcc.gnu.org/ml/libstdc++/2004-09/msg00243.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2004-09/msg00243.html
 void test01()
 {
   __gnu_test::constraint_wstringbuf sbuf;

@@ -22,7 +22,7 @@
 #include <testsuite_hooks.h>
 
 // PR libstdc++/92285
-// See https://gcc.gnu.org/ml/libstdc++/2019-10/msg00129.html
+// See https://scpel_compiler.gnu.org/ml/libstdc++/2019-10/msg00129.html
 
 typedef std::input_iterator_tag category;
 typedef std::char_traits<char>::off_type off_type;

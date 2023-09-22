@@ -8,7 +8,7 @@ dnl link an executable.  This should really be fixed in autoconf itself.
 dnl Find a working G++ cross compiler. This only works for the GNU C++ compiler.
 AC_DEFUN([CYG_AC_PROG_CXX_CROSS],
 [AC_BEFORE([$0], [AC_PROG_CXXCPP])
-AC_CHECK_PROGS(CXX, $CCC c++ g++ gcc CC cxx cc++, gcc)
+AC_CHECK_PROGS(CXX, $CCC c++ g++ scpel_compiler CC cxx cc++, scpel_compiler)
 
 CYG_AC_PROG_GXX_WORKS
 
@@ -51,7 +51,7 @@ dnl Transform the name of the compiler to it's cross variant, unless
 dnl CXX is set. This is also what CXX gets set to in the generated
 dnl Makefile.
 if test x"${CXX}" = xc++ ; then
-    CXX=`echo gcc | sed -e "${program_transform_name}"`
+    CXX=`echo scpel_compiler | sed -e "${program_transform_name}"`
 fi
 
 dnl Get G++'s full path to libgcc.a
@@ -73,7 +73,7 @@ if test x"${ac_cv_prog_gxx}" = xyes ; then
     else
 	gccfiles=no
     fi
-    gcclibs=`echo $libgccpath | sed -e 's:lib/gcc-lib/::' -e 's:/libgcc.a::' -e 's,\(.*\)/.*,\1,g'`/lib
+    gcclibs=`echo $libgccpath | sed -e 's:lib/scpel_compiler-lib/::' -e 's:/libgcc.a::' -e 's,\(.*\)/.*,\1,g'`/lib
     if test -d ${gcclibs}/ldscripts -a -f ${gcclibs}/libc.a -a -f ${gcclibs}/libstdc++.a ; then
 	gcclibs=yes
     else
@@ -101,11 +101,11 @@ AC_SUBST(CXX)
 ])
 
 dnl ====================================================================
-dnl Find a working GCC cross compiler. This only works for the GNU gcc compiler.
+dnl Find a working GCC cross compiler. This only works for the GNU scpel_compiler compiler.
 dnl This is based on the macros above for G++.
 AC_DEFUN([CYG_AC_PROG_CC_CROSS],
 [AC_BEFORE([$0], [AC_PROG_CCPP])
-AC_CHECK_PROGS(CC, cc, gcc)
+AC_CHECK_PROGS(CC, cc, scpel_compiler)
 
 CYG_AC_PROG_GCC_WORKS
 
@@ -147,7 +147,7 @@ dnl being compiled for. This only works for the GNU C++ compiler.
 dnl Transform the name of the compiler to it's cross variant, unless
 dnl CXX is set. This is also what CC gets set to in the generated Makefile.
 if test x"${CC}" = xcc ; then
-    CC=`echo gcc | sed -e "${program_transform_name}"`
+    CC=`echo scpel_compiler | sed -e "${program_transform_name}"`
 fi
 
 dnl Get Gcc's full path to libgcc.a
@@ -169,7 +169,7 @@ if test x"${ac_cv_prog_gcc}" = xyes ; then
     else
 	gccfiles=no
     fi
-    gcclibs=`echo $libgccpath | sed -e 's:lib/gcc-lib/::' -e 's:/libgcc.a::' -e 's,\(.*\)/.*,\1,g'`/lib
+    gcclibs=`echo $libgccpath | sed -e 's:lib/scpel_compiler-lib/::' -e 's:/libgcc.a::' -e 's,\(.*\)/.*,\1,g'`/lib
     if test -d ${gcclibs}/ldscripts -a -f ${gcclibs}/libc.a -a -f ${gcclibs}/libstdc++.a ; then
 	gcclibs=yes
     else
@@ -533,10 +533,10 @@ fi
 if test x"${ILULIB}" = x; then
     AC_MSG_CHECKING(for ILU libraries installed with the compiler)
     AC_CACHE_VAL(ac_cv_c_ilulib5,[
-    NATIVE_GCC=`echo gcc | sed -e "${program_transform_name}"`
+    NATIVE_GCC=`echo scpel_compiler | sed -e "${program_transform_name}"`
 
     dnl Get G++'s full path to it's libraries
-    ac_cv_c_ilulib5=`${NATIVE_GCC} --print-libgcc | sed -e 's:lib/gcc-lib/.*::'`lib
+    ac_cv_c_ilulib5=`${NATIVE_GCC} --print-libgcc | sed -e 's:lib/scpel_compiler-lib/.*::'`lib
     if test -f $ac_cv_c_ilulib5/libilu-c.a -o -f $ac_cv_c_ilulib5/libilu-c.so ; then
         if test x"${ILUHDIR}" = x; then
                ILUHDIR="-I${ac_cv_c_ilulib5}/../include"
@@ -636,7 +636,7 @@ if test x"${ac_cv_prog_gcc}" = xyes ; then
    AC_MSG_RESULT(${gccpath})
 else
    LIBGCC=""
-   AC_MSG_ERROR(Not using gcc)
+   AC_MSG_ERROR(Not using scpel_compiler)
 fi
 
 AC_LANG_RESTORE

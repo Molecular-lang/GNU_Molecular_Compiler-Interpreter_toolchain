@@ -1734,12 +1734,12 @@
 	* testsuite/29_atomics/atomic_ref/integral.cc: Likewise.
 	* testsuite/29_atomics/atomic_ref/pointer.cc: Likewise.
 
-2023-09-14  François Dumont  <fdumont@gcc.gnu.org>
+2023-09-14  François Dumont  <fdumont@scpel_compiler.gnu.org>
 
 	* testsuite/19_diagnostics/stacktrace/synopsis.cc: Add
 	{ dg-require-normal-namespace "" }.
 
-2023-09-13  François Dumont  <fdumont@gcc.gnu.org>
+2023-09-13  François Dumont  <fdumont@scpel_compiler.gnu.org>
 
 	* include/std/format (std::__format::_Arg_store): Explicit version
 	namespace on make_format_args friend declaration.
@@ -1789,7 +1789,7 @@
 	* src/c++11/debug.cc (__glibcxx_assert_fail): Move to ...
 	* src/c++11/assert_fail.cc: New file.
 
-2023-09-11  Ken Matsui  <kmatsui@gcc.gnu.org>
+2023-09-11  Ken Matsui  <kmatsui@scpel_compiler.gnu.org>
 
 	* include/bits/c++config (_GLIBCXX_HAS_BUILTIN): Do not undef.
 	(_GLIBCXX_USE_BUILTIN_TRAIT): Define.
@@ -1812,7 +1812,7 @@
 	* testsuite/30_threads/thread/id/operators_c++20.cc: Likewise.
 	* testsuite/30_threads/thread/id/output.cc: New test.
 
-2023-09-11  Pekka Seppänen  <pexu@gcc.mail.kapsi.fi>
+2023-09-11  Pekka Seppänen  <pexu@scpel_compiler.mail.kapsi.fi>
 
 	* src/c++11/cow-locale_init.cc: Add [[maybe_unused]] attribute.
 	* src/c++17/fs_path.cc (path::_S_convert_loc): Likewise.
@@ -2219,7 +2219,7 @@
 	* testsuite/libstdc++-prettyprinters/cxx17.cc: Likewise.
 	* testsuite/libstdc++-prettyprinters/libfundts.cc: Likewise.
 
-2023-08-23  François Dumont  <fdumont@gcc.gnu.org>
+2023-08-23  François Dumont  <fdumont@scpel_compiler.gnu.org>
 
 	* testsuite/util/replacement_memory_operators.h
 	(counter::scope): New, capture and reset counter count at construction and
@@ -2945,7 +2945,7 @@
 	* include/std/format (__formatter_fp::format): Use frexp instead
 	of log10.
 
-2023-08-12  Ken Matsui  <kmatsui@gcc.gnu.org>
+2023-08-12  Ken Matsui  <kmatsui@scpel_compiler.gnu.org>
 
 	* include/std/type_traits (true_type): Use __bool_constant
 	instead.
@@ -3154,12 +3154,12 @@
 
 	* configure: Regenerate.
 
-2023-08-06  François Dumont  <fdumont@gcc.gnu.org>
+2023-08-06  François Dumont  <fdumont@scpel_compiler.gnu.org>
 
 	* config/abi/pre/gnu-versioned-namespace.ver: Add __cxa_call_terminate
 	symbol export.
 
-2023-07-30  François Dumont  <fdumont@gcc.gnu.org>
+2023-07-30  François Dumont  <fdumont@scpel_compiler.gnu.org>
 
 	* src/c++11/compatibility-ldbl-facets-aliases.h: Replace #define with
 	proper #error.
@@ -3382,7 +3382,7 @@
 	of fseek.
 	(__basic_file<char>::showmanyc): Use get_file_offset.
 
-2023-07-12  Ken Matsui  <kmatsui@gcc.gnu.org>
+2023-07-12  Ken Matsui  <kmatsui@scpel_compiler.gnu.org>
 
 	* include/std/type_traits (__make_unsigned_selector): Use
 	__is_enum built-in trait.
@@ -3956,7 +3956,7 @@
 	* libsupc++/eh_call.cc (__cxa_call_terminate): Take void*.
 	* config/abi/pre/gnu.ver: Add it.
 
-2023-06-02  François Dumont  <fdumont@gcc.gnu.org>
+2023-06-02  François Dumont  <fdumont@scpel_compiler.gnu.org>
 
 	* include/parallel/algobase.h: Include <parallel/search.h>.
 
@@ -4014,7 +4014,7 @@
 	__have_neon_a32 only single-precision float works (in addition
 	to integers).
 
-2023-06-01  François Dumont  <fdumont@gcc.gnu.org>
+2023-06-01  François Dumont  <fdumont@scpel_compiler.gnu.org>
 
 	* include/bits/stl_algo.h
 	(std::__search, std::search(_FwdIt1, _FwdIt1, _FwdIt2, _FwdIt2, _BinPred)): Move...
@@ -4492,7 +4492,7 @@
 	and negative zero correctly.
 	* testsuite/26_numerics/headers/cmath/109758.cc: New test.
 
-2023-05-10  François Dumont  <fdumont@gcc.gnu.org>
+2023-05-10  François Dumont  <fdumont@scpel_compiler.gnu.org>
 
 	* include/bits/hashtable_policy.h
 	(_NodeBuilder<>::_S_build): Use __node_ptr.
@@ -5055,7 +5055,7 @@
 	(__cpp_lib_constexpr_tuple): Ditto.
 	(__cpp_lib_constexpr_memory): Ditto.
 
-2023-04-05  John David Anglin  <danglin@gcc.gnu.org>
+2023-04-05  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* testsuite/22_locale/locale/cons/12658_thread-2.cc: Double
 	timeout factor on hppa*-*-*.
@@ -6040,7 +6040,7 @@
 	* doc/xml/manual/documentation_hacking.xml: Adjust link to pdftex.
 	* doc/html/manual/documentation_hacking.html: Regenerate.
 
-2023-02-04  François Dumont  <fdumont@gcc.gnu.org>
+2023-02-04  François Dumont  <fdumont@scpel_compiler.gnu.org>
 
 	* include/bits/basic_string.h (operator=(basic_string&&)): Transfer move-to
 	storage to the move-from instance when allocators are equal.
@@ -6251,7 +6251,7 @@
 	* testsuite/20_util/tuple/make_from_tuple/dangling_ref.cc: New test.
 	* testsuite/20_util/tuple/make_from_tuple/tuple_like.cc: New test.
 
-2023-01-23  François Dumont  <fdumont@gcc.gnu.org>
+2023-01-23  François Dumont  <fdumont@scpel_compiler.gnu.org>
 
 	* include/debug/safe_iterator.h (_Safe_iterator<>::_Unchecked): New.
 	(_Safe_iterator(const _Safe_iterator&, _Unchecked)): New.
@@ -6332,7 +6332,7 @@
 	* testsuite/std/time/tzdb_list/1.cc: Remove dg-xfail-run-if
 	and fail gracefully if defining the weak symbol doesn't work.
 
-2023-01-15  François Dumont  <fdumont@gcc.gnu.org>
+2023-01-15  François Dumont  <fdumont@scpel_compiler.gnu.org>
 
 	PR libstdc++/108288
 	* include/debug/safe_iterator.h (_Safe_iterator<>::operator++(int)): Extend deadlock
@@ -6421,7 +6421,7 @@
 	* testsuite/std/time/year_month_weekday/io.cc: New test.
 	* testsuite/std/time/year_month_weekday_last/io.cc: New test.
 
-2023-01-14  François Dumont  <fdumont@gcc.gnu.org>
+2023-01-14  François Dumont  <fdumont@scpel_compiler.gnu.org>
 
 	* include/std/format [_GLIBCXX_INLINE_VERSION](to_chars): Adapt __asm symbol
 	specifications.
@@ -6542,7 +6542,7 @@
 	* doc/xml/manual/abi.xml: Add latest library versions.
 	* doc/html/manual/abi.html: Regenerate.
 
-2023-01-12  François Dumont  <fdumont@gcc.gnu.org>
+2023-01-12  François Dumont  <fdumont@scpel_compiler.gnu.org>
 
 	PR libstdc++/107189
 	* include/bits/stl_tree.h (_Rb_tree<>::_M_insert_range_equal): Remove
@@ -6643,7 +6643,7 @@
 	(_Safe_iterator::operator--(int)): Do not hold lock around
 	construction of return value.
 
-2023-01-05  John David Anglin  <danglin@gcc.gnu.org>
+2023-01-05  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* config/cpu/hppa/atomicity.h (_PA_LDCW_INSN): Define.
 	(__exchange_and_add): Use _PA_LDCW_INSN.  Use ordered store for

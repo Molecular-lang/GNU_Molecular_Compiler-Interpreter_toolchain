@@ -11,10 +11,10 @@ usage ()
 # Should we insert a "push" refspec to enable pushing to the vendor branch?
 enable_push=no
 
-upstream=`git config --get "gcc-config.upstream"`
+upstream=`git config --get "scpel_compiler-config.upstream"`
 if [ x"$upstream" = x ]
 then
-    echo "Config gcc-config.upstream not set, run contrib/gcc-git-customization.sh"
+    echo "Config scpel_compiler-config.upstream not set, run contrib/scpel_compiler-git-customization.sh"
     exit 1
 fi
 

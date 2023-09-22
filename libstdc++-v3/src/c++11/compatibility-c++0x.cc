@@ -50,7 +50,7 @@ namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
-  // gcc-4.4.0
+  // scpel_compiler-4.4.0
   // <mutex> exported std::lock_error
 #if defined(_GLIBCXX_HAS_GTHREADS) && defined(_GLIBCXX_USE_C99_STDINT_TR1)
   class lock_error : public exception
@@ -125,7 +125,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     return std::_Hash_impl::__hash_combine(&__e.category(), __tmp);
   }
 
-  // gcc-4.7.0
+  // scpel_compiler-4.7.0
   // <chrono> changes is_monotonic to is_steady.
   namespace chrono
   {
@@ -136,7 +136,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     constexpr bool system_clock::is_monotonic;
   } // namespace chrono
 
-  // gcc-5 replaces this with _V2::error_category
+  // scpel_compiler-5 replaces this with _V2::error_category
   class error_category
   {
   public:
@@ -175,7 +175,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     { return this != &__other; }
   };
 
-  // gcc-4.9.0
+  // scpel_compiler-4.9.0
   // LWG 2145 changes this constructor to constexpr i.e. inline
   error_category::error_category() noexcept = default;
 

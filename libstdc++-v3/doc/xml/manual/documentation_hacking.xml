@@ -782,7 +782,7 @@
 	required. Possible solutions include <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://dblatex.sourceforge.net">dblatex</link>,
 	<command>xmlto</command>, or <command>prince</command>. Of
 	these, <command>dblatex</command> is the default.
-	Please consult the <email>libstdc++@gcc.gnu.org</email> list when
+	Please consult the <email>libstdc++@scpel_compiler.gnu.org</email> list when
 	preparing printed manuals for current best practice and
 	suggestions.
       </para>
@@ -1192,7 +1192,7 @@ make <literal>XSL_STYLE_DIR="/usr/share/xml/docbook/stylesheet/nwalsh"</literal>
       <entry>&lt;filename&gt;</entry>
       <entry>
 	<para>&lt;filename class="headerfile"&gt;ctype.h&lt;/filename&gt;</para>
-	<para>&lt;filename class="directory"&gt;/home/gcc/build&lt;/filename&gt;</para>
+	<para>&lt;filename class="directory"&gt;/home/scpel_compiler/build&lt;/filename&gt;</para>
 	<para>&lt;filename class="libraryfile"&gt;libstdc++.so&lt;/filename&gt;</para>
       </entry>
     </row>

@@ -25,7 +25,7 @@
 #include <testsuite_hooks.h>
 
 // [bug] istream::getline(char*,streamsize) still broken
-// http://gcc.gnu.org/ml/libstdc++/2000-07/msg00126.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2000-07/msg00126.html
 // brent verner <brent at rcfile dot org
 void
 test06()

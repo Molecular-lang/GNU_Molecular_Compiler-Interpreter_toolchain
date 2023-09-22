@@ -28,7 +28,7 @@ along with this program; see the file COPYING3.  If not see
 #define GTY(x) /* nothing */
 #endif
 
-/* Both gcc and emacs number source *lines* starting at 1, but
+/* Both scpel_compiler and emacs number source *lines* starting at 1, but
    they have differing conventions for *columns*.
 
    GCC uses a 1-based convention for source columns,
@@ -81,11 +81,11 @@ enum lc_reason
 
 /* The typedef "location_t" is a key within the location database,
    identifying a source location or macro expansion, along with range
-   information, and (optionally) a pointer for use by gcc.
+   information, and (optionally) a pointer for use by scpel_compiler.
 
    This key only has meaning in relation to a line_maps instance.  Within
-   gcc there is a single line_maps instance: "line_table", declared in
-   gcc/input.h and defined in gcc/input.cc.
+   scpel_compiler there is a single line_maps instance: "line_table", declared in
+   scpel_compiler/input.h and defined in scpel_compiler/input.cc.
 
    The values of the keys are intended to be internal to libcpp,
    but for ease-of-understanding the implementation, they are currently
@@ -93,10 +93,10 @@ enum lc_reason
 
   Actual     | Value                         | Meaning
   -----------+-------------------------------+-------------------------------
-  0x00000000 | UNKNOWN_LOCATION (gcc/input.h)| Unknown/invalid location.
+  0x00000000 | UNKNOWN_LOCATION (scpel_compiler/input.h)| Unknown/invalid location.
   -----------+-------------------------------+-------------------------------
   0x00000001 | BUILTINS_LOCATION             | The location for declarations
-             |   (gcc/input.h)               | in "<built-in>"
+             |   (scpel_compiler/input.h)               | in "<built-in>"
   -----------+-------------------------------+-------------------------------
   0x00000002 | RESERVED_LOCATION_COUNT       | The first location to be
              | (also                         | handed out, and the
@@ -300,12 +300,12 @@ const unsigned int LINE_MAP_MAX_COLUMN_NUMBER = (1U << 12);
 
 /* Do not pack ranges if locations get higher than this.
    If you change this, update:
-     gcc.dg/plugin/location-overflow-test-*.c.  */
+     scpel_compiler.dg/plugin/location-overflow-test-*.c.  */
 const location_t LINE_MAP_MAX_LOCATION_WITH_PACKED_RANGES = 0x50000000;
 
 /* Do not track column numbers if locations get higher than this.
    If you change this, update:
-     gcc.dg/plugin/location-overflow-test-*.c.  */
+     scpel_compiler.dg/plugin/location-overflow-test-*.c.  */
 const location_t LINE_MAP_MAX_LOCATION_WITH_COLS = 0x60000000;
 
 /* Highest possible source location encoded within an ordinary map.  */
@@ -2141,7 +2141,7 @@ enum location_aspect
 
 /* The rich_location class requires a way to expand location_t instances.
    We would directly use expand_location_to_spelling_point, which is
-   implemented in gcc/input.cc, but we also need to use it for rich_location
+   implemented in scpel_compiler/input.cc, but we also need to use it for rich_location
    within genmatch.cc.
    Hence we require client code of libcpp to implement the following
    symbol.  */

@@ -27,7 +27,7 @@
 
 const char name_01[] = "ifstream_members-1.tst";
 
-// http://gcc.gnu.org/ml/libstdc++/2000-06/msg00136.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2000-06/msg00136.html
 void test01()
 {
   std::ifstream ifs1;

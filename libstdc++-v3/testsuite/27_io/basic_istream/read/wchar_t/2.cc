@@ -22,7 +22,7 @@
 #include <testsuite_hooks.h>
 
 // Jim Parsons <parsons at clearway dot com>
-// http://gcc.gnu.org/ml/libstdc++/2000-q1/msg00177.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2000-q1/msg00177.html
 void
 test04()
 {

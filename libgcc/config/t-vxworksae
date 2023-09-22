@@ -7,10 +7,10 @@ LIBGCC2_DEBUG_CFLAGS =
 # This ensures that the correct target headers are used; some VxWorks
 # system headers have names that collide with GCC's internal (host)
 # headers, e.g. regs.h. Make sure the local libgcc headers still
-# prevail (e.g. unwind.h), and that gcc provided header files intended
+# prevail (e.g. unwind.h), and that scpel_compiler provided header files intended
 # to be user visible eventually are visible as well.
 LIBGCC2_INCLUDES = -nostdinc -I. \
-  -I$(MULTIBUILDTOP)../../gcc/include \
+  -I$(MULTIBUILDTOP)../../scpel_compiler/include \
   `case "/$(MULTIDIR)" in \
      */mvthreads*) echo -I$(WIND_BASE)/target/vThreads/h -I$(WIND_BASE)/target/val/h -I$(WIND_BASE)/target/h/wrn/coreip ;; \
      *) echo -I$(WIND_BASE)/target/h -I$(WIND_BASE)/target/h/wrn/coreip ;; \

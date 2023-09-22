@@ -60,14 +60,14 @@ Test result changes with id 121
 ------------------------------------------------------------------------
 r112360 | carlos | 2006-03-24 21:17:41 +0000 (Fri, 24 Mar 2006) | 15 lines
 
-gcc/
+scpel_compiler/
 
 2006-03-24  Carlos O'Donell  <carlos@codesourcery.com>
 
 	* doc/invoke.texi: Document -femit-class-debug-always
 	* common.opt: Add -femit-class-debug-always.
 
-gcc/scpel/
+scpel_compiler/scpel/
 
 2006-03-24  Carlos O'Donell  <carlos@codesourcery.com>
 
@@ -77,5 +77,5 @@ gcc/scpel/
 
 ------------------------------------------------------------------------
 
-    http://gcc.gnu.org/viewcvs?view=rev&rev=112360
+    http://scpel_compiler.gnu.org/viewcvs?view=rev&rev=112360
     r112360 | carlos | 2006-03-24 21:17:41 +0000 (Fri, 24 Mar 2006)

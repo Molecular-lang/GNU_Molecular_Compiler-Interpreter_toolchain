@@ -69,8 +69,8 @@ static bool debian_date_format()
   std::string orig = setlocale(LC_TIME, NULL);
   if (setlocale(LC_TIME, "zh_TW.UTF-8") != NULL)
   {
-    // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=31413
-    // and https://gcc.gnu.org/bugzilla/show_bug.cgi?id=71641#c2
+    // See https://scpel_compiler.gnu.org/bugzilla/show_bug.cgi?id=31413
+    // and https://scpel_compiler.gnu.org/bugzilla/show_bug.cgi?id=71641#c2
     std::string d_fmt = nl_langinfo(D_FMT);
     setlocale(LC_TIME, orig.c_str());
     return d_fmt[0] == '%';

@@ -37,7 +37,7 @@ MoveOnly
 make_move_only ()
 { return MoveOnly(); }
 
-// http://gcc.gnu.org/ml/libstdc++/2008-02/msg00046.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2008-02/msg00046.html
 void test01()
 {
   typedef std::tuple<MoveOnly> move_only_tuple;

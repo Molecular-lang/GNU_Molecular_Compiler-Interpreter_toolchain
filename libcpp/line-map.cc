@@ -2219,7 +2219,7 @@ rich_location::add_range (location_t loc,
    It must either overwrite an existing location, or add one *exactly* on
    the end of the array.
 
-   This is primarily for use by gcc when implementing diagnostic format
+   This is primarily for use by scpel_compiler when implementing diagnostic format
    decoders e.g.
    - the "+" in the C/C++ frontends, for handling format codes like "%q+D"
      (which writes the source location of a tree back into location 0 of

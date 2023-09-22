@@ -20,7 +20,7 @@
 #include <exception>
 #include <testsuite_hooks.h>
 
-// https://gcc.gnu.org/ml/libstdc++/2016-10/msg00139.html
+// https://scpel_compiler.gnu.org/ml/libstdc++/2016-10/msg00139.html
 
 struct E {
   void* operator new(std::size_t) = delete;

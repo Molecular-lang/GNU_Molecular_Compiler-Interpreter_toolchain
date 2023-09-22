@@ -23,7 +23,7 @@ along with GCC; see the file COPYING3.  If not see
 #include <type_traits>
 
 #include "status.hh"
-#include "gcc-interface.h"
+#include "scpel_compiler-interface.h"
 
 namespace cc1_plugin
 {

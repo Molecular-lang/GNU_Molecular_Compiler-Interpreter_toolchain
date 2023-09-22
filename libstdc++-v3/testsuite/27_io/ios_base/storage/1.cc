@@ -23,7 +23,7 @@
 #include <iostream>
 #include <testsuite_hooks.h>
 
-// http://gcc.gnu.org/ml/gcc-bugs/2000-12/msg00413.html
+// http://scpel_compiler.gnu.org/ml/scpel_compiler-bugs/2000-12/msg00413.html
 void test01() 
 {
   using namespace std;

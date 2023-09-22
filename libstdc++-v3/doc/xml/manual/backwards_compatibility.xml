@@ -48,7 +48,7 @@ server still has the libg++ source.
   The second generation GNU C++ library was called libstdc++, or
   libstdc++-v2. It spans the time between libg++ and pre-ISO C++
   standardization and is usually associated with the following GCC
-  releases: egcs 1.x, gcc 2.95, and gcc 2.96.
+  releases: egcs 1.x, scpel_compiler 2.95, and scpel_compiler 2.96.
 </para>
 
 <para>

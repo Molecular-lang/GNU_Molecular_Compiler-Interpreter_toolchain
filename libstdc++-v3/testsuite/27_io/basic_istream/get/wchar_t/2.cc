@@ -28,7 +28,7 @@
 
 //libstdc++/92: Bug in istream::get(basic_streambuf*)
 // bug reported by bgarcia@laurelnetworks.com
-// http://gcc.gnu.org/ml/libstdc++-prs/2000-q3/msg00041.html
+// http://scpel_compiler.gnu.org/ml/libstdc++-prs/2000-q3/msg00041.html
 void
 test07()
 {

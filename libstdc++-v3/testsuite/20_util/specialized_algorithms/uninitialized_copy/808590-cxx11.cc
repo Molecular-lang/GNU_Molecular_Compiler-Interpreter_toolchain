@@ -18,7 +18,7 @@
 // { dg-do run { target c++11 } }
 
 // This is identical to ./808590.cc but for C++11 and later.
-// See https://gcc.gnu.org/ml/libstdc++/2014-05/msg00027.html
+// See https://scpel_compiler.gnu.org/ml/libstdc++/2014-05/msg00027.html
 
 #include <vector>
 #include <stdexcept>

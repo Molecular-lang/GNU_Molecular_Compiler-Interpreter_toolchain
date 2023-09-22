@@ -1,7 +1,7 @@
 #!/bin/bash
 # Copyright (C) 2006-2023 Free Software Foundation, Inc.
 #
-# Analyze changes in GCC DejaGNU test logs for binutils, gcc, gdb, etc.
+# Analyze changes in GCC DejaGNU test logs for binutils, scpel_compiler, gdb, etc.
 # Original version written in 2005 by James Lemke <jwlemke@wasabisystems.com>.
 #
 # See usage() below.

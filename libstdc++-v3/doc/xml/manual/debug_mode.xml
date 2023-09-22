@@ -822,7 +822,7 @@ test02()
 
   <listitem><para><emphasis> Use implementation-specific properties of anonymous
     namespaces. </emphasis>
-    See <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/ml/libstdc++/2003-08/msg00004.html">this post</link>.
+    See <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/ml/libstdc++/2003-08/msg00004.html">this post</link>.
     This method fails the <emphasis>correctness</emphasis> criteria.</para></listitem>
 
   <listitem><para><emphasis>Extension: allow reopening on namespaces</emphasis>: This would
@@ -848,7 +848,7 @@ test02()
     functions taking no arguments in mixed-mode settings resulting in
     equivalent link names, <code> vector::push_back() </code> being
     one example.
-    See <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/ml/libstdc++/2003-08/msg00177.html">proof-of-concept using link
+    See <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/ml/libstdc++/2003-08/msg00177.html">proof-of-concept using link
     name</link>. </para></listitem>
 </itemizedlist>
 

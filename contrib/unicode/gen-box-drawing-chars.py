@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Script to generate gcc/text-art/box-drawing-chars.inc
+# Script to generate scpel_compiler/text-art/box-drawing-chars.inc
 #
 # This file is part of GCC.
 #

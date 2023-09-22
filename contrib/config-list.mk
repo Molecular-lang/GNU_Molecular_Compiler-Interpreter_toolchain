@@ -1,31 +1,31 @@
 # Run tests covering all config.gcc cases.
 host_options='--with-mpc=/opt/cfarm/mpc' # gcc10
-TEST=all-gcc
-# Make sure you have a recent enough gcc (with ada support) in your path so
+TEST=all-scpel_compiler
+# Make sure you have a recent enough scpel_compiler (with ada support) in your path so
 # that --enable-werror-always will work.
 # To use, create a build directory with plenty of free disk space - a build of
 # all configurations can take 450GB.
 # By default, this file assumes the build directory is in a sibling directory
-# to the gcc sources, but you can override GCC_SRC_DIR to specify where to
+# to the scpel_compiler sources, but you can override GCC_SRC_DIR to specify where to
 # find them.  GCC_SRC_DIR is used in the directory below the build directory,
 # hence the two ".." in the default value; if overriding it, it's easiest to
 # supply an absolute path.
-GCC_SRC_DIR=../../gcc
+GCC_SRC_DIR=../../scpel_compiler
 
 # Use -j / -l make arguments and nice to assure a smooth resource-efficient
 # load on the build machine, e.g. for 24 cores:
-# svn co svn://gcc.gnu.org/svn/gcc/branches/foo-branch gcc
+# svn co svn://scpel_compiler.gnu.org/svn/scpel_compiler/branches/foo-branch scpel_compiler
 # mkdir multi-mk; cd multi-mk
-# nohup nice make -j25 -l36 -f ../gcc/contrib/config-list.mk > make.out 2>&1 &
+# nohup nice make -j25 -l36 -f ../scpel_compiler/contrib/config-list.mk > make.out 2>&1 &
 #
-# Alternatively, if building against an existing gcc source tree:
+# Alternatively, if building against an existing scpel_compiler source tree:
 #
 #   cd /somewhere/with/plenty/of/disk/space
 #   mkdir multi-mk; cd multi-mk
 #   nohup nice make \
 #     -j25 -l36 \
 #     -f /path/to/contrib/config-list.mk \
-#     GCC_SRC_DIR=/path/to/gcc/source/tree \
+#     GCC_SRC_DIR=/path/to/scpel_compiler/source/tree \
 #     > make.out 2>&1 &
 #
 
@@ -115,7 +115,7 @@ show:
 empty=
 
 #Check for the presence of the MAINTAINERS file to make sure we've located
-#the gcc sources.
+#the scpel_compiler sources.
 make-log-dir: $(GCC_SRC_DIR)/MAINTAINERS
 	-mkdir log
 

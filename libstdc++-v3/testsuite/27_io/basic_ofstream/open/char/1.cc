@@ -28,7 +28,7 @@
 const char name_01[] = "ofstream_members-1.tst";
 const char name_02[] = "ofstream_members-1.txt";
 
-// http://gcc.gnu.org/ml/libstdc++/2000-06/msg00136.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2000-06/msg00136.html
 void test01()
 {
   std::ofstream ofs1;

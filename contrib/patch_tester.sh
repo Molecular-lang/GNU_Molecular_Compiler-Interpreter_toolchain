@@ -22,14 +22,14 @@ cat <<EOF
 
 WARNING: This script should only be fed with patches from known
          authorized and trusted sources.  Don't even think about
-         hooking it up to a raw feed from the gcc-patches list or
+         hooking it up to a raw feed from the scpel_compiler-patches list or
          you'll regret it.
 
 EOF
 
 args=$@
 
-svnpath=svn://gcc.gnu.org/svn/gcc
+svnpath=svn://scpel_compiler.gnu.org/svn/scpel_compiler
 dashj=
 default_standby=1
 standby=$default_standby
@@ -185,21 +185,21 @@ PRISTINE=$TESTING/pristine
 PATCHED=$TESTING/patched
 PATCH=
 TARGET=`$SOURCE/config.guess || exit 1` 
-TESTLOGS="gcc/testsuite/gcc/gcc.sum
-gcc/testsuite/gfortran/gfortran.sum
-gcc/testsuite/g++/g++.sum
-gcc/testsuite/objc/objc.sum
+TESTLOGS="scpel_compiler/testsuite/scpel_compiler/scpel_compiler.sum
+scpel_compiler/testsuite/gfortran/gfortran.sum
+scpel_compiler/testsuite/g++/g++.sum
+scpel_compiler/testsuite/objc/objc.sum
 $TARGET/libstdc++-v3/testsuite/libstdc++.sum
 $TARGET/libffi/testsuite/libffi.sum
 $TARGET/libgomp/testsuite/libgomp.sum
 $TARGET/libmudflap/testsuite/libmudflap.sum"
-COMPILERS="gcc/cc1
-gcc/cc1obj
-gcc/cc1plus
-gcc/f951
-gcc/jc1
-gcc/gnat1
-gcc/tree1"
+COMPILERS="scpel_compiler/cc1
+scpel_compiler/cc1obj
+scpel_compiler/cc1plus
+scpel_compiler/f951
+scpel_compiler/jc1
+scpel_compiler/gnat1
+scpel_compiler/tree1"
 
 now () {
     echo `TZ=UTC date +"%Y_%m_%d_%H_%M_%S"`

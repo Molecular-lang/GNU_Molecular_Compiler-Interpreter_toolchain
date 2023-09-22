@@ -51,7 +51,7 @@ subtests.  For these tests, if one of the phases fails, we
 indicate which phase the failure originates in.  For instance,
 in the following test results:
 
-	gcc.c-torture/compile_execute/xxxx.c: [FAIL:C,FAIL:X,PASS]
+	scpel_compiler.c-torture/compile_execute/xxxx.c: [FAIL:C,FAIL:X,PASS]
 
 the "compile_execute" replaces the compile or execute portion of the test name,
 and "FAIL:C" and "FAIL:X" indicates where the combined test failed.

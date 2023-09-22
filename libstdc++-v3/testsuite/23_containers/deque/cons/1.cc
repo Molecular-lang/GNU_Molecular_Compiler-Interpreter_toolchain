@@ -27,7 +27,7 @@
 
 typedef std::deque<__gnu_test::object_counter>   gdeque;
 
-// see http://gcc.gnu.org/ml/libstdc++/2001-11/msg00139.html
+// see http://scpel_compiler.gnu.org/ml/libstdc++/2001-11/msg00139.html
 void
 test01()
 {

@@ -80,7 +80,7 @@
       are overloaded names (declared in <code>&lt;cctype&gt;</code> and
       <code>&lt;locale&gt;</code>) so the template-arguments for
       <code>transform&lt;&gt;</code> cannot be deduced, as explained in
-      <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/ml/libstdc++/2002-11/msg00180.html">this
+      <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/ml/libstdc++/2002-11/msg00180.html">this
       message</link>.
       <!-- section 14.8.2.4 clause 16 in ISO 14882:1998  -->
       At minimum, you can write short wrappers like
@@ -221,16 +221,16 @@
       built-in types.
    </para>
    <para>If you want to use your own special character class, then you have
-      <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/ml/libstdc++/2002-08/msg00163.html">a lot
+      <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/ml/libstdc++/2002-08/msg00163.html">a lot
       of work to do</link>, especially if you with to use i18n features
       (facets require traits information but don't have a traits argument).
    </para>
-   <para>Another example of how to specialize char_traits was given <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/ml/libstdc++/2002-08/msg00260.html">on the
+   <para>Another example of how to specialize char_traits was given <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/ml/libstdc++/2002-08/msg00260.html">on the
       mailing list</link> and at a later date was put into the file <code>
       include/ext/pod_char_traits.h</code>.  We agree
       that the way it's used with basic_string (scroll down to main())
-      doesn't look nice, but that's because <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/ml/libstdc++/2002-08/msg00236.html">the
-      nice-looking first attempt</link> turned out to <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/ml/libstdc++/2002-08/msg00242.html">not
+      doesn't look nice, but that's because <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/ml/libstdc++/2002-08/msg00236.html">the
+      nice-looking first attempt</link> turned out to <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/ml/libstdc++/2002-08/msg00242.html">not
       be conforming C++</link>, due to the rule that CharT must be a POD.
       (See how tricky this is?)
    </para>
@@ -377,7 +377,7 @@ stringtok(Container &amp;container, string const &amp;in,
       are relying on special functions offered by the CString class.
    </para>
    <para>Things are not as bad as they seem.  In
-      <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/ml/gcc/1999-04n/msg00236.html">this
+      <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/ml/scpel_compiler/1999-04n/msg00236.html">this
       message</link>, Joe Buck points out a few very important things:
    </para>
       <itemizedlist>

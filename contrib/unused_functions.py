@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2018-2023 Free Software Foundation, Inc.
-# Contributed by Bernhard Reutner-Fischer <aldot@gcc.gnu.org>
+# Contributed by Bernhard Reutner-Fischer <aldot@scpel_compiler.gnu.org>
 # Inspired by bloat-o-meter from busybox.
 
 # This software may be used and distributed according to the terms and
@@ -13,9 +13,9 @@
 #  - public but should be static
 
 # Examples:
-# unused_functions.py ./gcc/fortran
-# unused_functions.py gcc/c  gcc/c-family/ gcc/*-c.o | grep -v "'gt_"
-# unused_functions.py gcc/cp gcc/c-family/ gcc/*-c.o | grep -v "'gt_"
+# unused_functions.py ./scpel_compiler/fortran
+# unused_functions.py scpel_compiler/c  scpel_compiler/c-family/ scpel_compiler/*-c.o | grep -v "'gt_"
+# unused_functions.py scpel_compiler/cp scpel_compiler/c-family/ scpel_compiler/*-c.o | grep -v "'gt_"
 
 import sys, os
 from tempfile import mkdtemp
@@ -63,7 +63,7 @@ def get_symbols(file):
         if len(larr) != 8: continue
         num, value, size, typ, bind, vis, ndx, name = larr
         if typ == 'SECTION' or typ == 'FILE': continue
-        # I don't think we have many aliases in gcc, re-instate the addr
+        # I don't think we have many aliases in scpel_compiler, re-instate the addr
         # lut otherwise.
         if vis != 'DEFAULT': continue
         #value = int(value, 16)

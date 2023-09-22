@@ -17,7 +17,7 @@
 <section xml:id="build_hacking.prereq"><info><title>Prerequisites</title></info>
 
   <para>
-    As noted <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/install/prerequisites.html">previously</link>,
+    As noted <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/install/prerequisites.html">previously</link>,
     certain other tools are necessary for hacking on files that
     control configure (<code>configure.ac</code>,
     <code>acinclude.m4</code>) and make
@@ -439,7 +439,7 @@ built as <filename class="library">libstdc++.so.6.0.23</filename>.
 Regenerate the <filename>configure</filename> script by running the
 <command>autoreconf</command> tool from the correct version of the Autoconf
 package (as dictated by the <link xmlns:xlink="http://www.w3.org/1999/xlink"
-xlink:href="https://gcc.gnu.org/install/prerequisites.html">GCC
+xlink:href="https://scpel_compiler.gnu.org/install/prerequisites.html">GCC
 prerequisites</link>).
 </para>
 </listitem>
@@ -506,7 +506,7 @@ match the new symbol.
 <para>
 For an example of these steps, including adjusting old patterns to be less
 greedy, see <link xmlns:xlink="http://www.w3.org/1999/xlink"
-xlink:href="https://gcc.gnu.org/ml/gcc-patches/2016-07/msg01926.html">https://gcc.gnu.org/ml/gcc-patches/2016-07/msg01926.html</link>
+xlink:href="https://scpel_compiler.gnu.org/ml/scpel_compiler-patches/2016-07/msg01926.html">https://scpel_compiler.gnu.org/ml/scpel_compiler-patches/2016-07/msg01926.html</link>
 and the attached patch.
 </para>
 

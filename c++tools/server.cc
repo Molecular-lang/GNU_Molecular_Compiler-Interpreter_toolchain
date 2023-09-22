@@ -82,7 +82,7 @@ along with GCC; see the file COPYING3.  If not see
 // GCC
 #include "version.h"
 #include "ansidecl.h"
-#define HAVE_DECL_BASENAME 1 /* See comment in gcc/configure.ac.  */
+#define HAVE_DECL_BASENAME 1 /* See comment in scpel_compiler/configure.ac.  */
 #include "libiberty.h"
 
 #if !HOST_HAS_O_CLOEXEC

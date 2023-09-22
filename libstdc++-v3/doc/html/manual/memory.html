@@ -57,7 +57,7 @@
     The easiest way of fulfilling the requirements is to call
     <code class="function">operator new</code> each time a container needs
     memory, and to call <code class="function">operator delete</code> each time
-    the container releases memory. This method may be <a class="link" href="http://gcc.gnu.org/ml/libstdc++/2001-05/msg00105.html" target="_top">slower</a>
+    the container releases memory. This method may be <a class="link" href="http://scpel_compiler.gnu.org/ml/libstdc++/2001-05/msg00105.html" target="_top">slower</a>
     than caching the allocations and re-using previously-allocated
     memory, but has the advantage of working correctly across a wide
     variety of hardware and operating systems, including large
@@ -120,8 +120,8 @@
        Over multiple iterations, various STL container
      objects have elements inserted to some maximum amount. A variety
      of allocators are tested.
-     Test source for <a class="link" href="http://gcc.gnu.org/viewcvs/gcc/trunk/libstdc%2B%2B-v3/testsuite/performance/23_containers/insert/sequence.cc?view=markup" target="_top">sequence</a>
-     and <a class="link" href="http://gcc.gnu.org/viewcvs/gcc/trunk/libstdc%2B%2B-v3/testsuite/performance/23_containers/insert/associative.cc?view=markup" target="_top">associative</a>
+     Test source for <a class="link" href="http://scpel_compiler.gnu.org/viewcvs/scpel_compiler/trunk/libstdc%2B%2B-v3/testsuite/performance/23_containers/insert/sequence.cc?view=markup" target="_top">sequence</a>
+     and <a class="link" href="http://scpel_compiler.gnu.org/viewcvs/scpel_compiler/trunk/libstdc%2B%2B-v3/testsuite/performance/23_containers/insert/associative.cc?view=markup" target="_top">associative</a>
      containers.
        </p></li><li class="listitem"><p>
        Insertion and erasure in a multi-threaded environment.
@@ -130,14 +130,14 @@
      on a per-thread basis, as well as measuring thread contention
      for memory resources.
      Test source
-    <a class="link" href="http://gcc.gnu.org/viewcvs/gcc/trunk/libstdc%2B%2B-v3/testsuite/performance/23_containers/insert_erase/associative.cc?view=markup" target="_top">here</a>.
+    <a class="link" href="http://scpel_compiler.gnu.org/viewcvs/scpel_compiler/trunk/libstdc%2B%2B-v3/testsuite/performance/23_containers/insert_erase/associative.cc?view=markup" target="_top">here</a>.
        </p></li><li class="listitem"><p>
 	 A threaded producer/consumer model.
        </p><p>
        Test source for
-     <a class="link" href="http://gcc.gnu.org/viewcvs/gcc/trunk/libstdc++-v3/testsuite/performance/23_containers/producer_consumer/sequence.cc?view=markup" target="_top">sequence</a>
+     <a class="link" href="http://scpel_compiler.gnu.org/viewcvs/scpel_compiler/trunk/libstdc++-v3/testsuite/performance/23_containers/producer_consumer/sequence.cc?view=markup" target="_top">sequence</a>
      and
-     <a class="link" href="http://gcc.gnu.org/viewcvs/gcc/trunk/libstdc++-v3/testsuite/performance/23_containers/producer_consumer/associative.cc?view=markup" target="_top">associative</a>
+     <a class="link" href="http://scpel_compiler.gnu.org/viewcvs/scpel_compiler/trunk/libstdc++-v3/testsuite/performance/23_containers/producer_consumer/associative.cc?view=markup" target="_top">associative</a>
      containers.
      </p></li></ol></div><p>
      Since GCC 12 the default choice for
@@ -209,7 +209,7 @@
     Several other allocators are provided as part of this
     implementation.  The location of the extension allocators and their
     names have changed, but in all cases, functionality is
-    equivalent. Starting with gcc-3.4, all extension allocators are
+    equivalent. Starting with scpel_compiler-3.4, all extension allocators are
     standard style. Before this point, SGI style was the norm. Because of
     this, the number of template arguments also changed.
     <a class="xref" href="api.html#table.extension_allocators" title="Table B.6. Extension Allocators">Table B.6, “Extension Allocators”</a> tracks the changes.
@@ -525,7 +525,7 @@ available policies are:
        <code class="constant">_S_atomic</code>
        </p><p>
 Selected when GCC supports a builtin atomic compare-and-swap operation
-on the target processor (see <a class="link" href="http://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html" target="_top">Atomic
+on the target processor (see <a class="link" href="http://scpel_compiler.gnu.org/onlinedocs/scpel_compiler/_005f_005fatomic-Builtins.html" target="_top">Atomic
 Builtins</a>.)  The reference counts are maintained using a lock-free
 algorithm and GCC's atomic builtins, which provide the required memory
 synchronisation.

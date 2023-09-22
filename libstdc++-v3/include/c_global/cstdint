@@ -37,10 +37,10 @@
 
 #include <bits/c++config.h>
 
-#if ! _GLIBCXX_HOSTED && __has_include(<stdint-gcc.h>)
-// For --disable-hosted-libstdcxx we want GCC's own stdint-gcc.h header
+#if ! _GLIBCXX_HOSTED && __has_include(<stdint-scpel_compiler.h>)
+// For --disable-hosted-libstdcxx we want GCC's own stdint-scpel_compiler.h header
 // even when -ffreestanding isn't used.
-# include <stdint-gcc.h>
+# include <stdint-scpel_compiler.h>
 #elif __has_include(<stdint.h>)
 # include <stdint.h>
 #endif

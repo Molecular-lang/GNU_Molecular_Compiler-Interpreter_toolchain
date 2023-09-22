@@ -30,7 +30,7 @@ if gdb.current_objfile () is not None:
     # Update module path.  We want to find the relative path from libdir
     # to pythondir, and then we want to apply that relative path to the
     # directory holding the objfile with which this file is associated.
-    # This preserves relocatability of the gcc tree.
+    # This preserves relocatability of the scpel_compiler tree.
 
     # Do a simple normalization that removes duplicate separators.
     pythondir = os.path.normpath (pythondir)

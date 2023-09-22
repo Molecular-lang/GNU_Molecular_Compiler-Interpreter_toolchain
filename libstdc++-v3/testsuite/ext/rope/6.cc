@@ -19,7 +19,7 @@
 
 #include <ext/rope>
 
-// https://gcc.gnu.org/ml/libstdc++/2016-07/msg00114.html
+// https://scpel_compiler.gnu.org/ml/libstdc++/2016-07/msg00114.html
 void
 test01()
 {

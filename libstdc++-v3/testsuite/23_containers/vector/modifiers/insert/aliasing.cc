@@ -21,7 +21,7 @@
 #include <memory>
 #include <testsuite_hooks.h>
 
-// See https://gcc.gnu.org/ml/libstdc++/2016-07/msg00008.html for background.
+// See https://scpel_compiler.gnu.org/ml/libstdc++/2016-07/msg00008.html for background.
 
 struct T
 {

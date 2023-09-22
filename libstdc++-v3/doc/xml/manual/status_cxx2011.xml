@@ -2406,7 +2406,7 @@ particular release.
       <entry>Y</entry>
       <entry>Exception support is broken on non-Linux targets.
 	See <link xmlns:xlink="http://www.w3.org/1999/xlink"
-	xlink:href="https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66146">PR
+	xlink:href="https://scpel_compiler.gnu.org/bugzilla/show_bug.cgi?id=66146">PR
 	66146</link>.
       </entry>
     </row>

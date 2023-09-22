@@ -1,5 +1,5 @@
 // { dg-do run { target c++11 } }
-// 2011-11-20 Jonathan Wakely <jwakely.gcc -at- gmail.com>
+// 2011-11-20 Jonathan Wakely <jwakely.scpel_compiler -at- gmail.com>
 //
 // Copyright (C) 2011-2023 Free Software Foundation, Inc.
 //

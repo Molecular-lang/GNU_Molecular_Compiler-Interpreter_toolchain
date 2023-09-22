@@ -22,7 +22,7 @@
 #include <testsuite_string.h>
 #include <testsuite_hooks.h>
 
-// https://gcc.gnu.org/ml/libstdc++/2017-01/msg00021.html
+// https://scpel_compiler.gnu.org/ml/libstdc++/2017-01/msg00021.html
 void test01()
 {
   typedef __gnu_test::wstring string_type;

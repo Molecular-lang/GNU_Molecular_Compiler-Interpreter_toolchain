@@ -32,7 +32,7 @@ check_GNU_style.sh [patch]...
     complete.  The reference documentation of the GNU Coding Standards
     can be found here: http://www.gnu.org/prep/standards_toc.html
     and there are also some additional coding conventions for GCC:
-    http://gcc.gnu.org/codingconventions.html
+    http://scpel_compiler.gnu.org/codingconventions.html
 
 EOF
     exit 1

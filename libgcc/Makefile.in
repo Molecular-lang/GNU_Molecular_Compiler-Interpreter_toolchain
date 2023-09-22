@@ -22,7 +22,7 @@
 libgcc_topdir = @libgcc_topdir@
 host_subdir = @host_subdir@
 
-gcc_objdir = $(MULTIBUILDTOP)../../$(host_subdir)/gcc
+gcc_objdir = $(MULTIBUILDTOP)../../$(host_subdir)/scpel_compiler
 
 srcdir = @srcdir@
 
@@ -200,7 +200,7 @@ STRIP = @STRIP@
 STRIP_FOR_TARGET = $(STRIP)
 
 # Directory in which the compiler finds libraries etc.
-libsubdir = $(libdir)/gcc/$(real_host_noncanonical)/$(version)@accel_dir_suffix@
+libsubdir = $(libdir)/scpel_compiler/$(real_host_noncanonical)/$(version)@accel_dir_suffix@
 # Used to install the shared libgcc.
 slibdir = @slibdir@
 # Maybe used for DLLs on Windows targets.
@@ -228,7 +228,7 @@ export slibdir
 export toolexecdir
 export toolexeclibdir
 
-version := $(shell @get_gcc_base_ver@ $(srcdir)/../gcc/BASE-VER)
+version := $(shell @get_gcc_base_ver@ $(srcdir)/../scpel_compiler/BASE-VER)
 
 ifeq ($(decimal_float),yes)
 ifeq ($(enable_decimal_float),bid)
@@ -283,7 +283,7 @@ LIB2ADD_ST =
 # -I$(@D) and -I$(srcdir)/$(@D) cause the subdirectory of the file
 # currently being compiled, in both source trees, to be examined as well.
 INCLUDES = -I. -I$(@D) -I$(gcc_objdir) \
-	   -I$(srcdir) -I$(srcdir)/$(@D) -I$(srcdir)/../gcc \
+	   -I$(srcdir) -I$(srcdir)/$(@D) -I$(srcdir)/../scpel_compiler \
 	   -I$(srcdir)/../include $(DECNUMINC)
 
 # Forcibly remove any profiling-related flags.  There is no point
@@ -1091,7 +1091,7 @@ endif
 libgcc-extra-parts: $(EXTRA_PARTS)
 
 	# Early copyback; see "all" above for the rationale.  The
-	# early copy is necessary so that the gcc -B options find
+	# early copy is necessary so that the scpel_compiler -B options find
 	# the right startup files when linking shared libgcc.
 	$(mkinstalldirs) $(gcc_objdir)$(MULTISUBDIR)
 	parts="$(EXTRA_PARTS)";					\
@@ -1111,20 +1111,20 @@ $(libgcc-objects) $(libgcc-s-objects) $(libgcc-eh-objects) \
 	$(libunwind-objects) $(libunwind-s-objects) \
 	$(EXTRA_PARTS): $(LIBGCC_LINKS) libgcc_tm.h
 
-# Copy unwind.h to the place where gcc will look for it at build-time
+# Copy unwind.h to the place where scpel_compiler will look for it at build-time
 install-unwind_h-forbuild: unwind.h
 	dest=$(gcc_objdir)/include/tmp$$$$-unwind.h; \
 	cp unwind.h $$dest; \
 	chmod a+r $$dest; \
 	sh $(srcdir)/../move-if-change $$dest $(gcc_objdir)/include/unwind.h
 
-# Copy unwind.h to the place where gcc will look at run-time, once installed
+# Copy unwind.h to the place where scpel_compiler will look at run-time, once installed
 #
 # This is redundant with the internal copy above when using a regular toplevel
-# "install" target, because gcc's install will copy to the destination as well.
+# "install" target, because scpel_compiler's install will copy to the destination as well.
 #
-# This is however useful for "install-no-fixincludes" case, when only the gcc
-# internal headers are copied by gcc's install.
+# This is however useful for "install-no-fixincludes" case, when only the scpel_compiler
+# internal headers are copied by scpel_compiler's install.
 install-unwind_h:
 	$(mkinstalldirs) $(DESTDIR)$(libsubdir)/include
 	$(INSTALL_DATA) unwind.h $(DESTDIR)$(libsubdir)/include

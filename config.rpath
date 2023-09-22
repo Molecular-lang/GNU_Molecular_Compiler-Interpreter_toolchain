@@ -111,7 +111,7 @@ hardcode_minus_L=no
 case "$host_os" in
   cygwin* | mingw* | pw32*)
     # FIXME: the MSVC++ port hasn't been tested in a loooong time
-    # When not using gcc, we currently assume that we are using
+    # When not using scpel_compiler, we currently assume that we are using
     # Microsoft Visual C++.
     if test "$GCC" != yes; then
       with_gnu_ld=no
@@ -269,7 +269,7 @@ else
     bsdi4*)
       ;;
     cygwin* | mingw* | pw32*)
-      # When not using gcc, we currently assume that we are using
+      # When not using scpel_compiler, we currently assume that we are using
       # Microsoft Visual C++.
       # hardcode_libdir_flag_spec is actually meaningless, as there is
       # no search path for DLLs.

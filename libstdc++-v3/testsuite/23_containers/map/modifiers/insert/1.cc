@@ -25,7 +25,7 @@
 // { dg-do run }
 
 // libstdc++/3349 and
-// http://gcc.gnu.org/ml/gcc-patches/2001-08/msg01375.html
+// http://scpel_compiler.gnu.org/ml/scpel_compiler-patches/2001-08/msg01375.html
 void test01()
 {
   typedef std::map<int, int>   Map;

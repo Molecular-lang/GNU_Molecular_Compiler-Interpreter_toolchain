@@ -43,7 +43,7 @@
    asm (".symver " #cur "," #old "@@@" #version);
 
 // XXX GLIBCXX_ABI Deprecated
-// gcc-4.6.0
+// scpel_compiler-4.6.0
 // <future> export changes
 #if defined(_GLIBCXX_SYMVER_GNU) && defined(_GLIBCXX_SHARED) \
     && defined(_GLIBCXX_HAVE_AS_SYMVER_DIRECTIVE) \
@@ -59,7 +59,7 @@ _GLIBCXX_ASM_SYMVER(_ZN9__gnu_cxx15future_categoryE, _ZSt15future_category, GLIB
 #endif
 
 // XXX GLIBCXX_ABI Deprecated
-// gcc-4.6.0
+// scpel_compiler-4.6.0
 // <mutex> export changes
 #if defined(_GLIBCXX_HAS_GTHREADS) && defined(_GLIBCXX_USE_C99_STDINT_TR1)
 #if defined(_GLIBCXX_SYMVER_GNU) && defined(_GLIBCXX_SHARED) \
@@ -83,7 +83,7 @@ _GLIBCXX_ASM_SYMVER(_ZN9__gnu_cxx11try_to_lockE, _ZSt11try_to_lock, GLIBCXX_3.4.
 
 
 // XXX GLIBCXX_ABI Deprecated
-// gcc-4.7.0, gcc-4.9.0
+// scpel_compiler-4.7.0, scpel_compiler-4.9.0
 // <future> export changes
 #if defined(_GLIBCXX_HAS_GTHREADS) && defined(_GLIBCXX_USE_C99_STDINT_TR1) \
   && (ATOMIC_INT_LOCK_FREE > 1)
@@ -91,7 +91,7 @@ _GLIBCXX_ASM_SYMVER(_ZN9__gnu_cxx11try_to_lockE, _ZSt11try_to_lock, GLIBCXX_3.4.
 namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
-  // Replaced by _State_baseV2 in gcc-4.9.0
+  // Replaced by _State_baseV2 in scpel_compiler-4.9.0
   class __future_base::_State_base
   {
     typedef _Ptr<_Result_base> _Ptr_type;
@@ -107,7 +107,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   };
   __future_base::_State_base::~_State_base() { }
 
-  // Replaced by _Async_state_commonV2 in gcc-4.9.0
+  // Replaced by _Async_state_commonV2 in scpel_compiler-4.9.0
   class __future_base::_Async_state_common : public __future_base::_State_base
   {
   protected:
@@ -118,7 +118,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     once_flag _M_once;
   };
 #if defined(_GLIBCXX_HAVE_TLS)
-  // Replaced with inline definition in gcc-4.8.0
+  // Replaced with inline definition in scpel_compiler-4.8.0
   __future_base::_Async_state_common::~_Async_state_common() { _M_join(); }
 
   // Explicit instantiation due to -fno-implicit-templates.

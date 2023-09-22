@@ -6,22 +6,22 @@
 2023-09-11  Jonathan Wakely  <jwakely@redhat.com>
 
 	PR other/111359
-	* gcc-git-customization.sh: Check for getent before using it.
+	* scpel_compiler-git-customization.sh: Check for getent before using it.
 	Use id on macOS.
 
 2023-09-07  Tobias Burnus  <tobias@codesourcery.com>
 
-	* gcc-changelog/git_commit.py (GitCommit.__init__,
+	* scpel_compiler-changelog/git_commit.py (GitCommit.__init__,
 	to_changelog_entries): Fix lost wording fix.
 
 2023-09-07  Tobias Burnus  <tobias@codesourcery.com>
 
-	* gcc-changelog/git_commit.py (GitCommit.__init__):
+	* scpel_compiler-changelog/git_commit.py (GitCommit.__init__):
 	Handle commit_to_info_hook = None; otherwise, if None,
 	regard it as error.
 	(to_changelog_entries): Handle commit_to_info_hook = None;
 	if info is None, create a warning for it.
-	* gcc-changelog/git_email.py (GitEmail.__init__):
+	* scpel_compiler-changelog/git_email.py (GitEmail.__init__):
 	call super() with commit_to_info_hook=None instead
 	of a lambda function.
 
@@ -30,23 +30,23 @@
 	Revert:
 	2023-09-07  Tobias Burnus  <tobias@codesourcery.com>
 
-	* gcc-changelog/git_commit.py (GitCommit.__init__):
+	* scpel_compiler-changelog/git_commit.py (GitCommit.__init__):
 	Handle commit_to_info_hook = None; otherwise, if None,
 	regard it as error.
 	(to_changelog_entries): Handle commit_to_info_hook = None;
 	if info is None, create a warning for it.
-	* gcc-changelog/git_email.py (GitEmail.__init__):
+	* scpel_compiler-changelog/git_email.py (GitEmail.__init__):
 	call super() with commit_to_info_hook=None instead
 	of a lamda function.
 
 2023-09-07  Tobias Burnus  <tobias@codesourcery.com>
 
-	* gcc-changelog/git_commit.py (GitCommit.__init__):
+	* scpel_compiler-changelog/git_commit.py (GitCommit.__init__):
 	Handle commit_to_info_hook = None; otherwise, if None,
 	regard it as error.
 	(to_changelog_entries): Handle commit_to_info_hook = None;
 	if info is None, create a warning for it.
-	* gcc-changelog/git_email.py (GitEmail.__init__):
+	* scpel_compiler-changelog/git_email.py (GitEmail.__init__):
 	call super() with commit_to_info_hook=None instead
 	of a lamda function.
 
@@ -69,7 +69,7 @@
 
 2023-07-07  Richard Biener  <rguenther@suse.de>
 
-	* gcc-changelog/git_update_version.py: Remove GCC 10 from
+	* scpel_compiler-changelog/git_update_version.py: Remove GCC 10 from
 	active_refs.
 
 2023-06-22  David Malcolm  <dmalcolm@redhat.com>
@@ -173,8 +173,8 @@
 
 2023-04-17  Jakub Jelinek  <jakub@redhat.com>
 
-	* gcc-changelog/git_update_version.py (active_refs): Add
-	releases/gcc-13.
+	* scpel_compiler-changelog/git_update_version.py (active_refs): Add
+	releases/scpel_compiler-13.
 
 2023-03-16  Jakub Jelinek  <jakub@redhat.com>
 
@@ -205,8 +205,8 @@
 2023-01-19  Gaius Mulley  <gaiusmod2@gmail.com>
 
 	* gcc_update (files_and_dependencies): Add dependencies for
-	gcc/m2/gm2config.h.in, gcc/m2/configure,
-	gcc/m2/gm2-libs/config-host, libgm2/Makefile.in,
+	scpel_compiler/m2/gm2config.h.in, scpel_compiler/m2/configure,
+	scpel_compiler/m2/gm2-libs/config-host, libgm2/Makefile.in,
 	libgm2/aclocal.m4, libgm2/libm2cor/Makefile.in,
 	libgm2/libm2pim/Makefile.in, libgm2/libm2iso/Makefile.in,
 	libgm2/libm2log/Makefile.in and libgm2/libm2min/Makefile.in.
@@ -217,7 +217,7 @@
 
 2023-01-17  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/test_patches.txt: The CR character was removed
+	* scpel_compiler-changelog/test_patches.txt: The CR character was removed
 	with ./contrib/update-copyright.py which I'm going to change.
 
 2023-01-16  Jakub Jelinek  <jakub@redhat.com>
@@ -264,34 +264,34 @@
 
 2022-12-19  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Support digits in PR's
+	* scpel_compiler-changelog/git_commit.py: Support digits in PR's
 	component in subject.
 
 2022-12-19  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/test_email.py: Add new test.
-	* gcc-changelog/test_patches.txt: Add new patch.
+	* scpel_compiler-changelog/test_email.py: Add new test.
+	* scpel_compiler-changelog/test_patches.txt: Add new patch.
 
 2022-12-19  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Allow digit in component name.
+	* scpel_compiler-changelog/git_commit.py: Allow digit in component name.
 
 2022-12-19  Tobias Burnus  <tobias@codesourcery.com>
 
-	* gcc-changelog/git_check_commit.py (__main__): With -v print a
+	* scpel_compiler-changelog/git_check_commit.py (__main__): With -v print a
 	warning for the auto-added files.
-	* gcc-changelog/git_commit.py (GitCommit.__init__): Add self.warnings.
+	* scpel_compiler-changelog/git_commit.py (GitCommit.__init__): Add self.warnings.
 	(GitCommit.check_mentioned_files): Add warning for auto-added files.
 	(GitCommit.print_warnings): New function.
-	* gcc-changelog/git_email.py (__main__): Remove bogus argument to
+	* scpel_compiler-changelog/git_email.py (__main__): Remove bogus argument to
 	GitEmail constructor; print auto-added-files warning.
-	* gcc-changelog/test_email.py (test_auto_add_file_1,
+	* scpel_compiler-changelog/test_email.py (test_auto_add_file_1,
 	test_auto_add_file_2): New tests.
-	* gcc-changelog/test_patches.txt: Add two test cases.
+	* scpel_compiler-changelog/test_patches.txt: Add two test cases.
 
 2022-12-19  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/setup.cfg: Do not use flake8 pytest plug-in.
+	* scpel_compiler-changelog/setup.cfg: Do not use flake8 pytest plug-in.
 
 2022-12-16  Martin Liska  <mliska@suse.cz>
 
@@ -299,13 +299,13 @@
 
 2022-12-16  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_email.py: Use PatchSet constructor
+	* scpel_compiler-changelog/git_email.py: Use PatchSet constructor
 	as newline argument is not supported with older unidiff
 	library.
 
 2022-12-16  Tobias Burnus  <tobias@codesourcery.com>
 
-	* gcc-changelog/git_email.py (GitEmail:__init__): Support older
+	* scpel_compiler-changelog/git_email.py (GitEmail:__init__): Support older
 	unidiff.PatchSet that do not have a newline= argument
 	of from_filename.
 
@@ -317,12 +317,12 @@
 	* check_GNU_style.py: Likewise.
 	* check_GNU_style_lib.py: Likewise.
 	* filter-clang-warnings.py: Likewise.
-	* gcc-changelog/git_check_commit.py: Likewise.
-	* gcc-changelog/git_commit.py: Likewise.
-	* gcc-changelog/git_email.py: Likewise.
-	* gcc-changelog/git_repository.py: Likewise.
-	* gcc-changelog/git_update_version.py: Likewise.
-	* gcc-changelog/test_email.py: Likewise.
+	* scpel_compiler-changelog/git_check_commit.py: Likewise.
+	* scpel_compiler-changelog/git_commit.py: Likewise.
+	* scpel_compiler-changelog/git_email.py: Likewise.
+	* scpel_compiler-changelog/git_repository.py: Likewise.
+	* scpel_compiler-changelog/git_update_version.py: Likewise.
+	* scpel_compiler-changelog/test_email.py: Likewise.
 	* mark_spam.py: Likewise.
 
 2022-12-14  Martin Liska  <mliska@suse.cz>
@@ -338,39 +338,39 @@
 
 	* check_GNU_style.py: Use newline=\n.
 	* check_GNU_style_lib.py: Simplify.
-	* gcc-changelog/git_commit.py: Fix issues seen
+	* scpel_compiler-changelog/git_commit.py: Fix issues seen
 	Rust patchset.
-	* gcc-changelog/git_email.py: Use newline argument.
-	* gcc-changelog/test_email.py: New test.
-	* gcc-changelog/test_patches.txt: New test.
+	* scpel_compiler-changelog/git_email.py: Use newline argument.
+	* scpel_compiler-changelog/test_email.py: New test.
+	* scpel_compiler-changelog/test_patches.txt: New test.
 	* mklog.py: Use newline argument.
 
 2022-12-10  Thomas Schwinge  <thomas@codesourcery.com>
 
-	* gcc-changelog/git_commit.py (default_changelog_locations): Add
-	'gcc/rust'.
+	* scpel_compiler-changelog/git_commit.py (default_changelog_locations): Add
+	'scpel_compiler/rust'.
 	(bug_components): Add 'rust'.
 
 2022-12-10  Gaius Mulley  <gaiusmod2@gmail.com>
 
-	* gcc-changelog/git_commit.py (default_changelog_locations):
-	New entry for gcc/m2.  New entry for libgm2.
+	* scpel_compiler-changelog/git_commit.py (default_changelog_locations):
+	New entry for scpel_compiler/m2.  New entry for libgm2.
 
 2022-12-06  David Malcolm  <dmalcolm@redhat.com>
 
-	* gcc.doxy (INPUT): Add gcc/analyzer subdirectory.
+	* scpel_compiler.doxy (INPUT): Add scpel_compiler/analyzer subdirectory.
 
 2022-11-25  Martin Liska  <mliska@suse.cz>
 
 	Revert:
 	2022-11-25  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Temporarily disable
+	* scpel_compiler-changelog/git_commit.py: Temporarily disable
 	check_line.start.
 
 2022-11-25  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Temporarily disable
+	* scpel_compiler-changelog/git_commit.py: Temporarily disable
 	check_line.start.
 
 2022-11-21  Martin Liska  <mliska@suse.cz>
@@ -378,44 +378,44 @@
 	Revert:
 	2022-11-20  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Temporarily disable
+	* scpel_compiler-changelog/git_commit.py: Temporarily disable
 	check_line.start.
 
 2022-11-20  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Temporarily disable
+	* scpel_compiler-changelog/git_commit.py: Temporarily disable
 	check_line.start.
 
 2022-11-18  Jakub Jelinek  <jakub@redhat.com>
 
-	* gcc-changelog/git_update_version.py: Add
+	* scpel_compiler-changelog/git_update_version.py: Add
 	1957bedf29a1b2cc231972aba680fe80199d5498 to ignored commits.
 
 2022-11-15  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Revert temporary rule
+	* scpel_compiler-changelog/git_commit.py: Revert temporary rule
 	relaxation.
 
 2022-11-14  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Temporarily disable
+	* scpel_compiler-changelog/git_commit.py: Temporarily disable
 	check_line.start.
 
 2022-11-11  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Check for a space after leading
+	* scpel_compiler-changelog/git_commit.py: Check for a space after leading
 	tab.
-	* gcc-changelog/test_email.py: Likewise.
-	* gcc-changelog/test_patches.txt: Likewise.
+	* scpel_compiler-changelog/test_email.py: Likewise.
+	* scpel_compiler-changelog/test_patches.txt: Likewise.
 
 2022-11-06  Jakub Jelinek  <jakub@redhat.com>
 
-	* gcc-changelog/git_update_version.py: Add
+	* scpel_compiler-changelog/git_update_version.py: Add
 	e4cba49413ca429dc82f6aa2e88129ecb3fdd943 to ignored commits.
 
 2022-11-04  Thomas Schwinge  <thomas@codesourcery.com>
 
-	* gcc-changelog/git_commit.py (default_changelog_locations):
+	* scpel_compiler-changelog/git_commit.py (default_changelog_locations):
 	Remove 'liboffloadmic'.
 	* gcc_update (files_and_dependencies): Remove 'liboffloadmic'
 	files.
@@ -425,20 +425,20 @@
 2022-10-20  Jonathan Wakely   <jwakely@redhat.com>
 	    Ulrich Drepper  <drepper@redhat.com>
 
-	* gcc_update: Add rule for gcc/cp/std-name-hint.gperf.
+	* gcc_update: Add rule for scpel_compiler/cp/std-name-hint.gperf.
 
 2022-10-07  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_update_version.py: Remove extra fetch.
+	* scpel_compiler-changelog/git_update_version.py: Remove extra fetch.
 
 2022-10-06  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_update_version.py: Use logging module
+	* scpel_compiler-changelog/git_update_version.py: Use logging module
 	and provide robust debugging output.
 
 2022-10-05  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_update_version.py: Do fetch before a push.
+	* scpel_compiler-changelog/git_update_version.py: Do fetch before a push.
 
 2022-09-20  Martin Liska  <mliska@suse.cz>
 
@@ -452,7 +452,7 @@
 2022-08-30  Ulrich Drepper  <drepper@gmail.com>
 
 	* gcc_update (files_and_dependencies): Add rule for
-	gcc/cp/std-name-hint.h.
+	scpel_compiler/cp/std-name-hint.h.
 
 2022-08-30  Martin Liska  <mliska@suse.cz>
 
@@ -477,7 +477,7 @@
 
 2022-08-02  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Do not deduce changelog for root ChangeLog.
+	* scpel_compiler-changelog/git_commit.py: Do not deduce changelog for root ChangeLog.
 
 2022-07-22  Martin Liska  <mliska@suse.cz>
 
@@ -515,8 +515,8 @@
 
 2022-05-27  Richard Biener  <rguenther@suse.de>
 
-	* gcc-changelog/git_update_version.py (active_refs): Remove
-	releases/gcc-9.
+	* scpel_compiler-changelog/git_update_version.py (active_refs): Remove
+	releases/scpel_compiler-9.
 
 2022-05-06  Jakub Jelinek  <jakub@redhat.com>
 
@@ -524,8 +524,8 @@
 
 2022-04-28  Jakub Jelinek  <jakub@redhat.com>
 
-	* gcc-changelog/git_update_version.py (active_refs): Add
-	releases/gcc-12.
+	* scpel_compiler-changelog/git_update_version.py (active_refs): Add
+	releases/scpel_compiler-12.
 
 2022-04-25  Martin Liska  <mliska@suse.cz>
 
@@ -539,14 +539,14 @@
 
 2022-04-04  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_update_version.py: Ignore the revision.
+	* scpel_compiler-changelog/git_update_version.py: Ignore the revision.
 
 2022-03-31  Jakub Jelinek  <jakub@redhat.com>
 	    Joseph Myers  <joseph@codesourcery.com>
 
 	PR other/105114
 	* gcc_update: Fix up spelling of
-	gcc/config/loongarch/genopts/loongarch-strings dependency.
+	scpel_compiler/config/loongarch/genopts/loongarch-strings dependency.
 
 2022-03-29  Chenghua Xu  <xuchenghua@loongson.cn>
 	    Lulu Cheng  <chenglulu@loongson.cn>
@@ -561,21 +561,21 @@
 
 2022-03-28  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Match trailing dot literally.
+	* scpel_compiler-changelog/git_commit.py: Match trailing dot literally.
 
 2022-03-28  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Make the parsing stricter.
+	* scpel_compiler-changelog/git_commit.py: Make the parsing stricter.
 
 2022-03-26  Jakub Jelinek  <jakub@redhat.com>
 
-	* gcc-changelog/git_update_version.py: Add
+	* scpel_compiler-changelog/git_update_version.py: Add
 	3ab5c8cd03d92bf4ec41e351820349d92fbc40c4 to ignored commits.
 
 2022-03-10  Jonathan Wakely  <jwakely@redhat.com>
 
 	PR other/102664
-	* gcc-git-customization.sh: Fix non-portable commands.
+	* scpel_compiler-git-customization.sh: Fix non-portable commands.
 
 2022-03-10  Jakub Jelinek  <jakub@redhat.com>
 
@@ -610,14 +610,14 @@
 	* git-undescr.sh: New file.
 	Support optional arguments --long, --short and default
 	to 14 characters of git hash.
-	* gcc-git-customization.sh: Use the created files.
+	* scpel_compiler-git-customization.sh: Use the created files.
 
 2022-01-24  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: New files in toplev must
+	* scpel_compiler-changelog/git_commit.py: New files in toplev must
 	be explicitly marked as "New file".
-	* gcc-changelog/test_email.py: Test.
-	* gcc-changelog/test_patches.txt: Add test.
+	* scpel_compiler-changelog/test_email.py: Test.
+	* scpel_compiler-changelog/test_patches.txt: Add test.
 
 2022-01-23  Martin Liska  <mliska@suse.cz>
 
@@ -632,7 +632,7 @@
 
 	* git-backport.py: Use it.
 	* git-fix-changelog.py: New file.
-	* gcc-git-customization.sh: Add new alias git gcc-fix-changelog.
+	* scpel_compiler-git-customization.sh: Add new alias git scpel_compiler-fix-changelog.
 
 2022-01-17  Martin Liska  <mliska@suse.cz>
 
@@ -694,14 +694,14 @@
 
 	* update-copyright.py (class BadYear): Derive from 'Exception'.
 
-2021-11-05  Bernhard Reutner-Fischer  <aldot@gcc.gnu.org>
+2021-11-05  Bernhard Reutner-Fischer  <aldot@scpel_compiler.gnu.org>
 
 	* testsuite-management/validate_failures.py: 2to3
 
 2021-11-04  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_check_commit.py: Add -v option.
-	* gcc-changelog/git_commit.py: Print verbose diff for wrong
+	* scpel_compiler-changelog/git_check_commit.py: Add -v option.
+	* scpel_compiler-changelog/git_commit.py: Print verbose diff for wrong
 	filename.
 
 2021-11-02  Martin Liska  <mliska@suse.cz>
@@ -714,13 +714,13 @@
 
 2021-10-20  H.J. Lu  <hjl.tools@gmail.com>
 
-	* gcc-changelog/git_commit.py (ignored_prefixes): Add libffi/.
+	* scpel_compiler-changelog/git_commit.py (ignored_prefixes): Add libffi/.
 
 2021-10-18  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Update location of
+	* scpel_compiler-changelog/git_commit.py: Update location of
 	'bad parentheses wrapping'.
-	* gcc-changelog/test_email.py: Test it.
+	* scpel_compiler-changelog/test_email.py: Test it.
 
 2021-10-02  Martin Liska  <mliska@suse.cz>
 
@@ -734,13 +734,13 @@
 
 2021-09-15  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Add FIXME note.
+	* scpel_compiler-changelog/git_commit.py: Add FIXME note.
 
 2021-09-15  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Check commit email.
-	* gcc-changelog/test_email.py: Add new test.
-	* gcc-changelog/test_patches.txt: Likewise.
+	* scpel_compiler-changelog/git_commit.py: Check commit email.
+	* scpel_compiler-changelog/test_email.py: Add new test.
+	* scpel_compiler-changelog/test_patches.txt: Likewise.
 
 2021-09-15  Richard Biener  <rguenther@suse.de>
 
@@ -762,8 +762,8 @@
 2021-09-06  Serge Belyshev  <belyshev@depni.sinp.msu.ru>
 
 	* gcc_update: Derive human readable name for HEAD using git describe
-	like "git gcc-descr" with short commit hash.  Drop "revision" from
-	gcc/REVISION.
+	like "git scpel_compiler-descr" with short commit hash.  Drop "revision" from
+	scpel_compiler/REVISION.
 
 2021-08-30  Andrew Pinski  <apinski@marvell.com>
 
@@ -783,7 +783,7 @@
 
 2021-08-18  Martin Liska  <mliska@suse.cz>
 
-	* gcc-git-customization.sh: Wrap $@ in quotes.
+	* scpel_compiler-git-customization.sh: Wrap $@ in quotes.
 	* git-commit-mklog.py: Add new argument --co.
 	* mklog.py: Skip the Co-Authored-By lines.
 
@@ -793,7 +793,7 @@
 
 2021-08-03  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_update_version.py: Ignore problematic
+	* scpel_compiler-changelog/git_update_version.py: Ignore problematic
 	commit.
 
 2021-07-20  Richard Earnshaw  <rearnsha@arm.com>
@@ -811,7 +811,7 @@
 
 2021-06-23  Martin Liska  <mliska@suse.cz>
 
-	* gcc-git-customization.sh: Use the new wrapper.
+	* scpel_compiler-git-customization.sh: Use the new wrapper.
 	* git-commit-mklog.py: New file.
 	* prepare-commit-msg: Support GCC_MKLOG_ARGS.
 
@@ -837,21 +837,21 @@
 
 2021-06-13  Tobias Burnus  <tobias@codesourcery.com>
 
-	* gcc-changelog/git_commit.py (pr_regex): Add ?P<pr> for group('pr').
+	* scpel_compiler-changelog/git_commit.py (pr_regex): Add ?P<pr> for group('pr').
 	(subject_pr_regex, subject_pr2_regex): New.
 	(GitInfo.__init__, GitCommit.parse_changelog): Check subject PRs.
-	* gcc-changelog/git_email.py (SUBJECT_PREFIX, subject_patch_regex): New.
+	* scpel_compiler-changelog/git_email.py (SUBJECT_PREFIX, subject_patch_regex): New.
 	(GitEmail.__init__): Parse 'Subject:' and pass it to GitInfo.
-	* gcc-changelog/test_email.py (test_pr_only_in_subject,
+	* scpel_compiler-changelog/test_email.py (test_pr_only_in_subject,
 	test_wrong_pr_comp_in_subject, test_copyright_years): New.
-	* gcc-changelog/test_patches.txt (0030-PR-c-92746, pr-check1.patch):
+	* scpel_compiler-changelog/test_patches.txt (0030-PR-c-92746, pr-check1.patch):
 	Update to avoid triggering the new check.
 	(0001-rs6000-Support-doubleword, pr-wrong-comp.patch,
 	copyright-years.patch): New.
 
 2021-06-11  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_update_version.py: Ignore commit that
+	* scpel_compiler-changelog/git_update_version.py: Ignore commit that
 	violates rules and was somehow pushed.
 
 2021-05-25  Jakub Jelinek  <jakub@redhat.com>
@@ -860,13 +860,13 @@
 
 2021-05-24  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Add note that ChangeLog entries
+	* scpel_compiler-changelog/git_commit.py: Add note that ChangeLog entries
 	are added automatically.
-	* gcc-changelog/test_email.py: Update test.
+	* scpel_compiler-changelog/test_email.py: Update test.
 
 2021-05-18  Jonathan Wakely  <jwakely@redhat.com>
 
-	* gcc-changelog/git_email.py: Remove use of non-strict mode.
+	* scpel_compiler-changelog/git_email.py: Remove use of non-strict mode.
 
 2021-05-17  Richard Biener  <rguenther@suse.de>
 
@@ -887,12 +887,12 @@
 
 2021-05-14  Jakub Jelinek  <jakub@redhat.com>
 
-	* gcc-changelog/git_update_version.py: Remove releases/gcc-8 from
+	* scpel_compiler-changelog/git_update_version.py: Remove releases/scpel_compiler-8 from
 	active_refs.
 
 2021-05-14  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Support Co-Authored-By before
+	* scpel_compiler-changelog/git_commit.py: Support Co-Authored-By before
 	a first ChangeLog entry.
 
 2021-05-13  Martin Liska  <mliska@suse.cz>
@@ -903,8 +903,8 @@
 
 2021-05-12  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Simplify needle lookup.
-	* gcc-changelog/git_update_version.py: Pass ref_name to
+	* scpel_compiler-changelog/git_commit.py: Simplify needle lookup.
+	* scpel_compiler-changelog/git_update_version.py: Pass ref_name to
 	parse_git_revisions.
 
 2021-05-11  Martin Liska  <mliska@suse.cz>
@@ -914,46 +914,46 @@
 
 2021-05-11  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_check_commit.py: Remove --non-strict-mode.
-	* gcc-changelog/git_commit.py: Remove strict mode.
-	* gcc-changelog/git_email.py: Likewise.
-	* gcc-changelog/git_repository.py: Likewise.
-	* gcc-changelog/test_email.py: Likewise.
-	* gcc-changelog/test_patches.txt: Update patches so that they
+	* scpel_compiler-changelog/git_check_commit.py: Remove --non-strict-mode.
+	* scpel_compiler-changelog/git_commit.py: Remove strict mode.
+	* scpel_compiler-changelog/git_email.py: Likewise.
+	* scpel_compiler-changelog/git_repository.py: Likewise.
+	* scpel_compiler-changelog/test_email.py: Likewise.
+	* scpel_compiler-changelog/test_patches.txt: Update patches so that they
 	don't contain a ChangeLog file changes.
 
 2021-05-11  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Remove ChangeLog locations
+	* scpel_compiler-changelog/git_commit.py: Remove ChangeLog locations
 	based on ref_name.
-	* gcc-changelog/git_repository.py: Likewise.
+	* scpel_compiler-changelog/git_repository.py: Likewise.
 
 2021-05-10  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_email.py: Remove newlines when --help
+	* scpel_compiler-changelog/git_email.py: Remove newlines when --help
 	is used.
 
 2021-05-10  Tobias Burnus  <tobias@codesourcery.com>
 
-	* gcc-changelog/git_check_commit.py (__Main__): State in --help
+	* scpel_compiler-changelog/git_check_commit.py (__Main__): State in --help
 	the default value for 'revisions'.
-	* gcc-changelog/git_email.py (show_help): Add.
+	* scpel_compiler-changelog/git_email.py (show_help): Add.
 	(__main__): Handle -h and --help.
 
 2021-05-10  Tobias Burnus  <tobias@codesourcery.com>
 
-	* gcc-changelog/git_commit.py (Error.__repr__): Add space after the colon.
+	* scpel_compiler-changelog/git_commit.py (Error.__repr__): Add space after the colon.
 	(GitCommit.check_mentioned_files): Check whether the same file has been
 	specified multiple times.
-	* gcc-changelog/test_email.py (TestGccChangelog.test_multi_same_file): New.
-	* gcc-changelog/test_patches.txt (0001-OpenMP-Fix-SIMT): New test.
+	* scpel_compiler-changelog/test_email.py (TestGccChangelog.test_multi_same_file): New.
+	* scpel_compiler-changelog/test_patches.txt (0001-OpenMP-Fix-SIMT): New test.
 
 2021-05-10  Martin Liska  <mliska@suse.cz>
 
 	Revert:
 	2021-05-10  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Remove components that will be
+	* scpel_compiler-changelog/git_commit.py: Remove components that will be
 	removed.
 
 2021-05-10  Martin Liska  <mliska@suse.cz>
@@ -962,14 +962,14 @@
 
 2021-05-10  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Remove components that will be
+	* scpel_compiler-changelog/git_commit.py: Remove components that will be
 	removed.
 
 2021-04-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* gennews (files): Add files for GCC 10 and GCC 11.
 
-2021-04-22  David Edelsohn  <dje.gcc@gmail.com>
+2021-04-22  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* config-list.mk: Remove rs6000-ibm-aix6.1.
 	Rename rs6000-ibm-aix7.1 to powerpc-ibm-aix7.1.
@@ -977,19 +977,19 @@
 
 2021-04-20  Jakub Jelinek  <jakub@redhat.com>
 
-	* gcc-changelog/git_update_version.py (active_refs): Add
-	releases/gcc-11.
+	* scpel_compiler-changelog/git_update_version.py (active_refs): Add
+	releases/scpel_compiler-11.
 
 2021-04-12  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Do not allow space in long lines.
+	* scpel_compiler-changelog/git_commit.py: Do not allow space in long lines.
 
 2021-04-12  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Support long filenames
+	* scpel_compiler-changelog/git_commit.py: Support long filenames
 	in entries.
-	* gcc-changelog/test_email.py: Test it.
-	* gcc-changelog/test_patches.txt: Likewise.
+	* scpel_compiler-changelog/test_email.py: Test it.
+	* scpel_compiler-changelog/test_patches.txt: Likewise.
 
 2021-03-23  Martin Liska  <mliska@suse.cz>
 
@@ -1005,17 +1005,17 @@
 
 2021-03-16  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_update_version.py: Skip one problematic
+	* scpel_compiler-changelog/git_update_version.py: Skip one problematic
 	commit.
 
 2021-03-12  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Allow deletion of ChangeLog
+	* scpel_compiler-changelog/git_commit.py: Allow deletion of ChangeLog
 	files.
-	* gcc-changelog/setup.cfg: Set line limit to 120 characters.
-	* gcc-changelog/test_email.py: Add test.
-	* gcc-changelog/test_patches.txt: Likewise.
-	* gcc-changelog/git_email.py: Fix parsing of deleted files.
+	* scpel_compiler-changelog/setup.cfg: Set line limit to 120 characters.
+	* scpel_compiler-changelog/test_email.py: Add test.
+	* scpel_compiler-changelog/test_patches.txt: Likewise.
+	* scpel_compiler-changelog/git_email.py: Fix parsing of deleted files.
 
 2021-02-08  Mike Frysinger  <vapier@gentoo.org>
 
@@ -1025,7 +1025,7 @@
 2021-02-03  Aaron Sawdey  <acsawdey@linux.ibm.com>
 
 	* gcc_update (files_and_dependencies): Add dependency for
-	gcc/config/rs6000/fusion.md on gcc/config/rs6000/genfusion.md.
+	scpel_compiler/config/rs6000/fusion.md on scpel_compiler/config/rs6000/genfusion.md.
 
 2021-01-28  Eric Botcazou  <ebotcazou@adacore.com>
 
@@ -1038,10 +1038,10 @@
 
 2021-01-13  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Support wrapping of functions
+	* scpel_compiler-changelog/git_commit.py: Support wrapping of functions
 	in parentheses that can take multiple lines.
-	* gcc-changelog/test_email.py: Add tests for it.
-	* gcc-changelog/test_patches.txt: Add 2 patches.
+	* scpel_compiler-changelog/test_email.py: Add tests for it.
+	* scpel_compiler-changelog/test_patches.txt: Add 2 patches.
 
 2021-01-13  Martin Liska  <mliska@suse.cz>
 
@@ -1051,11 +1051,11 @@
 
 2021-01-13  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Allow modifications of older
+	* scpel_compiler-changelog/git_commit.py: Allow modifications of older
 	ChangeLog (or specific) files without need to make a ChangeLog
 	entry.
-	* gcc-changelog/test_email.py: Test it.
-	* gcc-changelog/test_patches.txt: Add new patch.
+	* scpel_compiler-changelog/test_email.py: Test it.
+	* scpel_compiler-changelog/test_patches.txt: Add new patch.
 
 2021-01-11  Martin Liska  <mliska@suse.cz>
 
@@ -1064,11 +1064,11 @@
 
 2021-01-06  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Add decode_path function.
-	* gcc-changelog/git_email.py: Use it in order to solve
+	* scpel_compiler-changelog/git_commit.py: Add decode_path function.
+	* scpel_compiler-changelog/git_email.py: Use it in order to solve
 	utf8 encoding filename issues.
-	* gcc-changelog/git_repository.py: Likewise.
-	* gcc-changelog/test_email.py: Test it.
+	* scpel_compiler-changelog/git_repository.py: Likewise.
+	* scpel_compiler-changelog/test_email.py: Test it.
 
 2021-01-04  Jakub Jelinek  <jakub@redhat.com>
 
@@ -1086,20 +1086,20 @@
 
 2021-01-04  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Skip Update copyright
+	* scpel_compiler-changelog/git_commit.py: Skip Update copyright
 	years commits.
 
 2020-12-21  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Add new error for quoted
+	* scpel_compiler-changelog/git_commit.py: Add new error for quoted
 	filenames.
-	* gcc-changelog/test_email.py: Test it.
-	* gcc-changelog/test_patches.txt: Test it.
+	* scpel_compiler-changelog/test_email.py: Test it.
+	* scpel_compiler-changelog/test_patches.txt: Test it.
 
 2020-12-21  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/test_email.py: New test.
-	* gcc-changelog/test_patches.txt: Likewise.
+	* scpel_compiler-changelog/test_email.py: New test.
+	* scpel_compiler-changelog/test_patches.txt: Likewise.
 
 2020-12-17  Nathan Sidwell  <nathan@acm.org>
 
@@ -1112,7 +1112,7 @@
 
 2020-12-15  Nathan Sidwell  <nathan@acm.org>
 
-	* gcc-changelog/git_commit.py (changelog_locations): Add
+	* scpel_compiler-changelog/git_commit.py (changelog_locations): Add
 	libcody, c++tools.
 
 2020-12-08  Martin Liska  <mliska@suse.cz>
@@ -1131,39 +1131,39 @@
 
 2020-12-02  Jason Merrill  <jason@redhat.com>
 
-	* gcc-git-customization.sh: Configure sendemail.to.
+	* scpel_compiler-git-customization.sh: Configure sendemail.to.
 
 2020-11-30  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Suggest close file for
+	* scpel_compiler-changelog/git_commit.py: Suggest close file for
 	'unchanged file mentioned in a ChangeLog' error.
-	* gcc-changelog/test_email.py: Test it.
+	* scpel_compiler-changelog/test_email.py: Test it.
 
 2020-11-30  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Allow sub-directory wildcard
+	* scpel_compiler-changelog/git_commit.py: Allow sub-directory wildcard
 	changelog entry. Fix a typo caused by apostrophe escaping.
-	* gcc-changelog/test_email.py: Test it.
-	* gcc-changelog/test_patches.txt: Likewise.
+	* scpel_compiler-changelog/test_email.py: Test it.
+	* scpel_compiler-changelog/test_patches.txt: Likewise.
 
 2020-11-30  Jonathan Wakely  <jwakely@redhat.com>
 
-	* gcc-changelog/git_commit.py (wildcard_prefixes): Add libstdc++
+	* scpel_compiler-changelog/git_commit.py (wildcard_prefixes): Add libstdc++
 	testsuite directory.
 
 2020-11-30  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Allow wildcard pattern only.
+	* scpel_compiler-changelog/git_commit.py: Allow wildcard pattern only.
 
 2020-11-27  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Use regex for cherry pick prefix.
-	* gcc-changelog/test_email.py: Test it.
-	* gcc-changelog/test_patches.txt: Likewise.
+	* scpel_compiler-changelog/git_commit.py: Use regex for cherry pick prefix.
+	* scpel_compiler-changelog/test_email.py: Test it.
+	* scpel_compiler-changelog/test_patches.txt: Likewise.
 
 2020-11-25  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Use revert_regex instead
+	* scpel_compiler-changelog/git_commit.py: Use revert_regex instead
 	of string prefix.  Convert sets to literals.
 
 2020-11-16  Martin Liska  <mliska@suse.cz>
@@ -1182,38 +1182,38 @@
 
 2020-11-06  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Add new check.
-	* gcc-changelog/test_email.py: Test it.
-	* gcc-changelog/test_patches.txt: Add new patch.
+	* scpel_compiler-changelog/git_commit.py: Add new check.
+	* scpel_compiler-changelog/test_email.py: Test it.
+	* scpel_compiler-changelog/test_patches.txt: Add new patch.
 
 2020-11-04  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_repository.py: Set strict=True
+	* scpel_compiler-changelog/git_repository.py: Set strict=True
 	for parse_git_revisions as a default.
 
 2020-11-04  Tobias Burnus  <tobias@codesourcery.com>
 
-	* gcc-changelog/git_commit.py (item_parenthesis_empty_regex,
+	* scpel_compiler-changelog/git_commit.py (item_parenthesis_empty_regex,
 	item_parenthesis_regex): Add.
 	(check_for_empty_description): Use them.
-	* gcc-changelog/test_email.py (test_emptry_entry_desc,
+	* scpel_compiler-changelog/test_email.py (test_emptry_entry_desc,
 	test_emptry_entry_desc_2): Add.
-	* gcc-changelog/test_patches.txt: Add two testcases for it.
+	* scpel_compiler-changelog/test_patches.txt: Add two testcases for it.
 
 2020-11-03  Tobias Burnus  <tobias@codesourcery.com>
 
-	* gcc-changelog/git_email.py: Add unidiff_supports_renaming check.
+	* scpel_compiler-changelog/git_email.py: Add unidiff_supports_renaming check.
 
 2020-11-03  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/setup.cfg: New file.
+	* scpel_compiler-changelog/setup.cfg: New file.
 
 2020-10-30  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Handle empty groups in
+	* scpel_compiler-changelog/git_commit.py: Handle empty groups in
 	file description.
-	* gcc-changelog/test_email.py: New test.
-	* gcc-changelog/test_patches.txt: Likewise.
+	* scpel_compiler-changelog/test_email.py: New test.
+	* scpel_compiler-changelog/test_patches.txt: Likewise.
 
 2020-09-21  Tobias Burnus  <tobias@codesourcery.com>
 
@@ -1241,12 +1241,12 @@
 
 2020-07-23  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: When reverting a backport,
+	* scpel_compiler-changelog/git_commit.py: When reverting a backport,
 	we should print only Revert header.
 
 2020-07-17  Jonathan Wakely  <jwakely@redhat.com>
 
-	* gcc-changelog/git_update_version.py: Fix typo.
+	* scpel_compiler-changelog/git_update_version.py: Fix typo.
 
 2020-07-10  Mike Nolta  <mike@nolta.net>
 
@@ -1255,27 +1255,27 @@
 2020-07-07  Alexandre Oliva  <oliva@adacore.com>
 	    Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Support CASE and COND.
-	* gcc-changelog/test_patches.txt: Add test.
-	* gcc-changelog/test_email.py: Add test.
+	* scpel_compiler-changelog/git_commit.py: Support CASE and COND.
+	* scpel_compiler-changelog/test_patches.txt: Add test.
+	* scpel_compiler-changelog/test_email.py: Add test.
 
 2020-06-30  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_repository.py: Support older releases of
+	* scpel_compiler-changelog/git_repository.py: Support older releases of
 	GitPython when renamed_file was named renamed.
 
 2020-06-30  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_check_commit.py: Print revision
+	* scpel_compiler-changelog/git_check_commit.py: Print revision
 	of original_info.
-	* gcc-changelog/git_commit.py: Support Revert commits.
+	* scpel_compiler-changelog/git_commit.py: Support Revert commits.
 
 2020-06-30  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_check_commit.py: Use GitInfo
-	* gcc-changelog/git_commit.py: Add GitInfo class.
-	* gcc-changelog/git_email.py: Use GitInfo class.
-	* gcc-changelog/git_repository.py: Likewise.
+	* scpel_compiler-changelog/git_check_commit.py: Use GitInfo
+	* scpel_compiler-changelog/git_commit.py: Add GitInfo class.
+	* scpel_compiler-changelog/git_email.py: Use GitInfo class.
+	* scpel_compiler-changelog/git_repository.py: Likewise.
 
 2020-06-24  Ilya Leoshkevich  <iii@linux.ibm.com>
 
@@ -1284,40 +1284,40 @@
 
 2020-06-18  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_update_version.py: First checkout and then
+	* scpel_compiler-changelog/git_update_version.py: First checkout and then
 	run git pull ---rebase.
 
 2020-06-18  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_update_version.py: Support merge commits
+	* scpel_compiler-changelog/git_update_version.py: Support merge commits
 	and walk only on the branch that is being merged and generate
 	missing ChangeLog entries.
 
 2020-06-18  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Fix Backported from timestamp when
+	* scpel_compiler-changelog/git_commit.py: Fix Backported from timestamp when
 	use_commit_ts=True is used.
 
 2020-06-17  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Print 'Backported from master'
+	* scpel_compiler-changelog/git_commit.py: Print 'Backported from master'
 	heading to backported commits.
-	* gcc-changelog/test_email.py: Test it.
-	* gcc-changelog/test_patches.txt: Add new patch.
-	* gcc-changelog/git_repository.py: Add commit_to_date hook.
-	* gcc-changelog/git_email.py: Add fuzzy implementation
+	* scpel_compiler-changelog/test_email.py: Test it.
+	* scpel_compiler-changelog/test_patches.txt: Add new patch.
+	* scpel_compiler-changelog/git_repository.py: Add commit_to_date hook.
+	* scpel_compiler-changelog/git_email.py: Add fuzzy implementation
 	of commit_to_date_hook.
 
 2020-06-11  Jonathan Wakely  <jwakely@redhat.com>
 
-	* prepare-commit-msg: Use the gcc-config.mklog-hook-type Git
+	* prepare-commit-msg: Use the scpel_compiler-config.mklog-hook-type Git
 	config key instead of the GCC_FORCE_MKLOG environment variable.
 	Optionally disable generating a new ChangeLog template for
 	amended commits when the existing log is still OK.
 
 2020-06-11  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_update_version.py: Add --curent argument.
+	* scpel_compiler-changelog/git_update_version.py: Add --curent argument.
 
 2020-06-11  Martin Liska  <mliska@suse.cz>
 
@@ -1331,54 +1331,54 @@
 
 2020-06-10  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Fix renamed files in
+	* scpel_compiler-changelog/git_commit.py: Fix renamed files in
 	parse_git_name_status.
-	* gcc-changelog/test_email.py: Add test for it.
+	* scpel_compiler-changelog/test_email.py: Add test for it.
 
 2020-06-10  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Add more supported prefixes.
-	* gcc-changelog/test_email.py: Fix one flake8 error.
-	* gcc-changelog/test_patches.txt: Add tested for newly
+	* scpel_compiler-changelog/git_commit.py: Add more supported prefixes.
+	* scpel_compiler-changelog/test_email.py: Fix one flake8 error.
+	* scpel_compiler-changelog/test_patches.txt: Add tested for newly
 	supported prefixes.
 
 2020-06-10  Jonathan Wakely  <jwakely@redhat.com>
 
-	* gcc-changelog/git_commit.py (GitCommit.parse_changelog):
+	* scpel_compiler-changelog/git_commit.py (GitCommit.parse_changelog):
 	Improve error strings.
-	* gcc-changelog/test_email.py: Update expected errors.
+	* scpel_compiler-changelog/test_email.py: Update expected errors.
 
 2020-06-09  Jonathan Wakely  <jwakely@redhat.com>
 
-	* gcc-changelog/git_email.py: Set exit status on error.
+	* scpel_compiler-changelog/git_email.py: Set exit status on error.
 
 2020-06-09  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Fix ChangeLog regex in order to
+	* scpel_compiler-changelog/git_commit.py: Fix ChangeLog regex in order to
 	match the top-level ChangeLog.
-	* gcc-changelog/test_email.py: Add test.
-	* gcc-changelog/test_patches.txt: Likewise.
+	* scpel_compiler-changelog/test_email.py: Add test.
+	* scpel_compiler-changelog/test_patches.txt: Likewise.
 
 2020-06-02  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Support foo/bar/*: patterns in
+	* scpel_compiler-changelog/git_commit.py: Support foo/bar/*: patterns in
 	wildcard_prefixes locations.
-	* gcc-changelog/test_email.py: Test it.
-	* gcc-changelog/test_patches.txt: Add 3 new patches.
+	* scpel_compiler-changelog/test_email.py: Test it.
+	* scpel_compiler-changelog/test_patches.txt: Add 3 new patches.
 
 2020-06-02  Iain Buclaw  <ibuclaw@gdcproject.org>
 
-	* gcc-changelog/git_commit.py (ignored_prefixes): Add
-	gcc/testsuite/gdc.test/.
+	* scpel_compiler-changelog/git_commit.py (ignored_prefixes): Add
+	scpel_compiler/testsuite/gdc.test/.
 
 2020-06-02  Jonathan Wakely  <jwakely@redhat.com>
 
-	* gcc-changelog/test_email.py (TestGccChangelog.test_long_lines):
+	* scpel_compiler-changelog/test_email.py (TestGccChangelog.test_long_lines):
 	Update expected error message.
 
 2020-06-02  Jonathan Wakely  <jwakely@redhat.com>
 
-	* gcc-changelog/git_commit.py (GitCommit.parse_changelog): Fix
+	* scpel_compiler-changelog/git_commit.py (GitCommit.parse_changelog): Fix
 	grammar.
 
 2020-06-02  Jonathan Wakely  <jwakely@redhat.com>
@@ -1388,7 +1388,7 @@
 
 2020-06-02  Jonathan Wakely  <jwakely@redhat.com>
 
-	* gcc-changelog/git_commit.py (GitCommit.check_mentioned_files):
+	* scpel_compiler-changelog/git_commit.py (GitCommit.check_mentioned_files):
 	Improve error text.
 
 2020-05-31  Iain Buclaw  <ibuclaw@gdcproject.org>
@@ -1418,9 +1418,9 @@
 
 2020-05-29  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Find empty change descriptions.
-	* gcc-changelog/test_email.py: New test.
-	* gcc-changelog/test_patches.txt: New patch that tests that.
+	* scpel_compiler-changelog/git_commit.py: Find empty change descriptions.
+	* scpel_compiler-changelog/test_email.py: New test.
+	* scpel_compiler-changelog/test_patches.txt: New patch that tests that.
 
 2020-05-29  Martin Liska  <mliska@suse.cz>
 
@@ -1431,19 +1431,19 @@
 
 2020-05-29  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Properly
+	* scpel_compiler-changelog/git_commit.py: Properly
 	handle duplicite authors.
-	* gcc-changelog/test_email.py: New test.
-	* gcc-changelog/test_patches.txt: New patch.
+	* scpel_compiler-changelog/test_email.py: New test.
+	* scpel_compiler-changelog/test_patches.txt: New patch.
 
 2020-05-28  Pierre-Marie de Rodat  <derodat@adacore.com>
 
-	* gcc-changelog/git_email.py (GitEmail.__init__): Interpret file
+	* scpel_compiler-changelog/git_email.py (GitEmail.__init__): Interpret file
 	renamings as a file deletion plus a file addition.
-	* gcc-changelog/git_repository.py (parse_git_revisions):
+	* scpel_compiler-changelog/git_repository.py (parse_git_revisions):
 	Likewise.
-	* gcc-changelog/test_email.py: New testcase.
-	* gcc-changelog/test_patches.txt: New testcase.
+	* scpel_compiler-changelog/test_email.py: New testcase.
+	* scpel_compiler-changelog/test_patches.txt: New testcase.
 
 2020-05-28  Martin Liska  <mliska@suse.cz>
 
@@ -1458,14 +1458,14 @@
 
 2020-05-27  Martin Liska  <mliska@suse.cz>
 
-	* gcc-git-customization.sh: Use git-backport.py to drop
+	* scpel_compiler-git-customization.sh: Use git-backport.py to drop
 	all changes for ChangeLog files.
 	* git-backport.py: New file.
 
 2020-05-27  Martin Liska  <mliska@suse.cz>
 
-	* gcc-git-customization.sh: Rename
-	commit-mklog to gcc-commit-mklog.
+	* scpel_compiler-git-customization.sh: Rename
+	commit-mklog to scpel_compiler-commit-mklog.
 
 2020-05-27  Martin Liska  <mliska@suse.cz>
 
@@ -1474,25 +1474,25 @@
 
 2020-05-26  Pierre-Marie de Rodat  <derodat@adacore.com>
 
-	* gcc-changelog/git_commit.py (ChangeLogEntry): Handle entries
+	* scpel_compiler-changelog/git_commit.py (ChangeLogEntry): Handle entries
 	with multi-line file lists.
-	* gcc-changelog/test_email.py: New testcase.
-	* gcc-changelog/test_patches.txt: Likewise.
+	* scpel_compiler-changelog/test_email.py: New testcase.
+	* scpel_compiler-changelog/test_patches.txt: Likewise.
 
 2020-05-26  Pierre-Marie de Rodat  <derodat@adacore.com>
 
-	* gcc-changelog/git_update_version.py: Close file objects after
+	* scpel_compiler-changelog/git_update_version.py: Close file objects after
 	use.
-	* gcc-changelog/git_email.py: Likewise.
-	* gcc-changelog/test_email.py: Likewise.
+	* scpel_compiler-changelog/git_email.py: Likewise.
+	* scpel_compiler-changelog/test_email.py: Likewise.
 
 2020-05-26  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_update_version.py: Add 2 new options.
+	* scpel_compiler-changelog/git_update_version.py: Add 2 new options.
 
 2020-05-26  Alexandre Oliva  <oliva@gnu.org>
 
-	* gcc-changelog/git_commit.py (changelog_regex): Accept optional
+	* scpel_compiler-changelog/git_commit.py (changelog_regex): Accept optional
 	'for' prefix.
 
 2020-05-26  Alexandre Oliva  <oliva@adacore.com>
@@ -1502,48 +1502,48 @@
 
 2020-05-26  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Parse changelog entries for
+	* scpel_compiler-changelog/git_commit.py: Parse changelog entries for
 	ignored locations.
-	* gcc-changelog/test_email.py: Add new test for it.
-	* gcc-changelog/test_patches.txt: Likewise.
+	* scpel_compiler-changelog/test_email.py: Add new test for it.
+	* scpel_compiler-changelog/test_patches.txt: Likewise.
 
 2020-05-26  Jason Merrill  <jason@redhat.com>
 
 	* prepare-commit-msg: New file.
-	* gcc-git-customization.sh: Install it.  Add commit-mklog alias.
+	* scpel_compiler-git-customization.sh: Install it.  Add commit-mklog alias.
 	* mklog.py: Add new option -c which appends
 	to a ChangeLog file.
 
 2020-05-25  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Add trailing '/'
+	* scpel_compiler-changelog/git_commit.py: Add trailing '/'
 	for libdruntime.  Allow empty changelog for
 	only ignored files.
-	* gcc-changelog/test_email.py: New test for go
+	* scpel_compiler-changelog/test_email.py: New test for go
 	patch in ignored location.
-	* gcc-changelog/test_patches.txt: Add test.
+	* scpel_compiler-changelog/test_patches.txt: Add test.
 
 2020-05-22  Jakub Jelinek  <jakub@redhat.com>
 
-	* gcc-changelog/git_commit.py: Add trailing / to
-	gcc/testsuite/go.test/test and replace gcc/go/frontend/
-	with gcc/go/gofrontend/ in ignored locations.
+	* scpel_compiler-changelog/git_commit.py: Add trailing / to
+	scpel_compiler/testsuite/go.test/test and replace scpel_compiler/go/frontend/
+	with scpel_compiler/go/gofrontend/ in ignored locations.
 
 2020-05-22  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Add gcc/testsuite/go.test/test
+	* scpel_compiler-changelog/git_commit.py: Add scpel_compiler/testsuite/go.test/test
 	to ignored locations.
 
 2020-05-21  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_update_version.py: Prepare the script, the
+	* scpel_compiler-changelog/git_update_version.py: Prepare the script, the
 	only missing piece is pushing of the updated branches.
 
 2020-05-21  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Support DR entries/
-	* gcc-changelog/test_email.py: New test for it.
-	* gcc-changelog/test_patches.txt: New patch for it.
+	* scpel_compiler-changelog/git_commit.py: Support DR entries/
+	* scpel_compiler-changelog/test_email.py: New test for it.
+	* scpel_compiler-changelog/test_patches.txt: New patch for it.
 
 2020-05-21  Martin Liska  <mliska@suse.cz>
 
@@ -1552,34 +1552,34 @@
 
 2020-05-20  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Add author_tuple
+	* scpel_compiler-changelog/git_commit.py: Add author_tuple
 	only if not present in author_lines.
-	* gcc-changelog/test_email.py: New test.
-	* gcc-changelog/test_patches.txt: Add new patch.
+	* scpel_compiler-changelog/test_email.py: New test.
+	* scpel_compiler-changelog/test_patches.txt: Add new patch.
 
 2020-05-20  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Refactor to make flake8 happy.
-	* gcc-changelog/test_email.py: Add new test.
-	* gcc-changelog/test_patches.txt: Add new patch.
+	* scpel_compiler-changelog/git_commit.py: Refactor to make flake8 happy.
+	* scpel_compiler-changelog/test_email.py: Add new test.
+	* scpel_compiler-changelog/test_patches.txt: Add new patch.
 
 2020-05-20  Frederik Harwath  <frederik@codesourcery.com>
 
-	* gcc-changelog/git_commit.py: Skip over lines starting
+	* scpel_compiler-changelog/git_commit.py: Skip over lines starting
 	with "Reviewed-by: ", "Reviewed-on: ", or "Signed-off-by: "
 
 2020-05-20  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_check_commit.py: Change
+	* scpel_compiler-changelog/git_check_commit.py: Change
 	--allow-non-strict-mode to --non-strict-mode.
 
 2020-05-20  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Support cherry pick
+	* scpel_compiler-changelog/git_commit.py: Support cherry pick
 	prefix.
-	* gcc-changelog/test_email.py: Test it.
-	* gcc-changelog/test_patches.txt: Add new patch.
-	* gcc-git-customization.sh: Add gcc-backport.
+	* scpel_compiler-changelog/test_email.py: Test it.
+	* scpel_compiler-changelog/test_patches.txt: Add new patch.
+	* scpel_compiler-git-customization.sh: Add scpel_compiler-backport.
 
 2020-05-19  Martin Liska  <mliska@suse.cz>
 
@@ -1587,9 +1587,9 @@
 
 2020-05-19  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Add param use_commit_ts
+	* scpel_compiler-changelog/git_commit.py: Add param use_commit_ts
 	for to_changelog_entries.
-	* gcc-changelog/git_update_version.py: Se use_commit_ts to True.
+	* scpel_compiler-changelog/git_update_version.py: Se use_commit_ts to True.
 
 2020-05-19  Martin Liska  <mliska@suse.cz>
 
@@ -1598,13 +1598,13 @@
 
 2020-05-19  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_update_version.py:
+	* scpel_compiler-changelog/git_update_version.py:
 	Fill up entries in reverse order.
 
 2020-05-19  Martin Liska  <mliska@suse.cz>
 
-	* gcc-git-customization.sh: Add
-	alias.gcc-mklog new hook.
+	* scpel_compiler-git-customization.sh: Add
+	alias.scpel_compiler-mklog new hook.
 	* mklog.py: New file.
 	* test_mklog.py: New file.
 
@@ -1615,8 +1615,8 @@
 
 2020-05-19  Martin Liska  <mliska@suse.cz>
 
-	* gcc-git-customization.sh: Add gcc-verify alias
-	that uses contrib/gcc-changelog/git_check_commit.py.
+	* scpel_compiler-git-customization.sh: Add scpel_compiler-verify alias
+	that uses contrib/scpel_compiler-changelog/git_check_commit.py.
 
 2020-05-15  Andrew Burgess  <andrew.burgess@embecosm.com>
 
@@ -1625,8 +1625,8 @@
 
 2020-05-14  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/test_email.py: New file.
-	* gcc-changelog/test_patches.txt: New file.
+	* scpel_compiler-changelog/test_email.py: New file.
+	* scpel_compiler-changelog/test_patches.txt: New file.
 
 2020-05-13  Patrick Palka  <ppalka@redhat.com>
 
@@ -1634,21 +1634,21 @@
 
 2020-05-13  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_check_commit.py: Add default argument HEAD
+	* scpel_compiler-changelog/git_check_commit.py: Add default argument HEAD
 	for revisions and improve error message output.
 
 2020-05-13  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_commit.py: Restore print_output syntax
+	* scpel_compiler-changelog/git_commit.py: Restore print_output syntax
 	in git_commit.py.
 
 2020-05-13  Martin Liska  <mliska@suse.cz>
 
-	* gcc-changelog/git_check_commit.py: New file.
-	* gcc-changelog/git_commit.py: New file.
-	* gcc-changelog/git_email.py: New file.
-	* gcc-changelog/git_repository.py: New file.
-	* gcc-changelog/git_update_version.py: New file.
+	* scpel_compiler-changelog/git_check_commit.py: New file.
+	* scpel_compiler-changelog/git_commit.py: New file.
+	* scpel_compiler-changelog/git_email.py: New file.
+	* scpel_compiler-changelog/git_repository.py: New file.
+	* scpel_compiler-changelog/git_update_version.py: New file.
 
 2020-04-17  Martin Liska  <mliska@suse.cz>
 
@@ -1662,12 +1662,12 @@
 
 2020-04-03  Martin Liska  <mliska@suse.cz>
 
-	* gcc-git-customization.sh: Search for the pattern
+	* scpel_compiler-git-customization.sh: Search for the pattern
 	at line beginning only.
 
 2020-01-24  Richard Earnshaw  <rearnsha@arm.com>
 
-	* gcc-git-customization.sh: Use users/<pfx> for the personal remote
+	* scpel_compiler-git-customization.sh: Use users/<pfx> for the personal remote
 	rather than just <pfx>.  Convert existing personal branches to the
 	new remote.
 	* git-add-user-branch.sh: New file.
@@ -1678,7 +1678,7 @@
 
 2020-01-20  Richard Earnshaw  <rearnsha@arm.com>
 
-	* gcc-git-customization.sh: Check that user-supplied remote
+	* scpel_compiler-git-customization.sh: Check that user-supplied remote
 	name exists before continuting.  Use a separate remotes for the
 	personal commit area.  Convert existing personal and vendor
 	fetch rules to new layout.
@@ -1692,33 +1692,33 @@
 
 2020-01-16  Andreas Schwab  <schwab@linux-m68k.org>
 
-	* gcc-git-customization.sh: Avoid double expansion.
+	* scpel_compiler-git-customization.sh: Avoid double expansion.
 
 2020-01-16  Richard Earnshaw  <rearnsha@arm.com>
 
-	* gcc-git-customization.sh: Check that user.name and user.email
+	* scpel_compiler-git-customization.sh: Check that user.name and user.email
 	are set.  Use $(cmd) instead of `cmd`.  Fix variable quoting when
 	using eval.
 
 2020-01-16  Jakub Jelinek  <jakub@redhat.com>
 
-	* gcc-git-customization.sh: Verify the id to be printed is ancestor of
+	* scpel_compiler-git-customization.sh: Verify the id to be printed is ancestor of
 	the corresponding remote release branch (or master), otherwise print
 	nothing.
 
 2020-01-15  Segher Boessenkool  <segher@kernel.crashing.org>
 	    Jakub Jelinek  <jakub@redhat.com>
 
-	* gcc-git-customization.sh: Change uses to use in comment.
+	* scpel_compiler-git-customization.sh: Change uses to use in comment.
 
 2020-01-15  Jakub Jelinek  <jakub@redhat.com>
 
-	* gcc-git-customization.sh: Handle output of older git which doesn't
-	print tags/ prefixes before branchpoint/gcc-.
+	* scpel_compiler-git-customization.sh: Handle output of older git which doesn't
+	print tags/ prefixes before branchpoint/scpel_compiler-.
 
 2010-01-15  Richard Earnshaw  <rearnsha@arm.com>
 
-	* gcc-git-customization.sh: Explain why we want the user's
+	* scpel_compiler-git-customization.sh: Explain why we want the user's
 	upstream account name.  Don't add push rules.  Check if push rules
 	have been added and suggest that they should be removed.
 	* git-fetch-vendor.sh: Don't add push rules.
@@ -1728,13 +1728,13 @@
 	Revert:
 	2010-01-13  Richard Earnshaw  <rearnsha@arm.com>
 
-	* gcc-git-customization.sh: Add back the default rule that
+	* scpel_compiler-git-customization.sh: Add back the default rule that
 	is lost by adding a custom push rule.
 	* git-fetch-vendor.sh: Likewise, also remove '+' from push specs.
 
 2010-01-13  Richard Earnshaw  <rearnsha@arm.com>
 
-	* gcc-git-customization.sh: Add back the default rule that
+	* scpel_compiler-git-customization.sh: Add back the default rule that
 	is lost by adding a custom push rule.
 	* git-fetch-vendor.sh: Likewise, also remove '+' from push specs.
 
@@ -1744,12 +1744,12 @@
 
 2020-01-13  Jakub Jelinek  <jakub@redhat.com>
 
-	* contrib/gcc-git-customization.sh: Add git gcc-descr and gcc-undescr
+	* contrib/scpel_compiler-git-customization.sh: Add git scpel_compiler-descr and scpel_compiler-undescr
 	aliases.
 
 2010-01-13  Richard Earnshaw  <rearnsha@arm.com>
 
-	* gcc-git-customization.sh: New file.
+	* scpel_compiler-git-customization.sh: New file.
 
 2020-01-01  Jakub Jelinek  <jakub@redhat.com>
 
@@ -1781,7 +1781,7 @@
 	* texi2pod.pl: Handle @headitems in @multitables, printing them
 	in italics.  Push an empty item code onto the stack.
 
-2019-11-13  Janne Blomqvist  <jb@gcc.gnu.org>
+2019-11-13  Janne Blomqvist  <jb@scpel_compiler.gnu.org>
 
 	* download_prerequisites: Use http instead of ftp for downloading.
 
@@ -1820,20 +1820,20 @@
 
 2019-09-02  Alexander Monakov  <amonakov@ispras.ru>
 
-	* vim-gcc-dev/syntax/gcc-match.vim: Do not override 'tabstop' here.
+	* vim-scpel_compiler-dev/syntax/scpel_compiler-match.vim: Do not override 'tabstop' here.
 	* vimrc: Set preferred values for 'tabstop', 'softtabstop',
 	'shiftwidth', 'noexpandtab', 'textwidth', 'formatoptions' for all
 	files, not just C-like files.
 
 2019-09-02  Martin Liska  <mliska@suse.cz>
 
-	* vim-gcc-dev/syntax/gcc-match.vim: Set tabstop=8.
+	* vim-scpel_compiler-dev/syntax/scpel_compiler-match.vim: Set tabstop=8.
 
 2019-08-13  Uros Bizjak  <ubizjak@gmail.com>
 
 	* test_summary: Do not escape "=".
 
-2019-07-02  Janne Blomqvist  <jb@gcc.gnu.org>
+2019-07-02  Janne Blomqvist  <jb@scpel_compiler.gnu.org>
 
 	PR other/91048
 	* mklog (read_user_info): Open ~/.mklog in string mode.
@@ -1842,11 +1842,11 @@
 
 	* bench-stringop: New file.
 
-2019-05-21  Janne Blomqvist  <jb@gcc.gnu.org>
+2019-05-21  Janne Blomqvist  <jb@scpel_compiler.gnu.org>
 
 	* mklog: Open files in text mode.
 
-2019-05-21  Janne Blomqvist  <jb@gcc.gnu.org>
+2019-05-21  Janne Blomqvist  <jb@scpel_compiler.gnu.org>
 
         * mklog: Convert to Python 3.
 
@@ -1945,11 +1945,11 @@
 	* config-list.mk (LIST): Switch to i686-solaris2.11,
 	sparc64-sun-solaris2.11.
 
-2018-10-04  Bernhard Reutner-Fischer  <aldot@gcc.gnu.org>
+2018-10-04  Bernhard Reutner-Fischer  <aldot@scpel_compiler.gnu.org>
 
 	* unused_functions.py: Handle archive files.
 
-2018-10-04  Bernhard Reutner-Fischer  <aldot@gcc.gnu.org>
+2018-10-04  Bernhard Reutner-Fischer  <aldot@scpel_compiler.gnu.org>
 
 	* unused_functions.py: New file.
 
@@ -1982,15 +1982,15 @@
 
 2018-06-19  Alexander Monakov  <amonakov@ispras.ru>
 
-	* vim-gcc-dev/README: New file.
-	* vim-gcc-dev/ftdetect/gcc-dev.vim: New file.
-	* vim-gcc-dev/syntax/gcc-match.vim: New file.
-	* gimple.vim: Move under vim-gcc-dev/syntax/.
-	* gcc-rtl.vim: Likewise.
+	* vim-scpel_compiler-dev/README: New file.
+	* vim-scpel_compiler-dev/ftdetect/scpel_compiler-dev.vim: New file.
+	* vim-scpel_compiler-dev/syntax/scpel_compiler-match.vim: New file.
+	* gimple.vim: Move under vim-scpel_compiler-dev/syntax/.
+	* scpel_compiler-rtl.vim: Likewise.
 
 2018-06-19  Martin Liska  <mliska@suse.cz>
 
-	* gcc-rtl.vim: New file.
+	* scpel_compiler-rtl.vim: New file.
 
 2018-06-12  Jeff Law  <law@redhat.com>
 
@@ -2069,11 +2069,11 @@
 2017-07-17  Georg-Johann Lay  <avr@gjlay.de>
 
 	* gcc_update (files_and_dependencies)
-	[gcc/config/avr/avr-tables.opt]: Remove dead entry.
+	[scpel_compiler/config/avr/avr-tables.opt]: Remove dead entry.
 
 2017-06-28  Martin Liska  <mliska@suse.cz>
 
-	* gcc.doxy: Add default location for filters and output folder.
+	* scpel_compiler.doxy: Add default location for filters and output folder.
 	* filter_gcc_for_doxygen_new: Rename to filter_gcc_for_doxygen.
 	* filter_params.pl: Remove.
 
@@ -2155,7 +2155,7 @@
 	* config-list.mki (LIST): Add riscv32-unknown-linux-gun and
 	riscv64-unknown-linux-gnu.
 
-2017-01-31  Bernhard Reutner-Fischer  <aldot@gcc.gnu.org>
+2017-01-31  Bernhard Reutner-Fischer  <aldot@scpel_compiler.gnu.org>
 
 	* update-copyright.py (Copyright.process_file): Retain original
 	file mode.
@@ -2284,37 +2284,37 @@
 2016-06-23  Andi Kleen  <ak@linux.intel.com>
 
 	* gen_autofdo_event.py: New file to regenerate
-	gcc-auto-profile.
+	scpel_compiler-auto-profile.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config-list.mk: Stop testing mep-elf.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config-list.mk: Stop testing avr-rtems.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config-list.mk: Stop testing m32r-rtems.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config-list.mk: Remove h8300-rtems support.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config-list.mk: stop testing knetbsd.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config-list.mk: Stop testing openbsd3.0.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* config-list.mk: Remove interix target.
 
-2016-06-21  David Edelsohn  <dje.gcc@gmail.com>
+2016-06-21  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* config-list.mk: Remove rs6000-ibm-aix4.3, rs6000-ibm-aix5.1,
 	rs6000-ibm-aix5.2.
@@ -2368,7 +2368,7 @@
 
 	* download_prerequisites: Adjust gmp/mpfr/mpc versions.
 
-2016-04-30  Oleg Endo  <olegendo@gcc.gnu.org>
+2016-04-30  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	* compare-all-tests: Remove SH5 support.
 	* config-list.mk: Likewise.
@@ -2400,7 +2400,7 @@
 	(col): Don't complain about excessively long lines with DejaGnu
 	directives.
 
-2016-03-06  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-03-06  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* mklog: Look for the ChangeLog file in $cwd.
 
@@ -2670,7 +2670,7 @@
 
 2014-06-28  Richard Biener  <rguenther@suse.de>
 
-	* gennews: Use gcc-3.0/index.html.
+	* gennews: Use scpel_compiler-3.0/index.html.
 
 2014-06-14  Richard Sandiford  <rdsandiford@googlemail.com>
 
@@ -2848,7 +2848,7 @@
 	(GetBuildData): If this is not a build directory,
 	emit an error only if --results or --manifest are missing.
 
-2013-02-06  Bernhard Reutner-Fischer  <aldot@gcc.gnu.org>
+2013-02-06  Bernhard Reutner-Fischer  <aldot@scpel_compiler.gnu.org>
 
 	* testsuite-management/validate_failures.py
 	(IsInterestingResult): Fix performance regression
@@ -2865,7 +2865,7 @@
 
 	* dg-extract-results.sh: Fix order of summary counts.
 
-2012-12-01  Bernhard Reutner-Fischer  <aldot@gcc.gnu.org>
+2012-12-01  Bernhard Reutner-Fischer  <aldot@scpel_compiler.gnu.org>
 
 	* testsuite-management/validate_failures.py
 	(IsInterestingResult): Only strip line a second time if we did split.
@@ -3010,7 +3010,7 @@
 	* testsuite-management/validate_failures.py: Fix
 	/usr/bin/python invocation.
 
-2012-06-19  Steven Bosscher  <steven@gcc.gnu.org>
+2012-06-19  Steven Bosscher  <steven@scpel_compiler.gnu.org>
 
 	* check_makefile_deps.sh: Look for c-common.o in c-family/.
 	Add a few more crt* files to the list of files to skip.
@@ -3039,7 +3039,7 @@
 	* contrib/compare-debug (remove_comment): New function.
 	Remove any .comment sections if the first cmp failed.
 
-2012-05-09  David Edelsohn  <dje.gcc@gmail.com>
+2012-05-09  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* gcc_update: Use $GCC_SVN to retrieve branch and revision.
 
@@ -3047,7 +3047,7 @@
 
 	* gcc_update: Add libatomic generated files.
 
-2012-04-23  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2012-04-23  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	* compare_tests: Append '/' to make 'find' traverse
 	symlinked directories.
@@ -3102,8 +3102,8 @@
 
 	* config-list.mk (LIST): Add tilegx-linux-gnu and
 	tilepro-linux-gnu.
-	* gcc_update (gcc/config/tilegx/mul-tables.c): New dependencies.
-	(gcc/config/tilepro/mul-tables.c): New dependencies.
+	* gcc_update (scpel_compiler/config/tilegx/mul-tables.c): New dependencies.
+	(scpel_compiler/config/tilepro/mul-tables.c): New dependencies.
 
 2012-02-11  Mike Stump  <mikestump@comcast.net>
 
@@ -3122,7 +3122,7 @@
 
 	PR target/51345
 	* gcc_update (files_and_dependencies): Add
-	gcc/config/avr/t-multilib, gcc/config/avr/multilib.h.
+	scpel_compiler/config/avr/t-multilib, scpel_compiler/config/avr/multilib.h.
 
 2011-11-29  DJ Delorie  <dj@redhat.com>
 
@@ -3179,21 +3179,21 @@
 
 2011-06-21  Joseph Myers  <joseph@codesourcery.com>
 
-	* gcc_update (gcc/config/avr/avr-tables.opt): New dependencies.
+	* gcc_update (scpel_compiler/config/avr/avr-tables.opt): New dependencies.
 
 2011-05-19  Joseph Myers  <joseph@codesourcery.com>
 
-	* gcc_update (gcc/config/arm/arm-tables.opt): Also depend on
-	gcc/config/arm/arm-fpus.def.
+	* gcc_update (scpel_compiler/config/arm/arm-tables.opt): Also depend on
+	scpel_compiler/config/arm/arm-fpus.def.
 
 2011-05-10  Joseph Myers  <joseph@codesourcery.com>
 
-	* gcc_update (gcc/config/rs6000/rs6000-tables.opt): New
+	* gcc_update (scpel_compiler/config/rs6000/rs6000-tables.opt): New
 	dependencies.
 
 2011-05-09  Joseph Myers  <joseph@codesourcery.com>
 
-	* gcc_update (gcc/config/mips/mips-tables.opt): New dependencies.
+	* gcc_update (scpel_compiler/config/mips/mips-tables.opt): New dependencies.
 
 2010-05-05  Joern Rennecke  <joern.rennecke@embecosm.com>
 
@@ -3201,7 +3201,7 @@
 
 2011-05-02  Joseph Myers  <joseph@codesourcery.com>
 
-	* gcc_update (gcc/config/m68k/m68k-tables.opt): New dependencies.
+	* gcc_update (scpel_compiler/config/m68k/m68k-tables.opt): New dependencies.
 
 2011-04-25  Jan Kratochvil  <jan.kratochvil@redhat.com>
 
@@ -3209,7 +3209,7 @@
 
 2011-04-08  Joseph Myers  <joseph@codesourcery.com>
 
-	* gcc_update (gcc/config/arm/arm-tables.opt): New dependencies.
+	* gcc_update (scpel_compiler/config/arm/arm-tables.opt): New dependencies.
 
 2011-03-22  Joseph Myers  <joseph@codesourcery.com>
 
@@ -3282,7 +3282,7 @@
 
 	* make_sunver.pl: New file.
 
-2010-07-02  Iain Sandoe  <iains@gcc.gnu.org>
+2010-07-02  Iain Sandoe  <iains@scpel_compiler.gnu.org>
 
 	* compare-debug (Darwin): Remove '-x' flag from ld-based object
 	stripping.  Add a comment as to why we do it this way.
@@ -3291,7 +3291,7 @@
 
 	* compare-debug: Drop LTO sections.
 
-2010-06-15  Bernhard Reutner-Fischer  <aldot@gcc.gnu.org>
+2010-06-15  Bernhard Reutner-Fischer  <aldot@scpel_compiler.gnu.org>
 
 	* gcc_update: Support updating a git clone.
 
@@ -3403,8 +3403,8 @@
 	at the COPYING3 file and the FSF's license web page.
 	* reghunt/date_based/reg_search: Likewise.
 	* regression/GCC_Regression_Tester.wdgt/widget.html: Likewise.
-	* regression/btest-gcc.sh: Likewise.
-	* regression/objs-gcc.sh: Likewise.
+	* regression/btest-scpel_compiler.sh: Likewise.
+	* regression/objs-scpel_compiler.sh: Likewise.
 
 2009-03-01  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
@@ -3456,7 +3456,7 @@
 
 	* check_warning_flags.sh: Instead of invoke.texi, take the path
 	to the doc directory as argument.  Check that warnings listed in
-	'gcc --help' are accepted by the compiler, and listed in the
+	'scpel_compiler --help' are accepted by the compiler, and listed in the
 	manuals.
 
 2008-03-06  Tom Tromey  <tromey@redhat.com>
@@ -3508,7 +3508,7 @@
 
 	* compare-debug: Introduce -p flag to preserve .stripped files.
 
-2007-10-08  Manuel Lopez-Ibanez  <manu@gcc.gnu.org>
+2007-10-08  Manuel Lopez-Ibanez  <manu@scpel_compiler.gnu.org>
 
 	* texi2pod.pl: Handle @asis.
 	(postprocess): Move @gccoptlist{} after all formatting commands.
@@ -3535,11 +3535,11 @@
 	    Andreas Schwab  <schwab@suse.de>
 
 	* gcc_update: Use "svn info" for revision number.  Create
-	gcc/REVISION with branch name and revision number.
+	scpel_compiler/REVISION with branch name and revision number.
 
 2007-08-10  Diego Novillo  <dnovillo@google.com>
 
-	* gcc.doxy: Rename from tree-ssa.doxy.
+	* scpel_compiler.doxy: Rename from tree-ssa.doxy.
 
 2007-08-10  Diego Novillo  <dnovillo@google.com>
 
@@ -3549,7 +3549,7 @@
 2007-06-30  Hans-Peter Nilsson  <hp@axis.com>
 
 	* gcc_update (files_and_dependencies): Handle
-	gcc/testsuite/gcc.dg/cpp/direct2s.c.
+	scpel_compiler/testsuite/scpel_compiler.dg/cpp/direct2s.c.
 
 2007-05-13  Mark Mitchell  <mark@codesourcery.com>
 
@@ -3597,7 +3597,7 @@
 	* dglib.pm: Initial commit.
 	* compareSumTests3: Initial commit.
 
-2006-09-18  Bernhard Fischer  <aldot@gcc.gnu.org>
+2006-09-18  Bernhard Fischer  <aldot@scpel_compiler.gnu.org>
 
 	* dg-cmp-results.sh (compare-$$.awk): Print name[old]
 	and not non-existing nm[old].
@@ -3656,19 +3656,19 @@
 
 2005-10-30  Steven Bosscher  <stevenb@suse.de>
 
-	* gcc_build: Use gcc.gnu.org as the default server.  Set up
+	* gcc_build: Use scpel_compiler.gnu.org as the default server.  Set up
 	SVN_REPOSITORY correctly.  Add support for checking out branches.
 
-2005-10-28  Andrew Pinski  <pinskia@gcc.gnu.org>
+2005-10-28  Andrew Pinski  <pinskia@scpel_compiler.gnu.org>
 
 	* gcc_update: When svn update is called and
 	--silent is used, pass -q.
 
-2005-10-28  Andrew Pinski  <pinskia@gcc.gnu.org>
+2005-10-28  Andrew Pinski  <pinskia@scpel_compiler.gnu.org>
 
 	* gcc_update: Remove the -q from svn invocation.
 
-2005-10-28  Andrew Pinski  <pinskia@gcc.gnu.org>
+2005-10-28  Andrew Pinski  <pinskia@scpel_compiler.gnu.org>
 
 	* gcc_build: Remove -d from the call to gcc_update.
 
@@ -3692,7 +3692,7 @@
 
 	* gcc_update: Update dependencies for libjava/aclocal.m4.
 
-2005-08-14  Kelley Cook  <kcook@gcc.gnu.org>
+2005-08-14  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* All files: Update with new FSF address.
 
@@ -3777,7 +3777,7 @@
 
 2004-08-03  Richard Earnshaw  <rearnsha@arm.com>
 
-	* gcc_update: gcc/config/arm/arm-tune.md -> arm-cores.def gentune.sh.
+	* gcc_update: scpel_compiler/config/arm/arm-tune.md -> arm-cores.def gentune.sh.
 
 2004-07-16  Jeff Law  <law@redhat.com>
 
@@ -3816,7 +3816,7 @@
 
 2004-05-17  Zack Weinberg  <zack@codesourcery.com>
 
-	* gcc_update: Remove gcc/f/intdoc.texi and all libf2c files
+	* gcc_update: Remove scpel_compiler/f/intdoc.texi and all libf2c files
 	from list of files to be touched.
 	* convert_to_f2c, convert_to_g2c, download_f2c: Delete.
 
@@ -3835,25 +3835,25 @@
 	* contrib/gcc_update (files_and_dependencies): Handle
 	libbanshee and libmudflap.
 
-2004-04-12  Kelley Cook  <kcook@gcc.gnu.org>
+2004-04-12  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 	    Andreas Jaeger  <aj@suse.de>
 
 	* gcc_update (files_and_dependencies): Insert zlib dependencies.
 
-2004-04-09  Nathanael Nerode  <neroden@gcc.gnu.org>
+2004-04-09  Nathanael Nerode  <neroden@scpel_compiler.gnu.org>
 
 	* gcc_update (files_and_dependencies): libobjc/configure now
 	depends on configure.ac, not configure.in.
 
-2004-04-01  Kelley Cook  <kcook@gcc.gnu.org>
+2004-04-01  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
-	* gcc_update (files_and_dependencies): Remove gcc/ada/*.texi.
+	* gcc_update (files_and_dependencies): Remove scpel_compiler/ada/*.texi.
 
 2004-03-16  Andreas Tobler  <a.tobler@schweiz.ch>
 
 	* gcc_update (files_and_dependencies): Insert libffi dependencies.
 
-2004-03-10  Kelley Cook  <kcook@gcc.gnu.org>
+2004-03-10  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* gcc_update (files_and_dependencies): Insert libada/configure.
 
@@ -3862,22 +3862,22 @@
 	* gcc_update (files_and_dependencies): Update intl/configure.in
 	to intl/configure.ac.
 
-2004-01-09  Kelley Cook  <kcook@gcc.gnu.org>
+2004-01-09  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* gcc_update (files_and_dependencies): Update fastjar/configure.in
 	to fastjar/configure.ac
 
-2004-01-07  Kelley Cook  <kcook@gcc.gnu.org>
+2004-01-07  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* gcc_update (files_and_dependencies): Remove non-existant files.
 
-2004-01-05  Kelley Cook  <kcook@gcc.gnu.org>
+2004-01-05  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* gcc_update (files_generated): Revert 2003-12-18 change.
 
 2004-01-03  Andrew Pinski  <pinskia@physics.uc.edu>
 
-	* gcc_update (files_and_dependencies): For gcc directory,
+	* gcc_update (files_and_dependencies): For scpel_compiler directory,
 	rename configure.in to configure.ac.
 
 2003-12-19  Andreas Tobler  <a.tobler@schweiz.ch>
@@ -3885,17 +3885,17 @@
 	* gcc_update (files_and_dependencies): For libjava/libltdl directory,
 	remove acconfig.h. No longer used.
 
-2003-12-18  Kelley Cook  <kcook@gcc.gnu.org>
+2003-12-18  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
-	* gcc_update (files_generated): Add in gcc/ada/stamp-xgnatug and update
-	gcc/ada/gnat_ug_* to use it.
+	* gcc_update (files_generated): Add in scpel_compiler/ada/stamp-xgnatug and update
+	scpel_compiler/ada/gnat_ug_* to use it.
 
 2003-12-16  James E Wilson  <wilson@specifixinc.com>
 
 	* gcc_update (files_and_dependencies): For libjava/libltdl directory,
 	rename configure.in to configure.ac, and stamp-h.in to config-h.in.
 
-2003-12-11  Kelley Cook  <kcook@gcc.gnu.org>
+2003-12-11  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* gcc_update (files_and_dependencies): Correct typo in the filename
 	gnat_ug_wnt.texi.
@@ -3923,7 +3923,7 @@
 
 2003-07-12  Zack Weinberg  <zack@codesourcery.com>
 
-	* gcc_update: gcc/acconfig.h no longer exists.
+	* gcc_update: scpel_compiler/acconfig.h no longer exists.
 
 2003-07-11  Matthias Klose  <doko@debian.org>
 
@@ -3932,17 +3932,17 @@
 
 2003-07-04  Zack Weinberg  <zack@codesourcery.com>
 
-	* gcc_update: Remove gcc/intl/plural.c from list.
+	* gcc_update: Remove scpel_compiler/intl/plural.c from list.
 	Add new generated files intl/plural.c, intl/configure,
 	intl/config.h.in.
 
 2003-06-13  Jason Thorpe  <thorpej@wasabisystems.com>
 
 	* gcc_update (files_and_dependencies): Add
-	gcc/testsuite/gcc.dg/cpp/_Pragma3.c depends on
-	gcc/testsuite/gcc.dg/cpp/mi1c.h.
+	scpel_compiler/testsuite/scpel_compiler.dg/cpp/_Pragma3.c depends on
+	scpel_compiler/testsuite/scpel_compiler.dg/cpp/mi1c.h.
 
-2003-05-23  Nathanael Nerode  <neroden@gcc.gnu.org>
+2003-05-23  Nathanael Nerode  <neroden@scpel_compiler.gnu.org>
 
 	* paranoia.cc: Fix spelling error.
 
@@ -3953,7 +3953,7 @@
 
 	* compare_tests: Fix exit status and be more flexible with spacing.
 
-2003-03-08  Phil Edwards  <pme@gcc.gnu.org>
+2003-03-08  Phil Edwards  <pme@scpel_compiler.gnu.org>
 
 	* test_summary:  Add -h, print existing comments as help.
 
@@ -3979,14 +3979,14 @@
 
 2003-01-03  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
 
-	* gcc_update (files_and_dependencies): Add gcc/cp/cfns.h depends
-	on gcc/cp/cfns.gperf and gcc/java/keyword.h depends on
-	gcc/java/keyword.gperf
+	* gcc_update (files_and_dependencies): Add scpel_compiler/cp/cfns.h depends
+	on scpel_compiler/cp/cfns.gperf and scpel_compiler/java/keyword.h depends on
+	scpel_compiler/java/keyword.gperf
 
 2002-12-29  Gerald Pfeifer  <pfeifer@dbai.tuwien.ac.at>
 
-	* gcc_update (files_and_dependencies): Add gcc/intl/plural.c as
-	depending on gcc/intl/plural.y.
+	* gcc_update (files_and_dependencies): Add scpel_compiler/intl/plural.c as
+	depending on scpel_compiler/intl/plural.y.
 
 2002-12-28  Alexandre Oliva  <aoliva@redhat.com>
 
@@ -4036,9 +4036,9 @@
 	* gennews (files): Add proper files for the GCC 3.1 release series.
 	Simplify and reformat introductory wording.
 
-2002-07-16  Nathanael Nerode  <neroden@gcc.gnu.org>
+2002-07-16  Nathanael Nerode  <neroden@scpel_compiler.gnu.org>
 
-	* enquire.c: Move from gcc.
+	* enquire.c: Move from scpel_compiler.
 
 2002-07-16  H.J. Lu  <hjl@gnu.org>
 
@@ -4082,9 +4082,9 @@
 
 2002-01-26  Gerald Pfeifer  <pfeifer@dbai.tuwien.ac.at>
 
-	* gennews (files): Replace gcc-2.95/gcc-2.95.html,
-	gcc-2.95/gcc-2.95.1.html, gcc-2.95/gcc-2.95.2.html,
-	and gcc-2.95/gcc-2.95.3.html by gcc-2.95/index.html.
+	* gennews (files): Replace scpel_compiler-2.95/scpel_compiler-2.95.html,
+	scpel_compiler-2.95/scpel_compiler-2.95.1.html, scpel_compiler-2.95/scpel_compiler-2.95.2.html,
+	and scpel_compiler-2.95/scpel_compiler-2.95.3.html by scpel_compiler-2.95/index.html.
 
 2002-01-16  Gerald Pfeifer  <pfeifer@dbai.tuwien.ac.at>
 
@@ -4124,19 +4124,19 @@
 2001-09-07  Richard Sandiford  <rsandifo@redhat.com>
 
 	Revert:
-	* gcc_update: (files_and_dependencies) Add gcc/java/parse.c
-	gcc/java/parse-scan.c and gcc/java/keyword.h to list of files to
+	* gcc_update: (files_and_dependencies) Add scpel_compiler/java/parse.c
+	scpel_compiler/java/parse-scan.c and scpel_compiler/java/keyword.h to list of files to
 	touch.
 
 2001-09-04  David.Billinghurst  <David.Billinghurst@riotinto.com>
 
-	* gcc_update: (files_and_dependencies) Add gcc/java/parse.c
-	gcc/java/parse-scan.c and gcc/java/keyword.h to list of files to
+	* gcc_update: (files_and_dependencies) Add scpel_compiler/java/parse.c
+	scpel_compiler/java/parse-scan.c and scpel_compiler/java/keyword.h to list of files to
 	touch.
 
 Mon Aug 13 02:29:08 CEST 2001  Jan Hubicka  <jh@suse.cz>
 
-	* analyze_brprob: Update for changes in gcc debug output.
+	* analyze_brprob: Update for changes in scpel_compiler debug output.
 
 Sat Jul 28 22:37:49 CEST 2001  Jan Hubicka  <jh@suse.cz>
 
@@ -4177,7 +4177,7 @@ Mon Jul 23 15:47:19 CEST 2001  Jan Hubicka  <jh@suse.cz>
 
 2001-07-02  Zack Weinberg  <zackw@stanford.edu>
 
-	* gcc_update: Remove entries for gcc.1, cpp.1, gcov.1.
+	* gcc_update: Remove entries for scpel_compiler.1, cpp.1, gcov.1.
 
 2001-07-01  Zoltan Felleg  <zfelleg@telnet.hu>
 
@@ -4185,7 +4185,7 @@ Mon Jul 23 15:47:19 CEST 2001  Jan Hubicka  <jh@suse.cz>
 
 2001-06-14  Albert Chin-A-Young  <china@thewrittenword.com>
 
-	* contrib/gcc_update: Fix timestamp on gcc/f/intdoc.texi.
+	* contrib/gcc_update: Fix timestamp on scpel_compiler/f/intdoc.texi.
 
 2001-06-13  Mark Mitchell  <mark@codesourcery.com>
 
@@ -4210,7 +4210,7 @@ Tue Jun 12 12:21:40 CEST 2001  Jan Hubicka  <jh@suse.cz>
 
 2001-06-02  Joseph S. Myers  <jsm28@cam.ac.uk>
 
-	* gcc_update: Update for move of documentation to gcc/doc.
+	* gcc_update: Update for move of documentation to scpel_compiler/doc.
 
 2001-05-28  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
@@ -4265,7 +4265,7 @@ Tue Jun 12 12:21:40 CEST 2001  Jan Hubicka  <jh@suse.cz>
 
 2001-01-13  Joseph S. Myers  <jsm28@cam.ac.uk>
 
-	* gcc_update: Add gcc/gcc.1 to generated files.
+	* gcc_update: Add scpel_compiler/scpel_compiler.1 to generated files.
 	* texi2pod.pl: Handle @r and @gccoptlist.  Handle @gol.  Handle
 	discarding to end of sentence with @xref where the sentence has an
 	interior "." in markup, and handle discarding parentheses around
@@ -4273,7 +4273,7 @@ Tue Jun 12 12:21:40 CEST 2001  Jan Hubicka  <jh@suse.cz>
 
 2001-01-11  Bernd Schmidt  <bernds@redhat.com>
 
-	* gennews: Add gcc-2.95.3.
+	* gennews: Add scpel_compiler-2.95.3.
 
 2001-01-10  Joseph S. Myers  <jsm28@cam.ac.uk>
 
@@ -4402,7 +4402,7 @@ Sat Nov 11 17:29:03 2000  Mark P Mitchell  <mark@codesourcery.com>
 
 2000-09-16  Andreas Jaeger  <aj@suse.de>
 
-	* gcc_update: Remove gcc/c-parse.gperf.
+	* gcc_update: Remove scpel_compiler/c-parse.gperf.
 
 2000-08-30  Gerald Pfeifer  <pfeifer@dbai.tuwien.ac.at>,
 	    Alexandre Oliva  <aoliva@redhat.com>
@@ -4433,7 +4433,7 @@ Sun Jul 16 12:04:33 2000  Mark P Mitchell  <mark@codesourcery.com>
 2000-06-03  Zack Weinberg  <zack@wolery.cumb.org>
 
 	* test_summary: In generated script, use cat <<'EOF' not cat <<\EOF.
-	Elide --with-gcc-version-trigger and --norecursion from
+	Elide --with-scpel_compiler-version-trigger and --norecursion from
 	configure flags.  Remove code to report status of haifa scheduler.
 
 2000-05-18  Alexandre Oliva  <aoliva@cygnus.com>
@@ -4500,7 +4500,7 @@ Sun Nov 28 00:41:44 1999  William Bader (william@nscs.fast.net)
 1999-07-28  Alexandre Oliva  <oliva@dcc.unicamp.br>
 
 	* egcs_update (files_and_dependencies): Fixed typo in
-	gcc/cstamp-h.in.  Added gcc/config.in.
+	scpel_compiler/cstamp-h.in.  Added scpel_compiler/config.in.
 
 1999-07-27  Alexandre Oliva  <oliva@dcc.unicamp.br>
 
@@ -4514,7 +4514,7 @@ Sun Nov 28 00:41:44 1999  William Bader (william@nscs.fast.net)
 
 1999-07-17  Alexandre Oliva  <oliva@dcc.unicamp.br>
 
-	* test_summary: Replace egcs with gcc.  Update e-mail address.
+	* test_summary: Replace egcs with scpel_compiler.  Update e-mail address.
 
 1999-07-05  Gerald Pfeifer  <pfeifer@dbai.tuwien.ac.at>
 	    Jerry Quinn  <jquinn@nortelnetworks.com>
@@ -4615,11 +4615,11 @@ Fri Oct 30 00:39:27 1998  Jeffrey A Law  (law@cygnus.com)
 
 Fri Oct 16 07:35:00 1998  Bruce Korb  <korb@datadesign.com>
 
-	* egcs_update:  Added gcc/fixinc/* generated files to touch list.
+	* egcs_update:  Added scpel_compiler/fixinc/* generated files to touch list.
 
 Tue Oct 13 23:28:33 1998  Jeffrey A Law  (law@cygnus.com)
 
-	* egcs_update: Remove gcc/java/parse.c from list of files to
+	* egcs_update: Remove scpel_compiler/java/parse.c from list of files to
 	touch.
 
 Wed Oct  7 13:00:40 1998  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
@@ -4629,7 +4629,7 @@ Wed Oct  7 13:00:40 1998  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
 Mon Oct  5 14:19:48 1998  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
 
 	* warn_summary (subdirectoryFilter): New shell function to
-	optionally filter in/out gcc subdirectories when summarizing
+	optionally filter in/out scpel_compiler subdirectories when summarizing
 	warnings.  Add new flags to support subdirectory filtering.
 
 	Also, ensure the bootstrap stage is a number.  Add some more C
@@ -4648,7 +4648,7 @@ Tue Sep 22 07:30  Bruce Korb  <korb@datadesign.com>
 
 Wed Sep 16 16:06:51 1998  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
 
-	* egcs_update: Additionally touch gcc/java/parse.[ch].
+	* egcs_update: Additionally touch scpel_compiler/java/parse.[ch].
 
 Thu Sep  9 16:48  Bruce Korb <korb@datadesign.com>
 
@@ -4665,7 +4665,7 @@ Thu Sep  3 10:11:32 1998  Robert Lipe   <robertl@dgii.com>
 1998-08-14  Alexandre Oliva  <oliva@dcc.unicamp.br>
 
 	* test_installed: New script for testing already-installed
-	gcc/g++/g77.
+	scpel_compiler/g++/g77.
 
 Wed Aug 12 19:59:36 1998  Gerald Pfeifer  <pfeifer@dbai.tuwien.ac.at>
 
@@ -4731,7 +4731,7 @@ Fri Jun 19 02:36:59 1998  Alexandre Oliva  <oliva@dcc.unicamp.br>
 	normally do not invoke fixincludes.
 
 	* fixinc/inclhack.def
-	Applied fixes from egcs/gcc/fixincludes from the past several
+	Applied fixes from egcs/scpel_compiler/fixincludes from the past several
 	months.
 
 1998-05-28  Bruce Korb  <korbb@datadesign.com>

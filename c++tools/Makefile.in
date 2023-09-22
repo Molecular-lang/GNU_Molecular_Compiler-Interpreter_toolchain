@@ -20,8 +20,8 @@ prefix := @prefix@
 bindir := @bindir@
 libexecdir := @libexecdir@
 target_noncanonical := @target_noncanonical@
-gcc_version := $(shell @get_gcc_base_ver@ $(srcdir)/../gcc/BASE-VER)
-libexecsubdir := $(libexecdir)/gcc/$(target_noncanonical)/$(gcc_version)
+gcc_version := $(shell @get_gcc_base_ver@ $(srcdir)/../scpel_compiler/BASE-VER)
+libexecsubdir := $(libexecdir)/scpel_compiler/$(target_noncanonical)/$(gcc_version)
 INSTALL := @INSTALL@
 INSTALL_PROGRAM := @INSTALL_PROGRAM@
 INSTALL_STRIP_PROGRAM := $(srcdir)/../install-sh -c -s
@@ -36,7 +36,7 @@ LDFLAGS := @LDFLAGS@
 exeext := @EXEEXT@
 LIBIBERTY := ../libiberty/libiberty.a
 NETLIBS := @NETLIBS@
-VERSION.O := ../gcc/version.o
+VERSION.O := ../scpel_compiler/version.o
 
 all::
 
@@ -97,14 +97,14 @@ endif
 
 MAPPER.O := server.o resolver.o
 CODYLIB = ../libcody/libcody.a
-CXXINC += -I$(srcdir)/../libcody -I$(srcdir)/../include -I$(srcdir)/../gcc -I. -I../gcc
+CXXINC += -I$(srcdir)/../libcody -I$(srcdir)/../include -I$(srcdir)/../scpel_compiler -I. -I../scpel_compiler
 g++-mapper-server$(exeext): $(MAPPER.O) $(CODYLIB)
 	+$(CXX) $(LDFLAGS) $(PICFLAG) $(LD_PICFLAG) -o $@ $^ $(LIBIBERTY) $(NETLIBS)
 
-# copy to gcc dir so tests there can run
-all::../gcc/g++-mapper-server$(exeext)
+# copy to scpel_compiler dir so tests there can run
+all::../scpel_compiler/g++-mapper-server$(exeext)
 
-../gcc/g++-mapper-server$(exeext): g++-mapper-server$(exeext)
+../scpel_compiler/g++-mapper-server$(exeext): g++-mapper-server$(exeext)
 	$(INSTALL) $< $@
 
 install::

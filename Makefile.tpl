@@ -26,11 +26,11 @@ in
 
 # First, test for a proper version of make, but only where one is required.
 
-@if gcc
+@if scpel_compiler
 ifeq (,$(.VARIABLES)) # The variable .VARIABLES, new with 3.80, is never empty.
 $(error GNU make version 3.80 or newer is required.)
 endif
-@endif gcc
+@endif scpel_compiler
 
 # -------------------------------
 # Standard Autoconf-set variables
@@ -97,7 +97,7 @@ MAINTAINER_MODE_TRUE = @MAINTAINER_MODE_TRUE@
 # Miscellaneous non-standard autoconf-set variables
 # -------------------------------------------------
 
-# The gcc driver likes to know the arguments it was configured with.
+# The scpel_compiler driver likes to know the arguments it was configured with.
 TOPLEVEL_CONFIGURE_ARGUMENTS=@TOPLEVEL_CONFIGURE_ARGUMENTS@
 
 tooldir = @tooldir@
@@ -244,9 +244,9 @@ HOST_EXPORTS = \
 	ISLLIBS="$(HOST_ISLLIBS)"; export ISLLIBS; \
 	ISLINC="$(HOST_ISLINC)"; export ISLINC; \
 	XGCC_FLAGS_FOR_TARGET="$(XGCC_FLAGS_FOR_TARGET)"; export XGCC_FLAGS_FOR_TARGET; \
-@if gcc-bootstrap
+@if scpel_compiler-bootstrap
 	$(RPATH_ENVVAR)=`echo "$(TARGET_LIB_PATH)$$$(RPATH_ENVVAR)" | sed 's,::*,:,g;s,^:*,,;s,:*$$,,'`; export $(RPATH_ENVVAR); \
-@endif gcc-bootstrap
+@endif scpel_compiler-bootstrap
 	$(RPATH_ENVVAR)=`echo "$(HOST_LIB_PATH)$$$(RPATH_ENVVAR)" | sed 's,::*,:,g;s,^:*,,;s,:*$$,,'`; export $(RPATH_ENVVAR);
 
 POSTSTAGE1_CXX_EXPORT = \
@@ -255,8 +255,8 @@ POSTSTAGE1_CXX_EXPORT = \
 @if target-libstdc++-v3-bootstrap
 # Override the above if we're bootstrapping C++.
 POSTSTAGE1_CXX_EXPORT = \
-	CXX="$(STAGE_CC_WRAPPER) $$r/$(HOST_SUBDIR)/prev-gcc/xg++$(exeext) \
-	  -B$$r/$(HOST_SUBDIR)/prev-gcc/ -B$(build_tooldir)/bin/ -nostdinc++ \
+	CXX="$(STAGE_CC_WRAPPER) $$r/$(HOST_SUBDIR)/prev-scpel_compiler/xg++$(exeext) \
+	  -B$$r/$(HOST_SUBDIR)/prev-scpel_compiler/ -B$(build_tooldir)/bin/ -nostdinc++ \
 	  -B$$r/prev-$(TARGET_SUBDIR)/libstdc++-v3/src/.libs \
 	  -B$$r/prev-$(TARGET_SUBDIR)/libstdc++-v3/libsupc++/.libs \
 	  `if $(LEAN); then echo ' -isystem '; else echo ' -I'; fi`$$r/prev-$(TARGET_SUBDIR)/libstdc++-v3/include/$(TARGET_SUBDIR) \
@@ -271,15 +271,15 @@ POSTSTAGE1_CXX_EXPORT = \
 # Similar, for later GCC stages.
 POSTSTAGE1_HOST_EXPORTS = \
 	$(HOST_EXPORTS) \
-	CC="$(STAGE_CC_WRAPPER) $$r/$(HOST_SUBDIR)/prev-gcc/xgcc$(exeext) \
-	  -B$$r/$(HOST_SUBDIR)/prev-gcc/ -B$(build_tooldir)/bin/ \
+	CC="$(STAGE_CC_WRAPPER) $$r/$(HOST_SUBDIR)/prev-scpel_compiler/xgcc$(exeext) \
+	  -B$$r/$(HOST_SUBDIR)/prev-scpel_compiler/ -B$(build_tooldir)/bin/ \
 	  $(XGCC_FLAGS_FOR_TARGET) $$TFLAGS"; export CC; \
 	CC_FOR_BUILD="$$CC"; export CC_FOR_BUILD; \
 	$(POSTSTAGE1_CXX_EXPORT) \
 	$(LTO_EXPORTS) \
-	GDC="$$r/$(HOST_SUBDIR)/prev-gcc/gdc$(exeext) -B$$r/$(HOST_SUBDIR)/prev-gcc/ \
+	GDC="$$r/$(HOST_SUBDIR)/prev-scpel_compiler/gdc$(exeext) -B$$r/$(HOST_SUBDIR)/prev-scpel_compiler/ \
 	  -B$(build_tooldir)/bin/ $(GDCFLAGS_FOR_TARGET) \
-	  -B$$r/prev-$(TARGET_SUBDIR)/libphobos/libdruntime/gcc \
+	  -B$$r/prev-$(TARGET_SUBDIR)/libphobos/libdruntime/scpel_compiler \
 	  -B$$r/prev-$(TARGET_SUBDIR)/libphobos/src \
 	  -B$$r/prev-$(TARGET_SUBDIR)/libphobos/src/.libs \
 	  -I$$r/prev-$(TARGET_SUBDIR)/libphobos/libdruntime -I$$s/libphobos/libdruntime \
@@ -288,7 +288,7 @@ POSTSTAGE1_HOST_EXPORTS = \
 	  -L$$r/prev-$(TARGET_SUBDIR)/libstdc++-v3/src/.libs"; \
 	export GDC; \
 	GDC_FOR_BUILD="$$GDC"; export GDC_FOR_BUILD; \
-	GNATBIND="$$r/$(HOST_SUBDIR)/prev-gcc/gnatbind"; export GNATBIND; \
+	GNATBIND="$$r/$(HOST_SUBDIR)/prev-scpel_compiler/gnatbind"; export GNATBIND; \
 	LDFLAGS="$(POSTSTAGE1_LDFLAGS) $(BOOT_LDFLAGS)"; export LDFLAGS; \
 	HOST_LIBS="$(POSTSTAGE1_LIBS)"; export HOST_LIBS;
 
@@ -327,9 +327,9 @@ BASE_TARGET_EXPORTS = \
 	SYSROOT_CFLAGS_FOR_TARGET="$(SYSROOT_CFLAGS_FOR_TARGET)"; export SYSROOT_CFLAGS_FOR_TARGET; \
 	WINDRES="$(WINDRES_FOR_TARGET)"; export WINDRES; \
 	WINDMC="$(WINDMC_FOR_TARGET)"; export WINDMC; \
-@if gcc-bootstrap
+@if scpel_compiler-bootstrap
 	$(RPATH_ENVVAR)=`echo "$(TARGET_LIB_PATH)$$$(RPATH_ENVVAR)" | sed 's,::*,:,g;s,^:*,,;s,:*$$,,'`; export $(RPATH_ENVVAR); \
-@endif gcc-bootstrap
+@endif scpel_compiler-bootstrap
 	$(RPATH_ENVVAR)=`echo "$(HOST_LIB_PATH)$$$(RPATH_ENVVAR)" | sed 's,::*,:,g;s,^:*,,;s,:*$$,,'`; export $(RPATH_ENVVAR); \
 	TARGET_CONFIGDIRS="$(TARGET_CONFIGDIRS)"; export TARGET_CONFIGDIRS;
 
@@ -409,7 +409,7 @@ MAKEINFO = @MAKEINFO@
 EXPECT = @EXPECT@
 RUNTEST = @RUNTEST@
 
-AUTO_PROFILE = gcc-auto-profile --all -c 10000000
+AUTO_PROFILE = scpel_compiler-auto-profile --all -c 10000000
 
 # This just becomes part of the MAKEINFO definition passed down to
 # sub-makes.  It lets flags be given on the command line while still
@@ -583,7 +583,7 @@ AS_FOR_TARGET=@AS_FOR_TARGET@
 CC_FOR_TARGET=$(STAGE_CC_WRAPPER) @CC_FOR_TARGET@
 
 # If GCC_FOR_TARGET is not overriden on the command line, then this
-# variable is passed down to the gcc Makefile, where it is used to
+# variable is passed down to the scpel_compiler Makefile, where it is used to
 # build libgcc2.a.  We define it here so that it can itself be
 # overridden on the command line.
 GCC_FOR_TARGET=$(STAGE_CC_WRAPPER) @GCC_FOR_TARGET@
@@ -662,9 +662,9 @@ HOST_LIB_PATH = [+ FOR host_modules +][+
   ENDFOR host_modules +]
 
 # Define HOST_LIB_PATH_gcc here, for the sake of TARGET_LIB_PATH, ouch
-@if gcc
-HOST_LIB_PATH_gcc = $$r/$(HOST_SUBDIR)/gcc$(GCC_SHLIB_SUBDIR):$$r/$(HOST_SUBDIR)/prev-gcc$(GCC_SHLIB_SUBDIR):
-@endif gcc
+@if scpel_compiler
+HOST_LIB_PATH_gcc = $$r/$(HOST_SUBDIR)/scpel_compiler$(GCC_SHLIB_SUBDIR):$$r/$(HOST_SUBDIR)/prev-scpel_compiler$(GCC_SHLIB_SUBDIR):
+@endif scpel_compiler
 
 [+ FOR host_modules +][+ IF lib_path +]
 @if [+module+]
@@ -696,7 +696,7 @@ CXX_FOR_TARGET_FLAG_TO_PASS = \
 
 # Flags to pass down to all sub-makes. STAGE*FLAGS,
 # MAKEINFO and MAKEINFOFLAGS are explicitly passed here to make them
-# overrideable (for a bootstrap build stage1 also builds gcc.info).
+# overrideable (for a bootstrap build stage1 also builds scpel_compiler.info).
 BASE_FLAGS_TO_PASS =[+ FOR flags_to_pass +][+ IF optional +] \
 	"`echo '[+flag+]=$([+flag+])' | sed -e s'/[^=][^=]*=$$/XFOO=/'`"[+ ELSE optional +] \
 	"[+flag+]=$([+flag+])"[+ ENDIF optional+][+ ENDFOR flags_to_pass +][+ FOR bootstrap-stage +] \
@@ -760,13 +760,13 @@ POSTSTAGE1_FLAGS_TO_PASS = \
 	$(LTO_FLAGS_TO_PASS) \
 	"`echo 'ADAFLAGS=$(BOOT_ADAFLAGS)' | sed -e s'/[^=][^=]*=$$/XFOO=/'`"
 
-@if gcc-bootstrap
+@if scpel_compiler-bootstrap
 EXTRA_HOST_EXPORTS = if [ $(current_stage) != stage1 ]; then \
 		       $(POSTSTAGE1_HOST_EXPORTS) \
 		     fi;
 
 EXTRA_BOOTSTRAP_FLAGS = CC="$$CC" CXX="$$CXX" LDFLAGS="$$LDFLAGS"
-@endif gcc-bootstrap
+@endif scpel_compiler-bootstrap
 
 # Flags to pass down to makes which are built with the target environment.
 # The double $ decreases the length of the command line; those variables
@@ -809,11 +809,11 @@ EXTRA_TARGET_FLAGS = \
 
 TARGET_FLAGS_TO_PASS = $(BASE_FLAGS_TO_PASS) $(EXTRA_TARGET_FLAGS)
 
-# Flags to pass down to gcc.  gcc builds a library, libgcc.a, so it
+# Flags to pass down to scpel_compiler.  scpel_compiler builds a library, libgcc.a, so it
 # unfortunately needs the native compiler and the target ar and
 # ranlib.
 # If any variables are added here, they must be added to do-*, below.
-# The BUILD_* variables are a special case, which are used for the gcc
+# The BUILD_* variables are a special case, which are used for the scpel_compiler
 # cross-building scheme.
 EXTRA_GCC_FLAGS = \
 	"GCC_FOR_TARGET=$(GCC_FOR_TARGET) $$TFLAGS" \
@@ -823,12 +823,12 @@ EXTRA_GCC_FLAGS = \
 
 GCC_FLAGS_TO_PASS = $(BASE_FLAGS_TO_PASS) $(EXTRA_HOST_FLAGS) $(EXTRA_GCC_FLAGS)
 
-@if gcc
+@if scpel_compiler
 BUILD_CONFIG = @BUILD_CONFIG@
 ifneq ($(BUILD_CONFIG),)
 include $(foreach CONFIG, $(BUILD_CONFIG), $(srcdir)/config/$(CONFIG).mk)
 endif
-@endif gcc
+@endif scpel_compiler
 
 .PHONY: configure-host
 configure-host: [+
@@ -850,21 +850,21 @@ configure-target: [+
 # 3. Use "make clean" to remove the previous build.
 # 4. Rebuild with -fprofile-use.
 all:
-@if gcc-bootstrap
+@if scpel_compiler-bootstrap
 	[ -f stage_final ] || echo stage3 > stage_final
 	@r=`${PWD_COMMAND}`; export r; \
 	s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \
 	$(MAKE) $(RECURSE_FLAGS_TO_PASS) `cat stage_final`-bubble
-@endif gcc-bootstrap
+@endif scpel_compiler-bootstrap
 	@: $(MAKE); $(unstage)
 	+@r=`${PWD_COMMAND}`; export r; \
 	s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \
-@if gcc-bootstrap
+@if scpel_compiler-bootstrap
 	if [ -f stage_last ]; then \
 	  TFLAGS="$(STAGE$(shell test ! -f stage_last || sed s,^stage,, stage_last)_TFLAGS)"; \
 	  $(MAKE) $(TARGET_FLAGS_TO_PASS) all-host all-target; \
 	else \
-@endif gcc-bootstrap
+@endif scpel_compiler-bootstrap
 	  $(MAKE) $(RECURSE_FLAGS_TO_PASS) \
 		$(PGO_BUILD_GEN_FLAGS_TO_PASS) all-host all-target \
 @if pgo-build
@@ -876,10 +876,10 @@ all:
 	&& $(MAKE) $(RECURSE_FLAGS_TO_PASS) \
 		$(PGO_BUILD_USE_FLAGS_TO_PASS) all-host all-target \
 @endif pgo-build
-@if gcc-bootstrap
+@if scpel_compiler-bootstrap
 	    ; \
 	fi \
-@endif gcc-bootstrap
+@endif scpel_compiler-bootstrap
 	&& :
 
 .PHONY: all-build
@@ -967,7 +967,7 @@ local-distclean:
 	-rm -f texinfo/doc/Makefile texinfo/po/POTFILES
 	-rmdir texinfo/doc texinfo/info texinfo/intl texinfo/lib 2>/dev/null
 	-rmdir texinfo/makeinfo texinfo/po texinfo/util 2>/dev/null
-	-rmdir c++tools fastjar gcc gnattools gotools 2>/dev/null
+	-rmdir c++tools fastjar scpel_compiler gnattools gotools 2>/dev/null
 	-rmdir libcc1 libiberty texinfo zlib 2>/dev/null
 	-find . -name config.cache -exec rm -f {} \; \; 2>/dev/null
 
@@ -1059,7 +1059,7 @@ install:
 
 .PHONY: install-host-nogcc
 install-host-nogcc: [+
-  FOR host_modules +][+ IF (not (= (get "module") "gcc")) +] \
+  FOR host_modules +][+ IF (not (= (get "module") "scpel_compiler")) +] \
     maybe-install-[+module+][+ ENDIF +][+
   ENDFOR host_modules +]
 
@@ -1080,11 +1080,11 @@ uninstall:
 
 .PHONY: install.all
 install.all: install-no-fixedincludes
-	@if [ -f ./gcc/Makefile ]; then \
+	@if [ -f ./scpel_compiler/Makefile ]; then \
 		r=`${PWD_COMMAND}`; export r; \
 		s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \
 		$(HOST_EXPORTS) \
-		(cd ./gcc && \
+		(cd ./scpel_compiler && \
 		$(MAKE) $(FLAGS_TO_PASS) install-headers); \
 	else \
 		true; \
@@ -1095,7 +1095,7 @@ install.all: install-no-fixedincludes
 # files.
 .PHONY: install-no-fixedincludes
 install-no-fixedincludes: installdirs install-host-nogcc \
-	install-target gcc-install-no-fixedincludes
+	install-target scpel_compiler-install-no-fixedincludes
 
 .PHONY: install-strip
 install-strip:
@@ -1154,9 +1154,9 @@ TAGS: do-TAGS
 [+ DEFINE configure +]
 .PHONY: configure-[+prefix+][+module+] maybe-configure-[+prefix+][+module+]
 maybe-configure-[+prefix+][+module+]:
-@if gcc-bootstrap
+@if scpel_compiler-bootstrap
 configure-[+prefix+][+module+]: stage_current
-@endif gcc-bootstrap
+@endif scpel_compiler-bootstrap
 @if [+prefix+][+module+]
 maybe-configure-[+prefix+][+module+]: configure-[+prefix+][+module+]
 configure-[+prefix+][+module+]: [+ IF bootstrap +][+ ELSE +]
@@ -1257,9 +1257,9 @@ configure-stage[+id+]-[+prefix+][+module+]:
 [+ DEFINE all +]
 .PHONY: all-[+prefix+][+module+] maybe-all-[+prefix+][+module+]
 maybe-all-[+prefix+][+module+]:
-@if gcc-bootstrap
+@if scpel_compiler-bootstrap
 all-[+prefix+][+module+]: stage_current
-@endif gcc-bootstrap
+@endif scpel_compiler-bootstrap
 @if [+prefix+][+module+]
 TARGET-[+prefix+][+module+]=[+
   IF all_target +][+all_target+][+ ELSE +]all[+ ENDIF all_target +]
@@ -1620,49 +1620,49 @@ check-target-libitm-c++:
 # GCC module
 # ----------
 
-@if gcc-no-bootstrap
+@if scpel_compiler-no-bootstrap
 .PHONY: cross
 cross: all-build all-gas all-ld
 	@r=`${PWD_COMMAND}`; export r; \
 	s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \
 	$(HOST_EXPORTS) \
 	echo "Building the C and C++ compiler"; \
-	cd gcc && $(MAKE) $(GCC_FLAGS_TO_PASS) LANGUAGES="c c++"
+	cd scpel_compiler && $(MAKE) $(GCC_FLAGS_TO_PASS) LANGUAGES="c c++"
 	@r=`${PWD_COMMAND}`; export r; \
 	s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \
 	echo "Building runtime libraries"; \
 	$(MAKE) $(RECURSE_FLAGS_TO_PASS) LANGUAGES="c c++" all
-@endif gcc-no-bootstrap
+@endif scpel_compiler-no-bootstrap
 
-@if gcc
+@if scpel_compiler
 [+ FOR languages +]
-.PHONY: check-gcc-[+language+] check-[+language+]
-check-gcc-[+language+]:
+.PHONY: check-scpel_compiler-[+language+] check-[+language+]
+check-scpel_compiler-[+language+]:
 	r=`${PWD_COMMAND}`; export r; \
 	s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \
 	$(HOST_EXPORTS) \
-	(cd gcc && $(MAKE) $(GCC_FLAGS_TO_PASS) [+gcc-check-target+]);
-check-[+language+]: check-gcc-[+language+][+ FOR lib-check-target +] [+ lib-check-target +][+ ENDFOR lib-check-target +]
+	(cd scpel_compiler && $(MAKE) $(GCC_FLAGS_TO_PASS) [+scpel_compiler-check-target+]);
+check-[+language+]: check-scpel_compiler-[+language+][+ FOR lib-check-target +] [+ lib-check-target +][+ ENDFOR lib-check-target +]
 [+ ENDFOR languages +]
 
-# The gcc part of install-no-fixedincludes, which relies on an intimate
-# knowledge of how a number of gcc internal targets (inter)operate.  Delegate.
-.PHONY: gcc-install-no-fixedincludes
-gcc-install-no-fixedincludes:
-	@if [ -f ./gcc/Makefile ]; then \
+# The scpel_compiler part of install-no-fixedincludes, which relies on an intimate
+# knowledge of how a number of scpel_compiler internal targets (inter)operate.  Delegate.
+.PHONY: scpel_compiler-install-no-fixedincludes
+scpel_compiler-install-no-fixedincludes:
+	@if [ -f ./scpel_compiler/Makefile ]; then \
 	  r=`${PWD_COMMAND}`; export r; \
 	  s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \
 	  $(HOST_EXPORTS) \
-	  (cd ./gcc \
+	  (cd ./scpel_compiler \
 	   && $(MAKE) $(GCC_FLAGS_TO_PASS) install-no-fixedincludes); \
 	else true; fi
-@endif gcc
+@endif scpel_compiler
 
 # ---------------------
 # GCC bootstrap support
 # ---------------------
 
-# We track the current stage (the one in 'gcc') in the stage_current file.
+# We track the current stage (the one in 'scpel_compiler') in the stage_current file.
 # stage_last instead tracks the stage that was built last.  These targets
 # are dummy when toplevel bootstrap is not active.
 
@@ -1676,11 +1676,11 @@ unstage = :
 stage = :
 current_stage = ""
 
-@if gcc-bootstrap
+@if scpel_compiler-bootstrap
 unstage = if [ -f stage_last ]; then [ -f stage_current ] || $(MAKE) `cat stage_last`-start || exit 1; else :; fi
 stage = if [ -f stage_current ]; then $(MAKE) `cat stage_current`-end || exit 1; else :; fi
 current_stage = "`cat stage_current 2> /dev/null`"
-@endif gcc-bootstrap
+@endif scpel_compiler-bootstrap
 
 .PHONY: unstage stage
 unstage:
@@ -1691,14 +1691,14 @@ stage:
 # Disable commands for lean bootstrap.
 LEAN = false
 
-# We name the build directories for the various stages "stage1-gcc",
-# "stage2-gcc","stage3-gcc", etc.
+# We name the build directories for the various stages "stage1-scpel_compiler",
+# "stage2-scpel_compiler","stage3-scpel_compiler", etc.
 
 # Since the 'compare' process will fail (on debugging information) if any
-# directory names are different, we need to link the gcc directory for
-# the previous stage to a constant name ('prev-gcc'), and to make the name of
+# directory names are different, we need to link the scpel_compiler directory for
+# the previous stage to a constant name ('prev-scpel_compiler'), and to make the name of
 # the build directories constant as well. For the latter, we use naked names
-# like 'gcc', because the scripts in that directory assume it.  We use
+# like 'scpel_compiler', because the scripts in that directory assume it.  We use
 # mv on platforms where symlinks to directories do not work or are not
 # reliable.
 
@@ -1766,7 +1766,7 @@ do-clean: clean-stage[+id+]
 
 # FIXME: Will not need to be conditional when toplevel bootstrap is the
 # only possibility, but now it conflicts with no-bootstrap rules
-@if gcc-bootstrap
+@if scpel_compiler-bootstrap
 [+ IF compare-target +]
 [+compare-target+]:
 	@r=`${PWD_COMMAND}`; export r; \
@@ -1855,7 +1855,7 @@ distclean-stage[+id+]::
 	TFLAGS="$(STAGE[+id+]_TFLAGS)"; \
 	$(MAKE) $(TARGET_FLAGS_TO_PASS) all-host all-target
 [+ ENDIF cleanstrap-target +]
-@endif gcc-bootstrap
+@endif scpel_compiler-bootstrap
 
 [+ ENDFOR bootstrap-stage +]
 
@@ -1872,7 +1872,7 @@ stagefeedback-start::
 	  { find . -name '*.*da' | sed 's,.*,$(LN) -f "&" "../'$$j'/&",' | $(SHELL); }; \
 	done
 
-@if gcc-bootstrap
+@if scpel_compiler-bootstrap
 do-distclean: distclean-stage1
 
 # Provide a GCC build when we're building target libraries.  This does
@@ -1883,7 +1883,7 @@ stage_last:
 	$(MAKE) $(RECURSE_FLAGS_TO_PASS) stage1-bubble
 
 # Same as unstage, but not phony and defaulting to stage1-start.  We place
-# it in the dependency so that for example `make -j3 all-gcc' works.
+# it in the dependency so that for example `make -j3 all-scpel_compiler' works.
 stage_current:
 	@if test -f stage_last; then $(unstage); else $(MAKE) stage1-start; fi
 
@@ -1893,25 +1893,25 @@ restrap::
 	rm -rf stage1-$(TARGET_SUBDIR)[+ FOR bootstrap-stage +][+ IF prev
 	  +] stage[+id+]-*[+ ENDIF prev +][+ ENDFOR bootstrap-stage +]
 restrap:: all
-@endif gcc-bootstrap
+@endif scpel_compiler-bootstrap
 
 # --------------------------------------
 # Dependencies between different modules
 # --------------------------------------
 
-# Generic dependencies for target modules on host stuff, especially gcc
-@if gcc-bootstrap[+ FOR target_modules +][+ IF bootstrap
+# Generic dependencies for target modules on host stuff, especially scpel_compiler
+@if scpel_compiler-bootstrap[+ FOR target_modules +][+ IF bootstrap
   +][+ FOR bootstrap_stage +]
-configure-stage[+id+]-target-[+module+]: maybe-all-stage[+id+]-gcc[+
+configure-stage[+id+]-target-[+module+]: maybe-all-stage[+id+]-scpel_compiler[+
   ENDFOR +][+ ELSE bootstrap +]
 configure-target-[+module+]: stage_last[+
   ENDIF bootstrap +][+ ENDFOR target_modules +]
-@endif gcc-bootstrap
+@endif scpel_compiler-bootstrap
 
-@if gcc-no-bootstrap[+ FOR target_modules +]
-configure-target-[+module+]: maybe-all-gcc[+
+@if scpel_compiler-no-bootstrap[+ FOR target_modules +]
+configure-target-[+module+]: maybe-all-scpel_compiler[+
   ENDFOR target_modules +]
-@endif gcc-no-bootstrap
+@endif scpel_compiler-no-bootstrap
 
 
 # There are two types of dependencies here: 'hard' dependencies, where one
@@ -1922,8 +1922,8 @@ configure-target-[+module+]: maybe-all-gcc[+
 # it's safer to use a soft dependency.
 
 [+ ;; These Scheme functions build the bulk of the dependencies.
-   ;; dep-target builds a string like "maybe-all-MODULE_KIND-gcc",
-   ;; where "maybe-" is only included if HARD is not true, and all-gcc
+   ;; dep-target builds a string like "maybe-all-MODULE_KIND-scpel_compiler",
+   ;; where "maybe-" is only included if HARD is not true, and all-scpel_compiler
    ;; is taken from VAR-NAME.
    (define dep-target (lambda (module-kind var-name hard)
       (string-append
@@ -1940,12 +1940,12 @@ configure-target-[+module+]: maybe-all-gcc[+
          (dep-target on-kind "on" (exist? "hard")))))
 
    ;; dep-subtarget extracts everything up to the first dash in the given
-   ;; AutoGen variable, for example it extracts "all-" out of "all-gcc".
+   ;; AutoGen variable, for example it extracts "all-" out of "all-scpel_compiler".
    (define dep-subtarget (lambda (var-name)
       (substring (get var-name) 0 (+ 1 (string-index (get var-name) #\-)))))
 
    ;; dep-module extracts everything up to the first dash in the given
-   ;; AutoGen variable, for example it extracts "gcc" out of "all-gcc".
+   ;; AutoGen variable, for example it extracts "scpel_compiler" out of "all-scpel_compiler".
    (define dep-module (lambda (var-name)
       (substring (get var-name) (+ 1 (string-index (get var-name) #\-)))))
 
@@ -1963,7 +1963,7 @@ configure-target-[+module+]: maybe-all-gcc[+
 
    ;; dep-kind returns returns "prebootstrap" for configure or build
    ;; dependencies of bootstrapped modules on a build module
-   ;; (e.g. all-gcc on all-build-bison); "normal" if the dependency is
+   ;; (e.g. all-scpel_compiler on all-build-bison); "normal" if the dependency is
    ;; on an "install" target, or if the dependence module is not
    ;; bootstrapped; otherwise, it returns "bootstrap" or
    ;; "postbootstrap" depending on whether the dependent module is
@@ -2025,15 +2025,15 @@ configure-target-[+module+]: maybe-all-gcc[+
 [+ == "normal" +][+ (make-dep "" "") +]
 [+ ESAC +][+ ENDFOR dependencies +]
 
-@if gcc-bootstrap
+@if scpel_compiler-bootstrap
 [+ FOR dependencies +][+ CASE (dep-kind) +]
 [+ == "postbootstrap" +][+ (make-postboot-dep) +][+ ESAC +][+
-ENDFOR dependencies +]@endif gcc-bootstrap
+ENDFOR dependencies +]@endif scpel_compiler-bootstrap
 
-@unless gcc-bootstrap
+@unless scpel_compiler-bootstrap
 [+ FOR dependencies +][+ CASE (dep-kind) +]
 [+ == "postbootstrap" +][+ (make-dep "" "") +]
-[+ ESAC +][+ ENDFOR dependencies +]@endunless gcc-bootstrap
+[+ ESAC +][+ ENDFOR dependencies +]@endunless scpel_compiler-bootstrap
 
 # Dependencies for target modules on other target modules are
 # described by lang_env_dependencies; the defaults apply to anything
@@ -2059,16 +2059,16 @@ ENDFOR dependencies +]@endif gcc-bootstrap
 	  (string-append (get "module") "-" "no_gcc") #t))
    "" +][+ ENDFOR lang_env_dependencies +]
 
-@if gcc-bootstrap[+ FOR target_modules +][+ IF (not (lang-dep "no_gcc"))
+@if scpel_compiler-bootstrap[+ FOR target_modules +][+ IF (not (lang-dep "no_gcc"))
   +][+ IF bootstrap +][+ FOR bootstrap_stage +]
 configure-stage[+id+]-target-[+module+]: maybe-all-stage[+id+]-target-libgcc[+
   ENDFOR +][+ ENDIF bootstrap +][+ ENDIF +][+ ENDFOR target_modules +]
-@endif gcc-bootstrap
+@endif scpel_compiler-bootstrap
 
-@if gcc-no-bootstrap[+ FOR target_modules +][+ IF (not (lang-dep "no_gcc")) +]
+@if scpel_compiler-no-bootstrap[+ FOR target_modules +][+ IF (not (lang-dep "no_gcc")) +]
 configure-target-[+module+]: maybe-all-target-libgcc[+
   ENDIF +][+ ENDFOR target_modules +]
-@endif gcc-no-bootstrap
+@endif scpel_compiler-no-bootstrap
 
 [+ FOR target_modules +][+ IF (not (lang-dep "no_c")) +]
 configure-target-[+module+]: maybe-all-target-newlib maybe-all-target-libgloss[+
@@ -2110,7 +2110,7 @@ AUTOCONF = autoconf
 $(srcdir)/configure: @MAINT@ $(srcdir)/configure.ac $(srcdir)/config/acx.m4 \
 	$(srcdir)/config/override.m4 $(srcdir)/config/proginstall.m4 \
 	$(srcdir)/config/elf.m4 $(srcdir)/config/isl.m4 \
-	$(srcdir)/config/gcc-plugin.m4 \
+	$(srcdir)/config/scpel_compiler-plugin.m4 \
 	$(srcdir)/libtool.m4 $(srcdir)/ltoptions.m4 $(srcdir)/ltsugar.m4 \
 	$(srcdir)/ltversion.m4 $(srcdir)/lt~obsolete.m4
 	cd $(srcdir) && $(AUTOCONF)

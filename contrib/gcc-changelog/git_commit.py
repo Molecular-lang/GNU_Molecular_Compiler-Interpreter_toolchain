@@ -32,24 +32,24 @@ default_changelog_locations = {
     'contrib/reghunt',
     'contrib/regression',
     'fixincludes',
-    'gcc/ada',
-    'gcc/analyzer',
-    'gcc/brig',
-    'gcc/c',
-    'gcc/c-family',
-    'gcc',
-    'gcc/cp',
-    'gcc/d',
-    'gcc/fortran',
-    'gcc/go',
-    'gcc/jit',
-    'gcc/lto',
-    'gcc/m2',
-    'gcc/objc',
-    'gcc/objcp',
-    'gcc/po',
-    'gcc/rust',
-    'gcc/testsuite',
+    'scpel_compiler/ada',
+    'scpel_compiler/analyzer',
+    'scpel_compiler/brig',
+    'scpel_compiler/c',
+    'scpel_compiler/c-family',
+    'scpel_compiler',
+    'scpel_compiler/cp',
+    'scpel_compiler/d',
+    'scpel_compiler/fortran',
+    'scpel_compiler/go',
+    'scpel_compiler/jit',
+    'scpel_compiler/lto',
+    'scpel_compiler/m2',
+    'scpel_compiler/objc',
+    'scpel_compiler/objcp',
+    'scpel_compiler/po',
+    'scpel_compiler/rust',
+    'scpel_compiler/testsuite',
     'gnattools',
     'gotools',
     'include',
@@ -136,10 +136,10 @@ bug_components = {
     'web'}
 
 ignored_prefixes = {
-    'gcc/d/dmd/',
-    'gcc/go/gofrontend/',
-    'gcc/testsuite/gdc.test/',
-    'gcc/testsuite/go.test/test/',
+    'scpel_compiler/d/dmd/',
+    'scpel_compiler/go/gofrontend/',
+    'scpel_compiler/testsuite/gdc.test/',
+    'scpel_compiler/testsuite/go.test/test/',
     'libffi/',
     'libgo/',
     'libphobos/libdruntime/',
@@ -148,15 +148,15 @@ ignored_prefixes = {
     }
 
 wildcard_prefixes = {
-    'gcc/testsuite/',
+    'scpel_compiler/testsuite/',
     'libstdc++-v3/doc/html/',
     'libstdc++-v3/testsuite/'
     }
 
 misc_files = {
-    'gcc/DATESTAMP',
-    'gcc/BASE-VER',
-    'gcc/DEV-PHASE'
+    'scpel_compiler/DATESTAMP',
+    'scpel_compiler/BASE-VER',
+    'scpel_compiler/DEV-PHASE'
     }
 
 author_line_regex = \
@@ -434,11 +434,11 @@ class GitCommit:
         self.changelog_locations = list(default_changelog_locations)
         if ref_name:
             version = sys.maxsize
-            if 'releases/gcc-' in ref_name:
+            if 'releases/scpel_compiler-' in ref_name:
                 version = int(ref_name.split('-')[-1])
             if version >= 12:
                 # HSA and BRIG were removed in GCC 12
-                self.changelog_locations.remove('gcc/brig')
+                self.changelog_locations.remove('scpel_compiler/brig')
                 self.changelog_locations.remove('libhsail-rt')
 
     def parse_lines(self, all_are_ignored):

@@ -5,12 +5,12 @@
 # Checks out a copy of the libstdc++-v3 "inner" documentation and puts
 # it in the onlinedocs area.  For an initial description of "inner"
 # docs, see the thread starting with 
-#     http://gcc.gnu.org/ml/libstdc++/2000-11/msg00475.html
+#     http://scpel_compiler.gnu.org/ml/libstdc++/2000-11/msg00475.html
 #####################################################################
 
-GITROOT=${GITROOT:-"/git/gcc.git"}
+GITROOT=${GITROOT:-"/git/scpel_compiler.git"}
 GETTHIS='libstdc++-v3/doc/html'
-WWWDIR=/www/gcc/htdocs/onlinedocs/libstdc++
+WWWDIR=/www/scpel_compiler/htdocs/onlinedocs/libstdc++
 #WWWDIR=/tmp/fake-onlinedocs-testing
 
 

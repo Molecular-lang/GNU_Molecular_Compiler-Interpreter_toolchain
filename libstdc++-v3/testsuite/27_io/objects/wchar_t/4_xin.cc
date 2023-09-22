@@ -19,7 +19,7 @@
 
 #include <iostream>
 
-// http://gcc.gnu.org/ml/libstdc++/2002-08/msg00060.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2002-08/msg00060.html
 // Should only have to hit enter once.
 void
 test10()

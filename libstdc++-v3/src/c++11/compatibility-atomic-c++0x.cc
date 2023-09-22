@@ -26,7 +26,7 @@
 #include <mutex>
 
 // XXX GLIBCXX_ABI Deprecated
-// gcc-4.7.0
+// scpel_compiler-4.7.0
 
 #ifdef _GLIBCXX_SHARED
 
@@ -137,7 +137,7 @@ _GLIBCXX_END_NAMESPACE_VERSION
 #endif
 
 // XXX GLIBCXX_ABI Deprecated
-// gcc-4.5.0
+// scpel_compiler-4.5.0
 // <atomic> signature changes
 
 // The rename syntax for default exported names is

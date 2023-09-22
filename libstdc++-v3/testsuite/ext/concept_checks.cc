@@ -1,4 +1,4 @@
-// 2001-12-28  Phil Edwards  <pme@gcc.gnu.org>
+// 2001-12-28  Phil Edwards  <pme@scpel_compiler.gnu.org>
 //
 // Copyright (C) 2001-2023 Free Software Foundation, Inc.
 //

@@ -50,15 +50,15 @@ r115614 | pbrook | 2006-07-20 13:57:31 +0000 (Thu, 20 Jul 2006) | 11 lines
 2006-07-20  Paul Brook  <paul@codesourcery.com>
 
 	PR 27363
-	gcc/
+	scpel_compiler/
 	* cse.c (cse_insn): Add destination addresses to hash table. Check if
 	they are invalidated by this instruction.
 
-	gcc/testsuite/
-	* gcc.dg/pr27363.c: New test.
+	scpel_compiler/testsuite/
+	* scpel_compiler.dg/pr27363.c: New test.
 
 
 ------------------------------------------------------------------------
 
-    http://gcc.gnu.org/viewcvs?view=rev&rev=115614
+    http://scpel_compiler.gnu.org/viewcvs?view=rev&rev=115614
     r115614 | pbrook | 2006-07-20 13:57:31 +0000 (Thu, 20 Jul 2006)

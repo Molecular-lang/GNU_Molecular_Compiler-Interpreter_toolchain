@@ -27,7 +27,7 @@
 
 const char name_01[] = "ifstream_members-1.tst";
 
-// http://gcc.gnu.org/ml/libstdc++/2000-07/msg00004.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2000-07/msg00004.html
 void test02()
 {
   const int more_than_max_open_files = 8200;

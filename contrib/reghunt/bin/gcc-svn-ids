@@ -2,7 +2,7 @@
 
 # Convert one kind of changeset identifier to another.
 #
-# Usage: gcc-svn-ids -f from_kind -t to_kind id
+# Usage: scpel_compiler-svn-ids -f from_kind -t to_kind id
 #
 # Where from_kind is one of:
 #   index   index into the changeset list used by the reghunt tools

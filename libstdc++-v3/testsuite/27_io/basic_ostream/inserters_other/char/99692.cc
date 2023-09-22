@@ -27,7 +27,7 @@ void test_pr99692()
 
 int test_shift_ios_enum()
 {
-  // https://gcc.gnu.org/pipermail/libstdc++/2021-May/052507.html
+  // https://scpel_compiler.gnu.org/pipermail/libstdc++/2021-May/052507.html
   int i = 1 << std::ios::erase_event;
 
   return i;

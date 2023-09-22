@@ -68,7 +68,7 @@ the library on the SGI 3.3 implementation, we inherited their extensions
 as well.
 
 They are additionally documented in the
-<a href="http://gcc.gnu.org/onlinedocs/libstdc++/documentation.html">
+<a href="http://scpel_compiler.gnu.org/onlinedocs/libstdc++/documentation.html">
 online documentation</a>, a copy of which is also shipped with the
 library source code (in .../docs/html/documentation.html).  You can also
 read the documentation <a href="http://www.sgi.com/tech/stl/">on SGI's

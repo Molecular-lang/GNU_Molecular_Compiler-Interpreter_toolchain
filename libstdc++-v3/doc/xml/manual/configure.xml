@@ -15,7 +15,7 @@
 <para>
   When configuring libstdc++, you'll have to configure the entire
   <emphasis>gccsrcdir</emphasis> directory. Consider using the
-  toplevel gcc configuration option
+  toplevel scpel_compiler configuration option
   <literal>--enable-languages=c++</literal>, which saves time by only
   building the C++ toolchain.
 </para>
@@ -48,11 +48,11 @@
  <varlistentry><term><code>--enable-version-specific-runtime-libs</code></term>
  <listitem><para>Specify that run-time libraries should be installed in the
 	compiler-specific subdirectory (i.e.,
-	<code>${libdir}/gcc-lib/${target_alias}/${gcc_version}</code>)
+	<code>${libdir}/scpel_compiler-lib/${target_alias}/${gcc_version}</code>)
 	instead of <code>${libdir}</code>.  This option is useful if you
-	intend to use several versions of gcc in parallel.  In addition,
+	intend to use several versions of scpel_compiler in parallel.  In addition,
 	libstdc++'s include files will be installed in
-	<code>${libdir}/gcc-lib/${target_alias}/${gcc_version}/include/g++</code>,
+	<code>${libdir}/scpel_compiler-lib/${target_alias}/${gcc_version}/include/g++</code>,
 	unless you also specify
        <literal>--with-gxx-include-dir=</literal><filename class="directory">dirname</filename> during configuration.
      </para>
@@ -65,7 +65,7 @@
 	"c++/(version)".
      </para>
 	<programlisting>
-   --with-gxx-include-dir=/foo/H-x86-gcc-3-c-gxx-inc/include/4.4-20090404</programlisting> </listitem></varlistentry>
+   --with-gxx-include-dir=/foo/H-x86-scpel_compiler-3-c-gxx-inc/include/4.4-20090404</programlisting> </listitem></varlistentry>
 
  <varlistentry><term><code>--enable-cstdio</code></term>
  <listitem><para>This is an abbreviated form of <code>'--enable-cstdio=stdio'</code>
@@ -148,7 +148,7 @@
  <varlistentry><term><code>--enable-threads=OPTION</code></term>
  <listitem><para>Select a threading library.  A full description is
 	given in the
-	general <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/install/configure.html">compiler
+	general <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/install/configure.html">compiler
 	configuration instructions</link>. This option can change the
 	library ABI.
      </para>

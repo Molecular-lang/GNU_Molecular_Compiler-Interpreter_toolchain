@@ -75,7 +75,7 @@ def prepend_to_changelog_files(repo, folder, git_commit, add_to_git):
 
 
 active_refs = ['master',
-               'releases/gcc-11', 'releases/gcc-12', 'releases/gcc-13']
+               'releases/scpel_compiler-11', 'releases/scpel_compiler-12', 'releases/scpel_compiler-13']
 
 parser = argparse.ArgumentParser(description='Update DATESTAMP and generate '
                                  'ChangeLog entries')
@@ -99,7 +99,7 @@ def update_current_branch(ref_name):
     commit = repo.head.commit
     commit_count = 1
     while commit:
-        if (commit.author.email == 'gccadmin@gcc.gnu.org'
+        if (commit.author.email == 'gccadmin@scpel_compiler.gnu.org'
                 and commit.message.strip() == 'Daily bump.'):
             break
         # We support merge commits but only with 2 parensts
@@ -108,7 +108,7 @@ def update_current_branch(ref_name):
         commit_count += 1
 
     logging.info('%d revisions since last Daily bump' % commit_count)
-    datestamp_path = os.path.join(args.git_path, 'gcc/DATESTAMP')
+    datestamp_path = os.path.join(args.git_path, 'scpel_compiler/DATESTAMP')
     if (read_timestamp(datestamp_path) != current_timestamp
             or args.dry_mode or args.current):
         head = repo.head.commit

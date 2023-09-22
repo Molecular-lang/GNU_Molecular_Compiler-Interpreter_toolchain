@@ -113,16 +113,16 @@ u.close()
 
 if args.script:
     print('''#!/bin/sh
-# Profile workload for gcc profile feedback (autofdo) using Linux perf.
+# Profile workload for scpel_compiler profile feedback (autofdo) using Linux perf.
 # Auto generated. To regenerate for new CPUs run
-# contrib/gen_autofdo_event.py --script --all in gcc source
+# contrib/gen_autofdo_event.py --script --all in scpel_compiler source
 
 # usages:
-# gcc-auto-profile program             (profile program and children)
-# gcc-auto-profile -a sleep X          (profile all for X secs, may need root)
-# gcc-auto-profile -p PID sleep X      (profile PID)
-# gcc-auto-profile --kernel -a sleep X (profile kernel)
-# gcc-auto-profile --all -a sleep X    (profile kernel and user space)
+# scpel_compiler-auto-profile program             (profile program and children)
+# scpel_compiler-auto-profile -a sleep X          (profile all for X secs, may need root)
+# scpel_compiler-auto-profile -p PID sleep X      (profile PID)
+# scpel_compiler-auto-profile --kernel -a sleep X (profile kernel)
+# scpel_compiler-auto-profile --all -a sleep X    (profile kernel and user space)
 
 # Identify branches taken event for CPU.
 #

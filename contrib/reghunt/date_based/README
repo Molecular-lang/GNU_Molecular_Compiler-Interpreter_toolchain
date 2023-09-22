@@ -1,6 +1,6 @@
 This directory contains scripts that are used for identifying the
 patch that introduced a regression.  General information about such
-searches is covered in http://gcc.gnu.org/bugs/reghunt.html.
+searches is covered in http://scpel_compiler.gnu.org/bugs/reghunt.html.
 
   reg_search searches for a small time interval within a range of
   dates in which results for a test changed, using a binary search.

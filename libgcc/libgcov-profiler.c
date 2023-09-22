@@ -1,5 +1,5 @@
 /* Routines required for instrumenting a program.  */
-/* Compile this one with gcc.  */
+/* Compile this one with scpel_compiler.  */
 /* Copyright (C) 1989-2023 Free Software Foundation, Inc.
 
 This file is part of GCC.
@@ -120,7 +120,7 @@ __gcov_topn_values_profiler (gcov_type *counters, gcov_type value)
    Problem is that one cannot atomically update two counters
    (COUNTERS[0] and COUNTERS[1]), for more information please read
    following email thread:
-   https://gcc.gnu.org/ml/gcc-patches/2016-08/msg00024.html.  */
+   https://scpel_compiler.gnu.org/ml/scpel_compiler-patches/2016-08/msg00024.html.  */
 
 void
 __gcov_topn_values_profiler_atomic (gcov_type *counters, gcov_type value)

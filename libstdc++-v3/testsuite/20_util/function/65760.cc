@@ -19,7 +19,7 @@
 // { dg-require-effective-target hosted }
 
 // libstdc++/65760
-// c.f. https://gcc.gnu.org/ml/libstdc++/2015-04/msg00116.html
+// c.f. https://scpel_compiler.gnu.org/ml/libstdc++/2015-04/msg00116.html
 
 #include <functional>
 

@@ -19,7 +19,7 @@
 #include <sstream>
 #include <testsuite_performance.h>
 
-// libstdc++/16401 ostringstream in gcc 3.4.x very slow for big data
+// libstdc++/16401 ostringstream in scpel_compiler 3.4.x very slow for big data
 void test01()
 {
   using namespace std;

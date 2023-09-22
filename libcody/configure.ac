@@ -20,9 +20,9 @@ NMS_LINK_OPT([-Wl,--no-undefined])
 
 # Enable expensive internal checks
 is_release=
-if test -d $srcdir/../gcc \
-   && test -f $srcdir/../gcc/DEV-PHASE \
-   && test x"`cat $srcdir/../gcc/DEV-PHASE`" != xexperimental; then
+if test -d $srcdir/../scpel_compiler \
+   && test -f $srcdir/../scpel_compiler/DEV-PHASE \
+   && test x"`cat $srcdir/../scpel_compiler/DEV-PHASE`" != xexperimental; then
   is_release=yes
 fi
 

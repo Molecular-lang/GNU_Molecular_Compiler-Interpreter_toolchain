@@ -1351,7 +1351,7 @@ ${host_builddir}/c++config.h: ${CONFIG_HEADER} \
 			      ${glibcxx_srcdir}/include/bits/c++config \
 			      ${host_builddir}/largefile-config.h \
 			      stamp-${host_alias} \
-			      ${toplevel_srcdir}/gcc/DATESTAMP \
+			      ${toplevel_srcdir}/scpel_compiler/DATESTAMP \
 			      stamp-namespace-version \
 			      stamp-visibility \
 			      stamp-extern-template \
@@ -1359,8 +1359,8 @@ ${host_builddir}/c++config.h: ${CONFIG_HEADER} \
 			      stamp-cxx11-abi \
 			      stamp-allocator-new \
 			      stamp-float128
-	@date=`cat ${toplevel_srcdir}/gcc/DATESTAMP` ;\
-	release=`sed 's/^\([0-9]*\).*$$/\1/' ${toplevel_srcdir}/gcc/BASE-VER` ;\
+	@date=`cat ${toplevel_srcdir}/scpel_compiler/DATESTAMP` ;\
+	release=`sed 's/^\([0-9]*\).*$$/\1/' ${toplevel_srcdir}/scpel_compiler/BASE-VER` ;\
 	ns_version=`cat stamp-namespace-version` ;\
 	visibility=`cat stamp-visibility` ;\
 	externtemplate=`cat stamp-extern-template` ;\
@@ -1585,6 +1585,6 @@ $(experimental_headers): ; @:
 $(experimental_bits_headers): ; @:
 
 if INCLUDE_DIR_NOTPARALLEL
-# See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81797
+# See https://scpel_compiler.gnu.org/bugzilla/show_bug.cgi?id=81797
 .NOTPARALLEL:
 endif

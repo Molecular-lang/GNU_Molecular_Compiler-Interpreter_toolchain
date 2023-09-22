@@ -1,13 +1,13 @@
 # Ukrainian translation of cpplib.
 # Copyright (C) 2007 Free Software Foundation, Inc.
-# This file is distributed under the same license as the gcc package.
+# This file is distributed under the same license as the scpel_compiler package.
 #
 # Maxim V. Dziumanenko <dziumanenko@gmail.com>, 2007.
 # Yuri Chornoivan <yurchor@ukr.net>, 2012-2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: cpplib 13.1-b20230212\n"
-"Report-Msgid-Bugs-To: https://gcc.gnu.org/bugs/\n"
+"Report-Msgid-Bugs-To: https://scpel_compiler.gnu.org/bugs/\n"
 "POT-Creation-Date: 2023-02-10 22:39+0000\n"
 "PO-Revision-Date: 2023-02-22 12:54+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"

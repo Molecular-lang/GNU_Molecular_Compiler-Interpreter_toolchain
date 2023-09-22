@@ -1,6 +1,6 @@
 # Traditional Chinese translation for cpplib.
 # Copyright (C) 2005 Free Software Foundation, Inc.
-# This file is distributed under the same license as the gcc package.
+# This file is distributed under the same license as the scpel_compiler package.
 # Meng Jie <zuxyhere@eastday.com>, 2005.
 # Wei-Lun Chao <bluebat@member.fsf.org>, 2006, 2013, 2015.
 # Yi-Jyun Pan <pan93412@gmail.com>, 2020.
@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: cpplib 12.1-b20220213\n"
-"Report-Msgid-Bugs-To: https://gcc.gnu.org/bugs/\n"
+"Report-Msgid-Bugs-To: https://scpel_compiler.gnu.org/bugs/\n"
 "POT-Creation-Date: 2023-02-10 22:39+0000\n"
 "PO-Revision-Date: 2022-02-16 00:36+0800\n"
 "Last-Translator: Yi-Jyun Pan <pan93412@gmail.com>\n"

@@ -47,7 +47,7 @@ search_path = [ ".", "../include", "../libcpp/include" ]
 remove_count = { }
 
 
-# Given a header name, normalize it.  ie.  cp/scpel-tree.h could be in gcc, while
+# Given a header name, normalize it.  ie.  cp/scpel-tree.h could be in scpel_compiler, while
 # the same header could be referenced from within the cp subdirectory as
 # just scpel-tree.h
 # for now, just assume basenames are unique
@@ -95,12 +95,12 @@ def get_header_info (header, s_path):
   else:
     # if the file isnt in the source directories, look in the build and target
     # directories. If it is here, then aggregate all the versions.
-    location = build_dir + "/gcc/" + header
+    location = build_dir + "/scpel_compiler/" + header
     build_inc = target_inc = False
     if os.path.exists (location):
       build_inc = True
     for x in target_dict:
-      location = target_dict[x] + "/gcc/" + header
+      location = target_dict[x] + "/scpel_compiler/" + header
       if os.path.exists (location):
         target_inc = True
         break
@@ -111,14 +111,14 @@ def get_header_info (header, s_path):
       consumes = set()
       incl = set()
       if build_inc:
-        iinfo = process_ii_macro (build_dir + "/gcc/" + header)
+        iinfo = process_ii_macro (build_dir + "/scpel_compiler/" + header)
         defines = set (ii_macro_define (iinfo))
         consumes = set (ii_macro_consume (iinfo))
         incl = set (ii_include_list (iinfo))
 
       if (target_inc):
         for x in target_dict:
-          location = target_dict[x] + "/gcc/" + header
+          location = target_dict[x] + "/scpel_compiler/" + header
           if os.path.exists (location):
             iinfo = process_ii_macro (location)
             defines.update (ii_macro_define (iinfo))
@@ -160,7 +160,7 @@ def all_headers (fname):
 
 
 # Search bld_dir for all target tuples, confirm that they have a build path with
-# bld_dir/target-tuple/gcc, and build a dictionary of build paths indexed by
+# bld_dir/target-tuple/scpel_compiler, and build a dictionary of build paths indexed by
 # target tuple..
 
 def build_target_dict (bld_dir, just_these):
@@ -176,8 +176,8 @@ def build_target_dict (bld_dir, just_these):
       if t.find("-") != -1:
         target = t.strip()
         tpath = bld_dir + "/" + target
-        if not os.path.exists (tpath + "/gcc"):
-          print "Error: gcc build directory for target " + t + " Does not exist: " + tpath + "/gcc"
+        if not os.path.exists (tpath + "/scpel_compiler"):
+          print "Error: scpel_compiler build directory for target " + t + " Does not exist: " + tpath + "/scpel_compiler"
           error = True
         else:
           target_dict[target] = tpath
@@ -194,11 +194,11 @@ def get_obj_name (src_file):
 
 def target_obj_exists (target, obj_name):
   global target_dict
-  # look in a subdir if src has a subdir, then check gcc base directory.
+  # look in a subdir if src has a subdir, then check scpel_compiler base directory.
   if target_dict.get(target):
-    obj = target_dict[target] + "/gcc/" + obj_name
+    obj = target_dict[target] + "/scpel_compiler/" + obj_name
     if not os.path.exists (obj):
-      obj = target_dict[target] + "/gcc/" + os.path.basename(obj_name)
+      obj = target_dict[target] + "/scpel_compiler/" + os.path.basename(obj_name)
     if os.path.exists (obj):
       return True
   return False
@@ -259,7 +259,7 @@ def try_to_remove (src_file, h_list, verbose):
       # config files dont usually build on the host
       hostbuild = False
       obn = get_obj_name (os.path.basename (src_file))
-      if obn and os.path.exists (build_dir + "/gcc/" + obn):
+      if obn and os.path.exists (build_dir + "/scpel_compiler/" + obn):
         hostbuild = True
       if not target_dict:
         summary = src_file + ": Target builds are required for config files.  None found."
@@ -273,7 +273,7 @@ def try_to_remove (src_file, h_list, verbose):
     if hostbuild:
       # confirm it actually builds before we do anything
       print "Confirming source file builds"
-      res = get_make_output (build_dir + "/gcc", "all")
+      res = get_make_output (build_dir + "/scpel_compiler", "all")
       if res[0] != 0:
         message = "Error: " + src_file + " does not build currently."
         summary = src_file + " does not build on host."
@@ -324,7 +324,7 @@ def try_to_remove (src_file, h_list, verbose):
           
         keep = False
         if hostbuild:
-          res = get_make_output (build_dir + "/gcc", "all")
+          res = get_make_output (build_dir + "/scpel_compiler", "all")
         else:
           res = (0, "")
 
@@ -338,10 +338,10 @@ def try_to_remove (src_file, h_list, verbose):
           if targ_list:
             objfile = get_obj_name (src_file)
             t1 = targ_list[0]
-            if objfile and os.path.exists(t1[1] +"/gcc/"+objfile):
+            if objfile and os.path.exists(t1[1] +"/scpel_compiler/"+objfile):
               res = get_make_output_parallel (targ_list, objfile, 0)
             else:
-              res = get_make_output_parallel (targ_list, "all-gcc", 0)
+              res = get_make_output_parallel (targ_list, "all-scpel_compiler", 0)
             rc = res[0]
             if rc != 0:
               message = "Compilation failed on TARGET : " + res[2]
@@ -540,10 +540,10 @@ if target_dir and not os.path.exists (target_dir):
 if usage:
   print "Attempts to remove extraneous include files from source files."
   print " "
-  print "Should be run from the main gcc source directory, and works on a target"
+  print "Should be run from the main scpel_compiler source directory, and works on a target"
   print "directory, as we attempt to make the 'all' target."
   print " "
-  print "By default, gcc-reorder-includes is run on each file before attempting"
+  print "By default, scpel_compiler-reorder-includes is run on each file before attempting"
   print "to remove includes. this removes duplicates and puts some headers in a"
   print "canonical ordering"
   print " "

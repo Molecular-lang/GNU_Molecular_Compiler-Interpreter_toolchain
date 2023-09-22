@@ -96,7 +96,7 @@
 	* config.h.in: Regenerate.
 	* configure: Regenerate.
 
-2022-07-01  Pekka Seppänen  <pexu@gcc.mail.kapsi.fi>
+2022-07-01  Pekka Seppänen  <pexu@scpel_compiler.mail.kapsi.fi>
 
 	PR lto/106118
 	* configure.ac: Move -pthread from here...
@@ -205,7 +205,7 @@
 
 	* configure: Re-generate.
 
-2020-11-29  John David Anglin  <danglin@gcc.gnu.org>
+2020-11-29  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* configure: Regenerate.
 
@@ -482,7 +482,7 @@
 	* configure.ac (accel_dir_suffix, real_target_noncanonical): Compute new
 	variables.
 
-2014-11-11  Francois-Xavier Coudert  <fxcoudert@gcc.gnu.org>
+2014-11-11  Francois-Xavier Coudert  <fxcoudert@scpel_compiler.gnu.org>
 
 	PR target/63610
 	* configure: Regenerate.
@@ -537,7 +537,7 @@
 2014-03-17  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 
 	* configure.ac (ac_lto_plugin_ldflags): Set to -Wc,-static-libgcc
-	for gcc.
+	for scpel_compiler.
 	* configure: Regenerate.
 	* Makefile.am (AM_LDFLAGS): New variable.
 	(liblto_plugin_la_LDFLAGS): Add it.
@@ -547,7 +547,7 @@
 
 	* configure: Regenerate.
 
-2012-09-14  David Edelsohn  <dje.gcc@gmail.com>
+2012-09-14  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* configure: Regenerated.
 
@@ -908,7 +908,7 @@
 2010-07-22  Richard Guenther  <rguenther@suse.de>
 
 	* Makefile.am: New copy_lto_plugin rule to install the plugin
-	into ../gcc.
+	into ../scpel_compiler.
 	* Makefile.in: Regenerated.
 
 2010-05-21  Richard Guenther  <rguenther@suse.de>
@@ -977,7 +977,7 @@
 	* lto-plugin.c (write_resolution): Assume resolution_file is set.
 	Print the symbol name.
 	(all_symbols_read_handler): Create a resolution file.
-	Pass it to gcc.
+	Pass it to scpel_compiler.
 	(cleanup_handler): Remove the resolution file.
 	(process_option): Drop the -resolution option.
 
@@ -1106,7 +1106,7 @@
 2009-10-02  Rafael Avila de Espindola  <espindola@google.com>
 
 	* Makefile.am (liblto_plugin_la_SOURCES): Remove
-	$(top_srcdir)/../gcc/lto/common.c
+	$(top_srcdir)/../scpel_compiler/lto/common.c
 	* Makefile.in: Regenerate.
 
 2009-10-01  Rafael Avila de Espindola  <espindola@google.com>
@@ -1250,8 +1250,8 @@
 	* Makefile.am (ltosymtab_SOURCES, liblto_plugin_la_SOURCES):
 	Update the location of common.c.
 	* Makefile.in: Regenerate.
-	* common.c: Moved to gcc/lto.
-	* common.h: Moved to gcc/lto.
+	* common.c: Moved to scpel_compiler/lto.
+	* common.h: Moved to scpel_compiler/lto.
 	* lto-plugin.c: Update the location of common.h.
 	* lto-symtab.c: Update the location of common.h.
 

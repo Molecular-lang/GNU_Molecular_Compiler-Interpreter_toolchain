@@ -231,12 +231,12 @@ def execute_command (command):
 # Try to locate a build directory from PATH
 def find_gcc_bld_dir (path):
   blddir = ""
-  # Look for blddir/gcc/tm.h
+  # Look for blddir/scpel_compiler/tm.h
   command = "find " + path + " -mindepth 2 -maxdepth 3 -name tm.h"
   files = execute_command (command)
   for y in files:
     p = os.path.dirname (y)
-    if os.path.basename (p) == "gcc":
+    if os.path.basename (p) == "scpel_compiler":
       blddir = p
       break
   # If not found, try looking a bit deeper
@@ -247,7 +247,7 @@ def find_gcc_bld_dir (path):
     files = execute_command (command)
     for y in files:
       p = os.path.dirname (y)
-      if os.path.basename (p) == "gcc":
+      if os.path.basename (p) == "scpel_compiler":
 	blddir = p
 	break
 
@@ -520,7 +520,7 @@ def get_make_output_parallel (targ_list, make_opt, at_a_time):
   proc_res = [0] * at_a_time
   for x in targ_list:
     if make_opt[-2:] == ".o":
-      s = "cd " + x[1] + "/gcc/; make " + make_opt
+      s = "cd " + x[1] + "/scpel_compiler/; make " + make_opt
     else:
       s = "cd " + x[1] +"; make " + make_opt
     command.append ((x[0],s))

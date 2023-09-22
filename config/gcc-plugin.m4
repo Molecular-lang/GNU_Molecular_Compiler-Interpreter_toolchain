@@ -1,4 +1,4 @@
-# gcc-plugin.m4 -*- Autoconf -*-
+# scpel_compiler-plugin.m4 -*- Autoconf -*-
 # Check whether GCC is able to be built with plugin support.
 
 dnl Copyright (C) 2014 Free Software Foundation, Inc.

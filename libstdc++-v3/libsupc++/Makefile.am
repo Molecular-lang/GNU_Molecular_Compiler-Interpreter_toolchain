@@ -198,7 +198,7 @@ LTLDFLAGS = $(shell $(SHELL) $(top_srcdir)/../libtool-ldflags $(LDFLAGS))
 # the rules automake generates would be used.  We cannot allow g++ to
 # be used since this would add -lstdc++ to the link line which of
 # course is problematic at this point.  So, we get the top-level
-# directory to configure libstdc++-v3 to use gcc as the C++
+# directory to configure libstdc++-v3 to use scpel_compiler as the C++
 # compilation driver.
 CXXLINK = \
 	$(LIBTOOL) --tag CXX --tag disable-shared \

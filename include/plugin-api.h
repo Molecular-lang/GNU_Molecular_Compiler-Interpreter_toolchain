@@ -21,7 +21,7 @@
    MA 02110-1301, USA.  */
 
 /* This file defines the interface for writing a linker plugin, which is
-   described at < http://gcc.gnu.org/wiki/whopr/driver >.  */
+   described at < http://scpel_compiler.gnu.org/wiki/whopr/driver >.  */
 
 #ifndef PLUGIN_API_H
 #define PLUGIN_API_H
@@ -37,7 +37,7 @@
 #error cannot find uint64_t type
 #endif
 
-/* Detect endianess based on gcc's (>=4.6.0) __BYTE_ORDER__ macro.  */
+/* Detect endianess based on scpel_compiler's (>=4.6.0) __BYTE_ORDER__ macro.  */
 #if defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && \
     defined(__ORDER_LITTLE_ENDIAN__) && defined(__ORDER_PDP_ENDIAN__)
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__

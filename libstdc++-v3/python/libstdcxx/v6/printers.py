@@ -144,7 +144,7 @@ def lookup_templ_spec(templ, *args):
         raise e
 
 # Use this to find container node types instead of find_type,
-# see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91997 for details.
+# see https://scpel_compiler.gnu.org/bugzilla/show_bug.cgi?id=91997 for details.
 
 
 def lookup_node_type(nodename, containertype):
@@ -2730,7 +2730,7 @@ def build_libstdcxx_dictionary():
 
     # libstdc++ objects requiring pretty-printing.
     # In order from:
-    # http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01847.html
+    # http://scpel_compiler.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01847.html
     libstdcxx_printer.add_version('std::', 'basic_string', StdStringPrinter)
     libstdcxx_printer.add_version(
         'std::__cxx11::', 'basic_string', StdStringPrinter)

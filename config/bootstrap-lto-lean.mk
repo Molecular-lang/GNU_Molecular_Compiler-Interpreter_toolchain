@@ -7,9 +7,9 @@ STAGEtrain_GENERATOR_CFLAGS += -flto=jobserver
 STAGEfeedback_CFLAGS += -flto=jobserver
 
 # assumes the host supports the linker plugin
-LTO_AR = $$r/$(HOST_SUBDIR)/prev-gcc/gcc-ar$(exeext) -B$$r/$(HOST_SUBDIR)/prev-gcc/
-LTO_RANLIB = $$r/$(HOST_SUBDIR)/prev-gcc/gcc-ranlib$(exeext) -B$$r/$(HOST_SUBDIR)/prev-gcc/
-LTO_NM = $$r/$(HOST_SUBDIR)/prev-gcc/gcc-nm$(exeext) -B$$r/$(HOST_SUBDIR)/prev-gcc/
+LTO_AR = $$r/$(HOST_SUBDIR)/prev-scpel_compiler/scpel_compiler-ar$(exeext) -B$$r/$(HOST_SUBDIR)/prev-scpel_compiler/
+LTO_RANLIB = $$r/$(HOST_SUBDIR)/prev-scpel_compiler/scpel_compiler-ranlib$(exeext) -B$$r/$(HOST_SUBDIR)/prev-scpel_compiler/
+LTO_NM = $$r/$(HOST_SUBDIR)/prev-scpel_compiler/scpel_compiler-nm$(exeext) -B$$r/$(HOST_SUBDIR)/prev-scpel_compiler/
 
 LTO_EXPORTS = AR="$(LTO_AR)"; export AR; \
 	      RANLIB="$(LTO_RANLIB)"; export RANLIB; \

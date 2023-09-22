@@ -27,7 +27,7 @@
 
 	* configure: Regenerate.
 
-2021-10-22  Eric Gallager  <egallager@gcc.gnu.org>
+2021-10-22  Eric Gallager  <egallager@scpel_compiler.gnu.org>
 
 	PR other/102663
 	* Makefile.in: Add dummy install-dvi target.
@@ -47,7 +47,7 @@
 	PR bootstrap/95413
 	* configure: Regenerated.
 
-2020-05-23  David Edelsohn  <dje.gcc@gmail.com>
+2020-05-23  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* Makefile.in (AR): Substitute @AR@.
 	* configure.ac (CHECK_PROG AR): New.

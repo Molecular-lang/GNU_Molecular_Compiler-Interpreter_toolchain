@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# Check for accurate dependencies in gcc/Makefile.in.
+# Check for accurate dependencies in scpel_compiler/Makefile.in.
 #
 # Copyright (C) 2008-2023 Free Software Foundation, Inc.
 # Written by Ralf Wildenhues <Ralf.Wildenhues@gmx.de>.
@@ -9,7 +9,7 @@
 # modified as defined in the GNU General Public License.  A copy of
 # its license can be downloaded from http://www.gnu.org/copyleft/gpl.html
 #
-# Start this script in an up to date build-tree/gcc directory.
+# Start this script in an up to date build-tree/scpel_compiler directory.
 # Using it in stage1 only works if the host compiler is GCC.
 
 # To continue an interrupted check, make sure there are no *.o.backup
@@ -35,7 +35,7 @@ set -e
 st=0
 
 if test -f c-family/c-common.o; then :; else
-  echo "$0: rerun in an up to date build-tree/gcc directory" >&2
+  echo "$0: rerun in an up to date build-tree/scpel_compiler directory" >&2
   exit 1
 fi
 

@@ -69,7 +69,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *  themselves (e.g., <code>class ostream;</code>) is not valid ISO C++.
    *
    *  For more specific declarations, see
-   *  https://gcc.gnu.org/onlinedocs/libstdc++/manual/io.html#std.io.objects
+   *  https://scpel_compiler.gnu.org/onlinedocs/libstdc++/manual/io.html#std.io.objects
    *
    *  @{
   */

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# This script parses the output of a gcc bootstrap when using warning
+# This script parses the output of a scpel_compiler bootstrap when using warning
 # flags and determines various statistics.
 # 
 # usage: warn_summary [-llf] [-s stage] [-nosub|-ch|-cp|-f|-fortran|-ada|-intl|-fixinc]
@@ -14,13 +14,13 @@
 #
 # -s number
 # Take warnings from stage "Number".  Stage 0 means show warnings from
-# before and after the gcc bootstrap directory.  E.g. libraries, etc.
-# This presupposes using "gcc -W*" for the stage1 compiler.
+# before and after the scpel_compiler bootstrap directory.  E.g. libraries, etc.
+# This presupposes using "scpel_compiler -W*" for the stage1 compiler.
 #
 # -nosub
-# Only show warnings from the gcc top level directory.
+# Only show warnings from the scpel_compiler top level directory.
 # -ch|-cp|-f|-fortran|-ada|-intl|-fixinc
-# Only show warnings from the specified gcc subdirectory.
+# Only show warnings from the specified scpel_compiler subdirectory.
 # These override each other so only the last one passed takes effect.
 #
 # -pass
@@ -46,7 +46,7 @@ longLineFilter()
 }
 
 # This function does one of three things.  It either passes through
-# all warning data, or passes through gcc toplevel warnings, or passes
+# all warning data, or passes through scpel_compiler toplevel warnings, or passes
 # through a particular subdirectory set of warnings.
 subdirectoryFilter()
 {
@@ -57,10 +57,10 @@ subdirectoryFilter()
   else
     if test "$filter" = nosub ; then
       # Omit all subdirectories.
-      egrep -v '/gcc/(ch|cp|f|fortran|ada|intl|fixinc)/'
+      egrep -v '/scpel_compiler/(ch|cp|f|fortran|ada|intl|fixinc)/'
     else
       # Pass through only subdir $filter.
-      grep "/gcc/$filter/"
+      grep "/scpel_compiler/$filter/"
     fi
   fi )
 }
@@ -71,7 +71,7 @@ subdirectoryFilter()
 stageNfilter()
 {
   if test "$stageN" -lt 1 ; then
-    # stage "0" means check everything *but* gcc.
+    # stage "0" means check everything *but* scpel_compiler.
     $AWK "BEGIN{t=1} ; /^Bootstrapping the compiler/{t=0} ; /^Building runtime libraries/{t=1} ; {if(t==1)print}"
   else
     if test "$stageN" -eq 1 ; then
@@ -122,7 +122,7 @@ keywordFilter() {
 srcdirFilter()
 {
   sed '
-s%^[^ ]*/\(gcc/\)%\1%;
+s%^[^ ]*/\(scpel_compiler/\)%\1%;
 s%^[^ ]*/\(include/\)%\1%;
 s%^[^ ]*/\(texinfo/\)%\1%;
 s%^[^ ]*/\(fastjar/\)%\1%;
@@ -196,7 +196,7 @@ for file in "$@" ; do
     if test "$filter" = nosub ; then
       echo "Counting non-subdirectory warnings,"
     else
-      echo "Counting warnings in the gcc/$filter subdirectory,"
+      echo "Counting warnings in the scpel_compiler/$filter subdirectory,"
     fi
   fi
   count=`warningFilter < $tmpfile | wc -l`

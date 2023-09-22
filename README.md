@@ -35,7 +35,7 @@ Make sure you have installed the dependencies:
 * `bison`
 * `flex`
 * `texinfo`
-* A C/C++ compiler (when building for the host, `gcc` is enough; cross-compiling may
+* A C/C++ compiler (when building for the host, `scpel_compiler` is enough; cross-compiling may
   need additional compilers) and `make`
 
 <h2 style="color:#660991;">Building on Linux</h2>
@@ -75,7 +75,6 @@ then run the program with:
    ```
 
 <strong>BEGIN QUOTE</strong> 
-<strong>Note:</strong>
    In the nearest future, we are to launch spm, Scpel Package Manager, its main use will be to track and install
    all necessary packages that any application requires to run. Just like any other package manager pip, cargo or anything
    but for Scpel.

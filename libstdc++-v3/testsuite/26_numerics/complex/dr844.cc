@@ -25,7 +25,7 @@
 // In C++11 mode we used to implement the resolution of
 // DR 844. complex pow return type is ambiguous.
 // However, doing that causes all sorts of issues, see, for example:
-//   http://gcc.gnu.org/ml/libstdc++/2013-01/msg00058.html
+//   http://scpel_compiler.gnu.org/ml/libstdc++/2013-01/msg00058.html
 // and also PR57974.
 void test01()
 {

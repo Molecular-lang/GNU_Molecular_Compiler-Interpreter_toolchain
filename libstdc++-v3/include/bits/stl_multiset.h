@@ -475,7 +475,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
        *  improve the performance of the insertion process.  A bad hint would
        *  cause no gains in efficiency.
        *
-       *  See https://gcc.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
+       *  See https://scpel_compiler.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
        *  for more on @a hinting.
        *
        *  Insertion requires logarithmic time (if the hint is not taken).
@@ -525,7 +525,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
        *  improve the performance of the insertion process.  A bad hint would
        *  cause no gains in efficiency.
        *
-       *  See https://gcc.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
+       *  See https://scpel_compiler.gnu.org/onlinedocs/libstdc++/manual/associative.html#containers.associative.insert_hints
        *  for more on @a hinting.
        *
        *  Insertion requires logarithmic time (if the hint is not taken).

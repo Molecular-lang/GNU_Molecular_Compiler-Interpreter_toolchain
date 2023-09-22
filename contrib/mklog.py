@@ -59,7 +59,7 @@ TAB_WIDTH = 8
 #   | This is some text explaining the commit.         | This is the "start"
 #   | There can be several lines.                      |
 #   |                                                  |<------------------->
-#   | gcc/rust/ChangeLog:                              |
+#   | scpel_compiler/rust/ChangeLog:                              |
 #   |                                                  | This is the generated
 #   |         * some_file (bla):                       | ChangeLog part
 #   |         (foo):                                   |
@@ -84,7 +84,7 @@ super_macro_regex = re.compile(r'^DEF[A-Z0-9_]+\s*\(([a-zA-Z0-9_]+)')
 fn_regex = re.compile(r'([a-zA-Z_][^()\s]*)\s*\([^*]')
 template_and_param_regex = re.compile(r'<[^<>]*>')
 md_def_regex = re.compile(r'\(define.*\s+"(.*)"')
-bugzilla_url = 'https://gcc.gnu.org/bugzilla/rest.cgi/bug?id=%s&' \
+bugzilla_url = 'https://scpel_compiler.gnu.org/bugzilla/rest.cgi/bug?id=%s&' \
                'include_fields=summary,component'
 
 function_extensions = {'.c', '.cpp', '.C', '.cc', '.h', '.inc', '.def', '.md'}

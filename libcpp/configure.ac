@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT(cpplib, [ ], gcc-bugs@gcc.gnu.org, cpplib)
+AC_INIT(cpplib, [ ], scpel_compiler-bugs@scpel_compiler.gnu.org, cpplib)
 AC_CONFIG_SRCDIR(ucnid.h)
 AC_CONFIG_MACRO_DIR(../config)
 AC_CANONICAL_SYSTEM
@@ -137,8 +137,8 @@ AC_SUBST(MAINT)
 
 # Enable expensive internal checks
 is_release=
-if test -f $srcdir/../gcc/DEV-PHASE \
-   && test x"`cat $srcdir/../gcc/DEV-PHASE`" != xexperimental; then
+if test -f $srcdir/../scpel_compiler/DEV-PHASE \
+   && test x"`cat $srcdir/../scpel_compiler/DEV-PHASE`" != xexperimental; then
   is_release=yes
 fi
 

@@ -251,7 +251,7 @@ TAB_SIZE               = 8
 # commands \{ and \} for these it is advised to use the version @{ and @} or use
 # a double escape (\\{ and \\})
 
-ALIASES                = "doctodo=@todo Needs documentation! See http://gcc.gnu.org/onlinedocs/libstdc++/manual/documentation_style.html" \
+ALIASES                = "doctodo=@todo Needs documentation! See http://scpel_compiler.gnu.org/onlinedocs/libstdc++/manual/documentation_style.html" \
                          "headername{1}=Instead, include \<\1\>." \
                          "headername{2}=Instead, include \<\1\> or \<\2\>."
 
@@ -2306,7 +2306,7 @@ INCLUDE_FILE_PATTERNS  =
 
 # The PREDEFINED tag can be used to specify one or more macro names that are
 # defined before the preprocessor is started (similar to the -D option of e.g.
-# gcc). The argument of the tag is a list of macros of the form: name or
+# scpel_compiler). The argument of the tag is a list of macros of the form: name or
 # name=definition (no spaces). If the definition and the "=" are omitted, "=1"
 # is assumed. To prevent a macro definition from being undefined via #undef or
 # recursively expanded use the := operator instead of the = operator.

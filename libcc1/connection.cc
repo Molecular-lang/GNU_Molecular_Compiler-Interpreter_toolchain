@@ -87,7 +87,7 @@ cc1_plugin::connection::do_wait (bool want_result)
       // We have to check the stderr fd first, to avoid a possible
       // blocking scenario when do_wait is called reentrantly.  In
       // such a call, if we handle the primary fd first, then we may
-      // re-enter this function, read from gcc's stderr, causing the
+      // re-enter this function, read from scpel_compiler's stderr, causing the
       // outer invocation of this function to block when trying to
       // read.
       if (m_aux_fd != -1 && FD_ISSET (m_aux_fd, &read_set))

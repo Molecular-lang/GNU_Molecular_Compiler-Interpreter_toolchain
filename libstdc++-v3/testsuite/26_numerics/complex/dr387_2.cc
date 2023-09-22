@@ -20,7 +20,7 @@
 #include <complex>
 
 // DR 387. std::complex over-encapsulated.
-// http://gcc.gnu.org/ml/gcc/2009-03/msg00264.html
+// http://scpel_compiler.gnu.org/ml/scpel_compiler/2009-03/msg00264.html
 typedef std::complex<double> C;
 
 C f1(C& c) { return c+1.0; }

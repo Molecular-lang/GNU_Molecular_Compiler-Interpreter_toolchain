@@ -1,13 +1,13 @@
 # Turkish translations for cpplib messages.
 # Copyright (C) 2007 Free Software Foundation, Inc.
-# This file is distributed under the same license as the gcc package.
+# This file is distributed under the same license as the scpel_compiler package.
 #
 # Nilgün Belma Bugüner <nilgun@buguner.name.tr>, 2001, ..., 2007.
 # Volkan Gezer <vlkngzr@gmail.com>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: cpplib 4.8.0\n"
-"Report-Msgid-Bugs-To: https://gcc.gnu.org/bugs/\n"
+"Report-Msgid-Bugs-To: https://scpel_compiler.gnu.org/bugs/\n"
 "POT-Creation-Date: 2023-02-10 22:39+0000\n"
 "PO-Revision-Date: 2013-11-01 22:29+0100\n"
 "Last-Translator: Volkan Gezer <vlkngzr@gmail.com>\n"

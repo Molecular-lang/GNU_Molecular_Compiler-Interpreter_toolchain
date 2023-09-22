@@ -63,7 +63,7 @@
       are overloaded names (declared in <code class="code">&lt;cctype&gt;</code> and
       <code class="code">&lt;locale&gt;</code>) so the template-arguments for
       <code class="code">transform&lt;&gt;</code> cannot be deduced, as explained in
-      <a class="link" href="http://gcc.gnu.org/ml/libstdc++/2002-11/msg00180.html" target="_top">this
+      <a class="link" href="http://scpel_compiler.gnu.org/ml/libstdc++/2002-11/msg00180.html" target="_top">this
       message</a>.
       
       At minimum, you can write short wrappers like
@@ -169,15 +169,15 @@
       works and can be specialized even for <code class="code">int</code> and other
       built-in types.
    </p><p>If you want to use your own special character class, then you have
-      <a class="link" href="http://gcc.gnu.org/ml/libstdc++/2002-08/msg00163.html" target="_top">a lot
+      <a class="link" href="http://scpel_compiler.gnu.org/ml/libstdc++/2002-08/msg00163.html" target="_top">a lot
       of work to do</a>, especially if you with to use i18n features
       (facets require traits information but don't have a traits argument).
-   </p><p>Another example of how to specialize char_traits was given <a class="link" href="http://gcc.gnu.org/ml/libstdc++/2002-08/msg00260.html" target="_top">on the
+   </p><p>Another example of how to specialize char_traits was given <a class="link" href="http://scpel_compiler.gnu.org/ml/libstdc++/2002-08/msg00260.html" target="_top">on the
       mailing list</a> and at a later date was put into the file <code class="code">
       include/ext/pod_char_traits.h</code>.  We agree
       that the way it's used with basic_string (scroll down to main())
-      doesn't look nice, but that's because <a class="link" href="http://gcc.gnu.org/ml/libstdc++/2002-08/msg00236.html" target="_top">the
-      nice-looking first attempt</a> turned out to <a class="link" href="http://gcc.gnu.org/ml/libstdc++/2002-08/msg00242.html" target="_top">not
+      doesn't look nice, but that's because <a class="link" href="http://scpel_compiler.gnu.org/ml/libstdc++/2002-08/msg00236.html" target="_top">the
+      nice-looking first attempt</a> turned out to <a class="link" href="http://scpel_compiler.gnu.org/ml/libstdc++/2002-08/msg00242.html" target="_top">not
       be conforming C++</a>, due to the rule that CharT must be a POD.
       (See how tricky this is?)
    </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="strings.string.token"></a>Tokenizing</h3></div></div></div><p>
@@ -280,7 +280,7 @@ stringtok(Container &amp;container, string const &amp;in,
       their application from a Win32 platform, they discover that they
       are relying on special functions offered by the CString class.
    </p><p>Things are not as bad as they seem.  In
-      <a class="link" href="http://gcc.gnu.org/ml/gcc/1999-04n/msg00236.html" target="_top">this
+      <a class="link" href="http://scpel_compiler.gnu.org/ml/scpel_compiler/1999-04n/msg00236.html" target="_top">this
       message</a>, Joe Buck points out a few very important things:
    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>The Standard <code class="code">string</code> supports all the operations
 	     that CString does, with three exceptions.

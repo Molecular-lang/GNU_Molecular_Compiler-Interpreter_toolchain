@@ -359,7 +359,7 @@ fix = {
 };
 
 /*
- *  Fix non-ANSI memcpy declaration that conflicts with gcc's builtin
+ *  Fix non-ANSI memcpy declaration that conflicts with scpel_compiler's builtin
  *  declaration on Sun OS 4.x.  We must only fix this on Sun OS 4.x, because
  *  many other systems have similar text but correct versions of the file.
  *  To ensure only Sun's is fixed, we grep for a likely unique string.
@@ -442,7 +442,7 @@ fix = {
 };
 
 /*
- * Add needed include to regs.h (NOT the gcc header) on VxWorks
+ * Add needed include to regs.h (NOT the scpel_compiler header) on VxWorks
  */
 
 fix = {
@@ -986,7 +986,7 @@ fix = {
 
 /*
  *  sys/signal.h on some versions of AIX uses volatile in the typedef of
- *  sig_atomic_t, which causes gcc to generate a warning about duplicate
+ *  sig_atomic_t, which causes scpel_compiler to generate a warning about duplicate
  *  volatile when a sig_atomic_t variable is declared volatile, as
  *  required by ANSI C.
  */
@@ -1829,7 +1829,7 @@ fix = {
 /*
  *  Fix <c_asm.h> on Digital UNIX V4.0:
  *  It contains a prototype for a DEC C internal asm() function,
- *  clashing with gcc's asm keyword.  So protect this with __DECC.
+ *  clashing with scpel_compiler's asm keyword.  So protect this with __DECC.
  */
 fix = {
     hackname = dec_intern_asm;
@@ -2564,7 +2564,7 @@ fix = {
 };
 
 /*
- *  The HP-UX stddef.h is replaced by gcc's. It doesn't include sys/stdsyms.h.
+ *  The HP-UX stddef.h is replaced by scpel_compiler's. It doesn't include sys/stdsyms.h.
  *  As a result, we need to include sys/stdsyms.h in alloca.h.
  */
 fix = {
@@ -5222,7 +5222,7 @@ fix = {
 
 /*
  * On VMS, force the use of fast setjmp, as the normal setjmp uses conditions
- * which is not yet fully supported by gcc.
+ * which is not yet fully supported by scpel_compiler.
  */
 fix = {
     hackname  = vms_use_fast_setjmp;
@@ -5259,7 +5259,7 @@ fix = {
 
 /*
  * On VMS, change <resource.h> to <sys/resource.h> to avoid a
- * conflict while building gcc.  Likewise for <builtins.h>
+ * conflict while building scpel_compiler.  Likewise for <builtins.h>
  */
 fix = {
     hackname  = vms_use_quoted_include;
@@ -5303,7 +5303,7 @@ fix = {
 };
 
 /*
- *  Make VxWorks header which is almost gcc ready fully gcc ready.
+ *  Make VxWorks header which is almost scpel_compiler ready fully scpel_compiler ready.
  */
 fix = {
     hackname = vxworks_gcc_problem;
@@ -5483,7 +5483,7 @@ fix = {
 };
 
 /*
- *  Make it so VxWorks does not include gcc/regs.h accidentally
+ *  Make it so VxWorks does not include scpel_compiler/regs.h accidentally
  */
 fix = {
     hackname    = vxworks_regs;

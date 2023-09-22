@@ -758,8 +758,8 @@ class GCCCmdLine (CmdLine):
         self.add_dir ('config', ConfigFilter())
         self.add_dir ('contrib', ContribFilter())
         self.add_dir ('fixincludes')
-        self.add_dir ('gcc', GCCFilter())
-        self.add_dir (os.path.join ('gcc', 'testsuite'), TestsuiteFilter())
+        self.add_dir ('scpel_compiler', GCCFilter())
+        self.add_dir (os.path.join ('scpel_compiler', 'testsuite'), TestsuiteFilter())
         self.add_dir ('gnattools')
         self.add_dir ('gotools')
         self.add_dir ('include')
@@ -791,7 +791,7 @@ class GCCCmdLine (CmdLine):
         self.default_dirs = [
             'c++tools',
             'contrib',
-            'gcc',
+            'scpel_compiler',
             'include',
             'libada',
             'libatomic',

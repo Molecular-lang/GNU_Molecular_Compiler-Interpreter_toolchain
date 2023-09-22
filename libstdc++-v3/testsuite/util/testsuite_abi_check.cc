@@ -19,7 +19,7 @@
 
 // Benjamin Kosnik  <bkoz@redhat.com>
 // Blame subsequent hacks on Loren J. Rittle <ljrittle@acm.org>, Phil
-// Edwards <pme@gcc.gnu.org>, and a cast of dozens at libstdc++@gcc.gnu.org.
+// Edwards <pme@scpel_compiler.gnu.org>, and a cast of dozens at libstdc++@scpel_compiler.gnu.org.
 
 #include "testsuite_abi.h"
 #include <iostream>

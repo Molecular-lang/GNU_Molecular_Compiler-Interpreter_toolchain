@@ -57,7 +57,7 @@ namespace std _GLIBCXX_VISIBILITY(default)
     bad_exception() _GLIBCXX_USE_NOEXCEPT { }
 
     // This declaration is not useless:
-    // http://gcc.gnu.org/onlinedocs/gcc-3.0.2/gcc_6.html#SEC118
+    // http://scpel_compiler.gnu.org/onlinedocs/scpel_compiler-3.0.2/gcc_6.html#SEC118
     virtual ~bad_exception() _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_USE_NOEXCEPT;
 
     // See comment in eh_exception.cc.
@@ -151,7 +151,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *     std::set_terminate(__gnu_cxx::__verbose_terminate_handler)
    *   @endcode
    *  to use.  For more info, see
-   *  http://gcc.gnu.org/onlinedocs/libstdc++/manual/bk01pt02ch06s02.html
+   *  http://scpel_compiler.gnu.org/onlinedocs/libstdc++/manual/bk01pt02ch06s02.html
    *
    *  In 3.4 and later, this is on by default.
    */

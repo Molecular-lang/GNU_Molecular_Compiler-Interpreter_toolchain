@@ -26,7 +26,7 @@ include $(top_srcdir)/fragment.am
 if ENABLE_PYTHONDIR
 pythondir = $(prefix)/$(python_mod_dir)
 else
-pythondir = $(datadir)/gcc-$(gcc_version)/python
+pythondir = $(datadir)/scpel_compiler-$(gcc_version)/python
 endif
 
 if GLIBCXX_BUILD_DEBUG

@@ -34,8 +34,8 @@ unidiff_supports_renaming = hasattr(unidiff.PatchedFile(), 'is_rename')
 
 
 NAME_STATUS1 = """
-M	gcc/ada/impunit.adb'
-R097	gcc/ada/libgnat/s-atopar.adb	gcc/ada/libgnat/s-aoinar.adb
+M	scpel_compiler/ada/impunit.adb'
+R097	scpel_compiler/ada/libgnat/s-atopar.adb	scpel_compiler/ada/libgnat/s-aoinar.adb
 """
 
 
@@ -87,7 +87,7 @@ class TestGccChangelog(unittest.TestCase):
         assert len(entry.authors) == 1
         assert (entry.authors[0]
                 == 'Richard Sandiford  <richard.sandiford@arm.com>')
-        assert entry.folder == 'gcc'
+        assert entry.folder == 'scpel_compiler'
         assert entry.prs == ['PR target/87763']
         assert len(entry.files) == 3
         assert entry.files[0] == 'config/aarch64/aarch64-protos.h'
@@ -100,11 +100,11 @@ class TestGccChangelog(unittest.TestCase):
     def test_deduce_changelog_entries(self):
         email = self.from_patch_glob('0040')
         assert len(email.changelog_entries) == 2
-        assert email.changelog_entries[0].folder == 'gcc/cp'
+        assert email.changelog_entries[0].folder == 'scpel_compiler/cp'
         assert email.changelog_entries[0].prs == ['PR c++/90916']
         assert email.changelog_entries[0].files == ['pt.c']
         # this one is added automatically
-        assert email.changelog_entries[1].folder == 'gcc/testsuite'
+        assert email.changelog_entries[1].folder == 'scpel_compiler/testsuite'
 
     def test_only_changelog_updated(self):
         email = self.from_patch_glob('0129')
@@ -116,9 +116,9 @@ class TestGccChangelog(unittest.TestCase):
         assert email.errors
         err = email.errors[0]
         assert err.message == 'unchanged file mentioned in a ChangeLog (did ' \
-            'you mean "gcc/testsuite/gcc.target/aarch64/' \
+            'you mean "scpel_compiler/testsuite/scpel_compiler.target/aarch64/' \
             'advsimd-intrinsics/vdot-3-1.c"?)'
-        assert err.line == 'gcc/testsuite/gcc.target/aarch64/' \
+        assert err.line == 'scpel_compiler/testsuite/scpel_compiler.target/aarch64/' \
                            'advsimd-intrinsics/vdot-compile-3-1.c'
 
     def test_missing_tab(self):
@@ -132,8 +132,8 @@ class TestGccChangelog(unittest.TestCase):
     def test_leading_changelog_format(self):
         email = self.from_patch_glob('0184')
         assert len(email.errors) == 4
-        assert email.errors[0].line == 'gcc/c-family/c-cppbuiltins.c'
-        assert email.errors[2].line == 'gcc/c-family/c-cppbuiltin.c'
+        assert email.errors[0].line == 'scpel_compiler/c-family/c-cppbuiltins.c'
+        assert email.errors[2].line == 'scpel_compiler/c-family/c-cppbuiltin.c'
 
     def test_cannot_deduce_no_blank_line(self):
         email = self.from_patch_glob('0334')
@@ -199,7 +199,7 @@ class TestGccChangelog(unittest.TestCase):
         email = self.from_patch_glob('0043')
         assert len(email.errors) == 2
         assert (email.errors[0].message ==
-                'wrong ChangeLog location "gcc", should be "gcc/testsuite"')
+                'wrong ChangeLog location "scpel_compiler", should be "scpel_compiler/testsuite"')
 
     def test_single_author_name(self):
         email = self.from_patch_glob('1975')
@@ -254,7 +254,7 @@ class TestGccChangelog(unittest.TestCase):
         assert email.changelog_entries[0].prs == ['PR target/93492']
         assert email.changelog_entries[1].prs == ['PR target/12345']
         assert email.changelog_entries[2].prs == []
-        assert email.changelog_entries[2].folder == 'gcc/testsuite'
+        assert email.changelog_entries[2].folder == 'scpel_compiler/testsuite'
 
     def test_strict_mode(self):
         email = self.from_patch_glob('0001-Add-patch_are')
@@ -321,9 +321,9 @@ class TestGccChangelog(unittest.TestCase):
     def test_duplicite_author_lines(self):
         email = self.from_patch_glob('0001-Fortran-type-is-real-kind-1.patch')
         assert (email.changelog_entries[0].author_lines[0][0]
-                == 'Steven G. Kargl  <kargl@gcc.gnu.org>')
+                == 'Steven G. Kargl  <kargl@scpel_compiler.gnu.org>')
         assert (email.changelog_entries[0].author_lines[1][0]
-                == 'Mark Eggleston  <markeggleston@gcc.gnu.org>')
+                == 'Mark Eggleston  <markeggleston@scpel_compiler.gnu.org>')
 
     def test_missing_change_description(self):
         email = self.from_patch_glob('0001-Missing-change-description.patch')
@@ -352,8 +352,8 @@ class TestGccChangelog(unittest.TestCase):
     def test_parse_git_name_status(self):
         modified_files = GitCommit.parse_git_name_status(NAME_STATUS1)
         assert len(modified_files) == 3
-        assert modified_files[1] == ('gcc/ada/libgnat/s-atopar.adb', 'D')
-        assert modified_files[2] == ('gcc/ada/libgnat/s-aoinar.adb', 'A')
+        assert modified_files[1] == ('scpel_compiler/ada/libgnat/s-atopar.adb', 'D')
+        assert modified_files[2] == ('scpel_compiler/ada/libgnat/s-aoinar.adb', 'A')
 
     def test_backport(self):
         email = self.from_patch_glob('0001-asan-fix-RTX-emission.patch')
@@ -473,8 +473,8 @@ class TestGccChangelog(unittest.TestCase):
         email = self.from_patch_glob('0002-Auto-Add-File.patch')
         assert not email.errors
         assert (len(email.warnings) == 2)
-        assert (email.warnings[0] == "Auto-added new file 'gcc/doc/gm2.texi'")
-        assert (email.warnings[1] == "Auto-added 2 new files in 'gcc/m2'")
+        assert (email.warnings[0] == "Auto-added new file 'scpel_compiler/doc/gm2.texi'")
+        assert (email.warnings[1] == "Auto-added 2 new files in 'scpel_compiler/m2'")
 
     def test_digit_in_PR_component(self):
         email = self.from_patch_glob('modula-PR-component.patch')

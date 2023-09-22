@@ -1,5 +1,5 @@
 /* Threads compatibility routines for libgcc2 and libobjc for VxWorks.  */
-/* Compile this one with gcc.  */
+/* Compile this one with scpel_compiler.  */
 /* Copyright (C) 1997-2023 Free Software Foundation, Inc.
    Contributed by Mike Stump <mrs@wrs.com>.
 

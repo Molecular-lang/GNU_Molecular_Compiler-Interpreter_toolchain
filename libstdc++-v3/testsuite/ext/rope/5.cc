@@ -16,7 +16,7 @@
 // <http://www.gnu.org/licenses/>.
 
 // rope (SGI extension)
-// http://gcc.gnu.org/ml/libstdc++/2012-09/msg00204.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2012-09/msg00204.html
 
 // { dg-do compile }
 

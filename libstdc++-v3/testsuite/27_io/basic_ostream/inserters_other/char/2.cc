@@ -27,7 +27,7 @@
 #include <testsuite_hooks.h>
 
 // via Brent Verner <brent@rcfile.org>
-// http://gcc.gnu.org/ml/libstdc++/2000-06/msg00005.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2000-06/msg00005.html
 void
 test03(void)
 {

@@ -24,7 +24,7 @@
 #define ITERATIONS 50000
 #endif
 
-// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=32261
+// https://scpel_compiler.gnu.org/bugzilla/show_bug.cgi?id=32261
 
 #include <pthread.h>
 #include <string>

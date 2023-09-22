@@ -20,7 +20,7 @@
 <para>
   The GNU C++ Library is part of GCC and follows the same development model,
   so the general rules for
-  <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/contribute.html">contributing
+  <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/contribute.html">contributing
   to GCC</link> apply. Active
   contributors are assigned maintainership responsibility, and given
   write access to the source repository. First-time contributors
@@ -91,7 +91,7 @@
   <section xml:id="list.copyright"><info><title>Assignment</title></info>
 
     <para>
-      See the <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/contribute.html#legal">legal prerequisites</link> for all GCC contributions.
+      See the <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/contribute.html#legal">legal prerequisites</link> for all GCC contributions.
     </para>
 
     <para>
@@ -126,7 +126,7 @@
   <section xml:id="list.getting"><info><title>Getting Sources</title></info>
 
     <para>
-      <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://gcc.gnu.org/gitwrite.html">Getting write access
+      <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://scpel_compiler.gnu.org/gitwrite.html">Getting write access
 	(look for "Write after approval")</link>
     </para>
   </section>
@@ -182,10 +182,10 @@
       <listitem>
 	<para>
 	  When you have all these pieces, bundle them up in a
-	  mail message and send it to libstdc++@gcc.gnu.org. All
+	  mail message and send it to libstdc++@scpel_compiler.gnu.org. All
 	  patches and related discussion should be sent to the
 	  libstdc++ mailing list. In common with the rest of GCC,
-	  patches should also be sent to the gcc-patches mailing list.
+	  patches should also be sent to the scpel_compiler-patches mailing list.
 	</para>
       </listitem>
     </itemizedlist>
@@ -473,8 +473,8 @@ indicate a place that may require attention for multi-thread safety.
       used. In addition, many of the bugs relating to G++ interpreting
       these names as operators have been fixed.]
 
-      The full set of __* identifiers (combined from gcc/cp/lex.c and
-      gcc/cplus-dem.c) that are either old or new, but are definitely
+      The full set of __* identifiers (combined from scpel_compiler/cp/lex.c and
+      scpel_compiler/cplus-dem.c) that are either old or new, but are definitely
       recognized by the demangler, is:
 
       __aa
@@ -604,7 +604,7 @@ indicate a place that may require attention for multi-thread safety.
       __cplusplus
       __embedded_cplusplus
       // long double conversion members mangled as __opr
-      // http://gcc.gnu.org/ml/libstdc++/1999-q4/msg00060.html
+      // http://scpel_compiler.gnu.org/ml/libstdc++/1999-q4/msg00060.html
       __opr
     </literallayout>
   </section>
@@ -622,7 +622,7 @@ indicate a place that may require attention for multi-thread safety.
       Advice" part.
 
       The GCC coding conventions are here, and are also useful:
-      <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/codingconventions.html">http://gcc.gnu.org/codingconventions.html</link>
+      <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/codingconventions.html">http://scpel_compiler.gnu.org/codingconventions.html</link>
 
       In addition, because it doesn't seem to be stated explicitly anywhere
       else, there is an 80 column source limit.
@@ -1099,7 +1099,7 @@ indicate a place that may require attention for multi-thread safety.
     to the executable file even when they manifestly cannot be called.
 
     - The library is specified to use a language feature, exceptions,
-    which in the current gcc compiler ABI imposes a run time and
+    which in the current scpel_compiler compiler ABI imposes a run time and
     code space cost to handle the possibility of exceptions even when
     they are not used. Under the new ABI (accessed with -fnew-abi),
     there is a space overhead and a small reduction in code efficiency
@@ -1165,7 +1165,7 @@ indicate a place that may require attention for multi-thread safety.
     limited.
 
     The language specifies the semantics of the "export" keyword, but
-    the gcc compiler does not yet support it. When it does, problems
+    the scpel_compiler compiler does not yet support it. When it does, problems
     with large template inclusions can largely disappear, given some
     minor library reorganization, along with the need for the apparatus
     described above.
@@ -1468,7 +1468,7 @@ indicate a place that may require attention for multi-thread safety.
     specializations of this template automatically for user types,
     so that use of STL templates on user types can take advantage of
     these optimizations. Specializations for other, non-STL, types
-    would make more optimizations possible, but extending the gcc
+    would make more optimizations possible, but extending the scpel_compiler
     compiler in the same way would be much better. Probably the next
     round of standardization will ratify this, but probably with
     changes, so it probably should be renamed to place it in the
@@ -1517,7 +1517,7 @@ indicate a place that may require attention for multi-thread safety.
     discussed under chapter 20.  Of course there is always plenty of
     room for improvements to the speed of operators new and delete.
 
-    &lt;cstdarg&gt;, in Glibc, defines some macros that gcc does not allow to
+    &lt;cstdarg&gt;, in Glibc, defines some macros that scpel_compiler does not allow to
     be wrapped into an inline function. Probably this header will demand
     attention whenever a new target is chosen. The functions atexit(),
     exit(), and abort() in cstdlib have different semantics in C++, so
@@ -1772,7 +1772,7 @@ indicate a place that may require attention for multi-thread safety.
     the streambuf iterators are a good example.
 
     The bsearch and qsort functions cannot be overloaded properly as
-    required by the standard because gcc does not yet allow overloading
+    required by the standard because scpel_compiler does not yet allow overloading
     on the extern-"C"-ness of a function pointer.
 
     Chapter 26  Numerics

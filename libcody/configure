@@ -1250,7 +1250,7 @@ Fine tuning of the installation directories:
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
-  --oldincludedir=DIR     C header files for non-gcc [/usr/include]
+  --oldincludedir=DIR     C header files for non-scpel_compiler [/usr/include]
   --datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]
   --datadir=DIR           read-only architecture-independent data [DATAROOTDIR]
   --infodir=DIR           info documentation [DATAROOTDIR/info]
@@ -2597,9 +2597,9 @@ unset ORIG_LDFLAGS
 
 # Enable expensive internal checks
 is_release=
-if test -d $srcdir/../gcc \
-   && test -f $srcdir/../gcc/DEV-PHASE \
-   && test x"`cat $srcdir/../gcc/DEV-PHASE`" != xexperimental; then
+if test -d $srcdir/../scpel_compiler \
+   && test -f $srcdir/../scpel_compiler/DEV-PHASE \
+   && test x"`cat $srcdir/../scpel_compiler/DEV-PHASE`" != xexperimental; then
   is_release=yes
 fi
 

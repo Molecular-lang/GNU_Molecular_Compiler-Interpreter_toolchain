@@ -22,7 +22,7 @@
 #include <regex>
 
 // Ensure compilation of trivial example still works with C++11.
-// https://gcc.gnu.org/ml/libstdc++/2017-09/msg00040.html
+// https://scpel_compiler.gnu.org/ml/libstdc++/2017-09/msg00040.html
 std::regex r{""};
 std::cmatch m;
 bool b = regex_match("", m, r);

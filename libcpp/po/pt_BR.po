@@ -1,12 +1,12 @@
 # Brazilian Portuguese translation for cpplib
 # Copyright (C) 2021 Free Software Foundation, Inc.
-# This file is distributed under the same license as the gcc package.
+# This file is distributed under the same license as the scpel_compiler package.
 # Rafael Fontenelle <rafaelff@gnome.org>, 2013-2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: cpplib 11.1-b20210207\n"
-"Report-Msgid-Bugs-To: https://gcc.gnu.org/bugs/\n"
+"Report-Msgid-Bugs-To: https://scpel_compiler.gnu.org/bugs/\n"
 "POT-Creation-Date: 2023-02-10 22:39+0000\n"
 "PO-Revision-Date: 2021-02-09 12:28-0300\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
@@ -1106,13 +1106,13 @@ msgstr "lista de argumentos interminável chamando macro \"%s\""
 msgid "function-like macro \"%s\" must be used with arguments in traditional C"
 msgstr "macro \"%s\" do tipo função deve ser usada com argumento em C tradicional"
 
-# http://gcc.gnu.org/bugzilla/show_bug.cgi?id=33305
+# http://scpel_compiler.gnu.org/bugzilla/show_bug.cgi?id=33305
 #: macro.cc:2307
 #, c-format
 msgid "invoking macro %s argument %d: empty macro arguments are undefined in ISO C++98"
 msgstr "chamando macro %s argumento %d: argumentos de macro vazios estão indefinidos em ISO C++98"
 
-# http://gcc.gnu.org/bugzilla/show_bug.cgi?id=33305
+# http://scpel_compiler.gnu.org/bugzilla/show_bug.cgi?id=33305
 #: macro.cc:2315 macro.cc:2324
 #, c-format
 msgid "invoking macro %s argument %d: empty macro arguments are undefined in ISO C90"

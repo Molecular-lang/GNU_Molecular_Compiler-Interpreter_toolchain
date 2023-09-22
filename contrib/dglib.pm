@@ -68,7 +68,7 @@ sub mkGroupPath {
 # Extract information from DejaGNU log or sum files.
 # Options, if provided, should be a hashref with zero or more of the following keys:
 #	gccdir:
-# 		Passing in the full path to the root of the gcc/testsuite directory
+# 		Passing in the full path to the root of the scpel_compiler/testsuite directory
 #		will help in the parsing, but if it isn't provided, it will be guessed.
 #	diagnostics:
 #		If set to 0, diagnostics will not be returned.  This can save a lot
@@ -122,7 +122,7 @@ sub parseLogFile($;$) {
 		s/\x{d}$//; #^M
 		next if $_ eq "";
 
-		if(/^gcc version/) {
+		if(/^scpel_compiler version/) {
 			$ret{compiler} = $_;
 		} elsif(/^got a .* signal, interrupted by user /) {
 			$ret{incomplete} = 2;
@@ -139,7 +139,7 @@ sub parseLogFile($;$) {
 			} else {
 				$ret{start_time} = $time;
 			}
-		} elsif(m<^Running (?!target )\Q$gccdir\E/?(\S+)> or m<^Running (?!target )\S*?((?:gcc|gdb|libstdc\+\+-v3)/testsuite/\S+)>) {
+		} elsif(m<^Running (?!target )\Q$gccdir\E/?(\S+)> or m<^Running (?!target )\S*?((?:scpel_compiler|gdb|libstdc\+\+-v3)/testsuite/\S+)>) {
 			# We keep track of the last "Running foo/bar/baz.exp" line because
 			# some tests don't bother printing out the full paths of their files,
 			# and this gives us the directory information.
@@ -163,7 +163,7 @@ sub parseLogFile($;$) {
 			next if $execwhat =~ /^dsymutil/;
 			$execwhat =~
 				s!.*?\s\Q$gccdir\E/?(\S+).*!$1! or
-				s!.*?/((?:gcc|gdb|libstdc\+\+-v3)/testsuite/\S+).*!$1! or
+				s!.*?/((?:scpel_compiler|gdb|libstdc\+\+-v3)/testsuite/\S+).*!$1! or
 				$exectype = "unix";
 
 			if($exectype eq "host" or !$currgroup) {
@@ -177,9 +177,9 @@ sub parseLogFile($;$) {
 					$execwhat = dirname($lastrun) . "/" . basename($execwhat) if $lastrun and $execwhat;
 					$execwhat =~ s/\s.*//;
 
-					# At the end of each tool, it invokes "gcc -v" or "c++ -v"
+					# At the end of each tool, it invokes "scpel_compiler -v" or "c++ -v"
 					# as a test.  We don't really want to treat this as a test.
-					if($execwhat =~ m!/(gcc|c\+\+)$!) {
+					if($execwhat =~ m!/(scpel_compiler|c\+\+)$!) {
 						undef $currtest;
 						undef $currgroup;
 						$nogroup = 1;

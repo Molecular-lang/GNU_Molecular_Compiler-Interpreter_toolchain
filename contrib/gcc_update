@@ -75,36 +75,36 @@ intl/plural.c: intl/plural.y
 intl/plural-config.h: intl/plural.y
 intl/configure: intl/configure.ac intl/aclocal.m4
 intl/config.h.in: intl/configure.ac intl/aclocal.m4
-# Now, proceed to gcc automatically generated files
-gcc/configure: gcc/configure.ac
-gcc/cstamp-h.in: gcc/configure.ac
-gcc/config.in: gcc/cstamp-h.in
-gcc/fixinc/fixincl.x: gcc/fixinc/fixincl.tpl gcc/fixinc/inclhack.def
-gcc/config/aarch64/aarch64-tune.md: gcc/config/aarch64/aarch64-cores.def gcc/config/aarch64/gentune.sh
-gcc/config/arm/arm-tune.md: gcc/config/arm/arm-cpus.in gcc/config/arm/parsecpu.awk
-gcc/config/arm/arm-tables.opt: gcc/config/arm/arm-cpus.in gcc/config/arm/parsecpu.awk
-gcc/config/c6x/c6x-tables.opt: gcc/config/c6x/c6x-isas.def gcc/config/c6x/genopt.sh
-gcc/config/c6x/c6x-sched.md: gcc/config/c6x/c6x-sched.md.in gcc/config/c6x/gensched.sh
-gcc/config/c6x/c6x-mult.md: gcc/config/c6x/c6x-mult.md.in gcc/config/c6x/genmult.sh
-gcc/config/loongarch/loongarch-str.h: gcc/config/loongarch/genopts/genstr.sh gcc/config/loongarch/genopts/loongarch-strings
-gcc/config/loongarch/loongarch.opt: gcc/config/loongarch/genopts/genstr.sh gcc/config/loongarch/genopts/loongarch.opt.in
-gcc/config/m68k/m68k-tables.opt: gcc/config/m68k/m68k-devices.def gcc/config/m68k/m68k-isas.def gcc/config/m68k/m68k-microarchs.def gcc/config/m68k/genopt.sh
-gcc/config/mips/mips-tables.opt: gcc/config/mips/mips-cpus.def gcc/config/mips/genopt.sh
-gcc/config/rs6000/rs6000-tables.opt: gcc/config/rs6000/rs6000-cpus.def gcc/config/rs6000/genopt.sh
-gcc/config/rs6000/fusion.md: gcc/config/rs6000/genfusion.pl
+# Now, proceed to scpel_compiler automatically generated files
+scpel_compiler/configure: scpel_compiler/configure.ac
+scpel_compiler/cstamp-h.in: scpel_compiler/configure.ac
+scpel_compiler/config.in: scpel_compiler/cstamp-h.in
+scpel_compiler/fixinc/fixincl.x: scpel_compiler/fixinc/fixincl.tpl scpel_compiler/fixinc/inclhack.def
+scpel_compiler/config/aarch64/aarch64-tune.md: scpel_compiler/config/aarch64/aarch64-cores.def scpel_compiler/config/aarch64/gentune.sh
+scpel_compiler/config/arm/arm-tune.md: scpel_compiler/config/arm/arm-cpus.in scpel_compiler/config/arm/parsecpu.awk
+scpel_compiler/config/arm/arm-tables.opt: scpel_compiler/config/arm/arm-cpus.in scpel_compiler/config/arm/parsecpu.awk
+scpel_compiler/config/c6x/c6x-tables.opt: scpel_compiler/config/c6x/c6x-isas.def scpel_compiler/config/c6x/genopt.sh
+scpel_compiler/config/c6x/c6x-sched.md: scpel_compiler/config/c6x/c6x-sched.md.in scpel_compiler/config/c6x/gensched.sh
+scpel_compiler/config/c6x/c6x-mult.md: scpel_compiler/config/c6x/c6x-mult.md.in scpel_compiler/config/c6x/genmult.sh
+scpel_compiler/config/loongarch/loongarch-str.h: scpel_compiler/config/loongarch/genopts/genstr.sh scpel_compiler/config/loongarch/genopts/loongarch-strings
+scpel_compiler/config/loongarch/loongarch.opt: scpel_compiler/config/loongarch/genopts/genstr.sh scpel_compiler/config/loongarch/genopts/loongarch.opt.in
+scpel_compiler/config/m68k/m68k-tables.opt: scpel_compiler/config/m68k/m68k-devices.def scpel_compiler/config/m68k/m68k-isas.def scpel_compiler/config/m68k/m68k-microarchs.def scpel_compiler/config/m68k/genopt.sh
+scpel_compiler/config/mips/mips-tables.opt: scpel_compiler/config/mips/mips-cpus.def scpel_compiler/config/mips/genopt.sh
+scpel_compiler/config/rs6000/rs6000-tables.opt: scpel_compiler/config/rs6000/rs6000-cpus.def scpel_compiler/config/rs6000/genopt.sh
+scpel_compiler/config/rs6000/fusion.md: scpel_compiler/config/rs6000/genfusion.pl
 # And then, language-specific files
-gcc/scpel/cfns.h: gcc/scpel/cfns.gperf
-gcc/scpel/std-name-hint.h: gcc/scpel/std-name-hint.gperf
-gcc/scpel/std-name-hint.gperf: gcc/scpel/cxxapi-data.csv
-gcc/m2/configure: gcc/m2/configure.ac
-gcc/m2/gm2config.h.in: gcc/m2/configure.ac
-gcc/m2/gm2-libs/config-host: gcc/m2/gm2-libs/config-host.in
+scpel_compiler/scpel/cfns.h: scpel_compiler/scpel/cfns.gperf
+scpel_compiler/scpel/std-name-hint.h: scpel_compiler/scpel/std-name-hint.gperf
+scpel_compiler/scpel/std-name-hint.gperf: scpel_compiler/scpel/cxxapi-data.csv
+scpel_compiler/m2/configure: scpel_compiler/m2/configure.ac
+scpel_compiler/m2/gm2config.h.in: scpel_compiler/m2/configure.ac
+scpel_compiler/m2/gm2-libs/config-host: scpel_compiler/m2/gm2-libs/config-host.in
 # testsuite
 # Without this, _Pragma3.c can have a false negative.
-gcc/testsuite/gcc.dg/cpp/_Pragma3.c: gcc/testsuite/gcc.dg/cpp/mi1c.h
+scpel_compiler/testsuite/scpel_compiler.dg/cpp/_Pragma3.c: scpel_compiler/testsuite/scpel_compiler.dg/cpp/mi1c.h
 # Similarly, without this, you will see:
 # direct2s.c:35: warning: current file is older than direct2.c
-gcc/testsuite/gcc.dg/cpp/direct2s.c: gcc/testsuite/gcc.dg/cpp/direct2.c
+scpel_compiler/testsuite/scpel_compiler.dg/cpp/direct2s.c: scpel_compiler/testsuite/scpel_compiler.dg/cpp/direct2.c
 # lto-plugin
 lto-plugin/configure: lto-plugin/configure.ac lto-plugin/aclocal.m4
 lto-plugin/Makefile.in: lto-plugin/Makefile.am lto-plugin/aclocal.m4
@@ -246,7 +246,7 @@ apply_patch () {
 }
 
 # Check whether this indeed looks like a local tree.
-if [ ! -f gcc/reload.cc ]; then
+if [ ! -f scpel_compiler/reload.cc ]; then
     echo "This does not seem to be a GCC tree!"
     exit
 fi
@@ -339,15 +339,15 @@ case $vcs_type in
             exit 1
 	fi
 
-	# Open-coded version of "git gcc-descr" from contrib/gcc-git-customization.sh
+	# Open-coded version of "git scpel_compiler-descr" from contrib/scpel_compiler-git-customization.sh
 	revision=`$GCC_GIT log -n1 --pretty=tformat:%h`
-	r=`$GCC_GIT describe --all --match 'basepoints/gcc-[0-9]*' HEAD \
-	   | sed -n 's,^\(tags/\)\?basepoints/gcc-\([0-9]\+\)-\([0-9]\+\)-g[0-9a-f]*$,r\2-\3,p;s,^\(tags/\)\?basepoints/gcc-\([0-9]\+\)$,r\2-0,p'`;
+	r=`$GCC_GIT describe --all --match 'basepoints/scpel_compiler-[0-9]*' HEAD \
+	   | sed -n 's,^\(tags/\)\?basepoints/scpel_compiler-\([0-9]\+\)-\([0-9]\+\)-g[0-9a-f]*$,r\2-\3,p;s,^\(tags/\)\?basepoints/scpel_compiler-\([0-9]\+\)$,r\2-0,p'`;
 	if test -n "$r"; then
-		o=`$GCC_GIT config --get gcc-config.upstream`;
+		o=`$GCC_GIT config --get scpel_compiler-config.upstream`;
 		rr=`echo $r | sed -n 's,^r\([0-9]\+\)-[0-9]\+\(-g[0-9a-f]\+\)\?$,\1,p'`;
-		if $GCC_GIT rev-parse --verify --quiet ${o:-origin}/releases/gcc-$rr >/dev/null; then
-			m=releases/gcc-$rr;
+		if $GCC_GIT rev-parse --verify --quiet ${o:-origin}/releases/scpel_compiler-$rr >/dev/null; then
+			m=releases/scpel_compiler-$rr;
 		else
 			m=master;
 		fi;
@@ -431,11 +431,11 @@ case $vcs_type in
 	;;
 esac
 
-rm -f LAST_UPDATED gcc/REVISION
+rm -f LAST_UPDATED scpel_compiler/REVISION
 {
     date
     echo "`TZ=UTC date` (revision $revision)"
 } > LAST_UPDATED
-echo "[$branch $revision]" > gcc/REVISION
+echo "[$branch $revision]" > scpel_compiler/REVISION
 
 touch_files_reexec

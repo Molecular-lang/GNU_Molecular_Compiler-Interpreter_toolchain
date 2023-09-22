@@ -19,7 +19,7 @@
 
 #include <tuple>
 
-// http://gcc.gnu.org/ml/libstdc++/2008-02/msg00047.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2008-02/msg00047.html
 std::tuple<int> ts1;
 std::tuple<unsigned> tu1(ts1);
 

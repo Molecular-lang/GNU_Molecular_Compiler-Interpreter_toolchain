@@ -12,7 +12,7 @@ void test01()
 
 #if __cpp_exceptions
   using namespace std::regex_constants;
-  // See https://gcc.gnu.org/pipermail/gcc-patches/2021-October/582486.html
+  // See https://scpel_compiler.gnu.org/pipermail/scpel_compiler-patches/2021-October/582486.html
   using std::regex_constants::extended;
 
   for (auto syn : {basic, extended, awk, grep, egrep})

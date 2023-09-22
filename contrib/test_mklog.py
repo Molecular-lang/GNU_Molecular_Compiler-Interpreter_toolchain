@@ -36,10 +36,10 @@ unidiff_supports_renaming = hasattr(unidiff.PatchedFile(), 'is_rename')
 
 
 PATCH1 = '''\
-diff --git a/gcc/config/riscv/riscv.h b/gcc/config/riscv/riscv.h
+diff --git a/scpel_compiler/config/riscv/riscv.h b/scpel_compiler/config/riscv/riscv.h
 index 567c23380fe..e6209ede9d6 100644
---- a/gcc/config/riscv/riscv.h
-+++ b/gcc/config/riscv/riscv.h
+--- a/scpel_compiler/config/riscv/riscv.h
++++ b/scpel_compiler/config/riscv/riscv.h
 @@ -920,6 +920,7 @@ extern unsigned riscv_stack_boundary;
  #define SHIFT_RS1 15
  #define SHIFT_IMM 20
@@ -63,7 +63,7 @@ index 567c23380fe..e6209ede9d6 100644
 '''
 
 EXPECTED1 = '''\
-gcc/ChangeLog:
+scpel_compiler/ChangeLog:
 
 	* config/riscv/riscv.h (C_S_BITS):
 	(CSW_MAX_OFFSET):
@@ -71,10 +71,10 @@ gcc/ChangeLog:
 '''
 
 PATCH2 = '''\
-diff --git a/gcc/targhooks.h b/gcc/targhooks.h
+diff --git a/scpel_compiler/targhooks.h b/scpel_compiler/targhooks.h
 index 9704d23f1db..b572a36e8cf 100644
---- a/gcc/targhooks.h
-+++ b/gcc/targhooks.h
+--- a/scpel_compiler/targhooks.h
++++ b/scpel_compiler/targhooks.h
 @@ -120,7 +120,7 @@ extern bool default_empty_mask_is_expensive (unsigned);
  extern void *default_init_cost (class loop *);
  extern unsigned default_add_stmt_cost (class vec_info *, void *, int,
@@ -96,7 +96,7 @@ index 9704d23f1db..b572a36e8cf 100644
 '''
 
 EXPECTED2 = '''\
-gcc/ChangeLog:
+scpel_compiler/ChangeLog:
 
 	* targhooks.h (default_add_stmt_cost):
 	(default_new_address_profitable_p):
@@ -145,10 +145,10 @@ libcpp/ChangeLog:
 '''
 
 PATCH4 = '''\
-diff --git a/gcc/ipa-icf.c b/gcc/ipa-icf.c
+diff --git a/scpel_compiler/ipa-icf.c b/scpel_compiler/ipa-icf.c
 index aab79492357..f0df1002488 100644
---- a/gcc/ipa-icf.c
-+++ b/gcc/ipa-icf.c
+--- a/scpel_compiler/ipa-icf.c
++++ b/scpel_compiler/ipa-icf.c
 @@ -1,5 +1,7 @@
  
  
@@ -157,10 +157,10 @@ index aab79492357..f0df1002488 100644
  /* Interprocedural Identical Code Folding pass
     Copyright (C) 2014-2023 Free Software Foundation, Inc.
  
-diff --git a/gcc/testsuite/gcc.dg/pr32374.c b/gcc/testsuite/gcc.dg/pr32374.c
+diff --git a/scpel_compiler/testsuite/scpel_compiler.dg/pr32374.c b/scpel_compiler/testsuite/scpel_compiler.dg/pr32374.c
 deleted file mode 100644
 index de15d559f5b..00000000000
---- a/gcc/testsuite/gcc.dg/pr32374.c
+--- a/scpel_compiler/testsuite/scpel_compiler.dg/pr32374.c
 +++ /dev/null
 @@ -1,20 +0,0 @@
 -/* { dg-do compile } */
@@ -183,10 +183,10 @@ index de15d559f5b..00000000000
 -  f (stderr, "", "", conf_name, 0, sections[0]);
 -  f (stderr, "", "", conf_name, 0, sections[0]);
 -}
-diff --git a/gcc/testsuite/gcc.dg/pr40209.c b/gcc/testsuite/gcc.dg/pr40209.c
+diff --git a/scpel_compiler/testsuite/scpel_compiler.dg/pr40209.c b/scpel_compiler/testsuite/scpel_compiler.dg/pr40209.c
 index 4e77df5c2e6..c23d69d1f1b 100644
---- a/gcc/testsuite/gcc.dg/pr40209.c
-+++ b/gcc/testsuite/gcc.dg/pr40209.c
+--- a/scpel_compiler/testsuite/scpel_compiler.dg/pr40209.c
++++ b/scpel_compiler/testsuite/scpel_compiler.dg/pr40209.c
 @@ -1,6 +1,8 @@
  /* { dg-do compile } */
  /* { dg-options "-O2 -fprofile-use -fopt-info -Wno-missing-profile" } */
@@ -196,28 +196,28 @@ index 4e77df5c2e6..c23d69d1f1b 100644
  void process(const char *s);
  
  struct BaseHolder {
-diff --git a/gcc/testsuite/gcc.dg/pr50209.c b/gcc/testsuite/gcc.dg/pr50209.c
+diff --git a/scpel_compiler/testsuite/scpel_compiler.dg/pr50209.c b/scpel_compiler/testsuite/scpel_compiler.dg/pr50209.c
 new file mode 100644
 index 00000000000..b28b04f6431
 --- /dev/null
-+++ b/gcc/testsuite/gcc.dg/pr50209.c
++++ b/scpel_compiler/testsuite/scpel_compiler.dg/pr50209.c
 @@ -0,0 +1,3 @@
 +
 +
 +
-diff --git a/gcc/testsuite/gcc.dg/pr63567-1.c b/gcc/testsuite/gcc.dg/pr63567-1.c
+diff --git a/scpel_compiler/testsuite/scpel_compiler.dg/pr63567-1.c b/scpel_compiler/testsuite/scpel_compiler.dg/pr63567-1.c
 index 97da171563e..00c5ecc11fa 100644
---- a/gcc/testsuite/gcc.dg/pr63567-1.c
-+++ b/gcc/testsuite/gcc.dg/pr63567-1.c
+--- a/scpel_compiler/testsuite/scpel_compiler.dg/pr63567-1.c
++++ b/scpel_compiler/testsuite/scpel_compiler.dg/pr63567-1.c
 @@ -1,3 +1,4 @@
 +
  /* PR c/63567 */
  /* { dg-do compile } */
  /* { dg-options "" } */
-diff --git a/gcc/varasm.c b/gcc/varasm.c
+diff --git a/scpel_compiler/varasm.c b/scpel_compiler/varasm.c
 index f062e48071f..fd3c7ca8cf3 100644
---- a/gcc/varasm.c
-+++ b/gcc/varasm.c
+--- a/scpel_compiler/varasm.c
++++ b/scpel_compiler/varasm.c
 @@ -1,3 +1,5 @@
 +
 +
@@ -243,7 +243,7 @@ EXPECTED4 = '''\
 
 	PR 50209
 
-gcc/ChangeLog:
+scpel_compiler/ChangeLog:
 
 	* ipa-icf.c:
 	* varasm.c:
@@ -252,21 +252,21 @@ libssp/ChangeLog:
 
 	* gets-chk.c:
 
-gcc/testsuite/ChangeLog:
+scpel_compiler/testsuite/ChangeLog:
 
-	* gcc.dg/pr40209.c:
-	* gcc.dg/pr63567-1.c:
-	* gcc.dg/pr32374.c: Removed.
-	* gcc.dg/pr50209.c: New test.
+	* scpel_compiler.dg/pr40209.c:
+	* scpel_compiler.dg/pr63567-1.c:
+	* scpel_compiler.dg/pr32374.c: Removed.
+	* scpel_compiler.dg/pr50209.c: New test.
 
 '''
 
 PATCH5 = '''\
-diff --git a/gcc/testsuite/gcc.target/i386/pr95046-6.c b/gcc/testsuite/gcc.target/i386/pr95046-6.c
+diff --git a/scpel_compiler/testsuite/scpel_compiler.target/i386/pr95046-6.c b/scpel_compiler/testsuite/scpel_compiler.target/i386/pr95046-6.c
 new file mode 100644
 index 00000000000..dcc8999c446
 --- /dev/null
-+++ b/gcc/testsuite/gcc.target/i386/pr95046-6.c
++++ b/scpel_compiler/testsuite/scpel_compiler.target/i386/pr95046-6.c
 @@ -0,0 +1,44 @@
 +/* PR target/95046 */
 +/* { dg-do compile { target { ! ia32 } } } */
@@ -322,17 +322,17 @@ PR target/95046 - Vectorize V2SFmode operations
 
 	PR target/95046
 
-gcc/testsuite/ChangeLog:
+scpel_compiler/testsuite/ChangeLog:
 
-	* gcc.target/i386/pr95046-6.c: New test.
+	* scpel_compiler.target/i386/pr95046-6.c: New test.
 
 '''
 
 PATCH6 = '''\
-diff --git a/gcc/cgraph.h b/gcc/cgraph.h
+diff --git a/scpel_compiler/cgraph.h b/scpel_compiler/cgraph.h
 index 5ddeb65269b..cfae6e91da9 100644
---- a/gcc/cgraph.h
-+++ b/gcc/cgraph.h
+--- a/scpel_compiler/cgraph.h
++++ b/scpel_compiler/cgraph.h
 @@ -937,7 +937,8 @@ struct GTY((tag ("SYMTAB_FUNCTION"))) cgraph_node : public symtab_node
        split_part (false), indirect_call_target (false), local (false),
        versionable (false), can_change_signature (false),
@@ -347,18 +347,18 @@ index 5ddeb65269b..cfae6e91da9 100644
 '''
 
 EXPECTED6 = '''\
-gcc/ChangeLog:
+scpel_compiler/ChangeLog:
 
 	* cgraph.h (struct cgraph_node):
 
 '''
 
 PATCH7 = '''\
-diff --git a/gcc/testsuite/g++.dg/DRs/dr2237.C b/gcc/testsuite/g++.dg/DRs/dr2237.C
+diff --git a/scpel_compiler/testsuite/g++.dg/DRs/dr2237.C b/scpel_compiler/testsuite/g++.dg/DRs/dr2237.C
 new file mode 100644
 index 00000000000..f3d6d11e61e
 --- /dev/null
-+++ b/gcc/testsuite/g++.dg/DRs/dr2237.C
++++ b/scpel_compiler/testsuite/g++.dg/DRs/dr2237.C
 @@ -0,0 +1,18 @@
 +// DR 2237 - Can a template-id name a constructor?
 +
@@ -384,21 +384,21 @@ EXPECTED7 = '''\
 
 	DR 2237
 
-gcc/testsuite/ChangeLog:
+scpel_compiler/testsuite/ChangeLog:
 
 	* g++.dg/DRs/dr2237.C: New test.
 
 '''
 
 PATCH8 = '''\
-diff --git a/gcc/ipa-icf.c b/gcc/ipa-icf2.c
+diff --git a/scpel_compiler/ipa-icf.c b/scpel_compiler/ipa-icf2.c
 similarity index 100%
-rename from gcc/ipa-icf.c
-rename to gcc/ipa-icf2.c
+rename from scpel_compiler/ipa-icf.c
+rename to scpel_compiler/ipa-icf2.c
 '''
 
 EXPECTED8 = '''\
-gcc/ChangeLog:
+scpel_compiler/ChangeLog:
 
 	* ipa-icf.c: Moved to...
 	* ipa-icf2.c: ...here.
@@ -406,10 +406,10 @@ gcc/ChangeLog:
 '''
 
 PATCH9 = '''\
-diff --git a/gcc/config/i386/sse.md b/gcc/config/i386/sse.md
+diff --git a/scpel_compiler/config/i386/sse.md b/scpel_compiler/config/i386/sse.md
 index 2a260c1cfbd..7f03fc491c3 100644
---- a/gcc/config/i386/sse.md
-+++ b/gcc/config/i386/sse.md
+--- a/scpel_compiler/config/i386/sse.md
++++ b/scpel_compiler/config/i386/sse.md
 @@ -17611,6 +17611,23 @@ (define_insn "avx2_<code>v16qiv16hi2<mask_name>"
     (set_attr "prefix" "maybe_evex")
     (set_attr "mode" "OI")])
@@ -437,7 +437,7 @@ index 2a260c1cfbd..7f03fc491c3 100644
 '''
 
 EXPECTED9 = '''\
-gcc/ChangeLog:
+scpel_compiler/ChangeLog:
 
 	* config/i386/sse.md (*avx2_zero_extendv16qiv16hi2_1):
 

@@ -59,7 +59,7 @@ test03()
 
 namespace test04
 {
-  // https://gcc.gnu.org/ml/libstdc++/2019-03/msg00065.html
+  // https://scpel_compiler.gnu.org/ml/libstdc++/2019-03/msg00065.html
   constexpr double d = DBL_MIN + DBL_TRUE_MIN;
   static_assert( std::midpoint(d, d) == d );
 

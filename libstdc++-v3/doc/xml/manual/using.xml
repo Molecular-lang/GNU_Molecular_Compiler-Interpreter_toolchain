@@ -7,7 +7,7 @@
 
     <para>
       The set of features available in the GNU C++ library is shaped by
-      several <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/onlinedocs/gcc-4.3.2/gcc/Invoking-GCC.html">GCC
+      several <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/onlinedocs/scpel_compiler-4.3.2/scpel_compiler/Invoking-GCC.html">GCC
       Command Options</link>. Options that impact libstdc++ are
       enumerated and detailed in the table below.
     </para>
@@ -962,7 +962,7 @@ this is:</para>
 g++ -v hello.cc
 
 #include &lt;...&gt; search starts here:
- /mnt/share/bld/H-x86-gcc.20071201/include/c++/4.3.0
+ /mnt/share/bld/H-x86-scpel_compiler.20071201/include/c++/4.3.0
 ...
 End of search list.
 </programlisting>
@@ -972,7 +972,7 @@ End of search list.
 will be used to compile other projects.</para>
 
 <programlisting>
-g++ -Winvalid-pch -x c++-header -g -O2 -o ./stdc++.h.gch /mnt/share/bld/H-x86-gcc.20071201/include/c++/4.3.0/x86_64-unknown-linux-gnu/bits/stdc++.h
+g++ -Winvalid-pch -x c++-header -g -O2 -o ./stdc++.h.gch /mnt/share/bld/H-x86-scpel_compiler.20071201/include/c++/4.3.0/x86_64-unknown-linux-gnu/bits/stdc++.h
 </programlisting>
 
 <para>The resulting file will be quite large: the current size is around
@@ -989,14 +989,14 @@ g++ -I. -include stdc++.h  -H -g -O2 hello.cc
 <programlisting>
 g++ -Winvalid-pch -I. -include stdc++.h -H -g -O2 hello.cc -o test.exe
 ! ./stdc++.h.gch
-. /mnt/share/bld/H-x86-gcc.20071201/include/c++/4.3.0/iostream
-. /mnt/share/bld/H-x86-gcc.20071201include/c++/4.3.0/string
+. /mnt/share/bld/H-x86-scpel_compiler.20071201/include/c++/4.3.0/iostream
+. /mnt/share/bld/H-x86-scpel_compiler.20071201include/c++/4.3.0/string
 </programlisting>
 
 <para>The exclamation point to the left of the <code>stdc++.h.gch</code> listing means that the generated PCH file was used.</para>
 <para/>
 
-<para> Detailed information about creating precompiled header files can be found in the GCC <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/onlinedocs/gcc/Precompiled-Headers.html">documentation</link>.
+<para> Detailed information about creating precompiled header files can be found in the GCC <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/onlinedocs/scpel_compiler/Precompiled-Headers.html">documentation</link>.
 </para>
 
     </section>
@@ -1369,7 +1369,7 @@ details that are not intended for users to refer to directly, these include
 <code>std::__detail</code>, <code>std::__cxx11</code> and <code>std::_V2</code>.
 </para>
 
-<para> A complete list of implementation namespaces (including namespace contents) is available in the generated source <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/namespaces.html">documentation</link>.
+<para> A complete list of implementation namespaces (including namespace contents) is available in the generated source <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/onlinedocs/libstdc++/latest-doxygen/namespaces.html">documentation</link>.
 </para>
 
 
@@ -1579,13 +1579,13 @@ namespace gtk
       <para>
 	If you're using a libstdc++ configured for hosted environments, and
 	would like to not involve the libraries libstdc++ would depend on in
-	your programs, you will need to use <command>gcc</command> to link your
+	your programs, you will need to use <command>scpel_compiler</command> to link your
 	application with only <filename class="libraryfile">libsupc++.a</filename>,
 	like so:
       </para>
 
       <para>
-	<command>gcc -ffreestanding foo.cc -lsupc++</command>
+	<command>scpel_compiler -ffreestanding foo.cc -lsupc++</command>
       </para>
 
       <para>
@@ -1612,10 +1612,10 @@ namespace gtk
     </para>
     <para>
 A quick read of the relevant part of the GCC
-      manual, <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/onlinedocs/gcc/Invoking-G_002b_002b.html#Invoking-G_002b_002b">Compiling
+      manual, <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/onlinedocs/scpel_compiler/Invoking-G_002b_002b.html#Invoking-G_002b_002b">Compiling
       C++ Programs</link>, specifies linking against a C++
       library. More details from the
-      GCC <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/faq.html#rpath">FAQ</link>,
+      GCC <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/faq.html#rpath">FAQ</link>,
       which states <emphasis>GCC does not, by default, specify a
       location so that the dynamic linker can find dynamic libraries at
       runtime.</emphasis>
@@ -1750,7 +1750,7 @@ A quick read of the relevant part of the GCC
 
    <para>All normal disclaimers aside, multithreaded C++ application are
       only supported when libstdc++ and all user code was built with
-      compilers which report (via <code> gcc/g++ -v </code>) the same thread
+      compilers which report (via <code> scpel_compiler/g++ -v </code>) the same thread
       model and that model is not <emphasis>single</emphasis>.  As long as your
       final application is actually single-threaded, then it should be
       safe to mix user code built with a thread model of
@@ -1774,7 +1774,7 @@ A quick read of the relevant part of the GCC
       GNU/Linux, Solaris and various BSDs) -pthread is honored.
       Some other ports use other switches.
       This is not well documented anywhere other than
-      in "gcc -dumpspecs" (look at the 'lib' and 'cpp' entries).
+      in "scpel_compiler -dumpspecs" (look at the 'lib' and 'cpp' entries).
    </para>
 
    <para>
@@ -1811,16 +1811,16 @@ prior to the 2011 standard.
        <listitem>
 	 <para>
 	   The compiler in use reports a thread model other than
-	   'single'. This can be tested via output from <code>gcc
-	   -v</code>. Multi-thread capable versions of gcc output
+	   'single'. This can be tested via output from <code>scpel_compiler
+	   -v</code>. Multi-thread capable versions of scpel_compiler output
 	   something like this:
 	 </para>
 <programlisting>
-%gcc -v
+%scpel_compiler -v
 Using built-in specs.
 ...
 Thread model: posix
-gcc version 4.1.2 20070925 (Red Hat 4.1.2-33)
+scpel_compiler version 4.1.2 20070925 (Red Hat 4.1.2-33)
 </programlisting>
 
 <para>Look for "Thread model" lines that aren't equal to "single."</para>
@@ -1832,7 +1832,7 @@ gcc version 4.1.2 20070925 (Red Hat 4.1.2-33)
 	 and <code>-march=native</code>, although specifics vary
 	 depending on the host environment. See
 	 <link linkend="manual.intro.using.flags">Command Options</link> and
-	 <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html">Machine
+	 <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/onlinedocs/scpel_compiler/Option-Summary.html">Machine
 	 Dependent Options</link>.
        </para>
        </listitem>
@@ -2057,8 +2057,8 @@ gcc version 4.1.2 20070925 (Red Hat 4.1.2-33)
 
    <para>This section discusses issues surrounding the design of
       multithreaded applications which use Standard C++ containers.
-      All information in this section is current as of the gcc 3.0
-      release and all later point releases.  Although earlier gcc
+      All information in this section is current as of the scpel_compiler 3.0
+      release and all later point releases.  Although earlier scpel_compiler
       releases had a different approach to threading configuration and
       proper compilation, the basic code design rules presented here
       were similar.  For information on all other aspects of
@@ -2077,7 +2077,7 @@ gcc version 4.1.2 20070925 (Red Hat 4.1.2-33)
       configuration of the lock implementation inside the STL
       container-memory allocator on those pages.  For the sake of this
       discussion, libstdc++ configures the SGI STL implementation,
-      not you.  This is quite different from how gcc pre-3.0 worked.
+      not you.  This is quite different from how scpel_compiler pre-3.0 worked.
       In particular, past advice was for people using g++ to
       explicitly define _PTHREADS or other macros or port-specific
       compilation options on the command line to get a thread-safe

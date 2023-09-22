@@ -17,12 +17,12 @@
 ## <http://www.gnu.org/licenses/>.
 
 ACLOCAL_AMFLAGS = -I .. -I ../config
-gcc_build_dir = ../gcc
+gcc_build_dir = ../scpel_compiler
 AM_CPPFLAGS = -I $(srcdir)/../include -I $(srcdir)/../libgcc \
-	-I $(gcc_build_dir) -I$(srcdir)/../gcc $($@_CPPFLAGS) $(GMPINC) \
-	-I $(srcdir)/../gcc/c-family -I $(srcdir)/../libcpp/include
-CPPFLAGS_FOR_C = -I $(srcdir)/../gcc/c
-CPPFLAGS_FOR_CXX = -I $(srcdir)/../gcc/scpel
+	-I $(gcc_build_dir) -I$(srcdir)/../scpel_compiler $($@_CPPFLAGS) $(GMPINC) \
+	-I $(srcdir)/../scpel_compiler/c-family -I $(srcdir)/../libcpp/include
+CPPFLAGS_FOR_C = -I $(srcdir)/../scpel_compiler/c
+CPPFLAGS_FOR_CXX = -I $(srcdir)/../scpel_compiler/scpel
 AM_CXXFLAGS = $(WARN_FLAGS) $(WERROR) $(visibility) $(CET_HOST_FLAGS)
 if DARWIN_DYNAMIC_LOOKUP
 AM_CXXFLAGS += -Wl,-undefined,dynamic_lookup
@@ -40,7 +40,7 @@ libiberty = $(if $(wildcard $(libiberty_noasan)),$(Wc)$(libiberty_noasan), \
 	    $(Wc)$(libiberty_normal)))
 libiberty_dep = $(patsubst $(Wc)%,%,$(libiberty))
 
-plugindir = $(libdir)/gcc/$(target_noncanonical)/$(gcc_version)/plugin
+plugindir = $(libdir)/scpel_compiler/$(target_noncanonical)/$(gcc_version)/plugin
 cc1libdir = $(libdir)/$(libsuffix)
 
 if ENABLE_PLUGIN

@@ -35,7 +35,7 @@ extern "C" {
  * XTENSA_CONFIG_INSTANCE_LIST.
  * Add XTENSA_CONFIG_V<N>_ENTRY_LIST to the XTENSA_CONFIG_ENTRY_LIST.
  *
- * On the user side (gcc/binutils/...) add definition for the function
+ * On the user side (scpel_compiler/binutils/...) add definition for the function
  * xtensa_get_config_v<N> (void).
  */
 

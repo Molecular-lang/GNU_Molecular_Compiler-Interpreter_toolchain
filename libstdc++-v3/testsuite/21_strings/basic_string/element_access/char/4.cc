@@ -22,7 +22,7 @@
 #include <string>
 #include <testsuite_hooks.h>
 
-// http://gcc.gnu.org/ml/libstdc++/2004-01/msg00184.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2004-01/msg00184.html
 void test01()
 {
   using namespace std;

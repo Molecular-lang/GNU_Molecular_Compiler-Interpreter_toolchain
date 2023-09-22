@@ -1177,7 +1177,7 @@ func_source ()
 # if one wasn't chosen via the "--tag" command line option.
 # Only attempt this if the compiler in the base compile
 # command doesn't match the default compiler.
-# arg is usually of the form 'gcc ...'
+# arg is usually of the form 'scpel_compiler ...'
 func_infer_tag ()
 {
     $opt_debug
@@ -4975,7 +4975,7 @@ func_mode_link ()
       # -q* pass through compiler args for the IBM compiler
       # -m*, -t[45]*, -txscale* pass through architecture-specific
       # compiler args for GCC
-      # -F/path gives path to uninstalled frameworks, gcc on darwin
+      # -F/path gives path to uninstalled frameworks, scpel_compiler on darwin
       # -p, -pg, --coverage, -fprofile-* pass through profiling flag for GCC
       # @file GCC response files
       # -tp=* Portland pgcc target processor selection

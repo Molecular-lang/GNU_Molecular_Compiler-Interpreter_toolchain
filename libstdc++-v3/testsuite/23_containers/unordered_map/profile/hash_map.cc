@@ -1,5 +1,5 @@
 // { dg-options "-Wno-deprecated" }
-/* testing the gcc instrumented */
+/* testing the scpel_compiler instrumented */
 
 #include <ext/hash_map>
 using namespace std;

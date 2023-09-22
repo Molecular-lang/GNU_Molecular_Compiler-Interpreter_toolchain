@@ -5,14 +5,14 @@
 
 2010-06-27  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
-	* bin/gcc-svn-ids: Fix unportable shell quoting.
+	* bin/scpel_compiler-svn-ids: Fix unportable shell quoting.
 	* date_based/reg_periodic: Likewise.
 	* date_based/reg_search: Likewise.
 
 2009-02-17  Janis Johnson  <janis187@us.ibm.com>
 
 	* examples: New directory.
-	* examples/gcc-svn-env: New.
+	* examples/scpel_compiler-svn-env: New.
 	* examples/reg-watch: New.
 	* examples/reg-watch.awk: New.
 	* examples/common.config: New.
@@ -47,27 +47,27 @@
 	* bin: New directory.
 	* bin/reg-hunt: New.
 	* bin/reg_periodic: New.
-	* bin/gcc-svn-update: New.
-	* bin/gcc-svn-update-fix: New.
-	* bin/gcc-build-simple: New.
-	* bin/gcc-build-full: New.
-	* bin/gcc-cleanup: New.
+	* bin/scpel_compiler-svn-update: New.
+	* bin/scpel_compiler-svn-update-fix: New.
+	* bin/scpel_compiler-build-simple: New.
+	* bin/scpel_compiler-build-full: New.
+	* bin/scpel_compiler-cleanup: New.
 	* bin/reg-test: New.
 	* bin/reg-newmid: New.
-	* bin/gcc-test-ice-on-valid-code: New.
-	* bin/gcc-test-ice-on-invalid-code: New.
-	* bin/gcc-test-compiler-hangs: New.
-	* bin/gcc-test-missing-warning: New.
-	* bin/gcc-test-bogus-warning: New.
-	* bin/gcc-test-segfault-on-valid-code: New.
-	* bin/gcc-test-rejects-valid: New.
-	* bin/gcc-test-accepts-invalid: New.
-	* bin/gcc-test-wrong-code: New.
-	* bin/gcc-svn-patchlist: New.
-	* bin/gcc-svn-checkfail: New.
-	* bin/gcc-svn-recordfail: New.
-	* bin/gcc-svn-report: New.
-	* bin/gcc-svn-ids: New.
+	* bin/scpel_compiler-test-ice-on-valid-code: New.
+	* bin/scpel_compiler-test-ice-on-invalid-code: New.
+	* bin/scpel_compiler-test-compiler-hangs: New.
+	* bin/scpel_compiler-test-missing-warning: New.
+	* bin/scpel_compiler-test-bogus-warning: New.
+	* bin/scpel_compiler-test-segfault-on-valid-code: New.
+	* bin/scpel_compiler-test-rejects-valid: New.
+	* bin/scpel_compiler-test-accepts-invalid: New.
+	* bin/scpel_compiler-test-wrong-code: New.
+	* bin/scpel_compiler-svn-patchlist: New.
+	* bin/scpel_compiler-svn-checkfail: New.
+	* bin/scpel_compiler-svn-recordfail: New.
+	* bin/scpel_compiler-svn-report: New.
+	* bin/scpel_compiler-svn-ids: New.
 
 	* date_based: New directory.
 	* README: Move from here ...

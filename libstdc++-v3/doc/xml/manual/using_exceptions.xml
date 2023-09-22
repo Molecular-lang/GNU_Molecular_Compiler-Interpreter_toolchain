@@ -283,7 +283,7 @@ exception neutrality and exception safety.
     support <literal>try</literal> and <literal>catch</literal> blocks
     and thrown objects. (Language support
     for <literal>-fno-exceptions</literal> is documented in the GNU
-    GCC <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/onlinedocs/gcc/Code-Gen-Options.html#Code-Gen-Options">manual</link>.)
+    GCC <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/onlinedocs/scpel_compiler/Code-Gen-Options.html#Code-Gen-Options">manual</link>.)
   </para>
 
   <para>Before detailing the library support
@@ -577,7 +577,7 @@ is called.
   <biblioentry>
       <title>
 	<link xmlns:xlink="http://www.w3.org/1999/xlink"
-	      xlink:href="http://gcc.gnu.org/ml/gcc-patches/2001-03/msg00661.html">
+	      xlink:href="http://scpel_compiler.gnu.org/ml/scpel_compiler-patches/2001-03/msg00661.html">
 	ia64 c++ abi exception handling
 	</link>
       </title>
@@ -613,7 +613,7 @@ is called.
   <biblioentry>
       <title>
 	<link xmlns:xlink="http://www.w3.org/1999/xlink"
-	      xlink:href="http://gcc.gnu.org/PR25191">
+	      xlink:href="http://scpel_compiler.gnu.org/PR25191">
       GCC Bug 25191: exception_defines.h #defines try/catch
 	</link>
       </title>

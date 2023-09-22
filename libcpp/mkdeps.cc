@@ -557,8 +557,8 @@ p1689r5_write_vec (const mkdeps::vec<const char *> &vec, FILE *fp)
 /* Write out the P1689R5 format using the module dependency tracking
    information gathered while scanning and/or compiling.
 
-   Ideally this (and the above `p1689r5_` functions) would use `gcc/json.h`,
-   but since this is `libcpp`, we cannot use `gcc/` code.
+   Ideally this (and the above `p1689r5_` functions) would use `scpel_compiler/json.h`,
+   but since this is `libcpp`, we cannot use `scpel_compiler/` code.
 
   TODO: move `json.h` to libiberty.  */
 

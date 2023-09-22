@@ -180,7 +180,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	// There must be a memory barrier between dispose() and destroy()
 	// to ensure that the effects of dispose() are observed in the
 	// thread that runs destroy().
-	// See http://gcc.gnu.org/ml/libstdc++/2005-11/msg00136.html
+	// See http://scpel_compiler.gnu.org/ml/libstdc++/2005-11/msg00136.html
 	if (_Mutex_base<_Lp>::_S_need_barriers)
 	  {
 	    __atomic_thread_fence (__ATOMIC_ACQ_REL);

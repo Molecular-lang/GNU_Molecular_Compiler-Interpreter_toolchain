@@ -7,7 +7,7 @@
 
 2023-08-11  Joseph Myers  <joseph@codesourcery.com>
 
-	* gcc-plugin.m4 (GCC_ENABLE_PLUGINS): Use
+	* scpel_compiler-plugin.m4 (GCC_ENABLE_PLUGINS): Use
 	export_sym_check="$ac_cv_prog_OBJDUMP -T" also when host is not
 	build or target.
 
@@ -45,12 +45,12 @@
 
 2023-08-07  H.J. Lu  <hjl.tools@gmail.com>
 
-	* gcc-plugin.m4 (GCC_PLUGIN_OPTION): Check if AR works with
+	* scpel_compiler-plugin.m4 (GCC_PLUGIN_OPTION): Check if AR works with
 	--plugin and rc before enabling --plugin.
 
 2023-08-07  H.J. Lu  <hjl.tools@gmail.com>
 
-	* gcc-plugin.m4 (GCC_PLUGIN_OPTION): New.
+	* scpel_compiler-plugin.m4 (GCC_PLUGIN_OPTION): New.
 
 2023-07-21  Sergei Trofimovich  <siarheit@google.com>
 
@@ -85,7 +85,7 @@
 2022-06-01  David Seifert  <soap@gentoo.org>
 
 	PR plugins/95648
-	* gcc-plugin.m4: Use libtool's $ac_cv_prog_OBJDUMP.
+	* scpel_compiler-plugin.m4: Use libtool's $ac_cv_prog_OBJDUMP.
 
 2022-05-20  Christophe Lyon  <christophe.lyon@arm.com>
 
@@ -110,15 +110,15 @@
 	Revert:
 	2021-12-16  H.J. Lu  <hjl.tools@gmail.com>
 
-	* gcc-plugin.m4 (GCC_PLUGIN_OPTION): New.
+	* scpel_compiler-plugin.m4 (GCC_PLUGIN_OPTION): New.
 
 2021-12-15  H.J. Lu  <hjl.tools@gmail.com>
 
-	* gcc-plugin.m4 (GCC_PLUGIN_OPTION): New.
+	* scpel_compiler-plugin.m4 (GCC_PLUGIN_OPTION): New.
 
 2021-12-15  Iain Sandoe  <iain@sandoe.co.uk>
 
-	* gcc-plugin.m4: Save and process CXXFLAGS.
+	* scpel_compiler-plugin.m4: Save and process CXXFLAGS.
 
 2021-11-30  Iain Buclaw  <ibuclaw@gdcproject.org>
 
@@ -296,7 +296,7 @@
 2019-05-02  Richard Biener  <rguenther@suse.de>
 
 	PR bootstrap/85574
-	* bootstrap-lto.mk (extra-compare): Set to gcc/lto1$(exeext).
+	* bootstrap-lto.mk (extra-compare): Set to scpel_compiler/lto1$(exeext).
 
 2019-04-16  Martin Liska  <mliska@suse.cz>
 
@@ -386,11 +386,11 @@
 
 2018-02-06  Eric Botcazou  <ebotcazou@adacore.com>
 
-	* gcc-plugin.m4 (GCC_ENABLE_PLUGINS): Remove -q option passed to grep.
+	* scpel_compiler-plugin.m4 (GCC_ENABLE_PLUGINS): Remove -q option passed to grep.
 
 2017-11-14 Boris Kolpackov  <boris@codesynthesis.com>
 
-	* gcc-plugin.m4: Add support for MinGW.
+	* scpel_compiler-plugin.m4: Add support for MinGW.
 
 2017-11-17  Igor Tsimbalist  <igor.v.tsimbalist@intel.com>
 
@@ -428,7 +428,7 @@
 	PR other/79046
 	* acx.m4 (GCC_BASE_VER): New m4 function.
 	(ACX_TOOL_DIRS): Require GCC_BASE_VER, for
-	--with-gcc-major-version-only use just major number from BASE-VER.
+	--with-scpel_compiler-major-version-only use just major number from BASE-VER.
 
 2017-01-06  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 
@@ -471,12 +471,12 @@
 
 	multi.m4: Don't set GCJ.
 
-2016-06-21  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2016-06-21  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* elf.m4: Remove interix support.
 	* picflag.m4: Likewise.
 
-2016-04-30  Oleg Endo  <olegendo@gcc.gnu.org>
+2016-04-30  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	* picflag.m4:  Remove SH5 support.
 
@@ -519,12 +519,12 @@
 
 	* sjlj.m4: New file.
 
-2015-05-04  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2015-05-04  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* bitfields.m4: Change int to long long, and use bitfields of
 	width 1 instead of 0.
 
-2015-05-01  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2015-05-01  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* bitfields.m4: New file.
 
@@ -577,7 +577,7 @@
 
 2014-10-27  Tom Tromey  <tromey@redhat.com>
 
-	* gcc-plugin.m4: New file.
+	* scpel_compiler-plugin.m4: New file.
 
 2014-09-01  Andi Kleen  <ak@linux.intel.com>
 
@@ -800,7 +800,7 @@
 
 	* acx.m4 (Test for GNAT): Update comment and add quotes in final test.
 
-2011-11-22  Iain Sandoe  <iains@gcc.gnu.org>
+2011-11-22  Iain Sandoe  <iains@scpel_compiler.gnu.org>
 
 	* weakref.m4: New file.
 
@@ -925,7 +925,7 @@
 
 	* bootstrap-lto: Use -flto.
 
-2010-11-04  Iain Sandoe  <iains@gcc.gnu.org>
+2010-11-04  Iain Sandoe  <iains@scpel_compiler.gnu.org>
 
 	* mh-darwin: Renamed from mh-ppc-darwin.
 
@@ -975,7 +975,7 @@
 
 	* override.m4: Remove obsolete (<2.64) definitions.
 
-2010-06-09  Iain Sandoe  <iains@gcc.gnu.org>
+2010-06-09  Iain Sandoe  <iains@scpel_compiler.gnu.org>
 
 	PR bootstrap/43170
 	* tls.m4 (GCC_CHECK_TLS): Add volatile qualifier to the test
@@ -1167,8 +1167,8 @@
 
 2008-07-30  Paolo Bonzini  <bonzini@gnu.org>
 
-	* mh-pa: New, from gcc/config/pa/x-ada.
-	* mh-pa-hpux10: New, from gcc/config/pa/x-ada-hpux10.
+	* mh-pa: New, from scpel_compiler/config/pa/x-ada.
+	* mh-pa-hpux10: New, from scpel_compiler/config/pa/x-ada-hpux10.
 
 2008-07-25  Keith Seitz  <keiths@redhat.com>
 
@@ -1193,7 +1193,7 @@
 	version _GCC_AUTOCONF_VERSION throughout the tree.
 	(m4_wrap): New override, fix for Posix semantics of m4wrap.
 
-2008-06-11  Bernhard Fischer  <aldot@gcc.gnu.org>
+2008-06-11  Bernhard Fischer  <aldot@scpel_compiler.gnu.org>
 
 	* tls.m4: Fix typos.
 
@@ -1305,7 +1305,7 @@
 	* mt-sde (CFLAGS_FOR_TARGET): Add -mno-gpopt.
 	(CXXFLAGS_FOR_TARGET): Likewise.
 
-2007-09-06  Francois-Xavier Coudert  <fxcoudert@gcc.gnu.org>
+2007-09-06  Francois-Xavier Coudert  <fxcoudert@scpel_compiler.gnu.org>
 
 	PR target/33281
 	* mh-mingw: New host makefile fragment.
@@ -1441,7 +1441,7 @@
 
 2007-01-01  Mike Stump  <mrs@apple.com>
 
-	* mh-ppc-darwin: Remove support for building with Apple's gcc-3.1.
+	* mh-ppc-darwin: Remove support for building with Apple's scpel_compiler-3.1.
 
 2006-12-04  Eric Botcazou  <ebotcazou@libertysurf.fr>
 
@@ -1504,7 +1504,7 @@
 
 	* acx.m4 (NCN_STRICT_CHECK_TARGET_TOOLS): Test $with_build_time_tools.
 	(ACX_PATH_SEP): New.
-	(ACX_TOOL_DIRS): Move here from the gcc directory.
+	(ACX_TOOL_DIRS): Move here from the scpel_compiler directory.
 	(ACX_CHECK_INSTALLED_TARGET_TOOL): New.
 	(GCC_TARGET_TOOL): Do not use a host tool if we found a target tool
 	with a complete path in either $with_build_time_tools or $exec_prefix.
@@ -1544,7 +1544,7 @@
 
 	* mt-gnu (CXXFLAGS): Include SYSROOT_CFLAGS_FOR_TARGET.
 
-2005-07-16  Kelley Cook  <kcook@gcc.gnu.org>
+2005-07-16  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* all files: Update FSF address.
 
@@ -1558,7 +1558,7 @@
 
 	* depstand.m4, lead-dot.m4: New files.
 
-2005-05-19  Kelley Cook  <kcook@gcc.gnu.org>
+2005-05-19  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* accross.m4: Delete file.
 
@@ -1574,7 +1574,7 @@
 
 2005-03-31  Paolo Bonzini  <bonzini@gnu.org>
 
-	* gcc-lib-path.m4: Remove.
+	* scpel_compiler-lib-path.m4: Remove.
 
 2005-03-21  Zack Weinberg  <zack@codesourcery.com>
 
@@ -1583,13 +1583,13 @@
 
 2005-03-15  Zack Weinberg  <zack@codesourcery.com>
 
-	* gcc-version.m4: Delete.
+	* scpel_compiler-version.m4: Delete.
 
 2005-02-28  Paolo Bonzini  <bonzini@gnu.org>
 
 	PR bootstrap/17383
 	* acx.m4 (GCC_TOPLEV_SUBDIRS): Set HOST_SUBDIR if an in-src
-	gcc build is going.
+	scpel_compiler build is going.
 
 2005-01-23  Joseph S. Myers  <joseph@codesourcery.com>
 
@@ -1602,7 +1602,7 @@
 
 2004-12-02  Richard Sandiford  <rsandifo@redhat.com>
 
-	* gcc-version.m4: New file.
+	* scpel_compiler-version.m4: New file.
 
 2004-09-24  Zack Weinberg  <zack@codesourcery.com>
 
@@ -1611,9 +1611,9 @@
 2004-09-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	PR bootstrap/17369
-	* gcc-lib-path.m4: New file.
+	* scpel_compiler-lib-path.m4: New file.
 
-2004-09-22  Kelley Cook  <kcook@gcc.gnu.org>
+2004-09-22  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* gettext-sister.m4: Renamed from gettext.m4
 	* codeset.m4, gettext.m4, glibc21.m4, iconv.m4, intdiv0.m4, po.m4,
@@ -1625,7 +1625,7 @@
 
 	* mh-ppc-darwin: Add file, and override BOOT_CFLAGS.
 
-2004-08-13  Nathanael Nerode  <neroden@gcc.gnu.org>
+2004-08-13  Nathanael Nerode  <neroden@scpel_compiler.gnu.org>
 
 	* Add ACX_{TARGET,HOST,BUILD}_NONCANONICAL,
 	which do an automatic AC_SUBST on _GCC_TOPLEV_*_NONCANONICAL.
@@ -1638,13 +1638,13 @@
 
 2004-06-09  Paolo Bonzini  <bonzini@gnu.org>
 
-	* acx.m4 (ACX_PROG_LN): From gcc, modified to
+	* acx.m4 (ACX_PROG_LN): From scpel_compiler, modified to
 	accept a parameter.
 
 2004-05-23  Paolo Bonzini  <bonzini@gnu.org>
 
 	* acx.m4 (ACX_HEADER_STDBOOL, ACX_HEADER_STRING):
-	From gcc.
+	From scpel_compiler.
 
 2004-04-16  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
 
@@ -1657,7 +1657,7 @@
 	PR ada/14131
 	Move language detection to the top level.
 	* acx.m4 (ACX_PROG_GNAT): New macro, moved here
-	from the gcc subdirectory.
+	from the scpel_compiler subdirectory.
 
 2004-03-09  Hans-Peter Nilsson  <hp@axis.com>
 
@@ -1671,7 +1671,7 @@
 	* aclocal.m4: Regenerate.
 	* configure: Regenerate.
 
-2003-10-14  Nathanael Nerode  <neroden@gcc.gnu.org>
+2003-10-14  Nathanael Nerode  <neroden@scpel_compiler.gnu.org>
 
 	* gettext.m4: Properly quote arguments to AC_DEFUN.
 
@@ -1692,19 +1692,19 @@
 2003-07-04  Zack Weinberg  <zack@codesourcery.com>
 
 	* gettext.m4: New file - copy of gettext.m4 from binutils
-	CVS, with added AC_ISC_POSIX macro from gcc/aclocal.m4.
+	CVS, with added AC_ISC_POSIX macro from scpel_compiler/aclocal.m4.
 
 2003-05-14  Kelley Cook  <kelleycook@wideopenwest.com>
 
 	* acinclude.m4: Accept i[3456789]86 for machine type.
 
-2003-05-18  Nathanael Nerode  <neroden@gcc.gnu.org>
+2003-05-18  Nathanael Nerode  <neroden@scpel_compiler.gnu.org>
 
 	* acx.m4: Introduce _GCC_TOPLEV_NONCANONICAL_BUILD,
 	_GCC_TOPLEV_NONCANOICAL_HOST, _GCC_TOPLEV_NONCANONICAL_TARGET,
 	GCC_TOPLEV_SUBDIRS.
 
-2003-03-04  Nathanael Nerode  <neroden@gcc.gnu.org>
+2003-03-04  Nathanael Nerode  <neroden@scpel_compiler.gnu.org>
 
 	* mh-dgux: Delete.
 
@@ -1716,7 +1716,7 @@
 	depending on whether build != host or not.
 	(NCN_STRICT_CHECK_TARGET_TOOL): Ditto, with the target prefix.
 
-2002-12-28  Nathanael Nerode  <neroden@gcc.gnu.org>
+2002-12-28  Nathanael Nerode  <neroden@scpel_compiler.gnu.org>
 
 	* acx.m4: New.
 	* mh-a68bsd, mh-aix386, mh-apollo68, mh-delta88, mh-hp300,
@@ -2292,7 +2292,7 @@ Thu Dec  2 14:35:54 1993  Ian Lance Taylor  (ian@tweedledumb.cygnus.com)
 
 Tue Nov 16 22:54:39 1993  Jim Kingdon  (kingdon@lioth.cygnus.com)
 
-	* mh-a68bsd: Define CC to gcc.
+	* mh-a68bsd: Define CC to scpel_compiler.
 
 Mon Nov 15 16:56:51 1993  Jim Kingdon  (kingdon@lioth.cygnus.com)
 
@@ -2316,7 +2316,7 @@ Tue Oct 19 18:58:21 1993  Jim Kingdon  (kingdon@lioth.cygnus.com)
 	* mh-hp300: Don't define CFLAGS to empty.  Why should hp300 be
 	different from anything else?  ("gdb doesn't understand the native
 	debug format" isn't a good enough answer because we might be using
-	gcc).
+	scpel_compiler).
 
 Tue Oct  5 12:17:40 1993  Peter Schauer  (pes@regent.e-technik.tu-muenchen.de)
 
@@ -2353,7 +2353,7 @@ Thu Apr  8 11:21:52 1993  Ian Lance Taylor  (ian@cygnus.com)
 
 Wed Mar 31 12:31:56 1993  Ian Lance Taylor  (ian@cygnus.com)
 
-	* mh-irix4: Bump -XNh value to 1500 to match gcc requirements.
+	* mh-irix4: Bump -XNh value to 1500 to match scpel_compiler requirements.
 
 Mon Mar 29 19:59:26 1993  david d `zoo' zuhn  (zoo at cirdan.cygnus.com)
 
@@ -2380,7 +2380,7 @@ Tue Dec 29 15:06:00 1992  Ian Lance Taylor  (ian@cygnus.com)
 
 Mon Dec  7 06:43:27 1992  david d `zoo' zuhn  (zoo at cirdan.cygnus.com)
 
-	* mh-sco: don't default $(CC) to gcc
+	* mh-sco: don't default $(CC) to scpel_compiler
 
 Mon Nov 30 14:54:34 1992  david d `zoo' zuhn  (zoo at cirdan.cygnus.com)
 

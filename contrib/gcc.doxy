@@ -16,7 +16,7 @@
 # If a relative path is entered, it will be relative to the location 
 # where doxygen was started. If left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = gcc-doxygen
+OUTPUT_DIRECTORY       = scpel_compiler-doxygen
 
 # The INPUT_FILTER tag can be used to specify a program that doxygen should 
 # invoke to filter for each input file. Doxygen will invoke the filter program 
@@ -478,7 +478,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = gcc gcc/analyzer
+INPUT                  = scpel_compiler scpel_compiler/analyzer
 
 # This tag can be used to specify the character encoding of the source files that 
 # doxygen parses. Internally doxygen uses the UTF-8 encoding, which is also the default 
@@ -1029,7 +1029,7 @@ INCLUDE_FILE_PATTERNS  =
 
 # The PREDEFINED tag can be used to specify one or more macro names that 
 # are defined before the preprocessor is started (similar to the -D option of 
-# gcc). The argument of the tag is a list of macros of the form: name 
+# scpel_compiler). The argument of the tag is a list of macros of the form: name 
 # or name=definition (no spaces). If the definition and the = are 
 # omitted =1 is assumed. To prevent a macro definition from being 
 # undefined via #undef or recursively expanded use the := operator 

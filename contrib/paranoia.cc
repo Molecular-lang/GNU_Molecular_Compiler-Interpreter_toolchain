@@ -142,7 +142,7 @@ lines
 #include <unistd.h>
 #include <float.h>
 
-    /* This part is made all the more awful because many gcc headers are
+    /* This part is made all the more awful because many scpel_compiler headers are
        not prepared at all to be parsed as C++.  The biggest stickler
        here is const structure members.  So we include exactly the pieces
        that we need.  */
@@ -184,7 +184,7 @@ static bool verbose = false;
 static int verbose_index = 0;
 
 /* ====================================================================== */
-/* The implementation of the abstract floating point class based on gcc's
+/* The implementation of the abstract floating point class based on scpel_compiler's
    real.cc.  I.e. the object of this exercise.  Templated so that we can
    all fp sizes.  */
 

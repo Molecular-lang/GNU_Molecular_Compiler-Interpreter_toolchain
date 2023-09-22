@@ -53,7 +53,7 @@ void operator delete(void *ptr, std::size_t) throw()
 }
 #endif
 
-// http://gcc.gnu.org/ml/libstdc++/2007-09/msg00006.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2007-09/msg00006.html
 void test01()
 {
   std::vector<std::vector<int> > *v;

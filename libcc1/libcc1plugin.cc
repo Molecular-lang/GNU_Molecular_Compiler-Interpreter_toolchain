@@ -24,7 +24,7 @@
 #undef PACKAGE_TARNAME
 #undef PACKAGE_VERSION
 
-#include "../gcc/config.h"
+#include "../scpel_compiler/config.h"
 
 #undef PACKAGE_NAME
 #undef PACKAGE_STRING
@@ -32,12 +32,12 @@
 #undef PACKAGE_VERSION
 
 #define INCLUDE_MEMORY
-#include "gcc-plugin.h"
+#include "scpel_compiler-plugin.h"
 #include "system.h"
 #include "coretypes.h"
 #include "stringpool.h"
 
-#include "gcc-interface.h"
+#include "scpel_compiler-interface.h"
 #include "hash-set.h"
 #include "machmode.h"
 #include "vec.h"
@@ -66,7 +66,7 @@
 #include "connection.hh"
 #include "marshall.hh"
 #include "rpc.hh"
-#include "gcc-c-interface.h"
+#include "scpel_compiler-c-interface.h"
 #include "context.hh"
 
 #include <vector>
@@ -806,7 +806,7 @@ plugin_init (struct plugin_name_args *plugin_info,
     current_context->add_callback (# N, fun);		\
   }
 
-#include "gcc-c-fe.def"
+#include "scpel_compiler-c-fe.def"
 
 #undef GCC_METHOD0
 #undef GCC_METHOD1

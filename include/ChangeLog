@@ -17,7 +17,7 @@
 
 2023-08-07  Alan Modra  <amodra@gmail.com>
 
-	* plugin-api.h: When handling non-gcc or gcc < 4.6.0 include
+	* plugin-api.h: When handling non-scpel_compiler or scpel_compiler < 4.6.0 include
 	necessary header files before testing macros.  Make more use
 	of #elif.  Test _LITTLE_ENDIAN and _BIG_ENDIAN in final tests.
 
@@ -646,7 +646,7 @@
 	* unique-ptr.h: Make include of <memory> conditional on C++11 or
 	later.
 
-2017-10-16  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2017-10-16  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 	    David Malcolm  <dmalcolm@redhat.com>
 
 	* unique-ptr.h: New file.
@@ -709,32 +709,32 @@
 2017-01-30  Alexandre Oliva <aoliva@redhat.com>
 
 	Introduce C++ support in libcc1.
-	* gcc-c-fe.def (int_type_v0): Rename from...
+	* scpel_compiler-c-fe.def (int_type_v0): Rename from...
 	(int_type): ... this.  Introduce new version.
 	(float_type_v0): Rename from...
 	(float_type): ... this.  Introduce new version.
 	(char_type): New.
-	* gcc-c-interface.h (gcc_c_api_version): Add GCC_C_FE_VERSION_1.
+	* scpel_compiler-c-interface.h (gcc_c_api_version): Add GCC_C_FE_VERSION_1.
 	(gcc_type_array): Move...
-	* gcc-interface.h: ... here.
-	* gcc-cp-fe.def: New.
-	* gcc-cp-interface.h: New.
+	* scpel_compiler-interface.h: ... here.
+	* scpel_compiler-cp-fe.def: New.
+	* scpel_compiler-cp-interface.h: New.
 
 2017-01-30  Jan Kratochvil <jan.kratochvil@redhat.com>
 
-	* gcc-interface.h (enum gcc_base_api_version): Update comment
+	* scpel_compiler-interface.h (enum gcc_base_api_version): Update comment
 	for GCC_FE_VERSION_1.
 	(struct gcc_base_vtable): Rename set_arguments to
 	set_arguments_v0.  Add set_arguments, set_triplet_regexp and
 	set_driver_filename.
 
-	* gcc-interface.h (enum gcc_base_api_version): Add comment to
+	* scpel_compiler-interface.h (enum gcc_base_api_version): Add comment to
 	GCC_FE_VERSION_1.
 	(struct gcc_base_vtable): Rename compile to compile_v0.
 	Update comment for compile.  New methods set_verbose and
 	compile.
 
-	* gcc-interface.h (enum gcc_base_api_version): Add
+	* scpel_compiler-interface.h (enum gcc_base_api_version): Add
 	GCC_FE_VERSION_1.
 
 2017-01-24  Pekka Jääskeläinen  <pekka@parmance.com>
@@ -802,7 +802,7 @@
 2016-10-14  Pedro Alves  <palves@redhat.com>
 
 	* ansidecl.h (GCC_FINAL): Delete.
-	(OVERRIDE, FINAL): New, moved from gcc/coretypes.h.
+	(OVERRIDE, FINAL): New, moved from scpel_compiler/coretypes.h.
 
 2016-08-15  Jakub Jelinek  <jakub@redhat.com>
 
@@ -830,7 +830,7 @@
 	* dwarf2.h (enum dwarf_source_language) <DW_LANG_Rust,
 	DW_LANG_Rust_old>: New constants.
 
-2016-04-29  Oleg Endo  <olegendo@gcc.gnu.org>
+2016-04-29  Oleg Endo  <olegendo@scpel_compiler.gnu.org>
 
 	* longlong.h (umul_ppmm): Remove SHMEDIA checks.
 	(__umulsidi3, count_leading_zeros): Remove SHMEDIA implementations.
@@ -982,7 +982,7 @@
 	* dwarf2.def (DW_AT_GNU_numerator, DW_AT_GNU_denominator): New
 	attributes.
 
-2015-08-11  Trevor Saunders  <tbsaunde+gcc@tbsaunde.org>
+2015-08-11  Trevor Saunders  <tbsaunde+scpel_compiler@tbsaunde.org>
 
 	* ansidecl.h (GCC_FINAL): New macro.
 
@@ -1026,13 +1026,13 @@
 
 2014-12-24  Uros Bizjak  <ubizjak@gmail.com>
 	    Ben Elliston  <bje@au.ibm.com>
-	    Manuel Lopez-Ibanez  <manu@gcc.gnu.org>
+	    Manuel Lopez-Ibanez  <manu@scpel_compiler.gnu.org>
 
 	* libiberty.h (xasprintf): Declare.
 
 2014-12-11  Uros Bizjak  <ubizjak@gmail.com>
 	    Ben Elliston  <bje@au.ibm.com>
-	    Manuel Lopez-Ibanez  <manu@gcc.gnu.org>
+	    Manuel Lopez-Ibanez  <manu@scpel_compiler.gnu.org>
 
 	* libiberty.h (xvasprintf): Declare.
 
@@ -1065,7 +1065,7 @@
 	(DW_AT_APPLE_property): New macros.
 
 2014-11-11  Anthony Brandon  <anthony.brandon@gmail.com>
-	    Manuel López-Ibáñez  <manu@gcc.gnu.org>
+	    Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	PR driver/36312
 	* filenames.h: Add prototype for canonical_filename_eq.
@@ -1086,9 +1086,9 @@
 	    Jan Kratochvil  <jan.kratochvil@redhat.com>
 	    Tom Tromey  <tromey@redhat.com>
 
-	* gcc-c-fe.def: New file.
-	* gcc-c-interface.h: New file.
-	* gcc-interface.h: New file.
+	* scpel_compiler-c-fe.def: New file.
+	* scpel_compiler-c-interface.h: New file.
+	* scpel_compiler-interface.h: New file.
 
 2014-10-15  David Malcolm  <dmalcolm@redhat.com>
 
@@ -1429,7 +1429,7 @@
 
 2011-04-25  Jan Kratochvil  <jan.kratochvil@redhat.com>
 
-	* ansidecl.h (ENUM_BITFIELD): New, from gcc/system.h.
+	* ansidecl.h (ENUM_BITFIELD): New, from scpel_compiler/system.h.
 
 2011-03-31  Tristan Gingold  <gingold@adacore.com>
 
@@ -1467,7 +1467,7 @@
 	DWARF2_External_CompUnit, DWARF2_Internal_CompUnit,
 	DWARF2_External_ARange, DWARF2_Internal_ARange): Removed.
 
-2011-01-12  Iain Sandoe  <iains@gcc.gnu.org>
+2011-01-12  Iain Sandoe  <iains@scpel_compiler.gnu.org>
 
 	* dwarf2.h: Update value for DW_AT_hi_user.
 
@@ -1618,7 +1618,7 @@
 
 2009-10-23  Kai Tietz  <kai.tietz@onevision.com>
 
-	* splay-tree.h (libi_uhostptr_t): Add gcc specific
+	* splay-tree.h (libi_uhostptr_t): Add scpel_compiler specific
 	__extension__ for long long type case to silent cX9.
 	(libi_shostptr_t): Likewise.
 

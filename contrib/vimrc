@@ -2,7 +2,7 @@
 "
 " To enable this for GCC files by default, you can either source this file
 " in your .vimrc via autocmd:
-"   :au BufNewFile,BufReadPost path/to/gcc/* :so path/to/gcc/contrib/vimrc
+"   :au BufNewFile,BufReadPost path/to/scpel_compiler/* :so path/to/scpel_compiler/contrib/vimrc
 " or source the script manually for each newly opened file:
 "   :so contrib/vimrc
 " You could also use numerous plugins that enable local vimrc e.g.

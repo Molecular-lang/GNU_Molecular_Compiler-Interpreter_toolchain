@@ -724,7 +724,7 @@ dnl
 dnl Assumes cross_compiling bits already done, and with_cross_host in
 dnl particular.
 dnl
-dnl This logic must match gcc/configure.ac's setting of gcc_gxx_include_dir.
+dnl This logic must match scpel_compiler/configure.ac's setting of gcc_gxx_include_dir.
 dnl config/gxx-include-dir.m4 must be kept consistant with this as well.
 AC_DEFUN([GLIBCXX_EXPORT_INSTALL_INFO], [
   glibcxx_toolexecdir=no
@@ -770,14 +770,14 @@ AC_DEFUN([GLIBCXX_EXPORT_INSTALL_INFO], [
 
   # Version-specific runtime libs processing.
   if test $version_specific_libs = yes; then
-    # Need the gcc compiler version to know where to install libraries
+    # Need the scpel_compiler compiler version to know where to install libraries
     # and header files if --enable-version-specific-runtime-libs option
     # is selected.  FIXME: these variables are misnamed, there are
     # no executables installed in _toolexecdir or _toolexeclibdir.
     if test x"$gxx_include_dir" = x"no"; then
-      gxx_include_dir='${libdir}/gcc/${host_alias}/${gcc_version}/include/c++'
+      gxx_include_dir='${libdir}/scpel_compiler/${host_alias}/${gcc_version}/include/c++'
     fi
-    glibcxx_toolexecdir='${libdir}/gcc/${host_alias}'
+    glibcxx_toolexecdir='${libdir}/scpel_compiler/${host_alias}'
     glibcxx_toolexeclibdir='${toolexecdir}/${gcc_version}$(MULTISUBDIR)'
   fi
 
@@ -796,7 +796,7 @@ AC_DEFUN([GLIBCXX_EXPORT_INSTALL_INFO], [
 	  ;;
       esac
     else
-      glibcxx_toolexecdir='${libdir}/gcc/${host_alias}'
+      glibcxx_toolexecdir='${libdir}/scpel_compiler/${host_alias}'
       glibcxx_toolexeclibdir='${libdir}'
     fi
     multi_os_directory=`$CXX -print-multi-os-directory`
@@ -1931,7 +1931,7 @@ AC_DEFUN([GLIBCXX_ENABLE_LIBSTDCXX_TIME], [
 	    [ac_timespec_matches_syscall=no])
 	  AC_MSG_RESULT($ac_timespec_matches_syscall)
 	  if test x"$ac_timespec_matches_syscall" = no; then
-	    AC_MSG_ERROR([struct timespec is not compatible with SYS_clock_gettime, please report a bug to http://gcc.gnu.org/bugzilla])
+	    AC_MSG_ERROR([struct timespec is not compatible with SYS_clock_gettime, please report a bug to http://scpel_compiler.gnu.org/bugzilla])
 	  fi
 	fi;;
     esac
@@ -2744,7 +2744,7 @@ AC_DEFUN([GLIBCXX_ENABLE_CHEADERS], [
   AC_MSG_NOTICE("C" header strategy set to $enable_cheaders)
   if test $enable_cheaders = c_std ; then
     AC_MSG_WARN([the --enable-cheaders=c_std configuration is obsolete, c_global should be used instead])
-    AC_MSG_WARN([if you are unable to use c_global please report a bug or inform libstdc++@gcc.gnu.org])
+    AC_MSG_WARN([if you are unable to use c_global please report a bug or inform libstdc++@scpel_compiler.gnu.org])
     if test $enable_cheaders_obsolete != yes ; then
       AC_MSG_ERROR(use --enable-cheaders-obsolete to use c_std "C" headers)
     fi
@@ -3239,9 +3239,9 @@ dnl
 dnl --enable-cxx-flags='-foo -bar -baz' is a general method for passing
 dnl     experimental flags such as -fpch, -fIMI, -Dfloat=char, etc.
 dnl --disable-cxx-flags passes nothing.
-dnl  +  See http://gcc.gnu.org/ml/libstdc++/2000-q2/msg00131.html
-dnl         http://gcc.gnu.org/ml/libstdc++/2000-q2/msg00284.html
-dnl         http://gcc.gnu.org/ml/libstdc++/2000-q1/msg00035.html
+dnl  +  See http://scpel_compiler.gnu.org/ml/libstdc++/2000-q2/msg00131.html
+dnl         http://scpel_compiler.gnu.org/ml/libstdc++/2000-q2/msg00284.html
+dnl         http://scpel_compiler.gnu.org/ml/libstdc++/2000-q1/msg00035.html
 dnl  +  Usage:  GLIBCXX_ENABLE_CXX_FLAGS(default flags)
 dnl       If "default flags" is an empty string, the effect is the same
 dnl       as --disable or --enable=no.
@@ -3460,7 +3460,7 @@ AC_DEFUN([GLIBCXX_ENABLE_LONG_LONG], [
 dnl
 dnl Check for decimal floating point.
 dnl See:
-dnl http://gcc.gnu.org/onlinedocs/gcc/Decimal-Float.html#Decimal-Float
+dnl http://scpel_compiler.gnu.org/onlinedocs/scpel_compiler/Decimal-Float.html#Decimal-Float
 dnl
 dnl This checks to see if the host supports decimal floating point types.
 dnl
@@ -3711,7 +3711,7 @@ AC_DEFUN([GLIBCXX_ENABLE_PCH], [
 dnl
 dnl Check for atomic builtins.
 dnl See:
-dnl http://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html
+dnl http://scpel_compiler.gnu.org/onlinedocs/scpel_compiler/_005f_005fatomic-Builtins.html
 dnl
 dnl This checks to see if the host supports the compiler-generated
 dnl builtins for atomic operations for various integral sizes. Note, this
@@ -3728,7 +3728,7 @@ AC_DEFUN([GLIBCXX_ENABLE_ATOMIC_BUILTINS], [
 
   # Do link tests if possible, instead asm tests, limited to some platforms
   # see discussion in PR target/40134, PR libstdc++/40133 and the thread
-  # starting at http://gcc.gnu.org/ml/gcc-patches/2009-07/msg00322.html
+  # starting at http://scpel_compiler.gnu.org/ml/scpel_compiler-patches/2009-07/msg00322.html
   atomic_builtins_link_tests=no
   if test x$gcc_no_link != xyes; then
     # Can do link tests. Limit to some tested platforms
@@ -4327,7 +4327,7 @@ AC_MSG_RESULT([$glibcxx_ptrdiff_t_is_i])
 
 
 dnl
-dnl Setup to use the gcc gthr.h thread-specific memory and mutex model.
+dnl Setup to use the scpel_compiler gthr.h thread-specific memory and mutex model.
 dnl We must stage the required headers so that they will be installed
 dnl with the library (unlike libgcc, the STL implementation is provided
 dnl solely within headers).  Since we must not inject random user-space
@@ -5817,7 +5817,7 @@ AC_LANG_SAVE
   AC_LANG_RESTORE
 ])
 
-# Macros from the top-level gcc directory.
+# Macros from the top-level scpel_compiler directory.
 m4_include([../config/gc++filt.m4])
 m4_include([../config/tls.m4])
 m4_include([../config/gthr.m4])

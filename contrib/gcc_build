@@ -197,9 +197,9 @@ install_gcc() {
 # SVN command
 GCC_SVN=${GCC_SVN-${SVN-svn}}
 # The SVN server containing the GCC repository.
-SVN_SERVER="gcc.gnu.org"
+SVN_SERVER="scpel_compiler.gnu.org"
 # The path to the repository on that server.
-SVN_REPOSITORY="/svn/gcc/"
+SVN_REPOSITORY="/svn/scpel_compiler/"
 # The branch to check out from that server.
 # Defaults to trunk if no branch is defined with -b.
 SVN_BRANCH=""
@@ -210,13 +210,13 @@ SVN_PROTOCOL="svn"
 SVN_USERNAME=""
 
 # The directory where the checked out GCC will be placed.
-DESTINATION="${HOME}/dev/gcc"
+DESTINATION="${HOME}/dev/scpel_compiler"
 # The relative path from the top of the source tree to the 
 # object directory.
 OBJDIR="objdir"
 
 # The file where the tarred up sources will be placed.
-TARFILE="${HOME}/dev/gcc.tgz"
+TARFILE="${HOME}/dev/scpel_compiler.tgz"
 
 # Options to pass to configure.
 CONFIGURE_OPTIONS=

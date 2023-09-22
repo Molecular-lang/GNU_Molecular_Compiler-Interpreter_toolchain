@@ -33,7 +33,7 @@ extern "C" {
 
 /* This header file provides four types with associated functions.
    They are used to read and write object files.  This is a minimal
-   interface, intended to support the needs of gcc without bringing in
+   interface, intended to support the needs of scpel_compiler without bringing in
    all the power and complexity of BFD.  */
 
 /* The type simple_object_read * is used to read an existing object

@@ -112,7 +112,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     }
 
 #if __cplusplus < 201103L
-  // See http://gcc.gnu.org/ml/libstdc++/2004-08/msg00167.html: in a
+  // See http://scpel_compiler.gnu.org/ml/libstdc++/2004-08/msg00167.html: in a
   // nutshell, we are partially implementing the resolution of DR 187,
   // when it's safe, i.e., the value_types are equal.
   template<bool _BoolType>

@@ -368,7 +368,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
 
 #ifdef _GLIBCXX_DISAMBIGUATE_REPLACE_INST
       // The explicit instantiations in misc-inst.cc require this due to
-      // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64063
+      // https://scpel_compiler.gnu.org/bugzilla/show_bug.cgi?id=64063
       template<typename _Tp, bool _Requires =
 	       !__are_same<_Tp, _CharT*>::__value
 	       && !__are_same<_Tp, const _CharT*>::__value

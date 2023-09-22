@@ -283,7 +283,7 @@ extern UDItype __udiv_qrnnd (UDItype *, UDItype, UDItype, UDItype);
 #endif /* __arm__ */
 
 #if defined(__arm__)
-/* Let gcc decide how best to implement count_leading_zeros.  */
+/* Let scpel_compiler decide how best to implement count_leading_zeros.  */
 #define count_leading_zeros(COUNT,X)	((COUNT) = __builtin_clz (X))
 #define count_trailing_zeros(COUNT,X)   ((COUNT) = __builtin_ctz (X))
 #define COUNT_LEADING_ZEROS_0 32
@@ -545,7 +545,7 @@ extern UDItype __umulsidi3 (USItype, USItype);
 #endif /* __i960__ */
 
 #if defined (__ia64) && W_TYPE_SIZE == 64
-/* This form encourages gcc (pre-release 3.4 at least) to emit predicated
+/* This form encourages scpel_compiler (pre-release 3.4 at least) to emit predicated
    "sub r=r,r" and "sub r=r,r,1", giving a 2 cycle latency.  The generic
    code using "al<bl" arithmetically comes out making an actual 0 or 1 in a
    register, which takes an extra cycle.  */
@@ -561,7 +561,7 @@ extern UDItype __umulsidi3 (USItype, USItype);
   } while (0)
 
 /* Do both product parts in assembly, since that gives better code with
-   all gcc versions.  Some callers will just use the upper part, and in
+   all scpel_compiler versions.  Some callers will just use the upper part, and in
    that situation we waste an instruction, but not any cycles.  */
 #define umul_ppmm(ph, pl, m0, m1)					\
   __asm__ ("xma.hu %0 = %2, %3, f0\n\txma.l %1 = %2, %3, f0"		\
@@ -581,7 +581,7 @@ extern UDItype __umulsidi3 (USItype, USItype);
     _c += _x >> 1;							\
     (count) =  W_TYPE_SIZE - 1 - _c;					\
   } while (0)
-/* similar to what gcc does for __builtin_ffs, but 0 based rather than 1
+/* similar to what scpel_compiler does for __builtin_ffs, but 0 based rather than 1
    based, and we don't need a special case for x==0 here */
 #define count_trailing_zeros(count, x)					\
   do {									\
@@ -874,13 +874,13 @@ extern UDItype __umulsidi3 (USItype, USItype);
 
 /* FIXME: We should test _IBMR2 here when we add assembly support for the
    system vendor compilers.
-   FIXME: What's needed for gcc PowerPC VxWorks?  __vxworks__ is not good
+   FIXME: What's needed for scpel_compiler PowerPC VxWorks?  __vxworks__ is not good
    enough, since that hits ARM and m68k too.  */
 #if (defined (_ARCH_PPC)	/* AIX */				\
-     || defined (__powerpc__)	/* gcc */				\
+     || defined (__powerpc__)	/* scpel_compiler */				\
      || defined (__POWERPC__)	/* BEOS */				\
      || defined (__ppc__)	/* Darwin */				\
-     || (defined (PPC) && ! defined (CPU_FAMILY)) /* gcc 2.7.x GNU&SysV */    \
+     || (defined (PPC) && ! defined (CPU_FAMILY)) /* scpel_compiler 2.7.x GNU&SysV */    \
      || (defined (PPC) && defined (CPU_FAMILY)    /* VxWorks */               \
 	 && CPU_FAMILY == PPC)                                                \
      ) && W_TYPE_SIZE == 32
@@ -921,7 +921,7 @@ extern UDItype __umulsidi3 (USItype, USItype);
 #define COUNT_LEADING_ZEROS_0 32
 #if defined (_ARCH_PPC) || defined (__powerpc__) || defined (__POWERPC__) \
   || defined (__ppc__)                                                    \
-  || (defined (PPC) && ! defined (CPU_FAMILY)) /* gcc 2.7.x GNU&SysV */       \
+  || (defined (PPC) && ! defined (CPU_FAMILY)) /* scpel_compiler 2.7.x GNU&SysV */       \
   || (defined (PPC) && defined (CPU_FAMILY)    /* VxWorks */                  \
 	 && CPU_FAMILY == PPC)
 #define umul_ppmm(ph, pl, m0, m1) \

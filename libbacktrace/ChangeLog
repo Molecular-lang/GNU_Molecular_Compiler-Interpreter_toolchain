@@ -309,7 +309,7 @@
 	string index extends past buffer.
 	(resolve_addr_index): Similarly for address index.
 
-2020-11-29  John David Anglin  <danglin@gcc.gnu.org>
+2020-11-29  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* configure: Regenerate.
 
@@ -1345,7 +1345,7 @@
 	* libbacktrace/Makefile.in
 	(HAVE_PTHREAD_TRUE@@NATIVE_TRUE@ttest_CFLAGS): Add $(AM_CFLAGS)
 
-2017-08-02  David Edelsohn  <dje.gcc@gmail.com>
+2017-08-02  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	PR bootstrap/81638
 	* xcoff.c (xcoff_process_linenos): Initialize incl to NULL.
@@ -1438,7 +1438,7 @@
 	(elf_add): Don't set *fileline_fn to elf_nodebug value in case of
 	missing debug info anymore.
 
-2016-02-06  John David Anglin  <danglin@gcc.gnu.org>
+2016-02-06  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* mmap.c (MAP_FAILED): Define if not defined.
 
@@ -1452,7 +1452,7 @@
 	even when sys/mman.h exists.
 	* configure: Regenerate
 
-2015-12-09  John David Anglin  <danglin@gcc.gnu.org>
+2015-12-09  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	PR libgfortran/68115
 	* configure.ac: Set libbacktrace_cv_sys_sync to no on hppa*-*-hpux*.
@@ -1566,7 +1566,7 @@
 
 	* ChangeLog.jit: New.
 
-2014-11-11  Francois-Xavier Coudert  <fxcoudert@gcc.gnu.org>
+2014-11-11  Francois-Xavier Coudert  <fxcoudert@scpel_compiler.gnu.org>
 
 	PR target/63610
 	* configure: Regenerate.
@@ -1754,8 +1754,8 @@
 2013-01-01  Ian Lance Taylor  <iant@google.com>
 
 	PR bootstrap/54834
-	* Makefile.am (AM_CPPFLAGS): Remove -I ../gcc/include and -I
-	$(MULTIBUILDTOP)/../../gcc/include.
+	* Makefile.am (AM_CPPFLAGS): Remove -I ../scpel_compiler/include and -I
+	$(MULTIBUILDTOP)/../../scpel_compiler/include.
 	* Makefile.in: Rebuild.
 
 2013-01-01  Ian Lance Taylor  <iant@google.com>

@@ -22,7 +22,7 @@
 #include <locale>
 
 // Const correctness issue:
-// http://gcc.gnu.org/ml/libstdc++/2003-01/msg00370.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2003-01/msg00370.html
 void
 test01()
 {

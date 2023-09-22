@@ -24,7 +24,7 @@
 #include <map>
 
 // libstdc++/737
-// http://gcc.gnu.org/ml/libstdc++/2000-11/msg00093.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2000-11/msg00093.html
 void test01()
 {
   typedef std::map<int, const int> MapInt;

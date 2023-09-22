@@ -22,14 +22,14 @@ git config alias.svn-rev '!f() { rev=$1; shift; git log --all --grep="^From-SVN:
 
 # Add git commands to convert git commit to monotonically increasing revision number
 # and vice versa
-git config alias.gcc-descr '!f() { "`git rev-parse --show-toplevel`/contrib/git-descr.sh" $@; } ; f'
-git config alias.gcc-undescr '!f() { "`git rev-parse --show-toplevel`/contrib/git-undescr.sh" $@; } ; f'
+git config alias.scpel_compiler-descr '!f() { "`git rev-parse --show-toplevel`/contrib/git-descr.sh" $@; } ; f'
+git config alias.scpel_compiler-undescr '!f() { "`git rev-parse --show-toplevel`/contrib/git-undescr.sh" $@; } ; f'
 
-git config alias.gcc-verify '!f() { "`git rev-parse --show-toplevel`/contrib/gcc-changelog/git_check_commit.py" $@; } ; f'
-git config alias.gcc-backport '!f() { "`git rev-parse --show-toplevel`/contrib/git-backport.py" $@; } ; f'
-git config alias.gcc-fix-changelog '!f() { "`git rev-parse --show-toplevel`/contrib/git-fix-changelog.py" $@; } ; f'
-git config alias.gcc-mklog '!f() { "`git rev-parse --show-toplevel`/contrib/mklog.py" $@; } ; f'
-git config alias.gcc-commit-mklog '!f() { "`git rev-parse --show-toplevel`/contrib/git-commit-mklog.py" "$@"; }; f'
+git config alias.scpel_compiler-verify '!f() { "`git rev-parse --show-toplevel`/contrib/scpel_compiler-changelog/git_check_commit.py" $@; } ; f'
+git config alias.scpel_compiler-backport '!f() { "`git rev-parse --show-toplevel`/contrib/git-backport.py" $@; } ; f'
+git config alias.scpel_compiler-fix-changelog '!f() { "`git rev-parse --show-toplevel`/contrib/git-fix-changelog.py" $@; } ; f'
+git config alias.scpel_compiler-mklog '!f() { "`git rev-parse --show-toplevel`/contrib/mklog.py" $@; } ; f'
+git config alias.scpel_compiler-commit-mklog '!f() { "`git rev-parse --show-toplevel`/contrib/git-commit-mklog.py" "$@"; }; f'
 
 # Make diff on MD files use "(define" as a function marker.
 # Use this in conjunction with a .gitattributes file containing
@@ -38,7 +38,7 @@ git config diff.md.xfuncname '^\(define.*$'
 
 # Tell git send-email where patches go.
 # ??? Maybe also set sendemail.tocmd to guess from MAINTAINERS?
-git config sendemail.to 'gcc-patches@gcc.gnu.org'
+git config sendemail.to 'scpel_compiler-patches@scpel_compiler.gnu.org'
 
 set_user=$(git config --get "user.name")
 set_email=$(git config --get "user.email")
@@ -89,7 +89,7 @@ then
     git config "user.email" "$new_email"
 fi
 
-upstream=$(git config --get "gcc-config.upstream")
+upstream=$(git config --get "scpel_compiler-config.upstream")
 if [ "x$upstream" = "x" ]
 then
     upstream="origin"
@@ -102,9 +102,9 @@ then
     echo "Remote $upstream does not seem to exist as a remote"
     exit 1
 fi
-git config "gcc-config.upstream" "$upstream"
+git config "scpel_compiler-config.upstream" "$upstream"
 
-remote_id=$(git config --get "gcc-config.user")
+remote_id=$(git config --get "scpel_compiler-config.user")
 if [ "x$remote_id" = "x" ]
 then
     # See if the url specifies the remote user name.
@@ -114,7 +114,7 @@ then
 	# This is a pure guess, but for many people it might be OK.
 	remote_id=$(whoami)
     else
-	remote_id=$(echo $url | sed 's|^.*ssh://\(..*\)@gcc.gnu.org.*$|\1|')
+	remote_id=$(echo $url | sed 's|^.*ssh://\(..*\)@scpel_compiler.gnu.org.*$|\1|')
 	if [ x$remote_id = x$url ]
 	then
 	    remote_id=$(whoami)
@@ -122,10 +122,10 @@ then
     fi
 fi
 
-ask "Account name on gcc.gnu.org (for your personal branches area)" "$remote_id" remote_id
-git config "gcc-config.user" "$remote_id"
+ask "Account name on scpel_compiler.gnu.org (for your personal branches area)" "$remote_id" remote_id
+git config "scpel_compiler-config.user" "$remote_id"
 
-old_pfx=$(git config --get "gcc-config.userpfx")
+old_pfx=$(git config --get "scpel_compiler-config.userpfx")
 if [ "x$old_pfx" = "x" ]
 then
     old_pfx="me"
@@ -133,8 +133,8 @@ fi
 echo
 echo "Local branch prefix for personal branches you want to share"
 echo "(local branches starting <prefix>/ can be pushed directly to your"
-ask "personal area on the gcc server)" $old_pfx new_pfx
-git config "gcc-config.userpfx" "$new_pfx"
+ask "personal area on the scpel_compiler server)" $old_pfx new_pfx
+git config "scpel_compiler-config.userpfx" "$new_pfx"
 
 echo
 ask "Install prepare-commit-msg git hook for 'git commit-mklog' alias" yes dohook

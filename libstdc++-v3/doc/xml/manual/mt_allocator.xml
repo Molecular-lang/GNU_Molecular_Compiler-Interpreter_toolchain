@@ -26,7 +26,7 @@
   particular it now also does a good job in single-threaded
   applications [hereinafter referred to as an ST application]. (Note:
   In this document, when referring to single-threaded applications
-  this also includes applications that are compiled with gcc without
+  this also includes applications that are compiled with scpel_compiler without
   thread support enabled. This is accomplished using ifdef's on
   __GTHREADS). This allocator is tunable, very flexible, and capable
   of high-performance.
@@ -308,7 +308,7 @@ containers, this works, as an instance of the allocator is constructed
 as part of a container's constructor. However, this assumption is
 implementation-specific, and subject to change. For an example of a
 pool that frees memory, see the following
-    <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/viewcvs/gcc/trunk/libstdc++-v3/testsuite/ext/mt_allocator/deallocate_local-6.cc?view=markup">
+    <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/viewcvs/scpel_compiler/trunk/libstdc++-v3/testsuite/ext/mt_allocator/deallocate_local-6.cc?view=markup">
     example.</link>
 </para>
 

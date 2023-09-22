@@ -23,7 +23,7 @@
 #include <testsuite_hooks.h>
 
 // libstdc++/4548
-// http://gcc.gnu.org/ml/libstdc++/2001-11/msg00150.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2001-11/msg00150.html
 void test02()
 {
   std::wstring str01 = L"twelve chars";

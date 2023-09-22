@@ -3,7 +3,7 @@
 # Copyright (C) 2018-2023 Free Software Foundation, Inc.
 #
 # Find missing and extra parameters in documentation compared to
-# output of: gcc --help=params.
+# output of: scpel_compiler --help=params.
 #
 # This file is part of GCC.
 #

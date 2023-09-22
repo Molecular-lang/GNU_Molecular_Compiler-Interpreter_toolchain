@@ -47,7 +47,7 @@
 
 2021-04-06  Nathan Sidwell  <nathan@acm.org>
 
-	* LICENSE.gcc: Delete.
+	* LICENSE.scpel_compiler: Delete.
 
 2021-01-12  Nathan Sidwell  <nathan@acm.org>
 
@@ -66,7 +66,7 @@
 	* configure: Rebuilt.
 	* config.h.in: Rebuilt.
 
-2021-01-06  John David Anglin  <danglin@gcc.gnu.org>
+2021-01-06  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	PR bootstrap/98506
 	* resolver.cc: Only use fstatat when _POSIX_C_SOURCE >= 200809L.
@@ -180,7 +180,7 @@
 	* CODING.md: New.
 	* CONTRIB.md: New.
 	* LICENSE: New.
-	* LICENSE.gcc: New.
+	* LICENSE.scpel_compiler: New.
 	* Makefile.in: New.
 	* Makesub.in: New.
 	* README.md: New.

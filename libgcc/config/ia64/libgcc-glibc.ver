@@ -55,7 +55,7 @@
   __unordtf2
 }
 
-# Those TF functions are the aliases of the XF functions before gcc 3.4.
+# Those TF functions are the aliases of the XF functions before scpel_compiler 3.4.
 GCC_3.0 {
   __divtf3
   __fixtfti

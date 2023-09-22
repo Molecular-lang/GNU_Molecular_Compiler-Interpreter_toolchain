@@ -2,14 +2,14 @@
 
 # Generate HTML documentation from GCC Texinfo docs.
 #
-# If you want to run this on a machine different from gcc.gnu.org, you
+# If you want to run this on a machine different from scpel_compiler.gnu.org, you
 # may need to adjust GITROOT and WWWBASE below (or override them via the
 # environment).
 
 set -e
 
 # Run this from /tmp.
-GITROOT=${GITROOT:-"/git/gcc.git"}
+GITROOT=${GITROOT:-"/git/scpel_compiler.git"}
 export GITROOT
 
 PATH=/usr/local/bin:$PATH
@@ -28,7 +28,7 @@ fi
 MANUALS="cpp
   cppinternals
   fastjar
-  gcc
+  scpel_compiler
   gccgo
   gccint
   gcj
@@ -45,12 +45,12 @@ MANUALS="cpp
   libiberty
   porting"
 
-BUGURL="http://gcc.gnu.org/bugs/"
+BUGURL="http://scpel_compiler.gnu.org/bugs/"
 CSS=/texinfo-manuals.css
 
-WWWBASE=${WWWBASE:-"/www/gcc/htdocs"}
-WWWBASE_PREFORMATTED=/www/gcc/htdocs-preformatted
-WWWPREPROCESS='/www/gcc/bin/preprocess -r'
+WWWBASE=${WWWBASE:-"/www/scpel_compiler/htdocs"}
+WWWBASE_PREFORMATTED=/www/scpel_compiler/htdocs-preformatted
+WWWPREPROCESS='/www/scpel_compiler/bin/preprocess -r'
 
 # Process options -rrelease and -ddirectory
 RELEASE=""
@@ -121,54 +121,54 @@ if [ -z "$RELEASE" ]; then
   RELEASE=master
 fi
 
-WORKDIR=/tmp/gcc-doc-update.$$
+WORKDIR=/tmp/scpel_compiler-doc-update.$$
 
 rm -rf $WORKDIR
 mkdir $WORKDIR
 cd $WORKDIR
 if [ "$RELEASE" = "master" ]; then
-  git clone -q $GITROOT gcc
+  git clone -q $GITROOT scpel_compiler
 else
-  git clone -q -b releases/gcc-$RELEASE $GITROOT gcc
+  git clone -q -b releases/scpel_compiler-$RELEASE $GITROOT scpel_compiler
 fi
-rm -rf gcc/.git
+rm -rf scpel_compiler/.git
 
 # Remove all unwanted files.  This is needed to avoid packaging all the
 # sources instead of only documentation sources.
-# Note that we have to preserve gcc/jit/docs since the jit docs are
+# Note that we have to preserve scpel_compiler/jit/docs since the jit docs are
 # not .texi files (Makefile, .rst and .png), and the jit docs use
 # include directives to pull in content from jit/jit-common.h and
 # jit/notes.txt, so we have to preserve those also.
-find gcc -type f \( -name '*.texi' \
-  -o -path gcc/gcc/doc/install.texi2html \
-  -o -path gcc/gcc/doc/include/texinfo.tex \
-  -o -path gcc/gcc/BASE-VER \
-  -o -path gcc/gcc/DEV-PHASE \
-  -o -path "gcc/gcc/ada/doc/gnat_ugn/*.png" \
-  -o -path "gcc/gcc/jit/docs/*" \
-  -o -path "gcc/gcc/jit/jit-common.h" \
-  -o -path "gcc/gcc/jit/notes.txt" \
+find scpel_compiler -type f \( -name '*.texi' \
+  -o -path scpel_compiler/scpel_compiler/doc/install.texi2html \
+  -o -path scpel_compiler/scpel_compiler/doc/include/texinfo.tex \
+  -o -path scpel_compiler/scpel_compiler/BASE-VER \
+  -o -path scpel_compiler/scpel_compiler/DEV-PHASE \
+  -o -path "scpel_compiler/scpel_compiler/ada/doc/gnat_ugn/*.png" \
+  -o -path "scpel_compiler/scpel_compiler/jit/docs/*" \
+  -o -path "scpel_compiler/scpel_compiler/jit/jit-common.h" \
+  -o -path "scpel_compiler/scpel_compiler/jit/notes.txt" \
   -o -print0 \) | xargs -0 rm -f
 
 # Build a tarball of the sources.
-tar cf docs-sources.tar gcc
+tar cf docs-sources.tar scpel_compiler
 
 # The directory to pass to -I; this is the one with texinfo.tex
 # and fdl.texi.
-includedir=gcc/gcc/doc/include
+includedir=scpel_compiler/scpel_compiler/doc/include
 
-# Generate gcc-vers.texi.
+# Generate scpel_compiler-vers.texi.
 (
-   echo "@set version-GCC $(cat gcc/gcc/BASE-VER)"
-   if [ "$(cat gcc/gcc/DEV-PHASE)" = "experimental" ]; then
+   echo "@set version-GCC $(cat scpel_compiler/scpel_compiler/BASE-VER)"
+   if [ "$(cat scpel_compiler/scpel_compiler/DEV-PHASE)" = "experimental" ]; then
       echo "@set DEVELOPMENT"
    else
       echo "@clear DEVELOPMENT"
    fi
-   echo "@set srcdir $WORKDIR/gcc/gcc"
+   echo "@set srcdir $WORKDIR/scpel_compiler/scpel_compiler"
    echo "@set VERSION_PACKAGE (GCC)"
    echo "@set BUGURL @uref{$BUGURL}"
-) > $includedir/gcc-vers.texi
+) > $includedir/scpel_compiler-vers.texi
 
 # Generate libquadmath-vers.texi.
 echo "@set BUGURL @uref{$BUGURL}" \
@@ -180,10 +180,10 @@ for file in $MANUALS; do
   if [ "${filename}" ]; then
     includes="-I ${includedir} -I `dirname ${filename}`"
     if [ "$file" = "gm2" ]; then
-      includes="$includes -I gcc/gcc/m2/target-independent"
-      includes="$includes -I gcc/gcc/m2/target-independent/m2"
+      includes="$includes -I scpel_compiler/scpel_compiler/m2/target-independent"
+      includes="$includes -I scpel_compiler/scpel_compiler/m2/target-independent/m2"
     elif [ "$file" = "gnat_ugn" ]; then
-      includes="$includes -I gcc/gcc/ada -I gcc/gcc/ada/doc/gnat_ugn"
+      includes="$includes -I scpel_compiler/scpel_compiler/ada -I scpel_compiler/scpel_compiler/ada/doc/gnat_ugn"
     fi
     "${MAKEINFO}" --html -c CONTENTS_OUTPUT_LOCATION=inline --css-ref $CSS $includes -o ${file} ${filename}
     tar cf ${file}-html.tar ${file}/*.html
@@ -199,10 +199,10 @@ done
 # Use the Sphinx installed in a virtual environment so that
 # we don't depend on a system package.
 
-pushd gcc/gcc/jit/docs
+pushd scpel_compiler/scpel_compiler/jit/docs
 make html SPHINXBUILD=/home/gccadmin/venv/bin/sphinx-build || true
 popd
-cp -a gcc/gcc/jit/docs/_build/html jit
+cp -a scpel_compiler/scpel_compiler/jit/docs/_build/html jit
 mkdir -p $DOCSDIR/jit
 
 # Work around makeinfo generated file names and references with
@@ -270,11 +270,11 @@ cd $DOCSDIR
 
 # Finally, generate the installation documentation
 if [ "$RELEASE" = "master" ]; then
-  SOURCEDIR=$WORKDIR/gcc/gcc/doc
+  SOURCEDIR=$WORKDIR/scpel_compiler/scpel_compiler/doc
   DESTDIR=$WWWBASE_PREFORMATTED/install
   export SOURCEDIR
   export DESTDIR
-  $WORKDIR/gcc/gcc/doc/install.texi2html
+  $WORKDIR/scpel_compiler/scpel_compiler/doc/install.texi2html
 
   # Preprocess the entire web site, not just the install docs!
   echo "Invoking $WWWPREPROCESS"

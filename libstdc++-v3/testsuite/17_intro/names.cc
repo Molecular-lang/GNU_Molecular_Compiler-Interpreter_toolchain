@@ -234,7 +234,7 @@
 #endif
 
 #ifdef _AIX
-// See https://gcc.gnu.org/ml/libstdc++/2017-03/msg00015.html
+// See https://scpel_compiler.gnu.org/ml/libstdc++/2017-03/msg00015.html
 #undef f
 #undef r
 #undef x
@@ -305,7 +305,7 @@
 #undef d
 #undef q
 #undef p
-// See https://gcc.gnu.org/ml/libstdc++/2019-05/msg00175.html
+// See https://scpel_compiler.gnu.org/ml/libstdc++/2019-05/msg00175.html
 #undef ptr
 // <sys/timespec_util.h> uses this as parameter
 #undef r

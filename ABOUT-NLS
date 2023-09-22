@@ -204,7 +204,7 @@ translation percentage of at least 50%.
      gas                |                                        [] |
      gawk               |             []    [] []                [] |
      gcal               |             []                            |
-     gcc                |                   []                   [] |
+     scpel_compiler                |                   []                   [] |
      gettext            |       []    []    [] []                [] |
      gettext-runtime    |       []    []    [] []                [] |
      gettext-tools      |                      []                [] |
@@ -307,7 +307,7 @@ translation percentage of at least 50%.
      gas                |          []                            |
      gawk               |          []       []                   |
      gcal               |          []                            |
-     gcc                |          []                            |
+     scpel_compiler                |          []                            |
      gettext            |          []                      [] [] |
      gettext-runtime    |          []                []    [] [] |
      gettext-tools      |                                  []    |
@@ -410,7 +410,7 @@ translation percentage of at least 50%.
      gas                |                                        |
      gawk               |                                []      |
      gcal               |                                        |
-     gcc                |                                        |
+     scpel_compiler                |                                        |
      gettext            |                         []             |
      gettext-runtime    |                         []             |
      gettext-tools      |                                        |
@@ -513,7 +513,7 @@ translation percentage of at least 50%.
      gas                |                   []                      |  3
      gawk               |             []    []                      |  9
      gcal               |             []    []                      |  4
-     gcc                |                   []                      |  4
+     scpel_compiler                |                   []                      |  4
      gettext            | [] [] []    []    []                 []   | 15
      gettext-runtime    | [] [] []    []    []                 []   | 16
      gettext-tools      |    [] []                                  |  5

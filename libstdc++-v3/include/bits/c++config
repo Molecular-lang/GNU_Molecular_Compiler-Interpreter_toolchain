@@ -303,7 +303,7 @@
   }
 
   For full details see:
-  http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/namespaces.html
+  http://scpel_compiler.gnu.org/onlinedocs/libstdc++/latest-doxygen/namespaces.html
 */
 namespace std
 {

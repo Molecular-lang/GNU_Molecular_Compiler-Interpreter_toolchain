@@ -174,10 +174,10 @@ AC_SUBST(enable_gcov)
 # Also toolexecdir, though it's only used in toolexeclibdir
 case ${version_specific_libs} in
   yes)
-    # Need the gcc compiler version to know where to install libraries
+    # Need the scpel_compiler compiler version to know where to install libraries
     # and header files if --enable-version-specific-runtime-libs option
     # is selected.
-    toolexecdir='$(libdir)/gcc/$(target_noncanonical)'
+    toolexecdir='$(libdir)/scpel_compiler/$(target_noncanonical)'
     toolexeclibdir='$(toolexecdir)/$(gcc_version)$(MULTISUBDIR)'
     ;;
   no)
@@ -194,7 +194,7 @@ case ${version_specific_libs} in
 	  ;;
       esac
     else
-      toolexecdir='$(libdir)/gcc-lib/$(target_noncanonical)'
+      toolexecdir='$(libdir)/scpel_compiler-lib/$(target_noncanonical)'
       toolexeclibdir='$(libdir)'
     fi
     multi_os_directory=`$CC -print-multi-os-directory`
@@ -597,7 +597,7 @@ fi
 
 # See if we have thread-local storage.  We can only test assembler
 # since link-time and run-time tests require the newly built
-# gcc, which can't be used to build executable due to that libgcc
+# scpel_compiler, which can't be used to build executable due to that libgcc
 # is yet to be built here.
 GCC_CHECK_CC_TLS
 set_have_cc_tls=

@@ -19,7 +19,7 @@
 
 #include <ostream>
 
-// https://gcc.gnu.org/ml/libstdc++/2014-09/msg00108.html
+// https://scpel_compiler.gnu.org/ml/libstdc++/2014-09/msg00108.html
 struct O : std::ostream
 {
   O() : std::ostream(NULL) { }

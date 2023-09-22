@@ -224,7 +224,7 @@ _GLIBCXX_END_NAMESPACE_VERSION
     && defined(_GLIBCXX_HAVE_AS_SYMVER_DIRECTIVE) \
     && defined(_GLIBCXX_HAVE_SYMVER_SYMBOL_RENAMING_RUNTIME_SUPPORT)
 
-/* gcc-3.4.4
+/* scpel_compiler-3.4.4
 _ZNSt19istreambuf_iteratorIcSt11char_traitsIcEEppEv
 _ZNSt19istreambuf_iteratorIwSt11char_traitsIwEEppEv
  */
@@ -247,7 +247,7 @@ _GLIBCXX_END_NAMESPACE_VERSION
 } // namespace std
 
 
-/* gcc-4.0.0
+/* scpel_compiler-4.0.0
 _ZNSs4_Rep26_M_set_length_and_sharableEj
 _ZNSs7_M_copyEPcPKcj
 _ZNSs7_M_moveEPcPKcj
@@ -405,7 +405,7 @@ _GLIBCXX_END_NAMESPACE_VERSION
 #undef _GLIBCXX_APPLY_SYMVER
 
 
-/* gcc-3.4.0
+/* scpel_compiler-3.4.0
 _ZN10__gnu_norm15_List_node_base4hookEPS0_;
 _ZN10__gnu_norm15_List_node_base4swapERS0_S1_;
 _ZN10__gnu_norm15_List_node_base6unhookEv;
@@ -434,7 +434,7 @@ _ZN10__gnu_norm15_List_node_base8transferEPS0_S1_, \
 GLIBCXX_3.4)
 #undef _List_node_base
 
-// gcc-4.1.0
+// scpel_compiler-4.1.0
 // Long double versions of "C" math functions.
 #if defined (_GLIBCXX_LONG_DOUBLE_COMPAT) \
     || (defined (__arm__) && defined (__linux__) && defined (__ARM_EABI__)) \

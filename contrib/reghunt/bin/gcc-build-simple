@@ -53,7 +53,7 @@ make all-libcpp > ${LOGDIR}/make.all-libcpp.log 2>&1 || true
 make all-libdecnumber > ${LOGDIR}/make.all-libdecnumber.log 2>&1 || true
 make all-intl > ${LOGDIR}/make.all-intl.log 2>&1 || true
 make all-libbanshee > ${LOGDIR}/make.all-libbanshee.log 2>&1 || true
-make configure-gcc > ${LOGDIR}/make.configure-gcc.log  2>&1 || true
+make configure-scpel_compiler > ${LOGDIR}/make.configure-scpel_compiler.log  2>&1 || true
 
 # hack for 3.3 branch
 if [ ! -f libiberty/libiberty.a ]; then
@@ -70,7 +70,7 @@ if [ ! -f libiberty/libiberty.a ]; then
   fi
 fi
 
-cd gcc
+cd scpel_compiler
 # REG_COMPILER is cc1, cc1plus, or f951
 #msg "make $REG_COMPILER"
 make $REG_MAKE_J $REG_COMPILER > ${LOGDIR}/make.${REG_COMPILER}.log 2>&1 \

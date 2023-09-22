@@ -134,7 +134,7 @@ test03()
 void
 test04()
 {
-  // https://gcc.gnu.org/ml/libstdc++/2015-01/msg00176.html
+  // https://scpel_compiler.gnu.org/ml/libstdc++/2015-01/msg00176.html
   // Verify the new function template overloads do not cause problems
   // when the comparison function is not transparent.
   struct I

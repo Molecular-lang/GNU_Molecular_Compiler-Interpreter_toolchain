@@ -1,23 +1,23 @@
 # Define environment variables used by regression-hunting scripts.
 
 # Change this if using a local copy of the repository.
-export REG_SVN_REPO=svn://gcc.gnu.org/svn/gcc
+export REG_SVN_REPO=svn://scpel_compiler.gnu.org/svn/scpel_compiler
 REG_TOP=${HOME}/reghunt
 export REG_BIN=${REG_TOP}/bin
 export PATH=${REG_BIN}:${PATH}
 
 # The build scripts look for these variables if they are defined.
-#export BINUTILS=/opt/gcc-nightly/binutils-2.19/bin
-#export GMP=/opt/gcc-nightly/gmp-mpfr
+#export BINUTILS=/opt/scpel_compiler-nightly/binutils-2.19/bin
+#export GMP=/opt/scpel_compiler-nightly/gmp-mpfr
 export REG_DEFAULT_BUILD=${REG_DEFAULT_BUILD-powerpc-linux}
 
 export REG_SRCDIR=${REG_TOP}/src
 export REG_BUILDDIR=${REG_TOP}/build
 export REG_OBJDIR=${REG_BUILDDIR}/obj
 export REG_PREFIX=${REG_TOP}/install
-export REG_IDS=${REG_BIN}/gcc-svn-ids
-export REG_REPORT=${REG_BIN}/gcc-svn-report
-export REG_CLEANUP=${REG_CLEANUP-$REG_BIN/gcc-cleanup}
+export REG_IDS=${REG_BIN}/scpel_compiler-svn-ids
+export REG_REPORT=${REG_BIN}/scpel_compiler-svn-report
+export REG_CLEANUP=${REG_CLEANUP-$REG_BIN/scpel_compiler-cleanup}
 export REG_STOP=${REG_SRCDIR}/STOP
 
 # Used for parallelism in make commands; very system-dependent, this is POSIX.

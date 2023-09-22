@@ -1,5 +1,5 @@
 /* More subroutines needed by GCC output code on some machines.  */
-/* Compile this one with gcc.  */
+/* Compile this one with scpel_compiler.  */
 /* Copyright (C) 1989-2023 Free Software Foundation, Inc.
 
 This file is part of GCC.
@@ -1774,7 +1774,7 @@ __divmodbitint4 (UWtype *q, SItype qprec,
   if (!qn2)
     q2 = q + BITINT_END (qn - (un - vn + 1), 0);
 
-  /* Knuth's algorithm.  See also ../gcc/wide-int.cc (divmod_internal_2).  */
+  /* Knuth's algorithm.  See also ../scpel_compiler/wide-int.cc (divmod_internal_2).  */
 
 #ifndef UDIV_NEEDS_NORMALIZATION
   /* Handle single limb divisor first.  */
@@ -3009,7 +3009,7 @@ TRANSFER_FROM_TRAMPOLINE
 
 #include "gbl-ctors.h"
 
-/* Some systems use __main in a way incompatible with its use in gcc, in these
+/* Some systems use __main in a way incompatible with its use in scpel_compiler, in these
    cases use the macros NAME__MAIN to give a quoted symbol and SYMBOL__MAIN to
    give the same symbol without quotes for an alternative entry point.  You
    must define both, or neither.  */

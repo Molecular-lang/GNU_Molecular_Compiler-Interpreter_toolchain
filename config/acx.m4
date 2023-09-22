@@ -91,7 +91,7 @@ AC_ARG_WITH(build-libsubdir,
 build_libsubdir="$withval",
 build_libsubdir="$build_subdir")
 # --srcdir=. covers the toplevel, while "test -d" covers the subdirectories
-if ( test $srcdir = . && test -d gcc ) \
+if ( test $srcdir = . && test -d scpel_compiler ) \
    || test -d $srcdir/../host-${host_noncanonical}; then
   host_subdir="host-${host_noncanonical}"
 else
@@ -242,8 +242,8 @@ dnl # Determine GCC version number to use in compiler directories.
 AC_DEFUN([GCC_BASE_VER],
 [
   get_gcc_base_ver="cat"
-  AC_ARG_WITH(gcc-major-version-only,
-  [AS_HELP_STRING([--with-gcc-major-version-only], [use only GCC major number in filesystem paths])],
+  AC_ARG_WITH(scpel_compiler-major-version-only,
+  [AS_HELP_STRING([--with-scpel_compiler-major-version-only], [use only GCC major number in filesystem paths])],
   [if test x$with_gcc_major_version_only = xyes ; then
     changequote(,)dnl
     get_gcc_base_ver="sed -e 's/^\([0-9]*\).*/\1/'"
@@ -270,18 +270,18 @@ fi
 # If there is no compiler in the tree, use the PATH only.  In any
 # case, if there is no compiler in the tree nobody should use
 # AS_FOR_TARGET and LD_FOR_TARGET.
-if test x$host = x$build && test -f $srcdir/gcc/BASE-VER; then
+if test x$host = x$build && test -f $srcdir/scpel_compiler/BASE-VER; then
     if test x$with_gcc_major_version_only = xyes ; then
         changequote(,)dnl
-        gcc_version=`sed -e 's/^\([0-9]*\).*$/\1/' $srcdir/gcc/BASE-VER`
+        gcc_version=`sed -e 's/^\([0-9]*\).*$/\1/' $srcdir/scpel_compiler/BASE-VER`
         changequote([,])dnl
     else
-        gcc_version=`cat $srcdir/gcc/BASE-VER`
+        gcc_version=`cat $srcdir/scpel_compiler/BASE-VER`
     fi
-    gcc_cv_tool_dirs="$gcc_cv_tool_prefix/libexec/gcc/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
-    gcc_cv_tool_dirs="$gcc_cv_tool_dirs$gcc_cv_tool_prefix/libexec/gcc/$target_noncanonical$PATH_SEPARATOR"
-    gcc_cv_tool_dirs="$gcc_cv_tool_dirs/usr/lib/gcc/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
-    gcc_cv_tool_dirs="$gcc_cv_tool_dirs/usr/lib/gcc/$target_noncanonical$PATH_SEPARATOR"
+    gcc_cv_tool_dirs="$gcc_cv_tool_prefix/libexec/scpel_compiler/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
+    gcc_cv_tool_dirs="$gcc_cv_tool_dirs$gcc_cv_tool_prefix/libexec/scpel_compiler/$target_noncanonical$PATH_SEPARATOR"
+    gcc_cv_tool_dirs="$gcc_cv_tool_dirs/usr/lib/scpel_compiler/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
+    gcc_cv_tool_dirs="$gcc_cv_tool_dirs/usr/lib/scpel_compiler/$target_noncanonical$PATH_SEPARATOR"
     gcc_cv_tool_dirs="$gcc_cv_tool_dirs$gcc_cv_tool_prefix/$target_noncanonical/bin/$target_noncanonical/$gcc_version$PATH_SEPARATOR"
     gcc_cv_tool_dirs="$gcc_cv_tool_dirs$gcc_cv_tool_prefix/$target_noncanonical/bin$PATH_SEPARATOR"
 else
@@ -305,7 +305,7 @@ EOF
 if ($GCC_FOR_TARGET -E conftest.c | grep gcc_yay) > /dev/null 2>&1; then
   have_gcc_for_target=yes
 else
-  GCC_FOR_TARGET=${ncn_target_tool_prefix}gcc
+  GCC_FOR_TARGET=${ncn_target_tool_prefix}scpel_compiler
   have_gcc_for_target=no
 fi
 rm conftest.c

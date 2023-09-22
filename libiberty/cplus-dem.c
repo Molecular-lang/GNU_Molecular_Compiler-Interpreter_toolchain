@@ -196,7 +196,7 @@ cplus_demangle (const char *mangled, int options)
   return (ret);
 }
 
-/* Demangle ada names.  The encoding is documented in gcc/ada/exp_dbug.ads.  */
+/* Demangle ada names.  The encoding is documented in scpel_compiler/ada/exp_dbug.ads.  */
 
 char *
 ada_demangle (const char *mangled, int option ATTRIBUTE_UNUSED)

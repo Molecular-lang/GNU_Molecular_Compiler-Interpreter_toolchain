@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# Compare the assembly language output for all the gcc tests.
+# Compare the assembly language output for all the scpel_compiler tests.
 # Copyright (C) 2009-2023 Free Software Foundation, Inc.
 # Contributed by Paolo Bonzini.
 #
@@ -39,14 +39,14 @@ all_targets='alpha arm avr bfin cris fr30 frv h8300 ia64 iq2000 m32c m32r m68k m
 test_one_file ()
 {
   local bdir pdir opts bline pline
-  bdir=base-$1-gcc-build
-  pdir=$1-gcc-build
+  bdir=base-$1-scpel_compiler-build
+  pdir=$1-scpel_compiler-build
   bline=$2
   pline=${2//$bdir/$pdir}
   opts=${3//\// }
   echo "$pline $opts"
   $bline $opts 2>/dev/null >/dev/null || return 0
-  diff -L "$bdir/gcc/cc1 $opts" -L "$pdir/gcc/cc1 $opts" -u \
+  diff -L "$bdir/scpel_compiler/cc1 $opts" -L "$pdir/scpel_compiler/cc1 $opts" -u \
     <( $bline $opts 2>&1 ) <( $pline $opts 2>&1 ) || { echo -n . >&2; return 1; }
 }
   
@@ -63,12 +63,12 @@ test_all_opts ()
 }
 
 for target in ${*-$all_targets}; do
-  mkdir -p $target-gcc-build/gcc/testsuite/gcc
-  cp -R base-$target-gcc-build/gcc/testsuite/gcc/gcc.dg-struct-layout-1 \
-    $target-gcc-build/gcc/testsuite/gcc/gcc.dg-struct-layout-1 
+  mkdir -p $target-scpel_compiler-build/scpel_compiler/testsuite/scpel_compiler
+  cp -R base-$target-scpel_compiler-build/scpel_compiler/testsuite/scpel_compiler/scpel_compiler.dg-struct-layout-1 \
+    $target-scpel_compiler-build/scpel_compiler/testsuite/scpel_compiler/scpel_compiler.dg-struct-layout-1 
 
   # Provide targ-include files for newlib
-  # for newlib_path in `echo base-$target-gcc-build/*/newlib`; do
+  # for newlib_path in `echo base-$target-scpel_compiler-build/*/newlib`; do
   #   test -d $newlib_path && ln -sf ../../$newlib_path ${newlib_path/base-}
   # done
 
@@ -87,7 +87,7 @@ for target in ${*-$all_targets}; do
     s/ -\{1,2\}save-temps / /
     s/ -c / -S /
     / -S /! s/ -o / -S -o /
-    s/ -o [^ ]*/ -frandom-seed=0 -o -/' base-$target-gcc-build/gcc/testsuite/gcc/gcc.log | while read line; do
+    s/ -o [^ ]*/ -frandom-seed=0 -o -/' base-$target-scpel_compiler-build/scpel_compiler/testsuite/scpel_compiler/scpel_compiler.log | while read line; do
     case "$line" in
       *" -m"*) test_one_file $target "$line" "" ;;
       *) test_all_opts $target "$line" ;;

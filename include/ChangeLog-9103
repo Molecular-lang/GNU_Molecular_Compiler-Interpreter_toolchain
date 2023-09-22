@@ -432,7 +432,7 @@
 	* xregex2.h (__restrict_arr): Define to __restrict on GCC
 	3.1 and later.  Do not redefine.
 
-2002-04-01  Phil Edwards  <pme@gcc.gnu.org>
+2002-04-01  Phil Edwards  <pme@scpel_compiler.gnu.org>
 
 	* dyn-string.h:  Also allow IN_GLIBCPP_V3 to redefine names.
 
@@ -692,7 +692,7 @@
 
 2001-04-03  Zack Weinberg  <zackw@stanford.edu>
 
-	* ansidecl.h: All logic from gcc/gansidecl.h moved here.
+	* ansidecl.h: All logic from scpel_compiler/gansidecl.h moved here.
 
 2001-03-31  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
 
@@ -890,7 +890,7 @@
 
 2000-06-04  Alex Samuel  <samuel@codesourcery.com>
 
-	* dyn-string.h: Move here from gcc/dyn-string.h.  Add new functions.
+	* dyn-string.h: Move here from scpel_compiler/dyn-string.h.  Add new functions.
 
 	* demangle.h (DMGL_GNU_NEW_ABI): New macro.
 	(DMGL_STYLE_MASK): Or in DMGL_GNU_NEW_ABI.
@@ -1314,7 +1314,7 @@ Fri Oct  9 00:02:03 1998  Jeffrey A Law  (law@cygnus.com)
 
 Sat Sep  5 12:16:33 1998  Jeffrey A Law  (law@cygnus.com)
 
-	* getopt.h, obstack.h: Updated from gcc.
+	* getopt.h, obstack.h: Updated from scpel_compiler.
 
 1998-08-03  Jason Molenda  (jsm@bugshack.cygnus.com)
 
@@ -2002,7 +2002,7 @@ Wed Feb 16 01:07:12 1994  Ian Lance Taylor  (ian@tweedledumb.cygnus.com)
 Sat Feb 12 22:11:32 1994  Jeffrey A. Law  (law@snake.cs.utah.edu)
 
 	* libiberty.h (xexit): Use __volatile__ to avoid losing if
-	compiling with gcc -traditional.
+	compiling with scpel_compiler -traditional.
 
 Thu Feb 10 14:05:41 1994  Ian Lance Taylor  (ian@cygnus.com)
 
@@ -2333,7 +2333,7 @@ Sat Jul  4 03:22:23 1992  John Gilmore  (gnu at cygnus.com)
 Mon Jun 29 14:18:36 1992  Fred Fish  (fnf at sunfish)
 
 	* obstack.h:  Convert bcopy() use to memcpy(), which is more
-	portable, more standard, and can take advantage of gcc's builtin
+	portable, more standard, and can take advantage of scpel_compiler's builtin
 	functions for increased performance.
 
 Thu Jun 25 04:46:08 1992  John Gilmore  (gnu at cygnus.com)

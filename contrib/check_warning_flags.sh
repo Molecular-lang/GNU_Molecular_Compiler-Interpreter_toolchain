@@ -18,7 +18,7 @@
 progname=`echo "$0" | sed 's,.*/,,'`
 usage ()
 {
-  echo "usage: $progname path/to/gcc/doc"
+  echo "usage: $progname path/to/scpel_compiler/doc"
   echo "set \$CC to the compiler to be checked"
   exit 1
 }
@@ -26,7 +26,7 @@ usage ()
 ret=0
 LC_ALL=C
 export LC_ALL
-: ${CC=gcc}
+: ${CC=scpel_compiler}
 test $# = 1 || usage
 gcc_docdir=$1
 invoke_texi=$gcc_docdir/invoke.texi

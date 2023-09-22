@@ -36,7 +36,7 @@ void erase(size_t num_elm, size_t elm_strt, size_t elm_end)
   VERIFY( assignment_operator::count() == min_num_cpy );
 }
 
-// http://gcc.gnu.org/ml/libstdc++/2007-01/msg00098.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2007-01/msg00098.html
 void test01()
 {
   for (size_t num_elm = 0; num_elm <= 10; ++num_elm)

@@ -6,7 +6,7 @@ If you are having some problem with a system header that is either
 broken by the manufacturer, or is broken by the fixinclude process,
 then you will need to alter or add information to the include fix
 definitions file, ``inclhack.def''.  Please also send relevant
-information to gcc-bugs@gcc.gnu.org, gcc-patches@gcc.gnu.org and,
+information to scpel_compiler-bugs@scpel_compiler.gnu.org, scpel_compiler-patches@scpel_compiler.gnu.org and,
 please, to me:  bkorb@gnu.org.
 
 To make your fix, you will need to do several things:
@@ -320,7 +320,7 @@ EXAMPLES OF FIXES:
     The brute force method is, of course, to configure and build
     GCC.  But you can also:
 
-        cd ${top_builddir}/gcc
+        cd ${top_builddir}/scpel_compiler
         rm -rf include-fixed/ stmp-fixinc
         make stmp-fixinc
 

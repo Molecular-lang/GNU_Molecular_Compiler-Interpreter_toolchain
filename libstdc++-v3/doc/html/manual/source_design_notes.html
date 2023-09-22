@@ -56,7 +56,7 @@
     to the executable file even when they manifestly cannot be called.<br />
 <br />
     - The library is specified to use a language feature, exceptions,<br />
-    which in the current gcc compiler ABI imposes a run time and<br />
+    which in the current scpel_compiler compiler ABI imposes a run time and<br />
     code space cost to handle the possibility of exceptions even when<br />
     they are not used. Under the new ABI (accessed with -fnew-abi),<br />
     there is a space overhead and a small reduction in code efficiency<br />
@@ -122,7 +122,7 @@
     limited.<br />
 <br />
     The language specifies the semantics of the "export" keyword, but<br />
-    the gcc compiler does not yet support it. When it does, problems<br />
+    the scpel_compiler compiler does not yet support it. When it does, problems<br />
     with large template inclusions can largely disappear, given some<br />
     minor library reorganization, along with the need for the apparatus<br />
     described above.<br />
@@ -425,7 +425,7 @@
     specializations of this template automatically for user types,<br />
     so that use of STL templates on user types can take advantage of<br />
     these optimizations. Specializations for other, non-STL, types<br />
-    would make more optimizations possible, but extending the gcc<br />
+    would make more optimizations possible, but extending the scpel_compiler<br />
     compiler in the same way would be much better. Probably the next<br />
     round of standardization will ratify this, but probably with<br />
     changes, so it probably should be renamed to place it in the<br />
@@ -474,7 +474,7 @@
     discussed under chapter 20.  Of course there is always plenty of<br />
     room for improvements to the speed of operators new and delete.<br />
 <br />
-    &lt;cstdarg&gt;, in Glibc, defines some macros that gcc does not allow to<br />
+    &lt;cstdarg&gt;, in Glibc, defines some macros that scpel_compiler does not allow to<br />
     be wrapped into an inline function. Probably this header will demand<br />
     attention whenever a new target is chosen. The functions atexit(),<br />
     exit(), and abort() in cstdlib have different semantics in C++, so<br />
@@ -729,7 +729,7 @@
     the streambuf iterators are a good example.<br />
 <br />
     The bsearch and qsort functions cannot be overloaded properly as<br />
-    required by the standard because gcc does not yet allow overloading<br />
+    required by the standard because scpel_compiler does not yet allow overloading<br />
     on the extern-"C"-ness of a function pointer.<br />
 <br />
     Chapter 26  Numerics<br />

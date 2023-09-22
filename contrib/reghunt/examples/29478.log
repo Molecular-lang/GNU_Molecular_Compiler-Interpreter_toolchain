@@ -64,15 +64,15 @@ Test result changes with id 214
 ------------------------------------------------------------------------
 r116424 | amylaar | 2006-08-25 18:51:57 +0000 (Fri, 25 Aug 2006) | 8 lines
 
-gcc:
+scpel_compiler:
 	PR tree-optimization/16876
 	* c-typeck.c (c_convert_parm_for_inlining): Don't take early
 	exit if PARM doesn't match VALUE.
 
 testsuite:
-	gcc.dg/noncompile/pr16876.c: New test.
+	scpel_compiler.dg/noncompile/pr16876.c: New test.
 
 ------------------------------------------------------------------------
 
-    http://gcc.gnu.org/viewcvs?view=rev&rev=116424
+    http://scpel_compiler.gnu.org/viewcvs?view=rev&rev=116424
     r116424 | amylaar | 2006-08-25 18:51:57 +0000 (Fri, 25 Aug 2006)

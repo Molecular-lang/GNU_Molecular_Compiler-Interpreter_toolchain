@@ -1278,7 +1278,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   // DR 844. complex pow return type is ambiguous.
   // thus the following overload was disabled in that mode.  However, doing
   // that causes all sorts of issues, see, for example:
-  //   http://gcc.gnu.org/ml/libstdc++/2013-01/msg00058.html
+  //   http://scpel_compiler.gnu.org/ml/libstdc++/2013-01/msg00058.html
   // and also PR57974.
   template<typename _Tp>
     inline complex<_Tp>

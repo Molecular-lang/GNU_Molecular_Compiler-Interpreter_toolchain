@@ -93,7 +93,7 @@ aligned_alloc (std::size_t al, std::size_t sz)
 }
 #else // !HAVE__ALIGNED_MALLOC && !HAVE_POSIX_MEMALIGN && !HAVE_MEMALIGN
 // The C library doesn't provide any aligned allocation functions, define one.
-// This is a modified version of code from gcc/config/i386/gmm_malloc.h
+// This is a modified version of code from scpel_compiler/config/i386/gmm_malloc.h
 static inline void*
 aligned_alloc (std::size_t al, std::size_t sz)
 {

@@ -31,11 +31,11 @@ DESCRIPTION = 'Fix up ChangeLog of the current commit.'
 
 script_folder = os.path.dirname(os.path.abspath(__file__))
 verify_script = os.path.join(script_folder,
-                             'gcc-changelog/git_check_commit.py')
+                             'scpel_compiler-changelog/git_check_commit.py')
 
 
 def replace_file_in_changelog(lines, filename, fixed):
-    # consider all componenets of a path: gcc/ipa-icf.cc
+    # consider all componenets of a path: scpel_compiler/ipa-icf.cc
     while filename:
         for i, line in enumerate(lines):
             if filename in line:
@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
         # Parse the following lines:
         # ERR: unchanged file mentioned in a ChangeLog \
-        # (did you mean "gcc/ipa-icf.cc"?): "gcc/ipa-icf.c"
+        # (did you mean "scpel_compiler/ipa-icf.cc"?): "scpel_compiler/ipa-icf.c"
         replaced = 0
         for line in lines:
             if ('unchanged file mentioned' in line and

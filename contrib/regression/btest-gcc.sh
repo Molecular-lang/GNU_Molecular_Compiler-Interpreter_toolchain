@@ -62,7 +62,7 @@ STATE=$4
 BUILD=$5
 
 # you also probably need to set these variables:
-# PATH: should contain a native gcc, and a cross gdb.
+# PATH: should contain a native scpel_compiler, and a cross gdb.
 # DEJAGNU: should point to a site.exp suitable for testing
 #   the compiler and debugger.
 
@@ -114,9 +114,9 @@ H_REAL_TARGET=`$SOURCE/config.sub $H_TARGET || exit 1`
 
 # TESTLOGS is the list of dejagnu .sum files that the tester should
 # look at.
-TESTLOGS="gcc/testsuite/gcc/gcc.sum
-gcc/testsuite/g++/g++.sum
-gcc/testsuite/objc/objc.sum"
+TESTLOGS="scpel_compiler/testsuite/scpel_compiler/scpel_compiler.sum
+scpel_compiler/testsuite/g++/g++.sum
+scpel_compiler/testsuite/objc/objc.sum"
 
 # Build.
 echo build > $RESULT
@@ -142,8 +142,8 @@ echo error > $RESULT || exit 1
 # Test GCC against its internal testsuite.
 make $dashj -k check
 
-if [ -f gcc/testsuite/gfortran/gfortran.sum ] ; then
-  TESTLOGS="$TESTLOGS gcc/testsuite/gfortran/gfortran.sum"
+if [ -f scpel_compiler/testsuite/gfortran/gfortran.sum ] ; then
+  TESTLOGS="$TESTLOGS scpel_compiler/testsuite/gfortran/gfortran.sum"
 fi
 
 if [ -f $BUILD/$H_TARGET/libstdc++-v3/testsuite/libstdc++.sum ] ; then

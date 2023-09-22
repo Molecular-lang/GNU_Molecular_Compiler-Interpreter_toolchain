@@ -53,7 +53,7 @@ test01()
   VERIFY( t.isctype(L'\t', t.lookup_classname(range(blank))));
 #if defined (NEWLINE_IN_CLASS_BLANK)
   /* On some targets, '\n' is in class 'blank'.
-     See https://gcc.gnu.org/ml/gcc-patches/2015-02/msg00059.html.  */
+     See https://scpel_compiler.gnu.org/ml/scpel_compiler-patches/2015-02/msg00059.html.  */
   VERIFY( t.isctype(L'\n', t.lookup_classname(range(blank))));
 #else
   VERIFY(!t.isctype(L'\n', t.lookup_classname(range(blank))));

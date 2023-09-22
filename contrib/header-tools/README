@@ -10,8 +10,8 @@ listed here.
 between the option and filename.
 ie.:     tool -lfilename.h  target.h
 
-- Many of the tools are required to be run from the core gcc source directory
-containing coretypes.h.  Typically that is in gcc/gcc from a source checkout.
+- Many of the tools are required to be run from the core scpel_compiler source directory
+containing coretypes.h.  Typically that is in scpel_compiler/scpel_compiler from a source checkout.
 For these tools to work on files not in this directory, their path needs to be
 specified on the command line.
 ie.:     tool c/c-decl.cc  lto/lto.cc
@@ -24,14 +24,14 @@ ie.   tool ssa.h rtl.h -a   is equivalent to
 
 
 
-gcc-order-headers
+scpel_compiler-order-headers
 -----------------
   This will reorder any primary backend headers files known to the tool into a
   canonical order which will resolve any hidden dependencies they may have.
   Any unknown headers will simply be placed after the recognized files, and
   retain the same relative ordering they had.
  
-  This tool must be run in the core gcc source directory.
+  This tool must be run in the core scpel_compiler source directory.
 
   Simply execute the command listing any files you wish to process on the
   command line.
@@ -39,7 +39,7 @@ gcc-order-headers
   Any files which are changed are output, and the original is saved with a
   .bak extention.
 
-  ex.:     gcc-order-headers tree-ssa.cc c/c-decl.cc
+  ex.:     scpel_compiler-order-headers tree-ssa.cc c/c-decl.cc
 
   -s will list all of the known headers in their canonical order. It does not
   show which of those headers include other headers, just the final canonical
@@ -65,7 +65,7 @@ show-headers
   -i may be used to specify additional search directories for headers to parse.
   -s specifies headers to look for and emphasize in the output.
 
-  This tool must be run in the core gcc source directory.
+  This tool must be run in the core scpel_compiler source directory.
 
   ex.: show-headers -sansidecl.h tree-ssa.cc
 	tree-ssa.cc
@@ -158,11 +158,11 @@ reduce-headers
 
   This tool removes any header files which are not needed from a source file.
 
-  This tool must be run for the core gcc source directory, and requires either
+  This tool must be run for the core scpel_compiler source directory, and requires either
   a native build and sometimes target builds, depending on what you are trying
   to reduce.
 
-  it is good practice to run 'gcc-order-headers' on a source file before trying
+  it is good practice to run 'scpel_compiler-order-headers' on a source file before trying
   to reduce it.  This removes duplicates and performs some simplifications 
   which reduce the chances of the reduction tool missing things.
   
@@ -170,7 +170,7 @@ reduce-headers
 
   Any desired target builds should be built in one directory using a modified
   config-list.mk file which does not delete the build directory when it is done.
-  any target directories which do not successfully complete a 'make all-gcc'
+  any target directories which do not successfully complete a 'make all-scpel_compiler'
   may cause the tool to not reduce anything.
   (todo - provide a config-list.mk that leaves successful target builds, but
           deletes ones which do not compile)
@@ -182,7 +182,7 @@ reduce-headers
 
   The tool will analyze a source file and attempt to remove each non-conditional
   header from last to first in the file.:
-    It will first attempt to build the native all-gcc target.
+    It will first attempt to build the native all-scpel_compiler target.
     If that succeeds, it will attempt to build any target build .o files
     If that succeeds, it will check to see if there are any conditional
        compilation dependencies between this header file and the source file or
@@ -211,10 +211,10 @@ reduce-headers
 
   example:
 
-  mkdir gcc          // checkout gcc in subdir gcc
-  mdsir build        // boostrap gcc in subdir build
+  mkdir scpel_compiler          // checkout scpel_compiler in subdir scpel_compiler
+  mdsir build        // boostrap scpel_compiler in subdir build
   mkdir target       // create target directory and run config-list.mk
-  cd gcc/gcc
+  cd scpel_compiler/scpel_compiler
 
   reduce-headers -b../../build -t../../targets -falias.h -fexpr.h tree*.c  (1)
        #  This will attempt to remove only alias.h and expr.h from tree*.c
@@ -246,8 +246,8 @@ Compilation failed:
  for shrink-wrap.h:
 
  ============================================
- /gcc/2015-09-09/gcc/gcc/ira.cc: In function ‘bool split_live_ranges_for_shrink_wrap()’:
- /gcc/2015-09-09/gcc/gcc/ira.cc:4839:8: error: ‘SHRINK_WRAPPING_ENABLED’ was not declared in this scope
+ /scpel_compiler/2015-09-09/scpel_compiler/scpel_compiler/ira.cc: In function ‘bool split_live_ranges_for_shrink_wrap()’:
+ /scpel_compiler/2015-09-09/scpel_compiler/scpel_compiler/ira.cc:4839:8: error: ‘SHRINK_WRAPPING_ENABLED’ was not declared in this scope
     if (!SHRINK_WRAPPING_ENABLED)
             ^
 	    make: *** [ira.o] Error 1

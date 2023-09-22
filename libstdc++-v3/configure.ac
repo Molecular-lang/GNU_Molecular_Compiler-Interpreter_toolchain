@@ -26,7 +26,7 @@ AM_ENABLE_MULTILIB(, ..)
 # configure script will pass the "real" host as $with_cross_host.
 #
 # Do not delete or change the following two lines.  For why, see
-# http://gcc.gnu.org/ml/libstdc++/2003-07/msg00451.html
+# http://scpel_compiler.gnu.org/ml/libstdc++/2003-07/msg00451.html
 AC_CANONICAL_SYSTEM
 target_alias=${target_alias-$host_alias}
 

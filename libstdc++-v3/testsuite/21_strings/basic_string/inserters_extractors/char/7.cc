@@ -27,7 +27,7 @@
 #include <sstream>
 #include <testsuite_hooks.h>
 
-// http://gcc.gnu.org/ml/libstdc++/2000-q1/msg00085.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2000-q1/msg00085.html
 // istream::operator>>(string)
 // sets failbit
 // NB: this is a defect in the standard.

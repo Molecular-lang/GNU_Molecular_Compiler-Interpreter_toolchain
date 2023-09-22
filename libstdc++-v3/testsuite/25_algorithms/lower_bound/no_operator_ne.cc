@@ -19,7 +19,7 @@
 #include <algorithm>
 #include <testsuite_hooks.h>
 
-// http://gcc.gnu.org/ml/libstdc++/2000-06/msg00316.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2000-06/msg00316.html
 struct foo { };
 
 bool operator== (const foo&, const foo&) { return true; }

@@ -109,8 +109,8 @@ static inline uint64_t umulh(const uint64_t a, const uint64_t b) {
 //
 // E.g.:
 // https://bugs.llvm.org/show_bug.cgi?id=37932
-// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=17958
-// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=37443
+// https://scpel_compiler.gnu.org/bugzilla/show_bug.cgi?id=17958
+// https://scpel_compiler.gnu.org/bugzilla/show_bug.cgi?id=37443
 //
 // The functions here perform division-by-constant using multiplications
 // in the same way as 64-bit compilers would do.

@@ -29,7 +29,7 @@ struct A { };
 
 struct B { };
 
-// http://gcc.gnu.org/ml/libstdc++/2000-09/msg00002.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2000-09/msg00002.html
 void test01()
 {
   std::vector< A<B> > vec01;

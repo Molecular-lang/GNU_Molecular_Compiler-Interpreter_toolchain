@@ -40,7 +40,7 @@
 proc load_gcc_lib { filename } {
     global srcdir loaded_libs
 
-    load_file $srcdir/../../gcc/testsuite/lib/$filename
+    load_file $srcdir/../../scpel_compiler/testsuite/lib/$filename
     set loaded_libs($filename) ""
 }
 
@@ -167,7 +167,7 @@ proc libstdc++_init { testfile } {
 
     # Locate libgcc.a so we don't need to account for different values of
     # SHLIB_EXT on different platforms
-    set gccdir [lookfor_file $tool_root_dir gcc/libgcc.a]
+    set gccdir [lookfor_file $tool_root_dir scpel_compiler/libgcc.a]
     if {$gccdir != ""} {
 	set gccdir [file dirname $gccdir]
 	append ld_library_path_tmp ":${gccdir}"
@@ -270,7 +270,7 @@ proc libstdc++_init { testfile } {
     set cxxpchflags ""
     set cxxvtvflags ""
     set cxxldflags ""
-    set cc [transform "gcc"]
+    set cc [transform "scpel_compiler"]
     # Locate testsuite_hooks.h and other testsuite headers.
     set includes "-I${srcdir}/util"
     # Adapt the defaults for special circumstances.
@@ -338,7 +338,7 @@ proc libstdc++_init { testfile } {
 
     # If a PCH file is available, use it.  We must delay performing
     # this check until $cxx and such have been initialized because we
-    # perform a test compilation.  (Ideally, gcc --print-file-name would
+    # perform a test compilation.  (Ideally, scpel_compiler --print-file-name would
     # list PCH files, but it does not.)
     if { $cxxpchflags != "" } {
 	set src "config[pid].cc"
@@ -448,7 +448,7 @@ proc libstdc++-dg-test { prog do_what extra_tool_flags } {
 }
 
 # Override the DejaGnu dg-test in order to clear flags after a test, as
-# is done for compiler tests in gcc-dg.exp.
+# is done for compiler tests in scpel_compiler-dg.exp.
 
 if { [info procs saved-dg-test] == [list] } {
     rename dg-test saved-dg-test

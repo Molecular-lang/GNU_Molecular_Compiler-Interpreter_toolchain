@@ -45,12 +45,12 @@ case $BRANCH in
 "")             BRANCH="trunk";;
 mline)          BRANCH="trunk";;
 mainline)       BRANCH="trunk";;
-4.1)            BRANCH="gcc-4_1-branch";;
-gcc-4_1-branch) ;;
-4.0)            BRANCH="gcc-4_0-branch";;
-gcc-4_0-branch) ;;
-3.4)            BRANCH="gcc-3_4-branch";;
-gcc-3_4-branch) ;;
+4.1)            BRANCH="scpel_compiler-4_1-branch";;
+scpel_compiler-4_1-branch) ;;
+4.0)            BRANCH="scpel_compiler-4_0-branch";;
+scpel_compiler-4_0-branch) ;;
+3.4)            BRANCH="scpel_compiler-3_4-branch";;
+scpel_compiler-3_4-branch) ;;
 *)              ;; # abort "$0: unrecognized branch $BRANCH"
 esac
 
@@ -67,7 +67,7 @@ LOW_REV=`svn info --revision {"${LOW_DATE}"} \
   | awk '/Revision:/ { print $2 }'`
 
 # Create the list of information for LOW_REV through HIGH_DATE in a
-# form expected by gcc-svn-ids.
+# form expected by scpel_compiler-svn-ids.
 
 svn log --quiet --non-interactive \
         --revision ${LOW_REV}:{"${HIGH_DATE}"} \

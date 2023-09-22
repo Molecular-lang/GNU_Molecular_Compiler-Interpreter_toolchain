@@ -25,7 +25,7 @@
 #include <testsuite_hooks.h>
 
 // [patch] bits/istream.tcc - getline(char_type*,streamsize,char_type)
-// http://gcc.gnu.org/ml/libstdc++/2000-07/msg00003.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2000-07/msg00003.html
 void
 test05()
 {

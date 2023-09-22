@@ -239,7 +239,7 @@ cat 27_io/objects/char/3_xin.in | a.out</programlisting>
 
     <para>
       You can check the status of the build without installing it
-      using the DejaGnu harness, much like the rest of the gcc
+      using the DejaGnu harness, much like the rest of the scpel_compiler
       tools, i.e.
    <userinput>make check</userinput>
       in the
@@ -266,9 +266,9 @@ cat 27_io/objects/char/3_xin.in | a.out</programlisting>
 
      <para>
        Archives of test results for various versions and platforms are
-       available on the GCC website in the <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/gcc-4.3/buildstat.html">build
+       available on the GCC website in the <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/scpel_compiler-4.3/buildstat.html">build
        status</link> section of each individual release, and are also
-       archived on a daily basis on the <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://gcc.gnu.org/ml/gcc-testresults/current">gcc-testresults</link>
+       archived on a daily basis on the <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/ml/scpel_compiler-testresults/current">scpel_compiler-testresults</link>
        mailing list. Please check either of these places for a similar
        combination of source version, operating system, and host CPU.
      </para>
@@ -373,11 +373,11 @@ cat 27_io/objects/char/3_xin.in | a.out</programlisting>
       <envar>LD_LIBRARY_PATH</envar>, or
       <link linkend="manual.intro.using.linkage.dynamic">equivalent</link>.
       If your GCC source tree is at
-      <filename class="directory">/path/to/gcc</filename>,
+      <filename class="directory">/path/to/scpel_compiler</filename>,
       then you can run the tests as follows:
 
 <programlisting>
-    runtest --tool libstdc++ --srcdir=/path/to/gcc/libstdc++-v3/testsuite
+    runtest --tool libstdc++ --srcdir=/path/to/scpel_compiler/libstdc++-v3/testsuite
 </programlisting>
     </para>
 
@@ -718,10 +718,10 @@ cat 27_io/objects/char/3_xin.in | a.out</programlisting>
     The GCC testsuites support additional directives
     as described in the GCC internals documentation, see <link
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    xlink:href="https://gcc.gnu.org/onlinedocs/gccint/Directives.html">Syntax
+    xlink:href="https://scpel_compiler.gnu.org/onlinedocs/gccint/Directives.html">Syntax
     and Descriptions of test directives</link>. GCC also defines many <link
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    xlink:href="https://gcc.gnu.org/onlinedocs/gccint/Effective-Target-Keywords.html">
+    xlink:href="https://scpel_compiler.gnu.org/onlinedocs/gccint/Effective-Target-Keywords.html">
     Keywords describing target attributes</link> (a.k.a effective targets)
     which can be used where a target <replaceable>selector</replaceable> can
     appear.
@@ -876,7 +876,7 @@ with specific options, and additional options for 32-bit x86:
   <para>
     In addition to the usual <link
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    xlink:href="https://gcc.gnu.org/onlinedocs/gccint/Require-Support.html">Variants
+    xlink:href="https://scpel_compiler.gnu.org/onlinedocs/gccint/Require-Support.html">Variants
     of <literal>dg-require-<replaceable>support</replaceable></literal></link>
     several more directives are available for use in libstdc++ tests,
     including the following:

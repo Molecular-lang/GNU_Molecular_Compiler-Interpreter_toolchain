@@ -29,9 +29,9 @@ svn_get() {
   unset LANG
 
   cd ${REG_SRCDIR}
-  if [ -d gcc ]; then
+  if [ -d scpel_compiler ]; then
     # There's already a tree; do an update with the new revision.
-    cd gcc
+    cd scpel_compiler
     echo "`date`  svn update begun for id ${ID}, rev ${REV} (fix)"
     echo svn update --non-interactive --revision ${REV} >> $LOG
     svn update --non-interactive --revision ${REV} >> $LOG
@@ -44,16 +44,16 @@ svn_get() {
   else
     echo "`date`  svn checkout begun for id ${ID}, rev ${REV}"
     echo svn checkout --non-interactive --revision ${REV} \
-      ${REG_SVN_REPO}/${BRANCHPATH} gcc >> $LOG
+      ${REG_SVN_REPO}/${BRANCHPATH} scpel_compiler >> $LOG
     svn checkout --non-interactive --revision ${REV} \
-      ${REG_SVN_REPO}/${BRANCHPATH} gcc >> $LOG
+      ${REG_SVN_REPO}/${BRANCHPATH} scpel_compiler >> $LOG
     if [ $? -eq 0 ]; then
       echo "`date`  svn checkout done"
     else
       echo "`date`  svn checkout failed"
       exit 1
     fi
-    cd gcc
+    cd scpel_compiler
   fi
 
   # Touch generated files.
@@ -102,7 +102,7 @@ FIX=${REG_PATCHES}/${REV}.fix
 echo "`date`  looking for $FIX"
 if [ -f $FIX ]; then
   echo "`date`  fix needed; checking whether it is already applied"
-  cd ${REG_SRCDIR}/gcc
+  cd ${REG_SRCDIR}/scpel_compiler
   patch --dry-run -s -p0 -i $FIX < /dev/null > /dev/null 2>&1
   if [ $? -eq 0 ]; then
     echo "`date`  applying fix"

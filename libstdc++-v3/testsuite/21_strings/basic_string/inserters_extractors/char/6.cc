@@ -29,7 +29,7 @@
 
 // istringstream/stringbuf extractor properly size buffer based on
 // actual, not allocated contents (string.size() vs. string.capacity()).
-// http://gcc.gnu.org/ml/libstdc++/1999-q4/msg00049.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/1999-q4/msg00049.html
 void test06(void)
 {
   typedef std::string::size_type size_type;

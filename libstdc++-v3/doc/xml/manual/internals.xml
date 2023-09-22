@@ -535,7 +535,7 @@ taking other system-specific actions.
    <para>The libstdc++ library is linked with the C version of libtool, even
 though it is a C++ library.  Therefore, the C version of libtool needs to
 ensure that the run-time library initializers are run.  The usual way to
-do this is to build the library using <code>gcc -shared</code>.
+do this is to build the library using <code>scpel_compiler -shared</code>.
    </para>
 
    <para>If you need to change how the library is linked, look at

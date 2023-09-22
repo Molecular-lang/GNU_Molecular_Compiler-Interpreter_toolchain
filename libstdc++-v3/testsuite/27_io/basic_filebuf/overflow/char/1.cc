@@ -23,7 +23,7 @@
 #include <testsuite_hooks.h>
 
 // test03
-// http://gcc.gnu.org/ml/libstdc++/2000-q1/msg00151.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2000-q1/msg00151.html
 template<typename charT, typename traits = std::char_traits<charT> >
   class basic_nullbuf : public std::basic_filebuf<charT, traits>
   {

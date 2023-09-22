@@ -268,7 +268,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
 	  // TODO : this is not entirely correct.
 	  // This function requires extra support from the platform.
 	  //
-	  // Read http://gcc.gnu.org/ml/libstdc++/2013-09/msg00117.html and
+	  // Read http://scpel_compiler.gnu.org/ml/libstdc++/2013-09/msg00117.html and
 	  // http://www.open-std.org/Jtc1/sc22/wg21/docs/papers/2003/n1429.htm
 	  // for details.
 	  typedef std::ctype<char_type> __ctype_type;

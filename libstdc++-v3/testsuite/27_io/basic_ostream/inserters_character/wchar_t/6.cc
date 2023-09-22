@@ -23,7 +23,7 @@
 #include <testsuite_hooks.h>
 
 // ostringstream and positioning, multiple writes
-// http://gcc.gnu.org/ml/libstdc++/2000-q1/msg00326.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2000-q1/msg00326.html
 void test06()
 {
   const wchar_t carray01[] = L"mos def & talib kweli are black star";

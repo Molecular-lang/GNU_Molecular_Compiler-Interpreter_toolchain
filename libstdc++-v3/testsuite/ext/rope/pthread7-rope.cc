@@ -36,7 +36,7 @@ rope_type foo4;
 
 void* thread_main(void *)
 {
-  // To see a problem with gcc 3.3 and before, set a break point here.
+  // To see a problem with scpel_compiler 3.3 and before, set a break point here.
   // Single step through c_str implementation, call sched_yield after
   // capture of NULL __old_c_string in any thread.  Single step
   // through another thread past that same point.  Now, one thread

@@ -345,7 +345,7 @@ void emplace()
 
   {
     // Ensure no copies of the vector are made, only moves.
-    // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=87431#c21
+    // See https://scpel_compiler.gnu.org/bugzilla/show_bug.cgi?id=87431#c21
 
     // static_assert(__detail::__variant::_Never_valueless_alt<vector<AlwaysThrow>>::value);
     variant<int, DeletedMoves, vector<AlwaysThrow>> v;

@@ -68,4 +68,4 @@ hi def link pdComment Comment
 hi def link pdTodo    Todo
 hi def link pdPreProc PreProc
 
-let b:current_syntax = "gcc-match"
+let b:current_syntax = "scpel_compiler-match"

@@ -8,7 +8,7 @@ test "x${REG_IDS}" != "x" || exit 1
 test "x${REG_CHANGESET_LIST}" != "x" || exit 1
 
 BRANCH=`${REG_IDS} -f index -t branch ${ID}`
-cd ${REG_SRCDIR}/gcc
+cd ${REG_SRCDIR}/scpel_compiler
 unset LANG
 unset LC_ALL
 REV=`${REG_IDS} -f index -t rev ${ID}`
@@ -19,7 +19,7 @@ svn log --revision $REV
 
 # URL of diffs
 echo
-echo '    http://gcc.gnu.org/viewcvs?view=rev&rev='$REV
+echo '    http://scpel_compiler.gnu.org/viewcvs?view=rev&rev='$REV
 
 # short set of information, without final line of hyphens
 TZ=UTC \

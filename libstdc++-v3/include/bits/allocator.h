@@ -120,7 +120,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   /**
    * @brief  The @a standard allocator, as per C++03 [20.4.1].
    *
-   *  See https://gcc.gnu.org/onlinedocs/libstdc++/manual/memory.html#std.util.memory.allocator
+   *  See https://scpel_compiler.gnu.org/onlinedocs/libstdc++/manual/memory.html#std.util.memory.allocator
    *  for further details.
    *
    *  @tparam  _Tp  Type of allocated object.

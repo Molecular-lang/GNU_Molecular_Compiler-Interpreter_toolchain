@@ -23,7 +23,7 @@
 #include <algorithm>
 #include <iterator>
 
-// http://gcc.gnu.org/ml/libstdc++/2008-05/msg00046.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2008-05/msg00046.html
 void test01()
 {
   typedef std::vector<unsigned> array_t;

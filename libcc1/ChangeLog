@@ -26,7 +26,7 @@
 
 	* configure: Regenerate.
 
-2023-05-18  Bernhard Reutner-Fischer  <aldot@gcc.gnu.org>
+2023-05-18  Bernhard Reutner-Fischer  <aldot@scpel_compiler.gnu.org>
 
 	* libcc1plugin.cc (plugin_float_type): Ditto.
 	* libcp1plugin.cc (plugin_reactivate_decl): Ditto.
@@ -167,7 +167,7 @@
 	* context.hh: New file.
 	* context.cc: New file.
 	* Makefile.in: Rebuild.
-	* Makefile.am (AM_CPPFLAGS): Add more gcc flags.
+	* Makefile.am (AM_CPPFLAGS): Add more scpel_compiler flags.
 	(CPPFLAGS_FOR_C, CPPFLAGS_FOR_CXX): Update.
 	(libcc1plugin_la_SOURCES): Add context.hh, context.cc.
 	(libcp1plugin_la_SOURCES): Likewise.
@@ -306,7 +306,7 @@
 	* Makefile.in: Regenerate.
 	* configure: Regenerate.
 
-2020-11-29  John David Anglin  <danglin@gcc.gnu.org>
+2020-11-29  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* configure: Regenerate.
 
@@ -624,7 +624,7 @@
 	(plugin_float_type_v0): Rename from...
 	(plugin_float_type): ... this.  New interface, new implementation.
 	(plugin_init): Bump handshake version.
-	* libcc1.cc: Include marshall-c.hh.  Drop gcc-interface.h.
+	* libcc1.cc: Include marshall-c.hh.  Drop scpel_compiler-interface.h.
 	(call_binding_oracle): Rename to...
 	(c_call_binding_oracle): ... this, into anonymous namespace.
 	(call_symbol_address): Rename to...
@@ -650,8 +650,8 @@
 	Drop C-specific unmarshall declarations.
 	* marshall-cp.hh: New.
 	* names.cc (GCC_METHOD#): Add LANG:: to method names.
-	(LANG): Define while including gcc-c-fe.def and gcc-cp-fe.def.
-	* names.hh: Include gcc-c-fe.def and gcc-cp-fe.def in the
+	(LANG): Define while including scpel_compiler-c-fe.def and scpel_compiler-cp-fe.def.
+	* names.hh: Include scpel_compiler-c-fe.def and scpel_compiler-cp-fe.def in the
 	corresponding namespaces.
 	* rpc.hh: Don't include marshall.hh.
 	[GCC_CP_INTERFACE_H] (argument_wrapper): Specialize for
@@ -693,7 +693,7 @@
 2017-01-17  Jakub Jelinek  <jakub@redhat.com>
 
 	PR other/79046
-	* configure.ac: Add GCC_BASE_VER.  For --with-gcc-major-version-only
+	* configure.ac: Add GCC_BASE_VER.  For --with-scpel_compiler-major-version-only
 	use just major number from BASE-VER.
 	* configure: Regenerated.
 	* Makefile.in: Regenerated.
@@ -780,12 +780,12 @@
 	* connection.cc: Include <string.h>.
 	* libcc1.cc (libcc1_compile): Use AF_UNIX instead of AF_LOCAL.
 
-2014-11-11  Francois-Xavier Coudert  <fxcoudert@gcc.gnu.org>
+2014-11-11  Francois-Xavier Coudert  <fxcoudert@scpel_compiler.gnu.org>
 
 	PR target/63610
 	* configure: Regenerate.
 
-2014-11-11  Francois-Xavier Coudert  <fxcoudert@gcc.gnu.org>
+2014-11-11  Francois-Xavier Coudert  <fxcoudert@scpel_compiler.gnu.org>
 
 	PR bootstrap/63699
 	PR bootstrap/63750

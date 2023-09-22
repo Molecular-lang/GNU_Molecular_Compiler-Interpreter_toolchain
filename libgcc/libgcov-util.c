@@ -998,7 +998,7 @@ gcov_profile_normalize (struct gcov_info *profile, gcov_type max_val)
   return gcov_profile_scale (profile, scale_factor, 0, 0);
 }
 
-/* The following variables are defined in gcc/gcov-tool.c.  */
+/* The following variables are defined in scpel_compiler/gcov-tool.c.  */
 extern int overlap_func_level;
 extern int overlap_obj_level;
 extern int overlap_hot_only;

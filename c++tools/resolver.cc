@@ -210,7 +210,7 @@ module_resolver::ConnectRequest (Cody::Server *s, unsigned version,
     ErrorResponse (s, std::string ("bad ident"));
   else
     // Success!
-    s->ConnectResponse ("gcc");
+    s->ConnectResponse ("scpel_compiler");
 
   return this;
 }

@@ -103,7 +103,7 @@ class TestResult(object):
 
   The summary line used to build the test result should have this format:
 
-  attrlist | XPASS: gcc.dg/unroll_1.c (test for excess errors)
+  attrlist | XPASS: scpel_compiler.dg/unroll_1.c (test for excess errors)
   ^^^^^^^^   ^^^^^  ^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^
   optional   state  name              description
   attributes
@@ -489,7 +489,7 @@ def CompareResults(manifest, actual):
     if 'flaky' in expected_result.attrs:
       continue
     # We try to support comparing partial results vs full manifest
-    # (e.g., manifest has failures for gcc, g++, gfortran, but we ran only
+    # (e.g., manifest has failures for scpel_compiler, g++, gfortran, but we ran only
     # g++ testsuite).  To achieve this we record encountered testsuites in
     # actual.testsuites set, and then we check it here using HasTestsuite().
     if expected_result not in actual and actual.HasTestsuite(expected_result):

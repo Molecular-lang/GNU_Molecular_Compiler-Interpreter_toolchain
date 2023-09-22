@@ -74,7 +74,7 @@ set -x
 
 # TESTLOGS is the list of dejagnu .sum files that the tester should
 # look at.
-TESTLOGS="test/gcc/gcc.sum
+TESTLOGS="test/scpel_compiler/scpel_compiler.sum
 test/g++/g++.sum"
 
 # Nuke $BUILD and recreate it.
@@ -107,7 +107,7 @@ if [ $H_REAL_TARGET = $H_REAL_HOST -a $H_REAL_TARGET = i686-pc-linux-gnu ]
   make install-gdb install-dejagnu install-ld || exit 1
 elif [ $H_REAL_TARGET = $H_REAL_HOST ] ; then
   H_MAKE_TARGET=
-  test -f $SOURCE/gcc/configure && H_MAKE_TARGET=bootstrap
+  test -f $SOURCE/scpel_compiler/configure && H_MAKE_TARGET=bootstrap
   make $H_MAKE_TARGET || exit 1
   make install || exit 1
 else

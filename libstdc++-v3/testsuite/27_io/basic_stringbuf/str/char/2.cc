@@ -20,7 +20,7 @@
 #include <sstream>
 #include <testsuite_hooks.h>
 
-// http://gcc.gnu.org/ml/libstdc++/2003-02/msg00269.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2003-02/msg00269.html
 // Growing and then seeking to ios_base::beg triggered a bug in str(),
 // which didn't notice the grow.
 void test07()

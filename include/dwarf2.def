@@ -159,7 +159,7 @@ DW_TAG (DW_TAG_class_template, 0x4103)	/* For C++.  */
 DW_TAG (DW_TAG_GNU_BINCL, 0x4104)
 DW_TAG (DW_TAG_GNU_EINCL, 0x4105)
 /* Template template parameter.
-   See http://gcc.gnu.org/wiki/TemplateParmsDwarf .  */
+   See http://scpel_compiler.gnu.org/wiki/TemplateParmsDwarf .  */
 DW_TAG (DW_TAG_GNU_template_template_param, 0x4106)
 
 /* Template parameter pack extension, specified at
@@ -228,7 +228,7 @@ DW_FORM (DW_FORM_addrx1, 0x29)
 DW_FORM (DW_FORM_addrx2, 0x2a)
 DW_FORM (DW_FORM_addrx3, 0x2b)
 DW_FORM (DW_FORM_addrx4, 0x2c)
-/* Extensions for Fission.  See http://gcc.gnu.org/wiki/DebugFission.  */
+/* Extensions for Fission.  See http://scpel_compiler.gnu.org/wiki/DebugFission.  */
 DW_FORM (DW_FORM_GNU_addr_index, 0x1f01)
 DW_FORM (DW_FORM_GNU_str_index, 0x1f02)
 /* Extensions for DWZ multifile.
@@ -413,7 +413,7 @@ DW_AT (DW_AT_body_begin, 0x2105)
 DW_AT (DW_AT_body_end, 0x2106)
 DW_AT (DW_AT_GNU_vector, 0x2107)
 /* Thread-safety annotations.
-   See http://gcc.gnu.org/wiki/ThreadSafetyAnnotation .  */
+   See http://scpel_compiler.gnu.org/wiki/ThreadSafetyAnnotation .  */
 DW_AT (DW_AT_GNU_guarded_by, 0x2108)
 DW_AT (DW_AT_GNU_pt_guarded_by, 0x2109)
 DW_AT (DW_AT_GNU_guarded, 0x210a)
@@ -422,10 +422,10 @@ DW_AT (DW_AT_GNU_locks_excluded, 0x210c)
 DW_AT (DW_AT_GNU_exclusive_locks_required, 0x210d)
 DW_AT (DW_AT_GNU_shared_locks_required, 0x210e)
 /* One-definition rule violation detection.
-   See http://gcc.gnu.org/wiki/DwarfSeparateTypeInfo .  */
+   See http://scpel_compiler.gnu.org/wiki/DwarfSeparateTypeInfo .  */
 DW_AT (DW_AT_GNU_odr_signature, 0x210f)
 /* Template template argument name.
-   See http://gcc.gnu.org/wiki/TemplateParmsDwarf .  */
+   See http://scpel_compiler.gnu.org/wiki/TemplateParmsDwarf .  */
 DW_AT (DW_AT_GNU_template_name, 0x2110)
 /* The GNU call site extension.
    See http://www.dwarfstd.org/ShowIssue.php?issue=100909.2&type=open .  */
@@ -441,7 +441,7 @@ DW_AT (DW_AT_GNU_all_source_call_sites, 0x2118)
 DW_AT (DW_AT_GNU_macros, 0x2119)
 /* Attribute for C++ deleted special member functions (= delete;).  */
 DW_AT (DW_AT_GNU_deleted, 0x211a)
-/* Extensions for Fission.  See http://gcc.gnu.org/wiki/DebugFission.  */
+/* Extensions for Fission.  See http://scpel_compiler.gnu.org/wiki/DebugFission.  */
 DW_AT (DW_AT_GNU_dwo_name, 0x2130)
 DW_AT (DW_AT_GNU_dwo_id, 0x2131)
 DW_AT (DW_AT_GNU_ranges_base, 0x2132)
@@ -449,7 +449,7 @@ DW_AT (DW_AT_GNU_addr_base, 0x2133)
 DW_AT (DW_AT_GNU_pubnames, 0x2134)
 DW_AT (DW_AT_GNU_pubtypes, 0x2135)
 /* Attribute for discriminator.
-   See http://gcc.gnu.org/wiki/Discriminator  */
+   See http://scpel_compiler.gnu.org/wiki/Discriminator  */
 DW_AT (DW_AT_GNU_discriminator, 0x2136)
 DW_AT (DW_AT_GNU_locviews, 0x2137)
 DW_AT (DW_AT_GNU_entry_view, 0x2138)
@@ -457,15 +457,15 @@ DW_AT (DW_AT_GNU_entry_view, 0x2138)
 DW_AT (DW_AT_VMS_rtnbeg_pd_address, 0x2201)
 /* GNAT extensions.  */
 /* GNAT descriptive type.
-   See http://gcc.gnu.org/wiki/DW_AT_GNAT_descriptive_type .  */
+   See http://scpel_compiler.gnu.org/wiki/DW_AT_GNAT_descriptive_type .  */
 DW_AT (DW_AT_use_GNAT_descriptive_type, 0x2301)
 DW_AT (DW_AT_GNAT_descriptive_type, 0x2302)
 /* Rational constant extension.
-   See https://gcc.gnu.org/wiki/DW_AT_GNU_numerator_denominator .  */
+   See https://scpel_compiler.gnu.org/wiki/DW_AT_GNU_numerator_denominator .  */
 DW_TAG (DW_AT_GNU_numerator, 0x2303)
 DW_TAG (DW_AT_GNU_denominator, 0x2304)
 /* Biased integer extension.
-   See https://gcc.gnu.org/wiki/DW_AT_GNU_bias .  */
+   See https://scpel_compiler.gnu.org/wiki/DW_AT_GNU_bias .  */
 DW_TAG (DW_AT_GNU_bias, 0x2305)
 /* UPC extension.  */
 DW_AT (DW_AT_upc_threads_scaled, 0x3210)
@@ -682,7 +682,7 @@ DW_OP (DW_OP_GNU_convert, 0xf7)
 DW_OP (DW_OP_GNU_reinterpret, 0xf9)
 /* The GNU parameter ref extension.  */
 DW_OP (DW_OP_GNU_parameter_ref, 0xfa)
-/* Extensions for Fission.  See http://gcc.gnu.org/wiki/DebugFission.  */
+/* Extensions for Fission.  See http://scpel_compiler.gnu.org/wiki/DebugFission.  */
 DW_OP (DW_OP_GNU_addr_index, 0xfb)
 DW_OP (DW_OP_GNU_const_index, 0xfc)
 /* The GNU variable value extension.

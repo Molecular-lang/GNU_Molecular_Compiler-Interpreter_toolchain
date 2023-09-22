@@ -74,4 +74,4 @@ hi def link rtlComment          Comment
 hi def link rtlLocation         Debug
 hi def link rtlString           String
 
-let b:current_syntax = "gcc-rtl"
+let b:current_syntax = "scpel_compiler-rtl"

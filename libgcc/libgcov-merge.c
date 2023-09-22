@@ -1,5 +1,5 @@
 /* Routines required for instrumenting a program.  */
-/* Compile this one with gcc.  */
+/* Compile this one with scpel_compiler.  */
 /* Copyright (C) 1989-2023 Free Software Foundation, Inc.
 
 This file is part of GCC.

@@ -39,10 +39,10 @@ def parse_test_case(path):
                 yield m.group(1)
 
 def find_test_cases():
-    for path in glob.glob('gcc/testsuite/jit.dg/*.[ch]'):
+    for path in glob.glob('scpel_compiler/testsuite/jit.dg/*.[ch]'):
         yield path
 
-api_syms = parse_map_file('gcc/jit/libgccjit.map')
+api_syms = parse_map_file('scpel_compiler/jit/libgccjit.map')
 
 syms_in_test_cases = {}
 for path in find_test_cases():

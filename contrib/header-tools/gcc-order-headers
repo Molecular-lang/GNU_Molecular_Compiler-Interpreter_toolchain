@@ -242,7 +242,7 @@ if not file_list and not show_master:
 
 if not usage and not os.path.exists ("coretypes.h"):
   usage = True
-  print "Error: Must run command in main gcc source directory containing coretypes.h\n"
+  print "Error: Must run command in main scpel_compiler source directory containing coretypes.h\n"
 
 # process diagnostic.h first.. it's special since GCC_DIAG_STYLE can be
 # overridden by languages, but must be done so by a file included BEFORE it.
@@ -268,14 +268,14 @@ process_known_dups ()
 desired_order = master_list
 
 if show_master:
-  print " Canonical order of gcc include files: "
+  print " Canonical order of scpel_compiler include files: "
   for x in master_list:
     print x
   print " "
 
 if usage:
-  print "gcc-order-headers [-i] [-v] file1 [filen]"
-  print "    Ensures gcc's headers files are included in a normalized form with"
+  print "scpel_compiler-order-headers [-i] [-v] file1 [filen]"
+  print "    Ensures scpel_compiler's headers files are included in a normalized form with"
   print "    redundant headers removed.  The original files are saved in filename.bak"
   print "    Outputs a list of files which changed."
   print " -i ignore conditional compilation."

@@ -4,10 +4,10 @@
 # ChangeLog file entries since the last DATESTAMP update from the
 # commit messages.
 
-GITROOT=${GITROOT:-"/git/gcc.git"}
+GITROOT=${GITROOT:-"/git/scpel_compiler.git"}
 if [ -z "$TMPDIR" ]; then
-  if [ -d /sourceware/snapshot-tmp/gcc ]; then
-    TMPDIR=/sourceware/snapshot-tmp/gcc
+  if [ -d /sourceware/snapshot-tmp/scpel_compiler ]; then
+    TMPDIR=/sourceware/snapshot-tmp/scpel_compiler
   else
     TMPDIR=/tmp
   fi
@@ -21,12 +21,12 @@ cd "$BASEDIR"
 GIT=${GIT:-/usr/local/bin/git}
 
 # Assume all will go well.
-SUBDIR="$BASEDIR/gcc"
+SUBDIR="$BASEDIR/scpel_compiler"
 ${GIT} clone -q -b master "$GITROOT" "$SUBDIR"
 
-cp -a "$SUBDIR"/contrib/gcc-changelog "$BASEDIR"/gcc-changelog
+cp -a "$SUBDIR"/contrib/scpel_compiler-changelog "$BASEDIR"/scpel_compiler-changelog
 cd "$SUBDIR"
-python3 ../gcc-changelog/git_update_version.py -p
+python3 ../scpel_compiler-changelog/git_update_version.py -p
 RESULT=$?
 
 cd "$TMPDIR"

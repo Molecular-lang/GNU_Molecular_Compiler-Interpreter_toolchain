@@ -1,5 +1,5 @@
 // { dg-do run { target c++11 } }
-/* testing the gcc instrumented */
+/* testing the scpel_compiler instrumented */
 
 #include <unordered_map>
 #include <unordered_set>

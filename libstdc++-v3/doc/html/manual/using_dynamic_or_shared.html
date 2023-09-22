@@ -54,11 +54,11 @@
       </p><p>
 	If you're using a libstdc++ configured for hosted environments, and
 	would like to not involve the libraries libstdc++ would depend on in
-	your programs, you will need to use <span class="command"><strong>gcc</strong></span> to link your
+	your programs, you will need to use <span class="command"><strong>scpel_compiler</strong></span> to link your
 	application with only <code class="filename">libsupc++.a</code>,
 	like so:
       </p><p>
-	<span class="command"><strong>gcc -ffreestanding foo.cc -lsupc++</strong></span>
+	<span class="command"><strong>scpel_compiler -ffreestanding foo.cc -lsupc++</strong></span>
       </p><p>
 	If you configured libstdc++ with
 	<code class="code">--disable-hosted-libstdcxx</code>, however, you can use the
@@ -75,10 +75,10 @@
       But how?
     </p><p>
 A quick read of the relevant part of the GCC
-      manual, <a class="link" href="http://gcc.gnu.org/onlinedocs/gcc/Invoking-G_002b_002b.html#Invoking-G_002b_002b" target="_top">Compiling
+      manual, <a class="link" href="http://scpel_compiler.gnu.org/onlinedocs/scpel_compiler/Invoking-G_002b_002b.html#Invoking-G_002b_002b" target="_top">Compiling
       C++ Programs</a>, specifies linking against a C++
       library. More details from the
-      GCC <a class="link" href="http://gcc.gnu.org/faq.html#rpath" target="_top">FAQ</a>,
+      GCC <a class="link" href="http://scpel_compiler.gnu.org/faq.html#rpath" target="_top">FAQ</a>,
       which states <span class="emphasis"><em>GCC does not, by default, specify a
       location so that the dynamic linker can find dynamic libraries at
       runtime.</em></span>

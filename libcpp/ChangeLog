@@ -193,7 +193,7 @@
 
 	* config.in: Re-configure.
 
-2022-11-19  Bernhard Reutner-Fischer  <aldot@gcc.gnu.org>
+2022-11-19  Bernhard Reutner-Fischer  <aldot@scpel_compiler.gnu.org>
 
 	PR preprocessor/107691
 	* configure.ac: Add valgrind header checks.
@@ -645,7 +645,7 @@
 	* init.c (lang_defaults): Enable cxx23_identifiers for
 	-std={gnu,c}++{11,14,17,20} too.
 
-2021-11-29  Eric Gallager  <egallager@gcc.gnu.org>
+2021-11-29  Eric Gallager  <egallager@scpel_compiler.gnu.org>
 
 	PR other/103021
 	* Makefile.in: Use ETAGS variable in TAGS target.
@@ -800,7 +800,7 @@
 	* macro.c (collect_args): Only handle CPP_PRAGMA special if PRAGMA_OP
 	is set.
 
-2021-10-22  Eric Gallager  <egallager@gcc.gnu.org>
+2021-10-22  Eric Gallager  <egallager@scpel_compiler.gnu.org>
 
 	PR other/102663
 	* Makefile.in: Add dummy install-dvi target.
@@ -1436,7 +1436,7 @@
 	PR bootstrap/95413
 	* configure: Regenerated.
 
-2020-05-23  David Edelsohn  <dje.gcc@gmail.com>
+2020-05-23  David Edelsohn  <dje.scpel_compiler@gmail.com>
 
 	* Makefile.in (AR): Substitute @AR@.
 	* configure.ac (CHECK_PROG AR): New.
@@ -2408,7 +2408,7 @@
 	* macro.c (_cpp_builtin_macro_text): Call remap_filename for
 	__FILE__ and __BASE_FILE__.
 
-2018-01-10  Kelvin Nilsen  <kelvin@gcc.gnu.org>
+2018-01-10  Kelvin Nilsen  <kelvin@scpel_compiler.gnu.org>
 
 	* lex.c (search_line_fast): Remove illegal coercion of an
 	unaligned pointer value to vector pointer type and replace with
@@ -2708,7 +2708,7 @@
 2016-11-16  Jakub Jelinek  <jakub@redhat.com>
 
 	PR bootstrap/72823
-	* configure.ac (ENABLE_ASSERT_CHECKING): Define if gcc configure
+	* configure.ac (ENABLE_ASSERT_CHECKING): Define if scpel_compiler configure
 	would define that macro.
 	* configure: Regenerated.
 	* config.in: Regenerated.
@@ -2753,7 +2753,7 @@
 	(_cpp_lex_direct): Allow arbitrary comments in between
 	fallthrough_comment_p comment and following token.
 
-2016-10-04  Kelvin Nilsen  <kelvin@gcc.gnu.org>
+2016-10-04  Kelvin Nilsen  <kelvin@scpel_compiler.gnu.org>
 
 	PR target/77847
 	* lex.c (search_line_fast): Add a FALLTHROUGH comment to correct
@@ -2880,7 +2880,7 @@
 2016-08-26  David Malcolm  <dmalcolm@redhat.com>
 
 	* include/line-map.h (get_pure_location): New decl.
-	* line-map.c (get_pure_location): Move here, from gcc/input.c, adding
+	* line-map.c (get_pure_location): Move here, from scpel_compiler/input.c, adding
 	a line_maps * param.
 	(rich_location::add_fixit_insert): Call get_pure_location on "where".
 	(rich_location::add_fixit_replace): Call get_pure_location on the
@@ -3090,7 +3090,7 @@
 	(fixit_replace::maybe_get_end_loc): New function, implementing
 	fixit_hint::maybe_get_end_loc.
 
-2016-06-21  John David Anglin  <danglin@gcc.gnu.org>
+2016-06-21  John David Anglin  <danglin@scpel_compiler.gnu.org>
 
 	* line-map.c (location_adhoc_data_update): Use int64_t instead of
 	long long.
@@ -3501,7 +3501,7 @@
 
 	* system.h (CHECKING_P, gcc_checking_assert): Define.
 
-2015-09-21  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2015-09-21  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	PR c/66415
 	* line-map.c (linemap_position_for_loc_and_offset): Handle the
@@ -3556,7 +3556,7 @@
 	* line-map.c (linemap_position_for_loc_and_offset): Remove
 	linemap_assert_fails; reverse conditions.
 
-2015-05-26  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2015-05-26  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	* line-map.c (LINE_MAP_MAX_COLUMN_NUMBER
 	LINE_MAP_MAX_LOCATION_WITH_COLS,LINE_MAP_MAX_SOURCE_LOCATION):
@@ -3950,17 +3950,17 @@
 
 	* directives.c (cpp_define_formatted): Use xvasprintf.
 
-2014-12-05  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2014-12-05  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	* line-map.c (linemap_position_for_loc_and_offset): Add new
 	linemap_assert_fails.
 
-2014-12-02  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2014-12-02  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	* include/line-map.h (linemap_assert_fails): Declare.
 	* line-map.c (linemap_position_for_loc_and_offset): Use it.
 
-2014-12-02  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2014-12-02  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	* line-map.c (linemap_add): Fix typo.
 	(linemap_line_start): Fix whitespace.
@@ -3984,12 +3984,12 @@
 	* lex.c [__i386__ || __x86_64__]: Compile special SSE functions
 	only for (__GNUC__ >= 5 || !defined(__PIC__)).
 
-2014-11-13  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2014-11-13  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	* include/line-map.h: Include EXPR, so that unused variable warnings
 	do not occur.
 
-2014-11-11  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2014-11-11  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	PR fortran/44054
 	* include/line-map.h (linemap_position_for_loc_and_offset):
@@ -4059,7 +4059,7 @@
 	* init.c (cpp_create_reader): Likewise.
 	* identifiers.c (_cpp_init_hashtable): Likewise.
 
-2014-10-14  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2014-10-14  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	* include/line-map.h (linemap_location_from_macro_expansion_p):
 	const struct line_maps * argument.
@@ -4130,12 +4130,12 @@
 	(post_options): Likewise.
 	* lex.c (_cpp_lex_direct): Disallow C++ style comments in C90/C94.
 
-2014-09-09  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2014-09-09  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	* include/cpplib.h (struct cpp_options): Declare warn_normalize as
 	int instead of enum.
 
-2014-09-04  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2014-09-04  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	* macro.c (replace_args): Use cpp_pedwarning, cpp_warning and
 	CPP_W flags.
@@ -4143,14 +4143,14 @@
 	* init.c (cpp_create_reader): Do not init to -1 here.
 	* expr.c (num_binary_op): Use cpp_pedwarning.
 
-2014-08-29  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2014-08-29  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	* directives.c (check_eol_1): New.
 	(check_eol_endif_labels): New.
 	(check_eol): Call check_eol_1.
 	(do_else,do_endif): Call check_eol_endif_labels.
 
-2014-08-29  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2014-08-29  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	* macro.c (warn_of_redefinition): Suppress warnings for builtins
 	that lack the NODE_WARN flag, unless Wbuiltin-macro-redefined.
@@ -4269,7 +4269,7 @@
 
 2014-05-20  Richard Biener  <rguenther@suse.de>
 
-	* configure.ac: Copy gcc logic of detecting a 64bit type.
+	* configure.ac: Copy scpel_compiler logic of detecting a 64bit type.
 	Remove HOST_WIDE_INT define.
 	* include/cpplib.h: typedef cpp_num_part to a 64bit type,
 	similar to how hwint.h does it.
@@ -4514,8 +4514,8 @@
 
 	* configure.ac: Don't define ENABLE_CHECKING whenever
 	--enable-checking is seen, instead use similar --enable-checking=yes
-	vs. --enable-checking=release default as gcc/ subdir has and
-	define ENABLE_CHECKING if ENABLE_CHECKING is defined in gcc/.
+	vs. --enable-checking=release default as scpel_compiler/ subdir has and
+	define ENABLE_CHECKING if ENABLE_CHECKING is defined in scpel_compiler/.
 	Define ENABLE_VALGRIND_CHECKING if requested.
 	* lex.c (new_buff): If ENABLE_VALGRIND_CHECKING, put _cpp_buff
 	struct first in the allocated buffer and result->base after it.
@@ -4758,7 +4758,7 @@
 	cpp_reader::set_invocation_location.  Just collect the macro
 	expansion point when we are about to expand the top-most macro.
 	Do not override cpp_reader::about_to_expand_macro_p.
-	This fixes gcc.dg/cpp/paste12.c by making get_token_no_padding
+	This fixes scpel_compiler.dg/cpp/paste12.c by making get_token_no_padding
 	properly handle locations of expansion points.
 	(cpp_get_token_with_location): Adjust, as
 	cpp_reader::set_invocation_location is no more.
@@ -4800,7 +4800,7 @@
 	the initial base context, which has the same life time as the
 	current instance of cpp_file.
 
-2012-04-30  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2012-04-30  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 	    Dodji Seketeli  <dodji@seketeli.org>
 
 	PR c++/52974
@@ -4853,7 +4853,7 @@
 	begin with '_' as separate tokens and produce a warning.
 	(lex_string): Ditto.
 
-2012-04-26  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2012-04-26  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	* line-map.c (linemap_resolve_location): Synchronize comments with
 	those in line-map.h.
@@ -5183,7 +5183,7 @@
 	(INCLUDED_FROM): Return NULL for main files; use the new
 	accessors.
 	(LINEMAP_POSITION_FOR_COLUMN): Use the new accessors.
-	(struct expanded_location): Move here from gcc/input.h
+	(struct expanded_location): Move here from scpel_compiler/input.h
 	(linemap_resolve_location, linemap_expand_location)
 	(linemap_expand_location_full): Declare new functions.
 	* line-map.c: Include cpplib.h, internal.h
@@ -5391,7 +5391,7 @@
 2011-03-18  Richard Henderson  <rth@redhat.com>
 
 	PR bootstrap/45381
-	* lex.c [ALTIVEC] (search_line_fast): Require gcc version 4.5.
+	* lex.c [ALTIVEC] (search_line_fast): Require scpel_compiler version 4.5.
 
 2011-11-04  Eric Botcazou  <ebotcazou@adacore.com>
 	    Jakub Jelinek  <jakub@redhat.com>
@@ -5544,7 +5544,7 @@
 	(cpp_init_builtins): Define __STDC_VERSION__ to 201000L for C1X
 	variants.
 
-2010-04-09  Manuel López-Ibáñez <manu@gcc.gnu.org>
+2010-04-09  Manuel López-Ibáñez <manu@scpel_compiler.gnu.org>
 
 	PR cpp/43195
 	* files.c (report_missing_guard): Test for #pragma once.
@@ -5775,7 +5775,7 @@
 	* include/symtab.h: Likewise.
 	* internal.h: Likewise.
 
-2009-06-23  Manuel Lopez-Ibanez  <manu@gcc.gnu.org>
+2009-06-23  Manuel Lopez-Ibanez  <manu@scpel_compiler.gnu.org>
 
 	* directives.c (parse_include): Add location argument. Update all
 	calls.
@@ -5783,7 +5783,7 @@
 	(do_include_common): Error with exact location.
 	(parse_assertion): Likewise.
 
-2009-06-18  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2009-06-18  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	* expr.c (num_div_op): Take explicit location.
 
@@ -5821,7 +5821,7 @@
 	* include/cpplib.h (enum cpp_builtin_type): Rename from enum
 	builtin_type.  Change all uses.
 
-2009-05-14  Manuel Lopez-Ibanez  <manu@gcc.gnu.org>
+2009-05-14  Manuel Lopez-Ibanez  <manu@scpel_compiler.gnu.org>
 
 	PR cpp/36674
 	* directives (do_linemarker): Compensate for the increment in
@@ -5869,7 +5869,7 @@
 	* include/line-map.h: Likewise.
 	* include/symtab.h: Likewise.
 
-2009-04-22  Manuel Lopez-Ibanez  <manu@gcc.gnu.org>
+2009-04-22  Manuel Lopez-Ibanez  <manu@scpel_compiler.gnu.org>
 
 	PR c++/14875
 	* lex.c (cpp_type2name): Take a flags parameter. Call
@@ -5882,7 +5882,7 @@
 	* init.c (cpp_named_operator2name): New.
 	* internal.h (cpp_named_operator2name): Declare.
 
-2009-04-21  Manuel Lopez-Ibanez  <manu@gcc.gnu.org>
+2009-04-21  Manuel Lopez-Ibanez  <manu@scpel_compiler.gnu.org>
 
 	PR c++/13358
 	* init.c (cpp_create_reader): Wlong_long is disabled by default.
@@ -6076,7 +6076,7 @@
 
 	* lex.c (cpp_token_len): Use 6 as default length.
 
-2008-10-31  Manuel López-Ibáñez  <manu@gcc.gnu.org>
+2008-10-31  Manuel López-Ibáñez  <manu@scpel_compiler.gnu.org>
 
 	* expr.c (struct op): Add location.
 	(_cpp_parse_expr): Propagate locations throught the stack
@@ -6120,14 +6120,14 @@
 	(_cpp_report_missing_guards): Sort and print paths gathered by
 	report_missing_guard callback.
 
-2008-07-22  Manuel Lopez-Ibanez  <manu@gcc.gnu.org>
+2008-07-22  Manuel Lopez-Ibanez  <manu@scpel_compiler.gnu.org>
 
 	PR 28079
 	* directives.c (strtolinenum): Handle overflow.
 	(do_line): Give a warning if line number overflowed.
 	(do_linemarker): Update call to strtolinenum.
 
-2008-07-21  Manuel Lopez-Ibanez  <manu@gcc.gnu.org>
+2008-07-21  Manuel Lopez-Ibanez  <manu@scpel_compiler.gnu.org>
 
 	* include/line-map.h (linenum_type): New typedef.
 	(struct line_map): Use it.
@@ -6318,7 +6318,7 @@
 	* Makefile.in (TAGS_SOURCES): New variable.
 	(TAGS): New target.
 
-2008-04-11  Kaz Kojima  <kkojima@gcc.gnu.org>
+2008-04-11  Kaz Kojima  <kkojima@scpel_compiler.gnu.org>
 
 	* configure.ac: (need_64bit_hwint): Need 64bit hwint for sh-*-*
 	and shbe-*-*.
@@ -6743,7 +6743,7 @@
 2006-09-22  Geoffrey Keating  <geoffk@apple.com>
 
 	* configure.ac: Make need_64_bit_hwint case for x86-darwin
-	match exactly the glob in gcc/config.gcc.
+	match exactly the glob in scpel_compiler/config.gcc.
 	* configure: Regenerate.
 
 2006-09-13  Joseph S. Myers  <joseph@codesourcery.com>
@@ -6958,7 +6958,7 @@
 
 	* configure: Regenerate.
 
-2005-06-29  Kelley Cook  <kcook@gcc.gnu.org>
+2005-06-29  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* all files: Update FSF address in copyright headers.
 	* makeucnid.c (write_copyright): Update outputted FSF address.
@@ -7260,7 +7260,7 @@
 	(should_stack_file): Make a new file if the
 	compared file is still stacked.
 
-2004-11-28  Nathanael Nerode  <neroden@gcc.gnu.org>
+2004-11-28  Nathanael Nerode  <neroden@scpel_compiler.gnu.org>
 
 	PR preprocessor/17610
 	* directives.c (do_include_common): Error out if an empty filename
@@ -7273,7 +7273,7 @@
 	* include/cpp-id-data.h: Likewise.  Guard typedef of uchar
 	with !IN_GCC, so uchar is only defined whilst building libcpp.
 
-2004-11-24  Kelley Cook  <kcook@gcc.gnu.org>
+2004-11-24  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* aclocal.m4: Regenerate.
 
@@ -7360,7 +7360,7 @@
 	(distclean): Also delete localedir.h and localedir.hs.
 	(init.o): Update dependencies.
 
-2004-09-22  Kelley Cook  <kcook@gcc.gnu.org>
+2004-09-22  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* Makefile.in (aclocal.m4): Update dependencies.
 	* configure.ac (AC_CONFIG_MACRO_DIR): New.
@@ -7625,42 +7625,42 @@
 
 2004-05-23  Paolo Bonzini  <bonzini@gnu.org>
 
-	Moved libcpp from the gcc subdirectory to the toplevel.
+	Moved libcpp from the scpel_compiler subdirectory to the toplevel.
 	* Makefile.am: New file.
 	* Makefile.in: Regenerate.
 	* configure.ac: New file.
 	* configure: Regenerate.
 	* config.in: Regenerate.
-	* charset.c: Moved from gcc/cppcharset.c.  Add note about
+	* charset.c: Moved from scpel_compiler/cppcharset.c.  Add note about
 	brokenness of input charset detection.  Adjust for change
 	in name of cppucnid.h.
-	* errors.c: Moved from gcc/cpperror.c.  Do not include intl.h.
-	* expr.c: Moved from gcc/cppexp.c.
-	* files.c: Moved from gcc/cppfiles.c.  Do not include intl.h.
+	* errors.c: Moved from scpel_compiler/cpperror.c.  Do not include intl.h.
+	* expr.c: Moved from scpel_compiler/cppexp.c.
+	* files.c: Moved from scpel_compiler/cppfiles.c.  Do not include intl.h.
 	Remove #define of O_BINARY, it is in system.h.
-	* identifiers.c: Moved from gcc/cpphash.c.
-	* internal.h: Moved from gcc/cpphash.h.  Change header
+	* identifiers.c: Moved from scpel_compiler/cpphash.c.
+	* internal.h: Moved from scpel_compiler/cpphash.h.  Change header
 	guard name.  All other files adjusted to match name change.
-	* init.c: Moved from gcc/cppinit.c.
+	* init.c: Moved from scpel_compiler/cppinit.c.
 	(init_library) [ENABLE_NLS]: Call bindtextdomain.
-	* lex.c: Moved from gcc/cpplex.c.
-	* directives.c: Moved from gcc/cpplib.c.
-	* macro.c: Moved from gcc/cppmacro.c.
-	* pch.c: Moved from gcc/cpppch.c.  Do not include intl.h.
-	* traditional.c: Moved from gcc/cpptrad.c.
-	* ucnid.h: Moved from gcc/cppucnid.h.  Change header
+	* lex.c: Moved from scpel_compiler/cpplex.c.
+	* directives.c: Moved from scpel_compiler/cpplib.c.
+	* macro.c: Moved from scpel_compiler/cppmacro.c.
+	* pch.c: Moved from scpel_compiler/cpppch.c.  Do not include intl.h.
+	* traditional.c: Moved from scpel_compiler/cpptrad.c.
+	* ucnid.h: Moved from scpel_compiler/cppucnid.h.  Change header
 	guard name.
-	* ucnid.pl: Moved from gcc/cppucnid.pl.
-	* ucnid.tab: Moved from gcc/cppucnid.tab.  Change header
+	* ucnid.pl: Moved from scpel_compiler/cppucnid.pl.
+	* ucnid.tab: Moved from scpel_compiler/cppucnid.tab.  Change header
 	guard name.
-	* symtab.c: Moved from gcc/hashtable.c.
-	* line-map.c: Moved from gcc.  Do not include intl.h.
-	* mkdeps.c: Moved from gcc.
+	* symtab.c: Moved from scpel_compiler/hashtable.c.
+	* line-map.c: Moved from scpel_compiler.  Do not include intl.h.
+	* mkdeps.c: Moved from scpel_compiler.
 	* system.h: New file.
-	* include/cpplib.h: Moved from gcc.  Change header guard name.
-	* include/line-map.h: Moved from gcc.  Change header guard name.
-	* include/mkdeps.h: Moved from gcc.  Change header guard name.
-	* include/symtab.h: Moved from gcc/hashtable.h.  Change header
+	* include/cpplib.h: Moved from scpel_compiler.  Change header guard name.
+	* include/line-map.h: Moved from scpel_compiler.  Change header guard name.
+	* include/mkdeps.h: Moved from scpel_compiler.  Change header guard name.
+	* include/symtab.h: Moved from scpel_compiler/hashtable.h.  Change header
 	guard name.
 
 Copyright (C) 2004-2023 Free Software Foundation, Inc.

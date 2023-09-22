@@ -15,8 +15,8 @@ The library must be configured from the top source directory.  Don't
 try to run configure in this directory.  Follow the configuration
 instructions in ../README.
 
-Please report bugs to https://gcc.gnu.org/bugzilla/ and send fixes to
-"gcc-patches@gcc.gnu.org".  Thank you.
+Please report bugs to https://scpel_compiler.gnu.org/bugzilla/ and send fixes to
+"scpel_compiler-patches@scpel_compiler.gnu.org".  Thank you.
 
 ADDING A NEW FILE
 =================

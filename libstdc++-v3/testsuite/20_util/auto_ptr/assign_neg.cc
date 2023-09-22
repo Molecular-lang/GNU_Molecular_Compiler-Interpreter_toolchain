@@ -26,7 +26,7 @@
 
 // via Jack Reeves <jack_reeves@hispeed.ch>
 // libstdc++/3946
-// http://gcc.gnu.org/ml/libstdc++/2002-07/msg00024.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2002-07/msg00024.html
 struct Base { };
 struct Derived : public Base { };
 

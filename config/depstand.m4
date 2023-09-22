@@ -27,8 +27,8 @@
 AC_DEFUN([ZW_PROG_COMPILER_DEPENDENCIES],
 [ifelse([$1], CC,   [depcc="$CC"   am_compiler_list=],
         [$1], CXX,  [depcc="$CXX"  am_compiler_list=],
-        [$1], OBJC, [depcc="$OBJC" am_compiler_list='gcc3 gcc'],
-        [$1], GCJ,  [depcc="$GCJ"  am_compiler_list='gcc3 gcc'],
+        [$1], OBJC, [depcc="$OBJC" am_compiler_list='gcc3 scpel_compiler'],
+        [$1], GCJ,  [depcc="$GCJ"  am_compiler_list='gcc3 scpel_compiler'],
                     [depcc="$$1"   am_compiler_list=])
 
 am_depcomp=$ac_aux_dir/depcomp
@@ -37,7 +37,7 @@ AC_CACHE_CHECK([dependency style of $depcc],
 [if test -f "$am_depcomp"; then
   # We make a subdir and do the tests there.  Otherwise we can end up
   # making bogus files that we don't know about and never remove.  For
-  # instance it was reported that on HP-UX the gcc test will end up
+  # instance it was reported that on HP-UX the scpel_compiler test will end up
   # making a dummy file named `D' -- because `-MD' means `put the output
   # in D'.
   mkdir conftest.dir

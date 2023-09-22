@@ -22,7 +22,7 @@
 #include <string>
 #include <testsuite_hooks.h>
 
-// http://gcc.gnu.org/ml/libstdc++/2002-06/msg00025.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2002-06/msg00025.html
 void test04()
 {
   std::string str01("portofino");

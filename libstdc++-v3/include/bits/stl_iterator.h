@@ -256,7 +256,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        *  @warning This implementation requires that for an iterator of the
        *           underlying iterator type, @c x, a reference obtained by
        *           @c *x remains valid after @c x has been modified or
-       *           destroyed. This is a bug: http://gcc.gnu.org/PR51823
+       *           destroyed. This is a bug: http://scpel_compiler.gnu.org/PR51823
       */
       _GLIBCXX_NODISCARD
       _GLIBCXX17_CONSTEXPR reference

@@ -9,10 +9,10 @@
 
 augroup filetypedetect
 
-  au BufRead match.pd                setf gcc-match
+  au BufRead match.pd                setf scpel_compiler-match
 
   " Match RTL dump file names such as test.c.234r.pass-name
-  au BufRead *.[1-3][0-9][0-9]r.*    setf gcc-rtl
+  au BufRead *.[1-3][0-9][0-9]r.*    setf scpel_compiler-rtl
 
   " Match GIMPLE and IPA dump file names
   au BufRead *.[0-2][0-9][0-9][ti].* setf gimple

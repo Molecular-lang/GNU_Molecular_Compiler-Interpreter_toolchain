@@ -35,7 +35,7 @@ struct Ctype: std::ctype<wchar_t>
   }
 };
 
-// See http://gcc.gnu.org/ml/libstdc++/2003-11/msg00154.html
+// See http://scpel_compiler.gnu.org/ml/libstdc++/2003-11/msg00154.html
 void test01()
 {
   using namespace std;

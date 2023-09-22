@@ -22,7 +22,7 @@
 #include <cstddef>
 #include <type_traits>
 
-// Uncomment the following define once gcc has fixed bug 52748
+// Uncomment the following define once scpel_compiler has fixed bug 52748
 // (incomplete types in function call expressions):
 #define HAS_52748_FIXED
 

@@ -33,7 +33,7 @@ comp(class1&, class2&)
 class1 a;
 class2 b;
 
-// http://gcc.gnu.org/ml/libstdc++/2004-10/msg00448.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2004-10/msg00448.html
 void test01()
 {
   std::find_first_of(&a, &a, &b, &b, comp);

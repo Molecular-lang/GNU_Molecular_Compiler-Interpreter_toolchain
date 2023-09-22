@@ -36,7 +36,7 @@ struct D {
 // 20.7.12.2.1 shared_ptr constructors [util.smartptr.shared.const]
 
 // Construction from unique_ptr
-// See: http://gcc.gnu.org/ml/libstdc++/2008-09/msg00070.html.
+// See: http://scpel_compiler.gnu.org/ml/libstdc++/2008-09/msg00070.html.
 int
 test01()
 {

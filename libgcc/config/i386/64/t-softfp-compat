@@ -1,4 +1,4 @@
-# When TFmode was first added to x86-64 in gcc 4.3.0, some TFmode
+# When TFmode was first added to x86-64 in scpel_compiler 4.3.0, some TFmode
 # support functions got improper versions by accident.  Here we
 # correct the version and provide backward binary compatibility.
 

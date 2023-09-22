@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 #
-# Check gcc.pot file for stylistic issues as described in
-# https://gcc.gnu.org/onlinedocs/gccint/Guidelines-for-Diagnostics.html,
-# especially in gcc-internal-format messages.
+# Check scpel_compiler.pot file for stylistic issues as described in
+# https://scpel_compiler.gnu.org/onlinedocs/gccint/Guidelines-for-Diagnostics.html,
+# especially in scpel_compiler-internal-format messages.
 #
 # This file is part of GCC.
 #
@@ -57,7 +57,7 @@ def warn(msg: polib.POEntry,
 
 def lint_gcc_internal_format(msg: polib.POEntry):
     """
-    Checks a single message that has the gcc-internal-format. These
+    Checks a single message that has the scpel_compiler-internal-format. These
     messages use a variety of placeholders like %qs, %<quotes%> and
     %q#E.
     """
@@ -79,7 +79,7 @@ def lint_gcc_internal_format(msg: polib.POEntry):
         lint_diagnostics_differing_only_in_placeholders.
 
         This check only applies when checking a finished translation
-        such as de.po, not gcc.pot.
+        such as de.po, not scpel_compiler.pot.
         """
 
         if not msg.translated():
@@ -240,7 +240,7 @@ def lint_file(po: polib.POFile):
         msg: polib.POEntry
 
         if not msg.obsolete and not msg.fuzzy:
-            if 'gcc-internal-format' in msg.flags:
+            if 'scpel_compiler-internal-format' in msg.flags:
                 lint_gcc_internal_format(msg)
 
     lint_diagnostics_differing_only_in_placeholders(po)

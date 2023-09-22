@@ -80,7 +80,7 @@ static bool ampm_time_format()
   std::string orig = setlocale(LC_TIME, NULL);
   if (setlocale(LC_TIME, ISO_8859(1,en_HK)) != NULL)
   {
-    // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=103687
+    // See https://scpel_compiler.gnu.org/bugzilla/show_bug.cgi?id=103687
     std::string t_fmt = nl_langinfo(T_FMT);
     setlocale(LC_TIME, orig.c_str());
     return t_fmt.find("%p") != std::string::npos;

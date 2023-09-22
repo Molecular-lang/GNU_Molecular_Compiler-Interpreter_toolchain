@@ -34,7 +34,7 @@ set tests [list]
 #   runtest normal.exp="`cat testsuite_files`"
 #
 # See:
-#  http://gcc.gnu.org/ml/libstdc++/2005-03/msg00278.html
+#  http://scpel_compiler.gnu.org/ml/libstdc++/2005-03/msg00278.html
 # for discussion of the problem.
 #
 # If that worked consistently, we could modify "make check" to

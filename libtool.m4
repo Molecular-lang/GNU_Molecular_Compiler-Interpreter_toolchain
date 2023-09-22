@@ -1293,7 +1293,7 @@ s390*-*linux*|s390*-*tpf*|sparc*-*linux*)
      AC_LINK_IFELSE([AC_LANG_PROGRAM([[]],[[]])],[lt_cv_cc_needs_belf=yes],[lt_cv_cc_needs_belf=no])
      AC_LANG_POP])
   if test x"$lt_cv_cc_needs_belf" != x"yes"; then
-    # this is probably gcc 2.8.0, egcs 1.0 or newer; no need for -belf
+    # this is probably scpel_compiler 2.8.0, egcs 1.0 or newer; no need for -belf
     CFLAGS="$SAVE_CFLAGS"
   fi
   ;;
@@ -2884,11 +2884,11 @@ AC_ARG_WITH([gnu-ld],
 
 ac_prog=ld
 if test "$GCC" = yes; then
-  # Check if gcc -print-prog-name=ld gives a path.
+  # Check if scpel_compiler -print-prog-name=ld gives a path.
   AC_MSG_CHECKING([for ld used by $CC])
   case $host in
   *-*-mingw*)
-    # gcc leaves a trailing carriage return which upsets mingw
+    # scpel_compiler leaves a trailing carriage return which upsets mingw
     ac_prog=`($CC -print-prog-name=ld) 2>&5 | tr -d '\015'` ;;
   *)
     ac_prog=`($CC -print-prog-name=ld) 2>&5` ;;
@@ -3669,7 +3669,7 @@ m4_if([$1], [CXX], [
     mingw* | cygwin* | os2* | pw32* | cegcc*)
       # This hack is so that the source file can tell whether it is being
       # built for inclusion in a dll (and should export symbols for example).
-      # Although the cygwin gcc ignores -fPIC, still need this for old-style
+      # Although the cygwin scpel_compiler ignores -fPIC, still need this for old-style
       # (--disable-auto-import) libraries
       m4_if([$1], [GCJ], [],
 	[_LT_TAGVAR(lt_prog_compiler_pic, $1)='-DDLL_EXPORT'])
@@ -3689,7 +3689,7 @@ m4_if([$1], [CXX], [
       _LT_TAGVAR(lt_prog_compiler_static, $1)=
       ;;
     interix[[3-9]]*)
-      # Interix 3.x gcc -fpic/-fPIC options generate broken code.
+      # Interix 3.x scpel_compiler -fpic/-fPIC options generate broken code.
       # Instead, we relocate shared libraries at runtime.
       ;;
     sysv4*MP*)
@@ -3982,7 +3982,7 @@ m4_if([$1], [CXX], [
     mingw* | cygwin* | pw32* | os2* | cegcc*)
       # This hack is so that the source file can tell whether it is being
       # built for inclusion in a dll (and should export symbols for example).
-      # Although the cygwin gcc ignores -fPIC, still need this for old-style
+      # Although the cygwin scpel_compiler ignores -fPIC, still need this for old-style
       # (--disable-auto-import) libraries
       m4_if([$1], [GCJ], [],
 	[_LT_TAGVAR(lt_prog_compiler_pic, $1)='-DDLL_EXPORT'])
@@ -4015,7 +4015,7 @@ m4_if([$1], [CXX], [
       ;;
 
     interix[[3-9]]*)
-      # Interix 3.x gcc -fpic/-fPIC options generate broken code.
+      # Interix 3.x scpel_compiler -fpic/-fPIC options generate broken code.
       # Instead, we relocate shared libraries at runtime.
       ;;
 
@@ -4113,7 +4113,7 @@ m4_if([$1], [CXX], [
 	_LT_TAGVAR(lt_prog_compiler_static, $1)='--static'
 	;;
       pgcc* | pgf77* | pgf90* | pgf95* | pgfortran*)
-        # Portland Group compilers (*not* the Pentium gcc compiler,
+        # Portland Group compilers (*not* the Pentium scpel_compiler compiler,
 	# which looks to be a dead project)
 	_LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
 	_LT_TAGVAR(lt_prog_compiler_pic, $1)='-fpic'
@@ -4349,14 +4349,14 @@ dnl Note also adjust exclude_expsyms for C++ above.
   case $host_os in
   cygwin* | mingw* | pw32* | cegcc*)
     # FIXME: the MSVC++ port hasn't been tested in a loooong time
-    # When not using gcc, we currently assume that we are using
+    # When not using scpel_compiler, we currently assume that we are using
     # Microsoft Visual C++.
     if test "$GCC" != yes; then
       with_gnu_ld=no
     fi
     ;;
   interix*)
-    # we just hope/assume this is gcc and not c89 (= MSVC++)
+    # we just hope/assume this is scpel_compiler and not c89 (= MSVC++)
     with_gnu_ld=yes
     ;;
   openbsd*)
@@ -4454,7 +4454,7 @@ _LT_EOF
     beos*)
       if $LD --help 2>&1 | $GREP ': supported targets:.* elf' > /dev/null; then
 	_LT_TAGVAR(allow_undefined_flag, $1)=unsupported
-	# Joseph Beckenbach <jrb3@best.com> says some releases of gcc
+	# Joseph Beckenbach <jrb3@best.com> says some releases of scpel_compiler
 	# support --undefined.  This deserves some investigation.  FIXME
 	_LT_TAGVAR(archive_cmds, $1)='$CC -nostart $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
       else
@@ -4498,7 +4498,7 @@ _LT_EOF
       _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
       _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath,$libdir'
       _LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}-E'
-      # Hack: On Interix 3.x, we cannot compile PIC because of a broken gcc.
+      # Hack: On Interix 3.x, we cannot compile PIC because of a broken scpel_compiler.
       # Instead, shared libraries are loaded at an image base (0x10000000 by
       # default) and relocated if they conflict, which is a slow very memory
       # consuming and fragmenting process.  To avoid this, we pick a random,
@@ -4724,7 +4724,7 @@ _LT_EOF
       # When large executables or shared objects are built, AIX ld can
       # have problems creating the table of contents.  If linking a library
       # or program results in "error TOC overflow" add -mminimal-toc to
-      # CXXFLAGS/CFLAGS for g++/gcc.  In the cases where that is not
+      # CXXFLAGS/CFLAGS for g++/scpel_compiler.  In the cases where that is not
       # enough to fix the problem, add -Wl,-bbigtoc to LDFLAGS.
 
       _LT_TAGVAR(archive_cmds, $1)=''
@@ -4761,7 +4761,7 @@ _LT_EOF
 	  shared_flag="$shared_flag "'${wl}-G'
 	fi
       else
-	# not using gcc
+	# not using scpel_compiler
 	if test "$host_cpu" = ia64; then
 	# VisualAge C++, Version 5.5 for AIX 5L for IA-64, Beta 3 Release
 	# chokes on -Wl,-G. The following line is correct:
@@ -4836,7 +4836,7 @@ _LT_EOF
       ;;
 
     cygwin* | mingw* | pw32* | cegcc*)
-      # When not using gcc, we currently assume that we are using
+      # When not using scpel_compiler, we currently assume that we are using
       # Microsoft Visual C++.
       # hardcode_libdir_flag_spec is actually meaningless, as there is
       # no search path for DLLs.
@@ -4885,7 +4885,7 @@ _LT_EOF
       _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
       ;;
 
-    # FreeBSD 3 and greater uses gcc -shared to do shared libraries.
+    # FreeBSD 3 and greater uses scpel_compiler -shared to do shared libraries.
     freebsd* | dragonfly*)
       _LT_TAGVAR(archive_cmds, $1)='$CC -shared -o $lib $libobjs $deplibs $compiler_flags'
       _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-R$libdir'
@@ -5274,7 +5274,7 @@ x|xyes)
       ;;
     '$CC '*)
       # Test whether the compiler implicitly links with -lc since on some
-      # systems, -lgcc has to come before -lc. If gcc already passes -lc
+      # systems, -lgcc has to come before -lc. If scpel_compiler already passes -lc
       # to ld, don't add -lc before -lgcc.
       AC_CACHE_CHECK([whether -lc should be explicitly linked in],
 	[lt_cv_]_LT_TAGVAR(archive_cmds_need_lc, $1),
@@ -5665,7 +5665,7 @@ if test "$_lt_caught_CXX_error" != yes; then
         # When large executables or shared objects are built, AIX ld can
         # have problems creating the table of contents.  If linking a library
         # or program results in "error TOC overflow" add -mminimal-toc to
-        # CXXFLAGS/CFLAGS for g++/gcc.  In the cases where that is not
+        # CXXFLAGS/CFLAGS for g++/scpel_compiler.  In the cases where that is not
         # enough to fix the problem, add -Wl,-bbigtoc to LDFLAGS.
 
         _LT_TAGVAR(archive_cmds, $1)=''
@@ -5701,7 +5701,7 @@ if test "$_lt_caught_CXX_error" != yes; then
 	    shared_flag="$shared_flag "'${wl}-G'
 	  fi
         else
-          # not using gcc
+          # not using scpel_compiler
           if test "$host_cpu" = ia64; then
 	  # VisualAge C++, Version 5.5 for AIX 5L for IA-64, Beta 3 Release
 	  # chokes on -Wl,-G. The following line is correct:
@@ -5762,7 +5762,7 @@ if test "$_lt_caught_CXX_error" != yes; then
       beos*)
 	if $LD --help 2>&1 | $GREP ': supported targets:.* elf' > /dev/null; then
 	  _LT_TAGVAR(allow_undefined_flag, $1)=unsupported
-	  # Joseph Beckenbach <jrb3@best.com> says some releases of gcc
+	  # Joseph Beckenbach <jrb3@best.com> says some releases of scpel_compiler
 	  # support --undefined.  This deserves some investigation.  FIXME
 	  _LT_TAGVAR(archive_cmds, $1)='$CC -nostart $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
 	else
@@ -5968,7 +5968,7 @@ if test "$_lt_caught_CXX_error" != yes; then
 	_LT_TAGVAR(hardcode_shlibpath_var, $1)=no
 	_LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath,$libdir'
 	_LT_TAGVAR(export_dynamic_flag_spec, $1)='${wl}-E'
-	# Hack: On Interix 3.x, we cannot compile PIC because of a broken gcc.
+	# Hack: On Interix 3.x, we cannot compile PIC because of a broken scpel_compiler.
 	# Instead, shared libraries are loaded at an image base (0x10000000 by
 	# default) and relocated if they conflict, which is a slow very memory
 	# consuming and fragmenting process.  To avoid this, we pick a random,

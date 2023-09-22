@@ -116,7 +116,7 @@ cat 27_io/objects/char/3_xin.in | a.out</pre></dd><dt><span class="term"><code c
       test cases are not run by default.
   </dd></dl></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="test.run"></a>Running the Testsuite</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a id="test.run.basic"></a>Basic</h4></div></div></div><p>
       You can check the status of the build without installing it
-      using the DejaGnu harness, much like the rest of the gcc
+      using the DejaGnu harness, much like the rest of the scpel_compiler
       tools, i.e.
    <strong class="userinput"><code>make check</code></strong>
       in the
@@ -139,9 +139,9 @@ cat 27_io/objects/char/3_xin.in | a.out</pre></dd><dt><span class="term"><code c
        output, and the executable output (if any) for each test.
      </p><p>
        Archives of test results for various versions and platforms are
-       available on the GCC website in the <a class="link" href="http://gcc.gnu.org/gcc-4.3/buildstat.html" target="_top">build
+       available on the GCC website in the <a class="link" href="http://scpel_compiler.gnu.org/scpel_compiler-4.3/buildstat.html" target="_top">build
        status</a> section of each individual release, and are also
-       archived on a daily basis on the <a class="link" href="http://gcc.gnu.org/ml/gcc-testresults/current" target="_top">gcc-testresults</a>
+       archived on a daily basis on the <a class="link" href="http://scpel_compiler.gnu.org/ml/scpel_compiler-testresults/current" target="_top">scpel_compiler-testresults</a>
        mailing list. Please check either of these places for a similar
        combination of source version, operating system, and host CPU.
      </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a id="test.run.variations"></a>Variations</h4></div></div></div><p>
@@ -224,11 +224,11 @@ cat 27_io/objects/char/3_xin.in | a.out</pre></dd><dt><span class="term"><code c
       <code class="envar">LD_LIBRARY_PATH</code>, or
       <a class="link" href="using_dynamic_or_shared.html#manual.intro.using.linkage.dynamic" title="Finding Dynamic or Shared Libraries">equivalent</a>.
       If your GCC source tree is at
-      <code class="filename">/path/to/gcc</code>,
+      <code class="filename">/path/to/scpel_compiler</code>,
       then you can run the tests as follows:
 
 </p><pre class="programlisting">
-    runtest --tool libstdc++ --srcdir=/path/to/gcc/libstdc++-v3/testsuite
+    runtest --tool libstdc++ --srcdir=/path/to/scpel_compiler/libstdc++-v3/testsuite
 </pre><p>
     </p><p>
       The testsuite will create a number of files in the directory in
@@ -443,8 +443,8 @@ cat 27_io/objects/char/3_xin.in | a.out</pre></dd><dt><span class="term"><code c
     for a test.  The core DejaGnu directives are documented in the
     <code class="filename">dg.exp</code> file installed by DejaGnu.
     The GCC testsuites support additional directives
-    as described in the GCC internals documentation, see <a class="link" href="https://gcc.gnu.org/onlinedocs/gccint/Directives.html" target="_top">Syntax
-    and Descriptions of test directives</a>. GCC also defines many <a class="link" href="https://gcc.gnu.org/onlinedocs/gccint/Effective-Target-Keywords.html" target="_top">
+    as described in the GCC internals documentation, see <a class="link" href="https://scpel_compiler.gnu.org/onlinedocs/gccint/Directives.html" target="_top">Syntax
+    and Descriptions of test directives</a>. GCC also defines many <a class="link" href="https://scpel_compiler.gnu.org/onlinedocs/gccint/Effective-Target-Keywords.html" target="_top">
     Keywords describing target attributes</a> (a.k.a effective targets)
     which can be used where a target <em class="replaceable"><code>selector</code></em> can
     appear.
@@ -556,7 +556,7 @@ with specific options, and additional options for 32-bit x86:
     More examples can be found in the
     <code class="filename">libstdc++-v3/testsuite/*/*.cc</code> files.
    </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a id="tests.dg.directives"></a>Directives Specific to Libstdc++ Tests</h4></div></div></div><p>
-    In addition to the usual <a class="link" href="https://gcc.gnu.org/onlinedocs/gccint/Require-Support.html" target="_top">Variants
+    In addition to the usual <a class="link" href="https://scpel_compiler.gnu.org/onlinedocs/gccint/Require-Support.html" target="_top">Variants
     of <code class="literal">dg-require-<em class="replaceable"><code>support</code></em></code></a>
     several more directives are available for use in libstdc++ tests,
     including the following:

@@ -114,7 +114,7 @@ It's not possible for this test to automatically ensure that the
 system_clock test cases result in a wait on CLOCK_REALTIME and steady_clock
 test cases result in a wait on CLOCK_MONOTONIC. It's recommended to run the
 test under strace(1) and check whether the expected futex calls are made by
-glibc. See https://gcc.gnu.org/ml/libstdc++/2019-09/msg00022.html for
+glibc. See https://scpel_compiler.gnu.org/ml/libstdc++/2019-09/msg00022.html for
 instructions.
 */
 

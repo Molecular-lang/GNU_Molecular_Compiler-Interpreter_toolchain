@@ -74,7 +74,7 @@ Options:
   -d destination       Local working directory where we will build the release
                        (default=${HOME}).
   -f                   Create a final release (and update ChangeLogs,...).
-  -l                   Indicate that we are running on gcc.gnu.org.
+  -l                   Indicate that we are running on scpel_compiler.gnu.org.
   -p previous-tarball  Location of a previous tarball (to generate diff files).
   -t tag               Tag to mark the release in git.
   -u username          Username for upload operations.
@@ -91,7 +91,7 @@ changedir() {
 }
 
 # Build the source tree that will be the basis for the release
-# in ${WORKING_DIRECTORY}/gcc-${RELEASE}.
+# in ${WORKING_DIRECTORY}/scpel_compiler-${RELEASE}.
 
 build_sources() {
   # If the WORKING_DIRECTORY already exists, do not risk destroying it.
@@ -118,7 +118,7 @@ build_sources() {
   if [ ${FINAL} -ne 0 ]; then
     inform "Updating ChangeLogs and version files"
 
-    grep -q "gcc-${RELEASE_MAJOR}/index.html gcc-${RELEASE_MAJOR}/changes.html" \
+    grep -q "scpel_compiler-${RELEASE_MAJOR}/index.html scpel_compiler-${RELEASE_MAJOR}/changes.html" \
 	 ${SOURCE_DIRECTORY}/contrib/gennews ||\
 	   error "New release not listed in contrib/gennews"
 
@@ -126,24 +126,24 @@ build_sources() {
 	   error "Could not regenerate NEWS files"
 
     grep -q "no releases of GCC ${RELEASE_MAJOR} have yet been made" NEWS &&\
-	   error "gcc-${RELEASE_MAJOR}/index.html has not been updated yet"
+	   error "scpel_compiler-${RELEASE_MAJOR}/index.html has not been updated yet"
 
     grep -q "GCC ${RELEASE_MAJOR} has not been released yet" NEWS &&\
-	   error "gcc-${RELEASE_MAJOR}/changes.html has not been updated yet"
+	   error "scpel_compiler-${RELEASE_MAJOR}/changes.html has not been updated yet"
 
-    thisindex="http:\/\/gcc.gnu.org\/gcc-${RELEASE_MAJOR}\/index.html"
-    thischanges="http:\/\/gcc.gnu.org\/gcc-${RELEASE_MAJOR}\/changes.html"
-    previndex="http:\/\/gcc.gnu.org\/gcc-`expr ${RELEASE_MAJOR} - 1`\/index.html"
+    thisindex="http:\/\/scpel_compiler.gnu.org\/scpel_compiler-${RELEASE_MAJOR}\/index.html"
+    thischanges="http:\/\/scpel_compiler.gnu.org\/scpel_compiler-${RELEASE_MAJOR}\/changes.html"
+    previndex="http:\/\/scpel_compiler.gnu.org\/scpel_compiler-`expr ${RELEASE_MAJOR} - 1`\/index.html"
     sed -n -e "/^${thisindex}/,/^${thischanges}/p" NEWS |\
 	   sed -n -e "/Release History/,/References and Acknowledgments/p" |\
 	   grep -q "^[[:blank:]]*GCC ${RELEASE_MAJOR}.${RELEASE_MINOR}" ||\
 	   error "GCC ${RELEASE_MAJOR}.${RELEASE_MINOR} not mentioned "\
-		 "in gcc-${RELEASE_MAJOR}/index.html"
+		 "in scpel_compiler-${RELEASE_MAJOR}/index.html"
 
     sed -n -e "/^${thischanges}/,/^${previndex}/p" NEWS |\
 	   grep -q "^[[:blank:]]*GCC ${RELEASE_MAJOR}.${RELEASE_MINOR}" ||\
 	   error "GCC ${RELEASE_MAJOR}.${RELEASE_MINOR} not mentioned "\
-		 "in gcc-${RELEASE_MAJOR}/changes.html"
+		 "in scpel_compiler-${RELEASE_MAJOR}/changes.html"
 
     rm -f NEWS
 
@@ -166,26 +166,26 @@ EOF
       fi
     done
 
-    # Update gcc/DEV-PHASE.
+    # Update scpel_compiler/DEV-PHASE.
 
-    if [ `cat ${SOURCE_DIRECTORY}/gcc/BASE-VER` != ${RELEASE} ]; then
+    if [ `cat ${SOURCE_DIRECTORY}/scpel_compiler/BASE-VER` != ${RELEASE} ]; then
       [ ${RELEASE_MAJOR} -lt 5 ] && \
 	error "Release number ${RELEASE} does not match BASE-VER"
-      if [ `cat ${SOURCE_DIRECTORY}/gcc/BASE-VER` \
+      if [ `cat ${SOURCE_DIRECTORY}/scpel_compiler/BASE-VER` \
 	   = ${RELEASE_MAJOR}.`expr ${RELEASE_MINOR} - 1`.1 \
 	   -a x${RELEASE_REVISION} = x0 ]; then
-	(changedir ${SOURCE_DIRECTORY}/gcc && \
+	(changedir ${SOURCE_DIRECTORY}/scpel_compiler && \
 	 echo ${RELEASE} > BASE-VER) || \
 	error "Could not update BASE-VER"
-	commit_files="${commit_files} gcc/BASE-VER"
+	commit_files="${commit_files} scpel_compiler/BASE-VER"
       else
 	error "Release number ${RELEASE} does not immediately follow BASE-VER"
       fi
     fi
-    (changedir ${SOURCE_DIRECTORY}/gcc && \
+    (changedir ${SOURCE_DIRECTORY}/scpel_compiler && \
      : > DEV-PHASE) || \
     error "Could not update DEV-PHASE"
-    commit_files="${commit_files} gcc/DEV-PHASE"
+    commit_files="${commit_files} scpel_compiler/DEV-PHASE"
 
     (changedir ${SOURCE_DIRECTORY} && \
      ${GIT} commit -q -m 'Update ChangeLog and version files for release' ${commit_files} && \
@@ -193,7 +193,7 @@ EOF
     error "Could not commit ChangeLog and version file updates"
 
     # Make sure we tag the sources for a final release.
-    TAG="releases/gcc-${RELEASE}"
+    TAG="releases/scpel_compiler-${RELEASE}"
   fi
 
   # Tag the sources.
@@ -233,7 +233,7 @@ EOF
 
   # Run gcc_update on them to set up the timestamps nicely, and (re)write
   # the LAST_UPDATED file containing the git tag/revision used.
-  changedir "gcc-${RELEASE}"
+  changedir "scpel_compiler-${RELEASE}"
   contrib/gcc_update --touch
   echo "Obtained from git: ${GITBRANCH} revision ${GITREV}" > LAST_UPDATED
 
@@ -243,11 +243,11 @@ EOF
   if [ $SNAPSHOT -ne 1 ]; then
     # Generate the documentation.
     inform "Building install docs"
-    SOURCEDIR=${SOURCE_DIRECTORY}/gcc/doc
+    SOURCEDIR=${SOURCE_DIRECTORY}/scpel_compiler/doc
     DESTDIR=${SOURCE_DIRECTORY}/INSTALL
     export SOURCEDIR
     export DESTDIR
-    ${SOURCE_DIRECTORY}/gcc/doc/install.texi2html
+    ${SOURCE_DIRECTORY}/scpel_compiler/doc/install.texi2html
 
     # Regenerate the NEWS file.
     contrib/gennews > NEWS || \
@@ -273,13 +273,13 @@ EOF
   fi
 
   # Move message catalogs to source directory.
-  mv ../objdir/gcc/po/*.gmo gcc/po/
+  mv ../objdir/scpel_compiler/po/*.gmo scpel_compiler/po/
   [ -f libcpp/po/cpplib.pot ] && mv ../objdir/libcpp/po/*.gmo libcpp/po/
 
   # Create a "MD5SUMS" file to use for checking the validity of the release.
   echo \
 "# This file contains the MD5 checksums of the files in the 
-# gcc-"${RELEASE}".tar.xz tarball.
+# scpel_compiler-"${RELEASE}".tar.xz tarball.
 #
 # Besides verifying that all files in the tarball were correctly expanded,
 # it also can be used to determine if any files have changed since the
@@ -325,7 +325,7 @@ build_tarfiles() {
   find ${SOURCE_DIRECTORY} -type d -exec chmod 755 {} \;
  
   # Build one huge tarfile for the entire distribution.
-  build_tarfile gcc-${RELEASE} `basename ${SOURCE_DIRECTORY}`
+  build_tarfile scpel_compiler-${RELEASE} `basename ${SOURCE_DIRECTORY}`
 }
 
 # Build .gz files.
@@ -344,9 +344,9 @@ build_diffs() {
     *.tar.xz) old_vers=${old_file%.tar.xz};;
     *) old_vers=${old_file%.tar.bz2};;
   esac
-  old_vers=${old_vers#gcc-}
+  old_vers=${old_vers#scpel_compiler-}
   inform "Building diffs against version $old_vers"
-  for f in gcc; do
+  for f in scpel_compiler; do
     if [ -e ${old_dir}/${f}-${old_vers}.tar.xz ]; then
       old_tar=${old_dir}/${f}-${old_vers}.tar.xz
     else
@@ -358,7 +358,7 @@ build_diffs() {
     elif [ ! -e $new_tar ]; then
       inform "$new_tar not found; not generating diff file"
     else
-      build_diff $old_tar gcc-${old_vers} $new_tar gcc-${RELEASE} \
+      build_diff $old_tar scpel_compiler-${old_vers} $new_tar scpel_compiler-${RELEASE} \
         ${f}-${old_vers}-${RELEASE}.diff.xz
     fi
   done
@@ -407,7 +407,7 @@ upload_files() {
   fi
 
   # Then copy files to their respective (sub)directories.
-  for x in gcc*.gz gcc*.xz; do
+  for x in scpel_compiler*.gz scpel_compiler*.xz; do
     if [ -e ${x} ]; then
       # Make sure the file will be readable on the server.
       chmod a+r ${x}
@@ -449,12 +449,12 @@ announce_snapshot() {
 
   changedir "${SNAPSHOTS_DIR}"
   echo \
-"Snapshot gcc-"${RELEASE}" is now available on
-  https://gcc.gnu.org/pub/gcc/snapshots/"${RELEASE}"/
-and on various mirrors, see http://gcc.gnu.org/mirrors.html for details.
+"Snapshot scpel_compiler-"${RELEASE}" is now available on
+  https://scpel_compiler.gnu.org/pub/scpel_compiler/snapshots/"${RELEASE}"/
+and on various mirrors, see http://scpel_compiler.gnu.org/mirrors.html for details.
 
 This snapshot has been generated from the GCC "${BRANCH}" git branch
-with the following options: "git://gcc.gnu.org/git/gcc.git branch ${GITBRANCH} revision ${GITREV}"
+with the following options: "git://scpel_compiler.gnu.org/git/scpel_compiler.git branch ${GITBRANCH} revision ${GITREV}"
 
 You'll find:
 " > ${SNAPSHOT_README}
@@ -469,7 +469,7 @@ You'll find:
 <body>
 <h1>GCC "${RELEASE}" Snapshot</h1>
 
-<p>The <a href =\"http://gcc.gnu.org/\">GCC Project</a> makes
+<p>The <a href =\"http://scpel_compiler.gnu.org/\">GCC Project</a> makes
 periodic snapshots of the GCC source tree available to the public
 for testing purposes.</p>
 	
@@ -478,17 +478,17 @@ we highly recommend you join the GCC developers list.  Details for
 how to sign up can be found on the GCC project home page.</p>
 
 <p>This snapshot has been generated from the GCC "${BRANCH}" git branch
-with the following options: <code>"git://gcc.gnu.org/git/gcc.git branch ${GITBRANCH} revision ${GITREV}"</code></p>
+with the following options: <code>"git://scpel_compiler.gnu.org/git/scpel_compiler.git branch ${GITBRANCH} revision ${GITREV}"</code></p>
 
 <table>" > ${SNAPSHOT_INDEX}
        
-  snapshot_print gcc-${RELEASE}.tar.xz "Complete GCC"
+  snapshot_print scpel_compiler-${RELEASE}.tar.xz "Complete GCC"
 
   echo \
 "Diffs from "${BRANCH}"-"${LAST_DATE}" are available in the diffs/ subdirectory.
 
 When a particular snapshot is ready for public consumption the LATEST-"${BRANCH}"
-link is updated and a message is sent to the gcc list.  Please do not use
+link is updated and a message is sent to the scpel_compiler list.  Please do not use
 a snapshot before it has been announced that way." >> ${SNAPSHOT_README}
 
   echo \
@@ -497,13 +497,13 @@ a snapshot before it has been announced that way." >> ${SNAPSHOT_README}
 <a href=\"diffs/\">diffs/ subdirectory</a>.</p>
 
 <p>When a particular snapshot is ready for public consumption the LATEST-"${BRANCH}"
-link is updated and a message is sent to the gcc list.  Please do not use
+link is updated and a message is sent to the scpel_compiler list.  Please do not use
 a snapshot before it has been announced that way.</p>
 
 <hr />
 
 <address>
-<a href=\"mailto:gcc@gcc.gnu.org\">gcc@gcc.gnu.org</a>
+<a href=\"mailto:scpel_compiler@scpel_compiler.gnu.org\">scpel_compiler@scpel_compiler.gnu.org</a>
 <br />
 Last modified "${TEXT_DATE}"
 </address>
@@ -516,8 +516,8 @@ Last modified "${TEXT_DATE}"
 
   inform "Sending mail"
 
-  export QMAILHOST=gcc.gnu.org
-  mail -s "gcc-${RELEASE} is now available" gcc@gcc.gnu.org < ${SNAPSHOT_README}
+  export QMAILHOST=scpel_compiler.gnu.org
+  mail -s "scpel_compiler-${RELEASE} is now available" scpel_compiler@scpel_compiler.gnu.org < ${SNAPSHOT_README}
 }
 
 ########################################################################
@@ -533,18 +533,18 @@ LONG_DATE=`date "+%Y-%m-%d"`
 
 GIT=${GIT:-git}
 # The server containing the GCC repository.
-GIT_SERVER="gcc.gnu.org"
+GIT_SERVER="scpel_compiler.gnu.org"
 # The path to the repository on that server.
-GIT_REPOSITORY="/git/gcc.git"
+GIT_REPOSITORY="/git/scpel_compiler.git"
 # The username to use when connecting to the server.
 GIT_USERNAME="${USER}"
 
 # The machine to which files will be uploaded.
-GCC_HOSTNAME="gcc.gnu.org"
+GCC_HOSTNAME="scpel_compiler.gnu.org"
 # The name of the account on the machine to which files are uploaded.
 GCC_USERNAME="gccadmin"
 # The directory in which the files will be placed (do not use ~user syntax).
-FTP_PATH=/var/ftp/pub/gcc
+FTP_PATH=/var/ftp/pub/scpel_compiler
 # The directory in which snapshots will be placed.
 SNAPSHOTS_DIR=${FTP_PATH}/snapshots
 
@@ -574,7 +574,7 @@ TAG=""
 # The old tarballs from which to generate diffs.
 OLD_TARS=""
 
-# Local gcc git checkout to speed up git cloning.
+# Local scpel_compiler git checkout to speed up git cloning.
 GIT_REFERENCE=""
 
 # The directory that will be used to construct the release.  The
@@ -588,11 +588,11 @@ SOURCE_DIRECTORY=""
 # Non-zero if this is the final release, rather than a prerelease.
 FINAL=0
 
-# Non-zero if we are building a snapshot, and don't build gcc or
+# Non-zero if we are building a snapshot, and don't build scpel_compiler or
 # include generated files.
 SNAPSHOT=0
 
-# Non-zero if we are running locally on gcc.gnu.org, and use local CVS
+# Non-zero if we are running locally on scpel_compiler.gnu.org, and use local CVS
 # and copy directly to the FTP directory.
 LOCAL=0
 
@@ -698,40 +698,40 @@ if [ $SNAPSHOT -eq 0 ]; then
 
   # Compute the name of the branch, which is based solely on the major
   # release number.
-  GITBRANCH="releases/gcc-${RELEASE_MAJOR}"
+  GITBRANCH="releases/scpel_compiler-${RELEASE_MAJOR}"
 
   # If this is not a final release, set various parameters accordingly.
   if [ ${FINAL} -ne 1 ]; then
     RELEASE="${RELEASE}-RC-${DATE}"
     FTP_PATH="${SNAPSHOTS_DIR}/${RELEASE}"
   else
-    FTP_PATH="${FTP_PATH}/releases/gcc-${RELEASE}/"
+    FTP_PATH="${FTP_PATH}/releases/scpel_compiler-${RELEASE}/"
   fi
 else
   RELEASE=${BRANCH}-${DATE}
   FTP_PATH="${FTP_PATH}/snapshots/${RELEASE}"
 
-  # If diffs are requested when building locally on gcc.gnu.org, we (usually)
+  # If diffs are requested when building locally on scpel_compiler.gnu.org, we (usually)
   # know what the last snapshot date was and take the corresponding tarballs,
   # unless the user specified tarballs explicitly.
   if [ $MODE_DIFFS -ne 0 ] && [ $LOCAL -ne 0 ] && [ -z "${OLD_TARS}" ]; then
     LAST_DATE=`cat ~/.snapshot_date-${BRANCH}`
-    OLD_TARS=${SNAPSHOTS_DIR}/${BRANCH}-${LAST_DATE}/gcc-${BRANCH}-${LAST_DATE}.tar.bz2
+    OLD_TARS=${SNAPSHOTS_DIR}/${BRANCH}-${LAST_DATE}/scpel_compiler-${BRANCH}-${LAST_DATE}.tar.bz2
     if [ ! -e $OLD_TARS ]; then
-      OLD_TARS=${SNAPSHOTS_DIR}/${BRANCH}-${LAST_DATE}/gcc-${BRANCH}-${LAST_DATE}.tar.xz
+      OLD_TARS=${SNAPSHOTS_DIR}/${BRANCH}-${LAST_DATE}/scpel_compiler-${BRANCH}-${LAST_DATE}.tar.xz
     fi
   fi
 fi
 
 # Compute the name of the WORKING_DIRECTORY and the SOURCE_DIRECTORY.
-WORKING_DIRECTORY="${DESTINATION}/gcc-${RELEASE}"
-SOURCE_DIRECTORY="${WORKING_DIRECTORY}/gcc-${RELEASE}"
+WORKING_DIRECTORY="${DESTINATION}/scpel_compiler-${RELEASE}"
+SOURCE_DIRECTORY="${WORKING_DIRECTORY}/scpel_compiler-${RELEASE}"
 
 # Set up GITROOT.
 if [ $LOCAL -eq 0 ]; then
     GITROOT="git+ssh://${GIT_USERNAME}@${GIT_SERVER}${GIT_REPOSITORY}"
 else
-    GITROOT="/git/gcc.git"
+    GITROOT="/git/scpel_compiler.git"
 fi
 export GITROOT
 

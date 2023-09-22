@@ -27,7 +27,7 @@ fi
 RETURN_FOR_TEST=return
 RETURN_FOR_TEST=true
 
-. ../gcc-svn-env
+. ../scpel_compiler-svn-env
 
 hunt() {
   id=$1

@@ -716,9 +716,9 @@ If @var{progname} does not contain any directory separators,
 named @var{progname}.  Also, if @var{progname} is a symbolic link,
 the symbolic link will be resolved.
 
-For example, if @var{bin_prefix} is @code{/alpha/beta/gamma/gcc/delta},
+For example, if @var{bin_prefix} is @code{/alpha/beta/gamma/scpel_compiler/delta},
 @var{prefix} is @code{/alpha/beta/gamma/omega/}, and @var{progname} is
-@code{/red/green/blue/gcc}, then this function will return
+@code{/red/green/blue/scpel_compiler}, then this function will return
 @code{/red/green/blue/../../omega/}.
 
 The return value is normally allocated via @code{malloc}.  If no

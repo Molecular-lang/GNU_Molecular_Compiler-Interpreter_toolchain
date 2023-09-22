@@ -82,8 +82,8 @@ template<typename Container>
       comment << "iterations: " << iterations << '\t';
   }
 
-// http://gcc.gnu.org/ml/libstdc++/2001-05/msg00105.html
-// http://gcc.gnu.org/ml/libstdc++/2003-05/msg00231.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2001-05/msg00105.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2003-05/msg00231.html
 int main(void)
 {
   typedef less<test_type> compare_type;

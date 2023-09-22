@@ -103,7 +103,7 @@
 
 2022-05-20  Richard Biener  <rguenther@suse.de>
 
-	* crontab: Disable snapshots from the gcc-9 branch.
+	* crontab: Disable snapshots from the scpel_compiler-9 branch.
 
 2022-04-28  Jakub Jelinek  <jakub@redhat.com>
 
@@ -112,7 +112,7 @@
 
 2021-05-14  Jakub Jelinek  <jakub@redhat.com>
 
-	* crontab: Stop doing gcc-8 snapshots.
+	* crontab: Stop doing scpel_compiler-8 snapshots.
 
 2021-04-20  Jakub Jelinek  <jakub@redhat.com>
 
@@ -157,7 +157,7 @@
 
 2020-12-16  Jakub Jelinek  <jakub@redhat.com>
 
-	* update_version_git: Put BASEDIR into /sourceware/snapshot-tmp/gcc
+	* update_version_git: Put BASEDIR into /sourceware/snapshot-tmp/scpel_compiler
 	if it exist.
 
 2020-05-29  Martin Liska  <mliska@suse.cz>
@@ -177,7 +177,7 @@
 2020-05-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* update_version_git: Rewrite using
-	contrib/gcc-changelog/git_update_version.py.
+	contrib/scpel_compiler-changelog/git_update_version.py.
 
 2020-04-30  Jakub Jelinek  <jakub@redhat.com>
 
@@ -218,9 +218,9 @@
 	* update_version:svn: Remove.
 	* crontab: Use update_version_git.
 
-2019-11-20  Janne Blomqvist  <jb@gcc.gnu.org>
+2019-11-20  Janne Blomqvist  <jb@scpel_compiler.gnu.org>
 
-	* gcc_release: Use https for gcc.gnu.org.
+	* gcc_release: Use https for scpel_compiler.gnu.org.
 
 2019-11-14  Richard Biener  <rguenther@suse.de>
 
@@ -228,7 +228,7 @@
 
 2019-10-05  Richard Biener  <rguenther@suse.de>
 
-	* crontab: Disable snapshots from gcc-7-branch.
+	* crontab: Disable snapshots from scpel_compiler-7-branch.
 
 2019-08-05  David Malcolm  <dmalcolm@redhat.com>
 
@@ -250,8 +250,8 @@
 
 2018-10-26  Jakub Jelinek  <jakub@redhat.com>
 
-	* update_version_svn (IGNORE_BRANCHES): Add gcc-6-branch.
-	* crontab: Remove gcc-6-branch entry.
+	* update_version_svn (IGNORE_BRANCHES): Add scpel_compiler-6-branch.
+	* crontab: Remove scpel_compiler-6-branch entry.
 
 	* gcc_release (error, inform): Use $@ instead of $1.
 	(build_sources): Check for ^[[:blank:]]*GCC in both index.html
@@ -266,7 +266,7 @@
 
 2018-04-25  Jakub Jelinek  <jakub@redhat.com>
 
-	* crontab: Enable snapshots from gcc-8-branch.
+	* crontab: Enable snapshots from scpel_compiler-8-branch.
 
 2018-01-25  Richard Biener  <rguenther@suse.de>
 
@@ -295,7 +295,7 @@
 
 2017-04-20  Jakub Jelinek  <jakub@redhat.com>
 
-	* crontab: Enable snapshots from gcc-7-branch.
+	* crontab: Enable snapshots from scpel_compiler-7-branch.
 
 2017-03-03  Gerald Pfeifer  <gerald@pfeifer.com>
 
@@ -304,7 +304,7 @@
 2017-02-28  Gerald Pfeifer  <gerald@pfeifer.com>
 
 	* update_web_docs_svn: Remove a reference to GCC 3.1.  Describe
-	settings to tweak if running on a host different from gcc.gnu.org.
+	settings to tweak if running on a host different from scpel_compiler.gnu.org.
 	(WWWBASE): Allow override via the environment.  Also check for
 	existance.
 
@@ -342,11 +342,11 @@
 
 2016-04-15  Jakub Jelinek  <jakub@redhat.com>
 
-	* crontab: Enable snapshots from gcc-6-branch.
+	* crontab: Enable snapshots from scpel_compiler-6-branch.
 
 2015-06-23  Richard Biener  <rguenther@suse.de>
 
-	* update_version_svn: Add gcc-4_8-branch to IGNORE_BRANCHES.
+	* update_version_svn: Add scpel_compiler-4_8-branch to IGNORE_BRANCHES.
 
 2015-06-14  Richard Biener  <rguenther@suse.de>
 
@@ -355,7 +355,7 @@
 2015-04-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* update_version_svn: Update DATESTAMP also on
-	branches/gcc-[0-9]+-branch.
+	branches/scpel_compiler-[0-9]+-branch.
 
 	* gcc_release: Fix up thinko in the last commit, improve error
 	message.  Commit all ChangeLog, DEV-PHASE and BASE-VER changes
@@ -368,7 +368,7 @@
 	if BASE-VER doesn't match release, but is *.*.1 for the
 	one smaller minor version, bump BASE-VER.
 
-	* crontab: Enable snapshots from gcc-5-branch.
+	* crontab: Enable snapshots from scpel_compiler-5-branch.
 
 2015-04-07  Gerald Pfeifer  <gerald@pfeifer.com>
 
@@ -377,11 +377,11 @@
 
 2015-02-25  Arnaud Charlet  <charlet@adacore.com>
 
-	* update_web_docs_svn: Preserve gcc/ada/*.png. Update comments.
+	* update_web_docs_svn: Preserve scpel_compiler/ada/*.png. Update comments.
 
 2015-02-25  Arnaud Charlet  <charlet@adacore.com>
 
-	* update_web_docs_svn: Add -I gcc/gcc/ada/doc/gnat_ugn for gnat_ugn
+	* update_web_docs_svn: Add -I scpel_compiler/scpel_compiler/ada/doc/gnat_ugn for gnat_ugn
 
 2015-02-06  David Malcolm  <dmalcolm@redhat.com>
 
@@ -398,8 +398,8 @@
 2015-01-26  David Malcolm  <dmalcolm@redhat.com>
 
 	PR jit/64257
-	* update_web_docs_svn: Don't delete gcc/jit/docs or
-	gcc/jit/jit-common.h, gcc/jit/notes.txt. Special case the
+	* update_web_docs_svn: Don't delete scpel_compiler/jit/docs or
+	scpel_compiler/jit/jit-common.h, scpel_compiler/jit/notes.txt. Special case the
 	building of the JIT docs (using sphinx-build).  Special case
 	copying them up.
 
@@ -422,7 +422,7 @@
 
 2014-04-11  Jakub Jelinek  <jakub@redhat.com>
 
-	* crontab: Enable snapshots from gcc-4_9-branch.
+	* crontab: Enable snapshots from scpel_compiler-4_9-branch.
 
 2014-02-01  Dmitry Gorbachev  <d.g.gorbachev@gmail.com>
 
@@ -437,8 +437,8 @@
 
 2013-04-12  Jakub Jelinek  <jakub@redhat.com>
 
-	* crontab: Disable snapshots from gcc-4_6-branch.
-	* update_version_svn: Ignore gcc-4_6-branch.
+	* crontab: Disable snapshots from scpel_compiler-4_6-branch.
+	* update_version_svn: Ignore scpel_compiler-4_6-branch.
 
 2013-04-07  Gerald Pfeifer  <gerald@pfeifer.com>
 
@@ -448,21 +448,21 @@
 
 2013-03-16  Jakub Jelinek  <jakub@redhat.com>
 
-	* crontab: Enable snapshots from gcc-4_8-branch.
+	* crontab: Enable snapshots from scpel_compiler-4_8-branch.
 
 2012-07-02  Richard Guenther  <rguenther@suse.de>
 
-	* crontab: Disable snapshots from gcc-4_5-branch.
-	* update_version_svn: Ingore gcc-4_5-branch.
+	* crontab: Disable snapshots from scpel_compiler-4_5-branch.
+	* update_version_svn: Ingore scpel_compiler-4_5-branch.
 
 2012-03-23  Richard Guenther  <rguenther@suse.de>
 
-	* crontab: Enable snapshots from gcc-4_7-branch.
+	* crontab: Enable snapshots from scpel_compiler-4_7-branch.
 
 2012-03-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* crontab: Remove 4.4 branch from the list of snapshots to make.
-	* update_version_svn (IGNORE_BRANCHES): Add gcc-4_4-branch.
+	* update_version_svn (IGNORE_BRANCHES): Add scpel_compiler-4_4-branch.
 
 2012-03-05  Richard Guenther  <rguenther@suse.de>
 
@@ -483,7 +483,7 @@
 
 2011-06-27  Richard Guenther  <rguenther@suse.de>
 
-	* update_version_svn (IGNORE_BRANCHES): Add gcc-4_3-branch.
+	* update_version_svn (IGNORE_BRANCHES): Add scpel_compiler-4_3-branch.
 
 2011-05-22  Joseph Myers  <joseph@codesourcery.com>
 
@@ -577,7 +577,7 @@
 
 2009-10-10  Gerald Pfeifer  <gerald@pfeifer.com>
 
-	* update_web_docs_svn: Update BUGURL to http://gcc.gnu.org/bugs/.
+	* update_web_docs_svn: Update BUGURL to http://scpel_compiler.gnu.org/bugs/.
 
 2009-10-03  Diego Novillo  <dnovillo@google.com>
 
@@ -645,7 +645,7 @@
 	gcc_build.
 	(SVN): Don't use full path.
 
-2008-01-21  Jonathan Wakely  <jwakely.gcc@gmail.com>
+2008-01-21  Jonathan Wakely  <jwakely.scpel_compiler@gmail.com>
 
 	* update_web_docs_libstdcxx_svn: "docs" dir moved to "doc".
 
@@ -661,7 +661,7 @@
 
 	* gcc_release: Do not include copies of bugs.html in releases.
 	* update_web_docs_svn: Set VERSION_PACKAGE and BUGURL in
-	gcc-vers.texi.
+	scpel_compiler-vers.texi.
 
 2007-07-06  Joseph Myers  <joseph@codesourcery.com>
 
@@ -727,7 +727,7 @@
 
 2005-12-16  Mark Mitchell  <mark@codesourcery.com>
 
-	* update_web_docs_svn: Set @srcdir in gcc-vers.texi. 
+	* update_web_docs_svn: Set @srcdir in scpel_compiler-vers.texi. 
 	
 2005-11-18  Mark Mitchell  <mark@codesourcery.com>
 
@@ -781,7 +781,7 @@
 
 	* update_web_docs_old: Remove.
 
-2005-08-14  Kelley Cook  <kcook@gcc.gnu.org>
+2005-08-14  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* gcc_release: Update with FSF address.
 
@@ -797,15 +797,15 @@
 2005-05-19  Joseph S. Myers  <joseph@codesourcery.com>
 
 	* crontab: Don't build 3.3 branch snapshots.
-	* update_version (IGNORE_BRANCHES): Add gcc-3_3-branch.
+	* update_version (IGNORE_BRANCHES): Add scpel_compiler-3_3-branch.
 
 2005-03-15  Zack Weinberg  <zack@codesourcery.com>
 
 	* README: Update.
-	* gcc_release: Update gcc/DEV-PHASE if that file exists, instead
-	of gcc/version.c.
-	* update_version: Handle updating gcc/DATESTAMP.
-	* update_web_docs: Generate gcc-vers.texi first.
+	* gcc_release: Update scpel_compiler/DEV-PHASE if that file exists, instead
+	of scpel_compiler/version.c.
+	* update_version: Handle updating scpel_compiler/DATESTAMP.
+	* update_web_docs: Generate scpel_compiler-vers.texi first.
 
 2005-03-10  Ranjit Mathew  <rmathew@hotmail.com>
 
@@ -824,17 +824,17 @@
 
 	* crontab: Rename GCC 3.5 snapshots to GCC 4.0 snapshots.
 
-2004-08-14  Kelley Cook  <kcook@gcc.gnu.org>
+2004-08-14  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* gcc_release (build_sources): Add comment header to generated
 	MD5SUMS.
 
-2004-08-06  Kelley Cook  <kcook@gcc.gnu.org>
+2004-08-06  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* gcc_release (snapshot_print): Accept arguments.  Don't use echo -e.
 	(announce_snapshot):  Update for above.  Don't use echo -e.
 
-2004-08-03 Kelley Cook  <kcook@gcc.gnu.org>
+2004-08-03 Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* maintainer-scripts (snapshot_print): New function.
 	(announce_snapshot): Generate announcment on the fly.
@@ -856,7 +856,7 @@
 
 	* gcc_release (build_sources): Generate the NEWS file in toplevel.
 
-2004-05-17  Kelley Cook  <kcook@gcc.gnu.org>
+2004-05-17  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* gcc_release (build_sources): Change CRCs from brik to md5sum.
 
@@ -885,19 +885,19 @@
 
 2003-07-26  Paul Brook  <paul@nowt.org>
 
-	* gcc_release: Add gcc-fortran.
+	* gcc_release: Add scpel_compiler-fortran.
 	* snapshot-README: Ditto.
 	* snapshot-index.html: Ditto.
 
 2004-05-02  Gerald Pfeifer  <gerald@pfeifer.com>
 
 	* crontab: Move GCC 3.4 snapshots from Wednesday afternoon to
-	Friday night, where gcc.gnu.org has less load.
+	Friday night, where scpel_compiler.gnu.org has less load.
 
 2004-05-02  Gerald Pfeifer  <gerald@pfeifer.com>
 
 	* crontab: Adjust temporary directory used for snapshot generation.
-	Move GCC 3.3 snapshots to Wednesday 22:32, where gcc.gnu.org has
+	Move GCC 3.3 snapshots to Wednesday 22:32, where scpel_compiler.gnu.org has
 	less load.
 
 2004-04-19  Mark Mitchell  <mark@codesourcery.com>
@@ -938,7 +938,7 @@
 
 	* crontab: Make 3.4 snapshots from the new 3.4 release branch.
 
-2004-01-20  Kelley Cook  <kcook@gcc.gnu.org>
+2004-01-20  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* gcc_release (build_sources): Delete call to make f77.rebuilt.
 
@@ -964,7 +964,7 @@
 
 	* maintainer-addresses: New script.
 
-2003-10-24  Kelley Cook  <kcook@gcc.gnu.org>
+2003-10-24  Kelley Cook  <kcook@scpel_compiler.gnu.org>
 
 	* gcc_release (build_sources): Use --enable-generated-files-in-srcdir.
 
@@ -1052,7 +1052,7 @@
 
 2003-07-04  Gerald Pfeifer  <pfeifer@dbai.tuwien.ac.at>
 
-	* gcc_release: Execute gcc.gnu.org-only operations which are
+	* gcc_release: Execute scpel_compiler.gnu.org-only operations which are
 	related to diff generation only if diffs have been requested.
 	(build_sources): Improve tracing and an error message related
 	to tagging.
@@ -1091,7 +1091,7 @@
 
 	* snapshot-index.html: Use F77 instead of G77 front end.
 	Remove link to CodeSourcery snapshots which was not up-to-date.
-	Do not refer to gcc-bugs@gcc.gnu.org any longer.
+	Do not refer to scpel_compiler-bugs@scpel_compiler.gnu.org any longer.
 
 	* snapshot-README: Use F77 front end instead of G77 language.
 
@@ -1111,7 +1111,7 @@
 
 2003-06-14  Gerald Pfeifer  <pfeifer@dbai.tuwien.ac.at>
 
-	* snapshot-README: Use GCC instead of gcc, C++ front end instead of
+	* snapshot-README: Use GCC instead of scpel_compiler, C++ front end instead of
 	g++ language, and note that Java includes a run time.
 	* snapshot.index.html: Ditto.
 
@@ -1148,7 +1148,7 @@
 	* gcc_release (upload_files): Put diff files into a "diffs"
 	subdirectory
 
-2003-05-18  Nathanael Nerode  <neroden@gcc.gnu.org>
+2003-05-18  Nathanael Nerode  <neroden@scpel_compiler.gnu.org>
 
 	* gcc_release: GNU CC -> GCC.
 
@@ -1186,7 +1186,7 @@
 2002-09-23  Zack Weinberg  <zack@codesourcery.com>
 
 	* update_version: Do not check in files which are unchanged.
-	* gcc_release: Only update the version in gcc/version.c.
+	* gcc_release: Only update the version in scpel_compiler/version.c.
 
 2002-09-17  Joseph S. Myers  <jsm@polyomino.org.uk>
 
@@ -1221,14 +1221,14 @@
 
 2002-05-27  Joseph S. Myers  <jsm28@cam.ac.uk>
 
-	* update_version (textstring_FILES): Change gcc/ada/gnatvsn.ads to
-	gcc/gcc/ada/gnatvsn.ads.
+	* update_version (textstring_FILES): Change scpel_compiler/ada/gnatvsn.ads to
+	scpel_compiler/scpel_compiler/ada/gnatvsn.ads.
 
 2002-05-26  Joseph S. Myers  <jsm28@cam.ac.uk>
 
-	* gcc_release: Add gcc/ada/gnatvsn.ads to list of files in which
+	* gcc_release: Add scpel_compiler/ada/gnatvsn.ads to list of files in which
 	release status is updated.
-	* update_version (textstring_FILES): Add gcc/ada/gnatvsn.ads.
+	* update_version (textstring_FILES): Add scpel_compiler/ada/gnatvsn.ads.
 
 2002-05-21  Joseph S. Myers  <jsm28@cam.ac.uk>
 
@@ -1262,7 +1262,7 @@
 	* gcc_release: Build diffs for ada and chill.  Make "bzip2" a new
 	major mode.
 
-2002-03-06  Phil Edwards  <pme@gcc.gnu.org>
+2002-03-06  Phil Edwards  <pme@scpel_compiler.gnu.org>
 
 	* update_version:  Don't indent the version string.
 
@@ -1360,12 +1360,12 @@
 	* crontab: Build weekly snapshots.
 
 	* gcc_release: Copy from 3.0 branch.  Add support for building the
-	weekly snapshots on gcc.gnu.org.
+	weekly snapshots on scpel_compiler.gnu.org.
 
 2001-08-28  Joseph S. Myers  <jsm28@cam.ac.uk>
 
 	* update_web_docs: Also check out texinfo.tex from
-	gcc/doc/include.
+	scpel_compiler/doc/include.
 
 2001-08-06  Gerald Pfeifer  <pfeifer@dbai.tuwien.ac.at>
 
@@ -1398,7 +1398,7 @@
 	variables.
 	Fix a comment and add another one.
 	Generate the installation documentation in HTML format from
-	gcc/doc/install.texi.
+	scpel_compiler/doc/install.texi.
 
 2001-05-03  Joseph S. Myers  <jsm28@cam.ac.uk>
 
@@ -1412,7 +1412,7 @@
 
 2001-03-18  Joseph S. Myers  <jsm28@cam.ac.uk>
 
-	* update_version, update_branch_version: Check out with gcc
+	* update_version, update_branch_version: Check out with scpel_compiler
 	directory instead of using egcs link.
 
 2001-03-17  Joseph S. Myers  <jsm28@cam.ac.uk>

@@ -1,6 +1,6 @@
 // { dg-xfail-run-if "AIX operator new" { powerpc-ibm-aix* } }
 
-// 2004-01-25 jlquinn@gcc.gnu.org
+// 2004-01-25 jlquinn@scpel_compiler.gnu.org
 
 // Copyright (C) 2004-2023 Free Software Foundation, Inc.
 //

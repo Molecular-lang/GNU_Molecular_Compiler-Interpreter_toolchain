@@ -25,7 +25,7 @@
 // a.out >& output
 // "hello fine world\n" should be written to stdout, and output, in
 // proper order.  This is a version of the scott snyder test taken
-// from: http://gcc.gnu.org/ml/libstdc++/1999-q4/msg00108.html
+// from: http://scpel_compiler.gnu.org/ml/libstdc++/1999-q4/msg00108.html
 void test04()
 {
   using namespace std;

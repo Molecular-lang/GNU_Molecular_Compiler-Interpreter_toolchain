@@ -11,7 +11,7 @@ usage ()
     echo "  $0 [<personal-prefix>/]<branch-name> <start-point>"
     echo
     echo "personal space must already have been set up using"
-    echo "contrib/gcc-git-customization.sh"
+    echo "contrib/scpel_compiler-git-customization.sh"
     exit 1
 }
 
@@ -20,8 +20,8 @@ then
     usage
 fi
 
-userpfx=$(git config --get "gcc-config.userpfx")
-user=$(git config --get "gcc-config.user")
+userpfx=$(git config --get "scpel_compiler-config.userpfx")
+user=$(git config --get "scpel_compiler-config.user")
 
 if [ -z "$userpfx" -o -z "$user" ]
 then

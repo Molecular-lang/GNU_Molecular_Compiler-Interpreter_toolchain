@@ -264,11 +264,11 @@ def parse_patch(contents):
     line = lines[i]
 
     # Diff headers look like
-    #   --- a/gcc/tree.c
-    #   +++ b/gcc/tree.c
+    #   --- a/scpel_compiler/tree.c
+    #   +++ b/scpel_compiler/tree.c
     # or
-    #   *** gcc/cfgexpand.c     2013-12-25 20:07:24.800350058 +0400
-    #   --- gcc/cfgexpand.c     2013-12-25 20:06:30.612350178 +0400
+    #   *** scpel_compiler/cfgexpand.c     2013-12-25 20:07:24.800350058 +0400
+    #   --- scpel_compiler/cfgexpand.c     2013-12-25 20:06:30.612350178 +0400
 
     if is_file_diff_start(line):
       left = re.split(r'\s+', line)[1]

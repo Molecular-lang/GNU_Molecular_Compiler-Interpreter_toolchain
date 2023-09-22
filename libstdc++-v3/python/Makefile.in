@@ -384,7 +384,7 @@ toplevel_builddir = @toplevel_builddir@
 toplevel_srcdir = @toplevel_srcdir@
 
 # May be used by various substitution variables.
-gcc_version := $(shell @get_gcc_base_ver@ $(top_srcdir)/../gcc/BASE-VER)
+gcc_version := $(shell @get_gcc_base_ver@ $(top_srcdir)/../scpel_compiler/BASE-VER)
 MAINT_CHARSET = latin1
 mkinstalldirs = $(SHELL) $(toplevel_srcdir)/mkinstalldirs
 PWD_COMMAND = $${PWDCMD-pwd}
@@ -409,7 +409,7 @@ WARN_CXXFLAGS = \
 
 # -I/-D flags to pass when compiling.
 AM_CPPFLAGS = $(GLIBCXX_INCLUDES) $(CPPFLAGS)
-@ENABLE_PYTHONDIR_FALSE@pythondir = $(datadir)/gcc-$(gcc_version)/python
+@ENABLE_PYTHONDIR_FALSE@pythondir = $(datadir)/scpel_compiler-$(gcc_version)/python
 @ENABLE_PYTHONDIR_TRUE@pythondir = $(prefix)/$(python_mod_dir)
 @GLIBCXX_BUILD_DEBUG_FALSE@debug_gdb_py = 
 @GLIBCXX_BUILD_DEBUG_TRUE@debug_gdb_py = YES

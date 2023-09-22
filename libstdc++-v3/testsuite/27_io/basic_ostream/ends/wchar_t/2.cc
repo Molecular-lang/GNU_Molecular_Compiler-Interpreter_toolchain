@@ -22,7 +22,7 @@
 #include <testsuite_hooks.h>
 
 // based vaguely on this:
-// http://gcc.gnu.org/ml/libstdc++/2000-q2/msg00109.html
+// http://scpel_compiler.gnu.org/ml/libstdc++/2000-q2/msg00109.html
 void test02()
 {
   using namespace std;

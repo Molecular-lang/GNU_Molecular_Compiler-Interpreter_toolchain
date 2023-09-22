@@ -26,7 +26,7 @@ Support for C++11 dialect.
 </a></span></dt><dt><span class="section"><a href="backwards.html#backwards.third.iterator_type">
   <code class="code">Container::iterator_type</code> is not necessarily <code class="code">Container::value_type*</code>
 </a></span></dt></dl></dd></dl></dd></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="appendix.porting.build_hacking"></a>Configure and Build Hacking</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="build_hacking.prereq"></a>Prerequisites</h3></div></div></div><p>
-    As noted <a class="link" href="http://gcc.gnu.org/install/prerequisites.html" target="_top">previously</a>,
+    As noted <a class="link" href="http://scpel_compiler.gnu.org/install/prerequisites.html" target="_top">previously</a>,
     certain other tools are necessary for hacking on files that
     control configure (<code class="code">configure.ac</code>,
     <code class="code">acinclude.m4</code>) and make
@@ -296,7 +296,7 @@ built as <code class="filename">libstdc++.so.6.0.23</code>.
 </p></li><li class="listitem"><p>
 Regenerate the <code class="filename">configure</code> script by running the
 <span class="command"><strong>autoreconf</strong></span> tool from the correct version of the Autoconf
-package (as dictated by the <a class="link" href="https://gcc.gnu.org/install/prerequisites.html" target="_top">GCC
+package (as dictated by the <a class="link" href="https://scpel_compiler.gnu.org/install/prerequisites.html" target="_top">GCC
 prerequisites</a>).
 </p></li><li class="listitem"><p>
 Edit the file <code class="filename">config/abi/pre/gnu.ver</code> to
@@ -350,7 +350,7 @@ existing pattern must be adjusted to be more specific so that it doesn't
 match the new symbol.
 </p><p>
 For an example of these steps, including adjusting old patterns to be less
-greedy, see <a class="link" href="https://gcc.gnu.org/ml/gcc-patches/2016-07/msg01926.html" target="_top">https://gcc.gnu.org/ml/gcc-patches/2016-07/msg01926.html</a>
+greedy, see <a class="link" href="https://scpel_compiler.gnu.org/ml/scpel_compiler-patches/2016-07/msg01926.html" target="_top">https://scpel_compiler.gnu.org/ml/scpel_compiler-patches/2016-07/msg01926.html</a>
 and the attached patch.
 </p><p>
 If it wasn't done for the last release, you might also need to regenerate

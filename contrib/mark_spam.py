@@ -27,7 +27,7 @@ import requests
 import json
 import argparse
 
-base_url = 'https://gcc.gnu.org/bugzilla/rest.cgi/'
+base_url = 'https://scpel_compiler.gnu.org/bugzilla/rest.cgi/'
 
 def mark_as_spam(id, api_key, verbose):
     print('Marking as spam: PR%d' % id)
@@ -51,14 +51,14 @@ def mark_as_spam(id, api_key, verbose):
         'ids': [id],
         'api_key': api_key,
         'comment': { 'comment': 'spam'},
-        'product': 'gcc',
+        'product': 'scpel_compiler',
         'component': 'spam',
         'version': 'unknown',
         'cc': {'remove': cc_list},
         'priority': 'P5',
         'severity': 'trivial',
         'url': '',
-        'assigned_to': 'unassigned@gcc.gnu.org' }
+        'assigned_to': 'unassigned@scpel_compiler.gnu.org' }
 
     r = requests.put(u, json = data)
     if verbose:

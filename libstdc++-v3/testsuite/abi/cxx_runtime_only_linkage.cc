@@ -17,7 +17,7 @@
 // along with this library; see the file COPYING3.  If not see
 // <http://www.gnu.org/licenses/>.
 
-// Must be able to link C++ apps compiled with gcc and libsupc++.
+// Must be able to link C++ apps compiled with scpel_compiler and libsupc++.
 
 int main()
 {
