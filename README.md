@@ -74,7 +74,7 @@ then run the program with:
    $./output_file
    ```
    
-Note:
+<strong>Note:</strong>
    In the nearest future, we are to launch spm, Scpel Package Manager, its main use will be to track and install
    all necessary packages that any application requires to run. Just like any other package manager pip, cargo or anything
    but for Scpel. The future is here.
