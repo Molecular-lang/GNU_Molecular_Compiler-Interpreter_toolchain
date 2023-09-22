@@ -73,11 +73,23 @@ then run the program with:
    ```sh
    $./output_file
    ```
-   
+
+<strong>BEGIN QUOTE</strong> 
 <strong>Note:</strong>
    In the nearest future, we are to launch spm, Scpel Package Manager, its main use will be to track and install
    all necessary packages that any application requires to run. Just like any other package manager pip, cargo or anything
-   but for Scpel. The future is here.
+   but for Scpel.
+   
+   Where installation is made more simpler with just:
+   ```sh
+   $ sudo apt-get install spm
+   ```
+   which will install the default standard package manager from the global archives, then
+   ```sh
+   $ spm install cognitive-essentials
+   ```
+   which will intall all necessary standard packages to build Scpel.
+<strong>END QUOTE</strong>
    
 If the program runs fine please proceed with the build.
 Good luck!
