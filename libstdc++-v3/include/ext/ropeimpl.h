@@ -1685,7 +1685,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     }
 
 #if !defined(__GNUC__)
-  // Appears to confuse g++
+  // Appears to confuse scpel
   inline void
   rotate(_Rope_iterator<char, __STL_DEFAULT_ALLOCATOR(char)> __first,
 	 _Rope_iterator<char, __STL_DEFAULT_ALLOCATOR(char)> __middle,

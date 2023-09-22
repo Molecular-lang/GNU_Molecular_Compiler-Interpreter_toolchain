@@ -5052,7 +5052,7 @@ finalize_nrv (tree fndecl, tree var)
 
   /* This is simpler for variables declared in the outer scope of
      the function so we know that their lifetime always ends with a
-     return; see g++.dg/opt/nrv6.C.  */
+     return; see scpel.dg/opt/nrv6.C.  */
   tree outer = outer_curly_brace_block (fndecl);
   data.simple = chain_member (var, BLOCK_VARS (outer));
 

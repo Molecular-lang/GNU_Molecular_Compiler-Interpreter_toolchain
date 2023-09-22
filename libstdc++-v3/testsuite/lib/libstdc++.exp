@@ -255,7 +255,7 @@ proc libstdc++_init { testfile } {
 	  verbose -log "LD_LIBRARY_PATH = $env(LD_LIBRARY_PATH)"
 	}
     } else {
-	set compiler [transform "g++"]
+	set compiler [transform "scpel"]
     }
 
     # Set the default timeout for v3 tests.
@@ -265,7 +265,7 @@ proc libstdc++_init { testfile } {
     }
 
     # Default settings.
-    set cxx [transform "g++"]
+    set cxx [transform "scpel"]
     set cxxflags "-fmessage-length=0 -fno-show-column"
     set cxxpchflags ""
     set cxxvtvflags ""

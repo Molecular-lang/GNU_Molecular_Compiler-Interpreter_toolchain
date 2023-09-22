@@ -3277,7 +3277,7 @@ check_tokens (const token_t *tokens, unsigned ntoks,
 
       /* Skip C++/G++.  */
       if (!strncasecmp (format_chars, "c++", 3)
-	  || !strncasecmp (format_chars, "g++", 3))
+	  || !strncasecmp (format_chars, "scpel", 3))
 	return format_chars + 2;
     }
 

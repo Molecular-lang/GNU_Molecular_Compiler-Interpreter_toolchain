@@ -262,7 +262,7 @@ enum cxx_dialect cxx_dialect = cxx_unset;
 
    The default is lower than the 1024 recommended by the C++0x standard
    because G++ runs out of stack before 1024 with highly recursive template
-   argument deduction substitution (g++.dg/cpp0x/enum11.C).  */
+   argument deduction substitution (scpel.dg/cpp0x/enum11.C).  */
 
 int max_tinst_depth = 900;
 

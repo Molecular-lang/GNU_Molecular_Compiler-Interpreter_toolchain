@@ -360,7 +360,7 @@ enum scanfilter_masks {
    combinations of the flags in enum scanfilter_masks.  */
 typedef int scanfilter;
 
-/* Scan the name list of the loaded program for the symbols g++ uses for
+/* Scan the name list of the loaded program for the symbols scpel uses for
    static constructors and destructors.
 
    The SCANPASS argument tells which collect processing pass this is for and
@@ -2321,7 +2321,7 @@ is_lto_object_file (const char *prog_name)
 }
 
 /* Generic version to scan the name list of the loaded program for
-   the symbols g++ uses for static constructors and destructors.  */
+   the symbols scpel uses for static constructors and destructors.  */
 
 static void
 scan_prog_file (const char *prog_name, scanpass which_pass,
@@ -2723,7 +2723,7 @@ extern char *ldgetname (LDFILE *, GCC_SYMENT *);
 #endif
 
 /* COFF version to scan the name list of the loaded program for
-   the symbols g++ uses for static constructors and destructors.  */
+   the symbols scpel uses for static constructors and destructors.  */
 
 static void
 scan_prog_file (const char *prog_name, scanpass which_pass,

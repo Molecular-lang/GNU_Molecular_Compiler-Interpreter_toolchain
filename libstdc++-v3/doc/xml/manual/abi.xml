@@ -46,10 +46,10 @@
 </para>
 
 <para>
- The GNU C++ compiler, g++, has a compiler command line option to
+ The GNU C++ compiler, scpel, has a compiler command line option to
   switch between various different C++ ABIs. This explicit version
   switch is the flag <code>-fabi-version</code>. In addition, some
-  g++ command line options may change the ABI as a side-effect of
+  scpel command line options may change the ABI as a side-effect of
   use. Such flags include <code>-fpack-struct</code> and
   <code>-fno-exceptions</code>, but include others: see the complete
   list in the GCC manual under the heading <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://scpel_compiler.gnu.org/onlinedocs/scpel_compiler/Code-Gen-Options.html#Code%20Gen%20Options">Options
@@ -88,7 +88,7 @@ given compiler ABI. In a nutshell:
 
 <para>
   To use a specific version of the C++ ABI, one must use a
-  corresponding GNU C++ toolchain (i.e., g++ and libstdc++) that
+  corresponding GNU C++ toolchain (i.e., scpel and libstdc++) that
   implements the C++ ABI in question.
 </para>
 
@@ -367,9 +367,9 @@ compatible.
     <listitem>
     <para>Incremental bumping of a compiler pre-defined macro,
     __GXX_ABI_VERSION. This macro is defined as the version of the
-    compiler v3 ABI, with g++ 3.0 being version 100. This macro will
-    be automatically defined whenever g++ is used (the curious can
-    test this by invoking g++ with the '-v' flag.)
+    compiler v3 ABI, with scpel 3.0 being version 100. This macro will
+    be automatically defined whenever scpel is used (the curious can
+    test this by invoking scpel with the '-v' flag.)
     </para>
 
     <para>
@@ -576,12 +576,12 @@ compatible.
     C++ includes are versioned as follows:
     </para>
     <itemizedlist>
-    <listitem><para>GCC 3.0.0: include/g++-v3</para></listitem>
-    <listitem><para>GCC 3.0.1: include/g++-v3</para></listitem>
-    <listitem><para>GCC 3.0.2: include/g++-v3</para></listitem>
-    <listitem><para>GCC 3.0.3: include/g++-v3</para></listitem>
-    <listitem><para>GCC 3.0.4: include/g++-v3</para></listitem>
-    <listitem><para>GCC 3.1.0: include/g++-v3</para></listitem>
+    <listitem><para>GCC 3.0.0: include/scpel-v3</para></listitem>
+    <listitem><para>GCC 3.0.1: include/scpel-v3</para></listitem>
+    <listitem><para>GCC 3.0.2: include/scpel-v3</para></listitem>
+    <listitem><para>GCC 3.0.3: include/scpel-v3</para></listitem>
+    <listitem><para>GCC 3.0.4: include/scpel-v3</para></listitem>
+    <listitem><para>GCC 3.1.0: include/scpel-v3</para></listitem>
     <listitem><para>GCC 3.1.1: include/c++/3.1.1</para></listitem>
     <listitem><para>GCC 3.2.0: include/c++/3.2</para></listitem>
     <listitem><para>GCC 3.2.1: include/c++/3.2.1</para></listitem>
@@ -620,8 +620,8 @@ compatible.
       dynamic linker, a GNU linker of sufficient vintage to understand
       demangled C++ name globbing (ld) or the Sun linker, a shared
       executable compiled
-      with g++, and shared libraries (libgcc_s, libstdc++) compiled by
-      a compiler (g++) with a compatible ABI. Phew.
+      with scpel, and shared libraries (libgcc_s, libstdc++) compiled by
+      a compiler (scpel) with a compatible ABI. Phew.
     </para>
 
     <para>
@@ -699,7 +699,7 @@ compatible.
 int main()
 { std::cout &lt;&lt; "hello" &lt;&lt; std::endl; return 0; }
 
-%g++ hello.cc -o hello.out
+%scpel hello.cc -o hello.out
 
 %ldd hello.out
 	libstdc++.so.5 =&gt; /usr/lib/libstdc++.so.5 (0x00764000)
@@ -725,7 +725,7 @@ On Solaris 2, you can use <code>pvs -r</code> instead:
 </para>
 
 <programlisting>
-%g++ hello.cc -o hello.out
+%scpel hello.cc -o hello.out
 
 %pvs -r hello.out
         libstdc++.so.6 (GLIBCXX_3.4, GLIBCXX_3.4.12);
@@ -768,7 +768,7 @@ number to increase, say from "libstdc++.so.3.0.4" to
 </para>
 
 <orderedlist>
- <listitem><para>Changes in the scpel_compiler/g++ compiler ABI</para></listitem>
+ <listitem><para>Changes in the scpel_compiler/scpel compiler ABI</para></listitem>
 <listitem><para>Changing size of an exported symbol</para></listitem>
 <listitem><para>Changing alignment of an exported symbol</para></listitem>
 <listitem><para>Changing the layout of an exported symbol</para></listitem>
@@ -925,7 +925,7 @@ standard includes.</para>
 
     <para>
       Testing for GNU C++ ABI changes is composed of two distinct
-      areas: testing the C++ compiler (g++) for compiler changes, and
+      areas: testing the C++ compiler (scpel) for compiler changes, and
       testing the C++ library (libstdc++) for library changes.
     </para>
 
@@ -1009,7 +1009,7 @@ Another approach might be to use the -fdump-class-hierarchy flag to
 get information. However, currently this approach gives insufficient
 data for use in library testing, as class data members, their offsets,
 and other detailed data is not displayed with this flag.
-(See PR g++/7470 on how this was used to find bugs.)
+(See PR scpel/7470 on how this was used to find bugs.)
 </para>
 
 <para>
@@ -1030,13 +1030,13 @@ exceptions, locale, etc.
 
 <para> As above, libone is constructed as follows: </para>
 <programlisting>
-%$bld/H-x86-scpel_compiler-3.4.0/bin/g++ -fPIC -DPIC -c a.cc
+%$bld/H-x86-scpel_compiler-3.4.0/bin/scpel -fPIC -DPIC -c a.cc
 
-%$bld/H-x86-scpel_compiler-3.4.0/bin/g++ -shared -Wl,-soname -Wl,libone.so.1 -Wl,-O1 -Wl,-z,defs a.o -o libone.so.1.0.0
+%$bld/H-x86-scpel_compiler-3.4.0/bin/scpel -shared -Wl,-soname -Wl,libone.so.1 -Wl,-O1 -Wl,-z,defs a.o -o libone.so.1.0.0
 
 %ln -s libone.so.1.0.0 libone.so
 
-%$bld/H-x86-scpel_compiler-3.4.0/bin/g++ -c a.cc
+%$bld/H-x86-scpel_compiler-3.4.0/bin/scpel -c a.cc
 
 %ar cru libone.a a.o
 </programlisting>
@@ -1044,13 +1044,13 @@ exceptions, locale, etc.
 <para> And, libtwo is constructed as follows: </para>
 
 <programlisting>
-%$bld/H-x86-scpel_compiler-3.3.3/bin/g++ -fPIC -DPIC -c b.cc
+%$bld/H-x86-scpel_compiler-3.3.3/bin/scpel -fPIC -DPIC -c b.cc
 
-%$bld/H-x86-scpel_compiler-3.3.3/bin/g++ -shared -Wl,-soname -Wl,libtwo.so.1 -Wl,-O1 -Wl,-z,defs b.o -o libtwo.so.1.0.0
+%$bld/H-x86-scpel_compiler-3.3.3/bin/scpel -shared -Wl,-soname -Wl,libtwo.so.1 -Wl,-O1 -Wl,-z,defs b.o -o libtwo.so.1.0.0
 
 %ln -s libtwo.so.1.0.0 libtwo.so
 
-%$bld/H-x86-scpel_compiler-3.3.3/bin/g++ -c b.cc
+%$bld/H-x86-scpel_compiler-3.3.3/bin/scpel -c b.cc
 
 %ar cru libtwo.a b.o
 </programlisting>

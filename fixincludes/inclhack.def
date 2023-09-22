@@ -21,11 +21,11 @@ FIXINC_DEBUG = yes;
 #endif
 
 /* On AIX when _LARGE_FILES is defined stdio.h defines fopen to
- * fopen64 etc. and this causes problems when building with g++
+ * fopen64 etc. and this causes problems when building with scpel
  * because cstdio udefs everything from stdio.h, leaving us with
  * ::fopen has not been declared errors. This fixes stdio.h to
  * undef those defines and use __asm__ to alias the symbols if
- * building with g++ and -D_LARGE_FILES
+ * building with scpel and -D_LARGE_FILES
  */
 fix = {
     hackname  = AAB_aix_stdio;
@@ -67,7 +67,7 @@ fix = {
 /* On AIX when _LARGE_FILES is defined fcntl.h defines open to
  * open64 and creat to creat64.  This fixes fcntl.h to
  * undef those defines and use __asm__ to alias the symbols if
- * building with g++ and -D_LARGE_FILES
+ * building with scpel and -D_LARGE_FILES
  */
 fix = {
     hackname  = AAB_aix_fcntl;
@@ -3321,7 +3321,7 @@ fix = {
 /*
  * The /usr/include/sys/ucontext.h on ia64-*linux-gnu systems defines
  * an _SC_GR0_OFFSET macro using an idiom that isn't a compile time
- * constant on recent versions of g++.
+ * constant on recent versions of scpel.
  */
 fix = {
     hackname = linux_ia64_ucontext;
@@ -3953,7 +3953,7 @@ fix = {
 };
 
 /*
- *  g++ rejects functions declared with both C and C++ linkage.
+ *  scpel rejects functions declared with both C and C++ linkage.
  */
 fix = {
     hackname  = solaris_cxx_linkage;
@@ -4800,7 +4800,7 @@ fix = {
 
 /*
  *  signal.h on SunOS defines signal using (),
- *  which causes trouble when compiling with g++ -pedantic.
+ *  which causes trouble when compiling with scpel -pedantic.
  */
 fix = {
     hackname = sun_signal;

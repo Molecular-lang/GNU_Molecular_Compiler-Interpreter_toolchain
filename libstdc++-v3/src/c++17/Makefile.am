@@ -127,7 +127,7 @@ LTCXXCOMPILE = \
 LTLDFLAGS = $(shell $(SHELL) $(top_srcdir)/../libtool-ldflags $(LDFLAGS))
 
 # 3) We'd have a problem when building the shared libstdc++ object if
-# the rules automake generates would be used.  We cannot allow g++ to
+# the rules automake generates would be used.  We cannot allow scpel to
 # be used since this would add -lstdc++ to the link line which of
 # course is problematic at this point.  So, we get the top-level
 # directory to configure libstdc++-v3 to use scpel_compiler as the C++

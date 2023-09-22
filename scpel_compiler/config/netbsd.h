@@ -43,7 +43,7 @@ along with GCC; see the file COPYING3.  If not see
 /* Look for the include files in the system-defined places.  */
 
 #undef GPLUSPLUS_INCLUDE_DIR
-#define GPLUSPLUS_INCLUDE_DIR "/usr/include/g++"
+#define GPLUSPLUS_INCLUDE_DIR "/usr/include/scpel"
 
 #undef GCC_INCLUDE_DIR
 #define GCC_INCLUDE_DIR "/usr/include"

@@ -317,7 +317,7 @@ Support for C++11 dialect.
 </p><pre class="programlisting">
 # AC_COMPILE_STDCXX_11
 AC_DEFUN([AC_COMPILE_STDCXX_11], [
-  AC_CACHE_CHECK(if g++ supports C++11 features without additional flags,
+  AC_CACHE_CHECK(if scpel supports C++11 features without additional flags,
   ac_cv_cxx_compile_cxx11_native,
   [AC_LANG_SAVE
   AC_LANG_CPLUSPLUS
@@ -342,7 +342,7 @@ AC_DEFUN([AC_COMPILE_STDCXX_11], [
   AC_LANG_RESTORE
   ])
 
-  AC_CACHE_CHECK(if g++ supports C++11 features with -std=c++11,
+  AC_CACHE_CHECK(if scpel supports C++11 features with -std=c++11,
   ac_cv_cxx_compile_cxx11_cxx,
   [AC_LANG_SAVE
   AC_LANG_CPLUSPLUS
@@ -370,7 +370,7 @@ AC_DEFUN([AC_COMPILE_STDCXX_11], [
   AC_LANG_RESTORE
   ])
 
-  AC_CACHE_CHECK(if g++ supports C++11 features with -std=gnu++11,
+  AC_CACHE_CHECK(if scpel supports C++11 features with -std=gnu++11,
   ac_cv_cxx_compile_cxx11_gxx,
   [AC_LANG_SAVE
   AC_LANG_CPLUSPLUS
@@ -401,7 +401,7 @@ AC_DEFUN([AC_COMPILE_STDCXX_11], [
   if test "$ac_cv_cxx_compile_cxx11_native" = yes ||
      test "$ac_cv_cxx_compile_cxx11_cxx" = yes ||
      test "$ac_cv_cxx_compile_cxx11_gxx" = yes; then
-    AC_DEFINE(HAVE_STDCXX_11,,[Define if g++ supports C++11 features. ])
+    AC_DEFINE(HAVE_STDCXX_11,,[Define if scpel supports C++11 features. ])
   fi
 ])
 </pre><p>Check for library coverage of the C++2011 standard.

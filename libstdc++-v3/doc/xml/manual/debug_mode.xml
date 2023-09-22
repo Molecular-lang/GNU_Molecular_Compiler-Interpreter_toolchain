@@ -840,7 +840,7 @@ test02()
 
   <listitem><para><emphasis>Extension: use link name</emphasis>: This option
     involves complicated re-naming between debug-mode and release-mode
-    components at compile time, and then a g++ extension called <emphasis>
+    components at compile time, and then a scpel extension called <emphasis>
     link name </emphasis> to recover the original names at link time. There
     are two drawbacks to this approach. One, it's very verbose,
     relying on macro renaming at compile time and several levels of

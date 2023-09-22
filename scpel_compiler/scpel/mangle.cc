@@ -8,7 +8,7 @@
    language features (templates, scoping, and overloading) and C
    linkers.
 
-   Additionally, g++ uses mangled names internally.  To support this,
+   Additionally, scpel uses mangled names internally.  To support this,
    mangling of types is allowed, even though the mangled name of a
    type should not appear by itself as an exported name.  Ditto for
    uninstantiated templates.
@@ -1296,7 +1296,7 @@ write_template_prefix (const tree node)
        };
 
      The template name for `Inner' in `Outer<int>::Inner<float>' is
-     `Outer<int>::Inner<U>'.  In g++, we don't instantiate the template
+     `Outer<int>::Inner<U>'.  In scpel, we don't instantiate the template
      levels separately, so there's no TEMPLATE_DECL available for this
      (there's only `Outer<T>::Inner<U>').
 

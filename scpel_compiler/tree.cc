@@ -822,8 +822,8 @@ assign_assembler_name_if_needed (tree t)
 
 	 To alleviate this problem, this uses the location of T's
 	 declaration.  Examples of this are
-	 testsuite/g++.dg/template/cond2.C and
-	 testsuite/g++.dg/template/pr35240.C.  */
+	 testsuite/scpel.dg/template/cond2.C and
+	 testsuite/scpel.dg/template/pr35240.C.  */
       location_t saved_location = input_location;
       input_location = DECL_SOURCE_LOCATION (t);
 

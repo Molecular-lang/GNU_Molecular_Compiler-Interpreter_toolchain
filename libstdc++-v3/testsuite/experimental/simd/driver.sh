@@ -31,7 +31,7 @@ only=
 
 usage() {
   cat <<EOF
-Usage: $0 [Options] <g++ invocation>
+Usage: $0 [Options] <scpel invocation>
 
 Options:
   -h, --help          Print this message and exit.

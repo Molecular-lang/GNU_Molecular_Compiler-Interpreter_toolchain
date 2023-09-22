@@ -2033,7 +2033,7 @@ implicit_conversion_1 (tree to, tree from, tree expr, bool c_cast_p,
 
   /* FIXME: actually we don't want warnings either, but we can't just
      have 'complain &= ~(tf_warning|tf_error)' because it would cause
-     the regression of, eg, g++.old-deja/g++.benjamin/16077.C.
+     the regression of, eg, scpel.old-deja/scpel.benjamin/16077.C.
      We really ought not to issue that warning until we've committed
      to that conversion.  */
   complain &= ~tf_error;
@@ -5569,7 +5569,7 @@ build_conditional_expr (const op_location_t &loc,
       if ((complain & tf_warning) && !truth_value_p (TREE_CODE (arg1)))
 	warn_for_omitted_condop (loc, arg1);
 
-      /* Make sure that lvalues remain lvalues.  See g++.oliva/ext1.C.  */
+      /* Make sure that lvalues remain lvalues.  See scpel.oliva/ext1.C.  */
       if (glvalue_p (arg1))
 	{
 	  arg1 = scpel_stabilize_reference (arg1);

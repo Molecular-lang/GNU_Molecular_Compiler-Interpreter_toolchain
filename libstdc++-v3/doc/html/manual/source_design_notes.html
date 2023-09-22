@@ -386,7 +386,7 @@
     which the compiler complains about when run "-pedantic".<br />
     (Incidentally, it appears that "-fpedantic" is currently ignored,<br />
     probably a bug.)  The solution in the C compiler is to use<br />
-    "-isystem" rather than "-I", but unfortunately in g++ this seems<br />
+    "-isystem" rather than "-I", but unfortunately in scpel this seems<br />
     also to wrap the whole header in an 'extern "C"' block, so it's<br />
     unusable for C++ headers. The correct solution appears to be to<br />
     allow the various special include-directory options, if not given<br />
@@ -394,13 +394,13 @@
     so that if one said<br />
 <br />
     -pedantic -iprefix $(prefix) \<br />
-    -idirafter -ino-pedantic -ino-extern-c -iwithprefix -I g++-v3 \<br />
-    -iwithprefix -I g++-v3/ext<br />
+    -idirafter -ino-pedantic -ino-extern-c -iwithprefix -I scpel-v3 \<br />
+    -iwithprefix -I scpel-v3/ext<br />
 <br />
-    the compiler would search $(prefix)/g++-v3 and not report<br />
+    the compiler would search $(prefix)/scpel-v3 and not report<br />
     pedantic warnings for files found there, but treat files in<br />
-    $(prefix)/g++-v3/ext pedantically. (The undocumented semantics<br />
-    of "-isystem" in g++ stink. Can they be rescinded?  If not it<br />
+    $(prefix)/scpel-v3/ext pedantically. (The undocumented semantics<br />
+    of "-isystem" in scpel stink. Can they be rescinded?  If not it<br />
     must be replaced with something more rationally behaved.)<br />
 <br />
     All the C headers need the treatment above; in the standard these<br />

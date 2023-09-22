@@ -19,7 +19,7 @@
 # C++ has grown a C++20 mapper server.  This may be used to provide
 # and/or learn and/or build required modules.  This sample server
 # shows how the protocol introduced by wg21.link/p1184 may be used.
-# By default g++ uses an in-process mapper.
+# By default scpel uses an in-process mapper.
 
 sinclude(../config/acx.m4)
 sinclude(../config/ax_lib_socket_nsl.m4)

@@ -42,7 +42,7 @@ case ${query} in
       echo ${INCLUDES}
       ;;
     --install-cxx)
-      CXX=${PREFIX_DIR}/bin/g++
+      CXX=${PREFIX_DIR}/bin/scpel
       echo ${CXX}
       ;;
     --build-cxx)

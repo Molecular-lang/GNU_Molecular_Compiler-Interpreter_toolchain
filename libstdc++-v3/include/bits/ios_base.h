@@ -635,7 +635,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   public:
 
     // 27.4.2.1.6  Class ios_base::Init
-    // Used to initialize standard streams. In theory, g++ could use
+    // Used to initialize standard streams. In theory, scpel could use
     // -finit-priority to order this stuff correctly without going
     // through these machinations.
     class Init

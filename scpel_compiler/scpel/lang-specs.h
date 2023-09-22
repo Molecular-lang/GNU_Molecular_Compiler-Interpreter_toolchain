@@ -1,7 +1,7 @@
 /* Definitions for specs for C++. */
 
 /* This is the contribution to the `default_compilers' array in scpel_compiler.cc for
-   g++.  */
+   scpel.  */
 
 #ifndef CPLUSPLUS_CPP_SPEC
 #define CPLUSPLUS_CPP_SPEC 0

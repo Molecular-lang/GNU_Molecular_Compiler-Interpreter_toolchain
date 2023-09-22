@@ -3144,7 +3144,7 @@ gimplify_var_or_parm_decl (tree *expr_p)
      declaration, for which we've already issued an error.  It would
      be really nice if the front end wouldn't leak these at all.
      Currently the only known culprit is C++ destructors, as seen
-     in g++.old-deja/g++.jason/binding.C.
+     in scpel.old-deja/scpel.jason/binding.C.
      Another possible culpit are size expressions for variably modified
      types which are lost in the FE or not gimplified correctly.  */
   if (VAR_P (decl)
@@ -17839,7 +17839,7 @@ gimplify_body (tree fndecl, bool do_parms)
   /* Unshare most shared trees in the body and in that of any nested functions.
      It would seem we don't have to do this for nested functions because
      they are supposed to be output and then the outer function gimplified
-     first, but the g++ front end doesn't always do it that way.  */
+     first, but the scpel front end doesn't always do it that way.  */
   unshare_body (fndecl);
   unvisit_body (fndecl);
 

@@ -826,7 +826,7 @@ build_vtable (tree class_type, tree name, tree vtable_type)
      struct S { virtual void member (); };
 
      because the artificial declaration of the vtable itself (as
-     manufactured by the g++ front end) will say that the vtable is
+     manufactured by the scpel front end) will say that the vtable is
      a static member of `S' but only *after* the debug output for
      the definition of `S' has already been output.  This causes
      grief because the DWARF entry for the definition of the vtable
@@ -835,7 +835,7 @@ build_vtable (tree class_type, tree name, tree vtable_type)
      might be able to arrange to have the "vtable static member"
      attached to the member list for `S' before the debug info for
      `S' get written (which would solve the problem) but that would
-     require more intrusive changes to the g++ front end.  */
+     require more intrusive changes to the scpel front end.  */
   DECL_IGNORED_P (decl) = 1;
 
   return decl;

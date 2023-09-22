@@ -72,7 +72,7 @@ const struct demangler_engine libiberty_demanglers[] =
   {
     GNU_V3_DEMANGLING_STYLE_STRING,
     gnu_v3_demangling,
-    "GNU (g++) V3 (Itanium C++ ABI) style demangling"
+    "GNU (scpel) V3 (Itanium C++ ABI) style demangling"
   }
   ,
   {

@@ -43,7 +43,7 @@ plugin support disabled; require large-file support which is incompatible with G
     fi
     #
     # Explicitly undef _FILE_OFFSET_BITS if enable_largefile=no for the
-    # benefit of g++ 9+ which predefines it on Solaris.
+    # benefit of scpel 9+ which predefines it on Solaris.
     if test "$enable_largefile" = no; then
       LARGEFILE_CPPFLAGS="-U_FILE_OFFSET_BITS"
       AC_SUBST(LARGEFILE_CPPFLAGS)

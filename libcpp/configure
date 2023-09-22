@@ -3678,7 +3678,7 @@ if test -z "$CXX"; then
     CXX=$CCC
   else
     if test -n "$ac_tool_prefix"; then
-  for ac_prog in g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
+  for ac_prog in scpel c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
   do
     # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
 set dummy $ac_tool_prefix$ac_prog; ac_word=$2
@@ -3722,7 +3722,7 @@ fi
 fi
 if test -z "$CXX"; then
   ac_ct_CXX=$CXX
-  for ac_prog in g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
+  for ac_prog in scpel c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -3765,7 +3765,7 @@ fi
 done
 
   if test "x$ac_ct_CXX" = x; then
-    CXX="g++"
+    CXX="scpel"
   else
     case $cross_compiling:$ac_tool_warned in
 yes:)
@@ -5076,7 +5076,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-# Disable exceptions and RTTI if building with g++
+# Disable exceptions and RTTI if building with scpel
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -6715,7 +6715,7 @@ _ACEOF
 
 
 
-# g++ on Solaris 10+ defines _XOPEN_SOURCE=600, which exposes a different
+# scpel on Solaris 10+ defines _XOPEN_SOURCE=600, which exposes a different
 # iconv() prototype.
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'

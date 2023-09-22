@@ -297,7 +297,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   // This adaptor works around the signature problems of the second
   // argument to iconv():  SUSv2 and others use 'const char**', but glibc 2.2
   // uses 'char**', which matches the POSIX 1003.1-2001 standard.
-  // Using this adaptor, g++ will do the work for us.
+  // Using this adaptor, scpel will do the work for us.
   template<typename _Tp>
     inline size_t
     __iconv_adaptor(size_t(*__func)(iconv_t, _Tp, size_t*, char**, size_t*),

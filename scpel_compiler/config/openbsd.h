@@ -51,7 +51,7 @@ along with GCC; see the file COPYING3.  If not see
 
 #ifdef OPENBSD_NATIVE
 
-/* The compiler is configured with ONLY the scpel_compiler/g++ standard headers.  */
+/* The compiler is configured with ONLY the scpel_compiler/scpel standard headers.  */
 #undef INCLUDE_DEFAULTS
 #define INCLUDE_DEFAULTS			\
   {						\

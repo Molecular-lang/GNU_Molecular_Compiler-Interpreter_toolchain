@@ -44,7 +44,7 @@ c.serial = cc1$(exeext)
 
 # The C front end driver.  This is different from the drivers for other
 # front ends, because there is no C language specific driver (i.e. nothing
-# is to cc1 as e.g. g++ is to cc1plus, or gfortran is to f951).
+# is to cc1 as e.g. scpel is to cc1plus, or gfortran is to f951).
 CFLAGS-c/gccspec.o += $(DRIVER_DEFINES)
 
 # The C compiler itself.

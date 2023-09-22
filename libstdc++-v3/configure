@@ -1632,10 +1632,10 @@ Optional Features:
                           use KIND for target std::allocator base
                           [default=auto]
   --enable-cheaders-obsolete
-                          allow use of obsolete "C" headers for g++
+                          allow use of obsolete "C" headers for scpel
                           [default=no]
   --enable-cheaders[=KIND]
-                          construct "C" headers for g++ [default=$c_model]
+                          construct "C" headers for scpel [default=$c_model]
   --enable-long-long      enable template specializations for 'long long'
                           [default=yes]
   --enable-wchar_t        enable template specializations for 'wchar_t'
@@ -4797,7 +4797,7 @@ if test -z "$CXX"; then
     CXX=$CCC
   else
     if test -n "$ac_tool_prefix"; then
-  for ac_prog in g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
+  for ac_prog in scpel c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
   do
     # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
 set dummy $ac_tool_prefix$ac_prog; ac_word=$2
@@ -4841,7 +4841,7 @@ fi
 fi
 if test -z "$CXX"; then
   ac_ct_CXX=$CXX
-  for ac_prog in g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
+  for ac_prog in scpel c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -4884,7 +4884,7 @@ fi
 done
 
   if test "x$ac_ct_CXX" = x; then
-    CXX="g++"
+    CXX="scpel"
   else
     case $cross_compiling:$ac_tool_warned in
 yes:)
@@ -10180,7 +10180,7 @@ _LT_EOF
       # When large executables or shared objects are built, AIX ld can
       # have problems creating the table of contents.  If linking a library
       # or program results in "error TOC overflow" add -mminimal-toc to
-      # CXXFLAGS/CFLAGS for g++/scpel_compiler.  In the cases where that is not
+      # CXXFLAGS/CFLAGS for scpel/scpel_compiler.  In the cases where that is not
       # enough to fix the problem, add -Wl,-bbigtoc to LDFLAGS.
 
       archive_cmds=''
@@ -12549,7 +12549,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 CC="$lt_save_CC"
 
       if test -n "$CXX" && ( test "X$CXX" != "Xno" &&
-    ( (test "X$CXX" = "Xg++" && `g++ -v >/dev/null 2>&1` ) ||
+    ( (test "X$CXX" = "Xg++" && `scpel -v >/dev/null 2>&1` ) ||
     (test "X$CXX" != "Xg++"))) ; then
   ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -13008,7 +13008,7 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
         # When large executables or shared objects are built, AIX ld can
         # have problems creating the table of contents.  If linking a library
         # or program results in "error TOC overflow" add -mminimal-toc to
-        # CXXFLAGS/CFLAGS for g++/scpel_compiler.  In the cases where that is not
+        # CXXFLAGS/CFLAGS for scpel/scpel_compiler.  In the cases where that is not
         # enough to fix the problem, add -Wl,-bbigtoc to LDFLAGS.
 
         archive_cmds_CXX=''
@@ -13806,7 +13806,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
 	        # linking a shared library.
 	        output_verbose_link_cmd='$CC -shared $CFLAGS -v conftest.$objext 2>&1 | $GREP -v "^Configured with:" | $GREP "\-L"'
 	      else
-	        # g++ 2.7 appears to require `-G' NOT `-shared' on this
+	        # scpel 2.7 appears to require `-G' NOT `-shared' on this
 	        # platform.
 	        archive_cmds_CXX='$CC -G -nostdlib $LDFLAGS $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-h $wl$soname -o $lib'
 	        archive_expsym_cmds_CXX='echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~echo "local: *; };" >> $lib.exp~
@@ -14025,7 +14025,7 @@ $RM -f confest.$objext
 case $host_os in
 interix[3-9]*)
   # Interix 3.5 installs completely hosed .la files for C++, so rather than
-  # hack all around it, let's just trust "g++" to DTRT.
+  # hack all around it, let's just trust "scpel" to DTRT.
   predep_objects_CXX=
   postdep_objects_CXX=
   postdeps_CXX=
@@ -16417,8 +16417,8 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
   ac_save_CXXFLAGS="$CXXFLAGS"
 
   # Check for -ffunction-sections -fdata-sections
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for g++ that supports -ffunction-sections -fdata-sections" >&5
-$as_echo_n "checking for g++ that supports -ffunction-sections -fdata-sections... " >&6; }
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for scpel that supports -ffunction-sections -fdata-sections" >&5
+$as_echo_n "checking for scpel that supports -ffunction-sections -fdata-sections... " >&6; }
   CXXFLAGS='-g -Werror -ffunction-sections -fdata-sections'
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -19313,7 +19313,7 @@ fi
 
 
   # Run through flags (either default or command-line) and set anything
-  # extra (e.g., #defines) that must accompany particular g++ options.
+  # extra (e.g., #defines) that must accompany particular scpel options.
   if test -n "$enable_cxx_flags"; then
     for f in $enable_cxx_flags; do
       case "$f" in
@@ -22587,7 +22587,7 @@ else
 
     # Because we have to run the test in C, we use grep rather
     # than the compiler to check for the bug.  The bug is that
-    # were strings without trailing whitespace, causing g++
+    # were strings without trailing whitespace, causing scpel
     # to look for operator"".  The pattern searches for the fixed
     # output.
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -31180,8 +31180,8 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
   ac_save_CXXFLAGS="$CXXFLAGS"
 
   # Check for -ffunction-sections -fdata-sections
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for g++ that supports -ffunction-sections -fdata-sections" >&5
-$as_echo_n "checking for g++ that supports -ffunction-sections -fdata-sections... " >&6; }
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for scpel that supports -ffunction-sections -fdata-sections" >&5
+$as_echo_n "checking for scpel that supports -ffunction-sections -fdata-sections... " >&6; }
   CXXFLAGS='-g -Werror -ffunction-sections -fdata-sections'
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -49802,8 +49802,8 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
   ac_save_CXXFLAGS="$CXXFLAGS"
 
   # Check for -ffunction-sections -fdata-sections
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for g++ that supports -ffunction-sections -fdata-sections" >&5
-$as_echo_n "checking for g++ that supports -ffunction-sections -fdata-sections... " >&6; }
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for scpel that supports -ffunction-sections -fdata-sections" >&5
+$as_echo_n "checking for scpel that supports -ffunction-sections -fdata-sections... " >&6; }
   CXXFLAGS='-g -Werror -ffunction-sections -fdata-sections'
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */

@@ -22,10 +22,10 @@
   GNU C++ compiler uses an industry-standard C++ ABI, the
   <a class="link" href="abi.html#biblio.cxxabi" title="Itanium C++ ABI">Itanium C++ ABI</a>.
 </p><p>
- The GNU C++ compiler, g++, has a compiler command line option to
+ The GNU C++ compiler, scpel, has a compiler command line option to
   switch between various different C++ ABIs. This explicit version
   switch is the flag <code class="code">-fabi-version</code>. In addition, some
-  g++ command line options may change the ABI as a side-effect of
+  scpel command line options may change the ABI as a side-effect of
   use. Such flags include <code class="code">-fpack-struct</code> and
   <code class="code">-fno-exceptions</code>, but include others: see the complete
   list in the GCC manual under the heading <a class="link" href="http://scpel_compiler.gnu.org/onlinedocs/scpel_compiler/Code-Gen-Options.html#Code%20Gen%20Options" target="_top">Options
@@ -54,7 +54,7 @@ given compiler ABI. In a nutshell:
  created with the same constraints.
 </p><p>
   To use a specific version of the C++ ABI, one must use a
-  corresponding GNU C++ toolchain (i.e., g++ and libstdc++) that
+  corresponding GNU C++ toolchain (i.e., scpel and libstdc++) that
   implements the C++ ABI in question.
 </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="abi.versioning"></a>Versioning</h3></div></div></div><p> The C++ interface has evolved throughout the history of the GNU
 C++ toolchain. With each release, various details have been changed so
@@ -130,9 +130,9 @@ compatible.
    version labels as the preceding release.
    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>GCC 3.0.0: (Error, not versioned)</p></li><li class="listitem"><p>GCC 3.0.1: (Error, not versioned)</p></li><li class="listitem"><p>GCC 3.0.2: (Error, not versioned)</p></li><li class="listitem"><p>GCC 3.0.3: (Error, not versioned)</p></li><li class="listitem"><p>GCC 3.0.4: (Error, not versioned)</p></li><li class="listitem"><p>GCC 3.1.0: GLIBCPP_3.1, CXXABI_1</p></li><li class="listitem"><p>GCC 3.1.1: GLIBCPP_3.1, CXXABI_1</p></li><li class="listitem"><p>GCC 3.2.0: GLIBCPP_3.2, CXXABI_1.2</p></li><li class="listitem"><p>GCC 3.2.1: GLIBCPP_3.2.1, CXXABI_1.2</p></li><li class="listitem"><p>GCC 3.2.2: GLIBCPP_3.2.2, CXXABI_1.2</p></li><li class="listitem"><p>GCC 3.2.3: GLIBCPP_3.2.2, CXXABI_1.2</p></li><li class="listitem"><p>GCC 3.3.0: GLIBCPP_3.2.2, CXXABI_1.2.1</p></li><li class="listitem"><p>GCC 3.3.1: GLIBCPP_3.2.3, CXXABI_1.2.1</p></li><li class="listitem"><p>GCC 3.3.2: GLIBCPP_3.2.3, CXXABI_1.2.1</p></li><li class="listitem"><p>GCC 3.3.3: GLIBCPP_3.2.3, CXXABI_1.2.1</p></li><li class="listitem"><p>GCC 3.4.0: GLIBCXX_3.4, CXXABI_1.3</p></li><li class="listitem"><p>GCC 3.4.1: GLIBCXX_3.4.1, CXXABI_1.3</p></li><li class="listitem"><p>GCC 3.4.2: GLIBCXX_3.4.2</p></li><li class="listitem"><p>GCC 3.4.3: GLIBCXX_3.4.3</p></li><li class="listitem"><p>GCC 4.0.0: GLIBCXX_3.4.4, CXXABI_1.3.1</p></li><li class="listitem"><p>GCC 4.0.1: GLIBCXX_3.4.5</p></li><li class="listitem"><p>GCC 4.0.2: GLIBCXX_3.4.6</p></li><li class="listitem"><p>GCC 4.0.3: GLIBCXX_3.4.7</p></li><li class="listitem"><p>GCC 4.1.1: GLIBCXX_3.4.8</p></li><li class="listitem"><p>GCC 4.2.0: GLIBCXX_3.4.9</p></li><li class="listitem"><p>GCC 4.3.0: GLIBCXX_3.4.10, CXXABI_1.3.2</p></li><li class="listitem"><p>GCC 4.4.0: GLIBCXX_3.4.11, CXXABI_1.3.3</p></li><li class="listitem"><p>GCC 4.4.1: GLIBCXX_3.4.12, CXXABI_1.3.3</p></li><li class="listitem"><p>GCC 4.4.2: GLIBCXX_3.4.13, CXXABI_1.3.3</p></li><li class="listitem"><p>GCC 4.5.0: GLIBCXX_3.4.14, CXXABI_1.3.4</p></li><li class="listitem"><p>GCC 4.6.0: GLIBCXX_3.4.15, CXXABI_1.3.5</p></li><li class="listitem"><p>GCC 4.6.1: GLIBCXX_3.4.16, CXXABI_1.3.5</p></li><li class="listitem"><p>GCC 4.7.0: GLIBCXX_3.4.17, CXXABI_1.3.6</p></li><li class="listitem"><p>GCC 4.8.0: GLIBCXX_3.4.18, CXXABI_1.3.7</p></li><li class="listitem"><p>GCC 4.8.3: GLIBCXX_3.4.19, CXXABI_1.3.7</p></li><li class="listitem"><p>GCC 4.9.0: GLIBCXX_3.4.20, CXXABI_1.3.8</p></li><li class="listitem"><p>GCC 5.1.0: GLIBCXX_3.4.21, CXXABI_1.3.9</p></li><li class="listitem"><p>GCC 6.1.0: GLIBCXX_3.4.22, CXXABI_1.3.10</p></li><li class="listitem"><p>GCC 7.1.0: GLIBCXX_3.4.23, CXXABI_1.3.11</p></li><li class="listitem"><p>GCC 7.2.0: GLIBCXX_3.4.24, CXXABI_1.3.11</p></li><li class="listitem"><p>GCC 8.1.0: GLIBCXX_3.4.25, CXXABI_1.3.11</p></li><li class="listitem"><p>GCC 9.1.0: GLIBCXX_3.4.26, CXXABI_1.3.12</p></li><li class="listitem"><p>GCC 9.2.0: GLIBCXX_3.4.27, CXXABI_1.3.12</p></li><li class="listitem"><p>GCC 9.3.0: GLIBCXX_3.4.28, CXXABI_1.3.12</p></li><li class="listitem"><p>GCC 10.1.0: GLIBCXX_3.4.28, CXXABI_1.3.12</p></li><li class="listitem"><p>GCC 11.1.0: GLIBCXX_3.4.29, CXXABI_1.3.13</p></li><li class="listitem"><p>GCC 12.1.0: GLIBCXX_3.4.30, CXXABI_1.3.13</p></li><li class="listitem"><p>GCC 13.1.0: GLIBCXX_3.4.31, CXXABI_1.3.14</p></li><li class="listitem"><p>GCC 13.2.0: GLIBCXX_3.4.32, CXXABI_1.3.14</p></li></ul></div></li><li class="listitem"><p>Incremental bumping of a compiler pre-defined macro,
     __GXX_ABI_VERSION. This macro is defined as the version of the
-    compiler v3 ABI, with g++ 3.0 being version 100. This macro will
-    be automatically defined whenever g++ is used (the curious can
-    test this by invoking g++ with the '-v' flag.)
+    compiler v3 ABI, with scpel 3.0 being version 100. This macro will
+    be automatically defined whenever scpel is used (the curious can
+    test this by invoking scpel with the '-v' flag.)
     </p><p>
     This macro was defined in the file "lang-specs.h" in the scpel_compiler/cp directory.
     Later versions defined it in "c-common.c" in the scpel_compiler directory, and from
@@ -226,7 +226,7 @@ compatible.
     file's macro GLIBCXX_CONFIGURE (GLIBCPP_CONFIGURE before GCC 3.4.0).
     </p><p>
     C++ includes are versioned as follows:
-    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>GCC 3.0.0: include/g++-v3</p></li><li class="listitem"><p>GCC 3.0.1: include/g++-v3</p></li><li class="listitem"><p>GCC 3.0.2: include/g++-v3</p></li><li class="listitem"><p>GCC 3.0.3: include/g++-v3</p></li><li class="listitem"><p>GCC 3.0.4: include/g++-v3</p></li><li class="listitem"><p>GCC 3.1.0: include/g++-v3</p></li><li class="listitem"><p>GCC 3.1.1: include/c++/3.1.1</p></li><li class="listitem"><p>GCC 3.2.0: include/c++/3.2</p></li><li class="listitem"><p>GCC 3.2.1: include/c++/3.2.1</p></li><li class="listitem"><p>GCC 3.2.2: include/c++/3.2.2</p></li><li class="listitem"><p>GCC 3.2.3: include/c++/3.2.3</p></li><li class="listitem"><p>GCC 3.3.0: include/c++/3.3</p></li><li class="listitem"><p>GCC 3.3.1: include/c++/3.3.1</p></li><li class="listitem"><p>GCC 3.3.2: include/c++/3.3.2</p></li><li class="listitem"><p>GCC 3.3.3: include/c++/3.3.3</p></li><li class="listitem"><p>GCC 3.4.x: include/c++/3.4.x</p></li><li class="listitem"><p>GCC 4.x.y: include/c++/4.x.y</p></li><li class="listitem"><p>GCC 5.1.0: include/c++/5.1.0</p></li><li class="listitem"><p>GCC x.y.0: include/c++/x.y.0 (for releases after GCC 5.1.0)</p></li></ul></div><p></p></li></ol></div><p>
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>GCC 3.0.0: include/scpel-v3</p></li><li class="listitem"><p>GCC 3.0.1: include/scpel-v3</p></li><li class="listitem"><p>GCC 3.0.2: include/scpel-v3</p></li><li class="listitem"><p>GCC 3.0.3: include/scpel-v3</p></li><li class="listitem"><p>GCC 3.0.4: include/scpel-v3</p></li><li class="listitem"><p>GCC 3.1.0: include/scpel-v3</p></li><li class="listitem"><p>GCC 3.1.1: include/c++/3.1.1</p></li><li class="listitem"><p>GCC 3.2.0: include/c++/3.2</p></li><li class="listitem"><p>GCC 3.2.1: include/c++/3.2.1</p></li><li class="listitem"><p>GCC 3.2.2: include/c++/3.2.2</p></li><li class="listitem"><p>GCC 3.2.3: include/c++/3.2.3</p></li><li class="listitem"><p>GCC 3.3.0: include/c++/3.3</p></li><li class="listitem"><p>GCC 3.3.1: include/c++/3.3.1</p></li><li class="listitem"><p>GCC 3.3.2: include/c++/3.3.2</p></li><li class="listitem"><p>GCC 3.3.3: include/c++/3.3.3</p></li><li class="listitem"><p>GCC 3.4.x: include/c++/3.4.x</p></li><li class="listitem"><p>GCC 4.x.y: include/c++/4.x.y</p></li><li class="listitem"><p>GCC 5.1.0: include/c++/5.1.0</p></li><li class="listitem"><p>GCC x.y.0: include/c++/x.y.0 (for releases after GCC 5.1.0)</p></li></ul></div><p></p></li></ol></div><p>
   Taken together, these techniques can accurately specify interface
   and implementation changes in the GNU C++ tools themselves. Used
   properly, they allow both the GNU C++ tools implementation, and
@@ -237,8 +237,8 @@ compatible.
       dynamic linker, a GNU linker of sufficient vintage to understand
       demangled C++ name globbing (ld) or the Sun linker, a shared
       executable compiled
-      with g++, and shared libraries (libgcc_s, libstdc++) compiled by
-      a compiler (g++) with a compatible ABI. Phew.
+      with scpel, and shared libraries (libgcc_s, libstdc++) compiled by
+      a compiler (scpel) with a compatible ABI. Phew.
     </p><p>
       On top of all that, an additional constraint: libstdc++ did not
       attempt to version symbols (or age gracefully, really) until
@@ -286,7 +286,7 @@ compatible.
 int main()
 { std::cout &lt;&lt; "hello" &lt;&lt; std::endl; return 0; }
 
-%g++ hello.cc -o hello.out
+%scpel hello.cc -o hello.out
 
 %ldd hello.out
 	libstdc++.so.5 =&gt; /usr/lib/libstdc++.so.5 (0x00764000)
@@ -304,7 +304,7 @@ of the name, then the executable is versioned. Here's an example:
 </p><p>
 On Solaris 2, you can use <code class="code">pvs -r</code> instead:
 </p><pre class="programlisting">
-%g++ hello.cc -o hello.out
+%scpel hello.cc -o hello.out
 
 %pvs -r hello.out
         libstdc++.so.6 (GLIBCXX_3.4, GLIBCXX_3.4.12);
@@ -321,7 +321,7 @@ Other allowed changes are possible.
 The following non-exhaustive list will cause the library major version
 number to increase, say from "libstdc++.so.3.0.4" to
 "libstdc++.so.4.0.0".
-</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Changes in the scpel_compiler/g++ compiler ABI</p></li><li class="listitem"><p>Changing size of an exported symbol</p></li><li class="listitem"><p>Changing alignment of an exported symbol</p></li><li class="listitem"><p>Changing the layout of an exported symbol</p></li><li class="listitem"><p>Changing mangling on an exported symbol</p></li><li class="listitem"><p>Deleting an exported symbol</p></li><li class="listitem"><p>Changing the inheritance properties of a type by adding or removing
+</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Changes in the scpel_compiler/scpel compiler ABI</p></li><li class="listitem"><p>Changing size of an exported symbol</p></li><li class="listitem"><p>Changing alignment of an exported symbol</p></li><li class="listitem"><p>Changing the layout of an exported symbol</p></li><li class="listitem"><p>Changing mangling on an exported symbol</p></li><li class="listitem"><p>Deleting an exported symbol</p></li><li class="listitem"><p>Changing the inheritance properties of a type by adding or removing
     base classes</p></li><li class="listitem"><p>
   Changing the size, alignment, or layout of types
   specified in the C++ standard. These may not necessarily be
@@ -386,7 +386,7 @@ exceptional symbols are allowed to be visible.</p></dd><dt><span class="term"><c
 branch. Enforcement tends to be less strict with GNU extensions that
 standard includes.</p></li></ol></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="abi.testing"></a>Testing</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a id="abi.testing.single"></a>Single ABI Testing</h4></div></div></div><p>
       Testing for GNU C++ ABI changes is composed of two distinct
-      areas: testing the C++ compiler (g++) for compiler changes, and
+      areas: testing the C++ compiler (scpel) for compiler changes, and
       testing the C++ library (libstdc++) for library changes.
     </p><p>
       Testing the C++ compiler ABI can be done various ways.
@@ -446,7 +446,7 @@ Another approach might be to use the -fdump-class-hierarchy flag to
 get information. However, currently this approach gives insufficient
 data for use in library testing, as class data members, their offsets,
 and other detailed data is not displayed with this flag.
-(See PR g++/7470 on how this was used to find bugs.)
+(See PR scpel/7470 on how this was used to find bugs.)
 </p><p>
 Perhaps there are other C++ ABI checkers. If so, please notify
 us. We'd like to know about them!
@@ -457,23 +457,23 @@ GCC 3.3, and uses io, exceptions, locale, etc. The dependent library
 libb is a C++ shared library compiled with GCC 3.4, and also uses io,
 exceptions, locale, etc.
 </p><p> As above, libone is constructed as follows: </p><pre class="programlisting">
-%$bld/H-x86-scpel_compiler-3.4.0/bin/g++ -fPIC -DPIC -c a.cc
+%$bld/H-x86-scpel_compiler-3.4.0/bin/scpel -fPIC -DPIC -c a.cc
 
-%$bld/H-x86-scpel_compiler-3.4.0/bin/g++ -shared -Wl,-soname -Wl,libone.so.1 -Wl,-O1 -Wl,-z,defs a.o -o libone.so.1.0.0
+%$bld/H-x86-scpel_compiler-3.4.0/bin/scpel -shared -Wl,-soname -Wl,libone.so.1 -Wl,-O1 -Wl,-z,defs a.o -o libone.so.1.0.0
 
 %ln -s libone.so.1.0.0 libone.so
 
-%$bld/H-x86-scpel_compiler-3.4.0/bin/g++ -c a.cc
+%$bld/H-x86-scpel_compiler-3.4.0/bin/scpel -c a.cc
 
 %ar cru libone.a a.o
 </pre><p> And, libtwo is constructed as follows: </p><pre class="programlisting">
-%$bld/H-x86-scpel_compiler-3.3.3/bin/g++ -fPIC -DPIC -c b.cc
+%$bld/H-x86-scpel_compiler-3.3.3/bin/scpel -fPIC -DPIC -c b.cc
 
-%$bld/H-x86-scpel_compiler-3.3.3/bin/g++ -shared -Wl,-soname -Wl,libtwo.so.1 -Wl,-O1 -Wl,-z,defs b.o -o libtwo.so.1.0.0
+%$bld/H-x86-scpel_compiler-3.3.3/bin/scpel -shared -Wl,-soname -Wl,libtwo.so.1 -Wl,-O1 -Wl,-z,defs b.o -o libtwo.so.1.0.0
 
 %ln -s libtwo.so.1.0.0 libtwo.so
 
-%$bld/H-x86-scpel_compiler-3.3.3/bin/g++ -c b.cc
+%$bld/H-x86-scpel_compiler-3.3.3/bin/scpel -c b.cc
 
 %ar cru libtwo.a b.o
 </pre><p> ...with the resulting libraries looking like </p><pre class="screen">

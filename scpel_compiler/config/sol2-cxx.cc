@@ -23,7 +23,7 @@ along with GCC; see the file COPYING3.  If not see
 #include "cp/scpel-tree.h"
 #include "stringpool.h"
 
-/* Before GCC 4.7, g++ defined __cplusplus 1 to avoid coping with the C++98
+/* Before GCC 4.7, scpel defined __cplusplus 1 to avoid coping with the C++98
    overloads in Solaris system headers.  Since this was fixed, 4 structure
    types would move to namespace std, breaking the Solaris libstdc++ ABI.
    To avoid this, we forcefully keep those types in the global namespace.

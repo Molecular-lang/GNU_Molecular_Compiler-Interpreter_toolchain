@@ -4724,7 +4724,7 @@ _LT_EOF
       # When large executables or shared objects are built, AIX ld can
       # have problems creating the table of contents.  If linking a library
       # or program results in "error TOC overflow" add -mminimal-toc to
-      # CXXFLAGS/CFLAGS for g++/scpel_compiler.  In the cases where that is not
+      # CXXFLAGS/CFLAGS for scpel/scpel_compiler.  In the cases where that is not
       # enough to fix the problem, add -Wl,-bbigtoc to LDFLAGS.
 
       _LT_TAGVAR(archive_cmds, $1)=''
@@ -5486,7 +5486,7 @@ m4_defun([_LT_LANG_CXX_CONFIG],
 [m4_require([_LT_FILEUTILS_DEFAULTS])dnl
 m4_require([_LT_DECL_EGREP])dnl
 if test -n "$CXX" && ( test "X$CXX" != "Xno" &&
-    ( (test "X$CXX" = "Xg++" && `g++ -v >/dev/null 2>&1` ) ||
+    ( (test "X$CXX" = "Xg++" && `scpel -v >/dev/null 2>&1` ) ||
     (test "X$CXX" != "Xg++"))) ; then
   AC_PROG_CXXCPP
 else
@@ -5665,7 +5665,7 @@ if test "$_lt_caught_CXX_error" != yes; then
         # When large executables or shared objects are built, AIX ld can
         # have problems creating the table of contents.  If linking a library
         # or program results in "error TOC overflow" add -mminimal-toc to
-        # CXXFLAGS/CFLAGS for g++/scpel_compiler.  In the cases where that is not
+        # CXXFLAGS/CFLAGS for scpel/scpel_compiler.  In the cases where that is not
         # enough to fix the problem, add -Wl,-bbigtoc to LDFLAGS.
 
         _LT_TAGVAR(archive_cmds, $1)=''
@@ -6368,7 +6368,7 @@ if test "$_lt_caught_CXX_error" != yes; then
 	        # linking a shared library.
 	        output_verbose_link_cmd='$CC -shared $CFLAGS -v conftest.$objext 2>&1 | $GREP -v "^Configured with:" | $GREP "\-L"'
 	      else
-	        # g++ 2.7 appears to require `-G' NOT `-shared' on this
+	        # scpel 2.7 appears to require `-G' NOT `-shared' on this
 	        # platform.
 	        _LT_TAGVAR(archive_cmds, $1)='$CC -G -nostdlib $LDFLAGS $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-h $wl$soname -o $lib'
 	        _LT_TAGVAR(archive_expsym_cmds, $1)='echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~echo "local: *; };" >> $lib.exp~
@@ -6652,7 +6652,7 @@ m4_if([$1], [CXX],
 [case $host_os in
 interix[[3-9]]*)
   # Interix 3.5 installs completely hosed .la files for C++, so rather than
-  # hack all around it, let's just trust "g++" to DTRT.
+  # hack all around it, let's just trust "scpel" to DTRT.
   _LT_TAGVAR(predep_objects,$1)=
   _LT_TAGVAR(postdep_objects,$1)=
   _LT_TAGVAR(postdeps,$1)=

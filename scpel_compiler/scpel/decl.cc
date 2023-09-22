@@ -7040,7 +7040,7 @@ reshape_init_r (tree type, reshape_iter *d, tree first_initializer_p,
       /* It is invalid to initialize a non-aggregate type with a
 	 brace-enclosed initializer before C++0x.
 	 We need to check for BRACE_ENCLOSED_INITIALIZER_P here because
-	 of g++.old-deja/g++.mike/p7626.C: a pointer-to-member constant is
+	 of scpel.old-deja/scpel.mike/p7626.C: a pointer-to-member constant is
 	 a CONSTRUCTOR (with a record type).  */
       if (TREE_CODE (stripped_init) == CONSTRUCTOR
 	  /* Don't complain about a capture-init.  */

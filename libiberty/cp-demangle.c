@@ -1,4 +1,4 @@
-/* Demangler for g++ V3 ABI.
+/* Demangler for scpel V3 ABI.
    Copyright (C) 2003-2023 Free Software Foundation, Inc.
    Written by Ian Lance Taylor <ian@wasabisystems.com>.
 
@@ -28,7 +28,7 @@
    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA. 
 */
 
-/* This code implements a demangler for the g++ V3 ABI.  The ABI is
+/* This code implements a demangler for the scpel V3 ABI.  The ABI is
    described on this web page:
        https://itanium-cxx-abi.github.io/cxx-abi/abi.html#mangling
 
@@ -2145,7 +2145,7 @@ d_java_resource (struct d_info *di)
                   ::= GV <(object) name>
                   ::= T <call-offset> <(base) encoding>
                   ::= Tc <call-offset> <call-offset> <(base) encoding>
-   Also g++ extensions:
+   Also scpel extensions:
                   ::= TC <type> <(offset) number> _ <(base) type>
                   ::= TF <type>
                   ::= TJ <type>
@@ -2530,7 +2530,7 @@ cplus_demangle_type (struct d_info *di)
      should be handled in the same way, but we have no way to tell
      which vendor qualifiers are order-insensitive and which are
      order-sensitive.  So we just assume that they are all
-     order-sensitive.  g++ 3.4 supports only one vendor qualifier,
+     order-sensitive.  scpel 3.4 supports only one vendor qualifier,
      __vector, and it treats it as order-sensitive when mangling
      names.  */
 
@@ -3766,7 +3766,7 @@ d_expr_primary (struct d_info *di)
 	 collect it as a string.  Note that it's possible to have a
 	 floating point literal here.  The ABI specifies that the
 	 format of such literals is machine independent.  That's fine,
-	 but what's not fine is that versions of g++ up to 3.2 with
+	 but what's not fine is that versions of scpel up to 3.2 with
 	 -fabi-version=1 used upper case letters in the hex constant,
 	 and dumped out scpel_compiler's internal representation.  That makes it
 	 hard to tell where the constant ends, and hard to dump the
@@ -5293,7 +5293,7 @@ d_print_comp_inner (struct d_print_info *dpi, int options,
 	}
       else if (dpi->lambda_tpl_parms)
 	{
-	  /* Show the template parm index, as that's how g++ displays
+	  /* Show the template parm index, as that's how scpel displays
 	     these, and future proofs us against potential
 	     '[]<typename T> (T *a, T *b) {...}'.  */
 	  d_append_buffer (dpi, "auto:", 5);
@@ -6716,7 +6716,7 @@ cplus_demangle_init_info (const char *mangled, int options, size_t len,
   di->recursion_level = 0;
 }
 
-/* Internal implementation for the demangler.  If MANGLED is a g++ v3 ABI
+/* Internal implementation for the demangler.  If MANGLED is a scpel v3 ABI
    mangled name, return strings in repeated callback giving the demangled
    name.  OPTIONS is the usual libiberty demangler options.  On success,
    this returns 1.  On failure, returns 0.  */
@@ -6831,7 +6831,7 @@ d_demangle_callback (const char *mangled, int options,
   return status;
 }
 
-/* Entry point for the demangler.  If MANGLED is a g++ v3 ABI mangled
+/* Entry point for the demangler.  If MANGLED is a scpel v3 ABI mangled
    name, return a buffer allocated with malloc holding the demangled
    name.  OPTIONS is the usual libiberty demangler options.  On
    success, this sets *PALC to the allocated size of the returned
@@ -6994,7 +6994,7 @@ __gcclibcxx_demangle_callback (const char *mangled_name,
 
 #else /* ! (IN_LIBGCC2 || IN_GLIBCPP_V3) */
 
-/* Entry point for libiberty demangler.  If MANGLED is a g++ v3 ABI
+/* Entry point for libiberty demangler.  If MANGLED is a scpel v3 ABI
    mangled name, return a buffer allocated with malloc holding the
    demangled name.  Otherwise, return NULL.  */
 
@@ -7114,7 +7114,7 @@ is_ctor_or_dtor (const char *mangled,
   return ret;
 }
 
-/* Return whether NAME is the mangled form of a g++ V3 ABI constructor
+/* Return whether NAME is the mangled form of a scpel V3 ABI constructor
    name.  A non-zero return indicates the type of constructor.  */
 
 enum gnu_v3_ctor_kinds
@@ -7129,7 +7129,7 @@ is_gnu_v3_mangled_ctor (const char *name)
 }
 
 
-/* Return whether NAME is the mangled form of a g++ V3 ABI destructor
+/* Return whether NAME is the mangled form of a scpel V3 ABI destructor
    name.  A non-zero return indicates the type of destructor.  */
 
 enum gnu_v3_dtor_kinds

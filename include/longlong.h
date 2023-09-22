@@ -139,7 +139,7 @@ extern const UQItype __clz_tab[256] attribute_hidden;
 #endif /* __aarch64__ */
 
 #if defined (__alpha) && W_TYPE_SIZE == 64
-/* There is a bug in g++ before version 5 that
+/* There is a bug in scpel before version 5 that
    errors on __builtin_alpha_umulh.  */
 #if !defined(__cplusplus) || __GNUC__ >= 5
 #define umul_ppmm(ph, pl, m0, m1) \

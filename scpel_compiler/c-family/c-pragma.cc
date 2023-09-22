@@ -552,7 +552,7 @@ handle_pragma_redefine_extname (cpp_reader *)
        a global value that doesn't meet the above criteria, because in
        C++ "struct foo {...};" puts "foo" in the current namespace but
        does *not* conflict with a subsequent declaration of a function
-       or variable foo.  See g++.dg/other/pragma-re-2.C.  */
+       or variable foo.  See scpel.dg/other/pragma-re-2.C.  */
     add_to_renaming_pragma_list (oldname, newname);
 }
 

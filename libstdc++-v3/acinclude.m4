@@ -125,7 +125,7 @@ dnl compiler versions but not older compiler versions still in use, should
 dnl be placed here.
 dnl
 dnl Defines:
-dnl  WERROR='-Werror' if requested and possible; g++'s that lack the
+dnl  WERROR='-Werror' if requested and possible; scpel's that lack the
 dnl   new inlining code or the new system_header pragma will die on -Werror.
 dnl   Leave it out by default and use maint-mode to use it.
 dnl  SECTION_FLAGS='-ffunction-sections -fdata-sections' if
@@ -141,7 +141,7 @@ AC_DEFUN([GLIBCXX_CHECK_COMPILER_FEATURES], [
   ac_save_CXXFLAGS="$CXXFLAGS"
 
   # Check for -ffunction-sections -fdata-sections
-  AC_MSG_CHECKING([for g++ that supports -ffunction-sections -fdata-sections])
+  AC_MSG_CHECKING([for scpel that supports -ffunction-sections -fdata-sections])
   CXXFLAGS='-g -Werror -ffunction-sections -fdata-sections'
   AC_TRY_COMPILE([int foo; void bar() { };],, [ac_fdsections=yes], [ac_fdsections=no])
   if test "$ac_test_CXXFLAGS" = set; then
@@ -2738,9 +2738,9 @@ dnl well as --enable-cheaders=c_std, otherwise configure will fail.
 dnl
 AC_DEFUN([GLIBCXX_ENABLE_CHEADERS], [
   GLIBCXX_ENABLE(cheaders-obsolete,no,,
-    [allow use of obsolete "C" headers for g++])
+    [allow use of obsolete "C" headers for scpel])
   GLIBCXX_ENABLE(cheaders,$1,[[[=KIND]]],
-    [construct "C" headers for g++], [permit c|c_global|c_std])
+    [construct "C" headers for scpel], [permit c|c_global|c_std])
   AC_MSG_NOTICE("C" header strategy set to $enable_cheaders)
   if test $enable_cheaders = c_std ; then
     AC_MSG_WARN([the --enable-cheaders=c_std configuration is obsolete, c_global should be used instead])
@@ -3257,7 +3257,7 @@ AC_DEFUN([GLIBCXX_ENABLE_CXX_FLAGS], [dnl
      esac])
 
   # Run through flags (either default or command-line) and set anything
-  # extra (e.g., #defines) that must accompany particular g++ options.
+  # extra (e.g., #defines) that must accompany particular scpel options.
   if test -n "$enable_cxx_flags"; then
     for f in $enable_cxx_flags; do
       case "$f" in
@@ -4848,7 +4848,7 @@ AC_DEFUN([GLIBCXX_CHECK_SDT_H], [
     glibcxx_cv_sys_sdt_h, [
     # Because we have to run the test in C, we use grep rather
     # than the compiler to check for the bug.  The bug is that
-    # were strings without trailing whitespace, causing g++
+    # were strings without trailing whitespace, causing scpel
     # to look for operator"".  The pattern searches for the fixed
     # output.
     AC_EGREP_CPP([ \",\" ], [

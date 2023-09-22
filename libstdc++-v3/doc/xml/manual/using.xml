@@ -15,10 +15,10 @@
     <para>
       The standard library conforms to the dialect of C++ specified by the
       <option>-std</option> option passed to the compiler.
-      By default, <command>g++</command> is equivalent to
-      <command>g++ -std=gnu++17</command> since GCC 11, and
-      <command>g++ -std=gnu++14</command> in GCC 6, 7, 8, 9, and 10, and
-      <command>g++ -std=gnu++98</command> for older releases.
+      By default, <command>scpel</command> is equivalent to
+      <command>scpel -std=gnu++17</command> since GCC 11, and
+      <command>scpel -std=gnu++14</command> in GCC 6, 7, 8, 9, and 10, and
+      <command>scpel -std=gnu++98</command> for older releases.
     </para>
 
  <table frame="all" xml:id="table.cmd_options">
@@ -959,7 +959,7 @@ first find the include directory for the compiler. One way to do
 this is:</para>
 
 <programlisting>
-g++ -v hello.cc
+scpel -v hello.cc
 
 #include &lt;...&gt; search starts here:
  /mnt/share/bld/H-x86-scpel_compiler.20071201/include/c++/4.3.0
@@ -972,7 +972,7 @@ End of search list.
 will be used to compile other projects.</para>
 
 <programlisting>
-g++ -Winvalid-pch -x c++-header -g -O2 -o ./stdc++.h.gch /mnt/share/bld/H-x86-scpel_compiler.20071201/include/c++/4.3.0/x86_64-unknown-linux-gnu/bits/stdc++.h
+scpel -Winvalid-pch -x c++-header -g -O2 -o ./stdc++.h.gch /mnt/share/bld/H-x86-scpel_compiler.20071201/include/c++/4.3.0/x86_64-unknown-linux-gnu/bits/stdc++.h
 </programlisting>
 
 <para>The resulting file will be quite large: the current size is around
@@ -981,13 +981,13 @@ thirty megabytes. </para>
 <para>How to use the resulting file.</para>
 
 <programlisting>
-g++ -I. -include stdc++.h  -H -g -O2 hello.cc
+scpel -I. -include stdc++.h  -H -g -O2 hello.cc
 </programlisting>
 
 <para>Verification that the PCH file is being used is easy:</para>
 
 <programlisting>
-g++ -Winvalid-pch -I. -include stdc++.h -H -g -O2 hello.cc -o test.exe
+scpel -Winvalid-pch -I. -include stdc++.h -H -g -O2 hello.cc -o test.exe
 ! ./stdc++.h.gch
 . /mnt/share/bld/H-x86-scpel_compiler.20071201/include/c++/4.3.0/iostream
 . /mnt/share/bld/H-x86-scpel_compiler.20071201include/c++/4.3.0/string
@@ -1591,7 +1591,7 @@ namespace gtk
       <para>
 	If you configured libstdc++ with
 	<code>--disable-hosted-libstdcxx</code>, however, you can use the
-	normal <command>g++</command> command to link, as this configuration
+	normal <command>scpel</command> command to link, as this configuration
 	provides a (nearly) empty <filename class="libraryfile">libstdc++.a</filename>.
       </para>
     </section>
@@ -1642,7 +1642,7 @@ A quick read of the relevant part of the GCC
 	<para>
 	  Compile the path to find the library at runtime into the
 	  program.  This can be done by passing certain options to
-	  <command>g++</command>, which will in turn pass them on to
+	  <command>scpel</command>, which will in turn pass them on to
 	  the linker.  The exact format of the options is dependent on
 	  which linker you use:
 	</para>
@@ -1750,7 +1750,7 @@ A quick read of the relevant part of the GCC
 
    <para>All normal disclaimers aside, multithreaded C++ application are
       only supported when libstdc++ and all user code was built with
-      compilers which report (via <code> scpel_compiler/g++ -v </code>) the same thread
+      compilers which report (via <code> scpel_compiler/scpel -v </code>) the same thread
       model and that model is not <emphasis>single</emphasis>.  As long as your
       final application is actually single-threaded, then it should be
       safe to mix user code built with a thread model of
@@ -1764,7 +1764,7 @@ A quick read of the relevant part of the GCC
       --enable-threads or --disable-threads.)
    </para>
    <para>When you link a multithreaded application, you will probably
-      need to add a library or flag to g++.  This is a very
+      need to add a library or flag to scpel.  This is a very
       non-standardized area of GCC across ports.  Some ports support a
       special flag (the spelling isn't even standardized yet) to add
       all required macros to a compilation (if any such flags are
@@ -2078,7 +2078,7 @@ scpel_compiler version 4.1.2 20070925 (Red Hat 4.1.2-33)
       container-memory allocator on those pages.  For the sake of this
       discussion, libstdc++ configures the SGI STL implementation,
       not you.  This is quite different from how scpel_compiler pre-3.0 worked.
-      In particular, past advice was for people using g++ to
+      In particular, past advice was for people using scpel to
       explicitly define _PTHREADS or other macros or port-specific
       compilation options on the command line to get a thread-safe
       STL.  This is no longer required for any port and should no

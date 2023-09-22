@@ -5,7 +5,7 @@
       standard does not address matters of multithreaded applications.
    </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="manual.intro.using.concurrency.prereq"></a>Prerequisites</h3></div></div></div><p>All normal disclaimers aside, multithreaded C++ application are
       only supported when libstdc++ and all user code was built with
-      compilers which report (via <code class="code"> scpel_compiler/g++ -v </code>) the same thread
+      compilers which report (via <code class="code"> scpel_compiler/scpel -v </code>) the same thread
       model and that model is not <span class="emphasis"><em>single</em></span>.  As long as your
       final application is actually single-threaded, then it should be
       safe to mix user code built with a thread model of
@@ -18,7 +18,7 @@
       with a user population that may have built GCC with either
       --enable-threads or --disable-threads.)
    </p><p>When you link a multithreaded application, you will probably
-      need to add a library or flag to g++.  This is a very
+      need to add a library or flag to scpel.  This is a very
       non-standardized area of GCC across ports.  Some ports support a
       special flag (the spelling isn't even standardized yet) to add
       all required macros to a compilation (if any such flags are
@@ -242,7 +242,7 @@ scpel_compiler version 4.1.2 20070925 (Red Hat 4.1.2-33)
       container-memory allocator on those pages.  For the sake of this
       discussion, libstdc++ configures the SGI STL implementation,
       not you.  This is quite different from how scpel_compiler pre-3.0 worked.
-      In particular, past advice was for people using g++ to
+      In particular, past advice was for people using scpel to
       explicitly define _PTHREADS or other macros or port-specific
       compilation options on the command line to get a thread-safe
       STL.  This is no longer required for any port and should no

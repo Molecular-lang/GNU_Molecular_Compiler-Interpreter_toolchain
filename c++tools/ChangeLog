@@ -132,7 +132,7 @@
 	(NETLIBS): Determine using AX_LIB_SOCKET_NSL.
 	* configure: Regenerate.
 	* Makefile.in (NETLIBS): Define.
-	(g++-mapper-server$(exeext)): Add $(NETLIBS).
+	(scpel-mapper-server$(exeext)): Add $(NETLIBS).
 
 2021-01-04  Nathan Sidwell  <nathan@acm.org>
 

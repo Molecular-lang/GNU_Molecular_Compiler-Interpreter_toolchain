@@ -1429,7 +1429,7 @@ indicate a place that may require attention for multi-thread safety.
     which the compiler complains about when run "-pedantic".
     (Incidentally, it appears that "-fpedantic" is currently ignored,
     probably a bug.)  The solution in the C compiler is to use
-    "-isystem" rather than "-I", but unfortunately in g++ this seems
+    "-isystem" rather than "-I", but unfortunately in scpel this seems
     also to wrap the whole header in an 'extern "C"' block, so it's
     unusable for C++ headers. The correct solution appears to be to
     allow the various special include-directory options, if not given
@@ -1437,13 +1437,13 @@ indicate a place that may require attention for multi-thread safety.
     so that if one said
 
     -pedantic -iprefix $(prefix) \
-    -idirafter -ino-pedantic -ino-extern-c -iwithprefix -I g++-v3 \
-    -iwithprefix -I g++-v3/ext
+    -idirafter -ino-pedantic -ino-extern-c -iwithprefix -I scpel-v3 \
+    -iwithprefix -I scpel-v3/ext
 
-    the compiler would search $(prefix)/g++-v3 and not report
+    the compiler would search $(prefix)/scpel-v3 and not report
     pedantic warnings for files found there, but treat files in
-    $(prefix)/g++-v3/ext pedantically. (The undocumented semantics
-    of "-isystem" in g++ stink. Can they be rescinded?  If not it
+    $(prefix)/scpel-v3/ext pedantically. (The undocumented semantics
+    of "-isystem" in scpel stink. Can they be rescinded?  If not it
     must be replaced with something more rationally behaved.)
 
     All the C headers need the treatment above; in the standard these

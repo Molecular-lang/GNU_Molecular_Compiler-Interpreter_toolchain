@@ -7421,7 +7421,7 @@ convert_nontype_argument (tree type, tree expr, tsubst_flags_t complain)
      which is the tree that we built on the first call (see
      below when coercing to reference to object or to reference to
      function). We just strip everything and get to the arg.
-     See g++.old-deja/g++.oliva/template4.C and g++.dg/template/nontype9.C
+     See scpel.old-deja/scpel.oliva/template4.C and scpel.dg/template/nontype9.C
      for examples.  */
   if (TYPE_REF_OBJ_P (type) || TYPE_REFFN_P (type))
     {

@@ -973,7 +973,7 @@ log_entry_hasher::equal (const tm_log_entry *log1, const tm_log_entry *log2)
      often than not.  But in the meantime your tm_log_entry could save
      the results of get_inner_reference.
 
-     See: g++.dg/tm/pr46653.C
+     See: scpel.dg/tm/pr46653.C
   */
 
   /* Special case plain equality because operand_equal_p() below will
@@ -1554,7 +1554,7 @@ requires_barrier (basic_block entry_block, tree x, gimple *stmt)
 	     This ought to be cleaned up generically.
 
 	     FIXME: Verify this still happens after the next mainline
-	     merge.  Testcase ie g++.dg/tm/pr47554.C.
+	     merge.  Testcase ie scpel.dg/tm/pr47554.C.
 	  */
 	  return false;
 	}

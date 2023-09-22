@@ -1186,7 +1186,7 @@ digest_init_r (tree type, tree init, int nested, int flags,
     flags |= LOOKUP_AGGREGATE_PAREN_INIT;
 
   /* Strip NON_LVALUE_EXPRs since we aren't using as an lvalue
-     (g++.old-deja/g++.law/casts2.C).  */
+     (scpel.old-deja/scpel.law/casts2.C).  */
   if (TREE_CODE (init) == NON_LVALUE_EXPR)
     stripped_init = TREE_OPERAND (init, 0);
 
@@ -1991,7 +1991,7 @@ process_init_constructor_union (tree type, tree init, int nested, int flags,
 	;
       else if (identifier_p (ce->index))
 	{
-	  /* This can happen within a cast, see g++.dg/opt/cse2.C.  */
+	  /* This can happen within a cast, see scpel.dg/opt/cse2.C.  */
 	  tree name = ce->index;
 	  tree field;
 	  for (field = TYPE_FIELDS (type); field; field = TREE_CHAIN (field))

@@ -407,12 +407,12 @@ As a result:
   As usual, for full conformance to the standard, you also need a
   C library that conforms.
 
-The following lists changes that have been made to g++.  If some
+The following lists changes that have been made to scpel.  If some
 features mentioned below sound unfamiliar, you will probably want to
 look at the recently-released public review copy of the C++ Working
 Paper.  For PostScript and PDF (Adobe Acrobat) versions, see the
 archive at ftp://research.att.com/dist/stdc++/WP.  For HTML and ASCII
-versions, see ftp://ftp.cygnus.com/pub/g++.  On the web, see
+versions, see ftp://ftp.cygnus.com/pub/scpel.  On the web, see
 http://www.cygnus.com/~mrs/wp-draft.
 
 The scope of variables declared in the for-init-statement has been changed
@@ -427,7 +427,7 @@ Binary incompatibilities:
     for code efficiency; it remains one byte long on CISC targets.
 
     Code that does not use #pragma interface/implementation will most
-    likely shrink dramatically, as g++ now only emits the vtable for a
+    likely shrink dramatically, as scpel now only emits the vtable for a
     class in the translation unit where its first non-inline, non-abstract
     virtual function is defined.
 
@@ -467,7 +467,7 @@ The 'explicit' keyword is now supported.  'explicit' is used to mark
 constructors and type conversion operators that should not be used
 implicitly.
 
-g++ now accepts the typename keyword, though it currently has no
+scpel now accepts the typename keyword, though it currently has no
 semantics; it can be a no-op in the current template implementation.
 You may want to start using it in your code, however, since the
 pending rewrite of the template implementation to compile STL properly
@@ -481,7 +481,7 @@ expressions and function calls.
 -fno-strict-prototype now only applies to function declarations with
 "C" linkage.
 
-g++ now warns about 'if (x=0)' with -Wparentheses or -Wall.
+scpel now warns about 'if (x=0)' with -Wparentheses or -Wall.
 
 #pragma weak and #pragma pack are supported on System V R4 targets, as
 are various other target-specific #pragmas supported by scpel_compiler.
@@ -493,7 +493,7 @@ Explicit instantiation of template methods is now supported.  Also,
 'inline template class foo<int>;' can be used to emit only the vtable
 for a template class.
 
-With -fcheck-new, g++ will check the return value of all calls to
+With -fcheck-new, scpel will check the return value of all calls to
 operator new, and not attempt to modify a returned null pointer.
 
 The template instantiation code now handles more conversions when
@@ -595,7 +595,7 @@ Signatures have been added as a GNU C++ extension.  Using the option
 signatures.  A short introduction on signatures is in the section
 `Extension to the C++ Language' in the manual.
 
-The `g++' program is now a C program, rather than a shell script.
+The `scpel' program is now a C program, rather than a shell script.
 
 Lots and lots and lots of bugs fixes, in nested types, access control,
 pointers to member functions, the parser, templates, overload
@@ -809,10 +809,10 @@ support module has been added to libgcc2 that appends the basic block
 information to a text file 'bb.out'.  Machine descriptions can now
 override the basic block support module in the target macro file.
 
-New features in g++:
+New features in scpel:
 
 * The new flag `-fansi-overloading' for C++.  Use a newly implemented
-scheme of argument matching for C++.  It makes g++ more accurately
+scheme of argument matching for C++.  It makes scpel more accurately
 obey the rules set down in Chapter 13 of the Annotated C++ Reference
 Manual (the ARM).  This option will be turned on by default in a
 future release.
@@ -833,9 +833,9 @@ future release.
   will now (in theory) support up to 240 nested classes before hitting
   other system limits (like memory size).
 
-* There is a new C version of the `g++' driver, to replace the old
+* There is a new C version of the `scpel' driver, to replace the old
   shell script.  This should significantly improve the performance of
-  executing g++ on a system where a user's PATH environment variable
+  executing scpel on a system where a user's PATH environment variable
   references many NFS-mounted filesystems.  This driver also works
   under MS-DOS and OS/2.
 
@@ -845,8 +845,8 @@ future release.
 
 Noteworthy GCC changes in version 2.4.4:
 
-  A crash building g++ on various hosts (including m68k) has been
-  fixed.  Also the g++ compiler no longer reports incorrect
+  A crash building scpel on various hosts (including m68k) has been
+  fixed.  Also the scpel compiler no longer reports incorrect
   ambiguities in some situations where they do not exist, and
   const template member functions are now being found properly.
 

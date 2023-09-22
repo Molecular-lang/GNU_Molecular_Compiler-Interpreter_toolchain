@@ -1,5 +1,5 @@
 /* Definitions relating to the special __do_global_init function used
-   for getting g++ file-scope static objects constructed.  This file
+   for getting scpel file-scope static objects constructed.  This file
    will get included either by libgcc2.c (for systems that don't support
    a .init section) or by crtstuff.c (for those that do).
    Copyright (C) 1991-2023 Free Software Foundation, Inc.

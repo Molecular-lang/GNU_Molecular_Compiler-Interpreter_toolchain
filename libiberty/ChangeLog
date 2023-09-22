@@ -1323,7 +1323,7 @@
 
 2018-03-02  David Malcolm  <dmalcolm@redhat.com>
 
-	* cp-demangle.c: Update URL for g++ V3 ABI.
+	* cp-demangle.c: Update URL for scpel V3 ABI.
 
 2018-01-20  Eli Zaretskii  <eliz@gnu.org>
 
@@ -6420,7 +6420,7 @@
 	for integer template parameters. This doesn't break anything
 	because multi-digit numbers are never followed by a digit.
 	* testsuite/demangle-expected: Corrected all mangled test
-	cases with multi-digit template parameters: g++ 2.95.x does
+	cases with multi-digit template parameters: scpel 2.95.x does
 	not generate underscores around these parameters.
 
 2002-02-05  Jason Merrill  <jason@redhat.com>

@@ -17,7 +17,7 @@
   are some of them.
 </para>
 
-<section xml:id="debug.compiler"><info><title>Using <command>g++</command></title></info>
+<section xml:id="debug.compiler"><info><title>Using <command>scpel</command></title></info>
 
   <para>
     Compiler flags determine how debug information is transmitted

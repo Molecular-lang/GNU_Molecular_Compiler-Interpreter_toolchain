@@ -343,7 +343,7 @@ get_range_global (vrange &r, tree name, struct function *fun = cfun)
 // SSAs, if we pick things up to early, we may prematurely eliminate
 // builtin_unreachables.
 //
-// Without this restriction, the test in g++.dg/tree-ssa/pr61034.C has
+// Without this restriction, the test in scpel.dg/tree-ssa/pr61034.C has
 // all of its unreachable calls removed too early.
 //
 // See discussion here:

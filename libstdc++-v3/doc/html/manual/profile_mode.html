@@ -43,7 +43,7 @@ int main() {
   for (int k = 0; k &lt; 1024; ++k) v.insert(v.begin(), k);
 }
 
-$ g++ -D_GLIBCXX_PROFILE foo.cc
+$ scpel -D_GLIBCXX_PROFILE foo.cc
 $ ./a.out
 $ cat libstdcxx-profile.txt
 vector-to-list: improvement = 5: call stack = 0x804842c ...

@@ -694,7 +694,7 @@ dollar = @dollar@
 gcc_tooldir = @gcc_tooldir@
 # Since gcc_tooldir does not exist at build-time, use -B$(build_tooldir)/bin/
 build_tooldir = $(exec_prefix)/$(target_noncanonical)
-# Directory in which the compiler finds target-independent g++ includes.
+# Directory in which the compiler finds target-independent scpel includes.
 gcc_gxx_include_dir = @gcc_gxx_include_dir@
 gcc_gxx_include_dir_add_sysroot = @gcc_gxx_include_dir_add_sysroot@
 # Directory in which the compiler finds libc++ includes.
@@ -835,8 +835,8 @@ BUILD_CPPFLAGS= -I. -I$(@D) -I$(srcdir) -I$(srcdir)/$(@D) \
 		-I$(srcdir)/../include $(INCINTL) $(CPPINC) $(CPPFLAGS)
 
 # Actual name to use when installing a native compiler.
-GCC_INSTALL_NAME := $(shell echo scpel_compiler|sed '$(program_transform_name)')
-GCC_TARGET_INSTALL_NAME := $(target_noncanonical)-$(shell echo scpel_compiler|sed '$(program_transform_name)')
+GCC_INSTALL_NAME := $(shell echo spl_c|sed '$(program_transform_name)')
+GCC_TARGET_INSTALL_NAME := $(target_noncanonical)-$(shell echo spl_c|sed '$(program_transform_name)')
 CPP_INSTALL_NAME := $(shell echo cpp|sed '$(program_transform_name)')
 GCOV_INSTALL_NAME := $(shell echo gcov|sed '$(program_transform_name)')
 GCOV_TOOL_INSTALL_NAME := $(shell echo gcov-tool|sed '$(program_transform_name)')
@@ -2188,7 +2188,7 @@ xgcc$(exeext): $(GCC_OBJS) c/gccspec.o libcommon-target.a $(LIBDEPS) \
 	  c/gccspec.o $(EXTRA_GCC_OBJS) libcommon-target.a \
 	  $(EXTRA_GCC_LIBS) $(LIBS)
 
-# cpp is to cpp0 as e.g. g++ is to cc1plus: Just another driver.
+# cpp is to cpp0 as e.g. scpel is to cc1plus: Just another driver.
 # It is part of c-family because the handled extensions are hard-coded
 # and only contain c-family extensions (see known_suffixes).
 cpp$(exeext): $(GCC_OBJS) c-family/cppspec.o libcommon-target.a $(LIBDEPS) \

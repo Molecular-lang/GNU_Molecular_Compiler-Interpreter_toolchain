@@ -1011,7 +1011,7 @@ dump_type_suffix (cxx_pretty_printer *pp, tree t, int flags)
 	  arg = TREE_CHAIN (arg);
 
 	/* Function pointers don't have default args.  Not in standard C++,
-	   anyway; they may in g++, but we'll just pretend otherwise.  */
+	   anyway; they may in scpel, but we'll just pretend otherwise.  */
 	dump_parameters (pp, arg, flags & ~TFF_FUNCTION_DEFAULT_ARGUMENTS);
 
 	pp->padding = pp_before;

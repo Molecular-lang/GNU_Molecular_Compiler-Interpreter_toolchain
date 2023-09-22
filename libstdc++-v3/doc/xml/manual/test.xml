@@ -168,7 +168,7 @@ regressions, ABI, and performance.
       to finish or pass. At the moment, the interactive tests are not
       run by default. Instead, they are run by hand, like:
       <programlisting>
-g++ 27_io/objects/char/3_xin.cc
+scpel 27_io/objects/char/3_xin.cc
 cat 27_io/objects/char/3_xin.in | a.out</programlisting>
   </listitem>
 </varlistentry>
@@ -367,7 +367,7 @@ cat 27_io/objects/char/3_xin.in | a.out</programlisting>
     <para>
       You can run the tests with a compiler and library that have
       already been installed.  Make sure that the compiler (e.g.,
-      <command>g++</command>) is in your <envar>PATH</envar>.  If you are
+      <command>scpel</command>) is in your <envar>PATH</envar>.  If you are
       using shared libraries, then you must also ensure that the
       directory containing the shared version of libstdc++ is in your
       <envar>LD_LIBRARY_PATH</envar>, or

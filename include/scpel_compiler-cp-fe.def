@@ -76,7 +76,7 @@ GCC_METHOD1 (int /* bool */, push_function,
    As for making a local declaration visible for the code snippet,
    there are two possibilities: a) introduce it upfront, while
    entering the scope for the user expression (see the enter_scope
-   callback, called by g++ when encountering the push_user_expression
+   callback, called by scpel when encountering the push_user_expression
    pragma), which might save some scope switching and reactivate_decl
    (though this can't be helped if some declarations have to be
    introduced and discarded, because of multiple definitions of the
@@ -126,7 +126,7 @@ GCC_METHOD1 (int /* bool */, push_function,
    So, we declare c, then we leave the function scope and reenter it
    so as to declare c_0 (also with name "c", which is why we have to
    leave and reenter the function scope, otherwise we would get an
-   error because of the duplicate definition; g++ will assign a
+   error because of the duplicate definition; scpel will assign a
    discriminator because it still remembers there was an earlier
    declaration of c_0 within the function, it's just no longer in
    scope), then we can define c_0, including its member function f.

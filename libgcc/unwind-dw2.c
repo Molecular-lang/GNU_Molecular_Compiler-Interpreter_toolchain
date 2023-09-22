@@ -423,7 +423,7 @@ extract_cie_info (const struct dwarf_cie *cie, struct _Unwind_Context *context,
   _uleb128_t utmp;
   _sleb128_t stmp;
 
-  /* g++ v2 "eh" has pointer immediately following augmentation string,
+  /* scpel v2 "eh" has pointer immediately following augmentation string,
      so it must be handled first.  */
   if (aug[0] == 'e' && aug[1] == 'h')
     {

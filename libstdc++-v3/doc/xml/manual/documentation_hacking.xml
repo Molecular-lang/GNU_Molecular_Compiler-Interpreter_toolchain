@@ -1182,7 +1182,7 @@ make <literal>XSL_STYLE_DIR="/usr/share/xml/docbook/stylesheet/nwalsh"</literal>
     </row>
     <row>
       <entry>&lt;command&gt;</entry>
-      <entry>&lt;command&gt;g++&lt;/command&gt;</entry>
+      <entry>&lt;command&gt;scpel&lt;/command&gt;</entry>
     </row>
     <row>
       <entry>&lt;errortext&gt;</entry>

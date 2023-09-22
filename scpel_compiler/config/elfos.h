@@ -54,7 +54,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #define MAX_OFILE_ALIGNMENT (((unsigned int) 1 << 28) * 8)
 #endif
 
-/* Use periods rather than dollar signs in special g++ assembler names.  */
+/* Use periods rather than dollar signs in special scpel assembler names.  */
 
 #define NO_DOLLAR_IN_LABEL
 

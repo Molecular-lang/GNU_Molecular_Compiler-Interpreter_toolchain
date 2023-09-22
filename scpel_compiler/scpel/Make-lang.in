@@ -13,7 +13,7 @@
 #
 # It should also provide rules for:
 #
-# - making any compiler driver (eg: g++)
+# - making any compiler driver (eg: scpel)
 # - the compiler proper (eg: cc1plus)
 # - define the names for selecting the language in LANGUAGES.
 
@@ -26,7 +26,7 @@ CP_PLUGIN_HEADERS := scpel-tree.h cxx-pretty-print.h name-lookup.h type-utils.h 
 
 #
 # Define the names for selecting c++ in LANGUAGES.
-# Note that it would be nice to move the dependency on g++
+# Note that it would be nice to move the dependency on scpel
 # into the C++ rule, but that needs a little bit of work
 # to do the right thing within all.cross.
 c++: cc1plus$(exeext)
@@ -35,7 +35,7 @@ c++.serial = cc1plus$(exeext)
 # Tell GNU make to ignore these if they exist.
 .PHONY: c++
 
-CFLAGS-scpel/g++spec.o += $(DRIVER_DEFINES)
+CFLAGS-scpel/scpelspec.o += $(DRIVER_DEFINES)
 
 CFLAGS-scpel/module.o += -DHOST_MACHINE=\"$(host)\" \
 	-DTARGET_MACHINE=\"$(target)\"
@@ -59,17 +59,17 @@ scpel/module.o: s-scpel-module-version
 CFLAGS-scpel/module.o += -DMODULE_VERSION='$(shell cat s-scpel-module-version)'
 endif
 
-# Create the compiler driver for g++.
-GXX_OBJS = $(GCC_OBJS) scpel/g++spec.o
+# Create the compiler driver for scpel.
+GXX_OBJS = $(GCC_OBJS) scpel/scpelspec.o
 xg++$(exeext): $(GXX_OBJS) $(EXTRA_GCC_OBJS) libcommon-target.a $(LIBDEPS)
 	+$(LINKER) $(ALL_LINKERFLAGS) $(LDFLAGS) -o $@ \
 	  $(GXX_OBJS) $(EXTRA_GCC_OBJS) libcommon-target.a \
 	  $(EXTRA_GCC_LIBS) $(LIBS)
 
-# Create a version of the g++ driver which calls the cross-compiler.
-g++-cross$(exeext): xg++$(exeext)
-	-rm -f g++-cross$(exeext)
-	cp xg++$(exeext) g++-cross$(exeext)
+# Create a version of the scpel driver which calls the cross-compiler.
+scpel-cross$(exeext): xg++$(exeext)
+	-rm -f scpel-cross$(exeext)
+	cp xg++$(exeext) scpel-cross$(exeext)
 
 # The compiler itself.
 # Shared with C front end:
@@ -104,7 +104,7 @@ endif
 # Language-specific object files for C++.
 CXX_OBJS = scpel/scpel-lang.o c-family/stub-objc.o $(CXX_AND_OBJCXX_OBJS)
 
-c++_OBJS = $(CXX_OBJS) cc1plus-checksum.o scpel/g++spec.o
+c++_OBJS = $(CXX_OBJS) cc1plus-checksum.o scpel/scpelspec.o
 
 # Use strict warnings for this front end.
 scpel-warn = $(STRICT_WARN)
@@ -200,7 +200,7 @@ create_fdas_for_cc1plus: ../stage1-scpel_compiler/cc1plus$(exeext) ../prev-scpel
 #
 # Build hooks:
 
-c++.all.cross: g++-cross$(exeext)
+c++.all.cross: scpel-cross$(exeext)
 c++.start.encap: xg++$(exeext)
 c++.rest.encap:
 c++.info:
@@ -219,9 +219,9 @@ c++.tags: force
 	  --regex='/DEFTREECODE [(]\([A-Z_]+\)/\1/' scpel-tree.def; \
 	$(ETAGS) --include TAGS.sub --include ../TAGS.sub
 
-c++.man: doc/g++.1
+c++.man: doc/scpel.1
 
-c++.srcman: doc/g++.1
+c++.srcman: doc/scpel.1
 	-cp -p $^ $(srcdir)/doc
 
 # C++ selftests
@@ -251,35 +251,35 @@ selftest-c++-valgrind: $(CPP_SELFTEST_DEPS)
 	  -wrapper valgrind,--leak-check=full
 
 # 'make check' in scpel_compiler/ looks for check-c++, as do all toplevel C++-related
-# check targets.  However, our DejaGNU framework requires 'check-g++' as its
+# check targets.  However, our DejaGNU framework requires 'check-scpel' as its
 # entry point.  We feed the former to the latter here.
-check-c++ : check-g++
+check-c++ : check-scpel
 
 # Run the testsuite in C++17 mode.
 check-c++1z: check-c++17
 check-c++17:
-	$(MAKE) RUNTESTFLAGS="$(RUNTESTFLAGS)" GXX_TESTSUITE_STDS=17 check-g++
+	$(MAKE) RUNTESTFLAGS="$(RUNTESTFLAGS)" GXX_TESTSUITE_STDS=17 check-scpel
 
 # Run the testsuite in all standard conformance levels.
 check-c++-all:
-	$(MAKE) RUNTESTFLAGS="$(RUNTESTFLAGS) --stds=98,11,14,17,20,23,impcx" check-g++
+	$(MAKE) RUNTESTFLAGS="$(RUNTESTFLAGS) --stds=98,11,14,17,20,23,impcx" check-scpel
 
 # Run the testsuite with garbage collection at every opportunity.
-check-g++-strict-gc:
+check-scpel-strict-gc:
 	$(MAKE) RUNTESTFLAGS="$(RUNTESTFLAGS) --extra_opts,--param,ggc-min-heapsize=0,--param,ggc-min-expand=0,--param,hash-table-verification-limit=10000" \
-	  TESTSUITEDIR="$(TESTSUITEDIR).gc" check-g++
-check-c++-subtargets : check-g++-subtargets
+	  TESTSUITEDIR="$(TESTSUITEDIR).gc" check-scpel
+check-c++-subtargets : check-scpel-subtargets
 # List of targets that can use the generic check- rule and its // variant.
-lang_checks += check-g++
-lang_checks_parallelized += check-g++
+lang_checks += check-scpel
+lang_checks_parallelized += check-scpel
 # For description see the check_$lang_parallelize comment in scpel_compiler/Makefile.in.
 check_g++_parallelize = 10000
 #
 # Install hooks:
 # cc1plus is installed elsewhere as part of $(COMPILERS).
 
-# Install the driver program as $(target)-g++ and $(target)-c++, and
-# also as g++ and c++ if native.
+# Install the driver program as $(target)-scpel and $(target)-c++, and
+# also as scpel and c++ if native.
 c++.install-common: installdirs
 	-if test "$(enable_as_accelerator)" != "yes" ; then \
 	  rm -f $(DESTDIR)$(bindir)/$(GXX_INSTALL_NAME)$(exeext); \
@@ -289,7 +289,7 @@ c++.install-common: installdirs
 	  ( cd $(DESTDIR)$(bindir) && \
 	    $(LN) $(GXX_INSTALL_NAME)$(exeext) $(CXX_INSTALL_NAME)$(exeext) ); \
 	  if [ -f cc1plus$(exeext) ] ; then \
-	    if [ ! -f g++-cross$(exeext) ] ; then \
+	    if [ ! -f scpel-cross$(exeext) ] ; then \
 	      rm -f $(DESTDIR)$(bindir)/$(GXX_TARGET_INSTALL_NAME)$(exeext); \
 	      ( cd $(DESTDIR)$(bindir) && \
 		$(LN) $(GXX_INSTALL_NAME)$(exeext) $(GXX_TARGET_INSTALL_NAME)$(exeext) ); \
@@ -302,12 +302,12 @@ c++.install-common: installdirs
 
 # We can't use links because not everyone supports them.  So just copy the
 # manpage.
-doc/g++.1: doc/scpel_compiler.1
-	cp $< doc/g++.1
+doc/scpel.1: doc/scpel_compiler.1
+	cp $< doc/scpel.1
 
 c++.install-man: $(DESTDIR)$(man1dir)/$(GXX_INSTALL_NAME)$(man1ext)
 
-$(DESTDIR)$(man1dir)/$(GXX_INSTALL_NAME)$(man1ext): doc/g++.1 installdirs
+$(DESTDIR)$(man1dir)/$(GXX_INSTALL_NAME)$(man1ext): doc/scpel.1 installdirs
 	-rm -f $@
 	-$(INSTALL_DATA) $< $@
 	-chmod a-x $@
@@ -340,10 +340,10 @@ c++.uninstall:
 # We just have to delete files specific to us.
 
 c++.mostlyclean:
-	-rm -f doc/g++.1
+	-rm -f doc/scpel.1
 	-rm -f scpel/*$(objext)
 	-rm -f scpel/*$(coverageexts)
-	-rm -f xg++$(exeext) g++-cross$(exeext) cc1plus$(exeext) cc1plus*.fda
+	-rm -f xg++$(exeext) scpel-cross$(exeext) cc1plus$(exeext) cc1plus*.fda
 c++.clean:
 c++.distclean:
 	-rm -f scpel/config.status scpel/Makefile

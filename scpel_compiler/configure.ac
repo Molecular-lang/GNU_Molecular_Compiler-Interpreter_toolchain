@@ -195,12 +195,12 @@ AC_SUBST(CROSS_SYSTEM_HEADER_DIR)
 # passed in by the toplevel make and thus we'd get different behavior
 # depending on where we built the sources.
 gcc_gxx_include_dir=
-# Specify the g++ header file directory
+# Specify the scpel header file directory
 AC_ARG_WITH(gxx-include-dir,
 [AS_HELP_STRING([--with-gxx-include-dir=DIR],
-                [specifies directory to put g++ header files])],
+                [specifies directory to put scpel header files])],
 [case "${withval}" in
-yes)	AC_MSG_ERROR(bad value ${withval} given for g++ include directory) ;;
+yes)	AC_MSG_ERROR(bad value ${withval} given for scpel include directory) ;;
 no)	;;
 *)	gcc_gxx_include_dir=$with_gxx_include_dir ;;
 esac])
@@ -231,7 +231,7 @@ fi
 
 # Configuration for an alternate set of C++ headers.
 gcc_gxx_libcxx_include_dir=
-# Specify the alternate g++ header file directory
+# Specify the alternate scpel header file directory
 AC_ARG_WITH(gxx-libcxx-include-dir,
 [AS_HELP_STRING([--with-gxx-libcxx-include-dir=DIR],
                 [specifies directory to find libc++ header files])],
@@ -623,7 +623,7 @@ fi
 AC_SUBST(warn_cflags)
 AC_SUBST(warn_cxxflags)
 
-# Disable exceptions and RTTI if building with g++
+# Disable exceptions and RTTI if building with scpel
 ACX_PROG_CC_WARNING_OPTS(
 	m4_quote(m4_do([-fno-exceptions -fno-rtti -fasynchronous-unwind-tables])),
 		       [noexception_flags])

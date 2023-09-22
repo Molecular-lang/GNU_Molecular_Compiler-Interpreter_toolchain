@@ -1,21 +1,4 @@
-/* Compiler driver program that can handle many languages.
-   Copyright (C) 1987-2023 Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free
-Software Foundation; either version 3, or (at your option) any later
-version.
-
-GCC is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-for more details.
-
-You should have received a copy of the GNU General Public License
-along with GCC; see the file COPYING3.  If not see
-<http://www.gnu.org/licenses/>.  */
+/* Compiler driver program that can handle many languages. */
 
 /* This program is the user interface to the C compiler and possibly to
 other compilers.  It is used because compilation is a complicated procedure
@@ -1411,26 +1394,12 @@ static const struct compiler default_compilers[] =
      were not present when we built the driver, we will hit these copies
      and be given a more meaningful error than "file not used since
      linking is not done".  */
-  {".m",  "#Objective-C", 0, 0, 0}, {".mi",  "#Objective-C", 0, 0, 0},
-  {".mm", "#Objective-C++", 0, 0, 0}, {".M", "#Objective-C++", 0, 0, 0},
-  {".mii", "#Objective-C++", 0, 0, 0},
   {".cc", "#C++", 0, 0, 0}, {".cxx", "#C++", 0, 0, 0},
+  {".co", "#C++", 0, 0, 0}, {".scpel", "#C++", 0, 0, 0},
+  {".spl", "#C++", 0, 0, 0},
   {".cpp", "#C++", 0, 0, 0}, {".cp", "#C++", 0, 0, 0},
   {".c++", "#C++", 0, 0, 0}, {".C", "#C++", 0, 0, 0},
   {".CPP", "#C++", 0, 0, 0}, {".ii", "#C++", 0, 0, 0},
-  {".ads", "#Ada", 0, 0, 0}, {".adb", "#Ada", 0, 0, 0},
-  {".f", "#Fortran", 0, 0, 0}, {".F", "#Fortran", 0, 0, 0},
-  {".for", "#Fortran", 0, 0, 0}, {".FOR", "#Fortran", 0, 0, 0},
-  {".ftn", "#Fortran", 0, 0, 0}, {".FTN", "#Fortran", 0, 0, 0},
-  {".fpp", "#Fortran", 0, 0, 0}, {".FPP", "#Fortran", 0, 0, 0},
-  {".f90", "#Fortran", 0, 0, 0}, {".F90", "#Fortran", 0, 0, 0},
-  {".f95", "#Fortran", 0, 0, 0}, {".F95", "#Fortran", 0, 0, 0},
-  {".f03", "#Fortran", 0, 0, 0}, {".F03", "#Fortran", 0, 0, 0},
-  {".f08", "#Fortran", 0, 0, 0}, {".F08", "#Fortran", 0, 0, 0},
-  {".r", "#Ratfor", 0, 0, 0},
-  {".go", "#Go", 0, 1, 0},
-  {".d", "#D", 0, 1, 0}, {".dd", "#D", 0, 1, 0}, {".di", "#D", 0, 1, 0},
-  {".mod", "#Modula-2", 0, 0, 0}, {".m2i", "#Modula-2", 0, 0, 0},
   /* Next come the entries for C.  */
   {".c", "@c", 0, 0, 1},
   {"@c",
@@ -4582,7 +4551,7 @@ driver_handle_option (struct gcc_options *opts,
       spec_lang = arg;
       if (!strcmp (spec_lang, "none"))
 	/* Suppress the warning if -xnone comes after the last input
-	   file, because alternate command interfaces like g++ might
+	   file, because alternate command interfaces like scpel might
 	   find it useful to place -xnone after each input file.  */
 	spec_lang = 0;
       else
@@ -4618,7 +4587,7 @@ driver_handle_option (struct gcc_options *opts,
 	 libgfortran.spec handles -static-libquadmath,
 	 d-spec.cc understands -static-libphobos,
 	 gm2spec.cc understands -static-libgm2,
-	 and g++spec.cc understands -static-libstdc++.  */
+	 and scpelspec.cc understands -static-libstdc++.  */
       validated = true;
       break;
 

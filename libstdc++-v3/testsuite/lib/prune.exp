@@ -14,7 +14,7 @@
 # along with this program; see the file COPYING3.  If not see
 # <http://www.gnu.org/licenses/>.
 
-# Prune messages from g++ that aren't useful.
+# Prune messages from scpel that aren't useful.
 
 # Prune any messages matching ARGS[1] (a regexp) from test output.
 proc dg-prune-output { args } {

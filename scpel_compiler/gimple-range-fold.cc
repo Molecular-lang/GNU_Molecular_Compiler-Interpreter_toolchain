@@ -606,7 +606,7 @@ fold_using_range::fold_stmt (vrange &r, gimple *s, fur_source &src, tree name)
 
   // If the result is varying, check for basic nonnegativeness.
   // Specifically this helps for now with strict enum in cases like
-  // g++.dg/warn/pr33738.C.
+  // scpel.dg/warn/pr33738.C.
   bool so_p;
   if (res && r.varying_p () && INTEGRAL_TYPE_P (r.type ())
       && gimple_stmt_nonnegative_warnv_p (s, &so_p))

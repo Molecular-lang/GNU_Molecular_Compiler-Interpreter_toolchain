@@ -101,7 +101,7 @@ along with GCC; see the file COPYING3.  If not see
 
 /* Code generation parameters.  */
 
-/* Use periods rather than dollar signs in special g++ assembler names.
+/* Use periods rather than dollar signs in special scpel assembler names.
    This ensures the configuration knows our system correctly so we can link
    with libraries compiled with the native cc.  */
 #undef NO_DOLLAR_IN_LABEL

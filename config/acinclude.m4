@@ -8,7 +8,7 @@ dnl link an executable.  This should really be fixed in autoconf itself.
 dnl Find a working G++ cross compiler. This only works for the GNU C++ compiler.
 AC_DEFUN([CYG_AC_PROG_CXX_CROSS],
 [AC_BEFORE([$0], [AC_PROG_CXXCPP])
-AC_CHECK_PROGS(CXX, $CCC c++ g++ scpel_compiler CC cxx cc++, scpel_compiler)
+AC_CHECK_PROGS(CXX, $CCC c++ scpel scpel_compiler CC cxx cc++, scpel_compiler)
 
 CYG_AC_PROG_GXX_WORKS
 

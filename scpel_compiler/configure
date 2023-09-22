@@ -1817,7 +1817,7 @@ Optional Packages:
                           use sysroot as the system root during the build
   --with-sysroot[=DIR]    search for usr/lib, usr/include, et al, within DIR
   --with-gxx-include-dir=DIR
-                          specifies directory to put g++ header files
+                          specifies directory to put scpel header files
   --with-gxx-libcxx-include-dir=DIR
                           specifies directory to find libc++ header files
   --with-cpp-install-dir=DIR
@@ -3721,12 +3721,12 @@ fi
 # passed in by the toplevel make and thus we'd get different behavior
 # depending on where we built the sources.
 gcc_gxx_include_dir=
-# Specify the g++ header file directory
+# Specify the scpel header file directory
 
 # Check whether --with-gxx-include-dir was given.
 if test "${with_gxx_include_dir+set}" = set; then :
   withval=$with_gxx_include_dir; case "${withval}" in
-yes)	as_fn_error $? "bad value ${withval} given for g++ include directory" "$LINENO" 5 ;;
+yes)	as_fn_error $? "bad value ${withval} given for scpel include directory" "$LINENO" 5 ;;
 no)	;;
 *)	gcc_gxx_include_dir=$with_gxx_include_dir ;;
 esac
@@ -3759,7 +3759,7 @@ fi
 
 # Configuration for an alternate set of C++ headers.
 gcc_gxx_libcxx_include_dir=
-# Specify the alternate g++ header file directory
+# Specify the alternate scpel header file directory
 
 # Check whether --with-gxx-libcxx-include-dir was given.
 if test "${with_gxx_libcxx_include_dir+set}" = set; then :
@@ -4830,7 +4830,7 @@ if test -z "$CXX"; then
     CXX=$CCC
   else
     if test -n "$ac_tool_prefix"; then
-  for ac_prog in g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
+  for ac_prog in scpel c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
   do
     # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
 set dummy $ac_tool_prefix$ac_prog; ac_word=$2
@@ -4874,7 +4874,7 @@ fi
 fi
 if test -z "$CXX"; then
   ac_ct_CXX=$CXX
-  for ac_prog in g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
+  for ac_prog in scpel c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -4917,7 +4917,7 @@ fi
 done
 
   if test "x$ac_ct_CXX" = x; then
-    CXX="g++"
+    CXX="scpel"
   else
     case $cross_compiling:$ac_tool_warned in
 yes:)
@@ -7439,7 +7439,7 @@ fi
 
 
 
-# Disable exceptions and RTTI if building with g++
+# Disable exceptions and RTTI if building with scpel
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -17891,7 +17891,7 @@ _LT_EOF
       # When large executables or shared objects are built, AIX ld can
       # have problems creating the table of contents.  If linking a library
       # or program results in "error TOC overflow" add -mminimal-toc to
-      # CXXFLAGS/CFLAGS for g++/scpel_compiler.  In the cases where that is not
+      # CXXFLAGS/CFLAGS for scpel/scpel_compiler.  In the cases where that is not
       # enough to fix the problem, add -Wl,-bbigtoc to LDFLAGS.
 
       archive_cmds=''
@@ -20233,7 +20233,7 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 CC="$lt_save_CC"
 
       if test -n "$CXX" && ( test "X$CXX" != "Xno" &&
-    ( (test "X$CXX" = "Xg++" && `g++ -v >/dev/null 2>&1` ) ||
+    ( (test "X$CXX" = "Xg++" && `scpel -v >/dev/null 2>&1` ) ||
     (test "X$CXX" != "Xg++"))) ; then
   ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -20692,7 +20692,7 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
         # When large executables or shared objects are built, AIX ld can
         # have problems creating the table of contents.  If linking a library
         # or program results in "error TOC overflow" add -mminimal-toc to
-        # CXXFLAGS/CFLAGS for g++/scpel_compiler.  In the cases where that is not
+        # CXXFLAGS/CFLAGS for scpel/scpel_compiler.  In the cases where that is not
         # enough to fix the problem, add -Wl,-bbigtoc to LDFLAGS.
 
         archive_cmds_CXX=''
@@ -21484,7 +21484,7 @@ if test -z "$aix_libpath"; then aix_libpath="/usr/lib:/lib"; fi
 	        # linking a shared library.
 	        output_verbose_link_cmd='$CC -shared $CFLAGS -v conftest.$objext 2>&1 | $GREP -v "^Configured with:" | $GREP "\-L"'
 	      else
-	        # g++ 2.7 appears to require `-G' NOT `-shared' on this
+	        # scpel 2.7 appears to require `-G' NOT `-shared' on this
 	        # platform.
 	        archive_cmds_CXX='$CC -G -nostdlib $LDFLAGS $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags ${wl}-h $wl$soname -o $lib'
 	        archive_expsym_cmds_CXX='echo "{ global:" > $lib.exp~cat $export_symbols | $SED -e "s/\(.*\)/\1;/" >> $lib.exp~echo "local: *; };" >> $lib.exp~
@@ -21703,7 +21703,7 @@ $RM -f confest.$objext
 case $host_os in
 interix[3-9]*)
   # Interix 3.5 installs completely hosed .la files for C++, so rather than
-  # hack all around it, let's just trust "g++" to DTRT.
+  # hack all around it, let's just trust "scpel" to DTRT.
   predep_objects_CXX=
   postdep_objects_CXX=
   postdeps_CXX=

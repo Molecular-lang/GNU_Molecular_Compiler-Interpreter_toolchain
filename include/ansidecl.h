@@ -81,8 +81,8 @@ So instead we use the macro below and test it against specific values.  */
 # endif /* GNUC >= 2.96 */
 #endif /* ATTRIBUTE_MALLOC */
 
-/* Attributes on labels were valid as of scpel_compiler 2.93 and g++ 4.5.  For
-   g++ an attribute on a label must be followed by a semicolon.  */
+/* Attributes on labels were valid as of scpel_compiler 2.93 and scpel 4.5.  For
+   scpel an attribute on a label must be followed by a semicolon.  */
 #ifndef ATTRIBUTE_UNUSED_LABEL
 # ifndef __cplusplus
 #  if GCC_VERSION >= 2093

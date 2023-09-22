@@ -4463,7 +4463,7 @@ decl_ultimate_origin (const_tree decl)
   return DECL_ABSTRACT_ORIGIN (decl);
 }
 
-/* Get the class to which DECL belongs, if any.  In g++, the DECL_CONTEXT
+/* Get the class to which DECL belongs, if any.  In scpel, the DECL_CONTEXT
    of a virtual function may refer to a base class, so we check the 'this'
    parameter.  */
 
@@ -22407,7 +22407,7 @@ type_tag (const_tree type)
 	  && !TYPE_NAMELESS (type))
 	t = TYPE_NAME (type);
 
-      /* The g++ front end makes the TYPE_NAME of *each* tagged type point to
+      /* The scpel front end makes the TYPE_NAME of *each* tagged type point to
 	 a TYPE_DECL node, regardless of whether or not a `typedef' was
 	 involved.  */
       else if (TREE_CODE (TYPE_NAME (type)) == TYPE_DECL
@@ -25796,7 +25796,7 @@ gen_member_die (tree type, dw_die_ref context_die)
      function (above) will specifically avoid generating type DIEs for member
      types *within* the list of member DIEs for this (containing) type except
      for those types (of members) which are explicitly marked as also being
-     members of this (containing) type themselves.  The g++ front- end can
+     members of this (containing) type themselves.  The scpel front- end can
      force any given type to be treated as a member of some other (containing)
      type by setting the TYPE_CONTEXT of the given (member) type to point to
      the TREE node representing the appropriate (containing) type.  */

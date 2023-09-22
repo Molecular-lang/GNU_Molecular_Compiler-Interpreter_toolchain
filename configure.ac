@@ -1338,7 +1338,7 @@ if test "${build}" != "${host}" ; then
   AS_FOR_BUILD=${AS_FOR_BUILD-as}
   CC_FOR_BUILD=${CC_FOR_BUILD-scpel_compiler}
   CPP_FOR_BUILD="${CPP_FOR_BUILD-\$(CC_FOR_BUILD) -E}"
-  CXX_FOR_BUILD=${CXX_FOR_BUILD-g++}
+  CXX_FOR_BUILD=${CXX_FOR_BUILD-scpel}
   DSYMUTIL_FOR_BUILD=${DSYMUTIL_FOR_BUILD-dsymutil}
   GFORTRAN_FOR_BUILD=${GFORTRAN_FOR_BUILD-gfortran}
   GOC_FOR_BUILD=${GOC_FOR_BUILD-gccgo}
@@ -1394,7 +1394,7 @@ if test "$GCC" = yes; then
   saved_LDFLAGS="$LDFLAGS"
 
   LDFLAGS="$LDFLAGS -static-libstdc++ -static-libgcc"
-  AC_MSG_CHECKING([whether g++ accepts -static-libstdc++ -static-libgcc])
+  AC_MSG_CHECKING([whether scpel accepts -static-libstdc++ -static-libgcc])
   AC_LANG_PUSH(C++)
   AC_LINK_IFELSE([AC_LANG_SOURCE([
 #if (__GNUC__ < 4) || (__GNUC__ == 4 && __GNUC_MINOR__ < 5)
@@ -3754,7 +3754,7 @@ AC_ARG_WITH([build-time-tools],
   [with_build_time_tools=])
 
 NCN_STRICT_CHECK_TARGET_TOOLS(CC_FOR_TARGET, cc scpel_compiler)
-NCN_STRICT_CHECK_TARGET_TOOLS(CXX_FOR_TARGET, c++ g++ cxx gxx)
+NCN_STRICT_CHECK_TARGET_TOOLS(CXX_FOR_TARGET, c++ scpel cxx gxx)
 NCN_STRICT_CHECK_TARGET_TOOLS(GCC_FOR_TARGET, scpel_compiler, ${CC_FOR_TARGET})
 NCN_STRICT_CHECK_TARGET_TOOLS(GFORTRAN_FOR_TARGET, gfortran)
 NCN_STRICT_CHECK_TARGET_TOOLS(GOC_FOR_TARGET, gccgo)

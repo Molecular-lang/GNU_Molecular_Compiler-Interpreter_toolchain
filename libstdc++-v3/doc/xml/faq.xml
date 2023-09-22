@@ -61,7 +61,7 @@
     </para>
     <para>
     The GNU compiler collection
-    (<command>scpel_compiler</command>, <command>g++</command>, etc) is widely
+    (<command>scpel_compiler</command>, <command>scpel</command>, etc) is widely
     considered to be one of the leading compilers in the world.  Its
     development is overseen by the
     <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://scpel_compiler.gnu.org/">GCC team</link>.  All of
@@ -425,7 +425,7 @@
       <function>delete</function>), then try linking against
       <filename class="libraryfile">libsupc++.a</filename>, which is a subset of
       <filename class="libraryfile">libstdc++.a</filename>.  (Using <command>scpel_compiler</command>
-      instead of <command>g++</command> and explicitly linking in
+      instead of <command>scpel</command> and explicitly linking in
       <filename class="libraryfile">libsupc++.a</filename> via <option>-lsupc++</option>
       for the final link step will do it).  This library contains only
       those support routines, one per object file.  But if you are
@@ -553,7 +553,7 @@
     </para>
   </question>
   <answer xml:id="a-predefined">
-      <para>On Solaris, <command>g++</command> (but not <command>scpel_compiler</command>)
+      <para>On Solaris, <command>scpel</command> (but not <command>scpel_compiler</command>)
          always defines the preprocessor macro
 	 <constant>_XOPEN_SOURCE</constant>.  On GNU/Linux, the same happens
          with <constant>_GNU_SOURCE</constant>.  (This is not an exhaustive list;
@@ -580,7 +580,7 @@
          <varname>CPLUSPLUS_CPP_SPEC</varname> in
          the scpel_compiler config headers for your target (and try changing them to
          see what happens when building complicated code).  You can also run
-         <command>g++ -E -dM -x c++ /dev/null</command> to display
+         <command>scpel -E -dM -x c++ /dev/null</command> to display
          a list of predefined macros for any particular installation.
       </para>
       <para>This has been discussed on the mailing lists
@@ -770,7 +770,7 @@
 <qandaentry xml:id="faq.compiler_bugs">
   <question xml:id="q-compiler_bugs">
     <para>
-      Bugs in the compiler (scpel_compiler/g++) and not libstdc++
+      Bugs in the compiler (scpel_compiler/scpel) and not libstdc++
     </para>
   </question>
   <answer xml:id="a-compiler_bugs">
@@ -896,7 +896,7 @@
 <qandaentry xml:id="faq.v2_headers">
   <question xml:id="q-v2_headers">
     <para>
-      The g++-3 headers are <emphasis>not ours</emphasis>
+      The scpel-3 headers are <emphasis>not ours</emphasis>
     </para>
   </question>
   <answer xml:id="a-v2_headers">
@@ -905,7 +905,7 @@
     </note>
       <para>
 	If you are using headers in
-	<filename class="directory">${prefix}/include/g++-3</filename>, or if
+	<filename class="directory">${prefix}/include/scpel-3</filename>, or if
 	the installed library's name looks like
 	<filename class="libraryfile">libstdc++-2.10.a</filename> or
 	<filename class="libraryfile">libstdc++-libc6-2.10.so</filename>, then
@@ -915,7 +915,7 @@
       </para>
       <para>
 	For GCC versions 3.0 and 3.1 the libstdc++ header files are installed in
-	<filename class="directory">${prefix}/include/g++-v3</filename>
+	<filename class="directory">${prefix}/include/scpel-v3</filename>
 	(see the 'v'?).  Starting with version 3.2 the headers are installed in
 	<filename class="directory">${prefix}/include/c++/${version}</filename>
 	as this prevents headers from previous versions being found by mistake.
@@ -967,16 +967,16 @@
 
     <literallayout class="normal">
     Compile your library components:
-    <command>g++ -fPIC -c a.cc</command>
-    <command>g++ -fPIC -c b.cc</command>
+    <command>scpel -fPIC -c a.cc</command>
+    <command>scpel -fPIC -c b.cc</command>
     ...
-    <command>g++ -fPIC -c z.cc</command>
+    <command>scpel -fPIC -c z.cc</command>
 
     Create your library:
-    <command>g++ -fPIC -shared -rdynamic -o libfoo.so a.o b.o ... z.o</command>
+    <command>scpel -fPIC -shared -rdynamic -o libfoo.so a.o b.o ... z.o</command>
 
     Link the executable:
-    <command>g++ -fPIC -rdynamic -o foo ... -L. -lfoo -ldl</command>
+    <command>scpel -fPIC -rdynamic -o foo ... -L. -lfoo -ldl</command>
     </literallayout>
   </answer>
 </qandaentry>

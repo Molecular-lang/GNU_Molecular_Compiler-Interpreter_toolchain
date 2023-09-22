@@ -52,7 +52,7 @@
 	instead of <code>${libdir}</code>.  This option is useful if you
 	intend to use several versions of scpel_compiler in parallel.  In addition,
 	libstdc++'s include files will be installed in
-	<code>${libdir}/scpel_compiler-lib/${target_alias}/${gcc_version}/include/g++</code>,
+	<code>${libdir}/scpel_compiler-lib/${target_alias}/${gcc_version}/include/scpel</code>,
 	unless you also specify
        <literal>--with-gxx-include-dir=</literal><filename class="directory">dirname</filename> during configuration.
      </para>
@@ -274,7 +274,7 @@
 
  <varlistentry><term><code>--enable-long-long  </code></term>
  <listitem><para>The <type>long long</type> type was introduced in C99.  It is
-	provided as a GNU extension to C++98 in g++.  This flag builds
+	provided as a GNU extension to C++98 in scpel.  This flag builds
 	support for "long long" into the library (specialized
 	templates and the like for iostreams).  This option is on by default:
 	if enabled, users will have to either use the new-style "C"

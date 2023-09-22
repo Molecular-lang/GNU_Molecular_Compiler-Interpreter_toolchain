@@ -153,10 +153,10 @@
     </para>
 
     <para>
-     For <command>g++</command>, <constant>NULL</constant> is
+     For <command>scpel</command>, <constant>NULL</constant> is
      <code>#define</code>'d to be
      <constant>__null</constant>, a magic keyword extension of
-     <command>g++</command> that is slightly safer than a plain integer.
+     <command>scpel</command> that is slightly safer than a plain integer.
     </para>
 
     <para>

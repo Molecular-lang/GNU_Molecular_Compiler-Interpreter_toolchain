@@ -2039,7 +2039,7 @@ start_bitfield_representative (tree field)
   /* Force the representative to begin at a BITS_PER_UNIT aligned
      boundary - C++ may use tail-padding of a base object to
      continue packing bits so the bitfield region does not start
-     at bit zero (see g++.dg/abi/bitfield5.C for example).
+     at bit zero (see scpel.dg/abi/bitfield5.C for example).
      Unallocated bits may happen for other reasons as well,
      for example Ada which allows explicit bit-granular structure layout.  */
   DECL_FIELD_BIT_OFFSET (repr)

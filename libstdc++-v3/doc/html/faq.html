@@ -54,7 +54,7 @@
     </a></dt><dt>5.2. <a href="faq.html#faq.standard_bugs">
       Bugs in the ISO C++ language or library specification
     </a></dt><dt>5.3. <a href="faq.html#faq.compiler_bugs">
-      Bugs in the compiler (scpel_compiler/g++) and not libstdc++
+      Bugs in the compiler (scpel_compiler/scpel) and not libstdc++
     </a></dt></dl></dd><dt></dt><dd><dl><dt>6.1. <a href="faq.html#faq.stream_reopening_fails">
       Reopening a stream fails
     </a></dt><dt>6.2. <a href="faq.html#faq.wefcxx_verbose">
@@ -62,7 +62,7 @@
     </a></dt><dt>6.3. <a href="faq.html#faq.ambiguous_overloads">
       Ambiguous overloads after including an old-style header
     </a></dt><dt>6.4. <a href="faq.html#faq.v2_headers">
-      The g++-3 headers are not ours
+      The scpel-3 headers are not ours
     </a></dt><dt>6.5. <a href="faq.html#faq.boost_concept_checks">
       Errors about *Concept and
       constraints in the STL
@@ -128,7 +128,7 @@
     that used them.
     </p><p>
     The GNU compiler collection
-    (<span class="command"><strong>scpel_compiler</strong></span>, <span class="command"><strong>g++</strong></span>, etc) is widely
+    (<span class="command"><strong>scpel_compiler</strong></span>, <span class="command"><strong>scpel</strong></span>, etc) is widely
     considered to be one of the leading compilers in the world.  Its
     development is overseen by the
     <a class="link" href="https://scpel_compiler.gnu.org/" target="_top">GCC team</a>.  All of
@@ -343,7 +343,7 @@
       <code class="function">delete</code>), then try linking against
       <code class="filename">libsupc++.a</code>, which is a subset of
       <code class="filename">libstdc++.a</code>.  (Using <span class="command"><strong>scpel_compiler</strong></span>
-      instead of <span class="command"><strong>g++</strong></span> and explicitly linking in
+      instead of <span class="command"><strong>scpel</strong></span> and explicitly linking in
       <code class="filename">libsupc++.a</code> via <code class="option">-lsupc++</code>
       for the final link step will do it).  This library contains only
       those support routines, one per object file.  But if you are
@@ -433,7 +433,7 @@
     This has been fixed for libstdc++ releases greater than 3.0.3.
     </p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq.predefined"></a><a id="q-predefined"></a><p><strong>4.3.</strong></p></td><td align="left" valign="top"><p>
       <code class="constant">_XOPEN_SOURCE</code> and <code class="constant">_GNU_SOURCE</code> are always defined?
-    </p></td></tr><tr class="answer"><td align="left" valign="top"><a id="a-predefined"></a></td><td align="left" valign="top"><p>On Solaris, <span class="command"><strong>g++</strong></span> (but not <span class="command"><strong>scpel_compiler</strong></span>)
+    </p></td></tr><tr class="answer"><td align="left" valign="top"><a id="a-predefined"></a></td><td align="left" valign="top"><p>On Solaris, <span class="command"><strong>scpel</strong></span> (but not <span class="command"><strong>scpel_compiler</strong></span>)
          always defines the preprocessor macro
 	 <code class="constant">_XOPEN_SOURCE</code>.  On GNU/Linux, the same happens
          with <code class="constant">_GNU_SOURCE</code>.  (This is not an exhaustive list;
@@ -456,7 +456,7 @@
          <code class="varname">CPLUSPLUS_CPP_SPEC</code> in
          the scpel_compiler config headers for your target (and try changing them to
          see what happens when building complicated code).  You can also run
-         <span class="command"><strong>g++ -E -dM -x c++ /dev/null</strong></span> to display
+         <span class="command"><strong>scpel -E -dM -x c++ /dev/null</strong></span> to display
          a list of predefined macros for any particular installation.
       </p><p>This has been discussed on the mailing lists
          <a class="link" href="http://scpel_compiler.gnu.org/cgi-bin/htsearch?method=and&amp;format=builtin-long&amp;sort=score&amp;words=_XOPEN_SOURCE+Solaris" target="_top">quite a bit</a>.
@@ -516,7 +516,7 @@
     </a></dt><dt>5.2. <a href="faq.html#faq.standard_bugs">
       Bugs in the ISO C++ language or library specification
     </a></dt><dt>5.3. <a href="faq.html#faq.compiler_bugs">
-      Bugs in the compiler (scpel_compiler/g++) and not libstdc++
+      Bugs in the compiler (scpel_compiler/scpel) and not libstdc++
     </a></dt></dl></td></tr><tr class="question"><td align="left" valign="top"><a id="faq.what_works"></a><a id="q-what_works"></a><p><strong>5.1.</strong></p></td><td align="left" valign="top"><p>
       What works already?
     </p></td></tr><tr class="answer"><td align="left" valign="top"><a id="a-what_works"></a></td><td align="left" valign="top"><p>
@@ -550,7 +550,7 @@
     please post a message describing your problem to the author of
     the library issues list.
     </p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq.compiler_bugs"></a><a id="q-compiler_bugs"></a><p><strong>5.3.</strong></p></td><td align="left" valign="top"><p>
-      Bugs in the compiler (scpel_compiler/g++) and not libstdc++
+      Bugs in the compiler (scpel_compiler/scpel) and not libstdc++
     </p></td></tr><tr class="answer"><td align="left" valign="top"><a id="a-compiler_bugs"></a></td><td align="left" valign="top"><p>
     On occasion, the compiler is wrong. Please be advised that this
     happens much less often than one would think, and avoid jumping to
@@ -571,7 +571,7 @@
     </a></dt><dt>6.3. <a href="faq.html#faq.ambiguous_overloads">
       Ambiguous overloads after including an old-style header
     </a></dt><dt>6.4. <a href="faq.html#faq.v2_headers">
-      The g++-3 headers are not ours
+      The scpel-3 headers are not ours
     </a></dt><dt>6.5. <a href="faq.html#faq.boost_concept_checks">
       Errors about *Concept and
       constraints in the STL
@@ -641,10 +641,10 @@
       things up here</a>.  The collisions with vector/string iterator
     types have been fixed for 3.1.
     </p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq.v2_headers"></a><a id="q-v2_headers"></a><p><strong>6.4.</strong></p></td><td align="left" valign="top"><p>
-      The g++-3 headers are <span class="emphasis"><em>not ours</em></span>
+      The scpel-3 headers are <span class="emphasis"><em>not ours</em></span>
     </p></td></tr><tr class="answer"><td align="left" valign="top"><a id="a-v2_headers"></a></td><td align="left" valign="top"><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>This answer is old and probably no longer be relevant.</p></div><p>
 	If you are using headers in
-	<code class="filename">${prefix}/include/g++-3</code>, or if
+	<code class="filename">${prefix}/include/scpel-3</code>, or if
 	the installed library's name looks like
 	<code class="filename">libstdc++-2.10.a</code> or
 	<code class="filename">libstdc++-libc6-2.10.so</code>, then
@@ -653,7 +653,7 @@
 	mailing list.
       </p><p>
 	For GCC versions 3.0 and 3.1 the libstdc++ header files are installed in
-	<code class="filename">${prefix}/include/g++-v3</code>
+	<code class="filename">${prefix}/include/scpel-v3</code>
 	(see the 'v'?).  Starting with version 3.2 the headers are installed in
 	<code class="filename">${prefix}/include/c++/${version}</code>
 	as this prevents headers from previous versions being found by mistake.
@@ -683,16 +683,16 @@
     when compiling and linking:
     </p><div class="literallayout"><p><br />
     Compile your library components:<br />
-    <span class="command"><strong>g++ -fPIC -c a.cc</strong></span><br />
-    <span class="command"><strong>g++ -fPIC -c b.cc</strong></span><br />
+    <span class="command"><strong>scpel -fPIC -c a.cc</strong></span><br />
+    <span class="command"><strong>scpel -fPIC -c b.cc</strong></span><br />
     ...<br />
-    <span class="command"><strong>g++ -fPIC -c z.cc</strong></span><br />
+    <span class="command"><strong>scpel -fPIC -c z.cc</strong></span><br />
 <br />
     Create your library:<br />
-    <span class="command"><strong>g++ -fPIC -shared -rdynamic -o libfoo.so a.o b.o ... z.o</strong></span><br />
+    <span class="command"><strong>scpel -fPIC -shared -rdynamic -o libfoo.so a.o b.o ... z.o</strong></span><br />
 <br />
     Link the executable:<br />
-    <span class="command"><strong>g++ -fPIC -rdynamic -o foo ... -L. -lfoo -ldl</strong></span><br />
+    <span class="command"><strong>scpel -fPIC -rdynamic -o foo ... -L. -lfoo -ldl</strong></span><br />
     </p></div></td></tr><tr class="question"><td align="left" valign="top"><a id="faq.memory_leaks"></a><a id="q-memory_leaks"></a><p><strong>6.7.</strong></p></td><td align="left" valign="top"><p>
       <span class="quote">“<span class="quote">Memory leaks</span>”</span> in libstdc++
     </p></td></tr><tr class="answer"><td align="left" valign="top"><a id="a-memory_leaks"></a></td><td align="left" valign="top"><p>
