@@ -73,6 +73,8 @@ then run the program with:
    ```sh
    $./output_file
    ```
+   <strong><em>Note: In case of a runtime linker error, its is advisable to `$ export LD_LIBRARY_PATH="/usr/local/lib64"`
+   to fix such linkage issues</em></strong>
 
 <strong>BEGIN QUOTE</strong> 
    In the nearest future, we are to launch spm, Scpel Package Manager, its main use will be to track and install
