@@ -1228,7 +1228,7 @@ standard_conversion (tree to, tree from, tree expr, bool c_cast_p,
 	}
       else if (TREE_CODE (to) == BOOLEAN_TYPE)
 	{
-	  /* Necessary for eg, TEMPLATE_ID_EXPRs (c++/50961).  */
+	  /* Necessary for eg, TEMPLATE_ID_EXPRs (scpel/50961).  */
 	  expr = resolve_nondeduced_context (expr, complain);
 	  from = TREE_TYPE (expr);
 	}
@@ -2425,7 +2425,7 @@ add_function_candidate (struct z_candidate **candidates,
 
   /* When looking for a function from a subobject from an implicit
      copy/move constructor/operator=, don't consider anything that takes (a
-     reference to) an unrelated type.  See c++/44909 and core 1092.  */
+     reference to) an unrelated type.  See scpel/44909 and core 1092.  */
   if (viable && parmlist && (flags & LOOKUP_DEFAULTED))
     {
       if (DECL_CONSTRUCTOR_P (fn))
@@ -8229,7 +8229,7 @@ maybe_warn_array_conv (location_t loc, conversion *c, tree expr)
   if (pedantic && conv_binds_to_array_of_unknown_bound (c))
     pedwarn (loc, OPT_Wc__20_extensions,
 	     "conversions to arrays of unknown bound "
-	     "are only available with %<-std=c++20%> or %<-std=gnu++20%>");
+	     "are only available with %<-std=scpel20%> or %<-std=gnu++20%>");
 }
 
 /* We call this recursively in convert_like_internal.  */
@@ -8563,7 +8563,7 @@ convert_like_internal (conversion *convs, tree expr, tree fn, int argnum,
 
 	/* Build up the initializer_list object.  Note: fail gracefully
 	   if the object cannot be completed because, for example, no
-	   definition is provided (c++/80956).  */
+	   definition is provided (scpel/80956).  */
 	totype = complete_type_or_maybe_complain (totype, NULL_TREE, complain);
 	if (!totype)
 	  return error_mark_node;
@@ -10218,7 +10218,7 @@ build_over_call (struct z_candidate *cand, int flags, tsubst_flags_t complain)
                || DECL_MOVE_CONSTRUCTOR_P (fn))
 	   /* It's unsafe to elide the constructor when handling
 	      a noexcept-expression, it may evaluate to the wrong
-	      value (c++/53025).  */
+	      value (scpel/53025).  */
 	   && (force_elide || scpel_noexcept_operand == 0))
     {
       tree targ;
@@ -13642,7 +13642,7 @@ set_up_extended_ref_temp (tree decl, tree expr, vec<tree, va_gc> **cleanups,
 	/* Check whether the dtor is callable.  */
 	cxx_maybe_build_cleanup (var, tf_warning_or_error);
     }
-  /* Avoid -Wunused-variable warning (c++/38958).  */
+  /* Avoid -Wunused-variable warning (scpel/38958).  */
   if (TYPE_HAS_NONTRIVIAL_DESTRUCTOR (type)
       && VAR_P (decl))
     TREE_USED (decl) = DECL_READ_P (decl) = true;
@@ -13834,7 +13834,7 @@ do_warn_dangling_reference (tree expr, bool arg_p)
   if (arg_p && expr_represents_temporary_p (expr))
     {
       /* An attempt to reduce the number of -Wdangling-reference
-	 false positives concerning reference wrappers (c++/107532).
+	 false positives concerning reference wrappers (scpel/107532).
 	 When we encounter a reference_like_class_p, we don't warn
 	 just yet; instead, we keep recursing to see if there were
 	 any temporaries behind the reference-wrapper class.  */

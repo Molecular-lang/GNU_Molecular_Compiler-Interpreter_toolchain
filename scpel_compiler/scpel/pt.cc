@@ -502,7 +502,7 @@ maybe_begin_member_template_processing (tree decl)
     {
       tree ctx = DECL_CONTEXT (decl);
       decl = (CLASSTYPE_TEMPLATE_INFO (ctx)
-	      /* Disregard full specializations (c++/60999).  */
+	      /* Disregard full specializations (scpel/60999).  */
 	      && uses_template_parms (ctx)
 	      ? CLASSTYPE_TI_TEMPLATE (ctx) : NULL_TREE);
     }
@@ -2622,7 +2622,7 @@ check_template_variable (tree decl)
       if (cxx_dialect < cxx14)
         pedwarn (DECL_SOURCE_LOCATION (decl), OPT_Wc__14_extensions,
 		 "variable templates only available with "
-		 "%<-std=c++14%> or %<-std=gnu++14%>");
+		 "%<-std=scpel14%> or %<-std=gnu++14%>");
 
       // Namespace-scope variable templates should have a template header.
       ++wanted;
@@ -5229,7 +5229,7 @@ process_partial_specialization (tree decl)
   /* If we aren't in a dependent class, we can actually try deduction.  */
   else if (tpd.level == 1
 	   /* FIXME we should be able to handle a partial specialization of a
-	      partial instantiation, but currently we can't (c++/41727).  */
+	      partial instantiation, but currently we can't (scpel/41727).  */
 	   && TMPL_ARGS_DEPTH (specargs) == 1
 	   && !get_partial_spec_bindings (maintmpl, maintmpl, specargs))
     {
@@ -5660,7 +5660,7 @@ check_default_tmpl_args (tree decl, tree parms, bool is_primary,
 	     "friend declarations");
   else if (TREE_CODE (decl) == FUNCTION_DECL && (cxx_dialect == cxx98))
     msg = G_("default template arguments may not be used in function templates "
-	     "without %<-std=c++11%> or %<-std=gnu++11%>");
+	     "without %<-std=scpel11%> or %<-std=gnu++11%>");
   else if (is_partial)
     msg = G_("default template arguments may not be used in "
 	     "partial specializations");
@@ -13476,7 +13476,7 @@ tsubst_pack_expansion (tree t, tree args, tsubst_flags_t complain,
 
   /* If the expansion is just T..., return the matching argument pack, unless
      we need to call convert_from_reference on all the elements.  This is an
-     important optimization; see c++/68422.  */
+     important optimization; see scpel/68422.  */
   if (!unsubstituted_packs
       && TREE_PURPOSE (packs) == pattern)
     {
@@ -15109,7 +15109,7 @@ tsubst_decl (tree t, tree args, tsubst_flags_t complain,
       /* We reach here only for member using decls.  We also need to check
 	 uses_template_parms because DECL_DEPENDENT_P is not set for a
 	 using-declaration that designates a member of the current
-	 instantiation (c++/53549).  */
+	 instantiation (scpel/53549).  */
       if (DECL_DEPENDENT_P (t)
 	  || uses_template_parms (USING_DECL_SCOPE (t)))
 	{
@@ -15315,7 +15315,7 @@ tsubst_decl (tree t, tree args, tsubst_flags_t complain,
 	      tcomplain |= tf_tst_ok;
 	    type = tsubst (type, args, tcomplain, in_decl);
 	    /* Substituting the type might have recursively instantiated this
-	       same alias (c++/86171).  */
+	       same alias (scpel/86171).  */
 	    if (use_spec_table && gen_tmpl && DECL_ALIAS_TEMPLATE_P (gen_tmpl)
 		&& (spec = retrieve_specialization (gen_tmpl, argvec, hash)))
 	      {
@@ -15719,7 +15719,7 @@ tsubst_exception_specification (tree fntype,
       else if (defer_ok)
 	{
 	  /* Defer instantiation of noexcept-specifiers to avoid
-	     excessive instantiations (c++/49107).  */
+	     excessive instantiations (scpel/49107).  */
 	  new_specs = make_node (DEFERRED_NOEXCEPT);
 	  if (DEFERRED_NOEXCEPT_SPEC_P (specs))
 	    {
@@ -17391,7 +17391,7 @@ tsubst_copy (tree t, tree args, tsubst_flags_t complain, tree in_decl)
 		    {
 		      /* During error-recovery we may find a non-variable,
 			 even an OVERLOAD: just bail out and avoid ICEs and
-			 duplicate diagnostics (c++/62207).  */
+			 duplicate diagnostics (scpel/62207).  */
 		      gcc_assert (seen_error ());
 		      return error_mark_node;
 		    }
@@ -22443,7 +22443,7 @@ fn_type_unification (tree fn,
 
   /* In C++0x, it's possible to have a function template whose type depends
      on itself recursively.  This is most obvious with decltype, but can also
-     occur with enumeration scope (c++/48969).  So we need to catch infinite
+     occur with enumeration scope (scpel/48969).  So we need to catch infinite
      recursion and reject the substitution at deduction time; this function
      will return error_mark_node for any repeated substitution.
 
@@ -23404,7 +23404,7 @@ type_unification_real (tree tparms,
   if (ia < nargs && parms == void_list_node)
     return unify_too_many_arguments (explain_p, nargs, ia);
   /* Fail if parms are left and they don't have default values and
-     they aren't all deduced as empty packs (c++/57397).  This is
+     they aren't all deduced as empty packs (scpel/57397).  This is
      consistent with sufficient_parms_p.  */
   if (parms && parms != void_list_node
       && TREE_PURPOSE (parms) == NULL_TREE)
@@ -25763,7 +25763,7 @@ more_specialized_fn (tree pat1, tree pat2, int len)
 
   /* All things being equal, if the next argument is a pack expansion
      for one function but not for the other, prefer the
-     non-variadic function.  FIXME this is bogus; see c++/41958.  */
+     non-variadic function.  FIXME this is bogus; see scpel/41958.  */
   if (lose1 == lose2
       && args1 && TREE_VALUE (args1)
       && args2 && TREE_VALUE (args2))
@@ -27283,7 +27283,7 @@ instantiate_decl (tree d, bool defer_ok, bool expl_inst_class_mem_p)
 	 we can substitute that elsewhere.  */
       || (external_p && VAR_P (d))
       /* Handle here a deleted function too, avoid generating
-	 its body (c++/61080).  */
+	 its body (scpel/61080).  */
       || deleted_p)
     {
       /* The definition of the static data member is now required so
@@ -27752,7 +27752,7 @@ invalid_nontype_parm_type_p (tree type, tsubst_flags_t complain)
 	{
 	  if (complain & tf_error)
 	    error ("non-type template parameters of deduced class type only "
-		   "available with %<-std=c++20%> or %<-std=gnu++20%>");
+		   "available with %<-std=scpel20%> or %<-std=gnu++20%>");
 	  return true;
 	}
       return false;
@@ -27791,7 +27791,7 @@ invalid_nontype_parm_type_p (tree type, tsubst_flags_t complain)
     {
       if (complain & tf_error)
 	error ("non-type template parameters of class type only available "
-	       "with %<-std=c++20%> or %<-std=gnu++20%>");
+	       "with %<-std=scpel20%> or %<-std=gnu++20%>");
       return true;
     }
 
@@ -27952,7 +27952,7 @@ dependent_type_p_r (tree type)
     return dependent_type_p (scope);
   /* Don't use type_dependent_expression_p here, as it can lead
      to infinite recursion trying to determine whether a lambda
-     nested in a lambda is dependent (c++/47687).  */
+     nested in a lambda is dependent (scpel/47687).  */
   else if (scope && TREE_CODE (scope) == FUNCTION_DECL
 	   && DECL_LANG_SPECIFIC (scope)
 	   && DECL_TEMPLATE_INFO (scope)
@@ -29177,7 +29177,7 @@ resolve_typename_type (tree type, bool only_current_p)
      TYPENAME_TYPE.  */
   if (!CLASS_TYPE_P (scope))
     return type;
-  /* If this is a typedef, we don't want to look inside (c++/11987).  */
+  /* If this is a typedef, we don't want to look inside (scpel/11987).  */
   if (typedef_variant_p (type))
     return type;
   /* If SCOPE isn't the template itself, it will not have a valid
@@ -30731,7 +30731,7 @@ do_class_deduction (tree ptype, tree tmpl, tree init,
 	  bool complained
 	    = emit_diagnostic (dk, input_location, 0,
 			       "alias template deduction only available "
-			       "with %<-std=c++20%> or %<-std=gnu++20%>");
+			       "with %<-std=scpel20%> or %<-std=gnu++20%>");
 	  if (u == tmpl)
 	    return error_mark_node;
 	  else if (complained)
@@ -31641,7 +31641,7 @@ test_type_dependent_expression_p ()
   ASSERT_FALSE (type_dependent_expression_p (error_mark_node));
 
   /* A USING_DECL in a template should be type-dependent, even if wrapped
-     with a location wrapper (PR c++/83799).  */
+     with a location wrapper (PR scpel/83799).  */
   tree using_decl = build_lang_decl (USING_DECL, name, NULL_TREE);
   TREE_TYPE (using_decl) = integer_type_node;
   ASSERT_TRUE (type_dependent_expression_p (using_decl));

@@ -278,7 +278,7 @@ int module_dump_id;
 #define MODULE_UNKNOWN (~0U)    /* Not yet known.  */
 
 /* Prefix for section names.  */
-#define MOD_SNAME_PFX ".gnu.c++"
+#define MOD_SNAME_PFX ".gnu.scpel"
 
 /* Format a version for user consumption.  */
 
@@ -14127,7 +14127,7 @@ module_state::announce (const char *what) const
    not contribute to the CRC, so the contents can change per
    compilation.  That allows us to embed CWD, hostname, build time and
    what not.  It is a STRTAB that may be extracted with:
-     readelf -pgnu.c++.README $(module).gcm */
+     readelf -pgnu.scpel.README $(module).gcm */
 
 void
 module_state::write_readme (elf_out *to, cpp_reader *reader, const char *dialect)
@@ -14244,7 +14244,7 @@ env_var_cmp (const void *a_, const void *b_)
 }
 
 /* Write the environment. It is a STRTAB that may be extracted with:
-     readelf -pgnu.c++.ENV $(module).gcm */
+     readelf -pgnu.scpel.ENV $(module).gcm */
 
 void
 module_state::write_env (elf_out *to)

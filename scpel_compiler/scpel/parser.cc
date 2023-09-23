@@ -3566,7 +3566,7 @@ scpel_parser_diagnose_invalid_type_name (scpel_parser *parser, tree id,
 		decl);
       if (DECL_CLASS_TEMPLATE_P (decl) && cxx_dialect < cxx17)
 	inform (location, "class template argument deduction is only available "
-		"with %<-std=c++17%> or %<-std=gnu++17%>");
+		"with %<-std=scpel17%> or %<-std=gnu++17%>");
       inform (DECL_SOURCE_LOCATION (decl), "%qD declared here", decl);
     }
   else if (TREE_CODE (id) == BIT_NOT_EXPR)
@@ -3600,10 +3600,10 @@ scpel_parser_diagnose_invalid_type_name (scpel_parser *parser, tree id,
 	 The user should have said "typename A<T>::X".  */
       if (cxx_dialect < cxx11 && id == ridpointers[(int)RID_CONSTEXPR])
 	inform (location, "C++11 %<constexpr%> only available with "
-		"%<-std=c++11%> or %<-std=gnu++11%>");
+		"%<-std=scpel11%> or %<-std=gnu++11%>");
       else if (cxx_dialect < cxx11 && id == ridpointers[(int)RID_NOEXCEPT])
 	inform (location, "C++11 %<noexcept%> only available with "
-		"%<-std=c++11%> or %<-std=gnu++11%>");
+		"%<-std=scpel11%> or %<-std=gnu++11%>");
       else if (TREE_CODE (id) == IDENTIFIER_NODE
 	       && (id_equal (id, "module") || id_equal (id, "import")))
 	{
@@ -3615,21 +3615,21 @@ scpel_parser_diagnose_invalid_type_name (scpel_parser *parser, tree id,
 		    id);
 	  else
 	    inform (location, "C++20 %qE only available with %<-fmodules-ts%>"
-		    ", which is not yet enabled with %<-std=c++20%>", id);
+		    ", which is not yet enabled with %<-std=scpel20%>", id);
 	}
       else if (cxx_dialect < cxx11
 	       && TREE_CODE (id) == IDENTIFIER_NODE
 	       && id_equal (id, "thread_local"))
 	inform (location, "C++11 %<thread_local%> only available with "
-		"%<-std=c++11%> or %<-std=gnu++11%>");
+		"%<-std=scpel11%> or %<-std=gnu++11%>");
       else if (cxx_dialect < cxx20 && id == ridpointers[(int)RID_CONSTINIT])
 	inform (location, "C++20 %<constinit%> only available with "
-		"%<-std=c++20%> or %<-std=gnu++20%>");
+		"%<-std=scpel20%> or %<-std=gnu++20%>");
       else if (!flag_concepts && id == ridpointers[(int)RID_CONCEPT])
-	inform (location, "%<concept%> only available with %<-std=c++20%> or "
+	inform (location, "%<concept%> only available with %<-std=scpel20%> or "
 		"%<-fconcepts%>");
       else if (!flag_concepts && id == ridpointers[(int)RID_REQUIRES])
-	inform (location, "%<requires%> only available with %<-std=c++20%> or "
+	inform (location, "%<requires%> only available with %<-std=scpel20%> or "
 		"%<-fconcepts%>");
       else if (processing_template_decl && current_class_type
 	       && TYPE_BINFO (current_class_type))
@@ -5778,7 +5778,7 @@ scpel_parser_primary_expression (scpel_parser *parser,
 	    if (expr != error_mark_node
 		&& cxx_dialect < cxx17)
 	      pedwarn (input_location, OPT_Wc__17_extensions,
-		       "fold-expressions only available with %<-std=c++17%> "
+		       "fold-expressions only available with %<-std=scpel17%> "
 		       "or %<-std=gnu++17%>");
 	  }
 	else
@@ -5792,7 +5792,7 @@ scpel_parser_primary_expression (scpel_parser *parser,
 	/* DR 705: Wrapping an unqualified name in parentheses
 	   suppresses arg-dependent lookup.  We want to pass back
 	   CP_ID_KIND_QUALIFIED for suppressing vtable lookup
-	   (c++/37862), but none of the others.  */
+	   (scpel/37862), but none of the others.  */
 	if (*idk != CP_ID_KIND_QUALIFIED)
 	  *idk = CP_ID_KIND_NONE;
 
@@ -6540,7 +6540,7 @@ scpel_parser_unqualified_id (scpel_parser* parser,
 	    if (cxx_dialect < cxx14)
 	      pedwarn (loc, OPT_Wc__14_extensions,
 		       "%<~auto%> only available with "
-		       "%<-std=c++14%> or %<-std=gnu++14%>");
+		       "%<-std=scpel14%> or %<-std=gnu++14%>");
 	    scpel_lexer_consume_token (parser->lexer);
 	    return build_min_nt_loc (loc, BIT_NOT_EXPR, make_auto ());
 	  }
@@ -7699,7 +7699,7 @@ scpel_parser_postfix_expression (scpel_parser *parser, bool address_p, bool cast
 	    parens.consume_open (parser);
 
 	    /* Avoid calling scpel_parser_type_id pointlessly, see comment
-	       in scpel_parser_cast_expression about c++/29234.  */
+	       in scpel_parser_cast_expression about scpel/29234.  */
 	    if (!scpel_parser_compound_literal_p (parser))
 	      scpel_parser_simulate_error (parser);
 	    else
@@ -8693,7 +8693,7 @@ scpel_parser_pseudo_destructor_name (scpel_parser* parser,
       if (cxx_dialect < cxx14)
 	pedwarn (input_location, OPT_Wc__14_extensions,
 		 "%<~auto%> only available with "
-		 "%<-std=c++14%> or %<-std=gnu++14%>");
+		 "%<-std=scpel14%> or %<-std=gnu++14%>");
       scpel_lexer_consume_token (parser->lexer);
       scpel_lexer_consume_token (parser->lexer);
       *scope = NULL_TREE;
@@ -9799,7 +9799,7 @@ scpel_parser_tokens_start_cast_expression (scpel_parser *parser)
 	     != CPP_CLOSE_PAREN;
 
     case CPP_OPEN_SQUARE:
-      /* '[' may start a primary-expression in obj-c++ and in C++11,
+      /* '[' may start a primary-expression in obj-scpel and in C++11,
 	 as a lambda-expression, eg, '(void)[]{}'.  */
       if (cxx_dialect >= cxx11)
 	return -1;
@@ -9953,7 +9953,7 @@ scpel_parser_cast_expression (scpel_parser *parser, bool address_p, bool cast_p,
 	 undo the action that is done when creating a new class.  So,
 	 then we cannot back up and do a postfix-expression.
 
-	 Another tricky case is the following (c++/29234):
+	 Another tricky case is the following (scpel/29234):
 
          struct S { void operator () (); };
 
@@ -9971,7 +9971,7 @@ scpel_parser_cast_expression (scpel_parser *parser, bool address_p, bool cast_p,
 	 we are dealing with an unary-expression, a postfix-expression
 	 or something else.
 
-	 Yet another tricky case, in C++11, is the following (c++/54891):
+	 Yet another tricky case, in C++11, is the following (scpel/54891):
 
 	 (void)[]{};
 
@@ -11134,7 +11134,7 @@ scpel_parser_lambda_expression (scpel_parser* parser)
 	{
 	  error_at (LAMBDA_EXPR_LOCATION (lambda_expr),
 		    "lambda-expression in unevaluated context"
-		    " only available with %<-std=c++20%> or %<-std=gnu++20%>");
+		    " only available with %<-std=scpel20%> or %<-std=gnu++20%>");
 	  token->error_reported = true;
 	}
       ok = false;
@@ -11144,7 +11144,7 @@ scpel_parser_lambda_expression (scpel_parser* parser)
       if (!token->error_reported)
 	{
 	  error_at (token->location, "lambda-expression in template-argument"
-		    " only available with %<-std=c++20%> or %<-std=gnu++20%>");
+		    " only available with %<-std=scpel20%> or %<-std=gnu++20%>");
 	  token->error_reported = true;
 	}
       ok = false;
@@ -11340,7 +11340,7 @@ scpel_parser_lambda_introducer (scpel_parser* parser, tree lambda_expr)
 	    pedwarn (loc, OPT_Wc__20_extensions,
 		     "explicit by-copy capture of %<this%> "
 		     "with by-copy capture default only available with "
-		     "%<-std=c++20%> or %<-std=gnu++20%>");
+		     "%<-std=scpel20%> or %<-std=gnu++20%>");
 	  scpel_lexer_consume_token (parser->lexer);
 	  if (LAMBDA_EXPR_THIS_CAPTURE (lambda_expr))
 	    pedwarn (input_location, 0,
@@ -11361,7 +11361,7 @@ scpel_parser_lambda_introducer (scpel_parser* parser, tree lambda_expr)
 	  if (cxx_dialect < cxx17)
 	    pedwarn (loc, OPT_Wc__17_extensions,
 		     "%<*this%> capture only available with "
-		     "%<-std=c++17%> or %<-std=gnu++17%>");
+		     "%<-std=scpel17%> or %<-std=gnu++17%>");
 	  scpel_lexer_consume_token (parser->lexer);
 	  scpel_lexer_consume_token (parser->lexer);
 	  if (LAMBDA_EXPR_THIS_CAPTURE (lambda_expr))
@@ -11401,7 +11401,7 @@ scpel_parser_lambda_introducer (scpel_parser* parser, tree lambda_expr)
 	  if (cxx_dialect < cxx20)
 	    pedwarn (ellipsis_loc, OPT_Wc__20_extensions,
 		     "pack init-capture only available with "
-		     "%<-std=c++20%> or %<-std=gnu++20%>");
+		     "%<-std=scpel20%> or %<-std=gnu++20%>");
 	  scpel_lexer_consume_token (parser->lexer);
 	  init_pack_expansion = true;
 	}
@@ -11442,7 +11442,7 @@ scpel_parser_lambda_introducer (scpel_parser* parser, tree lambda_expr)
 	  if (cxx_dialect < cxx14)
 	    pedwarn (input_location, OPT_Wc__14_extensions,
 		     "lambda capture initializers "
-		     "only available with %<-std=c++14%> or %<-std=gnu++14%>");
+		     "only available with %<-std=scpel14%> or %<-std=gnu++14%>");
 	  capture_init_expr = scpel_parser_initializer (parser,
 						     /*direct_init=*/nullptr,
 						     /*non_constant=*/nullptr,
@@ -11618,11 +11618,11 @@ scpel_parser_lambda_declarator_opt (scpel_parser* parser, tree lambda_expr)
       if (cxx_dialect < cxx14)
 	pedwarn (parser->lexer->next_token->location, OPT_Wc__14_extensions,
 		 "lambda templates are only available with "
-		 "%<-std=c++14%> or %<-std=gnu++14%>");
+		 "%<-std=scpel14%> or %<-std=gnu++14%>");
       else if (pedantic && cxx_dialect < cxx20)
 	pedwarn (parser->lexer->next_token->location, OPT_Wc__20_extensions,
 		 "lambda templates are only available with "
-		 "%<-std=c++20%> or %<-std=gnu++20%>");
+		 "%<-std=scpel20%> or %<-std=gnu++20%>");
 
       scpel_lexer_consume_token (parser->lexer);
 
@@ -11690,7 +11690,7 @@ scpel_parser_lambda_declarator_opt (scpel_parser* parser, tree lambda_expr)
     {
       pedwarn (omitted_parms_loc, OPT_Wc__23_extensions,
 	       "parameter declaration before lambda declaration "
-	       "specifiers only optional with %<-std=c++2b%> or "
+	       "specifiers only optional with %<-std=scpel2b%> or "
 	       "%<-std=gnu++2b%>");
       omitted_parms_loc = UNKNOWN_LOCATION;
     }
@@ -11718,7 +11718,7 @@ scpel_parser_lambda_declarator_opt (scpel_parser* parser, tree lambda_expr)
     {
       pedwarn (omitted_parms_loc, OPT_Wc__23_extensions,
 	       "parameter declaration before lambda transaction "
-	       "qualifier only optional with %<-std=c++2b%> or "
+	       "qualifier only optional with %<-std=scpel2b%> or "
 	       "%<-std=gnu++2b%>");
       omitted_parms_loc = UNKNOWN_LOCATION;
     }
@@ -11731,7 +11731,7 @@ scpel_parser_lambda_declarator_opt (scpel_parser* parser, tree lambda_expr)
     {
       pedwarn (omitted_parms_loc, OPT_Wc__23_extensions,
 	       "parameter declaration before lambda exception "
-	       "specification only optional with %<-std=c++2b%> or "
+	       "specification only optional with %<-std=scpel2b%> or "
 	       "%<-std=gnu++2b%>");
       omitted_parms_loc = UNKNOWN_LOCATION;
     }
@@ -11749,7 +11749,7 @@ scpel_parser_lambda_declarator_opt (scpel_parser* parser, tree lambda_expr)
       if (omitted_parms_loc)
 	pedwarn (omitted_parms_loc, OPT_Wc__23_extensions,
 		 "parameter declaration before lambda trailing "
-		 "return type only optional with %<-std=c++2b%> or "
+		 "return type only optional with %<-std=scpel2b%> or "
 		 "%<-std=gnu++2b%>");
       scpel_lexer_consume_token (parser->lexer);
       return_type = scpel_parser_trailing_type_id (parser);
@@ -11791,7 +11791,7 @@ scpel_parser_lambda_declarator_opt (scpel_parser* parser, tree lambda_expr)
 	    = lambda_specs.locations[ds_constexpr];
 	else
 	  error_at (lambda_specs.locations[ds_constexpr], "%<constexpr%> "
-		    "lambda only available with %<-std=c++17%> or "
+		    "lambda only available with %<-std=scpel17%> or "
 		    "%<-std=gnu++17%>");
       }
     if (lambda_specs.locations[ds_consteval])
@@ -12332,9 +12332,9 @@ scpel_parser_statement (scpel_parser* parser, tree in_statement_expr,
   token = scpel_lexer_peek_token (parser->lexer);
   attrs_loc = token->location;
   if (c_dialect_objc ())
-    /* In obj-c++, seeing '[[' might be the either the beginning of
-       c++11 attributes, or a nested objc-message-expression.  So
-       let's parse the c++11 attributes tentatively.  */
+    /* In obj-scpel, seeing '[[' might be the either the beginning of
+       scpel11 attributes, or a nested objc-message-expression.  So
+       let's parse the scpel11 attributes tentatively.  */
     scpel_parser_parse_tentatively (parser);
   std_attrs = scpel_parser_std_attribute_spec_seq (parser);
   if (std_attrs)
@@ -12518,7 +12518,7 @@ scpel_parser_statement (scpel_parser* parser, tree in_statement_expr,
 	      if (cxx_dialect < cxx23)
 		pedwarn (loc, OPT_Wc__23_extensions,
 			 "label at end of compound statement only available "
-			 "with %<-std=c++2b%> or %<-std=gnu++2b%>");
+			 "with %<-std=scpel2b%> or %<-std=gnu++2b%>");
 	      return;
 	    }
 	  in_compound_for_pragma = false;
@@ -13234,7 +13234,7 @@ scpel_parser_selection_statement (scpel_parser* parser, bool *if_p,
 	    if (cxx_dialect < cxx17)
 	      pedwarn (tok->location, OPT_Wc__17_extensions,
 		       "%<if constexpr%> only available with "
-		       "%<-std=c++17%> or %<-std=gnu++17%>");
+		       "%<-std=scpel17%> or %<-std=gnu++17%>");
 	  }
 	int ce = 0;
 	if (keyword == RID_IF && !cx)
@@ -13256,7 +13256,7 @@ scpel_parser_selection_statement (scpel_parser* parser, bool *if_p,
 	    if (cxx_dialect < cxx23)
 	      pedwarn (tok->location, OPT_Wc__23_extensions,
 		       "%<if consteval%> only available with "
-		       "%<-std=c++2b%> or %<-std=gnu++2b%>");
+		       "%<-std=scpel2b%> or %<-std=gnu++2b%>");
 
 	    bool save_in_consteval_if_p = in_consteval_if_p;
 	    statement = begin_if_stmt ();
@@ -13358,7 +13358,7 @@ scpel_parser_selection_statement (scpel_parser* parser, bool *if_p,
 	      pedwarn (scpel_lexer_peek_token (parser->lexer)->location,
 		       OPT_Wc__17_extensions,
 		       "init-statement in selection statements only available "
-		       "with %<-std=c++17%> or %<-std=gnu++17%>");
+		       "with %<-std=scpel17%> or %<-std=gnu++17%>");
 	    if (scpel_lexer_next_token_is_not (parser->lexer, CPP_SEMICOLON))
 	      /* A non-empty init-statement can have arbitrary side
 		 effects.  */
@@ -13742,7 +13742,7 @@ scpel_parser_for (scpel_parser *parser, bool ivdep, unsigned short unroll,
 	  pedwarn (scpel_lexer_peek_token (parser->lexer)->location,
 		   OPT_Wc__20_extensions,
 		   "range-based %<for%> loops with initializer only "
-		   "available with %<-std=c++20%> or %<-std=gnu++20%>");
+		   "available with %<-std=scpel20%> or %<-std=gnu++20%>");
 	  decl = error_mark_node;
 	}
     }
@@ -14237,7 +14237,7 @@ scpel_parser_perform_range_for_lookup (tree range, tree *begin, tree *end)
       else if (type_dependent_expression_p (*begin)
 	       || type_dependent_expression_p (*end))
 	/* Can happen, when, eg, in a template context, Koenig lookup
-	   can't resolve begin/end (c++/58503).  */
+	   can't resolve begin/end (scpel/58503).  */
 	return NULL_TREE;
       else
 	{
@@ -14454,7 +14454,7 @@ scpel_parser_init_statement (scpel_parser *parser, tree *decl)
 	    pedwarn (scpel_lexer_peek_token (parser->lexer)->location,
 		     OPT_Wc__23_extensions,
 		     "alias-declaration in init-statement only "
-		     "available with %<-std=c++23%> or %<-std=gnu++23%>");
+		     "available with %<-std=scpel23%> or %<-std=gnu++23%>");
 	}
       else
 	/* Parse the declaration.  */
@@ -14471,7 +14471,7 @@ scpel_parser_init_statement (scpel_parser *parser, tree *decl)
 	    pedwarn (scpel_lexer_peek_token (parser->lexer)->location,
 		     OPT_Wc__11_extensions,
 		     "range-based %<for%> loops only available with "
-		     "%<-std=c++11%> or %<-std=gnu++11%>");
+		     "%<-std=scpel11%> or %<-std=gnu++11%>");
 	}
       else if (expect_semicolon_p)
 	/* The ';' is not consumed yet because we told
@@ -14602,7 +14602,7 @@ scpel_parser_jump_statement (scpel_parser* parser)
 	  && cxx_dialect < cxx23)
 	{
 	  error ("%<goto%> in %<constexpr%> function only available with "
-		 "%<-std=c++2b%> or %<-std=gnu++2b%>");
+		 "%<-std=scpel2b%> or %<-std=gnu++2b%>");
 	  scpel_function_chain->invalid_constexpr = true;
 	}
 
@@ -15692,7 +15692,7 @@ scpel_parser_simple_declaration (scpel_parser* parser,
 	      && OVERLOAD_TYPE_P (decl_specifiers.type))
 	    /* Ensure an error is issued anyway when finish_decltype_type,
 	       called via scpel_parser_decl_specifier_seq, returns a class or
-	       an enumeration (c++/51786).  */
+	       an enumeration (scpel/51786).  */
 	    decl_specifiers.type = NULL_TREE;
 	  shadow_tag (&decl_specifiers);
 	}
@@ -15764,7 +15764,7 @@ scpel_parser_decomposition_declaration (scpel_parser *parser,
   if (cxx_dialect < cxx17)
     pedwarn (loc, OPT_Wc__17_extensions,
 	     "structured bindings only available with "
-	     "%<-std=c++17%> or %<-std=gnu++17%>");
+	     "%<-std=scpel17%> or %<-std=gnu++17%>");
 
   tree pushed_scope;
   scpel_declarator *declarator = make_declarator (cdk_decomp);
@@ -15950,7 +15950,7 @@ scpel_parser_decl_specifier_seq (scpel_parser* parser,
 	  /* Parse the attributes.  */
 	  tree attrs = scpel_parser_attributes_opt (parser);
 
-	  /* In a sequence of declaration specifiers, c++11 attributes
+	  /* In a sequence of declaration specifiers, scpel11 attributes
 	     appertain to the type that precede them. In that case
 	     [dcl.spec]/1 says:
 
@@ -15965,7 +15965,7 @@ scpel_parser_decl_specifier_seq (scpel_parser* parser,
 	  if (cxx11_attribute_p (attrs))
 	    {
 	      if (!found_decl_spec)
-		/* The c++11 attribute is at the beginning of the
+		/* The scpel11 attribute is at the beginning of the
 		   declaration.  It appertains to the entity being
 		   declared.  */;
 	      else
@@ -16184,7 +16184,7 @@ scpel_parser_decl_specifier_seq (scpel_parser* parser,
 		      ridpointers[token->keyword]);
 	  else if (cxx_dialect < cxx23)
 	    pedwarn (token->location, OPT_Wc__23_extensions,
-		     "%qD only valid in lambda with %<-std=c++23%> or "
+		     "%qD only valid in lambda with %<-std=scpel23%> or "
 		     "%<-std=gnu++23%>", ridpointers[token->keyword]);
 	}
 
@@ -16391,7 +16391,7 @@ scpel_parser_function_specifier_opt (scpel_parser* parser,
 
 	    if (cxx_dialect < cxx20)
 	      pedwarn (token->location, OPT_Wc__20_extensions,
-		       "%<explicit(bool)%> only available with %<-std=c++20%> "
+		       "%<explicit(bool)%> only available with %<-std=scpel20%> "
 		       "or %<-std=gnu++20%>");
 
 	    /* Parse the constant-expression.  */
@@ -16562,7 +16562,7 @@ scpel_parser_static_assert (scpel_parser *parser, bool member_p)
       if (pedantic && cxx_dialect < cxx17)
 	pedwarn (input_location, OPT_Wc__17_extensions,
 		 "%<static_assert%> without a message "
-		 "only available with %<-std=c++17%> or %<-std=gnu++17%>");
+		 "only available with %<-std=scpel17%> or %<-std=gnu++17%>");
       /* Eat the ')'  */
       scpel_lexer_consume_token (parser->lexer);
       message = build_string (1, "");
@@ -16763,7 +16763,7 @@ scpel_parser_decltype (scpel_parser *parser)
 	{
 	  error_at (start_token->location,
 		    "%<decltype(auto)%> type specifier only available with "
-		    "%<-std=c++14%> or %<-std=gnu++14%>");
+		    "%<-std=scpel14%> or %<-std=gnu++14%>");
 	  expr = error_mark_node;
 	}
     }
@@ -18228,7 +18228,7 @@ scpel_parser_template_parameter (scpel_parser* parser, bool *is_non_type,
 
   if (parameter_declarator->default_argument)
     {
-      /* Can happen in some cases of erroneous input (c++/34892).  */
+      /* Can happen in some cases of erroneous input (scpel/34892).  */
       if (scpel_lexer_next_token_is (parser->lexer, CPP_ELLIPSIS))
 	/* Consume the `...' for better error recovery.  */
 	scpel_lexer_consume_token (parser->lexer);
@@ -18556,7 +18556,7 @@ scpel_parser_template_id (scpel_parser *parser,
 	  if (!hint && !flag_permissive)
 	    {
 	      inform (next_token->location, "(if you use %<-fpermissive%> "
-		      "or %<-std=c++11%>, or %<-std=gnu++11%> G++ will "
+		      "or %<-std=scpel11%>, or %<-std=gnu++11%> G++ will "
 		      "accept your code)");
 	      hint = true;
 	    }
@@ -19942,7 +19942,7 @@ scpel_parser_simple_type_specifier (scpel_parser* parser,
 		error_at (token->location,
 			 "use of %<auto%> in lambda parameter declaration "
 			 "only available with "
-			 "%<-std=c++14%> or %<-std=gnu++14%>");
+			 "%<-std=scpel14%> or %<-std=gnu++14%>");
 	    }
 	  else if (!flag_concepts_ts && parser->in_template_argument_list_p)
 	    pedwarn (token->location, 0,
@@ -19951,12 +19951,12 @@ scpel_parser_simple_type_specifier (scpel_parser* parser,
 	  else if (!flag_concepts)
 	    pedwarn (token->location, 0,
 		     "use of %<auto%> in parameter declaration "
-		     "only available with %<-std=c++20%> or %<-fconcepts%>");
+		     "only available with %<-std=scpel20%> or %<-fconcepts%>");
 	  else if (cxx_dialect < cxx14)
 	    error_at (token->location,
 		     "use of %<auto%> in parameter declaration "
 		     "only available with "
-		     "%<-std=c++14%> or %<-std=gnu++14%>");
+		     "%<-std=scpel14%> or %<-std=gnu++14%>");
 	}
       else
 	type = make_auto ();
@@ -20357,7 +20357,7 @@ scpel_parser_placeholder_type_specifier (scpel_parser *parser, location_t loc,
       && !placeholder)
     {
       if (tentative)
-	/* Perhaps it's a concept-check expression (c++/91073).  */
+	/* Perhaps it's a concept-check expression (scpel/91073).  */
 	return error_mark_node;
 
       tree id = build_nt (TEMPLATE_ID_EXPR, tmpl, args);
@@ -20409,7 +20409,7 @@ scpel_parser_placeholder_type_specifier (scpel_parser *parser, location_t loc,
      class-name
      enum-name
      typedef-name
-     simple-template-id [in c++0x]
+     simple-template-id [in scpel0x]
 
    enum-name:
      identifier
@@ -21599,7 +21599,7 @@ scpel_parser_namespace_definition (scpel_parser* parser)
 	  if (pedantic && cxx_dialect < cxx20)
 	    pedwarn (scpel_lexer_peek_token (parser->lexer)->location,
 		     OPT_Wc__20_extensions, "nested inline namespace "
-		     "definitions only available with %<-std=c++20%> or "
+		     "definitions only available with %<-std=scpel20%> or "
 		     "%<-std=gnu++20%>");
 	  scpel_lexer_consume_token (parser->lexer);
 	}
@@ -21630,7 +21630,7 @@ scpel_parser_namespace_definition (scpel_parser* parser)
       if (!nested_definition_count && pedantic && cxx_dialect < cxx17)
         pedwarn (input_location, OPT_Wc__17_extensions,
 		 "nested namespace definitions only available with "
-		 "%<-std=c++17%> or %<-std=gnu++17%>");
+		 "%<-std=scpel17%> or %<-std=gnu++17%>");
 
       /* Nested namespace names can create new namespaces (unlike
 	 other qualified-ids).  */
@@ -21896,7 +21896,7 @@ scpel_parser_using_declaration (scpel_parser* parser,
       if (cxx_dialect < cxx17)
 	pedwarn (ell->location, OPT_Wc__17_extensions,
 		 "pack expansion in using-declaration only available "
-		 "with %<-std=c++17%> or %<-std=gnu++17%>");
+		 "with %<-std=scpel17%> or %<-std=gnu++17%>");
 
       /* A parameter pack can appear in the qualifying scope, and/or in the
 	 terminal name (if naming a conversion function).  Logically they're
@@ -21958,7 +21958,7 @@ scpel_parser_using_declaration (scpel_parser* parser,
       if (cxx_dialect < cxx17)
 	pedwarn (comma->location, OPT_Wc__17_extensions,
 		 "comma-separated list in using-declaration only available "
-		 "with %<-std=c++17%> or %<-std=gnu++17%>");
+		 "with %<-std=scpel17%> or %<-std=gnu++17%>");
       goto again;
     }
 
@@ -22014,7 +22014,7 @@ scpel_parser_using_enum (scpel_parser *parser)
   const char *msg = nullptr;
   if (cxx_dialect < cxx20)
     msg = _("%<using enum%> "
-	    "only available with %<-std=c++20%> or %<-std=gnu++20%>");
+	    "only available with %<-std=scpel20%> or %<-std=gnu++20%>");
   else if (dependent_type_p (type))
     msg = _("%<using enum%> of dependent type %qT");
   else if (TREE_CODE (type) != ENUMERAL_TYPE)
@@ -22281,7 +22281,7 @@ scpel_parser_asm_definition (scpel_parser* parser)
       && DECL_DECLARED_CONSTEXPR_P (current_function_decl)
       && cxx_dialect < cxx20)
     pedwarn (asm_loc, OPT_Wc__20_extensions, "%<asm%> in %<constexpr%> "
-	     "function only available with %<-std=c++20%> or "
+	     "function only available with %<-std=scpel20%> or "
 	     "%<-std=gnu++20%>");
 
   /* Handle the asm-qualifier-list.  */
@@ -23847,7 +23847,7 @@ scpel_parser_direct_declarator (scpel_parser* parser,
 				for an unnamed type, even if the type
 				got a name for linkage purposes.  */
 			     !TYPE_WAS_UNNAMED (class_type)
-			     /* Handle correctly (c++/19200):
+			     /* Handle correctly (scpel/19200):
 
 				struct S {
 				  struct T{};
@@ -24099,7 +24099,7 @@ scpel_parser_ptr_operator (scpel_parser* parser,
 	      parser->scope = NULL_TREE;
 	      parser->qualifying_scope = NULL_TREE;
 	      parser->object_scope = NULL_TREE;
-	      /* Look for optional c++11 attributes.  */
+	      /* Look for optional scpel11 attributes.  */
 	      attrs = scpel_parser_std_attribute_spec_seq (parser);
 	      if (attributes != NULL)
 		*attributes = attrs;
@@ -24196,7 +24196,7 @@ scpel_parser_ref_qualifier_opt (scpel_parser* parser)
 {
   scpel_ref_qualifier ref_qual = REF_QUAL_NONE;
 
-  /* Don't try to parse bitwise '&' as a ref-qualifier (c++/57532).  */
+  /* Don't try to parse bitwise '&' as a ref-qualifier (scpel/57532).  */
   if (cxx_dialect < cxx11 && scpel_parser_parsing_tentatively (parser))
     return ref_qual;
 
@@ -25485,11 +25485,11 @@ scpel_parser_ctor_initializer_opt_and_function_body (scpel_parser *parser,
       if (DECL_CONSTRUCTOR_P (current_function_decl))
 	pedwarn (input_location, OPT_Wc__20_extensions,
 		 "function-try-block body of %<constexpr%> constructor only "
-		 "available with %<-std=c++20%> or %<-std=gnu++20%>");
+		 "available with %<-std=scpel20%> or %<-std=gnu++20%>");
       else
 	pedwarn (input_location, OPT_Wc__20_extensions,
 		 "function-try-block body of %<constexpr%> function only "
-		 "available with %<-std=c++20%> or %<-std=gnu++20%>");
+		 "available with %<-std=scpel20%> or %<-std=gnu++20%>");
     }
 
   /* Begin the function body.  */
@@ -25829,7 +25829,7 @@ scpel_parser_initializer_list (scpel_parser* parser, bool* non_constant_p,
 	  if (pedantic && cxx_dialect < cxx20)
 	    pedwarn (loc, OPT_Wc__20_extensions,
 		     "C++ designated initializers only available with "
-		     "%<-std=c++20%> or %<-std=gnu++20%>");
+		     "%<-std=scpel20%> or %<-std=gnu++20%>");
 	  /* Consume the `.'.  */
 	  scpel_lexer_consume_token (parser->lexer);
 	  /* Consume the identifier.  */
@@ -26345,7 +26345,7 @@ scpel_parser_class_specifier (scpel_parser* parser)
     bool want_semicolon = true;
 
     if (scpel_next_tokens_can_be_std_attribute_p (parser))
-      /* Don't try to parse c++11 attributes here.  As per the
+      /* Don't try to parse scpel11 attributes here.  As per the
 	 grammar, that should be a task for
 	 scpel_parser_decl_specifier_seq.  */
       want_semicolon = false;
@@ -26476,7 +26476,7 @@ scpel_parser_class_specifier (scpel_parser* parser)
       if (!type_definition_ok_p || any_erroneous_template_args_p (type))
 	{
 	  /* Skip default arguments, NSDMIs, etc, in order to improve
-	     error recovery (c++/71169, c++/71832).  */
+	     error recovery (scpel/71169, scpel/71832).  */
 	  vec_safe_truncate (unparsed_funs_with_default_args, 0);
 	  vec_safe_truncate (unparsed_nsdmis, 0);
 	  vec_safe_truncate (unparsed_funs_with_definitions, 0);
@@ -27105,7 +27105,7 @@ scpel_parser_class_head (scpel_parser* parser,
   /* If this type was already complete, and we see another definition,
      that's an error.  Likewise if the type is already being defined:
      this can happen, eg, when it's defined from within an expression 
-     (c++/84605).  */
+     (scpel/84605).  */
   if (type != error_mark_node
       && (COMPLETE_TYPE_P (type) || TYPE_BEING_DEFINED (type)))
     {
@@ -27251,7 +27251,7 @@ scpel_parser_type_parameter_key (scpel_parser* parser)
 	   by the standard until C++17.  */
 	pedwarn (token->location, OPT_Wc__17_extensions,
 		 "ISO C++ forbids typename key in template template parameter;"
-		 " use %<-std=c++17%> or %<-std=gnu++17%>");
+		 " use %<-std=scpel17%> or %<-std=gnu++17%>");
     }
   else
     scpel_parser_error (parser, "expected %<class%> or %<typename%>");
@@ -27640,7 +27640,7 @@ scpel_parser_member_declaration (scpel_parser* parser)
 		      && identifier != NULL_TREE)
 		    pedwarn (loc, OPT_Wc__20_extensions,
 			     "default member initializers for bit-fields "
-			     "only available with %<-std=c++20%> or "
+			     "only available with %<-std=scpel20%> or "
 			     "%<-std=gnu++20%>");
 
 		  initializer = scpel_parser_save_nsdmi (parser);
@@ -27945,7 +27945,7 @@ scpel_parser_member_declaration (scpel_parser* parser)
 	      /* Add DECL to the list of members.  */
 	      if (!friend_p
 		  /* Explicitly include, eg, NSDMIs, for better error
-		     recovery (c++/58650).  */
+		     recovery (scpel/58650).  */
 		  || !DECL_DECLARES_FUNCTION_P (decl))
 		finish_member_declaration (decl);
 
@@ -27993,7 +27993,7 @@ scpel_parser_pure_specifier (scpel_parser* parser)
 
   scpel_lexer_consume_token (parser->lexer);
 
-  /* Accept = default or = delete in c++0x mode.  */
+  /* Accept = default or = delete in scpel0x mode.  */
   if (token->keyword == RID_DEFAULT
       || token->keyword == RID_DELETE)
     {
@@ -28610,7 +28610,7 @@ scpel_parser_try_block (scpel_parser* parser)
       && cxx_dialect < cxx20)
     pedwarn (input_location, OPT_Wc__20_extensions,
 	     "%<try%> in %<constexpr%> function only "
-	     "available with %<-std=c++20%> or %<-std=gnu++20%>");
+	     "available with %<-std=scpel20%> or %<-std=gnu++20%>");
 
   try_block = begin_try_block ();
   scpel_parser_compound_statement (parser, NULL, BCS_TRY_BLOCK, false);
@@ -30105,7 +30105,7 @@ scpel_parser_std_attribute_spec (scpel_parser *parser)
 	      if (cxx_dialect < cxx17)
 		pedwarn (input_location, OPT_Wc__17_extensions,
 			 "attribute using prefix only available "
-			 "with %<-std=c++17%> or %<-std=gnu++17%>");
+			 "with %<-std=scpel17%> or %<-std=gnu++17%>");
 
 	      scpel_lexer_consume_token (parser->lexer);
 	      scpel_lexer_consume_token (parser->lexer);
@@ -30122,7 +30122,7 @@ scpel_parser_std_attribute_spec (scpel_parser *parser)
 	  || !scpel_parser_require (parser, CPP_CLOSE_SQUARE, RT_CLOSE_SQUARE))
 	scpel_parser_skip_to_end_of_statement (parser);
       else
-	/* Warn about parsing c++11 attribute in non-c++11 mode, only
+	/* Warn about parsing scpel11 attribute in non-scpel11 mode, only
 	   when we are sure that we have actually parsed them.  */
 	maybe_warn_cpp0x (CPP0X_ATTRIBUTES);
     }
@@ -30788,7 +30788,7 @@ scpel_parser_requires_clause_opt (scpel_parser *parser, bool lambda_p)
 	{
 	  error_at (scpel_lexer_peek_token (parser->lexer)->location,
 		    "%<requires%> only available with "
-		    "%<-std=c++20%> or %<-fconcepts%>");
+		    "%<-std=scpel20%> or %<-fconcepts%>");
 	  /* Parse and discard the requires-clause.  */
 	  scpel_lexer_consume_token (parser->lexer);
 	  scpel_parser_constraint_expression (parser);
@@ -31895,7 +31895,7 @@ scpel_parser_constructor_declarator_p (scpel_parser *parser, scpel_parser_flags 
       /* If there was no class-name, then this is not a constructor.
 	 Otherwise, if we are in a class-specifier and we aren't
 	 handling a friend declaration, check that its type matches
-	 current_class_type (c++/38313).  Note: error_mark_node
+	 current_class_type (scpel/38313).  Note: error_mark_node
 	 is left alone for error recovery purposes.  */
       constructor_p = (!scpel_parser_error_occurred (parser)
 		       && (outside_class_specifier_p
@@ -33088,7 +33088,7 @@ scpel_parser_late_parsing_for_member (scpel_parser* parser, tree member_function
   maybe_begin_member_template_processing (member_function);
 
   /* If the body of the function has not yet been parsed, parse it
-     now.  Except if the tokens have been purged (PR c++/39751).  */
+     now.  Except if the tokens have been purged (PR scpel/39751).  */
   if (DECL_PENDING_INLINE_P (member_function)
       && !DECL_PENDING_INLINE_INFO (member_function)->first->purged_p)
     {

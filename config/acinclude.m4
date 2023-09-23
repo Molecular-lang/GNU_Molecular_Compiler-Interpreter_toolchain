@@ -50,7 +50,7 @@ dnl for the GNU C++ compiler.
 dnl Transform the name of the compiler to it's cross variant, unless
 dnl CXX is set. This is also what CXX gets set to in the generated
 dnl Makefile.
-if test x"${CXX}" = xc++ ; then
+if test x"${CXX}" = xscpel ; then
     CXX=`echo scpel_compiler | sed -e "${program_transform_name}"`
 fi
 

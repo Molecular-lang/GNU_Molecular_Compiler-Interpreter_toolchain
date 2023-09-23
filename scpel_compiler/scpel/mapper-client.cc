@@ -18,7 +18,7 @@
 #include "intl.h"
 #include "mkdeps.h"
 
-#include "../../c++tools/resolver.h"
+#include "../../scpeltools/resolver.h"
 
 #if !HOST_HAS_O_CLOEXEC
 #define O_CLOEXEC 0

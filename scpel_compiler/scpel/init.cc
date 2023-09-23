@@ -2521,7 +2521,7 @@ constant_value_1 (tree decl, bool strict_p, bool return_aggregate_cst_ok_p,
 	  if (TREE_CODE (decl) == CONST_DECL
 	      || DECL_INITIALIZED_BY_CONSTANT_EXPRESSION_P (decl))
 	    /* Treat the error as a constant to avoid cascading errors on
-	       excessively recursive template instantiation (c++/9335).  */
+	       excessively recursive template instantiation (scpel/9335).  */
 	    return init;
 	  else
 	    return decl;

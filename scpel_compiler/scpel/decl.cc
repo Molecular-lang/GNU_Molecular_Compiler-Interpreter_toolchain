@@ -4279,7 +4279,7 @@ make_typename_type (tree context, tree name, enum tag_types tag_type,
   gcc_assert (TYPE_P (context));
 
   if (TREE_CODE (context) == TYPE_PACK_EXPANSION)
-    /* This can happen for C++17 variadic using (c++/88986).  */;
+    /* This can happen for C++17 variadic using (scpel/88986).  */;
   else if (!MAYBE_CLASS_TYPE_P (context))
     {
       if (complain & tf_error)
@@ -5936,13 +5936,13 @@ start_decl (const scpel_declarator *declarator,
       if (CP_DECL_THREAD_LOCAL_P (decl) && !DECL_REALLY_EXTERN (decl))
 	error_at (DECL_SOURCE_LOCATION (decl),
 		  "%qD defined %<thread_local%> in %qs function only "
-		  "available with %<-std=c++2b%> or %<-std=gnu++2b%>", decl,
+		  "available with %<-std=scpel2b%> or %<-std=gnu++2b%>", decl,
 		  DECL_IMMEDIATE_FUNCTION_P (current_function_decl)
 		  ? "consteval" : "constexpr");
       else if (TREE_STATIC (decl))
 	error_at (DECL_SOURCE_LOCATION (decl),
 		  "%qD defined %<static%> in %qs function only available "
-		  "with %<-std=c++2b%> or %<-std=gnu++2b%>", decl,
+		  "with %<-std=scpel2b%> or %<-std=gnu++2b%>", decl,
 		  DECL_IMMEDIATE_FUNCTION_P (current_function_decl)
 		  ? "consteval" : "constexpr");
       else
@@ -6671,7 +6671,7 @@ reshape_init_array_1 (tree elt_type, tree max_index, reshape_iter *d,
       if (!TREE_CONSTANT (elt_init))
 	TREE_CONSTANT (new_init) = false;
 
-      /* This can happen with an invalid initializer (c++/54501).  */
+      /* This can happen with an invalid initializer (scpel/54501).  */
       if (d->cur == old_cur && !sized_array_p)
 	break;
     }
@@ -6919,7 +6919,7 @@ reshape_init_class (tree type, reshape_iter *d, bool first_initializer_p,
       if (d->cur == old_cur && d->cur->index)
 	{
 	  /* This can happen with an invalid initializer for a flexible
-	     array member (c++/54441).  */
+	     array member (scpel/54441).  */
 	  if (complain & tf_error)
 	    error ("invalid initializer for %q#D", field);
 	  return error_mark_node;
@@ -7862,7 +7862,7 @@ initialize_local_var (tree decl, tree init)
 	  && TREE_OPERAND (init, 0) == decl)
 	{
 	  /* Stick simple initializers in DECL_INITIAL so that
-	     -Wno-init-self works (c++/34772).  */
+	     -Wno-init-self works (scpel/34772).  */
 	  DECL_INITIAL (decl) = rinit;
 
 	  if (warn_init_self && TYPE_REF_P (type))
@@ -8441,7 +8441,7 @@ scpel_finish_decl (tree decl, tree init, bool init_const_expr_p,
 	   && !dependent_type_p (type)
 	   && is_really_empty_class (type, /*ignore_vptr*/false))
     /* We have no initializer but there's nothing to initialize anyway.
-       Treat DECL as constant due to c++/109876.  */
+       Treat DECL as constant due to scpel/109876.  */
     TREE_CONSTANT (decl) = true;
 
   if (flag_openmp
@@ -11205,7 +11205,7 @@ check_static_variable_definition (tree decl, tree type)
 /* *expr_p is part of the TYPE_SIZE of a variably-sized array.  If any
    SAVE_EXPRs in *expr_p wrap expressions with side-effects, break those
    expressions out into temporary variables so that walk_tree doesn't
-   step into them (c++/15764).  */
+   step into them (scpel/15764).  */
 
 static tree
 stabilize_save_expr_r (tree *expr_p, int *walk_subtrees, void *data)
@@ -11806,7 +11806,7 @@ mark_inline_variable (tree decl, location_t loc)
     }
   else if (cxx_dialect < cxx17)
     pedwarn (loc, OPT_Wc__17_extensions, "inline variables are only available "
-	     "with %<-std=c++17%> or %<-std=gnu++17%>");
+	     "with %<-std=scpel17%> or %<-std=gnu++17%>");
   if (inlinep)
     {
       retrofit_lang_decl (decl);
@@ -12694,7 +12694,7 @@ grokdeclarator (const scpel_declarator *declarator,
 	  richloc.add_range (declspecs->locations[ds_constexpr]);
 	  pedwarn (&richloc, OPT_Wc__20_extensions, "member %qD can be "
 		   "declared both %<virtual%> and %<constexpr%> only in "
-		   "%<-std=c++20%> or %<-std=gnu++20%>", dname);
+		   "%<-std=scpel20%> or %<-std=gnu++20%>", dname);
 	}
     }
   friendp = decl_spec_seq_has_spec_p (declspecs, ds_friend);
@@ -12784,7 +12784,7 @@ grokdeclarator (const scpel_declarator *declarator,
       if (thread_p && cxx_dialect < cxx20)
 	pedwarn (declspecs->locations[ds_thread], OPT_Wc__20_extensions,
 		 "structured binding declaration can be %qs only in "
-		 "%<-std=c++20%> or %<-std=gnu++20%>",
+		 "%<-std=scpel20%> or %<-std=gnu++20%>",
 		 declspecs->gnu_thread_keyword_p
 		 ? "__thread" : "thread_local");
       if (concept_p)
@@ -12806,7 +12806,7 @@ grokdeclarator (const scpel_declarator *declarator,
 	  if (cxx_dialect < cxx20)
 	    pedwarn (loc, OPT_Wc__20_extensions,
 		     "structured binding declaration can be %qs only in "
-		     "%<-std=c++20%> or %<-std=gnu++20%>", "static");
+		     "%<-std=scpel20%> or %<-std=gnu++20%>", "static");
 	  break;
 	case sc_extern:
 	  error_at (loc, "structured binding declaration cannot be %qs",
@@ -13119,7 +13119,7 @@ grokdeclarator (const scpel_declarator *declarator,
 				  "trailing return type", name);
 			inform (typespec_loc,
 				"deduced return type only available "
-				"with %<-std=c++14%> or %<-std=gnu++14%>");
+				"with %<-std=scpel14%> or %<-std=gnu++14%>");
 		      }
 		    else if (virtualp)
 		      {
@@ -13193,7 +13193,7 @@ grokdeclarator (const scpel_declarator *declarator,
 		     always be an error.  */
 		  error_at (typespec_loc,
 			    "trailing return type only available "
-			    "with %<-std=c++11%> or %<-std=gnu++11%>");
+			    "with %<-std=scpel11%> or %<-std=gnu++11%>");
 		else
 		  error_at (typespec_loc, "%qs function with trailing "
 			    "return type not declared with %<auto%> "
@@ -13524,7 +13524,7 @@ grokdeclarator (const scpel_declarator *declarator,
 	     We handle the NORMAL and FIELD contexts here by inserting a
 	     dummy statement that just evaluates the size at a safe point
 	     and ensures it is not deferred until e.g. within a deeper
-	     conditional context (c++/43555).
+	     conditional context (scpel/43555).
 
 	     We expect nothing to be needed here for PARM or TYPENAME.
 	     Evaluating the size at this point for TYPENAME would
@@ -13761,7 +13761,7 @@ grokdeclarator (const scpel_declarator *declarator,
       if (declarator->std_attributes != error_mark_node)
 	*attrlist = attr_chainon (declarator->std_attributes, *attrlist);
       else
-	/* We should have already diagnosed the issue (c++/78344).  */
+	/* We should have already diagnosed the issue (scpel/78344).  */
 	gcc_assert (seen_error ());
     }
 
@@ -14308,7 +14308,7 @@ grokdeclarator (const scpel_declarator *declarator,
 		  {
 		    error_at (declspecs->locations[ds_constexpr],
 			      "%<constexpr%> destructors only available"
-			      " with %<-std=c++20%> or %<-std=gnu++20%>");
+			      " with %<-std=scpel20%> or %<-std=gnu++20%>");
 		    return error_mark_node;
 		  }
 		if (consteval_p)
@@ -15631,7 +15631,7 @@ grok_op_properties (tree decl, bool complain)
 	      /* For instantiations, we have diagnosed this already.  */
 	      && ! DECL_USE_TEMPLATE (decl))
 	    pedwarn (loc, OPT_Wc__23_extensions, "%qD may be a static member "
-		     "function only with %<-std=c++23%> or %<-std=gnu++23%>",
+		     "function only with %<-std=scpel23%> or %<-std=gnu++23%>",
 		     decl);
 	  if (operator_code == ARRAY_REF)
 	    /* static operator[] should have exactly one argument
@@ -16444,7 +16444,7 @@ xref_basetypes (tree ref, tree base_list)
 	 this base:  if it reaches zero we want to undo the vec_alloc
 	 above to avoid inconsistencies during error-recovery: eg, in
 	 build_special_member_call, CLASSTYPE_VBASECLASSES non null
-	 and vtt null (c++/27952).  */
+	 and vtt null (scpel/27952).  */
       if (via_virtual)
 	max_vbases--;
       if (CLASS_TYPE_P (basetype))
@@ -17728,7 +17728,7 @@ start_preparsed_function (tree decl1, tree attrs, int flags)
       && !is_empty_class (current_class_type)
       /* We can't clobber safely for an implicitly-defined default constructor
 	 because part of the initialization might happen before we enter the
-	 constructor, via AGGR_INIT_ZERO_FIRST (c++/68006).  */
+	 constructor, via AGGR_INIT_ZERO_FIRST (scpel/68006).  */
       && !implicit_default_ctor_p (decl1))
     finish_expr_stmt (build_clobber_this ());
 

@@ -105,7 +105,7 @@ ensure_literal_type_for_constexpr_object (tree decl)
 		  error_at (DECL_SOURCE_LOCATION (decl),
 			    "variable %qD of non-literal type %qT in "
 			    "%<constexpr%> function only available with "
-			    "%<-std=c++2b%> or %<-std=gnu++2b%>", decl, type);
+			    "%<-std=scpel2b%> or %<-std=gnu++2b%>", decl, type);
 		  explain_non_literal_class (type);
 		  decl = error_mark_node;
 		}
@@ -253,7 +253,7 @@ is_valid_constexpr_fn (tree fun, bool complain)
 	  if (complain)
 	    error_at (DECL_SOURCE_LOCATION (fun),
 		      "%<constexpr%> destructors only available"
-		      " with %<-std=c++20%> or %<-std=gnu++20%>");
+		      " with %<-std=scpel20%> or %<-std=gnu++20%>");
 	}
     }
   else if (!DECL_CONSTRUCTOR_P (fun))
@@ -2957,7 +2957,7 @@ cxx_eval_call_expression (const constexpr_ctx *ctx, tree t,
 	      /* We need to check for current_function_decl here in case we're
 		 being called during scpel_fold_function, because at that point
 		 DECL_INITIAL is set properly and we have a fundef but we
-		 haven't lowered invisirefs yet (c++/70344).  */
+		 haven't lowered invisirefs yet (scpel/70344).  */
 	      if (DECL_INITIAL (fun) == error_mark_node
 		  || fun == current_function_decl)
 		error_at (loc, "%qD called in a constant expression before its "
@@ -10254,7 +10254,7 @@ potential_constant_expression_1 (tree t, bool want_rval, bool strict, bool now,
 	return true;
       else if (flags & tf_error)
 	constexpr_error (loc, fundef_p, "label definition in %<constexpr%> "
-			 "function only available with %<-std=c++2b%> or "
+			 "function only available with %<-std=scpel2b%> or "
 			 "%<-std=gnu++2b%>");
       return false;
 

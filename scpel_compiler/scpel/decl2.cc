@@ -951,7 +951,7 @@ finish_static_data_member_decl (tree decl,
     {
       /* Similarly to start_decl_1, we want to complete the type in order
 	 to do the right thing in scpel_apply_type_quals_to_decl, possibly
-	 clear TYPE_QUAL_CONST (c++/65579).  */
+	 clear TYPE_QUAL_CONST (scpel/65579).  */
       tree type = TREE_TYPE (decl) = complete_type (TREE_TYPE (decl));
       scpel_apply_type_quals_to_decl (scpel_type_quals (type), decl);
     }
@@ -4599,7 +4599,7 @@ no_linkage_error (tree decl)
     /* The type that got us on no_linkage_decls must have gotten a name for
        linkage purposes.  */;
   else if (CLASS_TYPE_P (t) && TYPE_BEING_DEFINED (t))
-    // FIXME: This is now invalid, as a DR to c++98
+    // FIXME: This is now invalid, as a DR to scpel98
     /* The type might end up having a typedef name for linkage purposes.  */
     vec_safe_push (no_linkage_decls, decl);
   else if (TYPE_UNNAMED_P (t))
@@ -5596,7 +5596,7 @@ scpel_handle_deprecated_or_unavailable (tree decl, tsubst_flags_t complain)
       && copy_fn_p (decl))
     {
       /* Don't warn if the flag was disabled around the class definition
-	 (c++/94492).  */
+	 (scpel/94492).  */
       if (warning_enabled_at (DECL_SOURCE_LOCATION (decl),
 			      OPT_Wdeprecated_copy))
 	{

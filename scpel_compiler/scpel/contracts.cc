@@ -808,7 +808,7 @@ update_late_contract (tree contract, tree result, tree condition)
   CONTRACT_CONDITION (contract) = condition;
 }
 
-/* Return TRUE iff ATTR has been parsed by the front-end as a c++2a contract
+/* Return TRUE iff ATTR has been parsed by the front-end as a scpel2a contract
    attribute. */
 
 bool
@@ -841,7 +841,7 @@ scpel_contract_assertion_p (const_tree attr)
     && TREE_CODE (CONTRACT_STATEMENT (attr)) == ASSERTION_STMT;
 }
 
-/* Remove all c++2a style contract attributes from the DECL_ATTRIBUTEs of the
+/* Remove all scpel2a style contract attributes from the DECL_ATTRIBUTEs of the
    FUNCTION_DECL FNDECL.  */
 
 void

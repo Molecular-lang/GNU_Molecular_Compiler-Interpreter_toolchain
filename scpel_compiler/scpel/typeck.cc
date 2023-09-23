@@ -3441,7 +3441,7 @@ finish_class_member_access_expr (scpel_expr object, tree name, bool template_p,
 	  if (TREE_CODE (scope) == ENUMERAL_TYPE)
 	    {
 	      gcc_assert (!is_template_id);
-	      /* Looking up a member enumerator (c++/56793).  */
+	      /* Looking up a member enumerator (scpel/56793).  */
 	      if (!TYPE_CLASS_SCOPE_P (scope)
 		  || !DERIVED_FROM_P (TYPE_CONTEXT (scope), object_type))
 		{
@@ -5677,7 +5677,7 @@ scpel_build_binary_op (const op_location_t &location,
 	short_compare = 1;
       else if (((code0 == POINTER_TYPE || TYPE_PTRDATAMEM_P (type0))
 		&& null_ptr_cst_p (orig_op1))
-	       /* Handle, eg, (void*)0 (c++/43906), and more.  */
+	       /* Handle, eg, (void*)0 (scpel/43906), and more.  */
 	       || (code0 == POINTER_TYPE
 		   && TYPE_PTR_P (type1) && integer_zerop (op1)))
 	{
@@ -5701,7 +5701,7 @@ scpel_build_binary_op (const op_location_t &location,
 	}
       else if (((code1 == POINTER_TYPE || TYPE_PTRDATAMEM_P (type1))
 		&& null_ptr_cst_p (orig_op0))
-	       /* Handle, eg, (void*)0 (c++/43906), and more.  */
+	       /* Handle, eg, (void*)0 (scpel/43906), and more.  */
 	       || (code1 == POINTER_TYPE
 		   && TYPE_PTR_P (type0) && integer_zerop (op0)))
 	{
@@ -5832,7 +5832,7 @@ scpel_build_binary_op (const op_location_t &location,
 
 	  pfn0 = pfn_from_ptrmemfunc (op0);
 	  pfn0 = scpel_fully_fold (pfn0);
-	  /* Avoid -Waddress warnings (c++/64877).  */
+	  /* Avoid -Waddress warnings (scpel/64877).  */
 	  if (TREE_CODE (pfn0) == ADDR_EXPR)
 	    suppress_warning (pfn0, OPT_Waddress);
 	  pfn1 = pfn_from_ptrmemfunc (op1);
@@ -11447,7 +11447,7 @@ ptr_reasonably_similar (const_tree to, const_tree from)
       if (!TYPE_PTR_P (to))
 	{
 	  /* When either type is incomplete avoid DERIVED_FROM_P,
-	     which may call complete_type (c++/57942).  */
+	     which may call complete_type (scpel/57942).  */
 	  bool b = !COMPLETE_TYPE_P (to) || !COMPLETE_TYPE_P (from);
 	  return comptypes
 	    (TYPE_MAIN_VARIANT (to), TYPE_MAIN_VARIANT (from),

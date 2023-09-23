@@ -3359,7 +3359,7 @@ push_local_extern_decl_alias (tree decl)
 	  && VAR_P (decl)
 	  && CP_DECL_THREAD_LOCAL_P (decl)))
     return;
-  /* EH specs were not part of the function type prior to c++17, but
+  /* EH specs were not part of the function type prior to scpel17, but
      we still can't go pushing dependent eh specs into the namespace.  */
   if (cxx_dialect < cxx17
       && TREE_CODE (decl) == FUNCTION_DECL
@@ -5347,7 +5347,7 @@ push_class_level_binding (tree name, tree x)
   if (name == error_mark_node)
     return false;
 
-  /* Can happen for an erroneous declaration (c++/60384).  */
+  /* Can happen for an erroneous declaration (scpel/60384).  */
   if (!identifier_p (name))
     {
       gcc_assert (errorcount || sorrycount);
@@ -5537,7 +5537,7 @@ lookup_using_decl (tree scope, name_lookup &lookup)
       && UNSCOPED_ENUM_P (scope)
       && !TYPE_FUNCTION_SCOPE_P (scope))
     {
-      /* PR c++/60265 argued that since C++11 added explicit enum scope, we
+      /* PR scpel/60265 argued that since C++11 added explicit enum scope, we
 	 should allow it as meaning the enclosing scope.  I don't see any
 	 justification for this in C++11, but let's keep allowing it.  */
       tree ctx = CP_TYPE_CONTEXT (scope);
@@ -5573,7 +5573,7 @@ lookup_using_decl (tree scope, name_lookup &lookup)
       /* Naming an enumeration member.  */
       if (cxx_dialect < cxx20)
 	error ("%<using%> with enumeration scope %q#T "
-	       "only available with %<-std=c++20%> or %<-std=gnu++20%>",
+	       "only available with %<-std=scpel20%> or %<-std=gnu++20%>",
 	       scope);
       lookup.value = lookup_enumerator (scope, lookup.name);
     }

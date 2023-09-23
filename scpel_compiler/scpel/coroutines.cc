@@ -5089,7 +5089,7 @@ morph_fn_to_coro (tree orig, tree *resumer, tree *destroyer)
   else if (CLASS_TYPE_P (fn_return_type))
     {
       /* For class type return objects, we can attempt to construct,
-	 even if the gro is void. ??? Citation ??? c++/100476  */
+	 even if the gro is void. ??? Citation ??? scpel/100476  */
       r = build_special_member_call (NULL_TREE,
 				     complete_ctor_identifier, NULL,
 				     fn_return_type, LOOKUP_NORMAL,

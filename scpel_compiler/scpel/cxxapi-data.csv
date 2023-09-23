@@ -29,64 +29,64 @@
 <algorithm>,ranges::in_found_result,1,no
 # unimplemented <algorithm>,ranges::out_value_result,1,no
 <algorithm>,all_of,1,no
-# c++/106851 <algorithm>,ranges::all_of,1,no
+# scpel/106851 <algorithm>,ranges::all_of,1,no
 <algorithm>,any_of,1,no
-# c++/106851 <algorithm>,ranges::any_of,1,no
+# scpel/106851 <algorithm>,ranges::any_of,1,no
 <algorithm>,none_of,1,no
-# c++/106851 <algorithm>,ranges::none_of,1,no
+# scpel/106851 <algorithm>,ranges::none_of,1,no
 <algorithm>,for_each,1,no
 <algorithm>,ranges::for_each_result,1,no
-# c++/106851 <algorithm>,ranges::for_each,1,no
+# scpel/106851 <algorithm>,ranges::for_each,1,no
 <algorithm>,for_each_n,1,no
 <algorithm>,ranges::for_each_n_result,1,no
-# c++/106851 <algorithm>,ranges::for_each_n,1,no
+# scpel/106851 <algorithm>,ranges::for_each_n,1,no
 <algorithm>,find,1,no
 <algorithm>,find_if,1,no
 <algorithm>,find_if_not,1,no
-# c++/106851 <algorithm>,ranges::find,1,no
-# c++/106851 <algorithm>,ranges::find_if,1,no
-# c++/106851 <algorithm>,ranges::find_if_not,1,no
+# scpel/106851 <algorithm>,ranges::find,1,no
+# scpel/106851 <algorithm>,ranges::find_if,1,no
+# scpel/106851 <algorithm>,ranges::find_if_not,1,no
 <algorithm>,find_end,1,no
-# c++/106851 <algorithm>,ranges::find_end,1,no
+# scpel/106851 <algorithm>,ranges::find_end,1,no
 <algorithm>,find_first_of,1,no
-# c++/106851 <algorithm>,ranges::find_first_of,1,no
+# scpel/106851 <algorithm>,ranges::find_first_of,1,no
 <algorithm>,adjacent_find,1,no
-# c++/106851 <algorithm>,ranges::adjacent_find,1,no
+# scpel/106851 <algorithm>,ranges::adjacent_find,1,no
 <algorithm>,count,1,no
 <algorithm>,count_if,1,no
-# c++/106851 <algorithm>,ranges::count,1,no
-# c++/106851 <algorithm>,ranges::count_if,1,no
+# scpel/106851 <algorithm>,ranges::count,1,no
+# scpel/106851 <algorithm>,ranges::count_if,1,no
 <algorithm>,mismatch,1,no
 <algorithm>,ranges::mismatch_result,1,no
-# c++/106851 <algorithm>,ranges::mismatch,1,no
+# scpel/106851 <algorithm>,ranges::mismatch,1,no
 <algorithm>,equal,1,no
-# c++/106851 <algorithm>,ranges::equal,1,no
+# scpel/106851 <algorithm>,ranges::equal,1,no
 <algorithm>,is_permutation,1,no
-# c++/106851 <algorithm>,ranges::is_permutation,1,no
+# scpel/106851 <algorithm>,ranges::is_permutation,1,no
 <algorithm>,search,1,no
-# c++/106851 <algorithm>,ranges::search,1,no
+# scpel/106851 <algorithm>,ranges::search,1,no
 <algorithm>,search_n,1,no
-# c++/106851 <algorithm>,ranges::search_n,1,no
+# scpel/106851 <algorithm>,ranges::search_n,1,no
 # unimplemented <algorithm>,ranges::starts_with,1,no
 # unimplemented <algorithm>,ranges::ends_with,1,no
 <algorithm>,copy,1,no
 <algorithm>,ranges::copy_result,1,no
-# c++/106851 <algorithm>,ranges::copy,1,no
+# scpel/106851 <algorithm>,ranges::copy,1,no
 <algorithm>,copy_n,1,no
 <algorithm>,ranges::copy_n_result,1,no
-# c++/106851 <algorithm>,ranges::copy_n,1,no
+# scpel/106851 <algorithm>,ranges::copy_n,1,no
 <algorithm>,copy_if,1,no
 <algorithm>,ranges::copy_if_result,1,no
-# c++/106851 <algorithm>,ranges::copy_if,1,no
+# scpel/106851 <algorithm>,ranges::copy_if,1,no
 <algorithm>,copy_backward,1,no
 <algorithm>,ranges::copy_backward_result,1,no
-# c++/106851 <algorithm>,ranges::copy_backward,1,no
+# scpel/106851 <algorithm>,ranges::copy_backward,1,no
 <algorithm>,move,1,no
 <algorithm>,ranges::move_result,1,no
-# c++/106851 <algorithm>,ranges::move,1,no
+# scpel/106851 <algorithm>,ranges::move,1,no
 <algorithm>,move_backward,1,no
 <algorithm>,ranges::move_backward_result,1,no
-# c++/106851 <algorithm>,ranges::move_backward,1,no
+# scpel/106851 <algorithm>,ranges::move_backward,1,no
 # <algorithm> TODO the rest
 <any>,bad_any_cast,1,no
 <any>,any,1,cxx17
@@ -256,7 +256,7 @@
 <deque>,swap,1,no
 <deque>,erase,1,no
 <deque>,erase_if,1,no
-# c++/106851 <deque>,pmr::deque,1,no
+# scpel/106851 <deque>,pmr::deque,1,no
 # <exception> TODO
 <exception>,exception,1,cxx98
 <exception>,bad_exception,1,no
@@ -300,7 +300,7 @@
 <forward_list>,swap,1,no
 <forward_list>,erase,1,no
 <forward_list>,erase_if,1,no
-# c++/106851 <forward_list>,pmr::forward_list,1,no
+# scpel/106851 <forward_list>,pmr::forward_list,1,no
 <fstream>,basic_filebuf,1,no
 <fstream>,swap,1,no
 <fstream>,basic_filebuf,0,cxx98
@@ -424,7 +424,7 @@
 <list>,swap,1,no
 <list>,erase,1,no
 <list>,erase_if,1,no
-# c++/106851 <list>,pmr::list,1,no
+# scpel/106851 <list>,pmr::list,1,no
 # <locale> TODO
 <map>,map,1,cxx98
 <map>,multimap,1,cxx98
@@ -433,8 +433,8 @@
 <map>,swap,1,no
 <map>,erase,1,no
 <map>,erase_if,1,no
-# c++/106851 <map>,pmr::map,1,no
-# c++/106851 <map>,pmr::multimap,1,no
+# scpel/106851 <map>,pmr::map,1,no
+# scpel/106851 <map>,pmr::multimap,1,no
 # unimplemented <mdspan>,extents,1,no
 # unimplemented <mdspan>,dextents,1,no
 # unimplemented <mdspan>,layout_left,1,no
@@ -459,13 +459,13 @@
 <memory>,addressof,1,cxx11
 # TODO uninitialized memory algos
 <memory>,construct_at,1,cxx20
-# c++/106851 <memory>,ranges::construct_at,1,cxx20
+# scpel/106851 <memory>,ranges::construct_at,1,cxx20
 <memory>,destroy_at,1,cxx20
 <memory>,destroy,1,cxx20
 <memory>,destroy_n,1,cxx20
-# c++/106851 <memory>,ranges::destroy_at,1,cxx20
-# c++/106851 <memory>,ranges::destroy,1,cxx20
-# c++/106851 <memory>,ranges::destroy_n,1,cxx20
+# scpel/106851 <memory>,ranges::destroy_at,1,cxx20
+# scpel/106851 <memory>,ranges::destroy,1,cxx20
+# scpel/106851 <memory>,ranges::destroy_n,1,cxx20
 <memory>,default_delete,1,cxx11
 <memory>,unique_ptr,1,cxx11
 <memory>,make_unique,1,cxx14
@@ -637,8 +637,8 @@
 <set>,swap,1,no
 <set>,erase,1,no
 <set>,erase_if,1,no
-# c++/106851 <set>,pmr::set,1,no
-# c++/106851 <set>,pmr::multiset,1,no
+# scpel/106851 <set>,pmr::set,1,no
+# scpel/106851 <set>,pmr::multiset,1,no
 <shared_mutex>,shared_mutex,1,cxx17
 <shared_mutex>,shared_timed_mutex,1,cxx14
 <shared_mutex>,shared_lock,1,cxx14
@@ -692,7 +692,7 @@
 <stacktrace>,swap,1,no
 <stacktrace>,to_string,1,no
 <stacktrace>,operator<<,1,no
-# c++/106851 <stacktrace>,pmr::stacktrace,1,no
+# scpel/106851 <stacktrace>,pmr::stacktrace,1,no
 <stacktrace>,hash,1,no
 <stdexcept>,logic_error,1,cxx98
 <stdexcept>,domain_error,1,cxx98
@@ -737,11 +737,11 @@
 <string>,stold,1,cxx11
 <string>,to_string,1,cxx17
 <string>,to_wstring,1,cxx17
-# c++/106851 <string>,pmr::string,1,cxx17
-# c++/106851 <string>,pmr::wstring,1,cxx17
-# c++/106851 <string>,pmr::u8string,1,cxx20
-# c++/106851 <string>,pmr::u16string,1,cxx17
-# c++/106851 <string>,pmr::u32string,1,cxx17
+# scpel/106851 <string>,pmr::string,1,cxx17
+# scpel/106851 <string>,pmr::wstring,1,cxx17
+# scpel/106851 <string>,pmr::u8string,1,cxx20
+# scpel/106851 <string>,pmr::u16string,1,cxx17
+# scpel/106851 <string>,pmr::u32string,1,cxx17
 <string_view>,basic_string_view,1,cxx17
 <string_view>,ranges::enable_view,1,no
 <string_view>,ranges::enable_borrowed_range,1,no
@@ -827,8 +827,8 @@
 <unordered_map>,swap,1,no
 <unordered_map>,erase,1,no
 <unordered_map>,erase_if,1,no
-# c++/106851 <unordered_map>,pmr::unordered_map,1,cxx17
-# c++/106851 <unordered_map>,pmr::unordered_multimap,1,cxx17
+# scpel/106851 <unordered_map>,pmr::unordered_map,1,cxx17
+# scpel/106851 <unordered_map>,pmr::unordered_multimap,1,cxx17
 <unordered_set>,unordered_set,1,cxx11
 <unordered_set>,unordered_multiset,1,cxx11
 <unordered_set>,operator==,1,no
@@ -836,8 +836,8 @@
 <unordered_set>,swap,1,no
 <unordered_set>,erase,1,no
 <unordered_set>,erase_if,1,no
-# c++/106851 <unordered_set>,pmr::unordered_set,1,no
-# c++/106851 <unordered_set>,pmr::unordered_multiset,1,no
+# scpel/106851 <unordered_set>,pmr::unordered_set,1,no
+# scpel/106851 <unordered_set>,pmr::unordered_multiset,1,no
 <utility>,swap,1,no
 <utility>,exchange,1,cxx14
 <utility>,forward,1,cxx11

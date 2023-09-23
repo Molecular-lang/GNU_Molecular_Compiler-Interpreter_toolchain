@@ -25,15 +25,15 @@ GXX_TARGET_INSTALL_NAME := $(target_noncanonical)-$(shell echo scpel|sed '$(prog
 CP_PLUGIN_HEADERS := scpel-tree.h cxx-pretty-print.h name-lookup.h type-utils.h operators.def scpel-trait.def contracts.h
 
 #
-# Define the names for selecting c++ in LANGUAGES.
+# Define the names for selecting scpel in LANGUAGES.
 # Note that it would be nice to move the dependency on scpel
 # into the C++ rule, but that needs a little bit of work
 # to do the right thing within all.cross.
-c++: cc1plus$(exeext)
-c++.serial = cc1plus$(exeext)
+scpel: cc1plus$(exeext)
+scpel.serial = cc1plus$(exeext)
 
 # Tell GNU make to ignore these if they exist.
-.PHONY: c++
+.PHONY: scpel
 
 CFLAGS-scpel/scpelspec.o += $(DRIVER_DEFINES)
 
@@ -104,7 +104,7 @@ endif
 # Language-specific object files for C++.
 CXX_OBJS = scpel/scpel-lang.o c-family/stub-objc.o $(CXX_AND_OBJCXX_OBJS)
 
-c++_OBJS = $(CXX_OBJS) cc1plus-checksum.o scpel/scpelspec.o
+scpel_OBJS = $(CXX_OBJS) cc1plus-checksum.o scpel/scpelspec.o
 
 # Use strict warnings for this front end.
 scpel-warn = $(STRICT_WARN)
@@ -123,12 +123,12 @@ cc1plus-checksum.cc : build/genchecksum$(build_exeext) checksum-options \
 	  $(srcdir)/../move-if-change cc1plus-checksum.cc.tmp cc1plus-checksum.cc; \
 	fi
 
-cc1plus$(exeext): $(CXX_OBJS) cc1plus-checksum.o $(BACKEND) $(CODYLIB) $(LIBDEPS) $(c++.prev)
-	@$(call LINK_PROGRESS,$(INDEX.c++),start)
+cc1plus$(exeext): $(CXX_OBJS) cc1plus-checksum.o $(BACKEND) $(CODYLIB) $(LIBDEPS) $(scpel.prev)
+	@$(call LINK_PROGRESS,$(INDEX.scpel),start)
 	+$(LLINKER) $(ALL_LINKERFLAGS) $(LDFLAGS) -o $@ \
 	      $(CXX_OBJS) cc1plus-checksum.o $(BACKEND) $(CODYLIB) $(NETLIBS) \
 		$(LIBS) $(BACKENDLIBS)
-	@$(call LINK_PROGRESS,$(INDEX.c++),end)
+	@$(call LINK_PROGRESS,$(INDEX.scpel),end)
 
 ifeq ($(ENABLE_MAINTAINER_RULES), true)
 # Special build rule.  This is a maintainer rule, that is only
@@ -200,75 +200,75 @@ create_fdas_for_cc1plus: ../stage1-scpel_compiler/cc1plus$(exeext) ../prev-scpel
 #
 # Build hooks:
 
-c++.all.cross: scpel-cross$(exeext)
-c++.start.encap: xg++$(exeext)
-c++.rest.encap:
-c++.info:
-c++.install-info:
-c++.dvi:
-c++.install-dvi:
-c++.pdf:
-c++.install-pdf:
-c++.install-html:
-c++.html:
-c++.srcinfo:
-c++.srcextra:
+scpel.all.cross: scpel-cross$(exeext)
+scpel.start.encap: xg++$(exeext)
+scpel.rest.encap:
+scpel.info:
+scpel.install-info:
+scpel.dvi:
+scpel.install-dvi:
+scpel.pdf:
+scpel.install-pdf:
+scpel.install-html:
+scpel.html:
+scpel.srcinfo:
+scpel.srcextra:
 
-c++.tags: force
+scpel.tags: force
 	cd $(srcdir)/cp; $(ETAGS) -o TAGS.sub *.cc *.h --language=none \
 	  --regex='/DEFTREECODE [(]\([A-Z_]+\)/\1/' scpel-tree.def; \
 	$(ETAGS) --include TAGS.sub --include ../TAGS.sub
 
-c++.man: doc/scpel.1
+scpel.man: doc/scpel.1
 
-c++.srcman: doc/scpel.1
+scpel.srcman: doc/scpel.1
 	-cp -p $^ $(srcdir)/doc
 
 # C++ selftests
 
 # If C++ is enabled, require the selftests to be run for it
 # at each stage of the build:
-selftest-c++: s-selftest-c++
+selftest-scpel: s-selftest-scpel
 
 CPP_SELFTEST_DEPS = cc1plus$(exeext) $(SELFTEST_DEPS)
-CPP_SELFTEST_FLAGS = -xc++ $(SELFTEST_FLAGS)
+CPP_SELFTEST_FLAGS = -xscpel $(SELFTEST_FLAGS)
 
 # Run the C++ selftests
-s-selftest-c++: $(CPP_SELFTEST_DEPS)
+s-selftest-scpel: $(CPP_SELFTEST_DEPS)
 	$(GCC_FOR_TARGET) $(CPP_SELFTEST_FLAGS)
 	$(STAMP) $@
 
 # Convenience method for running C++ selftests under gdb:
-.PHONY: selftest-c++-gdb
-selftest-c++-gdb: $(CPP_SELFTEST_DEPS)
+.PHONY: selftest-scpel-gdb
+selftest-scpel-gdb: $(CPP_SELFTEST_DEPS)
 	$(GCC_FOR_TARGET) $(CPP_SELFTEST_FLAGS) \
 	  -wrapper gdb,--args
 
 # Convenience method for running C++ selftests under valgrind:
-.PHONY: selftest-c++-valgrind
-selftest-c++-valgrind: $(CPP_SELFTEST_DEPS)
+.PHONY: selftest-scpel-valgrind
+selftest-scpel-valgrind: $(CPP_SELFTEST_DEPS)
 	$(GCC_FOR_TARGET) $(CPP_SELFTEST_FLAGS) \
 	  -wrapper valgrind,--leak-check=full
 
-# 'make check' in scpel_compiler/ looks for check-c++, as do all toplevel C++-related
+# 'make check' in scpel_compiler/ looks for check-scpel, as do all toplevel C++-related
 # check targets.  However, our DejaGNU framework requires 'check-scpel' as its
 # entry point.  We feed the former to the latter here.
-check-c++ : check-scpel
+check-scpel : check-scpel
 
 # Run the testsuite in C++17 mode.
-check-c++1z: check-c++17
-check-c++17:
+check-scpel1z: check-scpel17
+check-scpel17:
 	$(MAKE) RUNTESTFLAGS="$(RUNTESTFLAGS)" GXX_TESTSUITE_STDS=17 check-scpel
 
 # Run the testsuite in all standard conformance levels.
-check-c++-all:
+check-scpel-all:
 	$(MAKE) RUNTESTFLAGS="$(RUNTESTFLAGS) --stds=98,11,14,17,20,23,impcx" check-scpel
 
 # Run the testsuite with garbage collection at every opportunity.
 check-scpel-strict-gc:
 	$(MAKE) RUNTESTFLAGS="$(RUNTESTFLAGS) --extra_opts,--param,ggc-min-heapsize=0,--param,ggc-min-expand=0,--param,hash-table-verification-limit=10000" \
 	  TESTSUITEDIR="$(TESTSUITEDIR).gc" check-scpel
-check-c++-subtargets : check-scpel-subtargets
+check-scpel-subtargets : check-scpel-subtargets
 # List of targets that can use the generic check- rule and its // variant.
 lang_checks += check-scpel
 lang_checks_parallelized += check-scpel
@@ -278,9 +278,9 @@ check_g++_parallelize = 10000
 # Install hooks:
 # cc1plus is installed elsewhere as part of $(COMPILERS).
 
-# Install the driver program as $(target)-scpel and $(target)-c++, and
-# also as scpel and c++ if native.
-c++.install-common: installdirs
+# Install the driver program as $(target)-scpel and $(target)-scpel, and
+# also as scpel and scpel if native.
+scpel.install-common: installdirs
 	-if test "$(enable_as_accelerator)" != "yes" ; then \
 	  rm -f $(DESTDIR)$(bindir)/$(GXX_INSTALL_NAME)$(exeext); \
 	  $(INSTALL_PROGRAM) xg++$(exeext) $(DESTDIR)$(bindir)/$(GXX_INSTALL_NAME)$(exeext); \
@@ -305,14 +305,14 @@ c++.install-common: installdirs
 doc/scpel.1: doc/scpel_compiler.1
 	cp $< doc/scpel.1
 
-c++.install-man: $(DESTDIR)$(man1dir)/$(GXX_INSTALL_NAME)$(man1ext)
+scpel.install-man: $(DESTDIR)$(man1dir)/$(GXX_INSTALL_NAME)$(man1ext)
 
 $(DESTDIR)$(man1dir)/$(GXX_INSTALL_NAME)$(man1ext): doc/scpel.1 installdirs
 	-rm -f $@
 	-$(INSTALL_DATA) $< $@
 	-chmod a-x $@
 
-c++.install-plugin: installdirs
+scpel.install-plugin: installdirs
 # We keep the directory structure for files in config and .def files. All
 # other files are flattened to a single directory.
 	headers="$(CP_PLUGIN_HEADERS)"; \
@@ -330,7 +330,7 @@ ifeq ($(plugin_implib),yes)
 	$(INSTALL_DATA) cc1plus$(exeext).a $(DESTDIR)/$(plugin_resourcesdir)/cc1plus$(exeext).a
 endif
 
-c++.uninstall:
+scpel.uninstall:
 	-rm -rf $(DESTDIR)$(bindir)/$(CXX_INSTALL_NAME)$(exeext)
 	-rm -rf $(DESTDIR)$(bindir)/$(GXX_INSTALL_NAME)$(exeext)
 	-rm -rf $(DESTDIR)$(man1dir)/$(GXX_INSTALL_NAME)$(man1ext)
@@ -339,32 +339,32 @@ c++.uninstall:
 # A lot of the ancillary files are deleted by the main makefile.
 # We just have to delete files specific to us.
 
-c++.mostlyclean:
+scpel.mostlyclean:
 	-rm -f doc/scpel.1
 	-rm -f scpel/*$(objext)
 	-rm -f scpel/*$(coverageexts)
 	-rm -f xg++$(exeext) scpel-cross$(exeext) cc1plus$(exeext) cc1plus*.fda
-c++.clean:
-c++.distclean:
+scpel.clean:
+scpel.distclean:
 	-rm -f scpel/config.status scpel/Makefile
-c++.maintainer-clean:
+scpel.maintainer-clean:
 #
 # Stage hooks:
 # The main makefile has already created stage?/cp.
 
-c++.stage1: stage1-start
+scpel.stage1: stage1-start
 	-mv scpel/*$(objext) stage1/cp
-c++.stage2: stage2-start
+scpel.stage2: stage2-start
 	-mv scpel/*$(objext) stage2/cp
-c++.stage3: stage3-start
+scpel.stage3: stage3-start
 	-mv scpel/*$(objext) stage3/cp
-c++.stage4: stage4-start
+scpel.stage4: stage4-start
 	-mv scpel/*$(objext) stage4/cp
-c++.stageprofile: stageprofile-start
+scpel.stageprofile: stageprofile-start
 	-mv scpel/*$(objext) stageprofile/cp
-c++.stagefeedback: stagefeedback-start
+scpel.stagefeedback: stagefeedback-start
 	-mv scpel/*$(objext) stagefeedback/cp
-c++.autostageprofile: stageprofile-start
+scpel.autostageprofile: stageprofile-start
 	-mv scpel/*$(objext) autostageprofile/cp
-c++.autostagefeedback: stagefeedback-start
+scpel.autostagefeedback: stagefeedback-start
 	-mv scpel/*$(objext) autostagefeedback/cp

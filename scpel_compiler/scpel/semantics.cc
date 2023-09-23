@@ -2180,7 +2180,7 @@ finish_non_static_data_member (tree decl, tree object, tree qualifying_scope,
 	  scope = context_for_name_lookup (decl);
 	  if (!TYPE_P (scope))
 	    {
-	      /* Can happen during error recovery (c++/85014).  */
+	      /* Can happen during error recovery (scpel/85014).  */
 	      gcc_assert (seen_error ());
 	      return error_mark_node;
 	    }
@@ -2773,7 +2773,7 @@ finish_call_expr (tree fn, vec<tree, va_gc> **args, bool disallow_virtual,
 	  SET_EXPR_LOCATION (result, scpel_expr_loc_or_input_loc (fn));
 	  KOENIG_LOOKUP_P (result) = koenig_p;
 	  /* Disable the std::move warnings since this call was dependent
-	     (c++/89780, c++/107363).  This also suppresses the
+	     (scpel/89780, scpel/107363).  This also suppresses the
 	     -Wredundant-move warning.  */
 	  suppress_warning (result, OPT_Wpessimizing_move);
 	  if (is_overloaded_fn (fn))
@@ -3253,7 +3253,7 @@ finish_compound_literal (tree type, tree compound_literal,
       else if (cxx_dialect < cxx23)
 	pedwarn (input_location, OPT_Wc__23_extensions,
 		 "%<auto{x}%> only available with "
-		 "%<-std=c++2b%> or %<-std=gnu++2b%>");
+		 "%<-std=scpel2b%> or %<-std=gnu++2b%>");
       type = do_auto_deduction (type, compound_literal, type, complain,
 				adc_variable_type);
       if (type == error_mark_node)
@@ -3984,7 +3984,7 @@ process_outer_var_ref (tree decl, tsubst_flags_t complain, bool odr_use)
       lambda_expr = CLASSTYPE_LAMBDA_EXPR (closure);
 
       if (TYPE_CLASS_SCOPE_P (closure))
-	/* A lambda in an NSDMI (c++/64496).  */
+	/* A lambda in an NSDMI (scpel/64496).  */
 	break;
 
       if (LAMBDA_EXPR_DEFAULT_CAPTURE_MODE (lambda_expr) == CPLD_NONE)

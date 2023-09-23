@@ -1250,7 +1250,7 @@ build_noexcept_spec (tree expr, tsubst_flags_t complain)
 		  || TREE_CODE (expr) == DEFERRED_NOEXCEPT);
       if (TREE_CODE (expr) != DEFERRED_NOEXCEPT)
 	/* Avoid problems with a function type built with a dependent typedef
-	   being reused in another scope (c++/84045).  */
+	   being reused in another scope (scpel/84045).  */
 	expr = strip_typedefs_expr (expr);
       return build_tree_list (expr, NULL_TREE);
     }

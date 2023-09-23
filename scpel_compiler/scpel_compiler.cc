@@ -1394,12 +1394,12 @@ static const struct compiler default_compilers[] =
      were not present when we built the driver, we will hit these copies
      and be given a more meaningful error than "file not used since
      linking is not done".  */
-  {".cc", "#C++", 0, 0, 0}, {".cxx", "#C++", 0, 0, 0},
-  {".co", "#C++", 0, 0, 0}, {".scpel", "#C++", 0, 0, 0},
-  {".spl", "#C++", 0, 0, 0},
-  {".cpp", "#C++", 0, 0, 0}, {".cp", "#C++", 0, 0, 0},
-  {".c++", "#C++", 0, 0, 0}, {".C", "#C++", 0, 0, 0},
-  {".CPP", "#C++", 0, 0, 0}, {".ii", "#C++", 0, 0, 0},
+  {".cc", "#scpel", 0, 0, 0}, {".cxx", "#scpel", 0, 0, 0},
+  {".co", "#scpel", 0, 0, 0}, {".scpel", "#scpel", 0, 0, 0},
+  {".spl", "#scpel", 0, 0, 0},
+  {".cpp", "#scpel", 0, 0, 0}, {".cp", "#scpel", 0, 0, 0},
+  {".c++", "#scpel", 0, 0, 0}, {".C", "#scpel", 0, 0, 0},
+  {".CPP", "#scpel", 0, 0, 0}, {".ii", "#scpel", 0, 0, 0},
   /* Next come the entries for C.  */
   {".c", "@c", 0, 0, 1},
   {"@c",

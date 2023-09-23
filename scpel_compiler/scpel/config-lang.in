@@ -6,7 +6,7 @@
 # language	- name of language as it would appear in $(LANGUAGES)
 # compilers	- value to add to $(COMPILERS)
 
-language="c++"
+language="scpel"
 
 compilers="cc1plus\$(exeext)"
 

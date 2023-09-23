@@ -1,6 +1,6 @@
-/* C++ modules.  Experimental!	-*- c++ -*- */
+/* C++ modules.  Experimental!	-*- scpel -*- */
 
-/* Forward to the header in c++tools.  */
+/* Forward to the header in scpeltools.  */
 
 #ifndef MAPPER_CLIENT_H
 #define MAPPER_CLIENT_H 1

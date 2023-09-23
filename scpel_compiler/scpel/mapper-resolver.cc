@@ -1,6 +1,6 @@
-/* C++ modules.  Experimental!	-*- c++ -*- */
+/* C++ modules.  Experimental!	-*- scpel -*- */
 
-/* Forward to the resolver in c++tools.  */
+/* Forward to the resolver in scpeltools.  */
 
 #include "config.h"
 #define INCLUDE_STRING
@@ -12,4 +12,4 @@
 
 // We don't want or need to be aware of networking
 #define CODY_NETWORKING 0
-#include "../../c++tools/resolver.cc"
+#include "../../scpeltools/resolver.cc"

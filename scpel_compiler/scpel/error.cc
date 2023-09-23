@@ -1043,7 +1043,7 @@ dump_type_suffix (cxx_pretty_printer *pp, tree t, int flags)
 	  /* Zero-length arrays have a null upper bound in C and SIZE_MAX
 	     in C++.  Handle both since the type might be constructed by
 	     the middle end and end up here as a result of a warning (see
-	     PR c++/97201).  */
+	     PR scpel/97201).  */
 	  if (!max || integer_all_onesp (max))
 	    pp_character (pp, '0');
 	  else if (tree_fits_shwi_p (max))
@@ -4515,78 +4515,78 @@ maybe_warn_cpp0x (cpp0x_warn_str str, location_t loc/*=input_location*/)
       case CPP0X_INITIALIZER_LISTS:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "extended initializer lists "
-		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_EXPLICIT_CONVERSION:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "explicit conversion operators "
-		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_VARIADIC_TEMPLATES:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "variadic templates "
-		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_LAMBDA_EXPR:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "lambda expressions "
-		  "only available with %<-std=c++11%> or %<-std=gnu++11%>");
+		  "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_AUTO:
 	pedwarn (loc, OPT_Wc__11_extensions,
-		 "C++11 auto only available with %<-std=c++11%> or "
+		 "C++11 auto only available with %<-std=scpel11%> or "
 		 "%<-std=gnu++11%>");
 	break;
       case CPP0X_SCOPED_ENUMS:
 	pedwarn (loc, OPT_Wc__11_extensions,
-		 "scoped enums only available with %<-std=c++11%> or "
+		 "scoped enums only available with %<-std=scpel11%> or "
 		 "%<-std=gnu++11%>");
 	break;
       case CPP0X_DEFAULTED_DELETED:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "defaulted and deleted functions "
-		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_INLINE_NAMESPACES:
 	if (pedantic)
 	  pedwarn (loc, OPT_Wc__11_extensions,
 		   "inline namespaces "
-		   "only available with %<-std=c++11%> or %<-std=gnu++11%>");
+		   "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_OVERRIDE_CONTROLS:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "override controls (override/final) "
-		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
         break;
       case CPP0X_NSDMI:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "non-static data member initializers "
-		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
         break;
       case CPP0X_USER_DEFINED_LITERALS:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "user-defined literals "
-		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_DELEGATING_CTORS:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "delegating constructors "
-		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
         break;
       case CPP0X_INHERITING_CTORS:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "inheriting constructors "
-		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
         break;
       case CPP0X_ATTRIBUTES:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "C++11 attributes "
-		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
 	break;
       case CPP0X_REF_QUALIFIER:
 	pedwarn (loc, OPT_Wc__11_extensions,
 		 "ref-qualifiers "
-		 "only available with %<-std=c++11%> or %<-std=gnu++11%>");
+		 "only available with %<-std=scpel11%> or %<-std=gnu++11%>");
 	break;
       default:
 	gcc_unreachable ();
