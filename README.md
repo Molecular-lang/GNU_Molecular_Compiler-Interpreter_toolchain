@@ -1,6 +1,6 @@
 <div align="center">
 	<h1 style="color:#660991;">Subconscious Electronic Programming Language</h1>
-	<img src="https://scpel.org/scpel_logo.png"  width="300" height="200">
+	<img src="https://scpel.org/scpel_logo.png"  width="300" height="300">
 </div>
 
 This is the main source code repository for [Scpel] on GNU GCC 14.0.0 implementation. 
