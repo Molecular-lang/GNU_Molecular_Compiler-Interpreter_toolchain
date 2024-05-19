@@ -3,7 +3,7 @@
 	<img src="https://scpel.org/scpel_logo.png"  width="300" height="300">
 </div>
 
-This is the main source code repository for [Scpel] on GNU GCC 14.0.0 implementation. 
+This is the main source code repository for [Scpel] on GNU GCC 15.0.0 implementation. 
 It contains the compiler, [Scpel Standard AI Library (Ssail)], and documentation.
 
 [Scpel]: https://www.scpel.org/
